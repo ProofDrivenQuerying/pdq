@@ -37,11 +37,11 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
  * Creates a schema, and in each test case creates a set of facts to test the
- * getUnexposedFacts method, and the groupFactsByAccessMethods method of the
+ * getUnexposedFacts method, or the groupFactsByAccessMethods method of the
  * AccessibleDatabaseChaseInstance class.
  * 
  * @author Efthymia Tsamoura
@@ -49,37 +49,22 @@ import uk.ac.ox.cs.pdq.util.Utility;
  */
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING) // makes the test executed in an abc order.
-public class TestAccessibleChaseInstance {
+public class TestAccessibleChaseInstance extends PdqTest {
 	private AccessibleDatabaseChaseInstance state;
 	private DatabaseConnection connection;
-	protected Schema schema;
 	protected AccessibleSchema accessibleSchema;
 
-	protected AccessMethod method0 = AccessMethod.create(new Integer[] {});
-	protected AccessMethod method1 = AccessMethod.create(new Integer[] { 0 });
-	protected AccessMethod method2 = AccessMethod.create(new Integer[] { 0, 1 });
-	protected AccessMethod method3 = AccessMethod.create(new Integer[] { 1 });
-
-	protected Attribute a = Attribute.create(Integer.class, "a");
-	protected Attribute b = Attribute.create(Integer.class, "b");
-	protected Attribute c = Attribute.create(Integer.class, "c");
-	protected Attribute d = Attribute.create(Integer.class, "d");
-	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
-
-	protected Relation R;
+	//protected Relation R;
 	protected Relation InferredAccessibleR;
-	protected Relation S;
 
 	@Before
-	public void setup() throws SQLException {
-		Utility.assertsEnabled();
-		this.R = Relation.create("R", new Attribute[] { a, b, InstanceID }, new AccessMethod[] { this.method0, this.method2 });
-		this.InferredAccessibleR = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R", new Attribute[] { a, b, InstanceID }, new AccessMethod[] {});
-		this.S = Relation.create("S", new Attribute[] { b, c, InstanceID }, new AccessMethod[] { this.method0, this.method1, this.method2 });
-		this.schema = new Schema(new Relation[] { this.R, this.S });
-		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.schema);
-		this.schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
-		this.accessibleSchema = new AccessibleSchema(this.schema);
+	public void setup() throws Exception {
+		super.setup();
+		this.InferredAccessibleR = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R", new Attribute[] { a, b, instanceID }, new AccessMethod[] {});
+		Schema schema = new Schema(new Relation[] { this.R, this.S });
+		this.connection = new DatabaseConnection(DatabaseParameters.Derby, schema);
+		schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
+		this.accessibleSchema = new AccessibleSchema(schema);
 	}
 
 	@Test
@@ -388,11 +373,11 @@ public class TestAccessibleChaseInstance {
 	@Test
 	public void testChaseTheAccessibleState() {
 		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.InstanceID });
+		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
 		// Create query
 		Atom[] atoms = new Atom[2];
 		Variable x = Variable.create("x");

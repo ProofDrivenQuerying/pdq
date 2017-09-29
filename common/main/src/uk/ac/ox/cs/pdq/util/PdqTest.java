@@ -52,6 +52,7 @@ public class PdqTest {
 	protected Attribute c = Attribute.create(Integer.class, "c");
 	protected Attribute d = Attribute.create(Integer.class, "d");
 	protected Attribute instanceID = Attribute.create(Integer.class, "InstanceID");
+	protected Attribute i = Attribute.create(String.class, "i");
 
 	protected Attribute at11 = Attribute.create(String.class, "at11");
 	protected Attribute at12 = Attribute.create(String.class, "at12");
@@ -66,6 +67,13 @@ public class PdqTest {
 	/* example relations */
 	protected Relation R = Relation.create("R", new Attribute[] { a, b, c }, new AccessMethod[] { this.method0, this.method2 });
 	protected Relation S = Relation.create("S", new Attribute[] { b, c }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+	protected Relation T = Relation.create("T", new Attribute[]{b,c,d}, new AccessMethod[]{this.method0, this.method1, this.method2});
+	/* same as R,S,T relations but with instanceID */
+	protected Relation Ri = Relation.create("R", new Attribute[]{a,b,c,instanceID}, new AccessMethod[]{this.method0, this.method2});
+	protected Relation Si = Relation.create("S", new Attribute[]{b,c,instanceID}, new AccessMethod[]{this.method0, this.method1, this.method2});
+	protected Relation Ti = Relation.create("T", new Attribute[]{b,c,d,instanceID}, new AccessMethod[]{this.method0, this.method1, this.method2});
+
+	protected Relation access = Relation.create("Accessible", new Attribute[]{i,instanceID});
 
 	protected Relation rel1 = Relation.create("R1", new Attribute[] { at11, at12, at13, instanceID });
 	protected Relation rel2 = Relation.create("R2", new Attribute[] { at21, at22, instanceID });
@@ -181,7 +189,7 @@ public class PdqTest {
 	 * 
 	 * Schema has 3 relations : 
 	 * R0(a,b,c) where a,b,c are integer attributes, with one access method with free access<br>
-	 * R1(a,b,c) where a,b,c are integer attributes, with one access method that needs input on the third attribute<br> 
+	 * R1(a,b,c) where a,b,c are integer attributes, with two access method, one needs input on the first attribute, the other on the third attribute<br> 
 	 * R2(a,b,c) where a,b,c are integer attributes, with one access method that needs input on the second attribute<br> 
 	 * In this scenario there are no dependencies. <br> 
 	 * The query is Q(x,y,z) =  R0(x,y1,z1) R1(x,y,5) R2(x1,y,z)

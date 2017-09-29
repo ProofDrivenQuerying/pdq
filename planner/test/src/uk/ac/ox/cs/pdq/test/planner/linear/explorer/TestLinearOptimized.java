@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
 
-import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
@@ -20,15 +19,11 @@ import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
-import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -52,7 +47,7 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
 import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
- * Tests the TestLinearOptimized explorer class.
+ * Tests the TestLinearOptimized explorer class. Uses the same 3 scenario as the other two linear chaser test does.
  * 
  * @author Efthymia Tsamoura
  * @author Gabor
@@ -189,6 +184,9 @@ public class TestLinearOptimized extends PdqTest {
 		Assert.assertTrue(relationalTerm.getChild(0) instanceof AccessTerm);
 	}
 
+	/**
+	 * Tests with scenario2, asserts that we have no valid plan.
+	 */
 	@SuppressWarnings("rawtypes")
 	@Test 
 	public void test2ExplorationSteps() {
@@ -274,42 +272,21 @@ public class TestLinearOptimized extends PdqTest {
 		}
 	}
 	
+	/**
+	 * Tests with scenario3, asserts that we have the correct plan.
+	 */
 	@SuppressWarnings("rawtypes")
 	@Test 
 	public void test3ExplorationSteps() {
-		GlobalCounterProvider.resetCounters();
-		//Create the relations
-		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.instanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{})});
-		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.instanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{0}),AccessMethod.create(new Integer[]{2})});
-		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.instanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{1})});
-		relations[3] = Relation.create("Accessible", new Attribute[]{this.a,this.instanceID});
-
-		//Create query
-		Atom[] atoms = new Atom[3];
-		Variable x = Variable.create("x");
-		Variable y = Variable.create("y");
-		Variable z = Variable.create("z");
-		atoms[0] = Atom.create(relations[0], new Term[]{x,Variable.create("y1"),Variable.create("z1")});
-		atoms[1] = Atom.create(relations[1], new Term[]{x,y,TypedConstant.create(5)});
-		atoms[2] = Atom.create(relations[2], new Term[]{Variable.create("x1"),y,z});
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[]{x,y,z}, (Conjunction) Conjunction.of(atoms));
-		
-		//Create schema
-		Schema schema = new Schema(relations);
-		schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(5)));
-		
+		TestScenario ts = getScenario3();
 		//Create accessible schema
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 		
-		assertAccessibleSchema(accessibleSchema, schema,4);
+		assertAccessibleSchema(accessibleSchema, ts.getSchema(),4);
 		
 		
 		//Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery(), ts.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
 	
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -344,7 +321,7 @@ public class TestLinearOptimized extends PdqTest {
 			explorer = new LinearOptimized(
 					new EventBus(), 
 					false,
-					query, 
+					ts.getQuery(), 
 					accessibleQuery,
 					accessibleSchema, 
 					chaser, 
