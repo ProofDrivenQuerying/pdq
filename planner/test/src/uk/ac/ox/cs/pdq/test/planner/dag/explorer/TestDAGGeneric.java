@@ -123,14 +123,7 @@ public class TestDAGGeneric {
 		// Create database connection
 		DatabaseConnection connection = null;
 		try {
-			DatabaseParameters mySqlDbParam = DatabaseParameters.Derby;
-			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
-			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-			mySqlDbParam.setDatabaseName("test_get_triggers");
-			mySqlDbParam.setDatabaseUser("root");
-			mySqlDbParam.setDatabasePassword("root");
-			
-			connection = new DatabaseConnection(mySqlDbParam, accessibleSchema);
+			connection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -279,14 +272,7 @@ public class TestDAGGeneric {
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			DatabaseParameters mySqlDbParam = DatabaseParameters.Derby;
-			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
-			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-			mySqlDbParam.setDatabaseName("test_get_triggers");
-			mySqlDbParam.setDatabaseUser("root");
-			mySqlDbParam.setDatabasePassword("root");
-			
-			databaseConnection = new DatabaseConnection(mySqlDbParam, accessibleSchema);
+			databaseConnection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -382,12 +368,7 @@ public class TestDAGGeneric {
 		// Create database connection
 		DatabaseConnection connection = null;
 		try {
-			DatabaseParameters postgresDbParam = DatabaseParameters.Derby;
-			postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
-			postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
-			postgresDbParam.setDatabaseName("test_get_triggers");
-			postgresDbParam.setDatabaseUser("postgres");
-			postgresDbParam.setDatabasePassword("root");
+			DatabaseParameters postgresDbParam = DatabaseParameters.Postgres;
 			
 			connection = new DatabaseConnection(postgresDbParam, accessibleSchema);
 		} catch (SQLException e) {
@@ -510,13 +491,7 @@ public class TestDAGGeneric {
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			DatabaseParameters mySqlDbParam = DatabaseParameters.Derby;
-			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
-			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-			mySqlDbParam.setDatabaseName("test_get_triggers");
-			mySqlDbParam.setDatabaseUser("root");
-			mySqlDbParam.setDatabasePassword("root");			
-			databaseConnection = new DatabaseConnection(mySqlDbParam, accessibleSchema);
+			databaseConnection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();

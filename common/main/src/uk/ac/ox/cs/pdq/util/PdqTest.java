@@ -3,6 +3,8 @@ package uk.ac.ox.cs.pdq.util;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
 import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.Lists;
@@ -29,7 +31,9 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  * @author Gabor
  *
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PdqTest {
+	
 	/* example variables */
 	protected Variable x = Variable.create("x");
 	protected Variable y = Variable.create("y");

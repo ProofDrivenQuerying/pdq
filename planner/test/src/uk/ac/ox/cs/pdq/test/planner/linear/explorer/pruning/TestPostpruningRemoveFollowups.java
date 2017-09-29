@@ -130,12 +130,7 @@ public class TestPostpruningRemoveFollowups {
 		// R3(x,y) R4(y,z) R0(x,y) R1(y,z)
 		// Postpruning should return the same plan
 
-		DatabaseParameters dbParams = DatabaseParameters.Derby;
-		dbParams.setConnectionUrl("jdbc:mysql://localhost/");
-		dbParams.setDatabaseDriver("com.mysql.jdbc.Driver");
-		dbParams.setDatabaseName("test_get_triggers");
-		dbParams.setDatabaseUser("root");
-		dbParams.setDatabasePassword("root");
+		DatabaseParameters dbParams = DatabaseParameters.MySql;
 		int numberOfRelations = 2;
 
 		// Create the relations

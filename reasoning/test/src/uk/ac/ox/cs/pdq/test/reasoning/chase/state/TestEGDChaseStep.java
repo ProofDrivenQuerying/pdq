@@ -131,22 +131,10 @@ public class TestEGDChaseStep {
 		if ("derby".equals(sqlType))
 			return new DatabaseConnection(DatabaseParameters.Derby, s);
 		if ("mysql".equals(sqlType)) {
-			DatabaseParameters dbParam = DatabaseParameters.Derby;
-			dbParam.setConnectionUrl("jdbc:mysql://localhost/");
-			dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-			dbParam.setDatabaseName("test_get_triggers");
-			dbParam.setDatabaseUser("root");
-			dbParam.setDatabasePassword("root");
-			return new DatabaseConnection(dbParam , s);
+			return new DatabaseConnection(DatabaseParameters.MySql, s);
 		}
 		if ("postgres".equals(sqlType)) {
-			DatabaseParameters dbParam = DatabaseParameters.Derby;
-			dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
-			dbParam.setDatabaseDriver("org.postgresql.Driver");
-			dbParam.setDatabaseName("test_get_triggers");
-			dbParam.setDatabaseUser("postgres");
-			dbParam.setDatabasePassword("root");
-			return new DatabaseConnection(dbParam , s);
+			return new DatabaseConnection(DatabaseParameters.Postgres, s);
 		}
 		throw new IllegalArgumentException("SqlType " + sqlType + " is not valid.");
 	}

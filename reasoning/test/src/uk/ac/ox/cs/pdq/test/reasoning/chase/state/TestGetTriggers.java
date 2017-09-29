@@ -30,6 +30,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
+import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
  * Tests the getMatches and the getTriggers methods of the DatabaseChaseInstance
@@ -38,7 +39,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
  * @author Efthymia Tsamoura
  * @author Gabor
  */
-public class TestGetTriggers {
+public class TestGetTriggers extends PdqTest {
 	private static final int NUMBER_OF_DUMMY_DATA = 100;
 	private static final int PARALLEL_THREADS = 10;
 	protected DatabaseChaseInstance[] chaseState = new DatabaseChaseInstance[3];
@@ -57,7 +58,8 @@ public class TestGetTriggers {
 	private Schema schema;
 
 	@Before
-	public void setup() throws SQLException {
+	public void setup() throws Exception {
+		super.setup();
 		Attribute factId = Attribute.create(Integer.class, "InstanceID");
 
 		Attribute at11 = Attribute.create(String.class, "at11");
@@ -85,24 +87,8 @@ public class TestGetTriggers {
 
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2, this.rel3 }, new Dependency[] { this.tgd, this.tgd2, this.egd });
 		this.chaseState[DERBY] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.Derby, this.schema, PARALLEL_THREADS));
-
-		DatabaseParameters mySqlDbParam = DatabaseParameters.Derby;
-		mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
-		mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-		mySqlDbParam.setDatabaseName("test_get_triggers");
-		mySqlDbParam.setDatabaseUser("root");
-		mySqlDbParam.setDatabasePassword("root");
-		
-		this.chaseState[MYSQL] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(mySqlDbParam, this.schema, PARALLEL_THREADS));
-		
-		DatabaseParameters postgresDbParam = DatabaseParameters.Derby;
-		postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
-		postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
-		postgresDbParam.setDatabaseName("test_get_triggers");
-		postgresDbParam.setDatabaseUser("postgres");
-		postgresDbParam.setDatabasePassword("root");
-		
-		this.chaseState[POSTGRES]  = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(postgresDbParam, this.schema, PARALLEL_THREADS));
+		this.chaseState[MYSQL] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.MySql, this.schema, PARALLEL_THREADS));
+ 		this.chaseState[POSTGRES]  = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.Postgres, this.schema, PARALLEL_THREADS));
 		
 	}
 
@@ -304,24 +290,12 @@ public class TestGetTriggers {
 
 	@Test
 	public void testScanario2MySql() throws SQLException {
-		DatabaseParameters dbParam = DatabaseParameters.Derby;
-		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
-		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-		dbParam.setDatabaseName("test_get_triggers");
-		dbParam.setDatabaseUser("root");
-		dbParam.setDatabasePassword("root");
-		testScanario2(new DatabaseConnection(dbParam, createSchemaScanario2()));
+		testScanario2(new DatabaseConnection(DatabaseParameters.MySql, createSchemaScanario2()));
 	}
 
 	@Test
 	public void testScanario2Postgres() throws SQLException {
-		DatabaseParameters dbParam = DatabaseParameters.Derby;
-		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
-		dbParam.setDatabaseDriver("org.postgresql.Driver");
-		dbParam.setDatabaseName("test_get_triggers");
-		dbParam.setDatabaseUser("postgres");
-		dbParam.setDatabasePassword("root");
-		testScanario2(new DatabaseConnection(dbParam, createSchemaScanario2()));
+		testScanario2(new DatabaseConnection(DatabaseParameters.Postgres, createSchemaScanario2()));
 	}
 
 	private Schema createSchemaScanario2() {

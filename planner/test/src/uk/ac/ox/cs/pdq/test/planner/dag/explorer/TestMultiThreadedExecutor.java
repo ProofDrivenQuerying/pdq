@@ -459,20 +459,7 @@ public class TestMultiThreadedExecutor {
 		// Create database connection
 		DatabaseConnection connection = null;
 		try {
-			DatabaseParameters mySqlDbParam = DatabaseParameters.Derby;
-			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
-			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-			mySqlDbParam.setDatabaseName("test_get_triggers");
-			mySqlDbParam.setDatabaseUser("root");
-			mySqlDbParam.setDatabasePassword("root");
-			DatabaseParameters postgresDbParam = DatabaseParameters.Derby;
-			postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
-			postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
-			postgresDbParam.setDatabaseName("test_get_triggers");
-			postgresDbParam.setDatabaseUser("postgres");
-			postgresDbParam.setDatabasePassword("root");
-
-			connection = new DatabaseConnection(postgresDbParam, accessibleSchema);
+			connection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
