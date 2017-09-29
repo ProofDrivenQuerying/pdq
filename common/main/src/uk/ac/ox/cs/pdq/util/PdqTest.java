@@ -53,6 +53,12 @@ public class PdqTest {
 	protected Attribute d = Attribute.create(Integer.class, "d");
 	protected Attribute instanceID = Attribute.create(Integer.class, "InstanceID");
 	protected Attribute i = Attribute.create(String.class, "i");
+	
+	/* same as a,b,c,d but with String attribute type */
+	protected Attribute a_s = Attribute.create(String.class, "a");
+	protected Attribute b_s = Attribute.create(String.class, "b");
+	protected Attribute c_s = Attribute.create(String.class, "c");
+	protected Attribute d_s = Attribute.create(String.class, "d");
 
 	protected Attribute at11 = Attribute.create(String.class, "at11");
 	protected Attribute at12 = Attribute.create(String.class, "at12");
@@ -72,6 +78,12 @@ public class PdqTest {
 	protected Relation Ri = Relation.create("R", new Attribute[]{a,b,c,instanceID}, new AccessMethod[]{this.method0, this.method2});
 	protected Relation Si = Relation.create("S", new Attribute[]{b,c,instanceID}, new AccessMethod[]{this.method0, this.method1, this.method2});
 	protected Relation Ti = Relation.create("T", new Attribute[]{b,c,d,instanceID}, new AccessMethod[]{this.method0, this.method1, this.method2});
+	
+	/* same as the Ri,Si,Ri tables but with string attribute types. */
+	protected Relation R_s = Relation.create("R", new Attribute[]{a_s,b_s,c_s,instanceID}, new AccessMethod[]{this.method0, this.method2});
+	protected Relation S_s = Relation.create("S", new Attribute[]{b_s,c_s,instanceID}, new AccessMethod[]{this.method0, this.method1, this.method2});
+	protected Relation T_s = Relation.create("T", new Attribute[]{b_s,c_s,d_s,instanceID}, new AccessMethod[]{this.method0, this.method1, this.method2});
+    
 
 	protected Relation access = Relation.create("Accessible", new Attribute[]{i,instanceID});
 
