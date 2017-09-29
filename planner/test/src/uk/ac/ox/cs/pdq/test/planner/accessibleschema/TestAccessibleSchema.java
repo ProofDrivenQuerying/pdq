@@ -1,13 +1,9 @@
 package uk.ac.ox.cs.pdq.test.planner.accessibleschema;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 
 import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -21,7 +17,6 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.util.PdqTest;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Tests the AccessibleSchema class by creating an example schemas and
