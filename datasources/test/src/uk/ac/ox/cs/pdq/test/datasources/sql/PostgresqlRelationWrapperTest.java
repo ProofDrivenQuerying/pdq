@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.test.datasources.sql;
 
-import static org.junit.Assert.*;
-
 import java.util.Arrays;
 import java.util.Properties;
 
