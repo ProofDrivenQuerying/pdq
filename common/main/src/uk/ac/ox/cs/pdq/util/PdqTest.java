@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.util;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -23,6 +24,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.PdqTest.TestScenario;
 
 /**
  * Creates the most commonly used objects for testing purposes. Also able to
@@ -33,7 +35,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PdqTest {
-	
+
 	/* example variables */
 	protected Variable x = Variable.create("x");
 	protected Variable y = Variable.create("y");
@@ -53,7 +55,7 @@ public class PdqTest {
 	protected Attribute d = Attribute.create(Integer.class, "d");
 	protected Attribute instanceID = Attribute.create(Integer.class, "InstanceID");
 	protected Attribute i = Attribute.create(String.class, "i");
-	
+
 	/* same as a,b,c,d but with String attribute type */
 	protected Attribute a_s = Attribute.create(String.class, "a");
 	protected Attribute b_s = Attribute.create(String.class, "b");
@@ -73,19 +75,18 @@ public class PdqTest {
 	/* example relations */
 	protected Relation R = Relation.create("R", new Attribute[] { a, b, c }, new AccessMethod[] { this.method0, this.method2 });
 	protected Relation S = Relation.create("S", new Attribute[] { b, c }, new AccessMethod[] { this.method0, this.method1, this.method2 });
-	protected Relation T = Relation.create("T", new Attribute[]{b,c,d}, new AccessMethod[]{this.method0, this.method1, this.method2});
+	protected Relation T = Relation.create("T", new Attribute[] { b, c, d }, new AccessMethod[] { this.method0, this.method1, this.method2 });
 	/* same as R,S,T relations but with instanceID */
-	protected Relation Ri = Relation.create("R", new Attribute[]{a,b,c,instanceID}, new AccessMethod[]{this.method0, this.method2});
-	protected Relation Si = Relation.create("S", new Attribute[]{b,c,instanceID}, new AccessMethod[]{this.method0, this.method1, this.method2});
-	protected Relation Ti = Relation.create("T", new Attribute[]{b,c,d,instanceID}, new AccessMethod[]{this.method0, this.method1, this.method2});
-	
-	/* same as the Ri,Si,Ri tables but with string attribute types. */
-	protected Relation R_s = Relation.create("R", new Attribute[]{a_s,b_s,c_s,instanceID}, new AccessMethod[]{this.method0, this.method2});
-	protected Relation S_s = Relation.create("S", new Attribute[]{b_s,c_s,instanceID}, new AccessMethod[]{this.method0, this.method1, this.method2});
-	protected Relation T_s = Relation.create("T", new Attribute[]{b_s,c_s,d_s,instanceID}, new AccessMethod[]{this.method0, this.method1, this.method2});
-    
+	protected Relation Ri = Relation.create("R", new Attribute[] { a, b, c, instanceID }, new AccessMethod[] { this.method0, this.method2 });
+	protected Relation Si = Relation.create("S", new Attribute[] { b, c, instanceID }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+	protected Relation Ti = Relation.create("T", new Attribute[] { b, c, d, instanceID }, new AccessMethod[] { this.method0, this.method1, this.method2 });
 
-	protected Relation access = Relation.create("Accessible", new Attribute[]{i,instanceID});
+	/* same as the Ri,Si,Ri tables but with string attribute types. */
+	protected Relation R_s = Relation.create("R", new Attribute[] { a_s, b_s, c_s, instanceID }, new AccessMethod[] { this.method0, this.method2 });
+	protected Relation S_s = Relation.create("S", new Attribute[] { b_s, c_s, instanceID }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+	protected Relation T_s = Relation.create("T", new Attribute[] { b_s, c_s, d_s, instanceID }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+
+	protected Relation access = Relation.create("Accessible", new Attribute[] { i, instanceID });
 
 	protected Relation rel1 = Relation.create("R1", new Attribute[] { at11, at12, at13, instanceID });
 	protected Relation rel2 = Relation.create("R2", new Attribute[] { at21, at22, instanceID });
@@ -127,13 +128,14 @@ public class PdqTest {
 	}
 
 	/**
-	 * Schema has 3 relations : 
-	 * R0(a,b,c) where a,b,c are integer attributes, with a free access method <br> 
-	 * R1(a,b,c) where a,b,c are integer attributes, with one access method that needs input on the second attribute<br> 
-	 * R2(a,b,c) where a,b,c are integer attributes, with one access method that needs input on the third
-	 * attribute.<br>
-	 * In this scenario there are no dependencies. <br> The query is Q(x,y,z) =
-	 * R0(x,y1,z1) R1(x,y,z2) R2(x1,y,z)
+	 * Schema has 3 relations : R0(a,b,c) where a,b,c are integer attributes, with a
+	 * free access method <br>
+	 * R1(a,b,c) where a,b,c are integer attributes, with one access method that
+	 * needs input on the second attribute<br>
+	 * R2(a,b,c) where a,b,c are integer attributes, with one access method that
+	 * needs input on the third attribute.<br>
+	 * In this scenario there are no dependencies. <br>
+	 * The query is Q(x,y,z) = R0(x,y1,z1) R1(x,y,z2) R2(x1,y,z)
 	 * 
 	 * Chasing this should provide a valid plan.
 	 */
@@ -161,15 +163,18 @@ public class PdqTest {
 	}
 
 	/**
-	 * Scenario2 has different access methods, but the relations and the query otherwise are the same as in scenario1.
+	 * Scenario2 has different access methods, but the relations and the query
+	 * otherwise are the same as in scenario1.
 	 * 
-	 * Schema has 3 relations : 
-	 * R0(a,b,c) where a,b,c are integer attributes, with one access method that needs input on the first attribute<br>
-	 * R1(a,b,c) where a,b,c are integer attributes, with one access method that needs input on the first attribute<br> 
-	 * R2(a,b,c) where a,b,c are integer attributes, with one access method that needs input on the second attribute<br> 
-	 * In this scenario there are no dependencies. <br> 
-	 * The query is Q(x,y,z) =  R0(x,y1,z1) R1(x,y,z2) R2(x1,y,z)
-	 *  
+	 * Schema has 3 relations : R0(a,b,c) where a,b,c are integer attributes, with
+	 * one access method that needs input on the first attribute<br>
+	 * R1(a,b,c) where a,b,c are integer attributes, with one access method that
+	 * needs input on the first attribute<br>
+	 * R2(a,b,c) where a,b,c are integer attributes, with one access method that
+	 * needs input on the second attribute<br>
+	 * In this scenario there are no dependencies. <br>
+	 * The query is Q(x,y,z) = R0(x,y1,z1) R1(x,y,z2) R2(x1,y,z)
+	 * 
 	 * Chasing this should NOT provide any plan.
 	 */
 	public TestScenario getScenario2() {
@@ -195,17 +200,20 @@ public class PdqTest {
 		ts.setQuery(query);
 		return ts;
 	}
-	
+
 	/**
-	 * Scenario3 has different access methods, and a modified query. It has multiple valid plans.
+	 * Scenario3 has different access methods, and a modified query. It has multiple
+	 * valid plans.
 	 * 
-	 * Schema has 3 relations : 
-	 * R0(a,b,c) where a,b,c are integer attributes, with one access method with free access<br>
-	 * R1(a,b,c) where a,b,c are integer attributes, with two access method, one needs input on the first attribute, the other on the third attribute<br> 
-	 * R2(a,b,c) where a,b,c are integer attributes, with one access method that needs input on the second attribute<br> 
-	 * In this scenario there are no dependencies. <br> 
-	 * The query is Q(x,y,z) =  R0(x,y1,z1) R1(x,y,5) R2(x1,y,z)
-	 *  
+	 * Schema has 3 relations : R0(a,b,c) where a,b,c are integer attributes, with
+	 * one access method with free access<br>
+	 * R1(a,b,c) where a,b,c are integer attributes, with two access method, one
+	 * needs input on the first attribute, the other on the third attribute<br>
+	 * R2(a,b,c) where a,b,c are integer attributes, with one access method that
+	 * needs input on the second attribute<br>
+	 * In this scenario there are no dependencies. <br>
+	 * The query is Q(x,y,z) = R0(x,y1,z1) R1(x,y,5) R2(x1,y,z)
+	 * 
 	 * Chasing this should provide more then one plan.
 	 */
 	public TestScenario getScenario3() {
@@ -233,7 +241,49 @@ public class PdqTest {
 		return ts;
 	}
 
-	
+	/**
+	 * <pre>
+	 * Tables:
+	 *	R0(a,b,c,d) accesses: Free, [0]
+	 *	R1(a,b,c,d) accesses: [0], [2,3]
+	 * 	R2(a,b,c,d) accesses: Free
+	 *	R3(a,b,c,d) accesses: [2,3]
+	 * Query:
+	 *  Q(x,y) -> R0('constant1',y,z,w) R1('constant2',_,z,w) R2(x,y,z',w') R3(_,_,z',w') where "_" means some unique variable.
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	public TestScenario getScenario4() {
+		// Create the relations
+		Relation[] relations = new Relation[5];
+		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+				new AccessMethod[] { AccessMethod.create(new Integer[] {}), AccessMethod.create(new Integer[] { 0 }) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+				new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }), AccessMethod.create(new Integer[] { 2, 3 }) });
+
+		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
+		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
+		// Create query
+		// R0('constant1',y,z,w) R1('constant2',_,z,w) R2(x,y,z',w') R3(_,_,z',w')
+		Atom[] atoms = new Atom[4];
+		atoms[0] = Atom.create(relations[0], new Term[] { TypedConstant.create(1), y, z, w });
+		atoms[1] = Atom.create(relations[1], new Term[] { TypedConstant.create(2), Variable.create("y2"), z, w });
+		atoms[2] = Atom.create(relations[2], new Term[] { x, y, Variable.create("z3"), Variable.create("w3") });
+		atoms[3] = Atom.create(relations[3], new Term[] { Variable.create("x4"), Variable.create("y4"), Variable.create("z3"), Variable.create("w3") });
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
+
+		// Create schema
+		Schema schema = new Schema(relations);
+		schema.addConstants(Arrays.asList(new TypedConstant[] { TypedConstant.create(1), TypedConstant.create(2) }));
+		TestScenario ts = new TestScenario();
+		ts.setSchema(schema);
+		ts.setQuery(query);
+		return ts;
+	}
+
 	/**
 	 * The query is Q(x,z) = \exists y R0(x,y) R1(y,z) We also have the dependencies
 	 * R0(x,y) -> R2(x,y) R1(y,z) -> R3(y,z) R2(x,y), R3(y,z) -> R0(x,w) R1(w,z)
@@ -270,7 +320,6 @@ public class PdqTest {
 		return ts;
 	}
 
-	
 	/**
 	 * Describes most of the necessary inputs for a test scenario.
 	 * 
