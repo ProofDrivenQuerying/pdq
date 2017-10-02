@@ -42,6 +42,8 @@ import uk.ac.ox.cs.pdq.util.PdqTest;
 /**
  * Tests the reasonUntilTermination method of the RestrictedChaser class
  * 
+ * Mostly uses the rel1,rel2 and tgd members of PdqTest as input.
+ * 
  * @author Efthymia Tsamoura
  * @author Gabor
  */
@@ -49,12 +51,6 @@ public class TestRestrictedChaser extends PdqTest {
 
 	public DatabaseChaseInstance state;
 	private RestrictedChaser chaser;
-
-	private Relation rel1;
-	private Relation rel2;
-
-	private TGD tgd;
-	private EGD egd;
 
 	protected Schema schema;
 	private DatabaseConnection connection;
@@ -64,59 +60,24 @@ public class TestRestrictedChaser extends PdqTest {
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		Attribute fact = Attribute.create(Integer.class, "InstanceID");
-		Attribute at11 = Attribute.create(String.class, "at11");
-		Attribute at12 = Attribute.create(String.class, "at12");
-		Attribute at13 = Attribute.create(String.class, "at13");
-		this.rel1 = Relation.create("R1", new Attribute[] { at11, at12, at13, fact });
-		Attribute at21 = Attribute.create(String.class, "at21");
-		Attribute at22 = Attribute.create(String.class, "at22");
-		this.rel2 = Relation.create("R2", new Attribute[] { at21, at22, fact });
-
-		Atom R1 = Atom.create(this.rel1, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
-		Atom R2 = Atom.create(this.rel2, new Term[] { Variable.create("y"), Variable.create("z") });
-		Atom R2p = Atom.create(this.rel2, new Term[] { Variable.create("y"), Variable.create("w") });
-
-		this.tgd = TGD.create(new Atom[] { R1 }, new Atom[] { R2 });
-		this.egd = EGD.create(new Atom[] { R2, R2p },
-				new Atom[] { Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), Variable.create("z"), Variable.create("w")) });
-
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2 }, new Dependency[] { this.tgd });
 		this.schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
-
 		this.setConnection(new DatabaseConnection(DatabaseParameters.Derby, this.schema));
 		this.chaser = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
 	}
 
-	public void createSchema() {
-		Attribute fact = Attribute.create(Integer.class, "InstanceID");
-		Attribute at11 = Attribute.create(String.class, "at11");
-		Attribute at12 = Attribute.create(String.class, "at12");
-		Attribute at13 = Attribute.create(String.class, "at13");
-		this.rel1 = Relation.create("R1", new Attribute[] { at11, at12, at13, fact });
-
-		Attribute at21 = Attribute.create(String.class, "at21");
-		Attribute at22 = Attribute.create(String.class, "at22");
-		this.rel2 = Relation.create("R2", new Attribute[] { at21, at22, fact });
-
-		Atom R1 = Atom.create(this.rel1, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
-		Atom R2 = Atom.create(this.rel2, new Term[] { Variable.create("y"), Variable.create("z") });
-		Atom R2p = Atom.create(this.rel2, new Term[] { Variable.create("y"), Variable.create("w") });
-
-		this.tgd = TGD.create(new Atom[] { R1 }, new Atom[] { R2 });
-		this.egd = EGD.create(new Atom[] { R2, R2p },
-				new Atom[] { Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), Variable.create("z"), Variable.create("w")) });
-
-		this.schema = new Schema(new Relation[] { this.rel1, this.rel2 }, new Dependency[] { this.tgd });
-		this.schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
-	}
-
-	public void setup(DatabaseConnection c) throws SQLException {
-
-		this.setConnection(c);
-		this.chaser = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
-	}
-
+	/**
+	 * Uses an two example relation a TGD and an EGD such a way that after reasoning every fact should contain the constant John such as:
+	 * <pre>
+	 * R1(k1,c,John), 
+	 * R1(k2,c,John), 
+	 * R1(k3,c,John), 
+	 * R1(k4,c,John), 
+	 * R1(k5,c,John), 
+	 * 
+	 * R2(c,John)
+	 * </pre>
+	 */
 	@Test
 	public void test_reasonUntilTermination1() {
 		Atom f20 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k1"), UntypedConstant.create("c"), UntypedConstant.create("c1") });
@@ -152,42 +113,53 @@ public class TestRestrictedChaser extends PdqTest {
 		Assert.assertEquals(Sets.newHashSet(n00, n01, n02, n03, n04, n1), facts);
 	}
 
+	/**
+	 * <pre>
+	 * Dependencies: 
+	 * 	R(z, x) → S(x, y1) ∧ T (x, y2) 
+	 * 	R(x,y1) ∧ S(x,y2)→y1 = y2
+	 * 
+	 * facts of the chase instance: 
+	 * 	R(a_{i−1}, a_i) for 1 ≤ i ≤ 10,
+	 * 
+	 * The chaser should produce nine equality classes each
+	 * one having representatives a_2, ... a_10 
+	 * 	EQUALITY(a_2,k1), 
+	 * 	EQUALITY(a_3,k3),
+	 * 	EQUALITY(a_4,k5), 
+	 * 	EQUALITY(a_5,k7), 
+	 * 	EQUALITY(a_6,k9), 
+	 * 	EQUALITY(a_7,k11),
+	 * 	EQUALITY(a_8,k13), 
+	 * 	EQUALITY(a_9,k15), 
+	 * 	EQUALITY(a_10,k17),
+	 * 
+	 * and the facts 
+	 * 	S(a_1,a_2), 
+	 *  T(a_1,k2), 
+	 *  S(a_2,a_3), 
+	 *  T(a_2,k4), 
+	 *  S(a_3,a_4),
+	 *  T(a_3,k6), 
+	 *  S(a_4,a_5), 
+	 *  T(a_4,k8), 
+	 *  S(a_5,a_6), 
+	 *  T(a_5,k10), 
+	 *  S(a_6,a_7),
+	 *  T(a_6,k12), 
+	 *  S(a_7,a_8), 
+	 *  T(a_7,k14), 
+	 *  S(a_8,a_9), 
+	 *  T(a_8,k16), 
+	 *  S(a_9,a_10),
+	 *  T(a_9,k18), 
+	 *  S(a_10,k19), 
+	 *  T(a_10,k20)]
+	 * </pre>
+	 */
 	@Test
 	public void testA() {
-		// Dependencies:
-		// R(z, x) → S(x, y1) ∧ T (x, y2)
-		// R(x,y1) ∧ S(x,y2)→y1 = y2
-		//
-		// facts of the chase instance:
-		// R(a_{i−1}, a_i) for 1 ≤ i ≤ 10,
-		//
-		// You should assert that the chaser should produce
-		// nine equality classes each one having representatives a_2, ... a_10
-		// EQUALITY(a_2,k1),
-		// EQUALITY(a_3,k3),
-		// EQUALITY(a_4,k5),
-		// EQUALITY(a_5,k7),
-		// EQUALITY(a_6,k9),
-		// EQUALITY(a_7,k11),
-		// EQUALITY(a_8,k13),
-		// EQUALITY(a_9,k15),
-		// EQUALITY(a_10,k17),
-		//
-		// and the facts
-		// S(a_1,a_2), T(a_1,k2),
-		// S(a_2,a_3), T(a_2,k4),
-		// S(a_3,a_4), T(a_3,k6),
-		// S(a_4,a_5), T(a_4,k8),
-		// S(a_5,a_6), T(a_5,k10),
-		// S(a_6,a_7), T(a_6,k12),
-		// S(a_7,a_8), T(a_7,k14),
-		// S(a_8,a_9), T(a_8,k16),
-		// S(a_9,a_10), T(a_9,k18),
-		// S(a_10,k19), T(a_10,k20)]
 
-		// Please define the dependencies and the input facts inside the test class and
-		// do
-		// not load them from external files.
 		Relation R = Relation.create("R",
 				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
 		Relation S = Relation.create("S",
@@ -210,7 +182,7 @@ public class TestRestrictedChaser extends PdqTest {
 		}
 		s.addConstants(constants);
 		try {
-			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(DatabaseParameters.Derby,s));
+			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(DatabaseParameters.Derby, s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -261,27 +233,24 @@ public class TestRestrictedChaser extends PdqTest {
 		Assert.assertEquals(1, countOfKsInS);
 	}
 
+	/**
+	 * <pre>
+	 * Dependencies:
+	 *	 	C(x) ∧ D(x) → Q(x)
+	 *		S(x, y) ∧ D(x) → D(y)
+	 *		R(z, x) → S(x, y1) ∧ T (x, y2)
+	 *		R(x,y1) ∧ S(x,y2)→y1 = y2
+	 *		R(x,y1) ∧ T(x,y2)→y1 = y2
+	 * Facts of the chase instance: 
+	 *		R(a_{i−1}, a_i) for 1 ≤ i ≤ 10, 
+	 *		D(a_1)
+	 *		C(a_5)
+	 * </pre>
+	 * 
+	 * The chaser should produces the facts D(a_i) for 1≤i≤10 and the fact Q(a_5).
+	 */
 	@Test
 	public void testB() {
-		// Dependencies:
-		// C(x) ∧ D(x) → Q(x)
-		// S(x, y) ∧ D(x) → D(y)
-		// R(z, x) → S(x, y1) ∧ T (x, y2)
-		// R(x,y1) ∧ S(x,y2)→y1 = y2
-		// R(x,y1) ∧ T(x,y2)→y1 = y2
-		//
-		// facts of the chase instance:
-		// R(a_{i−1}, a_i) for 1 ≤ i ≤ 10,
-		// D(a_1)
-		// C(a_5)
-		//
-		// You should assert that the chaser should produces
-		// the facts D(a_i) for 1≤i≤10
-		// and the fact Q(a_5).
-		//
-		// Please define the dependencies and the input facts inside the test class and
-		// do
-		// not load them from external files.
 		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute"), Attribute.create(Integer.class, "InstanceID") });
 		Relation D = Relation.create("D", new Attribute[] { Attribute.create(String.class, "attribute"), Attribute.create(Integer.class, "InstanceID") });
 		Relation Q = Relation.create("Q", new Attribute[] { Attribute.create(String.class, "attribute"), Attribute.create(Integer.class, "InstanceID") });
@@ -315,7 +284,7 @@ public class TestRestrictedChaser extends PdqTest {
 		try {
 			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(DatabaseParameters.Derby, s));
 		} catch (Exception e) {
-				throw new RuntimeException(e);
+			throw new RuntimeException(e);
 		}
 		System.out.println("Schema:" + s);
 		Set<Atom> newfacts = Sets.newHashSet(this.state.getFacts());
@@ -367,17 +336,26 @@ public class TestRestrictedChaser extends PdqTest {
 		testA1(DatabaseParameters.Postgres);
 	}
 
+	/**
+	 * Create the following unit tests for getMatches c. conjunctive query is
+	 * 
+	 * <pre>
+	 * Q(x,y) = A(x,x), B(x,y), C(y,z,'TypedConstant1') D(z,z)
+	 * </pre>
+	 * 
+	 * In this unit test we create facts in the database such that two conditions
+	 * hold:
+	 * <li>each relation has NUMBER_OF_DUMMY_DATA facts in the database and</li>
+	 * <li>there are only five answer tuples in the answer. You could do this by
+	 * adding junk tuples and manually creating tuples that participate in the
+	 * match. In the last unit test the query is boolean so you should only get true
+	 * </li>
+	 * 
+	 * We should get 5 matches.
+	 * 
+	 * @param dbParam
+	 */
 	public void testA1(DatabaseParameters dbParam) {
-		// Create the following unit tests for getMatches
-
-		// a. conjunctive query is Q(x,y) = A(x,x), B(x,y), C(y,z,'TypedConstant1')
-		// D(z,z)
-		//
-		// in each unit test create facts in the database such that two conditions hold:
-		// (i) each relation has 10000 facts in the database and (ii) there are only
-		// five
-		// answer tuples in the answer. You could do this by adding junk tuples and
-		// manually creating tuples that participate in the match.
 
 		Relation A = Relation.create("A",
 				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
@@ -455,17 +433,26 @@ public class TestRestrictedChaser extends PdqTest {
 		testB1(DatabaseParameters.Postgres);
 	}
 
+	/**
+	 * Create the following unit tests for getMatches c. conjunctive query is
+	 * 
+	 * <pre>
+	 * Q(x,y,z) = A('TypedConstant2',y,z,w), B(x,y,z,w), C(y,z,'TypedConstant1') D(x,y), E(x,y,'TypedConstant1')
+	 * </pre>
+	 * 
+	 * In this unit test we create facts in the database such that two conditions
+	 * hold:
+	 * <li>each relation has NUMBER_OF_DUMMY_DATA facts in the database and</li>
+	 * <li>there are only five answer tuples in the answer. You could do this by
+	 * adding junk tuples and manually creating tuples that participate in the
+	 * match. In the last unit test the query is boolean so you should only get true
+	 * </li>
+	 * 
+	 * We should get 5 matches.
+	 * 
+	 * @param dbParam
+	 */
 	public void testB1(DatabaseParameters dbParam) {
-		// Create the following unit tests for getMatches
-		// b. conjunctive query is Q(x,y,z) = A('TypedConstant2',y,z,w), B(x,y,z,w),
-		// C(y,z,'TypedConstant1') D(x,y), E(x,y,'TypedConstant1')
-		//
-		// in each unit test create facts in the database such that two conditions hold:
-		// (i) each relation has 10000 facts in the database and (ii) there are only
-		// five
-		// answer tuples in the answer. You could do this by adding junk tuples and
-		// manually creating tuples that participate in the match.
-		// In the last unit test the query is boolean so you should only get true
 		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
 				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3"), Attribute.create(Integer.class, "InstanceID") });
 		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
@@ -481,16 +468,18 @@ public class TestRestrictedChaser extends PdqTest {
 		List<Atom> facts = new ArrayList<>();
 		// producing garbage:
 		for (int i = 1; i <= NUMBER_OF_DUMMY_DATA; i++)
-			facts.add(Atom.create(A, new Term[] { TypedConstant.create("g1_1_" + i), TypedConstant.create("a_g_2_" + i), TypedConstant.create("cg_3a_" + i), TypedConstant.create("dga" + i)  }));
+			facts.add(Atom.create(A,
+					new Term[] { TypedConstant.create("g1_1_" + i), TypedConstant.create("a_g_2_" + i), TypedConstant.create("cg_3a_" + i), TypedConstant.create("dga" + i) }));
 		for (int i = 1; i <= NUMBER_OF_DUMMY_DATA; i++)
-			facts.add(Atom.create(B, new Term[] { TypedConstant.create("2g_1_" + i), TypedConstant.create("b_g_2_" + i), TypedConstant.create("cgb" + i), TypedConstant.create("dgb" + i) }));
+			facts.add(Atom.create(B,
+					new Term[] { TypedConstant.create("2g_1_" + i), TypedConstant.create("b_g_2_" + i), TypedConstant.create("cgb" + i), TypedConstant.create("dgb" + i) }));
 		for (int i = 1; i <= NUMBER_OF_DUMMY_DATA; i++)
 			facts.add(Atom.create(C, new Term[] { TypedConstant.create("3g_1_" + i), TypedConstant.create("c_g_2_" + i), TypedConstant.create("g_3a_" + i) }));
 		for (int i = 1; i <= NUMBER_OF_DUMMY_DATA; i++)
 			facts.add(Atom.create(D, new Term[] { TypedConstant.create("4g_1_" + i), TypedConstant.create("d_g_2_" + i) }));
 		for (int i = 1; i <= NUMBER_OF_DUMMY_DATA; i++)
 			facts.add(Atom.create(E, new Term[] { TypedConstant.create("5g_1_" + i), TypedConstant.create("e_g_2_" + i), TypedConstant.create("g_3b_" + i) }));
-// producing results:
+		// producing results:
 		for (int i = 1; i <= 5; i++)
 			facts.add(Atom.create(A, new Term[] { TypedConstant.create("TC2"), TypedConstant.create("y" + i), TypedConstant.create("z" + i), TypedConstant.create("w" + i) }));
 		for (int i = 1; i <= 5; i++)
@@ -520,18 +509,25 @@ public class TestRestrictedChaser extends PdqTest {
 		Assert.assertEquals(5, matches.size());
 	}
 
+	/**
+	 * Create the following unit tests for getMatches c. conjunctive query is
+	 * 
+	 * <pre>
+	 * Q = A('TypedConstant2',y,z,w), B(x,y,z,w), C(y,z,'TypedConstant1') D(x,y), E('TypedConstant2',y,y)
+	 * </pre>
+	 * 
+	 * In this unit test we create facts in the database such that two conditions
+	 * hold:
+	 * <li>each relation has NUMBER_OF_DUMMY_DATA facts in the database and</li>
+	 * <li>there are only five answer tuples in the answer. You could do this by
+	 * adding junk tuples and manually creating tuples that participate in the
+	 * match. In the last unit test the query is boolean so you should only get true
+	 * </li>
+	 * 
+	 * We should get 5 matches.
+	 */
 	@Test
 	public void testC() {
-		// Create the following unit tests for getMatches
-		// c. conjunctive query is Q = A('TypedConstant2',y,z,w), B(x,y,z,w),
-		// C(y,z,'TypedConstant1') D(x,y), E('TypedConstant2',y,y)
-		//
-		// in each unit test create facts in the database such that two conditions hold:
-		// (i) each relation has 10000 facts in the database and (ii) there are only
-		// five
-		// answer tuples in the answer. You could do this by adding junk tuples and
-		// manually creating tuples that participate in the match.
-		// In the last unit test the query is boolean so you should only get true
 		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
 				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3"), Attribute.create(Integer.class, "InstanceID") });
 		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
@@ -587,6 +583,11 @@ public class TestRestrictedChaser extends PdqTest {
 		Assert.assertEquals(5, matches.size());
 	}
 
+	/**
+	 * Shuting this test down.
+	 * 
+	 * @throws Exception
+	 */
 	public void tearDown() throws Exception {
 		state.close();
 	}
@@ -595,7 +596,28 @@ public class TestRestrictedChaser extends PdqTest {
 		return connection;
 	}
 
+	/**
+	 * Used by {@link TestRestrictedChaserMultiRun}
+	 */
 	public void setConnection(DatabaseConnection connection) {
 		this.connection = connection;
 	}
+
+	/**
+	 * Used by {@link TestRestrictedChaserMultiRun}
+	 */
+	public void createSchema() {
+		this.schema = new Schema(new Relation[] { this.rel1, this.rel2 }, new Dependency[] { this.tgd });
+		this.schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
+	}
+
+	/**
+	 * Used by {@link TestRestrictedChaserMultiRun}
+	 */
+	public void setup(DatabaseConnection c) throws SQLException {
+
+		this.setConnection(c);
+		this.chaser = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
+	}
+
 }
