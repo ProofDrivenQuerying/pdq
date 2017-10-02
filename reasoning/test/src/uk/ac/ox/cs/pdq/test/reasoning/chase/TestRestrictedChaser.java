@@ -10,7 +10,6 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -38,8 +37,7 @@ import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
-import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
  * Tests the reasonUntilTermination method of the RestrictedChaser class
@@ -47,7 +45,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * @author Efthymia Tsamoura
  * @author Gabor
  */
-public class TestRestrictedChaser {
+public class TestRestrictedChaser extends PdqTest {
 
 	public DatabaseChaseInstance state;
 	private RestrictedChaser chaser;
@@ -64,13 +62,8 @@ public class TestRestrictedChaser {
 	private static final int NUMBER_OF_DUMMY_DATA = 100;
 
 	@Before
-	public void setup() throws SQLException {
-		Utility.assertsEnabled();
-        MockitoAnnotations.initMocks(this);
-        GlobalCounterProvider.resetCounters();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+	public void setup() throws Exception {
+		super.setup();
 		Attribute fact = Attribute.create(Integer.class, "InstanceID");
 		Attribute at11 = Attribute.create(String.class, "at11");
 		Attribute at12 = Attribute.create(String.class, "at12");
@@ -595,7 +588,6 @@ public class TestRestrictedChaser {
 	}
 
 	public void tearDown() throws Exception {
-		getConnection().close();
 		state.close();
 	}
 

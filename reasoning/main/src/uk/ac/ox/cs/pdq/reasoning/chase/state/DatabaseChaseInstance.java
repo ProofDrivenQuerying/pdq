@@ -106,6 +106,9 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		super.deleteFacts(facts);
 		globalFactsPerDatabase.remove(super.getDatabaseConnection().getDatabaseName());
 	}
+	public static void resetFacts() {
+		globalFactsPerDatabase.clear();
+	}
 	/**
 	 * Instantiates a new database list state.
 	 *
