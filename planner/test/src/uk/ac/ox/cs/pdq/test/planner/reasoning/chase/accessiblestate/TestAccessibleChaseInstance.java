@@ -25,13 +25,8 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
@@ -65,6 +60,19 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		this.accessibleSchema = new AccessibleSchema(schema);
 	}
 
+	/** <pre>
+	 * Creates facts:
+	 * R2(c,c1)
+	 * R2(c,John)
+	 * R2(c,c4)
+	 * R2(c2,Jhon)
+	 * R2(c2,c4)
+	 * 
+	 * And the accessibility axiom requires input on the first attribute.
+	 * 
+	 * Checks if we got all facts in the same group.
+	 * </pre>
+	 */
 	@Test
 	public void test1_groupFactsByAccessMethods() throws SQLException {
 		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
@@ -89,6 +97,19 @@ public class TestAccessibleChaseInstance extends PdqTest {
 
 	}
 
+	/** <pre>
+	 * Creates facts:
+	 * R2(c,c1)
+	 * R2(c,John)
+	 * R2(c,c4)
+	 * R2(c2,Jhon)
+	 * R2(c2,c4)
+	 * 
+	 * And the accessibility axiom requires input on the second attribute.
+	 * 
+	 * Checks if we got 2 group.
+	 * </pre>
+	 */
 	@Test
 	public void test2_groupFactsByAccessMethods() throws SQLException {
 		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
@@ -121,6 +142,19 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		}
 	}
 
+	/** <pre>
+	 * Creates facts:
+	 * R2(c,c1)
+	 * R2(c,John)
+	 * R2(c,c4)
+	 * R2(c2,Jhon)
+	 * R2(c2,c4)
+	 * 
+	 * And the accessibility axiom requires input on the first and second attribute.
+	 * 
+	 * Checks if we got 5 group.
+	 * </pre>
+	 */
 	@Test
 	public void test3_groupFactsByAccessMethods() throws SQLException {
 		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
@@ -144,6 +178,19 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		}
 	}
 
+	/** <pre>
+	 * Creates facts:
+	 * R2(c,c1)
+	 * R2(c,John)
+	 * R2(c,c4)
+	 * R2(c2,Jhon)
+	 * R2(c2,c4)
+	 * 
+	 * And the accessibility axiom requires input on the second attribute.
+	 * 
+	 * Checks if we got 3 group.
+	 * </pre>
+	 */
 	@Test
 	public void test4_groupFactsByAccessMethods() throws SQLException {
 		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
@@ -176,6 +223,19 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		}
 	}
 
+	/** <pre>
+	 * Creates facts:
+	 * R2(c,c1)
+	 * R2(c,John)
+	 * R2(c,c4)
+	 * R2(c2,Jhon)
+	 * R2(c2,c4)
+	 * 
+	 * And then gets the unexposed facts.
+	 * 
+	 * Checks if we got 1 group with 5 facts
+	 * </pre>
+	 */
 	@Test
 	public void test1_getUnexposedFacts() throws SQLException {
 		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
@@ -196,7 +256,26 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		Assert.assertNotNull(groups.get(this.accessibleSchema.getAccessibilityAxioms()[0]));
 		Assert.assertEquals(5, groups.get(this.accessibleSchema.getAccessibilityAxioms()[0]).size());
 	}
-
+	
+	
+	/** <pre>
+	 * Creates facts:
+	 * R2(c,c1)
+	 * InferredAccessibleR2(c,c1)
+	 * R2(c,John)
+	 * R2(c,c4)
+	 * R2(c2,Jhon)
+	 * R2(c2,c4)
+	 * InferredAccessibleR2(c2,c4)
+	 * 
+	 * And then gets the unexposed facts.
+	 * 
+	 * Checks if we got 1 group with 3 facts:
+	 * R2(c,John)
+	 * R2(c,c4)
+	 * R2(c2,Jhon)
+	 * </pre>
+	 */
 	@Test
 	public void test1b_getUnexposedFacts() throws SQLException {
 		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
@@ -221,7 +300,20 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		assertContains(new Atom[] { f1, f2, f3 }, groups.get(this.accessibleSchema.getAccessibilityAxioms()[0]));
 		assertNotContains(new Atom[] { f0b, f4b }, groups.get(this.accessibleSchema.getAccessibilityAxioms()[0]));
 	}
-
+	
+	/** <pre>
+	 * Creates facts:
+	 * R2(c,c1)
+	 * R2(c,John)
+	 * R2(c,c4)
+	 * R2(c2,Jhon)
+	 * R2(c2,c4)
+	 * 
+	 * And then gets the unexposed facts.
+	 * 
+	 * Checks if we got 1 group with 5 facts
+	 * </pre>
+	 */
 	@Test
 	public void test2_getUnexposedFacts() throws SQLException {
 		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
@@ -243,7 +335,25 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		Assert.assertEquals(5, groups.get(this.accessibleSchema.getAccessibilityAxioms()[0]).size());
 		assertContains(new Atom[] { f0, f1, f2, f3, f4 }, groups.get(this.accessibleSchema.getAccessibilityAxioms()[0]));
 	}
-
+	
+	/** <pre>
+	 * Creates facts:
+	 * R2(c,c1)
+	 * InferredAccessibleR2(c,c1)
+	 * R2(c,John)
+	 * R2(c,c4)
+	 * R2(c2,Jhon)
+	 * R2(c2,c4)
+	 * 
+	 * And then gets the unexposed facts.
+	 * 
+	 * Checks if we got 1 group with 4 facts:
+	 * R2(c,John)
+	 * R2(c,c4)
+	 * R2(c2,Jhon)
+	 * R2(c2,c4)
+	 * </pre>
+	 */
 	@Test
 	public void test2b_getUnexposedFacts() throws SQLException {
 		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
@@ -269,6 +379,24 @@ public class TestAccessibleChaseInstance extends PdqTest {
 
 	}
 
+	/** <pre>
+	 * Creates facts:
+	 * R2(c,c1)
+	 * R2(c,John)
+	 * R2(c,c4)
+	 * R2(c2,Jhon)
+	 * R2(c2,c4)
+	 * InferredAccessibleR2(c2,Jhon)
+	 * InferredAccessibleR2(c2,c4)
+	 * 
+	 * And then gets the unexposed facts.
+	 * 
+	 * Checks if we got 1 group with 3 facts:
+	 * R2(c,John)
+	 * R2(c,c4)
+	 * R2(c2,Jhon)
+	 * </pre>
+	 */
 	@Test
 	public void test3_getUnexposedFacts() throws SQLException {
 		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
@@ -294,6 +422,20 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		assertNotContains(new Atom[] { f3b, f4b }, groups.get(this.accessibleSchema.getAccessibilityAxioms()[0]));
 	}
 
+
+	/** <pre>
+	 * Creates facts:
+	 * R2(c,c1)
+	 * R2(c,John)
+	 * R2(c,c4)
+	 * R2(c2,Jhon)
+	 * R2(c2,c4)
+	 * 
+	 * And then gets the unexposed facts.
+	 * 
+	 * Checks if we got 1 group with 5 facts:
+	 * </pre>
+	 */
 	@Test
 	public void test4_getUnexposedFacts() throws SQLException {
 		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
@@ -316,6 +458,25 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		assertContains(new Atom[] { f0, f1, f2, f3, f4 }, groups.get(this.accessibleSchema.getAccessibilityAxioms()[0]));
 	}
 
+
+	/** <pre>
+	 * Creates facts:
+	 * R2(c,c1)
+	 * R2(c,John)
+	 * R2(c,c4)
+	 * R2(c2,Jhon)
+	 * R2(c2,c4)
+	 * InferredAccessibleR2R2(c,c4)
+	 * InferredAccessibleR2(c2,Jhon)
+	 * InferredAccessibleR2(c2,c4)
+	 * 
+	 * And then gets the unexposed facts.
+	 * 
+	 * Checks if we got 1 group with 2 facts:
+	 * R2(c,John)
+	 * R2(c2,Jhon)
+	 * </pre>
+	 */
 	@Test
 	public void test4b_getUnexposedFacts() throws SQLException {
 		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
@@ -343,10 +504,45 @@ public class TestAccessibleChaseInstance extends PdqTest {
 
 	}
 
+	/**
+	 * Uses StandardScenario1 for schema and query. 
+	 * Tests if we get 4 facts in the database after reasoning.
+	 */
+	@Test
+	public void testChaseTheAccessibleState() {
+		TestScenario ts = getStandardScenario1();
+		// Create accessible schema
+		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
+		
+		// Create database connection
+		DatabaseConnection connection = null;
+		
+		// Create the chaser
+		RestrictedChaser chaser = new RestrictedChaser(null);
+		
+		try {
+			connection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
+			AccessibleChaseInstance state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
+					new AccessibleDatabaseChaseInstance(ts.getQuery(), accessibleSchema, connection, true);
+			chaser.reasonUntilTermination(state, accessibleSchema.getOriginalDependencies());
+			//Assert that we get four facts after chasing this thing
+			Assert.assertTrue(state.getFacts().size() == 4);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+
+	/**
+	 * Will throw assertion error if any Atom from the atoms array is contained by the list.
+	 */
 	private void assertNotContains(Atom[] atoms, List<Match> list) {
 		assertContainment(false, atoms, list);
 	}
 
+	/**
+	 * Will throw assertion error if any Atom from the atoms array is not contained by the list.
+	 */
 	private void assertContains(Atom[] atoms, List<Match> list) {
 		assertContainment(true, atoms, list);
 	}
@@ -367,55 +563,5 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		}
 	}
 	
-	
-	@Test
-	public void testChaseTheAccessibleState() {
-		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
-		// Create query
-		Atom[] atoms = new Atom[2];
-		Variable x = Variable.create("x");
-		Variable y = Variable.create("y");
-		Variable z = Variable.create("z");
-		Variable w = Variable.create("w");
-		atoms[0] = Atom.create(relations[0], new Term[] { x, y });
-		atoms[1] = Atom.create(relations[1], new Term[] { y, z });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
-
-		Dependency dependency1 = TGD.create(new Atom[] { Atom.create(relations[0], new Term[] { x, y })},
-				new Atom[] { Atom.create(relations[2], new Term[] { x, y })});
-		Dependency dependency2 = TGD.create(new Atom[] { Atom.create(relations[1], new Term[] { y, z })},
-				new Atom[] { Atom.create(relations[3], new Term[] { y, z })});
-		//R2(x,y), R3(y,z) -> R0(x,w) R1(w,z)
-		Dependency dependency3 = TGD.create(new Atom[] { Atom.create(relations[2], new Term[] { y, z }), Atom.create(relations[3], new Term[] { y, z })},
-				new Atom[] { Atom.create(relations[0], new Term[] { x, w }), Atom.create(relations[1], new Term[] { w, z })});
-		// Create schema
-		Schema schema = new Schema(relations, new Dependency[] { dependency1, dependency2, dependency3 });
-
-		// Create accessible schema
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 		
-		// Create database connection
-		DatabaseConnection connection = null;
-		
-		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
-		
-		try {
-			connection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
-			AccessibleChaseInstance state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
-					new AccessibleDatabaseChaseInstance(query, accessibleSchema, connection, true);
-			chaser.reasonUntilTermination(state, accessibleSchema.getOriginalDependencies());
-			//Assert that we get four facts after chasing this thing
-			Assert.assertTrue(state.getFacts().size() == 4);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			Assert.fail();
-		}
-	}
-	
 }
