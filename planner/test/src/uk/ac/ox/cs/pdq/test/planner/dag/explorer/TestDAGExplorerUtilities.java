@@ -34,8 +34,9 @@ import uk.ac.ox.cs.pdq.util.PdqTest;
 public class TestDAGExplorerUtilities extends PdqTest {
 
 	/**
-	 * Checks the output of the createInitialApplyRuleConfigurations function over
-	 * Scenario4. Assesrts if we got the right chase configurations.
+	 * Uses test scenario4 as input.
+	 * Checks the output of the createInitialApplyRuleConfigurations function. 
+	 * There should be 6 unique configurations.
 	 */
 	@Test
 	public void test1CreateInitialApplyRuleConfigurations() {

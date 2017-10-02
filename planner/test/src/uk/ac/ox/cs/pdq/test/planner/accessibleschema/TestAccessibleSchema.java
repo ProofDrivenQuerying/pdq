@@ -33,10 +33,13 @@ public class TestAccessibleSchema extends PdqTest {
 	 * test if the accessible version is what it should be.
 	 * 
 	 * For schema it uses the R,S,T tables from PdqTest, and adds these
-	 * dependencies: tgd: T(x,y,'constant1'), S(x,'constant2') -> R(x,y,z') S(y,x)
+	 * dependencies:
+	 * <pre>
+	 * TGD: T(x,y,'constant1'), S(x,'constant2') -> R(x,y,z') S(y,x)
 	 * <br>
-	 * egd: R(x,y,z), R(x,y,z') -> z=z'
-	 * 
+	 * EGD: R(x,y,z), R(x,y,z') -> z=z'
+	 * </pre>
+	 * Asserts the accessible axioms.
 	 */
 	@Test
 	public void test1() {
