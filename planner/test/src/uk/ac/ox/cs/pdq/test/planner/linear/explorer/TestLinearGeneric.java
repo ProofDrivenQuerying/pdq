@@ -19,7 +19,6 @@ import org.mockito.Mockito;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
@@ -73,7 +72,22 @@ public class TestLinearGeneric extends PdqTest {
 	/**
 	 * Uses Scenario1 from the PdqTest as input, then attempts a couple of
 	 * exploration steps checking the partial results and eventually the found plan.
-	 * TestScenario1 should have a valid plan.
+	 * TestScenario1 should have a valid plan, that should look like this:
+	 * DependentJoin{[(#4=#7)]
+	 * 		DependentJoin{[(#0=#3)]
+	 * 			Rename{[c1,c2,c3]
+	 * 				Access{R0.mt_0[]}
+	 * 			},
+	 * 			Rename{[c1,c4,c5]
+	 * 				Access{R1.mt_1[#0=a]}
+	 * 			}
+	 * 		},
+	 * 		Rename{[c6,c4,c7]
+	 * 			Access{R2.mt_2[#1=b]}
+	 * 		}
+	 * 	}
+	 * </pre>
+	 * 
 	 */
 	@Test
 	public void test1ExplorationSteps() {
@@ -176,13 +190,6 @@ public class TestLinearGeneric extends PdqTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
-	}
-
-	private static void AssertHasAccessTermChild(RelationalTerm relationalTerm) {
-		Assert.assertNotNull(relationalTerm);
-		Assert.assertNotNull(relationalTerm.getChildren());
-		Assert.assertEquals(1, relationalTerm.getChildren().length);
-		Assert.assertTrue(relationalTerm.getChild(0) instanceof AccessTerm);
 	}
 
 	/**
@@ -321,45 +328,42 @@ public class TestLinearGeneric extends PdqTest {
 	}
 
 	/**
-	 * These test cases are utilising the dynamic table and query generation of the
-	 * findExploredPlans function, and checking if we get the expected number of
-	 * output plans for the given number of input tables.
+	 * This test utilises a dynamic table and query generation function, and checks
+	 * if we get the expected number of output plans for the given number of input
+	 * tables.
 	 * 
+	 * For three input tables we should get 244 plans.
 	 */
 	// @Test //works but too slow (around 4 minutes) to execute.
 	public void test1ExplorationThreeRelationsDerby() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3, DatabaseParameters.Derby);
-		Assert.assertEquals(16, exploredPlans.size());
+		Assert.assertEquals(244, exploredPlans.size());
 	}
 
+	/**
+	 * This test utilises a dynamic table and query generation function, and checks
+	 * if we get the expected number of output plans for the given number of input
+	 * tables.
+	 * 
+	 * For three input tables we should get 244 plans.
+	 */
 	@Test
 	public void test1ExplorationThreeRelationsMySql() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3, DatabaseParameters.MySql);
 		Assert.assertEquals(244, exploredPlans.size());
 	}
 
+	/**
+	 * This test utilises a dynamic table and query generation function, and checks
+	 * if we get the expected number of output plans for the given number of input
+	 * tables.
+	 * 
+	 * For three input tables we should get 244 plans.
+	 */
 	@Test
 	public void test1ExplorationThreeRelationsPostgres() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3, DatabaseParameters.Postgres);
 		Assert.assertEquals(244, exploredPlans.size());
-	}
-
-	// @Test takes too long
-	public void test1ExplorationFiveRelationsDerby() {
-		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5, DatabaseParameters.Derby);
-		Assert.assertEquals(6, exploredPlans.size());
-	}
-
-	// @Test takes too long
-	public void test1ExplorationFiveRelationsMySql() {
-		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5, DatabaseParameters.MySql);
-		Assert.assertEquals(6, exploredPlans.size());
-	}
-
-	// @Test takes too long
-	public void test1ExplorationFiveRelationsPostgres() {
-		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5, DatabaseParameters.Postgres);
-		Assert.assertEquals(6, exploredPlans.size());
 	}
 
 	/**
@@ -517,20 +521,6 @@ public class TestLinearGeneric extends PdqTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
-	}
-
-	/**
-	 * Counts the number of DependentJoinTerm objects in a plan.
-	 */
-	private int countDependentJoinsInPlan(RelationalTerm key) {
-		int ret = 0;
-		if (key instanceof DependentJoinTerm) {
-			ret++;
-		}
-		for (RelationalTerm child : key.getChildren()) {
-			ret += countDependentJoinsInPlan(child);
-		}
-		return ret;
 	}
 
 	/**

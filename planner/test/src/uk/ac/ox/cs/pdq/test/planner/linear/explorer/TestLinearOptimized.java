@@ -12,7 +12,6 @@ import org.mockito.Mockito;
 
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
@@ -56,7 +55,22 @@ import uk.ac.ox.cs.pdq.util.PdqTest;
 public class TestLinearOptimized extends PdqTest {
 	
 	/**
-	 * Tests the explorer with the Scenario1 input schema and query. Asserts the best plan found is correct.
+	 * Tests the explorer with the Scenario1 input schema and query. Asserts the best plan found should be something like:
+	 * <pre>
+	 * DependentJoin { [(#4=#7)]
+	 * 		DependentJoin{ [(#0=#3)]
+	 * 			Rename{[c1,c2,c3]
+	 * 				Access{R0.mt_0[]}
+	 * 			},
+	 * 			Rename{[c1,c4,c5]
+	 * 				Access{R1.mt_1[#0=a]}
+	 * 			}
+	 * 		},
+	 * 		Rename{[c6,c4,c7]
+	 * 				Access{R2.mt_2[#1=b]}
+	 * 		}
+	 * }
+	 * </pre>
 	 */
 	@Test 
 	@SuppressWarnings("rawtypes")
@@ -177,13 +191,6 @@ public class TestLinearOptimized extends PdqTest {
 		}
 	}
 	
-	private static void AssertHasAccessTermChild(RelationalTerm relationalTerm) {
-		Assert.assertNotNull(relationalTerm);
-		Assert.assertNotNull(relationalTerm.getChildren());
-		Assert.assertEquals(1, relationalTerm.getChildren().length);
-		Assert.assertTrue(relationalTerm.getChild(0) instanceof AccessTerm);
-	}
-
 	/**
 	 * Tests with scenario2, asserts that we have no valid plan.
 	 */
@@ -273,7 +280,7 @@ public class TestLinearOptimized extends PdqTest {
 	}
 	
 	/**
-	 * Tests with scenario3, asserts that we have the correct plan.
+	 * Tests with scenario3, asserts that all plans are dominated by the best plan.
 	 */
 	@SuppressWarnings("rawtypes")
 	@Test 
@@ -366,6 +373,10 @@ public class TestLinearOptimized extends PdqTest {
 		}
 	}
 
+	/**
+	 * Checks most of the properties of the accessible schema. 
+	 * Throws assertion error in case there is a change in the schema configuration.
+	 */
 	private void assertAccessibleSchema(AccessibleSchema accessibleSchema, Schema schema, int numberOfAxioms) {
 		Assert.assertNotNull(accessibleSchema);
 		

@@ -11,7 +11,6 @@ import org.mockito.Mockito;
 
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
@@ -46,10 +45,14 @@ public class TestLinearKchase extends PdqTest {
 	@Mock
 	protected SimpleCatalog catalog;
 
-	// the following three test case executes the same chasing but with different
-	// "chase interval" value. Results should be the same, so the assertions in the
-	// test1ExplorationSteps function should make sure we have the right plan each
-	// time.
+	/**
+	 * the following three test case executes the same chasing but with different
+	 * "chase interval" value. Results should be the same, so the assertions in the
+	 * test1ExplorationSteps function should make sure we have the right plan each
+	 * time. More details about the input and output can be read at the
+	 * test1ExplorationSteps comment and also at the PdqTest.getScenario1()
+	 * functions. this case K (or chase interval) = 10.
+	 */
 	@Test
 	public void test1ExplorationStepsA_k10() {
 		GlobalCounterProvider.resetCounters();
@@ -57,6 +60,9 @@ public class TestLinearKchase extends PdqTest {
 		test1ExplorationSteps(10);
 	}
 
+	/**
+	 * same as above, but K=2.
+	 */
 	@Test
 	public void test1ExplorationStepsB_k2() {
 		GlobalCounterProvider.resetCounters();
@@ -64,6 +70,13 @@ public class TestLinearKchase extends PdqTest {
 		test1ExplorationSteps(2);
 	}
 
+	/**
+	 * same as above, but K=1. This case should be basically the same as a normal
+	 * linear chase since we will do a full chase step at each iteration, so this
+	 * setting is not commonly used, however it should not break, crash or go to
+	 * infinite loops, and to make sore this nice reliable fixed state is permanent
+	 * I added this test.
+	 */
 	@Test
 	public void test1ExplorationStepsB_k1() {
 		GlobalCounterProvider.resetCounters();
@@ -72,7 +85,24 @@ public class TestLinearKchase extends PdqTest {
 	}
 
 	/**
-	 * Uses test Scenario1 and asserts the best plan to be correct.
+	 * Uses test Scenario1 and asserts the best plan to be correct and looking
+	 * something like this:
+	 * 
+	 * <pre>
+	 * DependentJoin{[(#4=#7)]
+	 * 		DependentJoin{[(#0=#3)]
+	 * 			Rename{[c1,c2,c3]
+	 * 				Access{R0.mt_0[]}
+	 * 			},
+	 * 			Rename{[c1,c4,c5]
+	 * 				Access{R1.mt_1[#0=a]}
+	 * 			}
+	 * 		},
+	 * 		Rename{[c6,c4,c7]
+	 * 			Access{R2.mt_2[#1=b]}
+	 * 		}
+	 * 	}
+	 * </pre>
 	 * 
 	 * @param chaseInterval
 	 */
@@ -96,9 +126,6 @@ public class TestLinearKchase extends PdqTest {
 		RestrictedChaser chaser = new RestrictedChaser(null);
 
 		// Mock the cost estimator
-		// CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
-		// when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new
-		// DoubleCost(1.0));
 		when(this.catalog.getCardinality(ts.getSchema().getRelations()[0])).thenReturn(10);
 		when(this.catalog.getCardinality(ts.getSchema().getRelations()[1])).thenReturn(10000);
 		when(this.catalog.getCardinality(ts.getSchema().getRelations()[2])).thenReturn(100);
@@ -160,10 +187,4 @@ public class TestLinearKchase extends PdqTest {
 		}
 	}
 
-	private static void AssertHasAccessTermChild(RelationalTerm relationalTerm) {
-		Assert.assertNotNull(relationalTerm);
-		Assert.assertNotNull(relationalTerm.getChildren());
-		Assert.assertEquals(1, relationalTerm.getChildren().length);
-		Assert.assertTrue(relationalTerm.getChild(0) instanceof AccessTerm);
-	}
 }
