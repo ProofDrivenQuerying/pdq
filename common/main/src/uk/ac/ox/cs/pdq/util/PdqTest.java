@@ -220,6 +220,7 @@ public class PdqTest {
 	}
 
 	/**
+	 * <pre>
 	 * Scenario3 has different access methods, and a modified query. It has multiple
 	 * valid plans.
 	 * 
@@ -230,9 +231,12 @@ public class PdqTest {
 	 * R2(a,b,c) where a,b,c are integer attributes, with one access method that
 	 * needs input on the second attribute<br>
 	 * In this scenario there are no dependencies. <br>
-	 * The query is Q(x,y,z) = R0(x,y1,z1) R1(x,y,5) R2(x1,y,z)
+	 * 
+	 * The query is: 
+	 * Q(x,y,z) = R0(x,y1,z1) R1(x,y,5) R2(x1,y,z)
 	 * 
 	 * Chasing this should provide more then one plan.
+	 * </pre>
 	 */
 	public TestScenario getScenario3() {
 		// Create the relations
@@ -311,7 +315,6 @@ public class PdqTest {
 	 *	R3(a,b,c,d) accesses: [2,3]
 	 * Query:
 	 *  Q(x,y) -> R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w') where "_" means some unique variable.
-	 *  Q(x,y) -> R0('constant1',y,z,w) R1('constant2',_,z,w) R2(x,y,z',w') R3(_,_,z',w')
 	 * </pre>
 	 * 
 	 * @return
@@ -354,7 +357,6 @@ public class PdqTest {
 	 *	R3(a,b,c,d) accesses: [2,3]
 	 * Query:
 	 *  Q(x,y) -> R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w') where "_" means some unique variable.
-	 *  Q(x,y) -> R0('constant1',y,z,w) R1('constant2',_,z,w) R2(x,y,z',w') R3(_,_,z',w')
 	 * </pre>
 	 * 
 	 * @return

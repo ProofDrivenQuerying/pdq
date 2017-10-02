@@ -13,12 +13,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-
-import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
@@ -30,7 +26,6 @@ import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -58,7 +53,7 @@ import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
  * Tests the MultiThreadedExecutor class by using it mostly with Mock objects
@@ -67,74 +62,56 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * @author Efthymia Tsamoura
  * @author Gabor
  */
-public class TestMultiThreadedExecutor {
+public class TestMultiThreadedExecutor extends PdqTest {
 
-	protected Attribute a = Attribute.create(Integer.class, "a");
-	protected Attribute b = Attribute.create(Integer.class, "b");
-	protected Attribute c = Attribute.create(Integer.class, "c");
-	protected Attribute d = Attribute.create(Integer.class, "d");
-	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
 	int parallelThreads = 20;
 	boolean twoWay = false;
 
 	boolean printPlans = false;
 
-	@Before
-	public void setup() {
-		Utility.assertsEnabled();
-		MockitoAnnotations.initMocks(this);
-		GlobalCounterProvider.resetCounters();
-		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-	}
-
+	/**
+	 * Tests binary configurations when the MultiThreadedExecutor's twoWay mode
+	 * parameter is true.
+	 * 
+	 * @see TestMultiThreadedExecutor.test1CreateBinaryConfigurations()
+	 */
 	@Test
 	public void test1CreateBinaryConfigurations_TwoWay() {
 		twoWay = true;
 		test1CreateBinaryConfigurations();
 	}
 
+	/**
+	 * Tests binary configurations when the MultiThreadedExecutor's twoWay mode
+	 * parameter is false.
+	 * 
+	 * @see TestMultiThreadedExecutor.test1CreateBinaryConfigurations()
+	 */
 	@Test
 	public void test1CreateBinaryConfigurations_SingleWay() {
 		twoWay = false;
 		test1CreateBinaryConfigurations();
 	}
 
+	/**
+	 * Uses test scenario6 as input. Creates initial configurations and asserts the
+	 * amount created. Also asserts the number of equivalence classes created in the
+	 * process. After 3 rounds of creating configurations there should be
+	 * 
+	 * <li>160 equivalence classes in case twoWay mode is true,</li>
+	 * <li>64 equivalence classes in case twoWay mode is false,</li>
+	 * <li>96 new configurations in case twoWay mode is true,</li>
+	 * <li>24 new configurations in case twoWay mode is false,</li>
+	 * 
+	 */
 	public void test1CreateBinaryConfigurations() {
-		GlobalCounterProvider.resetCounters();
 		GlobalCounterProvider.getNext("CannonicalName");
-		// Create the relations
-		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID },
-				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
-
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID },
-				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
-		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.InstanceID });
-		// Create query
-		// R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w')
-		Atom[] atoms = new Atom[4];
-		Variable x = Variable.create("x");
-		Variable y = Variable.create("y");
-		Variable z = Variable.create("z");
-		Variable w = Variable.create("w");
-		atoms[0] = Atom.create(relations[0], new Term[] { x, y, z, w });
-		atoms[1] = Atom.create(relations[1], new Term[] { Variable.create("x2"), Variable.create("y2"), z, w });
-		atoms[2] = Atom.create(relations[2], new Term[] { x, y, Variable.create("z3"), Variable.create("w3") });
-		atoms[3] = Atom.create(relations[3], new Term[] { Variable.create("x4"), Variable.create("y4"), Variable.create("z3"), Variable.create("w3") });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
-
-		// Create schema
-		Schema schema = new Schema(relations);
-
+		TestScenario ts = getScenario6();
 		// Create accessible schema
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery(), ts.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
 
 		// Create database connection
 		DatabaseConnection connection = null;
@@ -152,7 +129,7 @@ public class TestMultiThreadedExecutor {
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
-		when(parameters.getMaxDepth()).thenReturn(relations.length);
+		when(parameters.getMaxDepth()).thenReturn(ts.getSchema().getNumberOfRelations());
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
@@ -185,8 +162,8 @@ public class TestMultiThreadedExecutor {
 		MultiThreadedExecutor executor = new MultiThreadedExecutor(mtcontext);
 
 		try {
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, query, accessibleQuery, accessibleSchema, chaser,
-					connection);
+			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleQuery, accessibleSchema,
+					chaser, connection);
 			Set<String> predicateNames = new HashSet<>();
 			for (DAGChaseConfiguration c : configurations) {
 				for (ApplyRule app : c.getApplyRules()) {
@@ -267,33 +244,12 @@ public class TestMultiThreadedExecutor {
 
 	@Test
 	public void test2CreateBinaryConfigurations() {
-		// Create the relations
-		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.InstanceID },
-				new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }), AccessMethod.create(new Integer[] { 2 }) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] { 1 }) });
-		relations[3] = Relation.create("Accessible", new Attribute[] { this.a, this.InstanceID });
-
-		// Create query
-		Atom[] atoms = new Atom[3];
-		Variable x = Variable.create("x");
-		Variable y = Variable.create("y");
-		Variable z = Variable.create("z");
-		atoms[0] = Atom.create(relations[0], new Term[] { x, Variable.create("y1"), Variable.create("z1") });
-		atoms[1] = Atom.create(relations[1], new Term[] { x, y, TypedConstant.create(5) });
-		atoms[2] = Atom.create(relations[2], new Term[] { Variable.create("x1"), y, z });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y, z }, (Conjunction) Conjunction.of(atoms));
-
-		// Create schema
-		Schema schema = new Schema(relations);
-		schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(5)));
-
+		TestScenario ts = getScenario3();
 		// Create accessible schema
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery(), ts.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
 
 		// Create database connection
 		DatabaseConnection connection = null;
@@ -310,7 +266,7 @@ public class TestMultiThreadedExecutor {
 		// Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
 		when(parameters.getSeed()).thenReturn(1);
-		when(parameters.getMaxDepth()).thenReturn(relations.length);
+		when(parameters.getMaxDepth()).thenReturn(ts.getSchema().getNumberOfRelations());
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
 		// Mock the cost estimator
@@ -345,7 +301,7 @@ public class TestMultiThreadedExecutor {
 		MultiThreadedExecutor executor = new MultiThreadedExecutor(mtcontext);
 
 		try {
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, query, accessibleQuery, accessibleSchema, chaser,
+			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser,
 					connection);
 			Set<String> predicateNames = new HashSet<>();
 			for (DAGChaseConfiguration c : configurations) {
@@ -421,13 +377,13 @@ public class TestMultiThreadedExecutor {
 		Relation[] relations = new Relation[NUMBER_OF_RELATIONS + 1];
 		for (int i = 0; i < relations.length - 1; i++) {
 			if (i % 2 == 0)
-				relations[i] = Relation.create("R" + i, new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID },
+				relations[i] = Relation.create("R" + i, new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
 						new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
 			else
-				relations[i] = Relation.create("R" + i, new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID },
+				relations[i] = Relation.create("R" + i, new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
 						new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
 		}
-		relations[relations.length - 1] = Relation.create("Accessible", new Attribute[] { this.a, this.InstanceID });
+		relations[relations.length - 1] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
 		// Create query
 		// R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w')
 		Atom[] atoms = new Atom[relations.length - 1];

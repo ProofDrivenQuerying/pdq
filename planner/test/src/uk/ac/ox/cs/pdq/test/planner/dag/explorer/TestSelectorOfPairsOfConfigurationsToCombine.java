@@ -60,7 +60,7 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 	 * <li> 12 binary combinations.</li> 
 	 * <li> 48 combinations of 3 rules.</li> 
 	 * <li> 96 combinations can be made combining the previous plus 1.</li> 
-	 * <li> 24 combinations can be created combyning pairs.</li> 
+	 * <li> 24 combinations can be created combining pairs.</li> 
 	 */
 	@Test
 	public void test1GetNextPairOfConfigurationsToCompose() {
