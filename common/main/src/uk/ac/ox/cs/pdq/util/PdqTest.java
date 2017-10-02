@@ -235,7 +235,19 @@ public class PdqTest {
 	 * The query is: 
 	 * Q(x,y,z) = R0(x,y1,z1) R1(x,y,5) R2(x1,y,z)
 	 * 
-	 * Chasing this should provide more then one plan.
+	 * Chasing this should provide more then one plan, for example with DAG there should be 8 valid plans, 
+	 * similar to this one:
+	 * Asserts that we found 8 plans, similar to this one:
+	 * DependentJoin{[(#4=#7)]
+	 *  	DependentJoin{[(#0=#3)]
+	 *   		Rename{[c0,c1,c2]
+	 *   			Access{R0.mt_0[]}},
+	 *   		Select{[(#2=5)]
+	 *   			Rename{[c0,c3,5]
+	 *   				Access{R1.mt_1[#0=a]}}}},
+	 *   	Rename{[c4,c3,c5]
+	 *   		Access{R2.mt_3[#1=b]}}}
+	 * cost = 1.0
 	 * </pre>
 	 */
 	public TestScenario getScenario3() {
@@ -316,7 +328,16 @@ public class PdqTest {
 	 * Query:
 	 *  Q(x,y) -> R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w') where "_" means some unique variable.
 	 * </pre>
-	 * 
+	 * For example with DAG explorer in this test scenario there should be 30 valid plans similar to this:
+	 * <pre>
+	 * Join{[(#0=#8&#1=#9)]
+	 * 		DependentJoin{[(#2=#6&#3=#7)]
+	 * 			Rename{[c1,c2,c7,c8]Access{R2.mt_3[]}},
+	 * 			Rename{[c9,c10,c7,c8]Access{R3.mt_4[#2=c,#3=d]}}},
+	 * 		DependentJoin{[(#2=#6&#3=#7)]
+	 * 			Rename{[c1,c2,c3,c4]Access{R0.mt_0[]}},
+	 * 			Rename{[c5,c6,c3,c4]Access{R1.mt_2[#2=c,#3=d]}}}}
+	 * </pre> 
 	 * @return
 	 */
 	public TestScenario getScenario5() {

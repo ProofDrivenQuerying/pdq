@@ -60,7 +60,21 @@ public class TestDAGGeneric extends PdqTest {
 
 	/**
 	 * Uses scenario5 as input, checks the accessible schema before exploration, and
-	 * the explored plans afterwards.
+	 * the explored plans afterwards. In this test we should have 30 plans similar
+	 * to this:
+	 * 
+	 * <pre>
+	 * Plan=Join{[(#0=#8&#1=#9)]
+	 * 		DependentJoin{[(#2=#6&#3=#7)]
+	 * 			Rename{[c1,c2,c7,c8]Access{R2.mt_3[]}},
+	 * 			Rename{[c9,c10,c7,c8]Access{R3.mt_4[#2=c,#3=d]}}},
+	 * 		DependentJoin{[(#2=#6&#3=#7)]
+	 * 			Rename{[c1,c2,c3,c4]Access{R0.mt_0[]}},
+	 * 			Rename{[c5,c6,c3,c4]Access{R1.mt_2[#2=c,#3=d]}}}}
+	 * Cost=1.0
+	 * </pre>
+	 * 
+	 * Asserts that we have busy plans too not only left-deep.
 	 */
 	@Test
 	public void test1ExplorationSteps() {
@@ -146,12 +160,26 @@ public class TestDAGGeneric extends PdqTest {
 	}
 
 	/**
-	 * Uses scenario3 
+	 * Uses scenario3 as input. Asserts that we found 8 plans, similar to this:
+	 * 
+	 * <pre>
+	 *  
+	 * DependentJoin{[(#4=#7)]
+	 *  	DependentJoin{[(#0=#3)]
+	 *   		Rename{[c0,c1,c2]
+	 *   			Access{R0.mt_0[]}},
+	 *   		Select{[(#2=5)]
+	 *   			Rename{[c0,c3,5]
+	 *   				Access{R1.mt_1[#0=a]}}}},
+	 *   	Rename{[c4,c3,c5]
+	 *   		Access{R2.mt_3[#1=b]}}}
+	 * cost = 1.0
+	 * </pre>
 	 */
 	@Test
 	public void test3ExplorationSteps() {
 		TestScenario ts = getScenario3();
-		
+
 		// Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 
@@ -193,8 +221,8 @@ public class TestDAGGeneric extends PdqTest {
 			List<Validator> validators = new ArrayList<>();
 			validators.add(new DefaultValidator());
 
-			explorer = new DAGGeneric(new EventBus(), false, parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, successDominance,
-					null, validators, 3);
+			explorer = new DAGGeneric(new EventBus(), false, parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator,
+					successDominance, null, validators, 3);
 
 			explorer.explore();
 			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();
@@ -211,9 +239,39 @@ public class TestDAGGeneric extends PdqTest {
 	}
 
 	/**
-	 * Creates a schema out of 4,8 or 12 relations where each four relation forms a
-	 * busy sub-plan. Current assertions are set to validate the results of a chase
-	 * execution of 8 relations.
+	 * Creates a schema out of 1,2 or 3 group of 4 relations where each four
+	 * relation forms a busy sub-plan. Current assertions are set to validate the
+	 * results of a chase execution of 8 relations. Number of relations can be
+	 * changed in the first line of the function for testing purposes. The case of 4
+	 * relations is havily tested, the case of 12 relations is too slow for normal
+	 * unit tests, so we use only the 8 relation mode for now.
+	 * <pre>
+	 * Expected plans are similar to this:
+	 * 
+	 * Project{[c0,c1,c10,c11]
+	 * 		Join{[(#0=#24&#1=#25&#8=#16&#9=#17)]
+	 * 			Join{[]DependentJoin{[(#2=#6&#3=#7)]
+	 * 				Rename{[c0,c1,c2,c3]
+	 * 					Access{R0.mt_0[]}},
+	 * 				Rename{[c4,c5,c2,c3]
+	 * 					Access{R1.mt_1[#2=c,#3=d]}}},
+	 * 			DependentJoin{[(#2=#6&#3=#7)]
+	 * 				Rename{[c10,c11,c16,c17]
+	 * 					Access{R6.mt_6[]}},
+	 * 				Rename{[c18,c19,c16,c17]
+	 * 					Access{R7.mt_7[#2=c,#3=d]}}}},
+	 * 		Join{[]
+	 * 			DependentJoin{[(#2=#6&#3=#7)]
+	 * 				Rename{[c10,c11,c12,c13]
+	 * 					Access{R4.mt_4[]}},
+	 * 				Rename{[c14,c15,c12,c13]
+	 * 					Access{R5.mt_5[#2=c,#3=d]}}},
+	 * 			DependentJoin{[(#2=#6&#3=#7)]
+	 * 				Rename{[c0,c1,c6,c7]
+	 * 					Access{R2.mt_2[]}},
+	 * 				Rename{[c8,c9,c6,c7]
+	 * 					Access{R3.mt_3[#2=c,#3=d]}}}}}}
+	 * </pre>
 	 */
 	@Test
 	public void test4LargeBushyPlanExploration() {
@@ -297,6 +355,8 @@ public class TestDAGGeneric extends PdqTest {
 			explorer.explore();
 			explorer.getExploredPlans();
 			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();
+			Assert.assertNotNull(explorer.getBestPlan());
+			Assert.assertEquals(0,(int)explorer.getBestPlan().getNumberOfInputAttributes());
 			Assert.assertNotNull(exploredPlans);
 			Assert.assertFalse(exploredPlans.isEmpty());
 			Assert.assertEquals(120, exploredPlans.size());
