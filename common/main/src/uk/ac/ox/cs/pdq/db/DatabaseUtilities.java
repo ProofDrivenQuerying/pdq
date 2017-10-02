@@ -49,7 +49,10 @@ public class DatabaseUtilities {
 			result.setAutoCommit(true);
 			return result;
 		} catch (SQLException e) {
-			e.getNextException().printStackTrace();
+			if (e.getNextException()!=null)
+				e.getNextException().printStackTrace();
+			else
+				e.printStackTrace();
 			log.debug(e.getMessage());
 		}
 		Connection result = DriverManager.getConnection(url, username, password);

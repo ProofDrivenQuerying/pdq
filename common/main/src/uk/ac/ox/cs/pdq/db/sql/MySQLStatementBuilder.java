@@ -51,7 +51,9 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	@Override
 	public Collection<String> createDropStatements(String databaseName) {
 		Collection<String> result = new LinkedList<>();
-		result.add("DROP DATABASE " + databaseName);
+		if (!"pdq".equalsIgnoreCase(databaseName))
+			// the default database that we connect to should never be dropped
+			result.add("DROP DATABASE " + databaseName);
 		log.trace(result);
 		return result;
 	}
