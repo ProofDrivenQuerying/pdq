@@ -16,7 +16,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -26,44 +25,33 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
  * Tests the chaseStep method of the DatabaseChaseInstance class
  * 
  * @author Efthymia Tsamoura
- *
+ * @author Gabor
  */
-public class TestChaseSteps {
+public class TestChaseSteps extends PdqTest {
 	private DatabaseChaseInstance state;
 	private DatabaseConnection connection;
 	protected Schema schema;
-	private Relation rel2;
-	private EGD egd;
 
 	@Before
-	public void setup() throws SQLException {
+	public void setup() throws Exception {
+		super.setup();
 		setupMocks();
 		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.schema);
 	}
 
 	public void setupMocks() throws SQLException {
 		MockitoAnnotations.initMocks(this);
-		Attribute factId = Attribute.create(Integer.class, "InstanceID");
-		Attribute at11 = Attribute.create(String.class, "at11");
-		Attribute at12 = Attribute.create(String.class, "at12");
-		this.rel2 = Relation.create("R2", new Attribute[] { at11, at12, factId });
-
-		Atom R2 = Atom.create(Predicate.create("R2", 2), new Term[] { Variable.create("y"), Variable.create("z") });
-		Atom R2p = Atom.create(Predicate.create("R2", 2), new Term[] { Variable.create("y"), Variable.create("w") });
-
-		this.egd = EGD.create(new Atom[]{R2, R2p}, new Atom[]{Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { Variable.create("z"), Variable.create("w") })});
-
 		this.schema = new Schema(new Relation[] { this.rel2 }, new Dependency[] { this.egd });
 		this.schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
 	}
@@ -72,6 +60,11 @@ public class TestChaseSteps {
 		this.connection = dc;
 	}
 
+	/**
+	 * R2{ at21, at22, instanceID }  AccessMethod [] and AccessMethod [0,1] 
+	 * EGD Variable.create("z") = Variable.create("w")
+	 * This test creates different set of fake matches for the egd and runs a chase step on them, asserts the result.
+	 */
 	@Test
 	public void test_chaseStep() {
 		Atom f0 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });

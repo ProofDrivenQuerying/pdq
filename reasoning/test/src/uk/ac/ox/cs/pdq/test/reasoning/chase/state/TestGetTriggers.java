@@ -21,7 +21,6 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -47,49 +46,12 @@ public class TestGetTriggers extends PdqTest {
 	private final int MYSQL = 1;
 	private final int POSTGRES = 2;
 
-	private Relation rel1;
-	private Relation rel2;
-	private Relation rel3;
-
-	private TGD tgd;
-	private TGD tgd2;
-	private EGD egd;
-
-	private Schema schema;
-
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		Attribute factId = Attribute.create(Integer.class, "InstanceID");
-
-		Attribute at11 = Attribute.create(String.class, "at11");
-		Attribute at12 = Attribute.create(String.class, "at12");
-		Attribute at13 = Attribute.create(String.class, "at13");
-		this.rel1 = Relation.create("R1", new Attribute[] { at11, at12, at13, factId });
-
-		Attribute at21 = Attribute.create(String.class, "at21");
-		Attribute at22 = Attribute.create(String.class, "at22");
-		this.rel2 = Relation.create("R2", new Attribute[] { at21, at22, factId });
-
-		Attribute at31 = Attribute.create(String.class, "at31");
-		Attribute at32 = Attribute.create(String.class, "at32");
-		this.rel3 = Relation.create("R3", new Attribute[] { at31, at32, factId });
-
-		Atom R1 = Atom.create(this.rel1, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
-		Atom R2 = Atom.create(this.rel2, new Term[] { Variable.create("y"), Variable.create("z") });
-		Atom R2p = Atom.create(this.rel2, new Term[] { Variable.create("y"), Variable.create("w") });
-		Atom R3 = Atom.create(this.rel3, new Term[] { Variable.create("y"), Variable.create("w") });
-
-		this.tgd = TGD.create(new Atom[] { R1 }, new Atom[] { R2 });
-		this.tgd2 = TGD.create(new Atom[] { R1 }, new Atom[] { R3 });
-		this.egd = EGD.create(new Atom[] { R2, R2p },
-				new Atom[] { Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), Variable.create("z"), Variable.create("w")) },true);
-
-		this.schema = new Schema(new Relation[] { this.rel1, this.rel2, this.rel3 }, new Dependency[] { this.tgd, this.tgd2, this.egd });
-		this.chaseState[DERBY] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.Derby, this.schema, PARALLEL_THREADS));
-		this.chaseState[MYSQL] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.MySql, this.schema, PARALLEL_THREADS));
- 		this.chaseState[POSTGRES]  = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.Postgres, this.schema, PARALLEL_THREADS));
-		
+		this.chaseState[DERBY] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.Derby, this.testSchema1, PARALLEL_THREADS));
+		this.chaseState[MYSQL] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.MySql, this.testSchema1, PARALLEL_THREADS));
+		this.chaseState[POSTGRES] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.Postgres, this.testSchema1, PARALLEL_THREADS));
 	}
 
 	@After
@@ -113,6 +75,12 @@ public class TestGetTriggers extends PdqTest {
 		test_getMatches1(chaseState[POSTGRES]);
 	}
 
+	/**
+	 * Uses {@link PdqTest}.testSchema1 as input, creates a set of facts that should
+	 * give 6 matches to {@link PdqTest}.tgd
+	 * 
+	 * @param state
+	 */
 	public void test_getMatches1(DatabaseChaseInstance state) {
 		Atom f20 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k1"), UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f21 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k2"), UntypedConstant.create("c"), UntypedConstant.create("c2") });
@@ -141,6 +109,11 @@ public class TestGetTriggers extends PdqTest {
 		test_getMatches2(chaseState[POSTGRES]);
 	}
 
+	/**
+	 * Uses {@link PdqTest}.testSchema1 as input, creates a set of facts that should
+	 * give 8 matches to {@link PdqTest}.egd
+	 * @param state
+	 */
 	public void test_getMatches2(DatabaseChaseInstance state) {
 		Atom f20 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f21 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c2") });
@@ -151,7 +124,7 @@ public class TestGetTriggers extends PdqTest {
 
 		state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25));
 		List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
-		Assert.assertEquals(4, matches.size());
+		Assert.assertEquals(8, matches.size());
 	}
 
 	@Test
@@ -169,6 +142,10 @@ public class TestGetTriggers extends PdqTest {
 		test_getMatches3(chaseState[POSTGRES]);
 	}
 
+	/**
+	 *  Same as test_getMatches2 but the input facts contain some equality already
+	 * @param state
+	 */
 	public void test_getMatches3(DatabaseChaseInstance state) {
 		Atom f20 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f21 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c2") });
@@ -181,9 +158,13 @@ public class TestGetTriggers extends PdqTest {
 
 		state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
 		List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ALL, LimitToThisOrAllInstances.THIS);
-		Assert.assertEquals(4, matches.size());
+		Assert.assertEquals(8, matches.size());
 	}
 
+	/**
+	 * Same as getMatches4 but called with all 3 database and repeated 100 times to see if there is any memory issues.
+	 * @throws SQLException
+	 */
 	@Test
 	public void test_getMatches4a100timesDerbyMysqlAndPostgres() throws SQLException {
 		System.out.print("[");
@@ -210,6 +191,9 @@ public class TestGetTriggers extends PdqTest {
 		System.out.println("");
 	}
 
+	/**
+	 * Same as getMatches3 but it loops over all 3 database connections
+	 */
 	@Test
 	public void test_getMatches4() {
 		Atom f20 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
@@ -223,7 +207,7 @@ public class TestGetTriggers extends PdqTest {
 		for (DatabaseChaseInstance state : chaseState) {
 			state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
 			List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
-			Assert.assertEquals(3, matches.size());
+			Assert.assertEquals(6, matches.size());
 		}
 	}
 
@@ -242,6 +226,12 @@ public class TestGetTriggers extends PdqTest {
 		test_getMatches5(chaseState[POSTGRES]);
 	}
 
+	/**
+	 * Same as before, but now the database contains some untyped constants
+	 * beginning with "c"
+	 * 
+	 * @param state
+	 */
 	public void test_getMatches5(DatabaseChaseInstance state) {
 		Atom f20 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k1"), UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f21 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k2"), UntypedConstant.create("c"), UntypedConstant.create("c2") });
@@ -272,6 +262,9 @@ public class TestGetTriggers extends PdqTest {
 		test_getMatches6(chaseState[POSTGRES]);
 	}
 
+	/** One last twist with the input atoms. Still uses the same test schema as the onese before.
+	 * @param state
+	 */
 	public void test_getMatches6(DatabaseChaseInstance state) {
 		Atom f20 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k1"), UntypedConstant.create("r1"), UntypedConstant.create("c1") });
 		Atom f21 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k2"), UntypedConstant.create("r2"), UntypedConstant.create("c2") });

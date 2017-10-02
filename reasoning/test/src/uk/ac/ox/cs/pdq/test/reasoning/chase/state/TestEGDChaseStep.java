@@ -30,6 +30,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
  * (4) Create the following unit tests for EGDchaseStep 
@@ -37,19 +38,18 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
  * a. the facts of the chase instance are A(c_i,c_{i+1}), for i=1,...,1000 The input matches contain
  * the EGD B(x,y), B(x,y') -> y=y' and the i-th match in the input collection
  * contains the mapping {x=k1, y'=c_i, y=c_{i+1}} for i=1,...,1000 after you do
- * this operation, the database should contain only one A fact. Measure how much
- * time it takes to do this update
+ * this operation, the database should contain only one A fact. 
  * 
  * b. the facts of the chase instance are A(c_i,c_{i+1}), for i=1,...,1000 The
  * input matches contain the EGD B(x,y), B(x,y') -> y=y' and the i-th match in
  * the input collection contains the mapping {x=k1, y'=c_i, y=c_{i+1}} for
  * i=1,...,500 after you do this operation, the database should contain 501 A
- * facts. Measure how much time it takes to do this update
+ * facts. 
  * 
  * @author Gabor
  *
  */
-public class TestEGDChaseStep {
+public class TestEGDChaseStep extends PdqTest {
 
 	@Test
 	public void testA_MySql() throws SQLException {
@@ -87,8 +87,9 @@ public class TestEGDChaseStep {
 	 * input matches contain the EGD B(x,y), B(x,y') -> y=y' and the i-th match in
 	 * the input collection contains the mapping {x=k1, y'=c_i, y=c_{i+1}} for
 	 * i=1,...,1000 after you do this operation, the database should contain only
-	 * one A fact. Measure how much time it takes to do this update
+	 * one A fact. 
 	 * 
+	 * Should have one in the database as a result.
 	 * @param sqlType
 	 * @throws SQLException 
 	 */
@@ -144,7 +145,9 @@ public class TestEGDChaseStep {
 	 * input matches contain the EGD B(x,y), B(x,y') -> y=y' and the i-th match in
 	 * the input collection contains the mapping {x=k1, y'=c_i, y=c_{i+1}} for
 	 * i=1,...,500 after you do this operation, the database should contain 501 A
-	 * facts. Measure how much time it takes to do this update
+	 * facts. 
+	 * 
+	 * Should have 501 in the database as a result.
 	 * 
 	 * @param sqlType
 	 * @throws SQLException 

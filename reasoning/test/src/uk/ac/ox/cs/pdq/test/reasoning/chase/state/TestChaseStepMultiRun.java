@@ -7,12 +7,13 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
+ * Runs the TestChaseStep test with a multiThreaded db connection.
  * @author Gabor
- *
+ * 
  */
 public class TestChaseStepMultiRun extends PdqTest {
 	private static final int REPEAT = 35;
-	
+
 	@Test
 	public void testSingleThreadDerby() throws Exception {
 		TestChaseSteps tcs = new TestChaseSteps();
@@ -34,7 +35,7 @@ public class TestChaseStepMultiRun extends PdqTest {
 	public void testSingleThreadPostgres() throws Exception {
 		TestChaseSteps tcs = new TestChaseSteps();
 		tcs.setupMocks();
-		tcs.setConnection(new DatabaseConnection(DatabaseParameters.Postgres,tcs.schema, 1));
+		tcs.setConnection(new DatabaseConnection(DatabaseParameters.Postgres, tcs.schema, 1));
 		tcs.test_chaseStep();
 		tcs.tearDown();
 	}
@@ -43,11 +44,11 @@ public class TestChaseStepMultiRun extends PdqTest {
 	public void testMultiThreadPostgres() throws Exception {
 		TestChaseSteps tcs = new TestChaseSteps();
 		tcs.setupMocks();
-		tcs.setConnection(new DatabaseConnection(DatabaseParameters.Postgres,tcs.schema, 10));
+		tcs.setConnection(new DatabaseConnection(DatabaseParameters.Postgres, tcs.schema, 10));
 		tcs.test_chaseStep();
 		tcs.tearDown();
 	}
-	
+
 	@Test
 	public void testSingleThreadMySql() throws Exception {
 		TestChaseSteps tcs = new TestChaseSteps();
@@ -81,13 +82,13 @@ public class TestChaseStepMultiRun extends PdqTest {
 			tcs.tearDown();
 		}
 	}
-	
+
 	@Test
 	public void testLongRunningMultiThreadPostgres() throws Exception {
 		for (int i = 0; i < REPEAT; i++) {
 			TestChaseSteps tcs = new TestChaseSteps();
 			tcs.setupMocks();
-			tcs.setConnection(new DatabaseConnection(DatabaseParameters.Postgres,tcs.schema, 10));
+			tcs.setConnection(new DatabaseConnection(DatabaseParameters.Postgres, tcs.schema, 10));
 			tcs.test_chaseStepInit();
 			for (int j = 0; j < REPEAT; j++) {
 				tcs.test_chaseStepAddFacts();
@@ -97,7 +98,7 @@ public class TestChaseStepMultiRun extends PdqTest {
 			tcs.tearDown();
 		}
 	}
-	
+
 	@Test
 	public void testLongRunningMultiThreadDerby() throws Exception {
 		for (int i = 0; i < REPEAT; i++) {
@@ -113,5 +114,5 @@ public class TestChaseStepMultiRun extends PdqTest {
 			tcs.tearDown();
 		}
 	}
-	
+
 }
