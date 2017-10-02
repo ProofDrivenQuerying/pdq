@@ -34,9 +34,16 @@ import uk.ac.ox.cs.pdq.util.PdqTest;
 
 public class TestPlanCreationUtility extends PdqTest {
 
+	/**
+	 * <pre>
+	 * Creates Facts of the R and S tables from the examples:
+	 * R(c1,c2,c2) S(c2,c1)
+	 *  and creates a singleAccessPlan from them and joins them. 
+	 * This joined plan have to have 0 inputs and 5 output attributes.
+	 * </pre>
+	 */
 	@Test
 	public void test1() {
-		// R(c1,c2,c2) S(c2,c1)
 		Atom fact1 = Atom.create(this.Ri, new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c2") });
 		Atom fact2 = Atom.create(this.Si, new Term[] { UntypedConstant.create("c2"), UntypedConstant.create("c1") });
 
@@ -53,9 +60,18 @@ public class TestPlanCreationUtility extends PdqTest {
 
 	}
 
+	/**
+	 * <pre>
+	 * Creates Facts of the R S and T tables from the examples: 
+	 *  R(c1,c2,c2) S(c2,c1) R(c1,c2,c2)
+	 *  and creates a singleAccessPlan from them and joins them. 
+	 * This joined plan have to have 0 inputs and 8 output attributes, the output attributes must contain repetition. 
+	 * The created plan must have one selection and one dependentJoin term child.
+	 * </pre>
+	 */
 	@Test
 	public void test1b() {
-		// R(c1,c2,c2) S(c2,c1) R(c1,c2,c2)
+
 		Atom fact1 = Atom.create(this.Ri, new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c2") });
 		Atom fact2 = Atom.create(this.Si, new Term[] { UntypedConstant.create("c2"), UntypedConstant.create("c1") });
 		Atom fact3 = Atom.create(this.Ti, new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c2") });
@@ -83,9 +99,17 @@ public class TestPlanCreationUtility extends PdqTest {
 		Assert.assertTrue(plan3.getChild(1) instanceof SelectionTerm);
 	}
 
+	/**
+	 * <pre>
+	 * Creates Facts of the R and S tables from the examples, 
+	 * R(c1,c2,c2) S(c2,c1)
+	 * and creates a singleAccessPlan from them and joins them. 
+	 * This joined plan have to have 0 inputs and 5 output attributes, the output attributes must contain repetition. 
+	 * The created plan must have one selection- and one rename- term child.
+	 * </pre>
+	 */
 	@Test
 	public void test2() {
-		// R(c1,c2,c2) S(c2,c1)
 		Atom fact1 = Atom.create(this.Ri, new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c2") });
 		Atom fact2 = Atom.create(this.Si, new Term[] { UntypedConstant.create("c2"), UntypedConstant.create("c1") });
 
@@ -107,9 +131,17 @@ public class TestPlanCreationUtility extends PdqTest {
 		Assert.assertTrue(plan2.getChild(1) instanceof RenameTerm);
 	}
 
+	/**
+	 * <pre>
+	 * Creates Facts of the R, S, and T tables from the examples:
+	 * 		 R(c1,c2,c2) S(c2,c1) T(c1,c2,c2)
+	 *  and creates a singleAccessPlan from them and joins them. 
+	 * This joined plan have to have 0 inputs and 8 output attributes, the output attributes must contain repetition. 
+	 * The created plan must have one selection- and one join- term child.
+	 * </pre>
+	 */
 	@Test
 	public void test2b() {
-		// R(c1,c2,c2) S(c2,c1) T(c1,c2,c2)
 		Atom fact1 = Atom.create(this.Ri, new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c2") });
 		Atom fact2 = Atom.create(this.Si, new Term[] { UntypedConstant.create("c2"), UntypedConstant.create("c1") });
 		Atom fact3 = Atom.create(this.Ti, new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c2") });
@@ -137,9 +169,17 @@ public class TestPlanCreationUtility extends PdqTest {
 		Assert.assertTrue(plan3.getChild(1) instanceof SelectionTerm);
 	}
 
+	/**
+	 * <pre>
+	 * Creates Facts of the R and S tables from the examples:
+	 * R(c1,c2,'Typed') S(c2,c1)
+	 *  and creates a singleAccessPlan from them and joins them. 
+	 * This joined plan have to have 0 inputs and 5 output attributes, the output attributes must contain repetition. 
+	 * The created plan must have one selection- and one rename- term child.
+	 * </pre>
+	 */
 	@Test
 	public void test3() {
-		// R(c1,c2,'Typed') S(c2,c1)
 		Atom fact1 = Atom.create(this.Ri, new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c2"), TypedConstant.create(21) });
 		Atom fact2 = Atom.create(this.Si, new Term[] { UntypedConstant.create("c2"), UntypedConstant.create("c1") });
 
@@ -160,10 +200,18 @@ public class TestPlanCreationUtility extends PdqTest {
 		Assert.assertTrue(plan2.getChild(0) instanceof SelectionTerm);
 		Assert.assertTrue(plan2.getChild(1) instanceof RenameTerm);
 	}
-
+	
+	/**
+	 * <pre>
+	 * Creates Facts of the R and S tables from the examples:
+	 * R(c1,c2,'Typed') S(c2,'22')
+	 *  and creates a singleAccessPlan from them and joins them. 
+	 * This joined plan have to have 0 inputs and 5 output attributes, the output attributes must contain repetition. 
+	 * The created plan must have two selectionterm child.
+	 * </pre>
+	 */
 	@Test
 	public void test4() {
-		// R(c1,c2,'Typed') S(c2,'22')
 		Atom fact1 = Atom.create(this.Ri, new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c2"), TypedConstant.create(21) });
 		Atom fact2 = Atom.create(this.Si, new Term[] { UntypedConstant.create("c2"), TypedConstant.create(22) });
 
@@ -184,10 +232,18 @@ public class TestPlanCreationUtility extends PdqTest {
 		Assert.assertTrue(plan2.getChild(0) instanceof SelectionTerm);
 		Assert.assertTrue(plan2.getChild(1) instanceof SelectionTerm);
 	}
-
+	
+	/**
+	 * <pre>
+	 * Creates Facts of the R and S tables from the examples:
+	 *  R(c1,c2,'Typed') S('22',c2)
+	 *  and creates a singleAccessPlan from them and joins them. 
+	 * This joined plan have to have 0 inputs and 5 output attributes, the output attributes must contain repetition. 
+	 * The created plan must have one selection- and one rename- term child.
+	 * </pre>
+	 */
 	@Test
 	public void test5() {
-		// R(c1,c2,'Typed') S('22',c2)
 		Atom fact1 = Atom.create(this.Ri, new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c2"), TypedConstant.create(21) });
 		Atom fact2 = Atom.create(this.Si, new Term[] { TypedConstant.create(22), UntypedConstant.create("c2") });
 
@@ -209,6 +265,15 @@ public class TestPlanCreationUtility extends PdqTest {
 		Assert.assertTrue(plan2.getChild(1) instanceof RenameTerm);
 	}
 
+	/**
+	 * <pre>
+	 * Creates Facts of the R and S tables from the examples:
+	 *  R(c1,c2,'Typed') S('22',c2)
+	 *  and creates a singleAccessPlan from them and joins them. 
+	 * This joined plan have to have 0 inputs and 5 output attributes, the output attributes must contain repetition. 
+	 * The created plan must have one selection- and one rename- term child.
+	 * </pre>
+	 */
 	@Test
 	public void test6() {
 		// R(c1,c2,'Typed') S('22',c2)

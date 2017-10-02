@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.util;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
@@ -10,6 +11,9 @@ import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.Lists;
 
+import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -24,7 +28,6 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.PdqTest.TestScenario;
 
 /**
  * Creates the most commonly used objects for testing purposes. Also able to
@@ -89,7 +92,7 @@ public class PdqTest {
 	protected Relation access = Relation.create("Accessible", new Attribute[] { i, instanceID });
 
 	protected Relation rel1 = Relation.create("R1", new Attribute[] { at11, at12, at13, instanceID });
-	protected Relation rel2 = Relation.create("R2", new Attribute[] { at21, at22, instanceID },new AccessMethod[] { this.method0, this.method2 });
+	protected Relation rel2 = Relation.create("R2", new Attribute[] { at21, at22, instanceID }, new AccessMethod[] { this.method0, this.method2 });
 	protected Relation rel3 = Relation.create("R3", new Attribute[] { at31, at32, instanceID });
 
 	/* example atoms */
@@ -128,6 +131,7 @@ public class PdqTest {
 	}
 
 	/**
+	 * <pre>
 	 * Schema has 3 relations : R0(a,b,c) where a,b,c are integer attributes, with a
 	 * free access method <br>
 	 * R1(a,b,c) where a,b,c are integer attributes, with one access method that
@@ -137,7 +141,21 @@ public class PdqTest {
 	 * In this scenario there are no dependencies. <br>
 	 * The query is Q(x,y,z) = R0(x,y1,z1) R1(x,y,z2) R2(x1,y,z)
 	 * 
-	 * Chasing this should provide a valid plan.
+	 * Chasing this should provide a valid plan. like this:
+	 * DependentJoin{[(#4=#7)]
+	 * 		DependentJoin{[(#0=#3)]
+	 * 			Rename{[c1,c2,c3]
+	 * 				Access{R0.mt_0[]}
+	 * 			},
+	 * 			Rename{[c1,c4,c5]
+	 * 				Access{R1.mt_1[#0=a]}
+	 * 			}
+	 * 		},
+	 * 		Rename{[c6,c4,c7]
+	 * 			Access{R2.mt_2[#1=b]}
+	 * 		}
+	 * 	}
+	 * </pre>
 	 */
 	public TestScenario getScenario1() {
 		// Create the relations
@@ -249,7 +267,7 @@ public class PdqTest {
 	 * 	R2(a,b,c,d) accesses: Free
 	 *	R3(a,b,c,d) accesses: [2,3]
 	 * Query:
-	 *  Q(x,y) -> R0('constant1',y,z,w) R1('constant2',_,z,w) R2(x,y,z',w') R3(_,_,z',w') where "_" means some unique variable.
+	 * Q(x,y) -> R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w')
 	 * </pre>
 	 * 
 	 * @return
@@ -267,12 +285,98 @@ public class PdqTest {
 				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
 		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
 		// Create query
-		// R0('constant1',y,z,w) R1('constant2',_,z,w) R2(x,y,z',w') R3(_,_,z',w')
+		// R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w')
 		Atom[] atoms = new Atom[4];
-		atoms[0] = Atom.create(relations[0], new Term[] { TypedConstant.create(1), y, z, w });
-		atoms[1] = Atom.create(relations[1], new Term[] { TypedConstant.create(2), Variable.create("y2"), z, w });
+		atoms[0] = Atom.create(relations[0], new Term[] { x, y, z, w });
+		atoms[1] = Atom.create(relations[1], new Term[] { Variable.create("x2"), Variable.create("y2"), z, w });
 		atoms[2] = Atom.create(relations[2], new Term[] { x, y, Variable.create("z3"), Variable.create("w3") });
 		atoms[3] = Atom.create(relations[3], new Term[] { Variable.create("x4"), Variable.create("y4"), Variable.create("z3"), Variable.create("w3") });
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
+
+		// Create schema
+		Schema schema = new Schema(relations);
+		schema.addConstants(Arrays.asList(new TypedConstant[] { TypedConstant.create(1), TypedConstant.create(2) }));
+		TestScenario ts = new TestScenario();
+		ts.setSchema(schema);
+		ts.setQuery(query);
+		return ts;
+	}
+
+	/**
+	 * <pre>
+	 * Tables:
+	 *	R0(a,b,c,d) accesses: Free
+	 *	R1(a,b,c,d) accesses: [0], [2,3]
+	 * 	R2(a,b,c,d) accesses: Free
+	 *	R3(a,b,c,d) accesses: [2,3]
+	 * Query:
+	 *  Q(x,y) -> R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w') where "_" means some unique variable.
+	 *  Q(x,y) -> R0('constant1',y,z,w) R1('constant2',_,z,w) R2(x,y,z',w') R3(_,_,z',w')
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	public TestScenario getScenario5() {
+		// Create the relations
+		Relation[] relations = new Relation[5];
+		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+				new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }), AccessMethod.create(new Integer[] { 2, 3 }) });
+
+		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
+		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
+		// Create query
+		// R0('constant1',y,z,w) R1('constant2',_,z,w) R2(x,y,z',w') R3(_,_,z',w')
+		Atom[] atoms = new Atom[4];
+		atoms[0] = Atom.create(relations[0], new Term[] { x, y, z, w });
+		atoms[1] = Atom.create(relations[1], new Term[] { Variable.create("x13"), Variable.create("y12"), z, w });
+		atoms[2] = Atom.create(relations[2], new Term[] { x, y, Variable.create("z3"), Variable.create("w3") });
+		atoms[3] = Atom.create(relations[3], new Term[] { Variable.create("x14"), Variable.create("y14"), Variable.create("z3"), Variable.create("w3") });
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
+
+		// Create schema
+		Schema schema = new Schema(relations);
+		schema.addConstants(Arrays.asList(new TypedConstant[] { TypedConstant.create(1), TypedConstant.create(2) }));
+		TestScenario ts = new TestScenario();
+		ts.setSchema(schema);
+		ts.setQuery(query);
+		return ts;
+	}
+
+	/**
+	 * <pre>
+	 * Tables:
+	 *	R0(a,b,c,d) accesses: Free
+	 *	R1(a,b,c,d) accesses: [2,3]
+	 * 	R2(a,b,c,d) accesses: Free
+	 *	R3(a,b,c,d) accesses: [2,3]
+	 * Query:
+	 *  Q(x,y) -> R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w') where "_" means some unique variable.
+	 *  Q(x,y) -> R0('constant1',y,z,w) R1('constant2',_,z,w) R2(x,y,z',w') R3(_,_,z',w')
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	public TestScenario getScenario6() {
+		// Create the relations
+		Relation[] relations = new Relation[5];
+		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
+
+		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
+		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
+		// Create query
+		// R0('constant1',y,z,w) R1('constant2',_,z,w) R2(x,y,z',w') R3(_,_,z',w')
+		Atom[] atoms = new Atom[4];
+		atoms[0] = Atom.create(relations[0], new Term[] { x, y, z, w });
+		atoms[1] = Atom.create(relations[1], new Term[] { Variable.create("x13"), Variable.create("y12"), z, w });
+		atoms[2] = Atom.create(relations[2], new Term[] { x, y, Variable.create("z3"), Variable.create("w3") });
+		atoms[3] = Atom.create(relations[3], new Term[] { Variable.create("x14"), Variable.create("y14"), Variable.create("z3"), Variable.create("w3") });
 		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
 
 		// Create schema
@@ -378,4 +482,39 @@ public class PdqTest {
 		}
 
 	}
+
+	/**
+	 * Utility function to check if a plan contains any child with the type access
+	 * term. Throws Assertion error in case - the given relationalTerm is null - the
+	 * given relationalTerm have no children - the given relationalTerm have only
+	 * one children - the given relational term does not have any AccessTerm
+	 * children.
+	 * 
+	 * The completed check is not recursive, it only cecks the immediate children.
+	 * 
+	 * @param relationalTerm
+	 *            the root of the plan tree to check for accessTerm child.
+	 */
+	public static void AssertHasAccessTermChild(RelationalTerm relationalTerm) {
+		Assert.assertNotNull(relationalTerm);
+		Assert.assertNotNull(relationalTerm.getChildren());
+		Assert.assertEquals(1, relationalTerm.getChildren().length);
+		Assert.assertTrue(relationalTerm.getChild(0) instanceof AccessTerm);
+	}
+
+	/**
+	 * Counts the number of DependentJoinTerm objects in a plan recursively.
+	 * 
+	 * @param plan
+	 *            The input plan for the counting.
+	 * @return the number of occurrences of DependentJoinTerm objects in the tree.
+	 *         The top level (root) relational term is also checked and counted if
+	 *         it is a DependentJoinTerm.
+	 */
+	public int countDependentJoinsInPlan(RelationalTerm plan) {
+		int ret=0;
+		for (int i=0;i < plan.getChildren().length; ret += countDependentJoinsInPlan(plan.getChildren()[i++]));
+		return ret + ((plan instanceof DependentJoinTerm)?1:0);
+	}
+
 }
