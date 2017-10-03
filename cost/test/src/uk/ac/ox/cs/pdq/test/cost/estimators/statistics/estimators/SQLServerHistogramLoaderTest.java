@@ -1,42 +1,33 @@
 package uk.ac.ox.cs.pdq.test.cost.estimators.statistics.estimators;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 
 import uk.ac.ox.cs.pdq.cost.statistics.SQLServerHistogram;
 import uk.ac.ox.cs.pdq.cost.statistics.SQLServerHistogramLoader;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.util.PdqTest;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SQLServerHistogramLoaderTest.
+ * Tests SQLServerHistogramLoader with two example histogram files.
  *
  * @author Efthymia Tsamoura
+ * @author Gabor
  */
-public class SQLServerHistogramLoaderTest {
-
+public class SQLServerHistogramLoaderTest extends PdqTest {
 	/**
-	 * Setup.
+	 * Test1, reading /test/input/V1Histogram.rpt
 	 */
-	@Before public void setup() {
-		Utility.assertsEnabled();
-        MockitoAnnotations.initMocks(this);
-	}
-
-	/**
-	 * Test1.
-	 */
-	@Test public void test1() {
+	@Test
+	public void test1() {
 		SQLServerHistogram histogram = SQLServerHistogramLoader.load(Integer.class, "/test/input/V1Histogram.rpt");
 		Assert.assertEquals(histogram.getBuckets().size(), 162);
 	}
-	
+
 	/**
-	 * Test2.
+	 * Test2, reading /test/input/V2Histogram.rpt
 	 */
-	@Test public void test2() {
+	@Test
+	public void test2() {
 		SQLServerHistogram histogram = SQLServerHistogramLoader.load(Integer.class, "/test/input/V2Histogram.rpt");
 		Assert.assertEquals(histogram.getBuckets().size(), 26);
 	}

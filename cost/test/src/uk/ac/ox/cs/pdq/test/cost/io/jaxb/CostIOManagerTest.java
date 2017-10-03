@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import javax.xml.bind.JAXBException;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
@@ -16,18 +15,22 @@ import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.util.PdqTest;
 
-public class CostIOManagerTest {
+/**
+ * Tests the CostIOManager's functions by creating a new cost file and then
+ * attempts to parse it back. Other inherited functions of the IOManager like
+ * importSchema is not tested in this class.
+ * 
+ * @author Gabor
+ *
+ */
+public class CostIOManagerTest extends PdqTest {
 
 	/**
-	 * Makes sure assertions are enabled.
+	 * Attempt to write to the file system a cost file that we created manually.
+	 * Asserts the existence of the new file and if it contains data.
 	 */
-	@Before
-	public void setup() {
-		Utility.assertsEnabled();
-	}
-
 	@Test
 	public void testWriteCost() {
 		try {
@@ -51,6 +54,9 @@ public class CostIOManagerTest {
 		return out;
 	}
 
+	/**
+	 * Tests if we can read back the data that we attempted to write earlier. Also deletes the file to make sure the next write-test will work. 
+	 */
 	@Test
 	public void testReadCost() {
 		try {
