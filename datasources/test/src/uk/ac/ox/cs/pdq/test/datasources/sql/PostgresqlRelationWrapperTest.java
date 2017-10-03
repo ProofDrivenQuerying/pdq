@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.test.datasources.sql;
 
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -76,7 +77,7 @@ public class PostgresqlRelationWrapperTest {
 	public Properties getProperties() {
 
 		Properties properties = new Properties();
-		properties.setProperty("url", "TODO");
+		properties.setProperty("url", "jdbc:postgresql://localhost:5432/");
 		properties.setProperty("database", "tpch");
 		properties.setProperty("username", "admin");
 		properties.setProperty("password", "admin");
@@ -91,6 +92,13 @@ public class PostgresqlRelationWrapperTest {
 				attributes_N, new AccessMethod[] {amFree});
 		
 		Assert.assertNotNull(target);
+		
+		// Test the connection.
+		try {
+			Assert.assertTrue(target.getConnection().isValid(1));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -118,16 +126,26 @@ public class PostgresqlRelationWrapperTest {
 		
 		// Construct the inputs by hand.
 		Table expected = new Table(inputAttributes);
-		// TODO: Nation names must match those in the NATIONS table in tpc-h.  
-		expected.appendRow(ttString.createTuple((Object[]) Arrays.copyOf(new String[] {"Greece"}, 1)));
-		expected.appendRow(ttString.createTuple((Object[]) Arrays.copyOf(new String[] {"Cyprus"}, 1)));
-		expected.appendRow(ttString.createTuple((Object[]) Arrays.copyOf(new String[] {"UK"}, 1)));
+		// Nation names must match those in the NATIONS table in tpc-h.  
+		expected.appendRow(ttString.createTuple((Object[]) Arrays.copyOf(new String[] {"ARGENTINA"}, 1)));
+		expected.appendRow(ttString.createTuple((Object[]) Arrays.copyOf(new String[] {"JAPAN"}, 1)));
+		expected.appendRow(ttString.createTuple((Object[]) Arrays.copyOf(new String[] {"UNITED KINGDOM"}, 1)));
 		ResetableIterator<Tuple> inputs = expected.iterator(); 
 		
 		Table result = target.access(inputAttributes, inputs); 
 		
 		Assert.assertEquals(expected.size(), result.size());
-		Assert.assertEquals(expected.getData(), result.getData());
+		// The nation names are in column 1.
+
+		// Note: This fails with ClassCastException (even though String is the correct type):
+		// String[] nationNames = result.getColumn(1);
+		Object[] nameColumn = result.getColumn(1);
+		String[] actual = Arrays.copyOf(nameColumn, nameColumn.length, String[].class);
+		
+		//// TODO: Ask Efi about appropriate use of getColumn - how specify the generic?
+		//// Compare to how getColumn would look using the Stream API.
+		Assert.assertArrayEquals(expected.getData().toArray(new String[0]), actual);
+		
 		expected = null;
 		result = null;
 		
