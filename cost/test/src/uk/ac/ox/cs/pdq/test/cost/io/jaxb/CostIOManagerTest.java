@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.test.cost.io.jaxb;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
@@ -13,8 +13,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
@@ -44,12 +42,10 @@ public class CostIOManagerTest extends PdqTest {
 		}
 	}
 
-	private File createCostFile() throws JAXBException, FileNotFoundException {
-		File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\cost\\io\\jaxb\\schema.xml");
-		Schema schema = IOManager.importSchema(schemaFile);
+	private File createCostFile() throws JAXBException, IOException {
 		Cost c = new DoubleCost(2.555);
-		File out = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\cost\\io\\jaxb\\ProjectionTermWithCost.xml");
-		RelationalTerm plan = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
+		File out = File.createTempFile("ProjectionTermWithCost","xml");
+		RelationalTerm plan = AccessTerm.create(testSchema1.getRelations()[0], this.method0);
 		CostIOManager.writeRelationalTermAndCost(out, plan, c);
 		return out;
 	}
