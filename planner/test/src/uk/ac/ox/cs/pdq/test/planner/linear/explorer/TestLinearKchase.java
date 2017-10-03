@@ -5,18 +5,12 @@ import static org.mockito.Mockito.when;
 import java.sql.SQLException;
 
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
-import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
@@ -25,17 +19,9 @@ import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -46,36 +32,27 @@ import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
- * Tests the LinearGeneric explorer class.
+ * Tests the LinearKChase explorer class.
  * 
  * @author Efthymia Tsamoura
  * @author Gabor
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestLinearKchase {
-
-	protected Attribute a = Attribute.create(Integer.class, "a");
-	protected Attribute b = Attribute.create(Integer.class, "b");
-	protected Attribute c = Attribute.create(Integer.class, "c");
-	protected Attribute d = Attribute.create(Integer.class, "d");
-	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
+public class TestLinearKchase extends PdqTest {
 
 	@Mock
 	protected SimpleCatalog catalog;
 
-	@Before
-	public void setup() {
-		Utility.assertsEnabled();
-		MockitoAnnotations.initMocks(this);
-		GlobalCounterProvider.resetCounters();
-		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-	}
-
+	/**
+	 * the following three test case executes the same chasing but with different
+	 * "chase interval" value. Results should be the same, so the assertions in the
+	 * test1ExplorationSteps function should make sure we have the right plan each
+	 * time. More details about the input and output can be read at the
+	 * test1ExplorationSteps comment and also at the PdqTest.getScenario1()
+	 * functions. this case K (or chase interval) = 10.
+	 */
 	@Test
 	public void test1ExplorationStepsA_k10() {
 		GlobalCounterProvider.resetCounters();
@@ -83,6 +60,9 @@ public class TestLinearKchase {
 		test1ExplorationSteps(10);
 	}
 
+	/**
+	 * same as above, but K=2.
+	 */
 	@Test
 	public void test1ExplorationStepsB_k2() {
 		GlobalCounterProvider.resetCounters();
@@ -90,6 +70,13 @@ public class TestLinearKchase {
 		test1ExplorationSteps(2);
 	}
 
+	/**
+	 * same as above, but K=1. This case should be basically the same as a normal
+	 * linear chase since we will do a full chase step at each iteration, so this
+	 * setting is not commonly used, however it should not break, crash or go to
+	 * infinite loops, and to make sore this nice reliable fixed state is permanent
+	 * I added this test.
+	 */
 	@Test
 	public void test1ExplorationStepsB_k1() {
 		GlobalCounterProvider.resetCounters();
@@ -97,32 +84,35 @@ public class TestLinearKchase {
 		test1ExplorationSteps(1);
 	}
 
+	/**
+	 * Uses test Scenario1 and asserts the best plan to be correct and looking
+	 * something like this:
+	 * 
+	 * <pre>
+	 * DependentJoin{[(#4=#7)]
+	 * 		DependentJoin{[(#0=#3)]
+	 * 			Rename{[c1,c2,c3]
+	 * 				Access{R0.mt_0[]}
+	 * 			},
+	 * 			Rename{[c1,c4,c5]
+	 * 				Access{R1.mt_1[#0=a]}
+	 * 			}
+	 * 		},
+	 * 		Rename{[c6,c4,c7]
+	 * 			Access{R2.mt_2[#1=b]}
+	 * 		}
+	 * 	}
+	 * </pre>
+	 * 
+	 * @param chaseInterval
+	 */
 	public void test1ExplorationSteps(int chaseInterval) {
-		// Create the relations
-		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] { 1 }) });
-		relations[3] = Relation.create("Accessible", new Attribute[] { this.a, this.InstanceID });
-		// Create query
-		Atom[] atoms = new Atom[3];
-		Variable x = Variable.create("x");
-		Variable y = Variable.create("y");
-		Variable z = Variable.create("z");
-		atoms[0] = Atom.create(relations[0], new Term[] { x, Variable.create("y1"), Variable.create("z1") });
-		atoms[1] = Atom.create(relations[1], new Term[] { x, y, Variable.create("z2") });
-		atoms[2] = Atom.create(relations[2], new Term[] { Variable.create("x1"), y, z });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y, z }, (Conjunction) Conjunction.of(atoms));
-
-		// Create schema
-		Schema schema = new Schema(relations);
-		schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(5)));
-
+		TestScenario ts = getScenario1();
 		// Create accessible schema
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery(), ts.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
 
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -136,17 +126,14 @@ public class TestLinearKchase {
 		RestrictedChaser chaser = new RestrictedChaser(null);
 
 		// Mock the cost estimator
-		// CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
-		// when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new
-		// DoubleCost(1.0));
-		when(this.catalog.getCardinality(relations[0])).thenReturn(10);
-		when(this.catalog.getCardinality(relations[1])).thenReturn(10000);
-		when(this.catalog.getCardinality(relations[2])).thenReturn(100);
-		when(this.catalog.getCardinality(relations[3])).thenReturn(10000);
-		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(relations[0], AccessMethod.create(new Integer[] {}))).thenReturn(10);
-		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(relations[1], AccessMethod.create(new Integer[] { 0 }))).thenReturn(100);
-		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(relations[2], AccessMethod.create(new Integer[] {}))).thenReturn(10);
-		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(relations[3], AccessMethod.create(new Integer[] { 0 }))).thenReturn(100);
+		when(this.catalog.getCardinality(ts.getSchema().getRelations()[0])).thenReturn(10);
+		when(this.catalog.getCardinality(ts.getSchema().getRelations()[1])).thenReturn(10000);
+		when(this.catalog.getCardinality(ts.getSchema().getRelations()[2])).thenReturn(100);
+		when(this.catalog.getCardinality(ts.getSchema().getRelations()[3])).thenReturn(10000);
+		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(ts.getSchema().getRelations()[0], AccessMethod.create(new Integer[] {}))).thenReturn(10);
+		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(ts.getSchema().getRelations()[1], AccessMethod.create(new Integer[] { 0 }))).thenReturn(100);
+		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(ts.getSchema().getRelations()[2], AccessMethod.create(new Integer[] {}))).thenReturn(10);
+		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(ts.getSchema().getRelations()[3], AccessMethod.create(new Integer[] { 0 }))).thenReturn(100);
 
 		CardinalityEstimator card = new NaiveCardinalityEstimator(this.catalog);
 		// TextBookCostEstimator costEstimator = null;
@@ -167,8 +154,8 @@ public class TestLinearKchase {
 			// OrderDependentCostEstimator sad = ;
 			OrderDependentCostPropagator costPropagator = new OrderDependentCostPropagator(costEstimator);
 
-			explorer = new LinearKChase(new EventBus(), false, query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, costPropagator, nodeFactory,
-					parameters.getMaxDepth(), chaseInterval);
+			explorer = new LinearKChase(new EventBus(), false, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, costPropagator,
+					nodeFactory, parameters.getMaxDepth(), chaseInterval);
 
 			explorer.explore();
 
@@ -200,10 +187,4 @@ public class TestLinearKchase {
 		}
 	}
 
-	private static void AssertHasAccessTermChild(RelationalTerm relationalTerm) {
-		Assert.assertNotNull(relationalTerm);
-		Assert.assertNotNull(relationalTerm.getChildren());
-		Assert.assertEquals(1, relationalTerm.getChildren().length);
-		Assert.assertTrue(relationalTerm.getChild(0) instanceof AccessTerm);
-	}
 }

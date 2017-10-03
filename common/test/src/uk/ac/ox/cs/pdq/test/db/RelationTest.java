@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.test.PdqTest;
+import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
  * @author Gabor

@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.xml.bind.JAXBException;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.eventbus.EventBus;
@@ -28,24 +27,13 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
  * @author Gabor
  *
  */
-public class TestMainPostgres {
-
-	private DatabaseParameters postgresDbParam;
-
-	@Before
-	public void setup() {
-		postgresDbParam = DatabaseParameters.Derby;
-		postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
-		postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
-		postgresDbParam.setDatabaseName("test_get_triggers");
-		postgresDbParam.setDatabaseUser("postgres");
-		postgresDbParam.setDatabasePassword("root");
-	}
+public class TestMainPostgres extends PdqTest {
 
 	private Schema addInstanceIdToSchema(Schema s) {
 		List<Relation> lr = new ArrayList<>();
@@ -77,7 +65,7 @@ public class TestMainPostgres {
 		Collection<Atom> facts = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgds\\data\\s.csv");
 
 		try {
-			DatabaseConnection dc = new DatabaseConnection(postgresDbParam, schema, 10);
+			DatabaseConnection dc = new DatabaseConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -131,7 +119,7 @@ public class TestMainPostgres {
 		Collection<Atom> facts1 = CommonToPDQTranslator.importFacts(schema, "s1", "test\\chaseBench\\tgds5\\data\\s1.csv");
 		facts0.addAll(facts1);
 		try {
-			DatabaseConnection dc = new DatabaseConnection(postgresDbParam, schema, 10);
+			DatabaseConnection dc = new DatabaseConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -173,7 +161,7 @@ public class TestMainPostgres {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgds\\data\\s.csv");
 		try {
-			DatabaseConnection dc = new DatabaseConnection(postgresDbParam, schema, 10);
+			DatabaseConnection dc = new DatabaseConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -233,7 +221,7 @@ public class TestMainPostgres {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgdsLarge\\data\\s.csv");
 		try {
-			DatabaseConnection dc = new DatabaseConnection(postgresDbParam, schema, 10);
+			DatabaseConnection dc = new DatabaseConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -294,7 +282,7 @@ public class TestMainPostgres {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "A", "test\\chaseBench\\vldb2010\\data\\A.csv");
 		try {
-			DatabaseConnection dc = new DatabaseConnection(postgresDbParam, schema, 10);
+			DatabaseConnection dc = new DatabaseConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -336,7 +324,7 @@ public class TestMainPostgres {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "deptemp", "test\\chaseBench\\weak\\data\\deptemp.csv");
 		try {
-			DatabaseConnection dc = new DatabaseConnection(postgresDbParam, schema, 10);
+			DatabaseConnection dc = new DatabaseConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);

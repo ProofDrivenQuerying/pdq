@@ -5,32 +5,24 @@ import static org.mockito.Mockito.when;
 import java.sql.SQLException;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
-import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
-import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -51,77 +43,48 @@ import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
- * Tests the TestLinearOptimized explorer class.
+ * Tests the TestLinearOptimized explorer class. Uses the same 3 scenario as the other two linear chaser test does.
  * 
  * @author Efthymia Tsamoura
  * @author Gabor
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestLinearOptimized {
-
-	protected Attribute a = Attribute.create(Integer.class, "a");
-	protected Attribute b = Attribute.create(Integer.class, "b");
-	protected Attribute c = Attribute.create(Integer.class, "c");
-	protected Attribute d = Attribute.create(Integer.class, "d");
-	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
+public class TestLinearOptimized extends PdqTest {
 	
-	@Before 
-	public void setup() {
-		Utility.assertsEnabled();
-        MockitoAnnotations.initMocks(this);
-        GlobalCounterProvider.resetCounters();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-	}
-	
+	/**
+	 * Tests the explorer with the Scenario1 input schema and query. Asserts the best plan found should be something like:
+	 * <pre>
+	 * DependentJoin { [(#4=#7)]
+	 * 		DependentJoin{ [(#0=#3)]
+	 * 			Rename{[c1,c2,c3]
+	 * 				Access{R0.mt_0[]}
+	 * 			},
+	 * 			Rename{[c1,c4,c5]
+	 * 				Access{R1.mt_1[#0=a]}
+	 * 			}
+	 * 		},
+	 * 		Rename{[c6,c4,c7]
+	 * 				Access{R2.mt_2[#1=b]}
+	 * 		}
+	 * }
+	 * </pre>
+	 */
 	@Test 
-	public void test1ExplorationStepsA() {
-		GlobalCounterProvider.resetCounters();
-		GlobalCounterProvider.getNext("CannonicalName");
-		test1ExplorationSteps();
-	}
-	@Test 
-	public void test1ExplorationStepsB() {
-		GlobalCounterProvider.resetCounters();
-		GlobalCounterProvider.getNext("CannonicalName");
-		test1ExplorationSteps();
-	}
 	@SuppressWarnings("rawtypes")
 	public void test1ExplorationSteps() {
+		GlobalCounterProvider.getNext("CannonicalName");
 		//Create the relations
-		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{})});
-		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{0})});
-		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{1})});
-		relations[3] = Relation.create("Accessible", new Attribute[]{this.a,this.InstanceID});
-		//Create query
-		Atom[] atoms = new Atom[3];
-		Variable x = Variable.create("x");
-		Variable y = Variable.create("y");
-		Variable z = Variable.create("z");
-		atoms[0] = Atom.create(relations[0], new Term[]{x,Variable.create("y1"),Variable.create("z1")});
-		atoms[1] = Atom.create(relations[1], new Term[]{x,y,Variable.create("z2")});
-		atoms[2] = Atom.create(relations[2], new Term[]{Variable.create("x1"),y,z});
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[]{x,y,z}, (Conjunction) Conjunction.of(atoms));
-		
-		//Create schema
-		Schema schema = new Schema(relations);
-		schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(5)));
-
+		TestScenario ts = getScenario1();
 		//Create accessible schema
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 		
-		assertAccessibleSchema(accessibleSchema, schema,3);
+		assertAccessibleSchema(accessibleSchema, ts.getSchema(),3);
 		
 		//Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery(), ts.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
 	
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -154,7 +117,7 @@ public class TestLinearOptimized {
 				explorer = new LinearOptimized(
 					new EventBus(), 
 					false,
-					query, 
+					ts.getQuery(), 
 					accessibleQuery,
 					accessibleSchema, 
 					chaser, 
@@ -228,47 +191,20 @@ public class TestLinearOptimized {
 		}
 	}
 	
-	private static void AssertHasAccessTermChild(RelationalTerm relationalTerm) {
-		Assert.assertNotNull(relationalTerm);
-		Assert.assertNotNull(relationalTerm.getChildren());
-		Assert.assertEquals(1, relationalTerm.getChildren().length);
-		Assert.assertTrue(relationalTerm.getChild(0) instanceof AccessTerm);
-	}
-
+	/**
+	 * Tests with scenario2, asserts that we have no valid plan.
+	 */
 	@SuppressWarnings("rawtypes")
 	@Test 
 	public void test2ExplorationSteps() {
-		//Create the relations
-		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{0})});
-		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{0})});
-		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{1})});
-		relations[3] = Relation.create("Accessible", new Attribute[]{this.a,this.InstanceID});
-
-		//Create query
-		Atom[] atoms = new Atom[3];
-		Variable x = Variable.create("x");
-		Variable y = Variable.create("y");
-		Variable z = Variable.create("z");
-		atoms[0] = Atom.create(relations[0], new Term[]{x,Variable.create("y1"),Variable.create("z1")});
-		atoms[1] = Atom.create(relations[1], new Term[]{x,y,Variable.create("z2")});
-		atoms[2] = Atom.create(relations[2], new Term[]{Variable.create("x1"),y,z});
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[]{x,y,z}, (Conjunction) Conjunction.of(atoms));
-		
-		//Create schema
-		Schema schema = new Schema(relations);
-		schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(5)));
-
+		TestScenario ts = getScenario2();
 		//Create accessible schema
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 		
-		assertAccessibleSchema(accessibleSchema, schema,3);
+		assertAccessibleSchema(accessibleSchema, ts.getSchema(),3);
 		
 		//Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery(), ts.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
 	
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -301,7 +237,7 @@ public class TestLinearOptimized {
 			explorer = new LinearOptimized(
 					new EventBus(), 
 					false,
-					query, 
+					ts.getQuery(), 
 					accessibleQuery,
 					accessibleSchema, 
 					chaser, 
@@ -343,42 +279,21 @@ public class TestLinearOptimized {
 		}
 	}
 	
+	/**
+	 * Tests with scenario3, asserts that all plans are dominated by the best plan.
+	 */
 	@SuppressWarnings("rawtypes")
 	@Test 
 	public void test3ExplorationSteps() {
-		GlobalCounterProvider.resetCounters();
-		//Create the relations
-		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{})});
-		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{0}),AccessMethod.create(new Integer[]{2})});
-		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{1})});
-		relations[3] = Relation.create("Accessible", new Attribute[]{this.a,this.InstanceID});
-
-		//Create query
-		Atom[] atoms = new Atom[3];
-		Variable x = Variable.create("x");
-		Variable y = Variable.create("y");
-		Variable z = Variable.create("z");
-		atoms[0] = Atom.create(relations[0], new Term[]{x,Variable.create("y1"),Variable.create("z1")});
-		atoms[1] = Atom.create(relations[1], new Term[]{x,y,TypedConstant.create(5)});
-		atoms[2] = Atom.create(relations[2], new Term[]{Variable.create("x1"),y,z});
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[]{x,y,z}, (Conjunction) Conjunction.of(atoms));
-		
-		//Create schema
-		Schema schema = new Schema(relations);
-		schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(5)));
-		
+		TestScenario ts = getScenario3();
 		//Create accessible schema
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 		
-		assertAccessibleSchema(accessibleSchema, schema,4);
+		assertAccessibleSchema(accessibleSchema, ts.getSchema(),4);
 		
 		
 		//Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery(), ts.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
 	
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -413,7 +328,7 @@ public class TestLinearOptimized {
 			explorer = new LinearOptimized(
 					new EventBus(), 
 					false,
-					query, 
+					ts.getQuery(), 
 					accessibleQuery,
 					accessibleSchema, 
 					chaser, 
@@ -458,6 +373,10 @@ public class TestLinearOptimized {
 		}
 	}
 
+	/**
+	 * Checks most of the properties of the accessible schema. 
+	 * Throws assertion error in case there is a change in the schema configuration.
+	 */
 	private void assertAccessibleSchema(AccessibleSchema accessibleSchema, Schema schema, int numberOfAxioms) {
 		Assert.assertNotNull(accessibleSchema);
 		

@@ -16,23 +16,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.google.common.collect.Lists;
-
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
@@ -48,6 +37,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseIn
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
+import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
  * Tests the SelectorOfPairsOfConfigurationsToCombine class, by creating an
@@ -58,55 +48,29 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
  * @author Efthymia Tsamoura
  * @author Gabor
  */
-public class TestSelectorOfPairsOfConfigurationsToCombine {
-
-	protected Attribute a = Attribute.create(Integer.class, "a");
-	protected Attribute b = Attribute.create(Integer.class, "b");
-	protected Attribute c = Attribute.create(Integer.class, "c");
-	protected Attribute d = Attribute.create(Integer.class, "d");
-	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
+public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 
 	boolean printPlans = false;
 
+	/**
+	 * Uses testScenario6 as input.
+	 * 
+	 * Creates an initial apply rule configuration, and then tests the SelectorOfPairsOfConfigurationsToCombine class using these configurations.
+	 * The expected results are:
+	 * <li> 12 binary combinations.</li> 
+	 * <li> 48 combinations of 3 rules.</li> 
+	 * <li> 96 combinations can be made combining the previous plus 1.</li> 
+	 * <li> 24 combinations can be created combining pairs.</li> 
+	 */
 	@Test
-	public void test1() {
-		GlobalCounterProvider.resetCounters();
-		GlobalCounterProvider.getNext("CannonicalName");
-		test1GetNextPairOfConfigurationsToCompose();
-	}
-
 	public void test1GetNextPairOfConfigurationsToCompose() {
-		// Create the relations
-		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID },
-				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
-
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID },
-				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
-		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.InstanceID });
-		// Create query
-		// R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w')
-		Atom[] atoms = new Atom[4];
-		Variable x = Variable.create("x");
-		Variable y = Variable.create("y");
-		Variable z = Variable.create("z");
-		Variable w = Variable.create("w");
-		atoms[0] = Atom.create(relations[0], new Term[] { x, y, z, w });
-		atoms[1] = Atom.create(relations[1], new Term[] { Variable.create("x2"), Variable.create("y2"), z, w });
-		atoms[2] = Atom.create(relations[2], new Term[] { x, y, Variable.create("z3"), Variable.create("w3") });
-		atoms[3] = Atom.create(relations[3], new Term[] { Variable.create("x4"), Variable.create("y4"), Variable.create("z3"), Variable.create("w3") });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
-
-		// Create schema
-		Schema schema = new Schema(relations);
-
+		GlobalCounterProvider.getNext("CannonicalName");
+		TestScenario ts = getScenario6();
 		// Create accessible schema
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery(), ts.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
 
 		// Create database connection
 		DatabaseConnection connection = null;
@@ -125,7 +89,7 @@ public class TestSelectorOfPairsOfConfigurationsToCombine {
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
 		try {
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, query, accessibleQuery, accessibleSchema, chaser,
+			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser,
 					connection);
 			Set<String> predicateNames = new HashSet<>();
 			for (DAGChaseConfiguration c : configurations) {
@@ -213,35 +177,18 @@ public class TestSelectorOfPairsOfConfigurationsToCombine {
 		}
 	}
 
+	/**
+	 * Uses test scenario3 as input.
+	 * Asserts the number of combinations. On depth 2 there should be 10 combinations, 24 on depth=3 and none on depth=4.
+	 */
 	@Test
 	public void test2GetNextPairOfConfigurationsToCompose() {
-		// Create the relations
-		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.InstanceID },
-				new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }), AccessMethod.create(new Integer[] { 2 }) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] { 1 }) });
-		relations[3] = Relation.create("Accessible", new Attribute[] { this.a, this.InstanceID });
-
-		// Create query
-		Atom[] atoms = new Atom[3];
-		Variable x = Variable.create("x");
-		Variable y = Variable.create("y");
-		Variable z = Variable.create("z");
-		atoms[0] = Atom.create(relations[0], new Term[] { x, Variable.create("y1"), Variable.create("z1") });
-		atoms[1] = Atom.create(relations[1], new Term[] { x, y, TypedConstant.create(5) });
-		atoms[2] = Atom.create(relations[2], new Term[] { Variable.create("x1"), y, z });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y, z }, (Conjunction) Conjunction.of(atoms));
-
-		// Create schema
-		Schema schema = new Schema(relations);
-		schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(5)));
-
+		TestScenario ts = getScenario3();
 		// Create accessible schema
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery(), ts.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
 
 		// Create database connection
 		DatabaseConnection connection = null;
@@ -266,7 +213,7 @@ public class TestSelectorOfPairsOfConfigurationsToCombine {
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
 		try {
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, query, accessibleQuery, accessibleSchema, chaser,
+			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser,
 					connection);
 
 			Set<String> predicateNames = new HashSet<>();

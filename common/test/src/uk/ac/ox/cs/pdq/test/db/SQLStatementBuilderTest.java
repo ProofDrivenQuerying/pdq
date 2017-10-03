@@ -21,28 +21,20 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.Lists;
 
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.ExecuteSynchronousSQLUpdateThread;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
+import uk.ac.ox.cs.pdq.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -51,7 +43,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * @author Gabor
  *
  */
-public class SQLStatementBuilderTest {
+public class SQLStatementBuilderTest extends PdqTest {
 	private final boolean print = false;
 	protected final static int insertCacheSize = 1000;
 	private int repeat = 100;
@@ -62,57 +54,15 @@ public class SQLStatementBuilderTest {
 		new String[] {"c","c","c","c","c","c"},
 		new String[] {"c1","c2","c3","c4","John","Michael"},
 	};
-	private Relation rel1;
-	private Relation rel2;
-	private Relation rel3;
-	
-	private TGD tgd;
-	private TGD tgd2;
-	private EGD egd;
-
-	private Schema schema;
 	private DatabaseConnection dcMySql;
 	private DatabaseConnection dcPostgresSql;
 	private DatabaseConnection dcDerby;
 	@Before
-	public void setup() throws SQLException {
-		Utility.assertsEnabled();
-        MockitoAnnotations.initMocks(this);
-        GlobalCounterProvider.resetCounters();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-		
-		Attribute factId = Attribute.create(Integer.class, "InstanceID");
-		
-		Attribute at11 = Attribute.create(String.class, "at11");
-		Attribute at12 = Attribute.create(String.class, "at12");
-		Attribute at13 = Attribute.create(String.class, "at13");
-		this.rel1 = Relation.create("R1", new Attribute[]{at11, at12, at13});
-		
-		Attribute at21 = Attribute.create(String.class, "at21");
-		Attribute at22 = Attribute.create(String.class, "at22");
-		this.rel2 = Relation.create("R2", new Attribute[]{at21, at22,factId});
-		
-		Attribute at31 = Attribute.create(String.class, "at31");
-		Attribute at32 = Attribute.create(String.class, "at32");
-		this.rel3 = Relation.create("R3", new Attribute[]{at31, at32,factId});
-		
-		Atom R1 = Atom.create(this.rel1, new Term[]{Variable.create("x"),Variable.create("y"),Variable.create("z")});
-		Atom R2 = Atom.create(this.rel2, new Term[]{Variable.create("y"),Variable.create("z")});
-		Atom R2p = Atom.create(this.rel2, new Term[]{Variable.create("y"),Variable.create("w")});
-		
-		Atom R3 = Atom.create(this.rel3, new Term[]{Variable.create("y"),Variable.create("w")});
-		
-		this.tgd = TGD.create(new Atom[]{R1},new Atom[]{R2});
-		this.tgd2 = TGD.create(new Atom[]{R1},new Atom[]{R3});	
-		this.egd = EGD.create(new Atom[]{R2,R2p}, new Atom[]{Atom.create(Predicate.create("EQUALITY", 2, true), 
-				Variable.create("z"),Variable.create("w"))});
-		this.schema = new Schema(new Relation[]{this.rel1, this.rel2, this.rel3}, new Dependency[]{this.tgd,this.tgd2, this.egd});
-		
-		dcMySql = new DatabaseConnection(DatabaseParameters.MySql, this.schema);
-		dcPostgresSql = new DatabaseConnection(DatabaseParameters.Postgres, this.schema);
-		dcDerby = new DatabaseConnection(DatabaseParameters.Derby, this.schema);
+	public void setup() throws Exception {
+		super.setup();
+		dcMySql = new DatabaseConnection(DatabaseParameters.MySql, this.testSchema1);
+		dcPostgresSql = new DatabaseConnection(DatabaseParameters.Postgres, this.testSchema1);
+		dcDerby = new DatabaseConnection(DatabaseParameters.Derby, this.testSchema1);
 		test_derbyAddFacts();
 		test_mySqlAddFacts();
 		test_PostgresAddFacts();
@@ -237,7 +187,7 @@ public class SQLStatementBuilderTest {
 				}
 			}
 			Assert.assertNotEquals(-1, expectedIndex);// we should have found one match
-			for (int i = 2; i <= columnsNumber; i++) {
+			for (int i = 2; i <= columnsNumber-1; i++) {
 				columnValue = rs.getString(i);
 				if (print) System.out.print(columnValue + "\t");
 				Assert.assertEquals(EXPECTED_RESULTS[i - 1][expectedIndex], columnValue);
@@ -248,23 +198,24 @@ public class SQLStatementBuilderTest {
 	}
 
 	private Collection<Atom> createTestFacts() {
+		int instanceid = 0;
 		Atom f20 = Atom.create(this.rel1, 
-				new Term[]{UntypedConstant.create("k1"), UntypedConstant.create("c"),UntypedConstant.create("c1")});
+				new Term[]{UntypedConstant.create("k1"), UntypedConstant.create("c"),UntypedConstant.create("c1"), TypedConstant.create(instanceid++)});
 
 		Atom f21 = Atom.create(this.rel1, 
-				new Term[]{UntypedConstant.create("k2"), UntypedConstant.create("c"),UntypedConstant.create("c2")});
+				new Term[]{UntypedConstant.create("k2"), UntypedConstant.create("c"),UntypedConstant.create("c2"), TypedConstant.create(instanceid++)});
 
 		Atom f22 = Atom.create(this.rel1, 
-				new Term[]{UntypedConstant.create("k3"), UntypedConstant.create("c"),UntypedConstant.create("c3")});
+				new Term[]{UntypedConstant.create("k3"), UntypedConstant.create("c"),UntypedConstant.create("c3"), TypedConstant.create(instanceid++)});
 
 		Atom f23 = Atom.create(this.rel1, 
-				new Term[]{UntypedConstant.create("k4"), UntypedConstant.create("c"),UntypedConstant.create("c4")});
+				new Term[]{UntypedConstant.create("k4"), UntypedConstant.create("c"),UntypedConstant.create("c4"), TypedConstant.create(instanceid++)});
 
 		Atom f24 = Atom.create(this.rel1, 
-				new Term[]{UntypedConstant.create("k5"), UntypedConstant.create("c"),TypedConstant.create(new String("John"))});
+				new Term[]{UntypedConstant.create("k5"), UntypedConstant.create("c"),TypedConstant.create(new String("John")), TypedConstant.create(instanceid++)});
 
 		Atom f25 = Atom.create(this.rel1, 
-				new Term[]{UntypedConstant.create("k6"), UntypedConstant.create("c"),TypedConstant.create(new String("Michael"))});
+				new Term[]{UntypedConstant.create("k6"), UntypedConstant.create("c"),TypedConstant.create(new String("Michael")), TypedConstant.create(instanceid++)});
 		return Lists.newArrayList(f20,f21,f22,f23,f24,f25);
 	}
 

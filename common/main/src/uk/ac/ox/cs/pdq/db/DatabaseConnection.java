@@ -58,13 +58,14 @@ public class DatabaseConnection implements AutoCloseable {
 		this(databaseParameters, schema, 1);
 	}
 
-	public DatabaseConnection(DatabaseParameters databaseParameters, Schema schema, int numberOfSynchConn) throws SQLException {
+	public DatabaseConnection(DatabaseParameters databaseParametersIn, Schema schema, int numberOfSynchConn) throws SQLException {
 		this.synchronousThreadsNumber = numberOfSynchConn;
-		String driver = databaseParameters.getDatabaseDriver();
-		String url = databaseParameters.getConnectionUrl();
-		String database = databaseParameters.getDatabaseName();
-		String username = databaseParameters.getDatabaseUser();
-		String password = databaseParameters.getDatabasePassword();
+		this.databaseParameters = (DatabaseParameters)databaseParametersIn.clone();
+		String driver = this.databaseParameters.getDatabaseDriver();
+		String url = this.databaseParameters.getConnectionUrl();
+		String database = this.databaseParameters.getDatabaseName();
+		String username = this.databaseParameters.getDatabaseUser();
+		String password = this.databaseParameters.getDatabasePassword();
 		if (url != null && url.contains("mysql")) {
 			this.builder = new MySQLStatementBuilder();
 		} else if (url != null && url.contains("postgres")) {
@@ -77,18 +78,8 @@ public class DatabaseConnection implements AutoCloseable {
 			if (Strings.isNullOrEmpty(url)) {
 				url = "jdbc:derby:memory:{1};create=true;";
 			}
-			if (Strings.isNullOrEmpty(database)) {
-				database = "chase";
-			}
-			// database name cannot be longer then 128 character, so if it is close we shorten it, 
-			// add current time to make sure it is unique even in case of multiple runs.
-			if (database.length() > 90) {
-				database = database.substring(0, 80) + "__";
-			}
-			database += "_" + System.currentTimeMillis() + "_" + GlobalCounterProvider.getNext("DatabaseConnectionName");
-			
-			database = database.toUpperCase();
-			databaseParameters.setDatabaseName(database);
+			database = validateDatabaseName(database);
+			this.databaseParameters.setDatabaseName(database);
 			synchronized (LOCK) {
 				username = "APP_" + GlobalCounterProvider.getNext("DatabaseConnectionName");
 			}
@@ -98,7 +89,11 @@ public class DatabaseConnection implements AutoCloseable {
 
 		for (int j = 0; j < synchronousThreadsNumber; j++)
 			this.synchronousConnections.add(DatabaseUtilities.getConnection(driver, url, database, username, password));
-
+		if (driver.contains("postgres")) {
+			// In case of postgres we need to have 2 databases, one we used to connect to, and a secondary to use.
+			database = database+"_work";
+			this.databaseParameters.setDatabaseName(database);
+		}
 		if (driver.contains("derby")) {
 			isDerby = true;
 			Statement st = this.synchronousConnections.get(0).createStatement();
@@ -106,13 +101,28 @@ public class DatabaseConnection implements AutoCloseable {
 		}
 		this.databaseName = database;
 		this.schema = schema;
-		this.databaseParameters = databaseParameters;
 		this.relationNamesToDatabaseTables = new LinkedHashMap<>();
 
 		if (!this.isInitialized) {
 			this.setup();
 			this.isInitialized = true;
 		}
+	}
+
+	private String validateDatabaseName(String databaseIn) {
+		String newDatabaseName = databaseIn;
+		if (Strings.isNullOrEmpty(newDatabaseName)) {
+			newDatabaseName = "chase";
+		}
+		// database name cannot be longer then 128 character, so if it is close we shorten it, 
+		// add current time to make sure it is unique even in case of multiple runs.
+		if (newDatabaseName.length() > 90) {
+			newDatabaseName = newDatabaseName.substring(0, 80) + "__";
+		}
+		newDatabaseName += "_" + System.currentTimeMillis() + "_" + GlobalCounterProvider.getNext("DatabaseConnectionName");
+		
+		newDatabaseName = newDatabaseName.toUpperCase();
+		return newDatabaseName;
 	}
 
 	/**

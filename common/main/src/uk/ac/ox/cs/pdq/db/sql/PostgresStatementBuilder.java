@@ -50,7 +50,9 @@ public class PostgresStatementBuilder extends SQLStatementBuilder {
 	@Override
 	public Collection<String> createDropStatements(String databaseName) {
 		Collection<String> result = new LinkedList<>();
-		result.add("DROP SCHEMA " + databaseName + " CASCADE");
+		if (!"pdq".equalsIgnoreCase(databaseName))
+			// the default database that we connect to should never be dropped
+			result.add("DROP SCHEMA " + databaseName + " CASCADE");
 		log.trace(result);
 		return result;
 	}
