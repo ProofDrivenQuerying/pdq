@@ -89,8 +89,8 @@ public class DatabaseConnection implements AutoCloseable {
 
 		for (int j = 0; j < synchronousThreadsNumber; j++)
 			this.synchronousConnections.add(DatabaseUtilities.getConnection(driver, url, database, username, password));
-		if (driver.contains("postgres")) {
-			// In case of postgres we need to have 2 databases, one we used to connect to, and a secondary to use.
+		if (!driver.contains("derby")) {
+			// In case of postgres and mysql we need to have 2 databases, one we used to connect to, and a secondary to use.
 			database = database+"_work";
 			this.databaseParameters.setDatabaseName(database);
 		}
