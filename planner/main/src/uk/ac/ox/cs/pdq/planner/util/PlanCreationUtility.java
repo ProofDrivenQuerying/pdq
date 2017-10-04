@@ -99,12 +99,21 @@ public class PlanCreationUtility {
 			//Rename the output attributes
 			Attribute[] renamings = computeRenamedAttributes(planRelation.getAttributes(), exposedFact.getTerms());
 			//Add a rename operator 
-			op1 = RenameTerm.create(renamings, access); 		
-			//Find if this fact has schema constants in output positions or repeated constants
-			//If yes, then compute the filtering conditions
-			Condition filteringConditions = PlanCreationUtility.createFilteringConditions(exposedFact.getTerms());
-			if (filteringConditions != null && ! checkEquality(filteringConditions, access.getInputConstants())) {
-				op1 = SelectionTerm.create(filteringConditions, op1);
+			if (op1 == null) {
+				op1 = RenameTerm.create(renamings, access); 		
+				//Find if this fact has schema constants in output positions or repeated constants
+				//If yes, then compute the filtering conditions
+				Condition filteringConditions = PlanCreationUtility.createFilteringConditions(exposedFact.getTerms());
+				if (filteringConditions != null && ! checkEquality(filteringConditions, access.getInputConstants())) {
+					op1 = SelectionTerm.create(filteringConditions, op1);
+				}
+			} else {
+				RelationalTerm op2 = RenameTerm.create(renamings, access); 		
+				Condition filteringConditions = PlanCreationUtility.createFilteringConditions(exposedFact.getTerms());
+				if (filteringConditions != null && ! checkEquality(filteringConditions, access.getInputConstants())) {
+					op2 = SelectionTerm.create(filteringConditions, op1);
+				}
+				op1 = JoinTerm.create(op1, op2);
 			}
 		}
 		return op1;
