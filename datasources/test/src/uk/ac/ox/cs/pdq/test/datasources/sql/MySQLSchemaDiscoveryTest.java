@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
@@ -18,10 +19,10 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MySQLSchemaDiscoveryTest.
  */
+@Ignore // this test requires a database called tpch_1 to exist in the MySql database and it supposed to have certain tables. This is not very good for a unit test, we should create the database on the fly.
 public class MySQLSchemaDiscoveryTest {
 
 	/** The schema. */
@@ -79,7 +80,7 @@ public class MySQLSchemaDiscoveryTest {
 	public MySQLSchemaDiscoveryTest() throws BuilderException {
 		Properties properties = new Properties();
 		properties.put("url", "jdbc:mysql://localhost/");
-		properties.put("database", "tpch_1");
+		properties.put("database", "pdq");
 		properties.put("driver", "com.mysql.jdbc.Driver");
 		properties.put("username", "pdq");
 		properties.put("password", "pdq");
