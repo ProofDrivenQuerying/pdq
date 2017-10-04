@@ -1,33 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="5.0" control-flow="TOP_DOWN">
-<command name="T1">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1655" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c1655" type="java.lang.String"/>
-</project>
-<child>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1654" type="java.lang.String"/>
-<attribute name="c1655" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="x0" type="java.lang.String"/>
-<attribute name="x1" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="V23" access-method="mt_23">
-<outputs>
-<attribute name="x0" type="java.lang.String"/>
-<attribute name="x1" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</command>
-</plan>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="RenameTerm">
+    <renamings name="c4" type="java.lang.String"/>
+    <renamings name="c5" type="java.lang.String"/>
+    <RelationalTerm type="AccessTerm">
+        <accessMethod name="mt_23"/>
+        <relation name="V23">
+            <attribute name="x0" type="java.lang.String"/>
+            <attribute name="x1" type="java.lang.String"/>
+            <access-method name="mt_23"/>
+        </relation>
+    </RelationalTerm>
+    <cost value="1.0" type="DoubleCost"/>
+</RelationalTermWithCost>

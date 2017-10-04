@@ -1,77 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plan type="dag" cost="75.0" control-flow="TOP_DOWN">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c2161" type="java.lang.Integer"/>
-<attribute name="c2162" type="java.lang.String"/>
-<attribute name="c2163" type="java.lang.Integer"/>
-<attribute name="c2165" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c2161" type="java.lang.Integer"/>
-<attribute name="c2162" type="java.lang.String"/>
-<attribute name="c2163" type="java.lang.Integer"/>
-<attribute name="c2165" type="java.lang.String"/>
-</project>
-<child>
-<operator type="DEPENDENT_JOIN" param="0">
-<outputs>
-<attribute name="c2163" type="java.lang.Integer"/>
-<attribute name="c2165" type="java.lang.String"/>
-<attribute name="c2166" type="java.lang.String"/>
-<attribute name="c2161" type="java.lang.Integer"/>
-<attribute name="c2162" type="java.lang.String"/>
-<attribute name="c2163" type="java.lang.Integer"/>
-<attribute name="c2164" type="java.lang.String"/>
-</outputs>
-<children>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c2163" type="java.lang.Integer"/>
-<attribute name="c2165" type="java.lang.String"/>
-<attribute name="c2166" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="r_regionkey" type="java.lang.Integer"/>
-<attribute name="r_name" type="java.lang.String"/>
-<attribute name="r_comment" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="region" access-method="m8">
-<outputs>
-<attribute name="r_regionkey" type="java.lang.Integer"/>
-<attribute name="r_name" type="java.lang.String"/>
-<attribute name="r_comment" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c2161" type="java.lang.Integer"/>
-<attribute name="c2162" type="java.lang.String"/>
-<attribute name="c2163" type="java.lang.Integer"/>
-<attribute name="c2164" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="n_nationkey" type="java.lang.Integer"/>
-<attribute name="n_name" type="java.lang.String"/>
-<attribute name="n_regionkey" type="java.lang.Integer"/>
-<attribute name="n_comment" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="nation" access-method="m7">
-<outputs>
-<attribute name="n_nationkey" type="java.lang.Integer"/>
-<attribute name="n_name" type="java.lang.String"/>
-<attribute name="n_regionkey" type="java.lang.Integer"/>
-<attribute name="n_comment" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-</child>
-</operator>
-</plan>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="ProjectionTerm">
+    <projections name="c6" type="java.lang.Integer"/>
+    <projections name="c7" type="java.lang.String"/>
+    <projections name="c8" type="java.lang.Integer"/>
+    <projections name="c10" type="java.lang.String"/>
+    <RelationalTerm type="RenameTerm">
+        <renamings name="c6" type="java.lang.Integer"/>
+        <renamings name="c7" type="java.lang.String"/>
+        <renamings name="c8" type="java.lang.Integer"/>
+        <renamings name="c10" type="java.lang.String"/>
+        <RelationalTerm type="AccessTerm">
+            <accessMethod name="m1"/>
+            <relation name="region_nation">
+                <attribute name="nation_key" type="java.lang.Integer"/>
+                <attribute name="nation_name" type="java.lang.String"/>
+                <attribute name="region_key" type="java.lang.Integer"/>
+                <attribute name="region_name" type="java.lang.String"/>
+                <access-method name="m1"/>
+            </relation>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="5.626204223185709E7" type="DoubleCost"/>
+</RelationalTermWithCost>

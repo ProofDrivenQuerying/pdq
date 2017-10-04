@@ -1,54 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="15.0" control-flow="TOP_DOWN">
-<command name="T1">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1478" type="java.lang.Integer"/>
-</outputs>
-<project>
-<attribute name="c1478" type="java.lang.Integer"/>
-</project>
-<child>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1478" type="java.lang.Integer"/>
-<attribute name="c1479" type="java.lang.Integer"/>
-<attribute name="c1480" type="java.math.BigDecimal"/>
-<attribute name="c1481" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="ps_partkey" type="java.lang.Integer"/>
-<attribute name="ps_availqty" type="java.lang.Integer"/>
-<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
-<attribute name="ps_comment" type="java.lang.String"/>
-</project>
-<child>
-<operator type="SELECT">
-<outputs>
-<attribute name="ps_partkey" type="java.lang.Integer"/>
-<attribute name="ps_suppkey" type="java.lang.Integer"/>
-<attribute name="ps_availqty" type="java.lang.Integer"/>
-<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
-<attribute name="ps_comment" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="1" value="5"/>
-</conjunction>
-<child>
-<operator type="ACCESS" relation="partsupp" access-method="m8">
-<outputs>
-<attribute name="ps_partkey" type="java.lang.Integer"/>
-<attribute name="ps_suppkey" type="java.lang.Integer"/>
-<attribute name="ps_availqty" type="java.lang.Integer"/>
-<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
-<attribute name="ps_comment" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</command>
-</plan>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="SelectionTerm">
+    <predicate type="ConjunctiveCondition">
+        <predicates position="1" type="ConstantEqualityCondition">
+            <constant type="java.lang.Integer" value="5"/>
+        </predicates>
+    </predicate>
+    <RelationalTerm type="RenameTerm">
+        <renamings name="c4" type="java.lang.Integer"/>
+        <renamings name="5" type="java.lang.Integer"/>
+        <renamings name="c5" type="java.lang.Integer"/>
+        <renamings name="c6" type="java.math.BigDecimal"/>
+        <renamings name="c7" type="java.lang.String"/>
+        <RelationalTerm type="AccessTerm">
+            <accessMethod name="m8"/>
+            <relation name="partsupp">
+                <attribute name="ps_partkey" type="java.lang.Integer"/>
+                <attribute name="ps_suppkey" type="java.lang.Integer"/>
+                <attribute name="ps_availqty" type="java.lang.Integer"/>
+                <attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+                <attribute name="ps_comment" type="java.lang.String"/>
+                <access-method name="m8"/>
+                <access-method name="m9" inputs="0,2"/>
+            </relation>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="1.0" type="DoubleCost"/>
+</RelationalTermWithCost>

@@ -1,100 +1,52 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="1.0" control-flow="TOP_DOWN">
-<command name="T1">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c5" type="java.math.BigDecimal"/>
-<attribute name="c6" type="java.math.BigDecimal"/>
-</outputs>
-<project>
-<attribute name="c5" type="java.math.BigDecimal"/>
-<attribute name="c6" type="java.math.BigDecimal"/>
-</project>
-<child>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1" type="java.lang.Integer"/>
-<attribute name="c2" type="java.lang.Integer"/>
-<attribute name="c3" type="java.lang.Integer"/>
-<attribute name="c4" type="java.lang.Integer"/>
-<attribute name="c5" type="java.math.BigDecimal"/>
-<attribute name="c6" type="java.math.BigDecimal"/>
-<attribute name="c7" type="java.math.BigDecimal"/>
-<attribute name="c8" type="java.lang.String"/>
-<attribute name="c9" type="java.lang.String"/>
-<attribute name="c10" type="java.sql.Date"/>
-<attribute name="c11" type="java.sql.Date"/>
-<attribute name="c12" type="java.sql.Date"/>
-<attribute name="c13" type="java.lang.String"/>
-<attribute name="c14" type="java.lang.String"/>
-<attribute name="c15" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="l_orderkey" type="java.lang.Integer"/>
-<attribute name="l_partkey" type="java.lang.Integer"/>
-<attribute name="l_suppkey" type="java.lang.Integer"/>
-<attribute name="l_linenumber" type="java.lang.Integer"/>
-<attribute name="l_extendedprice" type="java.math.BigDecimal"/>
-<attribute name="l_discount" type="java.math.BigDecimal"/>
-<attribute name="l_tax" type="java.math.BigDecimal"/>
-<attribute name="l_returnflag" type="java.lang.String"/>
-<attribute name="l_linestatus" type="java.lang.String"/>
-<attribute name="l_shipdate" type="java.sql.Date"/>
-<attribute name="l_commitdate" type="java.sql.Date"/>
-<attribute name="l_receiptdate" type="java.sql.Date"/>
-<attribute name="l_shipinstruct" type="java.lang.String"/>
-<attribute name="l_shipmode" type="java.lang.String"/>
-<attribute name="l_comment" type="java.lang.String"/>
-</project>
-<child>
-<operator type="SELECT">
-<outputs>
-<attribute name="l_orderkey" type="java.lang.Integer"/>
-<attribute name="l_partkey" type="java.lang.Integer"/>
-<attribute name="l_suppkey" type="java.lang.Integer"/>
-<attribute name="l_linenumber" type="java.lang.Integer"/>
-<attribute name="l_quantity" type="java.math.BigDecimal"/>
-<attribute name="l_extendedprice" type="java.math.BigDecimal"/>
-<attribute name="l_discount" type="java.math.BigDecimal"/>
-<attribute name="l_tax" type="java.math.BigDecimal"/>
-<attribute name="l_returnflag" type="java.lang.String"/>
-<attribute name="l_linestatus" type="java.lang.String"/>
-<attribute name="l_shipdate" type="java.sql.Date"/>
-<attribute name="l_commitdate" type="java.sql.Date"/>
-<attribute name="l_receiptdate" type="java.sql.Date"/>
-<attribute name="l_shipinstruct" type="java.lang.String"/>
-<attribute name="l_shipmode" type="java.lang.String"/>
-<attribute name="l_comment" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="4" value="10.0"/>
-</conjunction>
-<child>
-<operator type="ACCESS" relation="lineitem" access-method="mt_63">
-<outputs>
-<attribute name="l_orderkey" type="java.lang.Integer"/>
-<attribute name="l_partkey" type="java.lang.Integer"/>
-<attribute name="l_suppkey" type="java.lang.Integer"/>
-<attribute name="l_linenumber" type="java.lang.Integer"/>
-<attribute name="l_quantity" type="java.math.BigDecimal"/>
-<attribute name="l_extendedprice" type="java.math.BigDecimal"/>
-<attribute name="l_discount" type="java.math.BigDecimal"/>
-<attribute name="l_tax" type="java.math.BigDecimal"/>
-<attribute name="l_returnflag" type="java.lang.String"/>
-<attribute name="l_linestatus" type="java.lang.String"/>
-<attribute name="l_shipdate" type="java.sql.Date"/>
-<attribute name="l_commitdate" type="java.sql.Date"/>
-<attribute name="l_receiptdate" type="java.sql.Date"/>
-<attribute name="l_shipinstruct" type="java.lang.String"/>
-<attribute name="l_shipmode" type="java.lang.String"/>
-<attribute name="l_comment" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</command>
-</plan>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="SelectionTerm">
+    <predicate type="ConjunctiveCondition">
+        <predicates position="4" type="ConstantEqualityCondition">
+            <constant type="java.math.BigDecimal" value="10"/>
+        </predicates>
+    </predicate>
+    <RelationalTerm type="RenameTerm">
+        <renamings name="c15" type="java.lang.Integer"/>
+        <renamings name="c16" type="java.lang.Integer"/>
+        <renamings name="c17" type="java.lang.Integer"/>
+        <renamings name="c18" type="java.lang.Integer"/>
+        <renamings name="10" type="java.math.BigDecimal"/>
+        <renamings name="c19" type="java.math.BigDecimal"/>
+        <renamings name="c20" type="java.math.BigDecimal"/>
+        <renamings name="c21" type="java.math.BigDecimal"/>
+        <renamings name="c22" type="java.lang.String"/>
+        <renamings name="c23" type="java.lang.String"/>
+        <renamings name="c24" type="java.sql.Date"/>
+        <renamings name="c25" type="java.sql.Date"/>
+        <renamings name="c26" type="java.sql.Date"/>
+        <renamings name="c27" type="java.lang.String"/>
+        <renamings name="c28" type="java.lang.String"/>
+        <renamings name="c29" type="java.lang.String"/>
+        <RelationalTerm type="AccessTerm">
+            <accessMethod name="mt_63"/>
+            <relation name="lineitem">
+                <attribute name="l_orderkey" type="java.lang.Integer"/>
+                <attribute name="l_partkey" type="java.lang.Integer"/>
+                <attribute name="l_suppkey" type="java.lang.Integer"/>
+                <attribute name="l_linenumber" type="java.lang.Integer"/>
+                <attribute name="l_quantity" type="java.math.BigDecimal"/>
+                <attribute name="l_extendedprice" type="java.math.BigDecimal"/>
+                <attribute name="l_discount" type="java.math.BigDecimal"/>
+                <attribute name="l_tax" type="java.math.BigDecimal"/>
+                <attribute name="l_returnflag" type="java.lang.String"/>
+                <attribute name="l_linestatus" type="java.lang.String"/>
+                <attribute name="l_shipdate" type="java.sql.Date"/>
+                <attribute name="l_commitdate" type="java.sql.Date"/>
+                <attribute name="l_receiptdate" type="java.sql.Date"/>
+                <attribute name="l_shipinstruct" type="java.lang.String"/>
+                <attribute name="l_shipmode" type="java.lang.String"/>
+                <attribute name="l_comment" type="java.lang.String"/>
+                <access-method name="mt_60" inputs="1,2,3,6,7,8,9,10,13,14,15"/>
+                <access-method name="mt_61" inputs="1,4,5,10,11,12,13,14"/>
+                <access-method name="mt_62" inputs="1,6,8,9,10,13,14"/>
+                <access-method name="mt_63"/>
+            </relation>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="1.0" type="DoubleCost"/>
+</RelationalTermWithCost>

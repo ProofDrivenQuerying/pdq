@@ -1,75 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="10.0">
-<command name="T1">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c21481" type="java.lang.Integer"/>
-</outputs>
-<project>
-<attribute name="employeeid" type="java.lang.Integer"/>
-</project>
-<child>
-<operator type="SELECT">
-<outputs>
-<attribute name="employeeid" type="java.lang.Integer"/>
-<attribute name="lastname" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="1" value="smith"/>
-</conjunction>
-<child>
-<operator type="ACCESS" relation="Udirectory" access-method="m3">
-<outputs>
-<attribute name="employeeid" type="java.lang.Integer"/>
-<attribute name="lastname" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</command>
-<command name="T2">
-<operator type="DEPENDENT_JOIN" param="0">
-<outputs>
-<attribute name="c21481" type="java.lang.Integer"/>
-<attribute name="c21481" type="java.lang.Integer"/>
-<attribute name="c21482" type="java.lang.Integer"/>
-</outputs>
-<children>
-<operator type="ALIAS" name="T1"/>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c21481" type="java.lang.Integer"/>
-<attribute name="c21482" type="java.lang.Integer"/>
-</outputs>
-<project>
-<attribute name="employeeid" type="java.lang.Integer"/>
-<attribute name="officenumber" type="java.lang.Integer"/>
-</project>
-<child>
-<operator type="SELECT">
-<outputs>
-<attribute name="employeeid" type="java.lang.Integer"/>
-<attribute name="officenumber" type="java.lang.Integer"/>
-<attribute name="lastname" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="2" value="smith"/>
-</conjunction>
-<child>
-<operator type="ACCESS" relation="Profinfo" access-method="m2">
-<outputs>
-<attribute name="employeeid" type="java.lang.Integer"/>
-<attribute name="officenumber" type="java.lang.Integer"/>
-<attribute name="lastname" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-</command>
-</plan>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="DependentJoinTerm">
+    <RelationalTerm type="SelectionTerm">
+        <predicate type="ConjunctiveCondition">
+            <predicates position="1" type="ConstantEqualityCondition">
+                <constant value="smith"/>
+            </predicates>
+        </predicate>
+        <RelationalTerm type="RenameTerm">
+            <renamings name="c2" type="java.lang.Integer"/>
+            <renamings name="smith" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="m3"/>
+                <relation name="Udirectory">
+                    <attribute name="employeeid" type="java.lang.Integer"/>
+                    <attribute name="lastname" type="java.lang.String"/>
+                    <access-method name="m3"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+    <RelationalTerm type="SelectionTerm">
+        <predicate type="ConjunctiveCondition">
+            <predicates position="2" type="ConstantEqualityCondition">
+                <constant value="smith"/>
+            </predicates>
+        </predicate>
+        <RelationalTerm type="RenameTerm">
+            <renamings name="c2" type="java.lang.Integer"/>
+            <renamings name="c3" type="java.lang.Integer"/>
+            <renamings name="smith" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="m2" inputs="0"/>
+                <relation name="Profinfo">
+                    <attribute name="employeeid" type="java.lang.Integer"/>
+                    <attribute name="officenumber" type="java.lang.Integer"/>
+                    <attribute name="lastname" type="java.lang.String"/>
+                    <access-method name="m2" inputs="0"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="2.0" type="DoubleCost"/>
+</RelationalTermWithCost>

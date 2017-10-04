@@ -1,106 +1,55 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plan type="dag" cost="20200.0" control-flow="TOP_DOWN">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c17" type="java.lang.String"/>
-<attribute name="c19" type="java.lang.Integer"/>
-<attribute name="c22" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c17" type="java.lang.String"/>
-<attribute name="c19" type="java.lang.Integer"/>
-<attribute name="c22" type="java.lang.String"/>
-</project>
-<child>
-<operator type="JOIN" variant="SYMMETRIC_HASH">
-<outputs>
-<attribute name="c10" type="java.lang.Integer"/>
-<attribute name="c15" type="java.lang.String"/>
-<attribute name="c16" type="java.lang.String"/>
-<attribute name="c17" type="java.lang.String"/>
-<attribute name="c18" type="java.lang.String"/>
-<attribute name="c19" type="java.lang.Integer"/>
-<attribute name="c20" type="java.lang.String"/>
-<attribute name="c21" type="java.math.BigDecimal"/>
-<attribute name="c22" type="java.lang.String"/>
-<attribute name="c10" type="java.lang.Integer"/>
-<attribute name="c11" type="java.lang.Integer"/>
-<attribute name="c12" type="java.lang.Integer"/>
-<attribute name="c13" type="java.math.BigDecimal"/>
-<attribute name="c14" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="0" right="9"/>
-</conjunction>
-<children>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c10" type="java.lang.Integer"/>
-<attribute name="c15" type="java.lang.String"/>
-<attribute name="c16" type="java.lang.String"/>
-<attribute name="c17" type="java.lang.String"/>
-<attribute name="c18" type="java.lang.String"/>
-<attribute name="c19" type="java.lang.Integer"/>
-<attribute name="c20" type="java.lang.String"/>
-<attribute name="c21" type="java.math.BigDecimal"/>
-<attribute name="c22" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="p_partkey" type="java.lang.Integer"/>
-<attribute name="p_name" type="java.lang.String"/>
-<attribute name="p_mfgr" type="java.lang.String"/>
-<attribute name="p_brand" type="java.lang.String"/>
-<attribute name="p_type" type="java.lang.String"/>
-<attribute name="p_size" type="java.lang.Integer"/>
-<attribute name="p_container" type="java.lang.String"/>
-<attribute name="p_retailprice" type="java.math.BigDecimal"/>
-<attribute name="p_comment" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="part" access-method="m4">
-<outputs>
-<attribute name="p_partkey" type="java.lang.Integer"/>
-<attribute name="p_name" type="java.lang.String"/>
-<attribute name="p_mfgr" type="java.lang.String"/>
-<attribute name="p_brand" type="java.lang.String"/>
-<attribute name="p_type" type="java.lang.String"/>
-<attribute name="p_size" type="java.lang.Integer"/>
-<attribute name="p_container" type="java.lang.String"/>
-<attribute name="p_retailprice" type="java.math.BigDecimal"/>
-<attribute name="p_comment" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c10" type="java.lang.Integer"/>
-<attribute name="c11" type="java.lang.Integer"/>
-<attribute name="c12" type="java.lang.Integer"/>
-<attribute name="c13" type="java.math.BigDecimal"/>
-<attribute name="c14" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="ps_partkey" type="java.lang.Integer"/>
-<attribute name="ps_suppkey" type="java.lang.Integer"/>
-<attribute name="ps_availqty" type="java.lang.Integer"/>
-<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
-<attribute name="ps_comment" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="partsupp" access-method="m8">
-<outputs>
-<attribute name="ps_partkey" type="java.lang.Integer"/>
-<attribute name="ps_suppkey" type="java.lang.Integer"/>
-<attribute name="ps_availqty" type="java.lang.Integer"/>
-<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
-<attribute name="ps_comment" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-</child>
-</operator>
-</plan>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="ProjectionTerm">
+    <projections name="c20" type="java.lang.String"/>
+    <projections name="c22" type="java.lang.Integer"/>
+    <projections name="c25" type="java.lang.String"/>
+    <RelationalTerm type="JoinTerm">
+        <RelationalTerm type="RenameTerm">
+            <renamings name="c13" type="java.lang.Integer"/>
+            <renamings name="c18" type="java.lang.String"/>
+            <renamings name="c19" type="java.lang.String"/>
+            <renamings name="c20" type="java.lang.String"/>
+            <renamings name="c21" type="java.lang.String"/>
+            <renamings name="c22" type="java.lang.Integer"/>
+            <renamings name="c23" type="java.lang.String"/>
+            <renamings name="c24" type="java.math.BigDecimal"/>
+            <renamings name="c25" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="m4"/>
+                <relation name="part">
+                    <attribute name="p_partkey" type="java.lang.Integer"/>
+                    <attribute name="p_name" type="java.lang.String"/>
+                    <attribute name="p_mfgr" type="java.lang.String"/>
+                    <attribute name="p_brand" type="java.lang.String"/>
+                    <attribute name="p_type" type="java.lang.String"/>
+                    <attribute name="p_size" type="java.lang.Integer"/>
+                    <attribute name="p_container" type="java.lang.String"/>
+                    <attribute name="p_retailprice" type="java.math.BigDecimal"/>
+                    <attribute name="p_comment" type="java.lang.String"/>
+                    <access-method name="m4"/>
+                    <access-method name="m5" inputs="0,1"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="RenameTerm">
+            <renamings name="c13" type="java.lang.Integer"/>
+            <renamings name="c14" type="java.lang.Integer"/>
+            <renamings name="c15" type="java.lang.Integer"/>
+            <renamings name="c16" type="java.math.BigDecimal"/>
+            <renamings name="c17" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="m8"/>
+                <relation name="partsupp">
+                    <attribute name="ps_partkey" type="java.lang.Integer"/>
+                    <attribute name="ps_suppkey" type="java.lang.Integer"/>
+                    <attribute name="ps_availqty" type="java.lang.Integer"/>
+                    <attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+                    <attribute name="ps_comment" type="java.lang.String"/>
+                    <access-method name="m8"/>
+                    <access-method name="m9" inputs="0,2"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="7.01776781294164E13" type="DoubleCost"/>
+</RelationalTermWithCost>

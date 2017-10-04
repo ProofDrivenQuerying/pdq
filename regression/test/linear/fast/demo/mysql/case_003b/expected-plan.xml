@@ -1,224 +1,93 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="1.5050012256944444E14">
-<command name="T1">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c12208" type="java.lang.Integer"/>
-<attribute name="c12209" type="java.lang.Integer"/>
-<attribute name="c12210" type="java.lang.String"/>
-<attribute name="c12211" type="java.lang.String"/>
-<attribute name="c12212" type="java.lang.String"/>
-<attribute name="c12213" type="java.lang.String"/>
-<attribute name="c12214" type="java.lang.String"/>
-<attribute name="c12215" type="java.lang.String"/>
-<attribute name="c12216" type="java.lang.String"/>
-<attribute name="c12217" type="java.lang.String"/>
-<attribute name="c12218" type="java.lang.Double"/>
-<attribute name="c12219" type="java.lang.Double"/>
-<attribute name="c12220" type="java.lang.Double"/>
-<attribute name="c12221" type="java.lang.Double"/>
-<attribute name="c12222" type="java.lang.Double"/>
-<attribute name="c12223" type="java.lang.Double"/>
-<attribute name="c12224" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="woeid" type="java.lang.Integer"/>
-<attribute name="type" type="java.lang.Integer"/>
-<attribute name="placeTypeName" type="java.lang.String"/>
-<attribute name="country" type="java.lang.String"/>
-<attribute name="admin1" type="java.lang.String"/>
-<attribute name="admin2" type="java.lang.String"/>
-<attribute name="admin3" type="java.lang.String"/>
-<attribute name="locality1" type="java.lang.String"/>
-<attribute name="locality2" type="java.lang.String"/>
-<attribute name="postal" type="java.lang.String"/>
-<attribute name="centroid_lat" type="java.lang.Double"/>
-<attribute name="centroid_lng" type="java.lang.Double"/>
-<attribute name="bboxNorth" type="java.lang.Double"/>
-<attribute name="bboxSouth" type="java.lang.Double"/>
-<attribute name="bboxEast" type="java.lang.Double"/>
-<attribute name="bboxWest" type="java.lang.Double"/>
-<attribute name="timezone" type="java.lang.String"/>
-</project>
-<child>
-<operator type="SELECT">
-<outputs>
-<attribute name="woeid" type="java.lang.Integer"/>
-<attribute name="name" type="java.lang.String"/>
-<attribute name="type" type="java.lang.Integer"/>
-<attribute name="placeTypeName" type="java.lang.String"/>
-<attribute name="country" type="java.lang.String"/>
-<attribute name="admin1" type="java.lang.String"/>
-<attribute name="admin2" type="java.lang.String"/>
-<attribute name="admin3" type="java.lang.String"/>
-<attribute name="locality1" type="java.lang.String"/>
-<attribute name="locality2" type="java.lang.String"/>
-<attribute name="postal" type="java.lang.String"/>
-<attribute name="centroid_lat" type="java.lang.Double"/>
-<attribute name="centroid_lng" type="java.lang.Double"/>
-<attribute name="bboxNorth" type="java.lang.Double"/>
-<attribute name="bboxSouth" type="java.lang.Double"/>
-<attribute name="bboxEast" type="java.lang.Double"/>
-<attribute name="bboxWest" type="java.lang.Double"/>
-<attribute name="timezone" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="1" value="Asia"/>
-</conjunction>
-<child>
-<operator type="ACCESS" relation="YahooPlaces" access-method="yh_geo_name">
-<outputs>
-<attribute name="woeid" type="java.lang.Integer"/>
-<attribute name="name" type="java.lang.String"/>
-<attribute name="type" type="java.lang.Integer"/>
-<attribute name="placeTypeName" type="java.lang.String"/>
-<attribute name="country" type="java.lang.String"/>
-<attribute name="admin1" type="java.lang.String"/>
-<attribute name="admin2" type="java.lang.String"/>
-<attribute name="admin3" type="java.lang.String"/>
-<attribute name="locality1" type="java.lang.String"/>
-<attribute name="locality2" type="java.lang.String"/>
-<attribute name="postal" type="java.lang.String"/>
-<attribute name="centroid_lat" type="java.lang.Double"/>
-<attribute name="centroid_lng" type="java.lang.Double"/>
-<attribute name="bboxNorth" type="java.lang.Double"/>
-<attribute name="bboxSouth" type="java.lang.Double"/>
-<attribute name="bboxEast" type="java.lang.Double"/>
-<attribute name="bboxWest" type="java.lang.Double"/>
-<attribute name="timezone" type="java.lang.String"/>
-</outputs>
-<static-input>
-<input attribute="1" value="Asia" type="java.lang.String"/>
-</static-input>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</command>
-<command name="T2">
-<operator type="CROSS_PRODUCT">
-<outputs>
-<attribute name="c12208" type="java.lang.Integer"/>
-<attribute name="c12209" type="java.lang.Integer"/>
-<attribute name="c12210" type="java.lang.String"/>
-<attribute name="c12211" type="java.lang.String"/>
-<attribute name="c12212" type="java.lang.String"/>
-<attribute name="c12213" type="java.lang.String"/>
-<attribute name="c12214" type="java.lang.String"/>
-<attribute name="c12215" type="java.lang.String"/>
-<attribute name="c12216" type="java.lang.String"/>
-<attribute name="c12217" type="java.lang.String"/>
-<attribute name="c12218" type="java.lang.Double"/>
-<attribute name="c12219" type="java.lang.Double"/>
-<attribute name="c12220" type="java.lang.Double"/>
-<attribute name="c12221" type="java.lang.Double"/>
-<attribute name="c12222" type="java.lang.Double"/>
-<attribute name="c12223" type="java.lang.Double"/>
-<attribute name="c12224" type="java.lang.String"/>
-<attribute name="c12225" type="java.lang.Integer"/>
-<attribute name="c12227" type="java.lang.Integer"/>
-<attribute name="c12226" type="java.lang.String"/>
-</outputs>
-<children>
-<operator type="ALIAS" name="T1"/>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c12225" type="java.lang.Integer"/>
-<attribute name="c12227" type="java.lang.Integer"/>
-<attribute name="c12226" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="woeid" type="java.lang.Integer"/>
-<attribute name="placeType" type="java.lang.Integer"/>
-<attribute name="name" type="java.lang.String"/>
-</project>
-<child>
-<operator type="SELECT">
-<outputs>
-<attribute name="woeid" type="java.lang.Integer"/>
-<attribute name="placeType" type="java.lang.Integer"/>
-<attribute name="placeTypeName" type="java.lang.String"/>
-<attribute name="name" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="2" value="Country"/>
-</conjunction>
-<child>
-<operator type="ACCESS" relation="YahooCountries" access-method="yh_geo_country">
-<outputs>
-<attribute name="woeid" type="java.lang.Integer"/>
-<attribute name="placeType" type="java.lang.Integer"/>
-<attribute name="placeTypeName" type="java.lang.String"/>
-<attribute name="name" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-</command>
-<command name="T3">
-<operator type="DEPENDENT_JOIN" param="17">
-<outputs>
-<attribute name="c12208" type="java.lang.Integer"/>
-<attribute name="c12209" type="java.lang.Integer"/>
-<attribute name="c12210" type="java.lang.String"/>
-<attribute name="c12211" type="java.lang.String"/>
-<attribute name="c12212" type="java.lang.String"/>
-<attribute name="c12213" type="java.lang.String"/>
-<attribute name="c12214" type="java.lang.String"/>
-<attribute name="c12215" type="java.lang.String"/>
-<attribute name="c12216" type="java.lang.String"/>
-<attribute name="c12217" type="java.lang.String"/>
-<attribute name="c12218" type="java.lang.Double"/>
-<attribute name="c12219" type="java.lang.Double"/>
-<attribute name="c12220" type="java.lang.Double"/>
-<attribute name="c12221" type="java.lang.Double"/>
-<attribute name="c12222" type="java.lang.Double"/>
-<attribute name="c12223" type="java.lang.Double"/>
-<attribute name="c12224" type="java.lang.String"/>
-<attribute name="c12225" type="java.lang.Integer"/>
-<attribute name="c12227" type="java.lang.Integer"/>
-<attribute name="c12226" type="java.lang.String"/>
-<attribute name="c12225" type="java.lang.Integer"/>
-<attribute name="c12208" type="java.lang.Integer"/>
-<attribute name="c12242" type="java.lang.String"/>
-<attribute name="c12243" type="java.lang.String"/>
-<attribute name="c12244" type="java.lang.String"/>
-</outputs>
-<children>
-<operator type="ALIAS" name="T2"/>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c12225" type="java.lang.Integer"/>
-<attribute name="c12208" type="java.lang.Integer"/>
-<attribute name="c12242" type="java.lang.String"/>
-<attribute name="c12243" type="java.lang.String"/>
-<attribute name="c12244" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="source" type="java.lang.Integer"/>
-<attribute name="target" type="java.lang.Integer"/>
-<attribute name="placeTypeName" type="java.lang.String"/>
-<attribute name="name" type="java.lang.String"/>
-<attribute name="uri" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="YahooBelongsTo" access-method="yh_geo_belongs">
-<outputs>
-<attribute name="source" type="java.lang.Integer"/>
-<attribute name="target" type="java.lang.Integer"/>
-<attribute name="placeTypeName" type="java.lang.String"/>
-<attribute name="name" type="java.lang.String"/>
-<attribute name="uri" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-</command>
-</plan>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="JoinTerm">
+    <RelationalTerm type="DependentJoinTerm">
+        <RelationalTerm type="SelectionTerm">
+            <predicate type="ConjunctiveCondition">
+                <predicates position="2" type="ConstantEqualityCondition">
+                    <constant value="Country"/>
+                </predicates>
+            </predicate>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c54" type="java.lang.Integer"/>
+                <renamings name="c56" type="java.lang.Integer"/>
+                <renamings name="Country" type="java.lang.String"/>
+                <renamings name="c55" type="java.lang.String"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="yh_geo_country"/>
+                    <relation name="YahooCountries">
+                        <attribute name="woeid" type="java.lang.Integer"/>
+                        <attribute name="placeType" type="java.lang.Integer"/>
+                        <attribute name="placeTypeName" type="java.lang.String"/>
+                        <attribute name="name" type="java.lang.String"/>
+                        <access-method name="yh_geo_country"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="RenameTerm">
+            <renamings name="c54" type="java.lang.Integer"/>
+            <renamings name="c37" type="java.lang.Integer"/>
+            <renamings name="c71" type="java.lang.String"/>
+            <renamings name="c72" type="java.lang.String"/>
+            <renamings name="c73" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="yh_geo_belongs" inputs="0"/>
+                <relation name="YahooBelongsTo">
+                    <attribute name="source" type="java.lang.Integer"/>
+                    <attribute name="target" type="java.lang.Integer"/>
+                    <attribute name="placeTypeName" type="java.lang.String"/>
+                    <attribute name="name" type="java.lang.String"/>
+                    <attribute name="uri" type="java.lang.String"/>
+                    <access-method name="yh_geo_belongs" inputs="0"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+    <RelationalTerm type="RenameTerm">
+        <renamings name="c37" type="java.lang.Integer"/>
+        <renamings name="Asia" type="java.lang.String"/>
+        <renamings name="c38" type="java.lang.Integer"/>
+        <renamings name="c39" type="java.lang.String"/>
+        <renamings name="c40" type="java.lang.String"/>
+        <renamings name="c41" type="java.lang.String"/>
+        <renamings name="c42" type="java.lang.String"/>
+        <renamings name="c43" type="java.lang.String"/>
+        <renamings name="c44" type="java.lang.String"/>
+        <renamings name="c45" type="java.lang.String"/>
+        <renamings name="c46" type="java.lang.String"/>
+        <renamings name="c47" type="java.lang.Double"/>
+        <renamings name="c48" type="java.lang.Double"/>
+        <renamings name="c49" type="java.lang.Double"/>
+        <renamings name="c50" type="java.lang.Double"/>
+        <renamings name="c51" type="java.lang.Double"/>
+        <renamings name="c52" type="java.lang.Double"/>
+        <renamings name="c53" type="java.lang.String"/>
+        <RelationalTerm type="AccessTerm">
+            <accessMethod name="yh_geo_name" inputs="1"/>
+            <relation name="YahooPlaces">
+                <attribute name="woeid" type="java.lang.Integer"/>
+                <attribute name="name" type="java.lang.String"/>
+                <attribute name="type" type="java.lang.Integer"/>
+                <attribute name="placeTypeName" type="java.lang.String"/>
+                <attribute name="country" type="java.lang.String"/>
+                <attribute name="admin1" type="java.lang.String"/>
+                <attribute name="admin2" type="java.lang.String"/>
+                <attribute name="admin3" type="java.lang.String"/>
+                <attribute name="locality1" type="java.lang.String"/>
+                <attribute name="locality2" type="java.lang.String"/>
+                <attribute name="postal" type="java.lang.String"/>
+                <attribute name="centroid_lat" type="java.lang.Double"/>
+                <attribute name="centroid_lng" type="java.lang.Double"/>
+                <attribute name="bboxNorth" type="java.lang.Double"/>
+                <attribute name="bboxSouth" type="java.lang.Double"/>
+                <attribute name="bboxEast" type="java.lang.Double"/>
+                <attribute name="bboxWest" type="java.lang.Double"/>
+                <attribute name="timezone" type="java.lang.String"/>
+                <access-method name="yh_geo_name" inputs="1"/>
+                <access-method name="yh_geo_woeid" inputs="0"/>
+                <access-method name="yh_geo_type" inputs="1,2"/>
+            </relation>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="2.0833852539581704E16" type="DoubleCost"/>
+</RelationalTermWithCost>

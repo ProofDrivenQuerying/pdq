@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RelationalTermWithCost type="JoinTerm">
+<RelationalTermWithCost type="DependentJoinTerm">
     <RelationalTerm type="RenameTerm">
+        <renamings name="1" type="java.lang.Integer"/>
         <renamings name="c3" type="java.lang.Integer"/>
         <renamings name="c4" type="java.lang.Integer"/>
-        <renamings name="c5" type="java.lang.Integer"/>
         <RelationalTerm type="AccessTerm">
-            <accessMethod name="m1"/>
+            <accessMethod name="m1" inputs="0"/>
             <relation name="R">
                 <attribute name="a" type="java.lang.Integer"/>
                 <attribute name="b" type="java.lang.Integer"/>
                 <attribute name="c" type="java.lang.Integer"/>
-                <access-method name="m1"/>
+                <access-method name="m1" inputs="0"/>
             </relation>
         </RelationalTerm>
     </RelationalTerm>
     <RelationalTerm type="RenameTerm">
-        <renamings name="c4" type="java.lang.Integer"/>
+        <renamings name="c3" type="java.lang.Integer"/>
         <renamings name="c5" type="java.lang.Integer"/>
         <RelationalTerm type="AccessTerm">
-            <accessMethod name="m2"/>
+            <accessMethod name="m2" inputs="0"/>
             <relation name="S">
                 <attribute name="b" type="java.lang.Integer"/>
                 <attribute name="c" type="java.lang.Integer"/>
-                <access-method name="m2"/>
+                <access-method name="m2" inputs="0"/>
             </relation>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="2.8651063562460223E13" type="DoubleCost"/>
+    <cost value="2.412620631770441E11" type="DoubleCost"/>
 </RelationalTermWithCost>

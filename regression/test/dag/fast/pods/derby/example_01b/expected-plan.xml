@@ -1,63 +1,33 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plan type="dag" cost="2.0" control-flow="TOP_DOWN">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c72285" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c72285" type="java.lang.String"/>
-</project>
-<child>
-<operator type="DEPENDENT_JOIN" param="0">
-<outputs>
-<attribute name="c72283" type="java.lang.Integer"/>
-<attribute name="c72285" type="java.lang.String"/>
-<attribute name="c72283" type="java.lang.Integer"/>
-<attribute name="c72284" type="java.lang.Integer"/>
-<attribute name="c72285" type="java.lang.String"/>
-</outputs>
-<children>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c72283" type="java.lang.Integer"/>
-<attribute name="c72285" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="employeeid" type="java.lang.Integer"/>
-<attribute name="lastname" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="Udirectory1" access-method="m3">
-<outputs>
-<attribute name="employeeid" type="java.lang.Integer"/>
-<attribute name="lastname" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c72283" type="java.lang.Integer"/>
-<attribute name="c72284" type="java.lang.Integer"/>
-<attribute name="c72285" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="employeeid" type="java.lang.Integer"/>
-<attribute name="officenumber" type="java.lang.Integer"/>
-<attribute name="lastname" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="Profinfo" access-method="m2">
-<outputs>
-<attribute name="employeeid" type="java.lang.Integer"/>
-<attribute name="officenumber" type="java.lang.Integer"/>
-<attribute name="lastname" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-</child>
-</operator>
-</plan>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="ProjectionTerm">
+    <projections name="c5" type="java.lang.String"/>
+    <RelationalTerm type="DependentJoinTerm">
+        <RelationalTerm type="RenameTerm">
+            <renamings name="c3" type="java.lang.Integer"/>
+            <renamings name="c5" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="m3"/>
+                <relation name="Udirectory1">
+                    <attribute name="employeeid" type="java.lang.Integer"/>
+                    <attribute name="lastname" type="java.lang.String"/>
+                    <access-method name="m3"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="RenameTerm">
+            <renamings name="c3" type="java.lang.Integer"/>
+            <renamings name="c4" type="java.lang.Integer"/>
+            <renamings name="c5" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="m2" inputs="0"/>
+                <relation name="Profinfo">
+                    <attribute name="employeeid" type="java.lang.Integer"/>
+                    <attribute name="officenumber" type="java.lang.Integer"/>
+                    <attribute name="lastname" type="java.lang.String"/>
+                    <access-method name="m2" inputs="0"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="2.0" type="DoubleCost"/>
+</RelationalTermWithCost>

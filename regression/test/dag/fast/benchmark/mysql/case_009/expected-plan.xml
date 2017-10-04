@@ -1,363 +1,153 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plan type="dag" cost="78490.625" control-flow="TOP_DOWN">
-	<operator type="PROJECT">
-		<outputs>
-			<attribute name="c665" type="java.lang.String" />
-			<attribute name="c679" type="java.lang.String" />
-			<attribute name="c659" type="java.lang.String" />
-		</outputs>
-		<project>
-			<attribute name="c665" type="java.lang.String" />
-			<attribute name="c679" type="java.lang.String" />
-			<attribute name="c659" type="java.lang.String" />
-		</project>
-		<child>
-			<operator type="DEPENDENT_JOIN" param="11">
-				<outputs>
-					<attribute name="c667" type="java.lang.Integer" />
-					<attribute name="c685" type="java.lang.Integer" />
-					<attribute name="k693" type="java.lang.String" />
-					<attribute name="c673" type="java.lang.Integer" />
-					<attribute name="c679" type="java.lang.String" />
-					<attribute name="c680" type="java.lang.String" />
-					<attribute name="c667" type="java.lang.Integer" />
-					<attribute name="c681" type="java.lang.String" />
-					<attribute name="c682" type="java.math.BigDecimal" />
-					<attribute name="c683" type="java.lang.String" />
-					<attribute name="c684" type="java.lang.String" />
-					<attribute name="c658" type="java.lang.Integer" />
-					<attribute name="c665" type="java.lang.String" />
-					<attribute name="c666" type="java.lang.String" />
-					<attribute name="c667" type="java.lang.Integer" />
-					<attribute name="c668" type="java.lang.String" />
-					<attribute name="c669" type="java.math.BigDecimal" />
-					<attribute name="c670" type="java.lang.String" />
-					<attribute name="c671" type="java.lang.String" />
-					<attribute name="c672" type="java.lang.Integer" />
-					<attribute name="c673" type="java.lang.Integer" />
-					<attribute name="c659" type="java.lang.String" />
-					<attribute name="c674" type="java.math.BigDecimal" />
-					<attribute name="c675" type="java.sql.Date" />
-					<attribute name="c676" type="java.lang.String" />
-					<attribute name="c677" type="java.lang.Integer" />
-					<attribute name="c678" type="java.lang.String" />
-					<attribute name="c657" type="java.lang.Integer" />
-					<attribute name="c658" type="java.lang.Integer" />
-					<attribute name="c659" type="java.lang.String" />
-					<attribute name="c660" type="java.math.BigDecimal" />
-					<attribute name="c661" type="java.sql.Date" />
-					<attribute name="c662" type="java.lang.String" />
-					<attribute name="c663" type="java.lang.Integer" />
-					<attribute name="c664" type="java.lang.String" />
-				</outputs>
-				<children>
-					<operator type="DEPENDENT_JOIN" param="3">
-						<outputs>
-							<attribute name="c667" type="java.lang.Integer" />
-							<attribute name="c685" type="java.lang.Integer" />
-							<attribute name="k693" type="java.lang.String" />
-							<attribute name="c673" type="java.lang.Integer" />
-							<attribute name="c679" type="java.lang.String" />
-							<attribute name="c680" type="java.lang.String" />
-							<attribute name="c667" type="java.lang.Integer" />
-							<attribute name="c681" type="java.lang.String" />
-							<attribute name="c682" type="java.math.BigDecimal" />
-							<attribute name="c683" type="java.lang.String" />
-							<attribute name="c684" type="java.lang.String" />
-							<attribute name="c658" type="java.lang.Integer" />
-							<attribute name="c665" type="java.lang.String" />
-							<attribute name="c666" type="java.lang.String" />
-							<attribute name="c667" type="java.lang.Integer" />
-							<attribute name="c668" type="java.lang.String" />
-							<attribute name="c669" type="java.math.BigDecimal" />
-							<attribute name="c670" type="java.lang.String" />
-							<attribute name="c671" type="java.lang.String" />
-							<attribute name="c672" type="java.lang.Integer" />
-							<attribute name="c673" type="java.lang.Integer" />
-							<attribute name="c659" type="java.lang.String" />
-							<attribute name="c674" type="java.math.BigDecimal" />
-							<attribute name="c675" type="java.sql.Date" />
-							<attribute name="c676" type="java.lang.String" />
-							<attribute name="c677" type="java.lang.Integer" />
-							<attribute name="c678" type="java.lang.String" />
-						</outputs>
-						<children>
-							<operator type="DEPENDENT_JOIN" param="0,0">
-								<outputs>
-									<attribute name="c667" type="java.lang.Integer" />
-									<attribute name="c685" type="java.lang.Integer" />
-									<attribute name="k693" type="java.lang.String" />
-									<attribute name="c673" type="java.lang.Integer" />
-									<attribute name="c679" type="java.lang.String" />
-									<attribute name="c680" type="java.lang.String" />
-									<attribute name="c667" type="java.lang.Integer" />
-									<attribute name="c681" type="java.lang.String" />
-									<attribute name="c682" type="java.math.BigDecimal" />
-									<attribute name="c683" type="java.lang.String" />
-									<attribute name="c684" type="java.lang.String" />
-									<attribute name="c658" type="java.lang.Integer" />
-									<attribute name="c665" type="java.lang.String" />
-									<attribute name="c666" type="java.lang.String" />
-									<attribute name="c667" type="java.lang.Integer" />
-									<attribute name="c668" type="java.lang.String" />
-									<attribute name="c669" type="java.math.BigDecimal" />
-									<attribute name="c670" type="java.lang.String" />
-									<attribute name="c671" type="java.lang.String" />
-								</outputs>
-								<children>
-									<operator type="PROJECT">
-										<outputs>
-											<attribute name="c667" type="java.lang.Integer" />
-											<attribute name="c685" type="java.lang.Integer" />
-											<attribute name="k693" type="java.lang.String" />
-										</outputs>
-										<project>
-											<attribute name="nation_key" type="java.lang.Integer" />
-											<attribute name="region_key" type="java.lang.Integer" />
-											<attribute name="region_name" type="java.lang.String" />
-										</project>
-										<child>
-											<operator type="SELECT">
-												<outputs>
-													<attribute name="nation_key" type="java.lang.Integer" />
-													<attribute name="nation_name" type="java.lang.String" />
-													<attribute name="region_key" type="java.lang.Integer" />
-													<attribute name="region_name" type="java.lang.String" />
-												</outputs>
-												<conjunction>
-													<predicate type="equality" left="1" value="UNITED STATES" />
-												</conjunction>
-												<child>
-													<operator type="ACCESS" relation="region_nation"
-														access-method="m13">
-														<outputs>
-															<attribute name="nation_key" type="java.lang.Integer" />
-															<attribute name="nation_name" type="java.lang.String" />
-															<attribute name="region_key" type="java.lang.Integer" />
-															<attribute name="region_name" type="java.lang.String" />
-														</outputs>
-													</operator>
-												</child>
-											</operator>
-										</child>
-									</operator>
-									<operator type="JOIN" variant="SYMMETRIC_HASH">
-										<outputs>
-											<attribute name="c673" type="java.lang.Integer" />
-											<attribute name="c679" type="java.lang.String" />
-											<attribute name="c680" type="java.lang.String" />
-											<attribute name="c667" type="java.lang.Integer" />
-											<attribute name="c681" type="java.lang.String" />
-											<attribute name="c682" type="java.math.BigDecimal" />
-											<attribute name="c683" type="java.lang.String" />
-											<attribute name="c684" type="java.lang.String" />
-											<attribute name="c658" type="java.lang.Integer" />
-											<attribute name="c665" type="java.lang.String" />
-											<attribute name="c666" type="java.lang.String" />
-											<attribute name="c667" type="java.lang.Integer" />
-											<attribute name="c668" type="java.lang.String" />
-											<attribute name="c669" type="java.math.BigDecimal" />
-											<attribute name="c670" type="java.lang.String" />
-											<attribute name="c671" type="java.lang.String" />
-										</outputs>
-										<conjunction>
-											<predicate type="equality" left="3" right="11" />
-										</conjunction>
-										<children>
-											<operator type="PROJECT">
-												<outputs>
-													<attribute name="c673" type="java.lang.Integer" />
-													<attribute name="c679" type="java.lang.String" />
-													<attribute name="c680" type="java.lang.String" />
-													<attribute name="c667" type="java.lang.Integer" />
-													<attribute name="c681" type="java.lang.String" />
-													<attribute name="c682" type="java.math.BigDecimal" />
-													<attribute name="c683" type="java.lang.String" />
-													<attribute name="c684" type="java.lang.String" />
-												</outputs>
-												<project>
-													<attribute name="c_custkey" type="java.lang.Integer" />
-													<attribute name="c_name" type="java.lang.String" />
-													<attribute name="c_address" type="java.lang.String" />
-													<attribute name="c_nationkey" type="java.lang.Integer" />
-													<attribute name="c_phone" type="java.lang.String" />
-													<attribute name="c_acctbal" type="java.math.BigDecimal" />
-													<attribute name="c_mktsegment" type="java.lang.String" />
-													<attribute name="c_comment" type="java.lang.String" />
-												</project>
-												<child>
-													<operator type="ACCESS" relation="customer"
-														access-method="m1">
-														<outputs>
-															<attribute name="c_custkey" type="java.lang.Integer" />
-															<attribute name="c_name" type="java.lang.String" />
-															<attribute name="c_address" type="java.lang.String" />
-															<attribute name="c_nationkey" type="java.lang.Integer" />
-															<attribute name="c_phone" type="java.lang.String" />
-															<attribute name="c_acctbal" type="java.math.BigDecimal" />
-															<attribute name="c_mktsegment" type="java.lang.String" />
-															<attribute name="c_comment" type="java.lang.String" />
-														</outputs>
-													</operator>
-												</child>
-											</operator>
-											<operator type="PROJECT">
-												<outputs>
-													<attribute name="c658" type="java.lang.Integer" />
-													<attribute name="c665" type="java.lang.String" />
-													<attribute name="c666" type="java.lang.String" />
-													<attribute name="c667" type="java.lang.Integer" />
-													<attribute name="c668" type="java.lang.String" />
-													<attribute name="c669" type="java.math.BigDecimal" />
-													<attribute name="c670" type="java.lang.String" />
-													<attribute name="c671" type="java.lang.String" />
-												</outputs>
-												<project>
-													<attribute name="c_custkey" type="java.lang.Integer" />
-													<attribute name="c_name" type="java.lang.String" />
-													<attribute name="c_address" type="java.lang.String" />
-													<attribute name="c_nationkey" type="java.lang.Integer" />
-													<attribute name="c_phone" type="java.lang.String" />
-													<attribute name="c_acctbal" type="java.math.BigDecimal" />
-													<attribute name="c_mktsegment" type="java.lang.String" />
-													<attribute name="c_comment" type="java.lang.String" />
-												</project>
-												<child>
-													<operator type="ACCESS" relation="customer"
-														access-method="m1">
-														<outputs>
-															<attribute name="c_custkey" type="java.lang.Integer" />
-															<attribute name="c_name" type="java.lang.String" />
-															<attribute name="c_address" type="java.lang.String" />
-															<attribute name="c_nationkey" type="java.lang.Integer" />
-															<attribute name="c_phone" type="java.lang.String" />
-															<attribute name="c_acctbal" type="java.math.BigDecimal" />
-															<attribute name="c_mktsegment" type="java.lang.String" />
-															<attribute name="c_comment" type="java.lang.String" />
-														</outputs>
-													</operator>
-												</child>
-											</operator>
-										</children>
-									</operator>
-								</children>
-							</operator>
-							<operator type="PROJECT">
-								<outputs>
-									<attribute name="c672" type="java.lang.Integer" />
-									<attribute name="c673" type="java.lang.Integer" />
-									<attribute name="c659" type="java.lang.String" />
-									<attribute name="c674" type="java.math.BigDecimal" />
-									<attribute name="c675" type="java.sql.Date" />
-									<attribute name="c676" type="java.lang.String" />
-									<attribute name="c677" type="java.lang.Integer" />
-									<attribute name="c678" type="java.lang.String" />
-								</outputs>
-								<project>
-									<attribute name="o_orderkey" type="java.lang.Integer" />
-									<attribute name="o_custkey" type="java.lang.Integer" />
-									<attribute name="o_orderstatus" type="java.lang.String" />
-									<attribute name="o_totalprice" type="java.math.BigDecimal" />
-									<attribute name="o_orderdate" type="java.sql.Date" />
-									<attribute name="o_clerk" type="java.lang.String" />
-									<attribute name="o_shippriority" type="java.lang.Integer" />
-									<attribute name="o_comment" type="java.lang.String" />
-								</project>
-								<child>
-									<operator type="SELECT">
-										<outputs>
-											<attribute name="o_orderkey" type="java.lang.Integer" />
-											<attribute name="o_custkey" type="java.lang.Integer" />
-											<attribute name="o_orderstatus" type="java.lang.String" />
-											<attribute name="o_totalprice" type="java.math.BigDecimal" />
-											<attribute name="o_orderdate" type="java.sql.Date" />
-											<attribute name="o_orderpriority" type="java.lang.String" />
-											<attribute name="o_clerk" type="java.lang.String" />
-											<attribute name="o_shippriority" type="java.lang.Integer" />
-											<attribute name="o_comment" type="java.lang.String" />
-										</outputs>
-										<conjunction>
-											<predicate type="equality" left="5" value="1-URGENT" />
-										</conjunction>
-										<child>
-											<operator type="ACCESS" relation="orders"
-												access-method="m9">
-												<outputs>
-													<attribute name="o_orderkey" type="java.lang.Integer" />
-													<attribute name="o_custkey" type="java.lang.Integer" />
-													<attribute name="o_orderstatus" type="java.lang.String" />
-													<attribute name="o_totalprice" type="java.math.BigDecimal" />
-													<attribute name="o_orderdate" type="java.sql.Date" />
-													<attribute name="o_orderpriority" type="java.lang.String" />
-													<attribute name="o_clerk" type="java.lang.String" />
-													<attribute name="o_shippriority" type="java.lang.Integer" />
-													<attribute name="o_comment" type="java.lang.String" />
-												</outputs>
-											</operator>
-										</child>
-									</operator>
-								</child>
-							</operator>
-						</children>
-					</operator>
-					<operator type="PROJECT">
-						<outputs>
-							<attribute name="c657" type="java.lang.Integer" />
-							<attribute name="c658" type="java.lang.Integer" />
-							<attribute name="c659" type="java.lang.String" />
-							<attribute name="c660" type="java.math.BigDecimal" />
-							<attribute name="c661" type="java.sql.Date" />
-							<attribute name="c662" type="java.lang.String" />
-							<attribute name="c663" type="java.lang.Integer" />
-							<attribute name="c664" type="java.lang.String" />
-						</outputs>
-						<project>
-							<attribute name="o_orderkey" type="java.lang.Integer" />
-							<attribute name="o_custkey" type="java.lang.Integer" />
-							<attribute name="o_orderstatus" type="java.lang.String" />
-							<attribute name="o_totalprice" type="java.math.BigDecimal" />
-							<attribute name="o_orderdate" type="java.sql.Date" />
-							<attribute name="o_clerk" type="java.lang.String" />
-							<attribute name="o_shippriority" type="java.lang.Integer" />
-							<attribute name="o_comment" type="java.lang.String" />
-						</project>
-						<child>
-							<operator type="SELECT">
-								<outputs>
-									<attribute name="o_orderkey" type="java.lang.Integer" />
-									<attribute name="o_custkey" type="java.lang.Integer" />
-									<attribute name="o_orderstatus" type="java.lang.String" />
-									<attribute name="o_totalprice" type="java.math.BigDecimal" />
-									<attribute name="o_orderdate" type="java.sql.Date" />
-									<attribute name="o_orderpriority" type="java.lang.String" />
-									<attribute name="o_clerk" type="java.lang.String" />
-									<attribute name="o_shippriority" type="java.lang.Integer" />
-									<attribute name="o_comment" type="java.lang.String" />
-								</outputs>
-								<conjunction>
-									<predicate type="equality" left="5" value="1-URGENT" />
-								</conjunction>
-								<child>
-									<operator type="ACCESS" relation="orders"
-										access-method="m9">
-										<outputs>
-											<attribute name="o_orderkey" type="java.lang.Integer" />
-											<attribute name="o_custkey" type="java.lang.Integer" />
-											<attribute name="o_orderstatus" type="java.lang.String" />
-											<attribute name="o_totalprice" type="java.math.BigDecimal" />
-											<attribute name="o_orderdate" type="java.sql.Date" />
-											<attribute name="o_orderpriority" type="java.lang.String" />
-											<attribute name="o_clerk" type="java.lang.String" />
-											<attribute name="o_shippriority" type="java.lang.Integer" />
-											<attribute name="o_comment" type="java.lang.String" />
-										</outputs>
-									</operator>
-								</child>
-							</operator>
-						</child>
-					</operator>
-				</children>
-			</operator>
-		</child>
-	</operator>
-</plan>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="ProjectionTerm">
+    <projections name="c38" type="java.lang.String"/>
+    <projections name="c52" type="java.lang.String"/>
+    <projections name="c32" type="java.lang.String"/>
+    <RelationalTerm type="DependentJoinTerm">
+        <RelationalTerm type="DependentJoinTerm">
+            <RelationalTerm type="DependentJoinTerm">
+                <RelationalTerm type="SelectionTerm">
+                    <predicate type="ConjunctiveCondition">
+                        <predicates position="1" type="ConstantEqualityCondition">
+                            <constant value="UNITED STATES"/>
+                        </predicates>
+                    </predicate>
+                    <RelationalTerm type="RenameTerm">
+                        <renamings name="c40" type="java.lang.Integer"/>
+                        <renamings name="UNITED STATES" type="java.lang.String"/>
+                        <renamings name="c58" type="java.lang.Integer"/>
+                        <renamings name="k60" type="java.lang.String"/>
+                        <RelationalTerm type="AccessTerm">
+                            <accessMethod name="m13"/>
+                            <relation name="region_nation">
+<attribute name="nation_key" type="java.lang.Integer"/>
+<attribute name="nation_name" type="java.lang.String"/>
+<attribute name="region_key" type="java.lang.Integer"/>
+<attribute name="region_name" type="java.lang.String"/>
+<access-method name="m21" inputs="0"/>
+<access-method name="m13"/>
+                            </relation>
+                        </RelationalTerm>
+                    </RelationalTerm>
+                </RelationalTerm>
+                <RelationalTerm type="JoinTerm">
+                    <RelationalTerm type="RenameTerm">
+                        <renamings name="c46" type="java.lang.Integer"/>
+                        <renamings name="c52" type="java.lang.String"/>
+                        <renamings name="c53" type="java.lang.String"/>
+                        <renamings name="c40" type="java.lang.Integer"/>
+                        <renamings name="c54" type="java.lang.String"/>
+                        <renamings name="c55" type="java.math.BigDecimal"/>
+                        <renamings name="c56" type="java.lang.String"/>
+                        <renamings name="c57" type="java.lang.String"/>
+                        <RelationalTerm type="AccessTerm">
+                            <accessMethod name="m1" inputs="3"/>
+                            <relation name="customer">
+<attribute name="c_custkey" type="java.lang.Integer"/>
+<attribute name="c_name" type="java.lang.String"/>
+<attribute name="c_address" type="java.lang.String"/>
+<attribute name="c_nationkey" type="java.lang.Integer"/>
+<attribute name="c_phone" type="java.lang.String"/>
+<attribute name="c_acctbal" type="java.math.BigDecimal"/>
+<attribute name="c_mktsegment" type="java.lang.String"/>
+<attribute name="c_comment" type="java.lang.String"/>
+<access-method name="m1" inputs="3"/>
+                            </relation>
+                        </RelationalTerm>
+                    </RelationalTerm>
+                    <RelationalTerm type="RenameTerm">
+                        <renamings name="c31" type="java.lang.Integer"/>
+                        <renamings name="c38" type="java.lang.String"/>
+                        <renamings name="c39" type="java.lang.String"/>
+                        <renamings name="c40" type="java.lang.Integer"/>
+                        <renamings name="c41" type="java.lang.String"/>
+                        <renamings name="c42" type="java.math.BigDecimal"/>
+                        <renamings name="c43" type="java.lang.String"/>
+                        <renamings name="c44" type="java.lang.String"/>
+                        <RelationalTerm type="AccessTerm">
+                            <accessMethod name="m1" inputs="3"/>
+                            <relation name="customer">
+<attribute name="c_custkey" type="java.lang.Integer"/>
+<attribute name="c_name" type="java.lang.String"/>
+<attribute name="c_address" type="java.lang.String"/>
+<attribute name="c_nationkey" type="java.lang.Integer"/>
+<attribute name="c_phone" type="java.lang.String"/>
+<attribute name="c_acctbal" type="java.math.BigDecimal"/>
+<attribute name="c_mktsegment" type="java.lang.String"/>
+<attribute name="c_comment" type="java.lang.String"/>
+<access-method name="m1" inputs="3"/>
+                            </relation>
+                        </RelationalTerm>
+                    </RelationalTerm>
+                </RelationalTerm>
+            </RelationalTerm>
+            <RelationalTerm type="SelectionTerm">
+                <predicate type="ConjunctiveCondition">
+                    <predicates position="5" type="ConstantEqualityCondition">
+                        <constant value="1-URGENT"/>
+                    </predicates>
+                </predicate>
+                <RelationalTerm type="RenameTerm">
+                    <renamings name="c30" type="java.lang.Integer"/>
+                    <renamings name="c31" type="java.lang.Integer"/>
+                    <renamings name="c32" type="java.lang.String"/>
+                    <renamings name="c33" type="java.math.BigDecimal"/>
+                    <renamings name="c34" type="java.sql.Date"/>
+                    <renamings name="1-URGENT" type="java.lang.String"/>
+                    <renamings name="c35" type="java.lang.String"/>
+                    <renamings name="c36" type="java.lang.Integer"/>
+                    <renamings name="c37" type="java.lang.String"/>
+                    <RelationalTerm type="AccessTerm">
+                        <accessMethod name="m9" inputs="1"/>
+                        <relation name="orders">
+                            <attribute name="o_orderkey" type="java.lang.Integer"/>
+                            <attribute name="o_custkey" type="java.lang.Integer"/>
+                            <attribute name="o_orderstatus" type="java.lang.String"/>
+                            <attribute name="o_totalprice" type="java.math.BigDecimal"/>
+                            <attribute name="o_orderdate" type="java.sql.Date"/>
+                            <attribute name="o_orderpriority" type="java.lang.String"/>
+                            <attribute name="o_clerk" type="java.lang.String"/>
+                            <attribute name="o_shippriority" type="java.lang.Integer"/>
+                            <attribute name="o_comment" type="java.lang.String"/>
+                            <access-method name="m9" inputs="1"/>
+                        </relation>
+                    </RelationalTerm>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="SelectionTerm">
+            <predicate type="ConjunctiveCondition">
+                <predicates position="5" type="ConstantEqualityCondition">
+                    <constant value="1-URGENT"/>
+                </predicates>
+            </predicate>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c45" type="java.lang.Integer"/>
+                <renamings name="c46" type="java.lang.Integer"/>
+                <renamings name="c32" type="java.lang.String"/>
+                <renamings name="c47" type="java.math.BigDecimal"/>
+                <renamings name="c48" type="java.sql.Date"/>
+                <renamings name="1-URGENT" type="java.lang.String"/>
+                <renamings name="c49" type="java.lang.String"/>
+                <renamings name="c50" type="java.lang.Integer"/>
+                <renamings name="c51" type="java.lang.String"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="m9" inputs="1"/>
+                    <relation name="orders">
+                        <attribute name="o_orderkey" type="java.lang.Integer"/>
+                        <attribute name="o_custkey" type="java.lang.Integer"/>
+                        <attribute name="o_orderstatus" type="java.lang.String"/>
+                        <attribute name="o_totalprice" type="java.math.BigDecimal"/>
+                        <attribute name="o_orderdate" type="java.sql.Date"/>
+                        <attribute name="o_orderpriority" type="java.lang.String"/>
+                        <attribute name="o_clerk" type="java.lang.String"/>
+                        <attribute name="o_shippriority" type="java.lang.Integer"/>
+                        <attribute name="o_comment" type="java.lang.String"/>
+                        <access-method name="m9" inputs="1"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="1.0482144872825162E23" type="DoubleCost"/>
+</RelationalTermWithCost>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="DependentJoinTerm">
     <RelationalTerm type="RenameTerm">
-        <renamings name="c1" type="java.lang.Integer"/>
-        <renamings name="c2" type="java.lang.Integer"/>
         <renamings name="c3" type="java.lang.Integer"/>
+        <renamings name="c4" type="java.lang.Integer"/>
+        <renamings name="c5" type="java.lang.Integer"/>
         <RelationalTerm type="AccessTerm">
             <accessMethod name="m1"/>
             <relation name="R">
@@ -15,8 +15,8 @@
         </RelationalTerm>
     </RelationalTerm>
     <RelationalTerm type="RenameTerm">
-        <renamings name="c2" type="java.lang.Integer"/>
-        <renamings name="c3" type="java.lang.Integer"/>
+        <renamings name="c4" type="java.lang.Integer"/>
+        <renamings name="c5" type="java.lang.Integer"/>
         <RelationalTerm type="AccessTerm">
             <accessMethod name="m2" inputs="0"/>
             <relation name="S">

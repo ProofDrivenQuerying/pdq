@@ -1,133 +1,63 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plan type="dag" cost="3.0" control-flow="TOP_DOWN">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c72252" type="java.lang.Integer"/>
-<attribute name="c72251" type="java.lang.Integer"/>
-</outputs>
-<project>
-<attribute name="c72252" type="java.lang.Integer"/>
-<attribute name="c72251" type="java.lang.Integer"/>
-</project>
-<child>
-<operator type="JOIN" variant="SYMMETRIC_HASH">
-<outputs>
-<attribute name="c72250" type="java.lang.Integer"/>
-<attribute name="c72251" type="java.lang.Integer"/>
-<attribute name="c72252" type="java.lang.Integer"/>
-<attribute name="c72250" type="java.lang.Integer"/>
-<attribute name="c72251" type="java.lang.Integer"/>
-<attribute name="c72251" type="java.lang.Integer"/>
-<attribute name="c72250" type="java.lang.Integer"/>
-<attribute name="c72252" type="java.lang.Integer"/>
-<attribute name="c72251" type="java.lang.Integer"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="1" right="8"/>
-</conjunction>
-<children>
-<operator type="DEPENDENT_JOIN" param="0,2">
-<outputs>
-<attribute name="c72250" type="java.lang.Integer"/>
-<attribute name="c72251" type="java.lang.Integer"/>
-<attribute name="c72252" type="java.lang.Integer"/>
-<attribute name="c72250" type="java.lang.Integer"/>
-<attribute name="c72251" type="java.lang.Integer"/>
-<attribute name="c72251" type="java.lang.Integer"/>
-<attribute name="c72250" type="java.lang.Integer"/>
-<attribute name="c72252" type="java.lang.Integer"/>
-</outputs>
-<children>
-<operator type="DEPENDENT_JOIN" param="0,1">
-<outputs>
-<attribute name="c72250" type="java.lang.Integer"/>
-<attribute name="c72251" type="java.lang.Integer"/>
-<attribute name="c72252" type="java.lang.Integer"/>
-<attribute name="c72250" type="java.lang.Integer"/>
-<attribute name="c72251" type="java.lang.Integer"/>
-</outputs>
-<children>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c72250" type="java.lang.Integer"/>
-<attribute name="c72251" type="java.lang.Integer"/>
-</outputs>
-<project>
-<attribute name="r1.1" type="java.lang.Integer"/>
-<attribute name="r1.2" type="java.lang.Integer"/>
-</project>
-<child>
-<operator type="ACCESS" relation="r1" access-method="m1">
-<outputs>
-<attribute name="r1.1" type="java.lang.Integer"/>
-<attribute name="r1.2" type="java.lang.Integer"/>
-</outputs>
-</operator>
-</child>
-</operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c72252" type="java.lang.Integer"/>
-<attribute name="c72250" type="java.lang.Integer"/>
-<attribute name="c72251" type="java.lang.Integer"/>
-</outputs>
-<project>
-<attribute name="r3.1" type="java.lang.Integer"/>
-<attribute name="r3.2" type="java.lang.Integer"/>
-<attribute name="r3.3" type="java.lang.Integer"/>
-</project>
-<child>
-<operator type="ACCESS" relation="r3" access-method="m4">
-<outputs>
-<attribute name="r3.1" type="java.lang.Integer"/>
-<attribute name="r3.2" type="java.lang.Integer"/>
-<attribute name="r3.3" type="java.lang.Integer"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c72251" type="java.lang.Integer"/>
-<attribute name="c72250" type="java.lang.Integer"/>
-<attribute name="c72252" type="java.lang.Integer"/>
-</outputs>
-<project>
-<attribute name="r3.1" type="java.lang.Integer"/>
-<attribute name="r3.2" type="java.lang.Integer"/>
-<attribute name="r3.3" type="java.lang.Integer"/>
-</project>
-<child>
-<operator type="ACCESS" relation="r3" access-method="m4">
-<outputs>
-<attribute name="r3.1" type="java.lang.Integer"/>
-<attribute name="r3.2" type="java.lang.Integer"/>
-<attribute name="r3.3" type="java.lang.Integer"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c72251" type="java.lang.Integer"/>
-</outputs>
-<project>
-<attribute name="r2.1" type="java.lang.Integer"/>
-</project>
-<child>
-<operator type="ACCESS" relation="r2" access-method="m3">
-<outputs>
-<attribute name="r2.1" type="java.lang.Integer"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-</child>
-</operator>
-</plan>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="ProjectionTerm">
+    <projections name="c5" type="java.lang.Integer"/>
+    <projections name="c4" type="java.lang.Integer"/>
+    <RelationalTerm type="DependentJoinTerm">
+        <RelationalTerm type="DependentJoinTerm">
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c3" type="java.lang.Integer"/>
+                <renamings name="c4" type="java.lang.Integer"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="m1"/>
+                    <relation name="r1">
+                        <attribute name="r1.1" type="java.lang.Integer"/>
+                        <attribute name="r1.2" type="java.lang.Integer"/>
+                        <access-method name="m1"/>
+                        <access-method name="m2" inputs="0,1"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c5" type="java.lang.Integer"/>
+                <renamings name="c3" type="java.lang.Integer"/>
+                <renamings name="c4" type="java.lang.Integer"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="m4" inputs="1,2"/>
+                    <relation name="r3">
+                        <attribute name="r3.1" type="java.lang.Integer"/>
+                        <attribute name="r3.2" type="java.lang.Integer"/>
+                        <attribute name="r3.3" type="java.lang.Integer"/>
+                        <access-method name="m4" inputs="1,2"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="JoinTerm">
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c4" type="java.lang.Integer"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="m3"/>
+                    <relation name="r2">
+                        <attribute name="r2.1" type="java.lang.Integer"/>
+                        <access-method name="m3"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c4" type="java.lang.Integer"/>
+                <renamings name="c3" type="java.lang.Integer"/>
+                <renamings name="c5" type="java.lang.Integer"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="m4" inputs="1,2"/>
+                    <relation name="r3">
+                        <attribute name="r3.1" type="java.lang.Integer"/>
+                        <attribute name="r3.2" type="java.lang.Integer"/>
+                        <attribute name="r3.3" type="java.lang.Integer"/>
+                        <access-method name="m4" inputs="1,2"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="3.0" type="DoubleCost"/>
+</RelationalTermWithCost>
