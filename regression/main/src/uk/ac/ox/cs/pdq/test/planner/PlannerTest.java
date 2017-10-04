@@ -159,12 +159,6 @@ private static FileWriter summary = null;
 		 * @throws ReflectiveOperationException the reflective operation exception
 		 */
 		private boolean compare(File directory) throws ReflectiveOperationException {       
-			if (!directory.getAbsolutePath().toLowerCase().contains("mysql")) {             
-				return false;                                                               
-			}
-			if (directory.getAbsolutePath().toLowerCase().contains("blackbox_db")) {
-				return false;
-			}
 			if (summary == null) {
 				try {
 					summary = new FileWriter(new File("summary.txt"));
