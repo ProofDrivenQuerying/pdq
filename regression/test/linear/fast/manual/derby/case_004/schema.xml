@@ -38,5 +38,25 @@
                 </atom>
             </head>
         </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="R1">
+                    <variable name="x0"/>
+                    <variable name="x1"/>
+                </atom>
+                <atom name="R2">
+                    <variable name="x0"/>
+                    <variable name="x2"/>
+                    <variable name="x3"/>
+                    <variable name="x4"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="V3">
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+            </head>
+        </dependency>
     </dependencies>
 </schema>

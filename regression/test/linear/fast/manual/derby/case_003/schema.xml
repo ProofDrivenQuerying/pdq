@@ -49,10 +49,6 @@
                     <variable name="x"/>
                     <variable name="z"/>
                 </atom>
-                <atom name="r1">
-                    <variable name="x"/>
-                    <variable name="z"/>
-                </atom>
             </head>
         </dependency>
         <dependency type="TGD">
@@ -72,10 +68,6 @@
                 </atom>
             </body>
             <head>
-                <atom name="r1">
-                    <variable name="x"/>
-                    <variable name="z"/>
-                </atom>
                 <atom name="r1">
                     <variable name="x"/>
                     <variable name="z"/>
