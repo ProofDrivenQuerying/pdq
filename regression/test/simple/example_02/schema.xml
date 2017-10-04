@@ -13,4 +13,5 @@
             <access-method name="m2" inputs="0,1"/>
         </relation>
     </relations>
+    <dependencies/>
 </schema>
