@@ -108,6 +108,7 @@ public class TestOrderDependentCostEstimators {
 		
 		Assert.assertNotEquals(cost1,cost3);
 		Assert.assertNotEquals(cost2,cost4);
+		Assert.assertNotEquals(output,output2);
 		
 		//TODO assert the costs and verify that the numbers look reasonable
 	}
