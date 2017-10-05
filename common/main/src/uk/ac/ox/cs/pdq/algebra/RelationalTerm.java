@@ -1,6 +1,8 @@
 package uk.ac.ox.cs.pdq.algebra;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -22,7 +24,12 @@ public abstract class RelationalTerm implements Serializable {
 	protected final Attribute[] inputAttributes;
 	
 	protected final Attribute[] outputAttributes;
-
+	
+	/**
+	 * List of access children. used often enough to deserve a local cache holding this list. 
+	 */
+	private Set<AccessTerm> accessesCached = null;
+	
 	protected RelationalTerm(Attribute[] inputAttributes, Attribute[] outputAttributes) {
 		Assert.assertTrue(outputAttributes != null);
 		this.inputAttributes = inputAttributes;
@@ -62,4 +69,45 @@ public abstract class RelationalTerm implements Serializable {
 	public boolean isClosed() {
 		return this.inputAttributes.length == 0;
 	}
+	
+	/**
+	 * Gets the accesses, and caches them, since it is a slow operation to generate the list, but needed frequently.
+	 * @param operator the operator
+	 * @return the access operators that are children of the input operator
+	 */
+	public Set<AccessTerm> getAccesses() {
+		if (accessesCached!=null)
+			return accessesCached;
+		
+		Set<AccessTerm> result = new LinkedHashSet<>();
+		if (this instanceof AccessTerm) {
+			result.add(((AccessTerm) this));
+			accessesCached = result;
+			return result;
+		}
+		else if (this instanceof JoinTerm) {
+			for (RelationalTerm child: ((JoinTerm)this).getChildren()) 
+				result.addAll(child.getAccesses());
+			accessesCached = result;
+			return result;
+		}
+		else if (this instanceof DependentJoinTerm) {
+			for (RelationalTerm child: ((DependentJoinTerm)this).getChildren()) 
+				result.addAll(child.getAccesses());
+			accessesCached = result;
+			return result;
+		}
+		else if (this instanceof SelectionTerm) {
+			result.addAll(((SelectionTerm)this).getChildren()[0].getAccesses());
+		}
+		else if (this instanceof ProjectionTerm) {
+			result.addAll(((ProjectionTerm)this).getChildren()[0].getAccesses());
+		}
+		else if (this instanceof RenameTerm) {
+			result.addAll(((RenameTerm)this).getChildren()[0].getAccesses());
+		}
+		accessesCached = result;
+		return result;
+	}
+	
 }

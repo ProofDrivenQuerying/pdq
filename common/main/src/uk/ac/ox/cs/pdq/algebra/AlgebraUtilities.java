@@ -25,44 +25,40 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 public class AlgebraUtilities {
 
 	public static boolean assertSelectionCondition(Condition selectionCondition, Attribute[] outputAttributes) {
-		if(selectionCondition instanceof ConjunctiveCondition) {
-			for(SimpleCondition conjunct:((ConjunctiveCondition) selectionCondition).getSimpleConditions()) {
-				if(assertSelectionCondition(conjunct, outputAttributes) == false)
+		if (selectionCondition instanceof ConjunctiveCondition) {
+			for (SimpleCondition conjunct : ((ConjunctiveCondition) selectionCondition).getSimpleConditions()) {
+				if (assertSelectionCondition(conjunct, outputAttributes) == false)
 					return false;
 			}
 			return true;
-		}
-		else 
-			return assertSelectionCondition((SimpleCondition) selectionCondition, outputAttributes);	
+		} else
+			return assertSelectionCondition((SimpleCondition) selectionCondition, outputAttributes);
 	}
 
 	public static boolean assertSelectionCondition(SimpleCondition selectionCondition, Attribute[] outputAttributes) {
-		if(selectionCondition instanceof ConstantEqualityCondition) {
+		if (selectionCondition instanceof ConstantEqualityCondition) {
 			int position = ((ConstantEqualityCondition) selectionCondition).getPosition();
-			if( position > outputAttributes.length || 
-					!((ConstantEqualityCondition) selectionCondition).getConstant().getType().equals(outputAttributes[position].getType())) 
+			if (position > outputAttributes.length || !((ConstantEqualityCondition) selectionCondition).getConstant().getType().equals(outputAttributes[position].getType()))
 				return false;
-			else 
+			else
 				return true;
-		}
-		else if(selectionCondition instanceof AttributeEqualityCondition) {
+		} else if (selectionCondition instanceof AttributeEqualityCondition) {
 			int position = ((AttributeEqualityCondition) selectionCondition).getPosition();
 			int other = ((AttributeEqualityCondition) selectionCondition).getOther();
-			if( position > outputAttributes.length || other > outputAttributes.length) 
+			if (position > outputAttributes.length || other > outputAttributes.length)
 				return false;
-			else 
+			else
 				return true;
-		}
-		else 
+		} else
 			throw new RuntimeException("Unknown operator type");
 	}
 
-	protected static Map<Integer,Integer> computePositionsInRightChildThatAreBoundFromLeftChild(RelationalTerm left, RelationalTerm right) {
-		Map<Integer,Integer> result = new LinkedHashMap<>();
+	protected static Map<Integer, Integer> computePositionsInRightChildThatAreBoundFromLeftChild(RelationalTerm left, RelationalTerm right) {
+		Map<Integer, Integer> result = new LinkedHashMap<>();
 		for (int index = 0; index < right.getNumberOfInputAttributes(); ++index) {
 			Attribute attribute = right.getInputAttribute(index);
 			int indexOf = Arrays.asList(left.getOutputAttributes()).indexOf(attribute);
-			if(indexOf >= 0)
+			if (indexOf >= 0)
 				result.put(index, indexOf);
 		}
 		return result;
@@ -75,7 +71,7 @@ public class AlgebraUtilities {
 		List<Attribute> result = Lists.newArrayList(leftInputs);
 		for (int attributeIndex = 0; attributeIndex < right.getNumberOfInputAttributes(); attributeIndex++) {
 			Attribute inputAttribute = right.getInputAttribute(attributeIndex);
-			if(!Arrays.asList(leftOutputs).contains(inputAttribute))
+			if (!Arrays.asList(leftOutputs).contains(inputAttribute))
 				result.add(rightInputs[attributeIndex]);
 		}
 		return result.toArray(new Attribute[result.size()]);
@@ -86,7 +82,7 @@ public class AlgebraUtilities {
 		int totalCol = 0;
 		// Cluster patterns by variables
 		Set<Attribute> inChild = new LinkedHashSet<>();
-		for (RelationalTerm child:children) {
+		for (RelationalTerm child : children) {
 			inChild.clear();
 			for (int i = 0, l = child.getNumberOfOutputAttributes(); i < l; i++) {
 				Attribute col = child.getOutputAttributes()[i];
@@ -119,11 +115,11 @@ public class AlgebraUtilities {
 	public static Attribute[] computeInputAttributes(Relation relation, AccessMethod accessMethod) {
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
-		if(accessMethod.getInputs().length == 0) {
-			return new Attribute[]{};
+		if (accessMethod.getInputs().length == 0) {
+			return new Attribute[] {};
 		}
 		List<Attribute> inputs = new ArrayList<>();
-		for(Integer i:accessMethod.getInputs()) {
+		for (Integer i : accessMethod.getInputs()) {
 			inputs.add(relation.getAttribute(i));
 		}
 		return inputs.toArray(new Attribute[inputs.size()]);
@@ -131,18 +127,18 @@ public class AlgebraUtilities {
 
 	public static Attribute[] computeInputAttributes(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
 		Assert.assertNotNull(relation);
-		if (!(accessMethod != null && accessMethod.getInputs().length > 0) && (inputConstants ==null || inputConstants.isEmpty())) {
+		if (!(accessMethod != null && accessMethod.getInputs().length > 0) && (inputConstants == null || inputConstants.isEmpty())) {
 			return new Attribute[0];
 		}
 		Assert.assertTrue(accessMethod != null && accessMethod.getInputs().length > 0);
 		Assert.assertNotNull(inputConstants);
-		for(Integer position:inputConstants.keySet()) {
+		for (Integer position : inputConstants.keySet()) {
 			Assert.assertTrue(position < relation.getArity());
 			Assert.assertTrue(Arrays.asList(accessMethod.getInputs()).contains(position));
 		}
 		List<Attribute> inputs = new ArrayList<>();
-		for(Integer i:accessMethod.getInputs()) {
-			if(!inputConstants.containsKey(i)) {
+		for (Integer i : accessMethod.getInputs()) {
+			if (!inputConstants.containsKey(i)) {
 				inputs.add(relation.getAttribute(i));
 			}
 		}
@@ -178,46 +174,26 @@ public class AlgebraUtilities {
 	/**
 	 * Gets the accesses.
 	 *
-	 * @param operator the operator
+	 * @param operator
+	 *            the operator
 	 * @return the access operators that are children of the input operator
 	 */
 	public static Set<AccessTerm> getAccesses(RelationalTerm operator) {
-		Set<AccessTerm> result = new LinkedHashSet<>();
-		if (operator instanceof AccessTerm) {
-			result.add(((AccessTerm) operator));
-			return result;
-		}
-		else if (operator instanceof JoinTerm) {
-			for (RelationalTerm child: ((JoinTerm)operator).getChildren()) 
-				result.addAll(getAccesses(child));
-			return result;
-		}
-		else if (operator instanceof DependentJoinTerm) {
-			for (RelationalTerm child: ((DependentJoinTerm)operator).getChildren()) 
-				result.addAll(getAccesses(child));
-			return result;
-		}
-		else if (operator instanceof SelectionTerm) {
-			result.addAll(getAccesses(((SelectionTerm)operator).getChildren()[0]));
-		}
-		else if (operator instanceof ProjectionTerm) {
-			result.addAll(getAccesses(((ProjectionTerm)operator).getChildren()[0]));
-		}
-		else if (operator instanceof RenameTerm) {
-			result.addAll(getAccesses(((RenameTerm)operator).getChildren()[0]));
-		}
-		return result;
+		// functionality moved to the relationalTerm class in order to be able to cache
+		// the accesses, since it is a slow operation to generate the list, but needed
+		// frequently.
+		return operator.getAccesses();
 	}
 
 	public static Attribute[] computeRenamedInputAttributes(Attribute[] renamings, RelationalTerm child) {
 		Attribute[] newInputAttributes = new Attribute[child.getNumberOfInputAttributes()];
 		Attribute[] oldOutputAttributes = child.getOutputAttributes();
-		for(int index = 0; index < child.getNumberOfInputAttributes(); ++index) {
+		for (int index = 0; index < child.getNumberOfInputAttributes(); ++index) {
 			int indexInputAttribute = Arrays.asList(oldOutputAttributes).indexOf(child.getInputAttribute(index));
-			Preconditions.checkArgument(indexInputAttribute >=0, "Input attribute not found");
+			Preconditions.checkArgument(indexInputAttribute >= 0, "Input attribute not found");
 			newInputAttributes[index] = renamings[indexInputAttribute];
 		}
 		return newInputAttributes;
-	}	
+	}
 
 }
