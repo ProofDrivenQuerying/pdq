@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import java.util.Map;
+import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,6 +23,8 @@ import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
+import uk.ac.ox.cs.pdq.datasources.sql.PostgresqlRelationWrapper;
+import uk.ac.ox.cs.pdq.datasources.sql.SQLRelationWrapper;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
@@ -42,19 +45,19 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 @SuppressWarnings("unused")
 public class AccessTest {
 
-	AccessMethod am1 = AccessMethod.create("access_method1",new Integer[] {});
-	AccessMethod am2 = AccessMethod.create("access_method2",new Integer[] {0});
-	AccessMethod am3 = AccessMethod.create("access_method2",new Integer[] {0,1});
+	AccessMethod amFree = AccessMethod.create("free_access",new Integer[] {});
+	AccessMethod am0 = AccessMethod.create("access_0", new Integer[] {0});
+	AccessMethod am01 = AccessMethod.create("access_method3",new Integer[] {0,1});
 	
 	TupleType tt = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
 
 	InMemoryTableWrapper relation1 = new InMemoryTableWrapper("R1", new Attribute[] {Attribute.create(Integer.class, "a"),
 			Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c")},
-			new AccessMethod[] {am1});
+			new AccessMethod[] {amFree});
 	
 	InMemoryTableWrapper relation2 = new InMemoryTableWrapper("R2", new Attribute[] {Attribute.create(Integer.class, "c"),
 			Attribute.create(Integer.class, "d"), Attribute.create(Integer.class, "e")},
-			new AccessMethod[] {am1, am2, am3});
+			new AccessMethod[] {amFree, am0, am01});
 	
 	@SuppressWarnings("resource")
 	@Test
@@ -66,14 +69,14 @@ public class AccessTest {
 		
 		// Construct an Access instance by providing consistent access method & input constants 
 		// (in this case free access, i.e. no input constants).
-		Access target = new Access(relation1, am1);
+		Access target = new Access(relation1, amFree);
 		Assert.assertNotNull(target);
 		
 		// Note that the Access constructor may be called with an access method not found in the relation.
 		// TODO: - include an integration test for this case (below). 
 		// 		 - Q: given that this construction works, what is the purpose of the "AccessMethod[] methods" 
 		// 			  argument to the InMemoryTableWrapper constructor? 
-		target = new Access(relation1, am2);
+		target = new Access(relation1, am0);
 		Assert.assertNotNull(target);
 
 		/*
@@ -85,13 +88,13 @@ public class AccessTest {
 		inputConstants.put(0, TypedConstant.create(100));
 		
 		// Construct an Access instance by providing consistent access method & input constants.
-		target = new Access(relation2, am2, inputConstants);
+		target = new Access(relation2, am0, inputConstants);
 		Assert.assertNotNull(target);
 		
 		// An exception is thrown if the input constants map is inconsistent with the access method.
 		boolean caught = false; 
 		try {
-			new Access(relation2, am1, inputConstants);
+			new Access(relation2, amFree, inputConstants);
 		} catch (IllegalArgumentException e) {
 			caught = true;
 		}
@@ -102,7 +105,7 @@ public class AccessTest {
 		inputConstants.put(1, TypedConstant.create(100));
 		caught = false; 
 		try {
-			new Access(relation2, am1, inputConstants);
+			new Access(relation2, amFree, inputConstants);
 		} catch (IllegalArgumentException e) {
 			caught = true;
 		}
@@ -140,7 +143,7 @@ public class AccessTest {
 		 */
 		// Construct an Access instance by providing consistent access method & input constants 
 		// (in this case free access, i.e. no input constants).
-		 Access target = new Access(relation1, am1);
+		 Access target = new Access(relation1, amFree);
 		
 		// Create some tuples
 		Integer[] values = new Integer[] {10, 11, 12};
@@ -188,14 +191,14 @@ public class AccessTest {
 		// An exception is thrown if the input constants map is inconsistent with the access method.
 		boolean caught = false; 
 		try {
-			new Access(relation2, am1, inputConstants);
+			new Access(relation2, amFree, inputConstants);
 		} catch (IllegalArgumentException e) {
 			caught = true;
 		}
 		Assert.assertTrue(caught);
 
 		// Construct an Access instance by providing consistent access method & input constants.
-		Access target = new Access(relation2, am2, inputConstants);
+		Access target = new Access(relation2, am0, inputConstants);
 
 		// Create some tuples
 		Integer[] values1 = new Integer[] {10, 11, 12};
@@ -246,7 +249,7 @@ public class AccessTest {
 		// An exception is thrown if the input constants map is inconsistent with the access method.
 		boolean caught = false; 
 		try {
-			new Access(relation2, am1, inputConstants);
+			new Access(relation2, amFree, inputConstants);
 		} catch (IllegalArgumentException e) {
 			caught = true;
 		}
@@ -254,14 +257,14 @@ public class AccessTest {
 
 		caught = false;
 		try {
-			new Access(relation2, am2, inputConstants);
+			new Access(relation2, am0, inputConstants);
 		} catch (IllegalArgumentException e) {
 			caught = true;
 		}
 		Assert.assertTrue(caught);
 
 		// Construct an Access instance by providing consistent access method & input constants.
-		Access target = new Access(relation2, am3, inputConstants);
+		Access target = new Access(relation2, am01, inputConstants);
 
 		// Create some tuples
 		Integer[] values1 = new Integer[] {10, 11, 12};
@@ -295,6 +298,57 @@ public class AccessTest {
 		for (Tuple x:result.getData())
 			Assert.assertArrayEquals(values3, x.getValues());
 
+	}
+	
+	/*
+	 *  PostgresqlRelation construction.
+	 */
+	public Properties getProperties() {
+		Properties properties = new Properties();
+		properties.setProperty("url", "jdbc:postgresql://localhost:5432/");
+		properties.setProperty("database", "tpch");
+		properties.setProperty("username", "admin");
+		properties.setProperty("password", "admin");
+		return(properties);
+	}
+
+	Attribute[] attributes_N = new Attribute[] {
+			Attribute.create(Integer.class, "N_NATIONKEY"),
+			Attribute.create(String.class, "N_NAME"),
+			Attribute.create(Integer.class, "N_REGIONKEY"),
+			Attribute.create(String.class, "N_COMMENT")
+	};
+
+	SQLRelationWrapper postgresqlRelationNation = new PostgresqlRelationWrapper(this.getProperties(), "NATION", 
+			attributes_N, new AccessMethod[] {amFree});
+
+	@Test
+	public void test4() {
+
+		/*
+		 *  Free access on relation NATION. 
+		 */
+		Access target = new Access(postgresqlRelationNation, amFree);
+		
+		// Debugging:
+		// Fails at the call to open()
+		// queryString passed to SQLRelationWrapper.fetchTuples is "SELECT N_NATIONKEY,N_NAME,N_REGIONKEY,N_COMMENT FROM NATION) IN ())"
+		// due to inputTuples iterator having one next value, which is empty
+		// because inputTuples iterates over the inputs Table constructed as follows on line 203:
+		// 			Table inputs = new Table(this.attributesInInputPositions);
+		// 
+		
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+	
+		// Check that the result tuples are the ones expected. 
+		Assert.assertNotNull(result);
+		// TODO. Assert.assertEquals(22, result.size());
 	}
 	
 }
