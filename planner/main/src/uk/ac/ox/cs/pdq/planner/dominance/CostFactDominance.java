@@ -56,19 +56,22 @@ public class CostFactDominance implements Dominance{
 				boolean strictlyFactDominated = strictFactDominance.isDominated(source, target);
 				boolean factDominated = this.inputFactDominance.isDominated(source, target);
 				boolean strictlyCostDominated = false;
-				boolean costDominated = false;
-				
 				if(source.getPlan().isClosed() && target.getPlan().isClosed()) {
 					strictlyCostDominated = source.getCost().greaterThan(target.getCost());
-					costDominated = source.getCost().greaterOrEquals(target.getCost());
+					if(strictlyFactDominated && source.getCost().greaterOrEquals(target.getCost()) || strictlyCostDominated && factDominated) 
+						return true;
+					else 
+						return false;
+					
+					//costDominated = source.getCost().greaterOrEquals(target.getCost());
 				} else if(this.costEstimatorForOpenPlans != null) {
 					strictlyCostDominated = this.costEstimatorForOpenPlans.cost(source.getPlan()).greaterThan(this.costEstimatorForOpenPlans.cost(target.getPlan()));
-					costDominated = this.costEstimatorForOpenPlans.cost(source.getPlan()).greaterOrEquals(this.costEstimatorForOpenPlans.cost(target.getPlan()));
+					if(strictlyCostDominated && factDominated || strictlyFactDominated && this.costEstimatorForOpenPlans.cost(source.getPlan()).greaterOrEquals(this.costEstimatorForOpenPlans.cost(target.getPlan()))) 
+						return true;
+					else 
+						return false;
 				} 
-				if(strictlyFactDominated && costDominated || factDominated && strictlyCostDominated) 
-					return true;
-				else 
-					return false;
+				return false;
 			}
 			else {
 				if(source.getPlan().isClosed() && target.getPlan().isClosed()
