@@ -334,10 +334,16 @@ public abstract class SQLStatementBuilder {
 	public FromCondition createFromStatement(Atom[] facts) {
 		List<String> relations = new ArrayList<String>();
 		for (Atom fact : facts) {
-			String aliasName = this.aliasPrefix + this.aliasCounter;
+			String aliasName = null;
+			synchronized (this.aliases) {
+				aliasName = this.aliases.get(fact);
+				if (aliasName == null) {
+					aliasName = this.aliasPrefix + this.aliasCounter;
+					this.aliases.put(fact, aliasName);
+					this.aliasCounter++;
+				}
+			}
 			relations.add(this.createTableAliasingExpression(aliasName, fact.getPredicate()));
-			this.aliases.put(fact, aliasName);
-			this.aliasCounter++;
 		}
 		return new FromCondition(relations);
 	}
@@ -356,7 +362,10 @@ public abstract class SQLStatementBuilder {
 		LinkedHashMap<String, Variable> projected = new LinkedHashMap<>();
 		List<Variable> attributes = new ArrayList<>();
 		for (Atom fact : atoms) {
-			String alias = this.aliases.get(fact);
+			String alias = null;
+			synchronized (this.aliases) {
+				alias = this.aliases.get(fact);
+			}
 			for (int index = 0; index < fact.getNumberOfTerms(); ++index) {
 				Term term = fact.getTerm(index);
 				// Most likely broken if replaced with working one.
@@ -385,12 +394,16 @@ public abstract class SQLStatementBuilder {
 					if (leftPosition == null) {
 						leftPosition = pos;
 						leftRelation = (Relation) fact.getPredicate();
-						leftAlias = this.aliases.get(fact);
+						synchronized (this.aliases) {
+							leftAlias = this.aliases.get(fact);
+						}
 					} else {
 						Integer rightPosition = pos;
 						Relation rightRelation = (Relation) fact.getPredicate();
-						String rightAlias = this.aliases.get(fact);
-
+						String rightAlias = null;
+						synchronized (this.aliases) {
+							rightAlias = this.aliases.get(fact);
+						}
 						StringBuilder result = new StringBuilder();
 						result.append(leftAlias == null ? leftRelation.getName() : leftAlias).append(".").append(leftRelation.getAttribute(leftPosition).getName()).append('=');
 						result.append(rightAlias == null ? rightRelation.getName() : rightAlias).append(".").append(rightRelation.getAttribute(rightPosition).getName());
@@ -421,13 +434,17 @@ public abstract class SQLStatementBuilder {
 					for (Integer pos : positions) {
 						if (left != null && left.equals(fact.getTerm(pos))) {
 							StringBuilder result = new StringBuilder();
-							result.append(this.aliases.get(fact) == null ? fact.getPredicate().getName() : this.aliases.get(fact));
+							synchronized (this.aliases) {
+								result.append(this.aliases.get(fact) == null ? fact.getPredicate().getName() : this.aliases.get(fact));
+							}
 							result.append(".").append(((Relation) fact.getPredicate()).getAttribute(pos).getName());
 							leftEqualities.add(result.toString());
 						}
 						if (right != null && right.equals(fact.getTerm(pos))) {
 							StringBuilder result = new StringBuilder();
-							result.append(this.aliases.get(fact) == null ? fact.getPredicate().getName() : this.aliases.get(fact));
+							synchronized (this.aliases) {
+								result.append(this.aliases.get(fact) == null ? fact.getPredicate().getName() : this.aliases.get(fact));
+							}
 							result.append(".").append(((Relation) fact.getPredicate()).getAttribute(pos).getName());
 							rightEqualities.add(result.toString());
 						}
@@ -446,7 +463,10 @@ public abstract class SQLStatementBuilder {
 	public WhereCondition createEqualitiesWithConstants(Atom[] source) {
 		List<String> constantPredicates = new ArrayList<>();
 		for (Atom fact : source) {
-			String alias = this.aliases.get(fact);
+			String alias = null;
+			synchronized (this.aliases) {
+				alias = this.aliases.get(fact);
+			}
 			for (int index = 0; index < fact.getNumberOfTerms(); ++index) {
 				Term term = fact.getTerm(index);
 				if (!term.isVariable() && !term.isUntypedConstant()) {
@@ -467,7 +487,10 @@ public abstract class SQLStatementBuilder {
 			factIDs.add(atom.getId());
 		}
 		for (Atom fact : source) {
-			String alias = this.aliases.get(fact);
+			String alias = null;
+			synchronized (this.aliases) {
+				alias = this.aliases.get(fact);
+			}
 			setPredicates.add(createSQLMembershipExpression(relationNamesToRelationObjects.get(fact.getPredicate().getName()).getArity() - 1, factIDs,
 					(Relation) fact.getPredicate(), alias));
 		}
@@ -481,8 +504,10 @@ public abstract class SQLStatementBuilder {
 				int index = Arrays.asList(fact.getTerms()).indexOf(pair.getKey());
 				if (index != -1) {
 					StringBuilder eq = new StringBuilder();
-					eq.append(this.aliases.get(fact) == null ? fact.getPredicate().getName() : this.aliases.get(fact)).append(".")
-							.append(((Relation) fact.getPredicate()).getAttribute(index).getName()).append('=');
+					synchronized (this.aliases) {
+						eq.append(this.aliases.get(fact) == null ? fact.getPredicate().getName() : this.aliases.get(fact)).append(".")
+						.append(((Relation) fact.getPredicate()).getAttribute(index).getName()).append('=');
+					}
 					eq.append("'").append(pair.getValue()).append("'");
 					constantPredicates.add(eq.toString());
 				}

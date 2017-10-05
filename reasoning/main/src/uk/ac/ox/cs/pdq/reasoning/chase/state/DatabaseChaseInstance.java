@@ -33,6 +33,7 @@ import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.sql.FromCondition;
+import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.SelectCondition;
 import uk.ac.ox.cs.pdq.db.sql.WhereCondition;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -768,17 +769,18 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 */
 	public Pair<String,LinkedHashMap<String,Variable>> createSQLQuery(ConjunctiveQuery source, LimitToThisOrAllInstances l, Map<Variable, Constant> finalProjectionMapping) {
 		String query = "";
-		FromCondition from = this.databaseConnection.getSQLStatementBuilder().createFromStatement(source.getAtoms());
+		SQLStatementBuilder stb = this.databaseConnection.getSQLStatementBuilder();
+		FromCondition from = stb.createFromStatement(source.getAtoms());
 		//TOCOMMENT: Rename appropriately and comment each of the following methods.
-		SelectCondition projections = this.databaseConnection.getSQLStatementBuilder().createProjections(source.getAtoms());
+		SelectCondition projections = stb.createProjections(source.getAtoms());
 		WhereCondition where = new WhereCondition();
-		WhereCondition equalities = this.databaseConnection.getSQLStatementBuilder().createAttributeEqualities(source.getAtoms());
-		WhereCondition constantEqualities = this.databaseConnection.getSQLStatementBuilder().createEqualitiesWithConstants(source.getAtoms());
-		WhereCondition equalitiesWithProjectedVars = this.databaseConnection.getSQLStatementBuilder().createEqualitiesRespectingInputMapping(source.getAtoms(), finalProjectionMapping);
+		WhereCondition equalities = stb.createAttributeEqualities(source.getAtoms());
+		WhereCondition constantEqualities = stb.createEqualitiesWithConstants(source.getAtoms());
+		WhereCondition equalitiesWithProjectedVars = stb.createEqualitiesRespectingInputMapping(source.getAtoms(), finalProjectionMapping);
 
 		WhereCondition factproperties = null;
 		if(facts != null && !facts.isEmpty())
-			factproperties = this.databaseConnection.getSQLStatementBuilder().enforceStateMembership(source.getAtoms(), this.databaseConnection.getRelationNamesToDatabaseTables(), ((l.equals(LimitToThisOrAllInstances.THIS))?this.facts:null));
+			factproperties = stb.enforceStateMembership(source.getAtoms(), this.databaseConnection.getRelationNamesToDatabaseTables(), ((l.equals(LimitToThisOrAllInstances.THIS))?this.facts:null));
 		else
 			factproperties = new WhereCondition();
 		
@@ -787,7 +789,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		where.addCondition(equalitiesWithProjectedVars);
 		where.addCondition(factproperties);
 
-		query = this.databaseConnection.getSQLStatementBuilder().buildSQLQuery(projections, from, where);
+		query = stb.buildSQLQuery(projections, from, where);
 
 		log.trace(source);
 		log.trace(query);
