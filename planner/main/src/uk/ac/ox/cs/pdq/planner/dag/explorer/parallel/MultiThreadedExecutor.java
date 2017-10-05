@@ -222,6 +222,11 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 			try {
 				for (Future<DAGChaseConfiguration> result: results){
 					DAGChaseConfiguration r = result.get();
+					if (r == null)
+						continue;
+					if (r.getCost() == null) {
+						continue;
+					}
 					if(configuration == null
 							|| (r != null
 							&& configuration.getCost().greaterThan(r.getCost())))
