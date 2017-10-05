@@ -1,26 +1,32 @@
 package uk.ac.ox.cs.pdq.planner.dominance;
 
+import java.util.Collection;
+
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
-
 // TODO: Auto-generated Javadoc
 /**
- * Performs fast fact dominance checks.
- * A source configuration is fact dominated by a target configuration if any
- * inferred accessible fact plus in the source configuration also appears
- * in the target configuration. In order to perform this kind of check Skolem constants must be assigned to formula variables during chasing.
+ * Performs fast fact dominance checks. A source configuration is fact dominated
+ * by a target configuration if any inferred accessible fact plus in the source
+ * configuration also appears in the target configuration. In order to perform
+ * this kind of check Skolem constants must be assigned to formula variables
+ * during chasing.
  *
  * @author Efthymia Tsamoura
  */
-public class FastFactDominance implements FactDominance{
+public class FastFactDominance implements FactDominance {
 
 	/** The is strict. */
 	private final boolean hasStrictlyFewerFactsCheck;
 
 	/**
 	 * Constructor for FastFactDominance.
-	 * @param hasStrictlyFewerFactsCheck boolean
+	 * 
+	 * @param hasStrictlyFewerFactsCheck
+	 *            boolean
 	 */
 	public FastFactDominance(boolean hasStrictlyFewerFactsCheck) {
 		this.hasStrictlyFewerFactsCheck = hasStrictlyFewerFactsCheck;
@@ -29,25 +35,49 @@ public class FastFactDominance implements FactDominance{
 	/**
 	 * Checks if is dominated.
 	 *
-	 * @param source C
-	 * @param target C
+	 * @param source
+	 *            C
+	 * @param target
+	 *            C
 	 * @return true if the source configuration is dominated by target configuration
 	 */
 	@Override
 	public boolean isDominated(Configuration source, Configuration target) {
-		if (source.equals(target)) 
+		if (!(source instanceof DAGChaseConfiguration)) {
 			return false;
-		if (source instanceof DAGChaseConfiguration && 
-				target instanceof DAGChaseConfiguration && 
-				source.getInput().containsAll(target.getInput()) && 
-				((DAGChaseConfiguration)target).getState().getInferredAccessibleFacts().containsAll(((DAGChaseConfiguration)source).getState().getInferredAccessibleFacts())) {
-			if (!this.hasStrictlyFewerFactsCheck || this.hasStrictlyFewerFactsCheck && 
-					((DAGChaseConfiguration)source).getState().getInferredAccessibleFacts().size() < ((DAGChaseConfiguration)target).getState().getInferredAccessibleFacts().size()) 
-				return true;
 		}
+		if (!(target instanceof DAGChaseConfiguration)) {
+			return false;
+		}
+		Collection<Constant> srcInput = source.getInput();
+		Collection<Constant> srcTarget = target.getInput();
+		Collection<Atom> dTargetStateInfAccFacts = ((DAGChaseConfiguration) target).getState().getInferredAccessibleFacts();
+		Collection<Atom> dSourceStateInfAccFacts = ((DAGChaseConfiguration) source).getState().getInferredAccessibleFacts();
+		if (srcInput.size() < srcTarget.size()) {
+			return false;
+		}
+		if (!checkSrcToTargetInputContainment(srcInput,srcTarget)) {
+			return false;
+		}
+		if (dTargetStateInfAccFacts.size() < dSourceStateInfAccFacts.size()) {
+			return false;
+		}
+		if (!checkSrcToTargetInfAccFactsContainment(dSourceStateInfAccFacts,dTargetStateInfAccFacts)) { 
+			return false;
+		}
+		if (!this.hasStrictlyFewerFactsCheck || dSourceStateInfAccFacts.size() < dTargetStateInfAccFacts.size())
+			return true;
 		return false;
 	}
-	
+
+	private boolean checkSrcToTargetInputContainment(Collection<Constant> srcInput, Collection<Constant> srcTarget) {
+		return srcInput.containsAll(srcTarget);
+	}
+	private boolean checkSrcToTargetInfAccFactsContainment(Collection<Atom> dSourceStateInfAccFacts, Collection<Atom> dTargetStateInfAccFacts) {
+//		return dTargetStateInfAccFacts.containsAll(dSourceStateInfAccFacts);
+		return dSourceStateInfAccFacts.containsAll(dTargetStateInfAccFacts);
+	}
+
 	@Override
 	public FastFactDominance clone() {
 		return new FastFactDominance(this.hasStrictlyFewerFactsCheck);
