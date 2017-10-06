@@ -3,7 +3,7 @@
     <projections name="c5" type="java.lang.Integer"/>
     <projections name="c4" type="java.lang.Integer"/>
     <RelationalTerm type="DependentJoinTerm">
-        <RelationalTerm type="DependentJoinTerm">
+        <RelationalTerm type="JoinTerm">
             <RelationalTerm type="RenameTerm">
                 <renamings name="c3" type="java.lang.Integer"/>
                 <renamings name="c4" type="java.lang.Integer"/>
@@ -18,6 +18,18 @@
                 </RelationalTerm>
             </RelationalTerm>
             <RelationalTerm type="RenameTerm">
+                <renamings name="c4" type="java.lang.Integer"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="m3"/>
+                    <relation name="r2">
+                        <attribute name="r2.1" type="java.lang.Integer"/>
+                        <access-method name="m3"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="DependentJoinTerm">
+            <RelationalTerm type="RenameTerm">
                 <renamings name="c5" type="java.lang.Integer"/>
                 <renamings name="c3" type="java.lang.Integer"/>
                 <renamings name="c4" type="java.lang.Integer"/>
@@ -28,18 +40,6 @@
                         <attribute name="r3.2" type="java.lang.Integer"/>
                         <attribute name="r3.3" type="java.lang.Integer"/>
                         <access-method name="m4" inputs="1,2"/>
-                    </relation>
-                </RelationalTerm>
-            </RelationalTerm>
-        </RelationalTerm>
-        <RelationalTerm type="JoinTerm">
-            <RelationalTerm type="RenameTerm">
-                <renamings name="c4" type="java.lang.Integer"/>
-                <RelationalTerm type="AccessTerm">
-                    <accessMethod name="m3"/>
-                    <relation name="r2">
-                        <attribute name="r2.1" type="java.lang.Integer"/>
-                        <access-method name="m3"/>
                     </relation>
                 </RelationalTerm>
             </RelationalTerm>

@@ -4,13 +4,13 @@
         <RelationalTerm type="JoinTerm">
             <RelationalTerm type="JoinTerm">
                 <RelationalTerm type="RenameTerm">
-                    <renamings name="c38" type="java.lang.Integer"/>
+                    <renamings name="c23" type="java.lang.Integer"/>
                     <renamings name="c27" type="java.lang.String"/>
-                    <renamings name="c39" type="java.lang.String"/>
-                    <renamings name="c40" type="java.lang.Integer"/>
-                    <renamings name="c41" type="java.lang.String"/>
-                    <renamings name="c42" type="java.math.BigDecimal"/>
-                    <renamings name="c43" type="java.lang.String"/>
+                    <renamings name="c28" type="java.lang.String"/>
+                    <renamings name="c29" type="java.lang.Integer"/>
+                    <renamings name="c30" type="java.lang.String"/>
+                    <renamings name="c31" type="java.math.BigDecimal"/>
+                    <renamings name="c32" type="java.lang.String"/>
                     <RelationalTerm type="AccessTerm">
                         <accessMethod name="m6"/>
                         <relation name="supplier">
@@ -27,13 +27,13 @@
                     </RelationalTerm>
                 </RelationalTerm>
                 <RelationalTerm type="RenameTerm">
-                    <renamings name="c23" type="java.lang.Integer"/>
+                    <renamings name="c38" type="java.lang.Integer"/>
                     <renamings name="c27" type="java.lang.String"/>
-                    <renamings name="c28" type="java.lang.String"/>
-                    <renamings name="c29" type="java.lang.Integer"/>
-                    <renamings name="c30" type="java.lang.String"/>
-                    <renamings name="c31" type="java.math.BigDecimal"/>
-                    <renamings name="c32" type="java.lang.String"/>
+                    <renamings name="c39" type="java.lang.String"/>
+                    <renamings name="c40" type="java.lang.Integer"/>
+                    <renamings name="c41" type="java.lang.String"/>
+                    <renamings name="c42" type="java.math.BigDecimal"/>
+                    <renamings name="c43" type="java.lang.String"/>
                     <RelationalTerm type="AccessTerm">
                         <accessMethod name="m6"/>
                         <relation name="supplier">
@@ -85,10 +85,10 @@
         </RelationalTerm>
         <RelationalTerm type="JoinTerm">
             <RelationalTerm type="RenameTerm">
-                <renamings name="c29" type="java.lang.Integer"/>
-                <renamings name="c33" type="java.lang.String"/>
-                <renamings name="c34" type="java.lang.Integer"/>
-                <renamings name="c35" type="java.lang.String"/>
+                <renamings name="c40" type="java.lang.Integer"/>
+                <renamings name="k52" type="java.lang.String"/>
+                <renamings name="k53" type="java.lang.Integer"/>
+                <renamings name="k54" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
                     <accessMethod name="m10"/>
                     <relation name="nation">
@@ -102,10 +102,10 @@
                 </RelationalTerm>
             </RelationalTerm>
             <RelationalTerm type="RenameTerm">
-                <renamings name="c40" type="java.lang.Integer"/>
-                <renamings name="k52" type="java.lang.String"/>
-                <renamings name="k53" type="java.lang.Integer"/>
-                <renamings name="k54" type="java.lang.String"/>
+                <renamings name="c29" type="java.lang.Integer"/>
+                <renamings name="c33" type="java.lang.String"/>
+                <renamings name="c34" type="java.lang.Integer"/>
+                <renamings name="c35" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
                     <accessMethod name="m10"/>
                     <relation name="nation">

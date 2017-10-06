@@ -37,6 +37,29 @@
         </RelationalTerm>
     </RelationalTerm>
     <RelationalTerm type="JoinTerm">
+        <RelationalTerm type="SelectionTerm">
+            <predicate type="ConjunctiveCondition">
+                <predicates position="3" type="ConstantEqualityCondition">
+                    <constant value="AMERICA"/>
+                </predicates>
+            </predicate>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c61" type="java.lang.Integer"/>
+                <renamings name="c66" type="java.lang.String"/>
+                <renamings name="c67" type="java.lang.Integer"/>
+                <renamings name="AMERICA" type="java.lang.String"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="m0"/>
+                    <relation name="region_nation">
+                        <attribute name="nation_key" type="java.lang.Integer"/>
+                        <attribute name="nation_name" type="java.lang.String"/>
+                        <attribute name="region_key" type="java.lang.Integer"/>
+                        <attribute name="region_name" type="java.lang.String"/>
+                        <access-method name="m0"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
         <RelationalTerm type="RenameTerm">
             <renamings name="k75" type="java.lang.Integer"/>
             <renamings name="k87" type="java.lang.String"/>
@@ -51,29 +74,6 @@
                     <attribute name="region_name" type="java.lang.String"/>
                     <access-method name="m0"/>
                 </relation>
-            </RelationalTerm>
-        </RelationalTerm>
-        <RelationalTerm type="SelectionTerm">
-            <predicate type="ConjunctiveCondition">
-                <predicates position="3" type="ConstantEqualityCondition">
-                    <constant value="AMERICA"/>
-                </predicates>
-            </predicate>
-            <RelationalTerm type="RenameTerm">
-                <renamings name="k75" type="java.lang.Integer"/>
-                <renamings name="k87" type="java.lang.String"/>
-                <renamings name="k88" type="java.lang.Integer"/>
-                <renamings name="k90" type="java.lang.String"/>
-                <RelationalTerm type="AccessTerm">
-                    <accessMethod name="m0"/>
-                    <relation name="region_nation">
-                        <attribute name="nation_key" type="java.lang.Integer"/>
-                        <attribute name="nation_name" type="java.lang.String"/>
-                        <attribute name="region_key" type="java.lang.Integer"/>
-                        <attribute name="region_name" type="java.lang.String"/>
-                        <access-method name="m0"/>
-                    </relation>
-                </RelationalTerm>
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>

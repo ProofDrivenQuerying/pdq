@@ -4,7 +4,7 @@
         <RelationalTerm type="DependentJoinTerm">
             <RelationalTerm type="JoinTerm">
                 <RelationalTerm type="RenameTerm">
-                    <renamings name="c5" type="java.lang.Integer"/>
+                    <renamings name="c3" type="java.lang.Integer"/>
                     <renamings name="c4" type="java.lang.Integer"/>
                     <RelationalTerm type="AccessTerm">
                         <accessMethod name="m1"/>
@@ -17,7 +17,7 @@
                     </RelationalTerm>
                 </RelationalTerm>
                 <RelationalTerm type="RenameTerm">
-                    <renamings name="c3" type="java.lang.Integer"/>
+                    <renamings name="c5" type="java.lang.Integer"/>
                     <renamings name="c4" type="java.lang.Integer"/>
                     <RelationalTerm type="AccessTerm">
                         <accessMethod name="m1"/>
