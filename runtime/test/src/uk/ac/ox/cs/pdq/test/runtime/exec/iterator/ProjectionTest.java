@@ -312,7 +312,7 @@ public class ProjectionTest {
 	 */
 	public Properties getProperties() {
 		Properties properties = new Properties();
-		properties.setProperty("url", "TODO");
+		properties.setProperty("url", "jdbc:postgresql://localhost:5432/");
 		properties.setProperty("database", "tpch");
 		properties.setProperty("username", "admin");
 		properties.setProperty("password", "admin");
@@ -339,11 +339,11 @@ public class ProjectionTest {
 
 		/*
 		 *  Plan that does a free access on the CUSTOMER relation, then selects the rows where the value
-		 *  of the NATIONKEY column is 44 (TODO) and the MKTSEGMENT column is "TODO" and finally projects the NAME 
-		 *  and ACCTBAL columns. 
+		 *  of the NATIONKEY column is 23 (United Kingdom) and the MKTSEGMENT column is "MACHINERY" and 
+		 *  finally projects the NAME and ACCTBAL columns. 
 		 */
-		Condition condition = ConjunctiveCondition.create(new SimpleCondition[]{ConstantEqualityCondition.create(3, TypedConstant.create(44)), 
-				ConstantEqualityCondition.create(6, TypedConstant.create("TODO"))});
+		Condition condition = ConjunctiveCondition.create(new SimpleCondition[]{ConstantEqualityCondition.create(3, TypedConstant.create(23)), 
+				ConstantEqualityCondition.create(6, TypedConstant.create("MACHINERY"))});
 		Projection target = new Projection(new Attribute[]{Attribute.create(String.class, "C_NAME"), 
 				Attribute.create(Float.class, "C_ACCTBAL")}, 
 				new Selection(condition, new Access(postgresqlRelationCustomer, amFree))); 
@@ -359,10 +359,13 @@ public class ProjectionTest {
 		// Check that the result tuples are the ones expected. 
 		Assert.assertNotNull(result);
 		
-		// TODO: once we have the database populated...
-		Assert.assertEquals(22, result.size());
-//		for (Tuple x:result.getData())
-//			Assert.assertArrayEquals(values1, x.getValues());
+		Assert.assertEquals(2L, result.columns().longValue());
+		
+		// SELECT COUNT(*) FROM CUSTOMER WHERE c_nationkey=23 AND c_mktsegment='MACHINERY';
+		Assert.assertEquals(1158, result.size());
+
+		// TODO: Check data in the result against the results of the following query: 
+		// SELECT c_name, c_acctbal FROM CUSTOMER WHERE c_nationkey=23 AND c_mktsegment='MACHINERY';
 		
 	}
 }

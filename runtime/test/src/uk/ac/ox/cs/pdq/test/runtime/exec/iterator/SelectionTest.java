@@ -143,7 +143,7 @@ public class SelectionTest {
 	 */
 	public Properties getProperties() {
 		Properties properties = new Properties();
-		properties.setProperty("url", "TODO");
+		properties.setProperty("url", "jdbc:postgresql://localhost:5432/");
 		properties.setProperty("database", "tpch");
 		properties.setProperty("username", "admin");
 		properties.setProperty("password", "admin");
@@ -178,7 +178,7 @@ public class SelectionTest {
 	public void test2() {
 
 		/*
-		 *  Simple plan that does a free access on relation NATION, then selects the rows where the value
+		 *  Plan that does a free access on relation NATION, then selects the rows where the value
 		 *  of REGIONKEY column is equal to the constant 2. 
 		 */
 		Condition condition = ConstantEqualityCondition.create(2, TypedConstant.create(2));
@@ -194,12 +194,9 @@ public class SelectionTest {
 	
 		// Check that the result tuples are the ones expected. 
 		Assert.assertNotNull(result);
-		
-		// TODO: Find out which nations are in Region 2
-		Assert.assertEquals(22, result.size());
-//		for (Tuple x:result.getData())
-//			Assert.assertArrayEquals(values1, x.getValues());
 
+		// SELECT COUNT(*) FROM NATION WHERE n_regionkey=2;
+		Assert.assertEquals(5, result.size());
 	}
 	
 	@Test
@@ -207,11 +204,11 @@ public class SelectionTest {
 
 		/*
 		 *  Plan that does a free access on relation CUSTOMER, then selects the rows where the value
-		 *  of NATIONKEY column is equal to the constant 44 and then selects the rows where the value
-		 *  of MKTSEGMENT is "TODO". 
+		 *  of NATIONKEY column is equal to the constant 23 and then selects the rows where the value
+		 *  of MKTSEGMENT is "MACHINERY". 
 		 */
-		Condition nationkeyCondition = ConstantEqualityCondition.create(3, TypedConstant.create(44));
-		Condition mktsegmentCondition = ConstantEqualityCondition.create(6, TypedConstant.create("TODO"));
+		Condition nationkeyCondition = ConstantEqualityCondition.create(3, TypedConstant.create(23));
+		Condition mktsegmentCondition = ConstantEqualityCondition.create(6, TypedConstant.create("MACHINERY"));
 		Selection target = new Selection(mktsegmentCondition, 
 				new Selection(nationkeyCondition, new Access(postgresqlRelationCustomer, amFree)));
 		
@@ -226,10 +223,8 @@ public class SelectionTest {
 		// Check that the result tuples are the ones expected. 
 		Assert.assertNotNull(result);
 		
-		// TODO: Find out which nation has key 44, and which  customers have mktsegment "TODO". 
-		Assert.assertEquals(22, result.size());
-//		for (Tuple x:result.getData())
-//			Assert.assertArrayEquals(values1, x.getValues());
+		// SELECT COUNT(*) FROM CUSTOMER WHERE c_nationkey=23 AND c_mktsegment='MACHINERY';
+		Assert.assertEquals(1158, result.size());
 
 	}
 

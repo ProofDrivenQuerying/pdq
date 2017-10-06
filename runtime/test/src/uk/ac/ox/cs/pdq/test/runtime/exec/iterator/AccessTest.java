@@ -336,7 +336,16 @@ public class AccessTest {
 		// due to inputTuples iterator having one next value, which is empty
 		// because inputTuples iterates over the inputs Table constructed as follows on line 203:
 		// 			Table inputs = new Table(this.attributesInInputPositions);
-		// 
+		
+		// NOTE: In the receiveTupleFromParentAndPassItToChildren() method, we guard against the tuple arg being null, but not against
+		// it being an empty tuple (as it is here).
+		
+		// Q: why doesn't this fail for the InMemoryRelationWrapper case? 
+		// A: Line 205 is where the Access class interacts with the input relation, with the call:
+		// 			this.outputTuplesIterator = this.relation.iterator(this.attributesInInputPositions, inputs.iterator());
+		// 	  The iterator() method in InMemoryTableWrapper just returns a new AccessIterator instance (defined in it's own inner class!),
+		//	  whereas in SQLRelationWrapper the iterator() method calls access() which builds an SQL statement (which ends up being the 
+		// 	  invalid one above).
 		
 		//Execute the plan
 		Table result = null;
@@ -349,6 +358,64 @@ public class AccessTest {
 		// Check that the result tuples are the ones expected. 
 		Assert.assertNotNull(result);
 		// TODO. Assert.assertEquals(22, result.size());
+	}
+	
+	@Test
+	public void test5() {
+
+		/*
+		 *  Access on relation NATION taking an input constant. 
+		 */
+		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
+		inputConstants.put(0, TypedConstant.create(2));
+		
+		// Construct an Access instance by providing consistent access method & input constants.
+		Access target = new Access(postgresqlRelationNation, am0, inputConstants);
+
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+	
+		// Check that the result tuples are the ones expected. 
+		Assert.assertNotNull(result);
+		
+		// TODO: Find out which nations are in Region 2
+		Assert.assertEquals(1, result.size());
+		Assert.assertEquals(result.getData().get(0).getValue(1), "BRAZIL");
+	}
+
+	@Test
+	public void test6() {
+
+		//
+		// IMP TODO: Is this possible? Efi said it is, but requires confirmation.
+		//
+		
+		/*
+		 *  Access on relation NATION taking dynamic input. 
+		 */
+		// Construct an Access instance requiring input on the 0'th attribute.
+		Access target = new Access(postgresqlRelationNation, am0);
+
+		//// Q: how to execute an Access with dynamic input?
+		//// i.e. from where does the dynamic input come in the case of an Access?  
+		
+//		//Execute the plan
+//		Table result = null;
+//		try {
+//			result = this.planExecution(target);
+//		} catch (TimeoutException e) {
+//			e.printStackTrace();
+//		}
+//	
+//		// Check that the result tuples are the ones expected. 
+//		Assert.assertNotNull(result);
+//		
+
 	}
 	
 }
