@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
+import java.util.Collection;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -31,7 +32,7 @@ public class ConfigurationSpaceExplorationThread implements Callable<DAGChaseCon
 	private final SuccessDominance successDominance;
 	
 	/**  Performs domination checks*. */
-	//private final Dominance[] dominance;
+	private final Dominance[] dominance;
 
 	/**  Input configurations. */
 	private final Queue<DAGChaseConfiguration> input;
@@ -80,7 +81,7 @@ public class ConfigurationSpaceExplorationThread implements Callable<DAGChaseCon
 		this.output = output;
 		this.successful = successfulConfigurations;
 		this.successDominance = successDominance;
-		//this.dominance = dominance;
+		this.dominance = dominance;
 	}
 
 	/**
@@ -98,20 +99,20 @@ public class ConfigurationSpaceExplorationThread implements Callable<DAGChaseCon
 			// This dominance related stuff needs to be checked, unit tested and then added again.
 			
 			//If the configuration is not dominated
-//			DAGChaseConfiguration dominator = this.equivalenceClasses.dominate(this.dominance, configuration);
-//			if (dominator != null
-//					//ExplorerUtils.isDominated(this.dag, binConfig) != null || ExplorerUtils.isDominated(binConfigs, binConfig) != null
-//					) {
-//			} else {
+			DAGChaseConfiguration dominator = this.equivalenceClasses.dominate(this.dominance, configuration);
+			if (dominator != null
+					//ExplorerUtils.isDominated(this.dag, binConfig) != null || ExplorerUtils.isDominated(binConfigs, binConfig) != null
+					) {
+			} else {
 				//Assess its potential
 				if (ConfigurationUtility.getPotential(configuration, this.best == null ? null : this.best.getPlan(), this.best == null ? null : this.best.getCost(), this.successDominance)) {
 					//Find the configurations dominated by the current one and remove them
-//					Collection<DAGChaseConfiguration> dominated = this.equivalenceClasses.dominatedBy(this.dominance, configuration);
-//					if(!dominated.isEmpty()) {
-//						this.output.removeAll(dominated);
-//						this.equivalenceClasses.removeAll(dominated);
-//						this.successful.removeAll(dominated);
-//					}
+					Collection<DAGChaseConfiguration> dominated = this.equivalenceClasses.dominatedBy(this.dominance, configuration);
+					if(!dominated.isEmpty()) {
+						this.output.removeAll(dominated);
+						this.equivalenceClasses.removeAll(dominated);
+						this.successful.removeAll(dominated);
+					}
 					//Check for query match
 					boolean matchesQuery = false;
 					if (configuration.isClosed() && (matchesQuery = configuration.isSuccessful(this.query)) == true) {
@@ -127,7 +128,7 @@ public class ConfigurationSpaceExplorationThread implements Callable<DAGChaseCon
 						this.successful.add(configuration);
 					}
 				}
-//			}
+			}
 		}
 		return this.best;
 	}
