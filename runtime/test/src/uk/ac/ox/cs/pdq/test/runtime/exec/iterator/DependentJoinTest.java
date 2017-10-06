@@ -43,8 +43,8 @@ public class DependentJoinTest {
 	AccessMethod amFree = AccessMethod.create("free_access",new Integer[] {});
 	AccessMethod am0 = AccessMethod.create("access_0", new Integer[] {0});
 	AccessMethod am1 = AccessMethod.create("access_0", new Integer[] {1});
-	AccessMethod am01 = AccessMethod.create("access_method3",new Integer[] {0,1});
-	AccessMethod am3 = AccessMethod.create("access_0", new Integer[] {3});
+	AccessMethod am01 = AccessMethod.create("access_01",new Integer[] {0,1});
+	AccessMethod am3 = AccessMethod.create("access_3", new Integer[] {3});
 
 	TupleType tt2 = TupleType.DefaultFactory.create(Integer.class, Integer.class);
 	TupleType tt3 = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
@@ -536,7 +536,7 @@ public class DependentJoinTest {
 	 */
 	public Properties getProperties() {
 		Properties properties = new Properties();
-		properties.setProperty("url", "TODO");
+		properties.setProperty("url", "jdbc:postgresql://localhost:5432/");
 		properties.setProperty("database", "tpch");
 		properties.setProperty("username", "admin");
 		properties.setProperty("password", "admin");
@@ -621,11 +621,13 @@ public class DependentJoinTest {
 	public void test6() {
 
 		/*
-		 * Plan: DependentJoin(Access1, Access2)
+		 * DependentJoin(Access1, Access2).
+		 * Left: free access on CUSTOMER relation
+		 * Right: access NATION relation with input required on 0'th position (NATIONKEY)
 		 */
 		DependentJoin target = new DependentJoin(new Access(postgresqlRelationCustomer, amFree), 
 				new Access(postgresqlRelationNation, am0));
-
+ 
 		// Check that the plan has no input attributes (the left child has no input attributes
 		// and the right child has only one, namely "NATIONKEY", which is supplied by the left child).
 		Assert.assertEquals(0, target.getInputAttributes().length);
@@ -638,22 +640,24 @@ public class DependentJoinTest {
 			e.printStackTrace();
 		}
 
-		// TODO. Check that the result tuples are the ones expected. 
 		Assert.assertNotNull(result);
-		// TODO: execute a join manually to determine the expected size.
-		Assert.assertEquals(1000, result.size());
-		// TODO: check that the common attributes (by name) have common values.
 
+		// Since the NATIONKEY is unique in the NATION relation, there is a single result tuple
+		// for each tuple in the CUSTOMER relation.
+		// SELECT COUNT(*) FROM CUSTOMER, NATION WHERE CUSTOMER.c_nationkey = NATION.n_nationkey;
+		Assert.assertEquals(150000, result.size());
 	}
-
 
 	@Test
 	public void test7() {
 
 		/*
-		 * Plan: DependentJoin(Access1, Selection(Access2))
+		 * DependentJoin(Access1, Selection(Access2))
+		 * Left: free access on NATION relation
+		 * Right: access CUSTOMER relation with input required on 3rd position (NATIONKEY), 
+		 * 			then Select MKTSEGMENT = "AUTOMOBILE"  
 		 */
-		Condition mktsegmentCondition = ConstantEqualityCondition.create(6, TypedConstant.create("TODO"));
+		Condition mktsegmentCondition = ConstantEqualityCondition.create(6, TypedConstant.create("AUTOMOBILE"));
 		Selection selection = new Selection(mktsegmentCondition, new Access(postgresqlRelationCustomer, am3));
 
 		DependentJoin target = new DependentJoin(new Access(postgresqlRelationNation, amFree), 
@@ -671,9 +675,20 @@ public class DependentJoinTest {
 			e.printStackTrace();
 		}
 
-		// TODO. Check that the result tuples are the ones expected. 
 		Assert.assertNotNull(result);
+		
 		// TODO: execute a join manually to determine the expected size.
+		
+//		WITH right_child AS (
+//				SELECT * FROM CUSTOMER WHERE CUSTOMER.c_mktsegment='AUTOMOBILE'
+//				), left_child AS ( 
+//		        SELECT * FROM NATION
+//		        )
+//		SELECT * FROM left_child, right_child WHERE left_child.n_nationkey = right_child.c_nationkey;
+		
+		
+		// WITH right_child AS (SELECT * FROM CUSTOMER WHERE CUSTOMER.c_mktsegment='AUTOMOBILE'), left_child AS (SELECT * FROM NATION) SELECT count(*) FROM left_child, right_child WHERE left_child.n_nationkey = right_child.c_nationkey;
+
 		Assert.assertEquals(1000, result.size());
 		// TODO: check that the common attributes (by name) have common values.
 
@@ -812,6 +827,17 @@ public class DependentJoinTest {
 
 	}
 
+	/*
+	 * TODO: MISSING TWO TESTS HERE:
+	 */
+	/*
+	 * Plan: PROJECTION(Join(DependentJoin(NATION, SUPPLIER), DependentJoin(PART, PARTSUPP)))
+	 */
+	/*
+	 * Plan: PROJECTION(Join(DependentJoin(NATION, SUPPLIER), DependentJoin(CUSTOMER, ORDERS)))
+	 */
+
+	
 	@Test
 	public void stressTest3() {
 
@@ -856,6 +882,19 @@ public class DependentJoinTest {
 		Assert.assertEquals(1000, result.size());
 		// TODO: check that the common attributes (by name) have common values.	
 	}
+	
+	/*
+	 * TODO: MISSING TWO TESTS HERE:
+	 */
+	/*
+	 * Plan: 
+	 * DependentJoin(DependentJoin(Selection(NATION), SUPPLIER), DependentJoin(CUSTOMER, Selection(ORDERS)))
+	 */
+	/*
+	 * Plan: 
+	 * DependentJoin(Join(NATION, Selection(SUPPLIER)), DependentJoin(Selection(PART), PARTSUPP))
+	 */
+
 	
 	@Test
 	public void stressTest4() {
