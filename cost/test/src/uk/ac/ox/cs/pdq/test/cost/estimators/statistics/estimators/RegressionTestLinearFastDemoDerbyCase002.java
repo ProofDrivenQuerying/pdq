@@ -100,7 +100,7 @@ public class RegressionTestLinearFastDemoDerbyCase002 extends PdqTest {
 	 * 		Rename{[c2,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25]
 	 * 			Access{YahooWeather.mt_4[#0=a0]}}}
 	 * </pre>
-	 * Expected cost= 1.196321951304603E12;
+	 * Expected cost= 1.196321951304603E12; - The correct value was computed by regression tests in the review branch.
 	 */
 	@Test
 	public void test1() {
@@ -138,7 +138,7 @@ public class RegressionTestLinearFastDemoDerbyCase002 extends PdqTest {
 	 * <pre>
 	 * Access{YahooPlaces.mt_6[#1=Eiffel Tower]}
 	 * </pre>
-	 * Expected cost=100;
+	 * Expected cost=100; The correct value was counted by hand
 	 */
 	@Test
 	public void test2() {

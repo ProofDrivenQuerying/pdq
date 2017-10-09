@@ -101,6 +101,9 @@ public class TestTextBookCostEstimator extends PdqTest {
 	 * 			Access{YahooWeather.mt_1[#0=a0]}}}
 	 * </pre>
 	 * And evaluates its cost using the TextBookCostEstimator.
+	 * 
+	 * The correct value was created by old regression tests in review package before algebra-changes (not sure)
+	 *  
 	 */
 	@Test
 	public void test1() {
@@ -140,6 +143,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 	 * Access{YahooPlaces.mt_3[#1=Eiffel Tower]}
 	 * </pre>
 	 * And evaluates its cost using the TextBookCostEstimator.
+	 * The correct value was created by old regression tests in review package before algebra-changes (not sure)
 	 */
 	@Test
 	public void test2() {
@@ -162,6 +166,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 	 *  	Access{S.mt_1[#0=b]}}
 	 * </pre>
 	 * And evaluates its cost using the TextBookCostEstimator.
+	 * The correct value was created by old regression tests in review package before algebra-changes (not sure)
 	 */
 	@Test
 	public void test3() {
@@ -184,6 +189,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 	 *  	Access{S.mt_2[#0=b,#1=c]}}
 	 * </pre>
 	 * And evaluates its cost using the TextBookCostEstimator.
+	 * The correct value was created by old regression tests in review package before algebra-changes (not sure)
 	 */
 	@Test
 	public void test4() {
@@ -207,6 +213,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 	 *  	Access{S.mt_2[#0=b,#1=c]}}
 	 * </pre>
 	 * And evaluates its cost using the TextBookCostEstimator.
+	 * The correct value was created by old regression tests in review package before algebra-changes (not sure)
 	 */
 	@Test
 	public void test5() {
@@ -230,6 +237,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 	 *  	Access{S.mt_2[#0=b,#1=c]}}
 	 * </pre>
 	 * And evaluates its cost using the TextBookCostEstimator.
+	 * The correct value was created by old regression tests in review package before algebra-changes (not sure)
 	 */
 	@Test
 	public void test6() {
@@ -254,6 +262,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 	 *  	Access{S.mt_0[]}}
 	 * </pre>
 	 * And evaluates its cost using the TextBookCostEstimator.
+	 * The correct value was created by old regression tests in review package before algebra-changes (not sure)
 	 */
 	@Test
 	public void test7() {

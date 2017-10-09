@@ -98,6 +98,9 @@ public class TestNaiveCardinalityEstimator extends PdqTest {
 	 * 		Rename{[c2,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25]
 	 * 			Access{YahooWeather.mt_1[#0=a0]}}}
 	 * </pre>
+	 * Hand counted expected results: 
+	 *  - input 0
+	 *  - output 1.0E15
 	 */
 	@Test
 	public void test1() {
@@ -139,6 +142,10 @@ public class TestNaiveCardinalityEstimator extends PdqTest {
 	 * <pre>
 	 * Access{YahooPlaces.mt_3[#1=Eiffel Tower]}
 	 * </pre>
+	 * Hand counted expected results: 
+	 *  - input 0
+	 *  - output 1000000
+	 * 
 	 */
 	@Test
 	public void test2() {
@@ -169,6 +176,8 @@ public class TestNaiveCardinalityEstimator extends PdqTest {
 	 * Access{R.mt_0[]}
 	 * Access{S.mt_1[#0=b]}
 	 * </pre>
+	 * 
+	 * Asserts if we get back the cost given in the catalog. 
 	 */
 	@Test
 	public void test3() {
@@ -197,6 +206,7 @@ public class TestNaiveCardinalityEstimator extends PdqTest {
 	 * 		Access{R.mt_0[]},
 	 * 		Access{S.mt_2[#0=b,#1=c]}}
 	 * </pre>
+	 * Asserts if we get back the cost given in the catalog. 
 	 */
 	@Test
 	public void test4() {
@@ -226,6 +236,7 @@ public class TestNaiveCardinalityEstimator extends PdqTest {
 	 * 			Access{R.mt_0[]}},
 	 * 		Access{S.mt_2[#0=b,#1=c]}}
 	 * </pre>
+	 * Asserts if we get back the cost given in the catalog. 
 	 */
 	@Test
 	public void test5() {
@@ -256,6 +267,7 @@ public class TestNaiveCardinalityEstimator extends PdqTest {
 	 * <pre>
 	 * Access{R.mt_1[#0=1]}
 	 * </pre>
+	 * Asserts if we get back the cost given in the catalog. 
 	 */
 	@Test
 	public void test6() {
@@ -280,6 +292,7 @@ public class TestNaiveCardinalityEstimator extends PdqTest {
 	 * 		Access{R.mt_0[]},
 	 * 		Access{S.mt_0[]}}
 	 * </pre>
+	 * Asserts if we get back the cost given in the catalog. 
 	 */
 	@Test
 	public void test7() {
