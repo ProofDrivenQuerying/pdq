@@ -62,7 +62,7 @@ public class FastFactDominance implements FactDominance {
 		if (dTargetStateInfAccFacts.size() < dSourceStateInfAccFacts.size()) {
 			return false;
 		}
-		if (!checkSrcToTargetInfAccFactsContainment(dSourceStateInfAccFacts,dTargetStateInfAccFacts)) { 
+		if (!checkSrcToTargetInfAccFactsContainment(dTargetStateInfAccFacts,dSourceStateInfAccFacts)) { 
 			return false;
 		}
 		if (!this.hasStrictlyFewerFactsCheck || dSourceStateInfAccFacts.size() < dTargetStateInfAccFacts.size())
