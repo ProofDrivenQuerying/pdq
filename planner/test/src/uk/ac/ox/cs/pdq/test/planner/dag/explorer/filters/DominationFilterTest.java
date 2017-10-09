@@ -148,9 +148,7 @@ public class DominationFilterTest {
 		when(config32.getInput()).thenReturn(Lists.<Constant>newArrayList());
 
 		Set<DAGChaseConfiguration> expected = new LinkedHashSet<>();
-		expected.add(config11);
 		expected.add(config12);
-		expected.add(config21);
 		expected.add(config22);
 		expected.add(config31);
 		
