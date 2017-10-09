@@ -44,9 +44,9 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
-import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
  * Tests the DAG generic class. Makes sure we have all possible plans explored.

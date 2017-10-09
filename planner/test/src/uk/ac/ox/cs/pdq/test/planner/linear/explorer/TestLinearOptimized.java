@@ -41,9 +41,9 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
-import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
  * Tests the TestLinearOptimized explorer class. Uses the same 3 scenario as the other two linear chaser test does.

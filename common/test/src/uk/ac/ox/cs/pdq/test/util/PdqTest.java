@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.util;
+package uk.ac.ox.cs.pdq.test.util;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +28,8 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Creates the most commonly used objects for testing purposes. Also able to

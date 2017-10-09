@@ -28,8 +28,8 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
-import uk.ac.ox.cs.pdq.util.PdqTest;
 
 /**
  * Tests the getMatches and the getTriggers methods of the DatabaseChaseInstance
@@ -49,6 +49,10 @@ public class TestGetTriggers extends PdqTest {
 	@Before
 	public void setup() throws Exception {
 		super.setup();
+		for (DatabaseChaseInstance state : chaseState) {
+			if (state!=null) state.close();
+		}
+		DatabaseChaseInstance.resetFacts();
 		this.chaseState[DERBY] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.Derby, this.testSchema1, PARALLEL_THREADS));
 		this.chaseState[MYSQL] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.MySql, this.testSchema1, PARALLEL_THREADS));
 		this.chaseState[POSTGRES] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.Postgres, this.testSchema1, PARALLEL_THREADS));
@@ -176,10 +180,6 @@ public class TestGetTriggers extends PdqTest {
 		System.out.print("[");
 		try {
 			for (int i = 0; i < 100; i++) {
-				for (DatabaseChaseInstance state : chaseState) {
-					state.close();
-				}
-				setup();
 				test_getMatches4();
 				if (i % 1 == 0)
 					System.out.print(".");

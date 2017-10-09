@@ -48,6 +48,13 @@
 		<url>http://www.cs.ox.ac.uk/</url>
 	</organization>
 	<dependencies>
+ 		<dependency>
+        	<groupId>uk.ac.ox.cs.pdq</groupId>
+        	<artifactId>pdq-common</artifactId>
+        	<type>test-jar</type>
+        	<version>1.0.0-Beta</version>
+    	    <scope>test</scope>
+	    </dependency>		
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>

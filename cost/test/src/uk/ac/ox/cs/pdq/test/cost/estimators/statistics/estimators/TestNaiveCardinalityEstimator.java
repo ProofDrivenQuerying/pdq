@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.util.PdqTest;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * Test for the NaiveCardinalityEstimator class. Mainly uses the yashoo example

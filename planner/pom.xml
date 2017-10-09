@@ -105,6 +105,13 @@ these may be moved to a separate project later on.</description>
 			<scope>runtime</scope>
 		</dependency>
 	-->
+ 	<dependency>
+        <groupId>uk.ac.ox.cs.pdq</groupId>
+        <artifactId>pdq-common</artifactId>
+        <type>test-jar</type>
+        <version>1.0.0-Beta</version>
+        <scope>test</scope>
+    </dependency>		
 		<dependency>
 			<groupId>com.beust</groupId>
 			<artifactId>jcommander</artifactId>

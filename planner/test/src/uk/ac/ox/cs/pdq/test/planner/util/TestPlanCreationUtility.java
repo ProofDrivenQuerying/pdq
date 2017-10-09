@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
-import uk.ac.ox.cs.pdq.util.PdqTest;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * Using the same schema each test creates a different set of facts and uses the

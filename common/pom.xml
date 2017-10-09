@@ -39,6 +39,18 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
+ 			<plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-jar-plugin</artifactId>
+	            <executions>
+	                <execution>
+	                    <phase>package</phase>
+	                    <goals>
+	                        <goal>test-jar</goal>
+	                    </goals>
+	                </execution>
+	            </executions>               
+	        </plugin>       			
 		</plugins>
 	</build>
 	<name>PDQ common library</name>

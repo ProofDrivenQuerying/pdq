@@ -28,7 +28,7 @@ import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.PdqTest;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * This test when executed as a java application can detect memory leaks in the
