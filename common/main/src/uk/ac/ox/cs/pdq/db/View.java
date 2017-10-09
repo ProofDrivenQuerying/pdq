@@ -12,46 +12,50 @@ import uk.ac.ox.cs.pdq.util.Utility;
 /**
  * @author Efthymia Tsamoura
  * @author Julien Leblay
+ * @author Gabor
  */
-//TODO fix the equals and 
 @XmlJavaTypeAdapter(ViewAdapter.class)
 public class View extends Relation {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -4961888228318423619L;
 
-	/** 
-	 * TOCOMMENT what is this supposed to mean, and why is it a LinearGuarded dependency?
-	 *  The inverse dependency that defines the view. */
+	/**
+	 * The dependency that defines the view.
+	 */
+	protected TGD relationToViewDependency;
+	
+	/**
+	 * The inverse of the dependency that defines the view.
+	 */
 	protected LinearGuarded viewToRelationDependency;
 
-	/**  
-	 * TOCOMMENT So a view extends a Relation?? And does not have a declared connection to TGD except that it essentially is a TGD wrapper.
-	 * The dependency that defines the view. */
-	protected TGD relationToViewDependency;
 
 	public View(String name, Attribute[] attributes) {
 		super(name, attributes);
 	}
-	
+
 	public View(String name, Attribute[] attributes, AccessMethod[] methods) {
 		super(name, attributes, methods);
 	}
-	
+
 	/**
 	 * Instantiates a new view.
 	 *
-	 * @param dependency 		The dependency that defines the view
-	 * @param accessMethods 		The binding patterns with which a view can be accessed. By default, a view has free access
+	 * @param dependency
+	 *            The dependency that defines the view
+	 * @param accessMethods
+	 *            The binding patterns with which a view can be accessed. By
+	 *            default, a view has free access
 	 */
 	public View(LinearGuarded dependency, AccessMethod[] accessMethods) {
 		super(dependency.getBodyAtom(0).getPredicate().getName(), Utility.getAttributes(dependency.getGuard()), accessMethods);
 		this.viewToRelationDependency = dependency;
 		this.relationToViewDependency = TGD.create(this.viewToRelationDependency.getBody().getAtoms(), this.viewToRelationDependency.getHead().getAtoms());
 	}
+
 	/**
-	 * TOCOMMENT ???
-	 * Gets the dependency.
+	 * TOCOMMENT ??? Gets the inverse of the dependency that defines the view
 	 *
 	 * @return LinearGuarded
 	 */
@@ -71,7 +75,8 @@ public class View extends Relation {
 	/**
 	 * Sets the dependency.
 	 *
-	 * @param viewToRelationDependency LinearGuarded
+	 * @param viewToRelationDependency
+	 *            LinearGuarded
 	 */
 	public void setViewToRelationDependency(LinearGuarded viewToRelationDependency) {
 		this.viewToRelationDependency = viewToRelationDependency;
@@ -86,13 +91,12 @@ public class View extends Relation {
 		if (o == null) {
 			return false;
 		}
-		return this.getClass().isInstance(o)
-				&& this.name.equals(((View) o).name);
+		return this.getClass().isInstance(o) && this.name.equals(((View) o).name);
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.name);
 	}
-	
+
 }

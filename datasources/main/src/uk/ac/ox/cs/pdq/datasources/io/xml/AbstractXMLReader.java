@@ -41,26 +41,10 @@ public abstract class AbstractXMLReader<T> extends DefaultHandler implements Rea
 		return new ArrayList<>();
 	}
 
-	/**
-	 * TOCOMMENT ??
-	 * Gets the value.
-	 *
-	 * @param att 
-	 * @param qn 
-	 * @return the attribute value of the given qname
-	 */
 	protected String getValue(Attributes att, QNames qn) {
 		return att.getValue(qn.format());
 	}
-
-	/**
-	 * TOCOMMENT ??
-	 * Gets the int value.
-	 *
-	 * @param att 
-	 * @param qn 
-	 * @return the attribute value of the given qname
-	 */
+	
 	protected Integer getIntValue(Attributes att, QNames qn) {
 		try {
 			String s = att.getValue(qn.format());
