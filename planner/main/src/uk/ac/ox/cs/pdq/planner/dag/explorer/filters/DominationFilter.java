@@ -52,7 +52,6 @@ public class DominationFilter implements Filter {
 					}
 					if(!(input.get(j) instanceof ApplyRule) && this.dominance.isDominated(input.get(j), input.get(i))) {
 						filtered.add(input.get(j));
-						break;
 					}
 					++j;
 				}
