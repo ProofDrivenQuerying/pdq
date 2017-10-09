@@ -100,17 +100,14 @@ public class TestOrderDependentCostEstimators {
 		
 		
 		Cost cost1 = estimator.cost(bushy); 
+		Cost cost3 = estimator.cost(leftdeep);
+		
 		Cost cost2 = estimator2.cost(bushy);
-		
-		
-		Cost cost3 = estimator.cost(leftdeep); 
 		Cost cost4 = estimator2.cost(leftdeep);
 		
 		Assert.assertNotEquals(cost1,cost3);
-		Assert.assertNotEquals(cost2,cost4);
-		Assert.assertNotEquals(output,output2);
-		
-		//TODO assert the costs and verify that the numbers look reasonable
+		Assert.assertEquals(cost2,cost4); // busy or left deep doesn't matter, this counts accesses.
+		Assert.assertEquals(output,output2,0.0001);
 	}
 	//We create a bushy plan and a left deep one
 	//We estimate its cost with two order aware cost estimators
@@ -129,11 +126,11 @@ public class TestOrderDependentCostEstimators {
         DependentJoinTerm join0 = DependentJoinTerm.create(access0, access1);
         
         Map<Integer, TypedConstant> inputs = new LinkedHashMap<>();
-        inputs.put(2, TypedConstant.create("dummy"));
+        inputs.put(0, TypedConstant.create("dummy"));
         
         AccessTerm access2 = AccessTerm.create(this.T, this.method0);
         AccessTerm access3 = AccessTerm.create(this.U, this.method1, inputs);
-        DependentJoinTerm join1 = DependentJoinTerm.create(access2, access3);
+        JoinTerm join1 = JoinTerm.create(access2, access3);
         JoinTerm bushy = JoinTerm.create(join0, join1);
 		when(this.catalog.getCardinality(this.R)).thenReturn(10);
 		when(this.catalog.getCardinality(this.S)).thenReturn(10000);
@@ -151,15 +148,17 @@ public class TestOrderDependentCostEstimators {
 		Cost cost1 = estimator.cost(bushy); 
 		Cost cost2 = estimator2.cost(bushy);
 		
-		DependentJoinTerm leftdeep = DependentJoinTerm.create(JoinTerm.create(join0, access2), access3);
+		JoinTerm leftdeep = JoinTerm.create(JoinTerm.create(join0, access2), access3);
 		
 		Cost cost3 = estimator.cost(leftdeep); 
 		Cost cost4 = estimator2.cost(leftdeep);
 		
-		//TODO assert the costs and verify that the numbers look reasonable
+		Assert.assertNotEquals(cost1,cost2);
 		Assert.assertNotEquals(cost1,cost3);
-		Assert.assertNotEquals(cost2,cost4);
 		
+		Assert.assertNotEquals(cost3,cost4);
+		
+		Assert.assertEquals(cost2,cost4); // busy or left deep doesn't matter, this counts accesses.
 	}
 	
 	//We create a bushy plan and a left deep one
@@ -176,11 +175,11 @@ public class TestOrderDependentCostEstimators {
         this.access = Relation.create("Accessible", new Attribute[]{i,InstanceID});
         SelectionTerm access0 = SelectionTerm.create(ConstantEqualityCondition.create(2, TypedConstant.create("dummy1")), AccessTerm.create(this.R, this.method0));
         SelectionTerm access1 = SelectionTerm.create(ConstantEqualityCondition.create(1, TypedConstant.create("dummy2")), AccessTerm.create(this.S, this.method0));
-        DependentJoinTerm join0 = DependentJoinTerm.create(access0, access1);
+        JoinTerm join0 = JoinTerm.create(access0, access1);
         
         SelectionTerm access2 = SelectionTerm.create(ConstantEqualityCondition.create(2, TypedConstant.create("dummy3")), AccessTerm.create(this.T, this.method0));
         SelectionTerm access3 = SelectionTerm.create(ConstantEqualityCondition.create(1, TypedConstant.create("dummy4")), AccessTerm.create(this.U, this.method0));
-        DependentJoinTerm join1 = DependentJoinTerm.create(access2, access3);
+        JoinTerm join1 = JoinTerm.create(access2, access3);
         JoinTerm bushy = JoinTerm.create(join0, join1);
 		when(this.catalog.getCardinality(this.R)).thenReturn(10);
 		when(this.catalog.getCardinality(this.S)).thenReturn(10000);
@@ -198,13 +197,14 @@ public class TestOrderDependentCostEstimators {
 		Cost cost1 = estimator.cost(bushy); 
 		Cost cost2 = estimator2.cost(bushy);
 		
-		DependentJoinTerm leftdeep = DependentJoinTerm.create(JoinTerm.create(join0, access2), access3);
+		JoinTerm leftdeep = JoinTerm.create(JoinTerm.create(join0, access2), access3);
 		
 		Cost cost3 = estimator.cost(leftdeep); 
 		Cost cost4 = estimator2.cost(leftdeep);
 		
-		//TODO assert the costs and verify that the numbers look reasonable
+		Assert.assertNotEquals(cost1,cost2);
 		Assert.assertNotEquals(cost1,cost3);
-		Assert.assertNotEquals(cost2,cost4);
+		Assert.assertNotEquals(cost3,cost4);
+		Assert.assertEquals(cost2,cost4); // busy or left deep doesn't matter, this counts accesses.
 	}
 }
