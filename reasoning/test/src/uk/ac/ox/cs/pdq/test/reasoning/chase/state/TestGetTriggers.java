@@ -208,6 +208,12 @@ public class TestGetTriggers extends PdqTest {
 			state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
 			List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
 			Assert.assertEquals(6, matches.size());
+			try {
+				this.setup();
+				DatabaseChaseInstance.resetFacts();				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

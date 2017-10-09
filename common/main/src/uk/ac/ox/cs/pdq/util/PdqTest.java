@@ -128,6 +128,7 @@ public class PdqTest {
 		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		//DatabaseChaseInstance.resetFacts(); // can't be added here since DatabaseChaseInstance is not part of common, but it often needs to be reseted too. 				
 	}
 
 	/**

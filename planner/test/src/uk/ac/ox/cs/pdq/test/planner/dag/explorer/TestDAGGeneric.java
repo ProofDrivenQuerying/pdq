@@ -477,7 +477,7 @@ public class TestDAGGeneric extends PdqTest {
 			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();
 			Assert.assertNotNull(exploredPlans);
 			Assert.assertFalse(exploredPlans.isEmpty());
-			Assert.assertEquals(8, exploredPlans.size());
+			Assert.assertEquals(24, exploredPlans.size());
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
