@@ -29,6 +29,7 @@ public class AccessMethodTest {
 	 */
 	@Test
 	public void testCreation() {
+		
 		AccessMethod am1 = AccessMethod.create("test",new Integer[] {0});
 		AccessMethod am2 = AccessMethod.create("test1",new Integer[] {0});
 		AccessMethod am3= AccessMethod.create("test",new Integer[] {0});
