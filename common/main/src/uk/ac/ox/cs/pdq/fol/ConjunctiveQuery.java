@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.io.jaxb.adapters.QueryAdapter;
 
 //TODO fix the comments
 /**
- * TOCOMMENT find a pretty way to write formulas in javadoc
  * A conjunctive query (CQ) is a first order formula of the form \exists x_1, \ldots, x_n \Wedge A_i,
  * where A_i are atoms with arguments that are either variables or constants.
 

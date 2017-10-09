@@ -55,7 +55,7 @@ public class View extends Relation {
 	}
 
 	/**
-	 * TOCOMMENT ??? Gets the inverse of the dependency that defines the view
+	 * Gets the inverse of the dependency that defines the view
 	 *
 	 * @return LinearGuarded
 	 */

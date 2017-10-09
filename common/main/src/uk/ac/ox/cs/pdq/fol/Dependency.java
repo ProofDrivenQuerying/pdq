@@ -95,7 +95,6 @@ public class Dependency extends QuantifiedFormula {
 	}
 
 	/**
-	 * TOCOMMENT it would be better to say getBody or getHead; it's not really clear what left and right is.
 	 * Gets the left-hand side of this constraint.
 	 *
 	 * @return the left-hand side of this constraint
