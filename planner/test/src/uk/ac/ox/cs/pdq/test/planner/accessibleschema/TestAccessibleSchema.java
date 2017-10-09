@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.util.PdqTest;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * Tests the AccessibleSchema class by creating an example schemas and

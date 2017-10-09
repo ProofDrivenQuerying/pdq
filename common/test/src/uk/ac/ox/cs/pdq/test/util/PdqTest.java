@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.util;
+package uk.ac.ox.cs.pdq.test.util;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +28,8 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Creates the most commonly used objects for testing purposes. Also able to
@@ -128,6 +130,7 @@ public class PdqTest {
 		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		//DatabaseChaseInstance.resetFacts(); // can't be added here since DatabaseChaseInstance is not part of common, but it often needs to be reseted too. 				
 	}
 
 	/**

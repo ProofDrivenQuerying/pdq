@@ -88,6 +88,12 @@ Currently, the only implementation reasoning algorithm is the Chase.</descriptio
 		<url>http://www.cs.ox.ac.uk</url>
 	</organization>
 	<dependencies>
+	 	<dependency>
+	        <groupId>uk.ac.ox.cs.pdq</groupId>
+	        <artifactId>pdq-common</artifactId>
+	        <type>test-jar</type>
+	        <scope>test</scope>
+	    </dependency>		
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
 			<artifactId>pdq-common</artifactId>
@@ -112,6 +118,13 @@ Currently, the only implementation reasoning algorithm is the Chase.</descriptio
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
+		 	<dependency>
+		        <groupId>uk.ac.ox.cs.pdq</groupId>
+		        <artifactId>pdq-common</artifactId>
+		        <type>test-jar</type>
+		        <version>1.0.0-Beta</version>
+		        <scope>test</scope>
+		    </dependency>		
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
 				<artifactId>pdq-common</artifactId>

@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.cost.statistics.SQLServerHistogram;
 import uk.ac.ox.cs.pdq.cost.statistics.SQLServerHistogramLoader;
-import uk.ac.ox.cs.pdq.util.PdqTest;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * Tests SQLServerHistogramLoader with two example histogram files.
