@@ -7,7 +7,6 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
@@ -335,11 +334,12 @@ public class TestPlanCreationUtility extends PdqTest {
 
 		Assert.assertEquals(2, plan2.getInputAttributes().length);
 		Assert.assertEquals(Attribute.create(String.class, "c40"), plan2.getInputAttributes()[0]);
-		Assert.assertEquals(8, plan2.getOutputAttributes().length);
+		Assert.assertEquals(16, plan2.getOutputAttributes().length);
 		Assert.assertTrue(Arrays.asList(plan2.getOutputAttributes()).toString().contains("c31, c38, c39, c40, c41, c42, c43, c44"));
-		Assert.assertEquals(1, plan2.getChildren().length);
+		Assert.assertEquals(2, plan2.getChildren().length);
 		Assert.assertNotNull(plan2.getChild(0));
-		Assert.assertTrue(plan2.getChild(0) instanceof AccessTerm);
+		Assert.assertTrue(plan2.getChild(0) instanceof RenameTerm);
+		Assert.assertEquals(1, plan2.getAccesses().size());
 	}
 
 }
