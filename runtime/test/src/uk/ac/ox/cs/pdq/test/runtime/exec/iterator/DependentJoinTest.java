@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.test.runtime.exec.iterator;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,7 +12,6 @@ import java.util.concurrent.Executors;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
@@ -45,6 +42,7 @@ public class DependentJoinTest {
 	AccessMethod am1 = AccessMethod.create("access_0", new Integer[] {1});
 	AccessMethod am01 = AccessMethod.create("access_01",new Integer[] {0,1});
 	AccessMethod am3 = AccessMethod.create("access_3", new Integer[] {3});
+	AccessMethod am6 = AccessMethod.create("access_6", new Integer[] {6});
 
 	TupleType tt2 = TupleType.DefaultFactory.create(Integer.class, Integer.class);
 	TupleType tt3 = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
@@ -604,7 +602,7 @@ public class DependentJoinTest {
 	};
 
 	SQLRelationWrapper postgresqlRelationCustomer = new PostgresqlRelationWrapper(this.getProperties(), "CUSTOMER", 
-			attributes_C, new AccessMethod[] {amFree, am3});
+			attributes_C, new AccessMethod[] {amFree, am3, am6});
 	SQLRelationWrapper postgresqlRelationNation = new PostgresqlRelationWrapper(this.getProperties(), "NATION", 
 			attributes_N, new AccessMethod[] {amFree});
 	SQLRelationWrapper postgresqlRelationSupplier = new PostgresqlRelationWrapper(this.getProperties(), "SUPPLIER", 
@@ -649,6 +647,47 @@ public class DependentJoinTest {
 	}
 
 	@Test
+	public void test6a() {
+
+		/*
+		 * DependentJoin(Access1, Access2).
+		 * Left: access on CUSTOMER relation with constant input required on MKTSEGMENT 
+		 * Right: access NATION relation with input required on 0'th position (NATIONKEY)
+		 */
+		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
+		inputConstants.put(6, TypedConstant.create("AUTOMOBILE"));
+
+		// TODO:
+		// The following construction fails due to the naming convention used in TPC-H. The 
+		// NATIONKEY attribute is prefixed with C_ in the left child output attributes (from CUSTOMER),
+		// and with N_ in the right child input attributes (from NATION), so the DependentJoin
+		// constructor fails (at line 86), since it requires the right child input attribute names
+		// to be a subset of the left child output attribute names.
+		
+		DependentJoin target = new DependentJoin(new Access(postgresqlRelationCustomer, am6, inputConstants), 
+				new Access(postgresqlRelationNation, am0));
+ 
+		// Check that the plan has no input attributes (the left child has no input attributes
+		// and the right child has only one, namely "NATIONKEY", which is supplied by the left child).
+		Assert.assertEquals(0, target.getInputAttributes().length);
+
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		Assert.assertNotNull(result);
+
+		// Since the NATIONKEY is unique in the NATION relation, there is a single result tuple
+		// for each tuple in the CUSTOMER relation.
+		// SELECT COUNT(*) FROM CUSTOMER, NATION WHERE CUSTOMER.c_mktsegment='AUTOMOBILE' AND CUSTOMER.c_nationkey=NATION.n_nationkey;
+		Assert.assertEquals(29752, result.size());
+	}
+	
+	@Test
 	public void test7() {
 
 		/*
@@ -677,7 +716,7 @@ public class DependentJoinTest {
 
 		Assert.assertNotNull(result);
 		
-		// TODO: execute a join manually to determine the expected size.
+		// Execute a join manually to determine the expected size.
 		
 //		WITH right_child AS (
 //				SELECT * FROM CUSTOMER WHERE CUSTOMER.c_mktsegment='AUTOMOBILE'
@@ -686,11 +725,13 @@ public class DependentJoinTest {
 //		        )
 //		SELECT * FROM left_child, right_child WHERE left_child.n_nationkey = right_child.c_nationkey;
 		
-		
+		// equivalently:
 		// WITH right_child AS (SELECT * FROM CUSTOMER WHERE CUSTOMER.c_mktsegment='AUTOMOBILE'), left_child AS (SELECT * FROM NATION) SELECT count(*) FROM left_child, right_child WHERE left_child.n_nationkey = right_child.c_nationkey;
 
-		Assert.assertEquals(1000, result.size());
-		// TODO: check that the common attributes (by name) have common values.
+		Assert.assertEquals(29752, result.size());
+		// TODO: 
+		// - check the column names if possible (or number of columns if not)
+		// - check that the common attributes (by name) have common values.
 
 	}
 
