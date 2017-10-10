@@ -14,7 +14,7 @@ public class AttributeEqualityCondition extends SimpleCondition {
 	/**  The first of the two positions to be compared for equality. */
 	protected final Integer position;
 
-	/**  The other position to which position must be equals for a given tuple. */
+	/**  The second position in the equality comparison. */
 	protected final Integer other;
 
 	private AttributeEqualityCondition(Integer position, Integer other) {
