@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 
-// TODO: Auto-generated Javadoc
 /**
  * A REST attribute is an attribute whose behavior includes ways to produce 
  * inputs on a service access.

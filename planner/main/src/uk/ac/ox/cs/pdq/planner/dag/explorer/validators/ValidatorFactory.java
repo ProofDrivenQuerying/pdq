@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer.validators;
 
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.ValidatorTypes;
 
-// TODO: Auto-generated Javadoc
 /**
  * Creates validators (shape restrictions) based on the input arguments.
  * 

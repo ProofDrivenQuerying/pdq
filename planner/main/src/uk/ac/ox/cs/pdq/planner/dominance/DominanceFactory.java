@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimat
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
 
-// TODO: Auto-generated Javadoc
 /**
  * Creates cost dominance detectors using the input parameters.
  * The available options are:

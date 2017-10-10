@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.equivalence.FastStructuralEquivalence;
 import uk.ac.ox.cs.pdq.planner.equivalence.StructuralEquivalence;
 
-// TODO: Auto-generated Javadoc
 /**
  * A class of structurally equivalent configurations that supports multi-threading.
  * According to this implementation different threads can add, 
@@ -83,7 +82,7 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 				this.representative = configuration;
 			}
 			if(configuration.isClosed() && (this.minCostConfiguration == null ||
-					this.minCostConfiguration.getCost().greaterThan(configuration.getCost()))
+					this.minCostConfiguration.getCost()== null || this.minCostConfiguration.getCost().greaterThan(configuration.getCost()))
 					) {
 				this.minCostConfiguration = configuration;
 			}

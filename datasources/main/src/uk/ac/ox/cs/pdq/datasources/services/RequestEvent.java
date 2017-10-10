@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.datasources.services;
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * An access's request event.
  *

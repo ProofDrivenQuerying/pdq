@@ -9,7 +9,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClass;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 
-// TODO: Auto-generated Javadoc
 /**
  * Map of representatives. For each configuration c = BinConfiguration(c_1,c_2) we create a map from the
  * equivalence classes of c and c' to c''. This map helps us reducing the chasing time, i.e.,

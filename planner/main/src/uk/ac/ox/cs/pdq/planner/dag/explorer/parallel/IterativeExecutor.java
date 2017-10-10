@@ -11,7 +11,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Provides methods to create binary configurations or to
  * identify the minimum-cost configuration among a given set of configurations.

@@ -31,7 +31,6 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.IterativeExecutor;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
-// TODO: Auto-generated Javadoc
 /**
  * An explorer for plans using ideas from dynamic programming. It performs parallel chasing and
  * (success-)dominance, equivalence and success checks in parallel

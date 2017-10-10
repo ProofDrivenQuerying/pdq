@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * Frequency histograms.
  * @author Efthymia Tsamoura

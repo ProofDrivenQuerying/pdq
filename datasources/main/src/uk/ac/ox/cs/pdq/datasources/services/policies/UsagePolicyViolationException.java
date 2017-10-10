@@ -4,7 +4,6 @@ import uk.ac.ox.cs.pdq.datasources.AccessException;
 
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Exception thrown when a usage policy is violated. Detailed on the violation
  * should be provided in the message.

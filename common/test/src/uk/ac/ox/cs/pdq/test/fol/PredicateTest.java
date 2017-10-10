@@ -10,7 +10,6 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-// TODO: Auto-generated Javadoc
 /**
  * A predicate's signature, associate a symbol with an arity..
  *

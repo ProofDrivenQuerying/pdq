@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.datasources.services.rest;
 
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
 /**
  * Interface to output method, i.e. classes in charges are extract attribute
  * values from JSON results.

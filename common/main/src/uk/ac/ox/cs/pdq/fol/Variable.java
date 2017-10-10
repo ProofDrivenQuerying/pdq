@@ -7,7 +7,6 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.VariableAdapter;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
-// TODO: Auto-generated Javadoc
 /**
  * A variable
  *

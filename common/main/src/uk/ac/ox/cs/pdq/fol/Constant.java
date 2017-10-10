@@ -15,4 +15,10 @@ import uk.ac.ox.cs.pdq.io.jaxb.adapters.ConstantAdapter;
 @XmlJavaTypeAdapter(ConstantAdapter.class)
 public abstract class Constant extends Term {
 	private static final long serialVersionUID = -9179710480240580816L;
+	
+	// this could be faster then checking "instanceof Variable"
+	@Override
+	public boolean isVariable() {
+		return false;
+	}
 }

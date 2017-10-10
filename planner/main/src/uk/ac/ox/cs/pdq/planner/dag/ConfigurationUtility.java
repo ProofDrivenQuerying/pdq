@@ -27,7 +27,6 @@ import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Utility class.
  *

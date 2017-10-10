@@ -12,7 +12,6 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
 
 import com.google.common.eventbus.EventBus;
 
-// TODO: Auto-generated Javadoc
 /**
  * Searches for a feasible plan w.r.t. the relations' bindings and the schema dependencies.
  *

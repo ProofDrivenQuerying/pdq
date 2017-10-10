@@ -1,13 +1,10 @@
 package uk.ac.ox.cs.pdq.datasources;
 
-// TODO: Auto-generated Javadoc
 /**
  * Access exception implementation .
  *
  * @author Julien Leblay
  * 
- * 
- * ....
  */
 public class AccessException extends RuntimeException {
 

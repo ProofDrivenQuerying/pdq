@@ -27,7 +27,6 @@ import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 
-// TODO: Auto-generated Javadoc
 /**
  * A general parameters utility class, which allows getting and setting typed
  * properties, either through the loose properties methods, or stricter
@@ -434,8 +433,8 @@ public abstract class Parameters extends Properties {
 												.append("\n");
 									} catch (NoSuchFieldException
 											| SecurityException e1) {
-										// TODO Auto-generated catch block
 										e1.printStackTrace();
+										log.error(e1.getMessage(),e1);
 									}
 								}
 							}
@@ -446,6 +445,7 @@ public abstract class Parameters extends Properties {
 				} catch (IllegalArgumentException e) {
 					log.warn("Could not invoke target on field " + f.getName() + ".", e);
 				} catch (Exception e) {
+					e.printStackTrace();
 					log.error(e.getMessage(),e);
 				}
 			}

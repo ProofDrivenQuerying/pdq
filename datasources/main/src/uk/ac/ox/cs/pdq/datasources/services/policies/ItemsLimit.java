@@ -5,7 +5,6 @@ import java.util.Properties;
 import uk.ac.ox.cs.pdq.datasources.services.ServiceRepository;
 import uk.ac.ox.cs.pdq.datasources.services.rest.RESTAttribute;
 
-// TODO: Auto-generated Javadoc
 /**
  * Variant of the PagingLimit usage policy, where the start of a window is 
  * given by item index rather than page index.

@@ -50,7 +50,6 @@ import uk.ac.ox.cs.pdq.util.Typed;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Wrapper class for RESTful accessible relations.
  * 
@@ -386,7 +385,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		//			} while(event.hasMoreElements());
 		//		}
 		//
-		// TODO
 		//		this.cache.put(inputs, result);
 
 		return result;

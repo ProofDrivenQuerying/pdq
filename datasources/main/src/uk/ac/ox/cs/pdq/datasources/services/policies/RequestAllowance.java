@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import uk.ac.ox.cs.pdq.datasources.services.rest.RESTResponseEvent;
 
-// TODO: Auto-generated Javadoc
 /**
  * Check whether the number of requests for a given period is satisfied, waits
  * or throws an exception if not.

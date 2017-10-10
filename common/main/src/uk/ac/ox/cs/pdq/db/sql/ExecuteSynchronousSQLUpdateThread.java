@@ -19,7 +19,6 @@ public class ExecuteSynchronousSQLUpdateThread implements Callable<Boolean> {
 	protected final Queue<String> queries;
 
 	public ExecuteSynchronousSQLUpdateThread(Queue<String> queries, Connection connection) {
-		//TODO check input arguments
 		this.connection = connection;
 		this.queries = queries;
 	}

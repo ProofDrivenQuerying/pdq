@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.util;
 
 import java.lang.reflect.Type;
 
-// TODO: Auto-generated Javadoc
 /**
  * Common interface for typed objects, such as attributes and constants.
  *

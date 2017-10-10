@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import uk.ac.ox.cs.pdq.datasources.services.rest.RESTResponseEvent;
 
-// TODO: Auto-generated Javadoc
 /**
  * Check whether the amount of data for a given period has exceeded, waits
  * or throws an exception if so.

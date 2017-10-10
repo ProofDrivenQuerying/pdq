@@ -5,7 +5,6 @@ import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 
-// TODO: Auto-generated Javadoc
 /**
  * Requires the input pair of configurations to be non trivial, their combined depth to be <= the depth threshold
  * and at least one of the input configurations to be an ApplyRule.

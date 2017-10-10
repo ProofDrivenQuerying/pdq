@@ -23,7 +23,6 @@ import uk.ac.ox.cs.pdq.planner.dag.cost.sql.DAGConfigurationToSQLTranslator;
 
 import com.google.common.eventbus.EventBus;
 
-// TODO: Auto-generated Javadoc
 /**
  * Translates a configuration directly to an SQL
  * query which is further provided to PostgreSQL for cost analysis.
@@ -163,7 +162,6 @@ public class PostgresqlBlackBoxEstimator implements OrderDependentCostEstimator 
 
 	@Override
 	public Cost cost(RelationalTerm plan) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

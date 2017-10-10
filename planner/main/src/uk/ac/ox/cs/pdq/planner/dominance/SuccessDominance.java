@@ -4,7 +4,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 
-//TODO: Auto-generated Javadoc
 /**
 * Closed success dominance. 
 * A closed plan p success dominates another closed plan p', if p is successful and has cost < the cost of p'.
@@ -12,7 +11,6 @@ import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 * @author Efthymia Tsamoura
 */
 
-//TODO: Auto-generated Javadoc
 /**
 * Open success dominance.
 * A plan p success dominates another closed plan ', if p is successful and has cost < the cost of p'.

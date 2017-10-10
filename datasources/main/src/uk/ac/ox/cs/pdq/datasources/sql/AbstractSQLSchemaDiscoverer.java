@@ -27,7 +27,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 
-// TODO: Auto-generated Javadoc
 /**
  * This class factorises functionalities common to all SQLSchemaDiscorer.
  *  

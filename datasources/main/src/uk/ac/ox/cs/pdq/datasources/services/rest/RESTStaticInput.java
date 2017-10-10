@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 
-// TODO: Auto-generated Javadoc
 /**
  * A static attribute is an attribute whose value does not change at
  * runtime, and is not consider an actual attribute of relation.

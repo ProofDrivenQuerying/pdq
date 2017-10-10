@@ -4,7 +4,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class NaiveMetadata.
  *

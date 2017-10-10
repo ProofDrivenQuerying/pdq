@@ -16,7 +16,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * Translates a left-deep configuration, where all ApplyRule configurations have input-free bindings, into an SQL query.
  *

@@ -19,7 +19,6 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PostgresqlSchemaDiscoveryTest.
  */

@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.planner;
 
-// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred during a planning operation.
  *

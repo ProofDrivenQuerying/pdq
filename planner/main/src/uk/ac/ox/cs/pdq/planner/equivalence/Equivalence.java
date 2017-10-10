@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.planner.equivalence;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Configuration equivalence.
  *

@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * Density vectors for SQL Server 2014.
  * For more details see https://msdn.microsoft.com/en-gb/library/ms174384.aspx 

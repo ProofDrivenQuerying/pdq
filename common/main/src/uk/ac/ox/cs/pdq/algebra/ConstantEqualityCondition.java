@@ -5,14 +5,11 @@ import org.junit.Assert;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 /**
- *  *  *
- *   *   *    *TOCOMMENT: NO AUTHOR
- *    *    *
- *     *          */
-
-
-
-
+ * Represents a constant equality condition, that can be used to create -for example- a SelectionTerm.
+ *  
+ * @author Unknown
+ * @author Gabor
+ */
 public class ConstantEqualityCondition extends SimpleCondition {
 	private static final long serialVersionUID = 1040523371703814834L;
 

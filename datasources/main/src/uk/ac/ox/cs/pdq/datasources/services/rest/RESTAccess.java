@@ -10,7 +10,6 @@ import javax.ws.rs.client.WebTarget;
 
 import com.fasterxml.jackson.jaxrs.json.annotation.JacksonFeatures;
 
-// TODO: Auto-generated Javadoc
 /**
  * Represents an access to a REST service. This class can be used as a request 
  * builder, i.e. for modifying a request until it is eventually sent.

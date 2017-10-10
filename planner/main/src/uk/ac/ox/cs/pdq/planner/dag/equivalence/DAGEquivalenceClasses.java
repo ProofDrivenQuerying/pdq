@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Collections of DAG configuration equivalence classes.
  * 

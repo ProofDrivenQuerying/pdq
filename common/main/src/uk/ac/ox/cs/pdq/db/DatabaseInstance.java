@@ -212,7 +212,6 @@ public abstract class DatabaseInstance implements Instance {
 					} catch (LimitReachedException e1) {
 						executorService.shutdownNow();
 						executorService = Executors.newFixedThreadPool(this.databaseConnection.getNumberOfSynchronousConnections());
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}

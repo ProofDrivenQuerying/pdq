@@ -6,7 +6,6 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 
-// TODO: Auto-generated Javadoc
 /**
  * Requires the input pair of configurations to be non trivial.
  * An ordered pair of configurations (left, right) is non-trivial 

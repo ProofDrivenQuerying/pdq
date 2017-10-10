@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import com.google.common.base.Joiner;
 
-// TODO: Auto-generated Javadoc
 /**
  * This class capture the behavior have incorporate inputs parameters to a 
  * request. Input are (currently) one of two types: URL parameter or path
@@ -151,7 +150,7 @@ public class InputMethod {
 	}
 
 	/**
-	 * TODO redundant with compound key. will be removed.
+	 * redundant with compound key. will be removed.
 	 *
 	 * @param params the params
 	 * @return String

@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.planner.dominance;
 
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
-// TODO: Auto-generated Javadoc
 /**
  * Configuration dominance.
  *

@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer.validators;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Checks whether the binary configuration Binary(c,c') composed from a given pair of configurations c, c' satisfies given shape restrictions or not.
  * @author Efthymia Tsamoura

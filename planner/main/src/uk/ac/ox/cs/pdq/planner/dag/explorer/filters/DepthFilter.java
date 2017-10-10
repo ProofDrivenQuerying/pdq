@@ -5,7 +5,6 @@ import java.util.LinkedHashSet;
 
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 
-// TODO: Auto-generated Javadoc
 /**
  * Filters out the configurations with depth > the depth threshold.
  *

@@ -15,7 +15,6 @@ import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.util.Typed;
 
-// TODO: Auto-generated Javadoc
 /**
  * Implementation of a database table, whose tuples are fully loaded in memory.
  *

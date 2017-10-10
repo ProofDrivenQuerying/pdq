@@ -30,7 +30,6 @@ public class SchemaConverter {
 		try {
 			convert(src,to);
 		} catch (FileNotFoundException | JAXBException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

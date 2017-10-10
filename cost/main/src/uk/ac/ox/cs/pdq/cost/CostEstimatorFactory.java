@@ -20,7 +20,6 @@ import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 
-// TODO: Auto-generated Javadoc
 /**
  * A factory of cost estimation objects.
  * 	The following types of plan cost estimators are supported:

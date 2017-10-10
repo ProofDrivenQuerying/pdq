@@ -37,7 +37,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruningFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
-// TODO: Auto-generated Javadoc
 /**
  * Creates an explorer given the input arguments. The following types of explorers are available:
 	

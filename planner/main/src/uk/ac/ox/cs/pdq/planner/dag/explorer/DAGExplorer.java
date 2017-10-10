@@ -16,7 +16,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
-// TODO: Auto-generated Javadoc
 /**
  * Explores the space of DAG proofs.
  * Exploration proceeds roughly as follows.

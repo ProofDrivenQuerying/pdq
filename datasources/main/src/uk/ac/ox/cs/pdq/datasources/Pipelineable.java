@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.datasources;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.db.Attribute;
 
-// TODO: Auto-generated Javadoc
 /**
  * Common interface to pipelinable iterators, i.e. iterators that iterate over
  * a set of input tuples, and return output tuple one at a time.

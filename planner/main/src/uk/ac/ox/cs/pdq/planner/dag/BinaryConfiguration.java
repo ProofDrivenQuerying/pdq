@@ -14,7 +14,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import com.google.common.base.Preconditions;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Configurations represent a place in the search space for plans and proofs. In the DAG world these are built up inductively, and binary configurations are the main inductive constructor. Instances of binary DAG configurations.
  * They are of the form Binary(x,y), where x and y can be either binary of unary DAG configurations. 

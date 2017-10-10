@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.datasources;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * An iterator consuming another iterator.
  *

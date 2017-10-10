@@ -10,7 +10,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
  * Estimates the cardinality of the join of two attributes using their histograms .
  *

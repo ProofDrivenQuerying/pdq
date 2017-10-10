@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.datasources.services.rest;
 
-// TODO: Auto-generated Javadoc
 /**
  * A static input.
  *

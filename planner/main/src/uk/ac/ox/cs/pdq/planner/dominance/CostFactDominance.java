@@ -6,7 +6,6 @@ import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
-// TODO: Auto-generated Javadoc
 /**
  * Closed dominance. A closed configuration c dominates a closed configuration c', 
  * if c both cost- and fact- dominates c'.

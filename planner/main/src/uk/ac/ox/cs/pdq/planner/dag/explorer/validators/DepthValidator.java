@@ -4,7 +4,6 @@ import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 
-// TODO: Auto-generated Javadoc
 /**
  * Requires the input pair of configurations to be non trivial and their combined depth to be <= the depth threshold.
  *

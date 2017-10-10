@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.planner.dominance;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
-// TODO: Auto-generated Javadoc
 /**
  * Numerical success dominance. A configuration c dominates a configuration c', if c has >= facts than c'.
  * @author Efthymia Tsamoura

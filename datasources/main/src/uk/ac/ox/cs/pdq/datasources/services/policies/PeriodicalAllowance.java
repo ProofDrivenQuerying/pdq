@@ -12,7 +12,6 @@ import uk.ac.ox.cs.pdq.datasources.services.rest.RESTRequestEvent;
 import uk.ac.ox.cs.pdq.datasources.services.rest.RESTResponseEvent;
 import uk.ac.ox.cs.pdq.logging.Periods;
 
-// TODO: Auto-generated Javadoc
 /**
  * This class factorizes the behavior of usage policies that check if some
  * feature of a sequence of accesses exceed a certain threshold for a given 

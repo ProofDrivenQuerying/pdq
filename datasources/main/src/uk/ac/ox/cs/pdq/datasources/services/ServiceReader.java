@@ -38,7 +38,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Reads a service repository initialConfig from XML.
  * 

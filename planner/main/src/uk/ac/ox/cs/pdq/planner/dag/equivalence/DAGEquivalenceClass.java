@@ -5,7 +5,6 @@ import java.util.Collection;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 
-// TODO: Auto-generated Javadoc
 /**
  * Class of equivalent configurations.
  *  A mapping h from the chase constants of one configuration conf to the chase constants of another configuration conf'

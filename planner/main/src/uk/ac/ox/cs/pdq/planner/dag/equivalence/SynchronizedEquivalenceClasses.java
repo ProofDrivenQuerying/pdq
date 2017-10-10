@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * A collection of structurally equivalent classes that supports multi-threading.
  * According to this implementation different threads can add, remove or perform domination detection inside each class concurrently.

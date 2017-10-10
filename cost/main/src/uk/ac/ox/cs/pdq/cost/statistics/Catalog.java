@@ -9,7 +9,6 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
-// TODO: Auto-generated Javadoc
 /**
  * The database statistics .
  *

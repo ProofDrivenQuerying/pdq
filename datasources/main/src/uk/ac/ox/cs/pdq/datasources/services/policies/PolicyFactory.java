@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.datasources.services.ServiceRepository;
 
-// TODO: Auto-generated Javadoc
 /**
  * Factory for usage policies.
  * Assume all the relevant class have a constructor taking a single Properties

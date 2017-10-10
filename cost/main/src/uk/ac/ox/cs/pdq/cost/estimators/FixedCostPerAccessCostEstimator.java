@@ -14,7 +14,6 @@ import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 
-// TODO: Auto-generated Javadoc
 /**
  * A simple cost estimator.
  * According to this implementation, the cost of a plan equals the sum of the costs of the

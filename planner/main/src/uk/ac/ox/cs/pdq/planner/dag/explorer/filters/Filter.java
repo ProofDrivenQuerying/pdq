@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 
-// TODO: Auto-generated Javadoc
 /**
  * Filters out configurations.
  *

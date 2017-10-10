@@ -5,7 +5,6 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ConfigurationCostEstimator.
  *
@@ -34,24 +33,9 @@ public class ConfigurationCostEstimator implements CostEstimator {
 
 	@Override
 	public Cost cost(RelationalTerm plan) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-//	@Override
-//	public CostEstimator clone() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
-//	/* (non-Javadoc)
-//	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#estimateCost(uk.ac.ox.cs.pdq.util.Costable)
-//	 */
-//	@Override
-//	public Cost estimateCost(Configuration config) {
-//		return estimator.estimateCost(config.getPlan());
-//	}
-//
 	/* (non-Javadoc)
 	 * @see java.lang.Object#clone()
 	 */

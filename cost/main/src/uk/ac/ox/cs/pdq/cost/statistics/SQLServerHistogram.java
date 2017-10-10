@@ -10,7 +10,6 @@ import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * Histograms for SQL Server 2014.
  * @author Efthymia Tsamoura

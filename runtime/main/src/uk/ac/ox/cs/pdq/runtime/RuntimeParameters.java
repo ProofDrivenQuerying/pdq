@@ -31,8 +31,7 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	@Parameter(description="Type of executor to use in plan evaluation")
 	protected ExecutorTypes executorType;
 
-	/** TOCOMMENT: IS THIS MEANINGFUL? DO WE SUPPORT MULTIPLE SEMANTICS?  */
-	@Parameter(description="Semantics to use in plan execution",
+	@Parameter(description="Semantics to use in plan execution. SET will remove duplicates from result sets, BAG will not. Default is SET",
 			defaultValue = "SET")
 	protected Semantics semantics = Semantics.SET;
 	

@@ -25,7 +25,6 @@ import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 
-// TODO: Auto-generated Javadoc
 /**
  * Bootstrapping class for starting the planner. 
  * 

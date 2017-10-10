@@ -27,7 +27,6 @@ import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Simple dag explorer. The exploration proceeds similarly to the GenericExplorer.
  * First, it creates a new binary configuration and checks whether or not it could lead to the optimal solution.

@@ -33,7 +33,6 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.util.Triple;
 
-// TODO: Auto-generated Javadoc
 /**
  * MySQL-specific class for automatically discover a schema.
  *  

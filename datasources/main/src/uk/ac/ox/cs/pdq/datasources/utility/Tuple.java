@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.datasources.utility;
 import java.io.Serializable;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * A database tuple.
  * Tuple are immutable objects.

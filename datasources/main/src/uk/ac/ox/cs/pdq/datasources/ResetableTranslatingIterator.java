@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.datasources;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * An iterator that can be reset, i.e. the cursor can be placed back to the
  * beginning of the underlying Iterable at any time.

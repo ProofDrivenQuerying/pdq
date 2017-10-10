@@ -6,7 +6,6 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Configurations represent a node in the search space for a plan or proof.
  * DAG configurations are built up inductively via a composition operator

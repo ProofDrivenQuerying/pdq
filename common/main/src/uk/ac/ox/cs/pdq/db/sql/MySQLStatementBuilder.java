@@ -19,7 +19,6 @@ import uk.ac.ox.cs.pdq.fol.Term;
 
 import com.google.common.base.Joiner;
 
-// TODO: Auto-generated Javadoc
 /**
  * Builds queries for detecting homomorphisms in MySQL.
  *

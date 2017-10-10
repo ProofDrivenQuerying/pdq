@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.datasources.services;
 
-// TODO: Auto-generated Javadoc
 /**
  * Event for single access to an online service.
  * 

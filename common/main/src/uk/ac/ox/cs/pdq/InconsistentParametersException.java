@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq;
 
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Exception that occurrs when an inconsistency is found among parameters.
  *

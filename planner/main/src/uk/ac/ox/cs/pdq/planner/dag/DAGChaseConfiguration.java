@@ -9,7 +9,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 
-// TODO: Auto-generated Javadoc
 /**
  *  Configurations represent a partial proof and also a corresponding plan
  *  In the DAG planner they are proofs that may have hypotheses, corresponding to

@@ -19,7 +19,6 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * This usage policy incorporates paging constraints on the access to be 
  * performed. It set the access 'isComplete' fields to false until the last

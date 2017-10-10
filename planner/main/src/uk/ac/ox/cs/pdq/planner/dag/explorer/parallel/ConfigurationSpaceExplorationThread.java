@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
-// TODO: Auto-generated Javadoc
 /**
  * Iterates over the input collection of configurations to identify the minimum-cost one.
  * Given a set if input configuration C it removes from C the dominated and success dominated configurations 

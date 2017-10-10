@@ -29,11 +29,9 @@ public class DatabaseUtilities {
 			} catch (ClassNotFoundException e) {
 				throw new IllegalStateException("Could not load chase database driver '" + driver + "'");
 			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
 				log.error(e.getMessage(),e);
 				throw new RuntimeException(e);
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				log.error(e.getMessage(),e);
 				throw new RuntimeException(e);
 			}

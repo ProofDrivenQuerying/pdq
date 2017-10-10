@@ -6,7 +6,6 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 
-// TODO: Auto-generated Javadoc
 /**
  * A wrapper for PostgresqlTranslator-based SQL relations. This adds the 
  * SQLRelationWrapper some postgres-specific functionalities, mainly 

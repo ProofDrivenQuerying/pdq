@@ -23,7 +23,6 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
 
-// TODO: Auto-generated Javadoc
 /**
  * Given schema S_0, the Accessible Schema for S_0, denoted AcSch(S_0), 
  * is the schema without any access restrictions, such that:

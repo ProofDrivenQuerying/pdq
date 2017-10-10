@@ -7,7 +7,6 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
-// TODO: Auto-generated Javadoc
 /**
  * Performs fast fact dominance checks. A source configuration is fact dominated
  * by a target configuration if any inferred accessible fact plus in the source

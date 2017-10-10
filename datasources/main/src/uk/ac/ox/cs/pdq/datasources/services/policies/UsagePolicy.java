@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.datasources.services.policies;
 
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Usage policy for web resources. Implemented this class to model ad-hoc usage
  * policy that web services put in places (e.g. data allowance, bandwidth

@@ -27,7 +27,6 @@ import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
-// TODO: Auto-generated Javadoc
 /**
  * Creates new binary configurations.
  * Given two lists of configurations L and R, the algorithm creates a new binary configuration c=Binary(l,r) by 

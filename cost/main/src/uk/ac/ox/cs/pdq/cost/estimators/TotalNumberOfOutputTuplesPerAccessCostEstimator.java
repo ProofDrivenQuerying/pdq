@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * The cost of the plan equals the total number of output tuples per access .
  *

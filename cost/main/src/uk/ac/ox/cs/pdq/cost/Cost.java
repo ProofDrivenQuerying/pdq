@@ -4,7 +4,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import uk.ac.ox.cs.pdq.cost.io.jaxb.adapters.CostAdapter;
 
-// TODO: Auto-generated Javadoc
 /**
  * Abstract plan cost.
  *

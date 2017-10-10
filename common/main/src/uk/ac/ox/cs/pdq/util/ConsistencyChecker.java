@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.util;
 import uk.ac.ox.cs.pdq.InconsistentParametersException;
 import uk.ac.ox.cs.pdq.Parameters;
 
-// TODO: Auto-generated Javadoc
 /**
  * A generic interface to check the consistency of the input parameters.
  *

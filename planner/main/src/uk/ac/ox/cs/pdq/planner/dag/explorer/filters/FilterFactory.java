@@ -4,7 +4,6 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.FilterTypes;
 import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.NumericalFactDominance;
 
-// TODO: Auto-generated Javadoc
 /**
  * Creates filters based on the input arguments.
 

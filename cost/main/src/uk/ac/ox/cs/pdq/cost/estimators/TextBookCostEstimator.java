@@ -20,7 +20,6 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * A whitebox cost estimation implementation.
  * According to this, the cost of a plan equals the number of the accesses.

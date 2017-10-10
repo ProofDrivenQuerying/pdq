@@ -36,7 +36,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.EventHandler;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-// TODO: Auto-generated Javadoc
 /**
  * Provides high level functions for finding an optimal plan for a query with
  * respect to a schema, dependencies and access restrictions.

@@ -6,7 +6,6 @@ import uk.ac.ox.cs.pdq.datasources.services.AccessEvent;
 import com.google.common.eventbus.SubscriberExceptionContext;
 import com.google.common.eventbus.SubscriberExceptionHandler;
 
-// TODO: Auto-generated Javadoc
 /**
  * This handler is required by the EventBus class which does not allow
  * subscribing method to throw exceptions.

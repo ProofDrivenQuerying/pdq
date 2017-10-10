@@ -16,7 +16,6 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * Authentication policy than passes credential as URL parameters.
  * 

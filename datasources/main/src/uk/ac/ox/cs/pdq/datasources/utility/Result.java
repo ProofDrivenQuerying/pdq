@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.datasources.utility;
 
-// TODO: Auto-generated Javadoc
 /**
  * Common interface to query/plan results.
  *

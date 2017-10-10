@@ -2,14 +2,12 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 
-// TODO: Auto-generated Javadoc
 /**
  * Interface providing cardinality estimations for plan operators.
  *
  * @author Julien Leblay
  * @param <P> the generic type
  */
- //Efi: This class should be moved to the cost package 
 public interface RelationalTermCardinalityMetadata {
 
 	/**

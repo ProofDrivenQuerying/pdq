@@ -36,6 +36,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
@@ -53,10 +54,8 @@ public abstract class SQLStatementBuilder {
 	public BiMap<Atom, String> aliases = HashBiMap.create();
 
 	/** The alias prefix. */
-	private String aliasPrefix = "A";
+	public static final String ALIAS_PREFIX = "A";
 
-	/** TOCOMMENT: EXPLAIN The alias counter. */
-	private int aliasCounter = 0;
 	protected String databaseName;
 
 	/**
@@ -338,9 +337,8 @@ public abstract class SQLStatementBuilder {
 			synchronized (this.aliases) {
 				aliasName = this.aliases.get(fact);
 				if (aliasName == null) {
-					aliasName = this.aliasPrefix + this.aliasCounter;
+					aliasName = SQLStatementBuilder.ALIAS_PREFIX + GlobalCounterProvider.getNext("SQLStatmentBuilder.aliasCounter");
 					this.aliases.put(fact, aliasName);
-					this.aliasCounter++;
 				}
 			}
 			relations.add(this.createTableAliasingExpression(aliasName, fact.getPredicate()));

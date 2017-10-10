@@ -10,7 +10,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 
 import com.google.common.collect.Sets;
 
-// TODO: Auto-generated Javadoc
 /**
  * 
  * Maps each configuration to its constituting ApplyRule configurations. Used to speed up chasing, i.e.,

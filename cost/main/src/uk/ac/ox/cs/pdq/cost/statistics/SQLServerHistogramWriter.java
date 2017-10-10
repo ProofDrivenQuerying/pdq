@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.cost.statistics;
 
 import java.io.PrintStream;
 
-// TODO: Auto-generated Javadoc
 /**
  * Loads SQL Server 2014 histograms.
  *

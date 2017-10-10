@@ -10,7 +10,6 @@ import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
-// TODO: Auto-generated Javadoc
 /**
  * Passes information to MultiThreadedExecutor objects.
  * Creates clones of reasoners, homomorphism detectors and cost estimators.

@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.util;
 
-// TODO: Auto-generated Javadoc
 /**
  * Exception that occurrs when a task's timeout is reached.
  *

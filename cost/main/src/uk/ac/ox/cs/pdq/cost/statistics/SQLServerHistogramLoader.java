@@ -18,7 +18,6 @@ import com.google.common.collect.Lists;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Loads SQL Server 2014 histograms.
  *

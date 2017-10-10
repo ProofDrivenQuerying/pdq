@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.datasources.services;
 
 
 
-// TODO: Auto-generated Javadoc
 /**
  * An access's response event.
  *

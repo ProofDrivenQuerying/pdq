@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.cost;
 import com.google.common.base.Preconditions;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Cost of double value.
  *

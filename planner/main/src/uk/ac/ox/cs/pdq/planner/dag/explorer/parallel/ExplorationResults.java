@@ -5,7 +5,6 @@ import java.util.Set;
 
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 
-// TODO: Auto-generated Javadoc
 /**
  * Returns the results of a call to IterativeExecutor.finalIteration
  *

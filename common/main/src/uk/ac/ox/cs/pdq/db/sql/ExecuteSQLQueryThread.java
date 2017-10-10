@@ -47,7 +47,6 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 	public ExecuteSQLQueryThread(Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries, 
 			Map<String, TypedConstant> constants,
 			Connection connection, String databaseName) {
-		//TODO check input arguments
 		this.connection = connection;
 		this.queries = queries;
 		this.constants = constants;

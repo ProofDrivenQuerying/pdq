@@ -30,7 +30,6 @@ import uk.ac.ox.cs.pdq.planner.dag.equivalence.SynchronizedEquivalenceClasses;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
 
-// TODO: Auto-generated Javadoc
 /**
  * A IterativeExecutor that uses multi-threading on a single machine.
  *

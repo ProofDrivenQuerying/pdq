@@ -6,7 +6,6 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 
-// TODO: Auto-generated Javadoc
 /**
  * A wrapper for PostgresqlTranslator-based SQL relations. This adds the 
  * SQLViewWrapper some postgres-specific functionalities, mainly 

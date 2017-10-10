@@ -10,7 +10,6 @@ import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.services.ResponseEvent;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 
-// TODO: Auto-generated Javadoc
 /**
  * The event of a RESTAccess response. Holds the requestEvent itself, 
  * the response http response, and the output table extracted from it.

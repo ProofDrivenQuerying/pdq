@@ -11,7 +11,6 @@ import uk.ac.ox.cs.pdq.util.Typed;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 
-// TODO: Auto-generated Javadoc
 /**
  * Represents a type of tuple. Used to define a type of tuple and then create
  * tuples of that type.

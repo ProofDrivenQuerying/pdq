@@ -4,7 +4,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Returns the cost of a plan.
  *

@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 
-// TODO: Auto-generated Javadoc
 /**
  * Interface for all context-specific implementations of cardinality estimators.
  *

@@ -11,7 +11,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
  * An output method that uses a path expression to extract an attributes values
  * from a JSON result.

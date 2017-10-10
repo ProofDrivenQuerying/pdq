@@ -6,7 +6,6 @@ import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimat
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
 
-// TODO: Auto-generated Javadoc
 /**
  * Creates success dominance detectors using the input parameters.
  * The available options are:

@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.util;
 
-// TODO: Auto-generated Javadoc
 /**
  * A triple of elements.
  *

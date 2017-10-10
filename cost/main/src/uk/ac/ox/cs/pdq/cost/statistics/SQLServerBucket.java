@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.cost.statistics;
 import java.math.BigInteger;
 import java.util.Objects;
 
-// TODO: Auto-generated Javadoc
 /**
  * 
  * Buckets for SQL Server 2014.

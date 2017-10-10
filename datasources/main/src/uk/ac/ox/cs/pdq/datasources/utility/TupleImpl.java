@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.datasources.utility;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
-// TODO: Auto-generated Javadoc
 /**
  * A tuple implementation.
  *

@@ -39,16 +39,6 @@ public final class UntypedConstant extends Constant implements Comparable<Consta
 	}
 
 	/**
-	 * TOCOMMENT I suggest this goes, something is a variable if it is instance of Variable
-	 *
-	 */
-	@Override
-	public boolean isVariable() {
-		return false;
-	}
-
-
-	/**
 	 * Creates a new Constant that was never used or existed before.
 	 */
 	public static UntypedConstant getFreshConstant() {

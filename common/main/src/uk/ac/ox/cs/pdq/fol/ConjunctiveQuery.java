@@ -11,7 +11,6 @@ import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.QueryAdapter;
 
-//TODO fix the comments
 /**
  * A conjunctive query (CQ) is a first order formula of the form \exists x_1, \ldots, x_n \Wedge A_i,
  * where A_i are atoms with arguments that are either variables or constants.

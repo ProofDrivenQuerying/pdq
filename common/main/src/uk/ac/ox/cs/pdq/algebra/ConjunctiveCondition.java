@@ -3,13 +3,11 @@ package uk.ac.ox.cs.pdq.algebra;
 import org.junit.Assert;
 
 /**
- *  *
- *   *    *TOCOMMENT: NO AUTHOR, NO COMMENTS
- *    *
- *          */
-
-
-
+ * Represents a condition, that can be used to create -for example- a SelectionTerm, or a dependent join term. 
+ *  
+ * @author Unknown
+ * @author Gabor
+ */
 public class ConjunctiveCondition extends Condition {
 	private static final long serialVersionUID = 3482096951862132845L;
 	

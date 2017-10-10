@@ -5,7 +5,6 @@ import java.util.Collection;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 
-// TODO: Auto-generated Javadoc
 /**
  * Top level interface for all simple plan cost estimators.
  * The cost of a plan does not depend on the operators' order

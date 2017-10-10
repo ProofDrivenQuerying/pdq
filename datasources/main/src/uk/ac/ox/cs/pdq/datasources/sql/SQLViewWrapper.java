@@ -27,7 +27,6 @@ import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-// TODO: Auto-generated Javadoc
 /**
  * Wrapper for SQL views. This class inherits View and add functionality
  * to retrieve data from the underlying database tables.

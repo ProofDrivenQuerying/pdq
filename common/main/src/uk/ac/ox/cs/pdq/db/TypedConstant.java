@@ -19,11 +19,13 @@ import uk.ac.ox.cs.pdq.util.Typed;
 public class TypedConstant extends Constant implements Typed, Serializable, Comparable<Constant> {
 	private static final long serialVersionUID = 314066835619901611L;
 
-	//TODO remove the type
-	/**  The constant's type. */
+	/**
+	 * The constant's type. - Even though the type can be generated from the value
+	 * we still need this in order to be able to deal with "typed nulls"
+	 */
 	private final Type type;
 
-	/**  The constant's value. */
+	/** The constant's value. */
 	public final Object value;
 
 	protected TypedConstant(Object value) {
@@ -55,15 +57,15 @@ public class TypedConstant extends Constant implements Typed, Serializable, Comp
 	public boolean isUntypedConstant() {
 		return false;
 	}
-	
+
 	@Override
 	public TypedConstant clone() {
 		return new TypedConstant(this.value);
 	}
-	
-    public static TypedConstant create(Object value) {
-        return Cache.typedConstant.retrieve(new TypedConstant(value));
-    }
+
+	public static TypedConstant create(Object value) {
+		return Cache.typedConstant.retrieve(new TypedConstant(value));
+	}
 
 	@Override
 	public int compareTo(Constant con) {
@@ -79,26 +81,27 @@ public class TypedConstant extends Constant implements Typed, Serializable, Comp
 			return 1;
 		}
 		if (this.type.equals(Integer.class)) {
-			return ((Integer)this.getValue()).compareTo((Integer)o.getValue());
+			return ((Integer) this.getValue()).compareTo((Integer) o.getValue());
 		}
-		return ((String)this.getValue()).compareTo((String)o.getValue());
+		return ((String) this.getValue()).compareTo((String) o.getValue());
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof TypedConstant))
 			return false;
 		TypedConstant o = (TypedConstant) obj;
-		if (this.type != o.type) 
+		if (this.type != o.type)
 			return false;
 		if (this.value == null && o.value == null)
 			return true;
 		if (this.value == null || o.value == null)
 			return false;
 		if (this.value instanceof String)
-			return ((String)this.value).equals(o.value);
+			return ((String) this.value).equals(o.value);
 		if (this.value instanceof Integer)
-			return ((Integer)this.value).equals(o.value);
-		else 
+			return ((Integer) this.value).equals(o.value);
+		else
 			return this.value.equals(o.value);
 	}
 }

@@ -12,7 +12,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 
-// TODO: Auto-generated Javadoc
 /**
  * Cost estimator favoring query with more atoms.
  *

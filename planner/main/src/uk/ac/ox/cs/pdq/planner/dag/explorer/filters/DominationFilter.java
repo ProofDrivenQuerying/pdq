@@ -11,7 +11,6 @@ import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 
-// TODO: Auto-generated Javadoc
 /**
  * Filters out the fact dominated configurations.
  *

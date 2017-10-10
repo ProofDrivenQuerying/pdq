@@ -19,7 +19,6 @@ import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
 
-// TODO: Auto-generated Javadoc
 /**
  * Compute the estimated input and output cardinalities of a logical operator
  * and its descendants, based on a naive criteria, in particular using fixed
