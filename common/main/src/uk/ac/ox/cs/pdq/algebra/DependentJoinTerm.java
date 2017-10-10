@@ -30,10 +30,13 @@ public class DependentJoinTerm extends RelationalTerm {
 		super(AlgebraUtilities.computeInputAttributesForDependentJoinTerm(child1, child2), AlgebraUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
+/* TOCOMMENT: What is being asserted here??? This is crucial
+ * for understanding what this term means */
 		Assert.assertTrue(CollectionUtils.containsAny(Arrays.asList(child1.getOutputAttributes()),Arrays.asList(child2.getInputAttributes())));
 		this.children[0] = child1;
 		this.children[1] = child2;
 		this.positionsInRightChildThatAreBoundFromLeftChild = AlgebraUtilities.computePositionsInRightChildThatAreBoundFromLeftChild(child1, child2);
+/* TOCOMMENT: What  are follow-up Join?? */
 		this.followupJoinConditions = AlgebraUtilities.computeJoinConditions(this.children);
 	}
 	
