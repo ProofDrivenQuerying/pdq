@@ -125,7 +125,7 @@ public class ConjunctiveQuery extends Formula {
 					if (t.isVariable()) {
 						Constant c = canonicalMapping.get(t);
 						if (c == null) {
-							c = UntypedConstant.create(CanonicalNameGenerator.getName());
+							c = UntypedConstant.create(ChaseConstantGenerator.getName());
 							canonicalMapping.put((Variable) t, c);
 						}
 					}

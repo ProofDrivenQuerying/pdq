@@ -8,7 +8,7 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
- * TOCOMMENT rename to ChaseConstantGenerator, move this to reasoning, connected to ConjunctiveQuery cleanup as well.
+ * TOCOMMENT move this to reasoning, connected to ConjunctiveQuery cleanup as well.
  * 
  * Generates constants for existentially quantified variables. It is called when
  * a dependency is grounded
@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
  *
  */
 
-public final class CanonicalNameGenerator {
+public final class ChaseConstantGenerator {
 
 	/**
 	 * The DEFAULT_PREFIX for canonical names. Used for example to create cannonicalQuerries. 

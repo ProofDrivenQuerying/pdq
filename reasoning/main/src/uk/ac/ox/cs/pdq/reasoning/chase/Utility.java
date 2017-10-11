@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.WhereCondition;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.CanonicalNameGenerator;
+import uk.ac.ox.cs.pdq.fol.ChaseConstantGenerator;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -74,7 +74,6 @@ public class Utility {
 	}
 
 	/**
-	 * TOCOMMENT there is no "canonicalNames" mentioned in the comment says here.
 	 * Skolemize mapping.
 	 *
 	 * @param mapping the mapping
@@ -87,7 +86,7 @@ public class Utility {
 		for(Variable variable:dependency.getExistential()) {
 			if (!result.containsKey(variable)) {
 				result.put(variable, 
-						UntypedConstant.create(CanonicalNameGenerator.getTriggerWitness(dependency, mapping, variable)));
+						UntypedConstant.create(ChaseConstantGenerator.getTriggerWitness(dependency, mapping, variable)));
 			}
 		}
 

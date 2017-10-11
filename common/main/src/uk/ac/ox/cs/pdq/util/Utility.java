@@ -24,7 +24,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.CanonicalNameGenerator;
+import uk.ac.ox.cs.pdq.fol.ChaseConstantGenerator;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -330,7 +330,7 @@ public class Utility {
 				if (t.isVariable()) {
 					Constant c = canonicalMapping.get(t);
 					if (c == null) {
-						c = UntypedConstant.create(CanonicalNameGenerator.getName());
+						c = UntypedConstant.create(ChaseConstantGenerator.getName());
 						canonicalMapping.put((Variable) t, c);
 					}
 				}
