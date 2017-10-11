@@ -7,7 +7,6 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 
-// TODO: Auto-generated Javadoc
 /**
  * Configurations represent derivation of implicit information using constraints
  * and have a direct correspondence with a query plan. 

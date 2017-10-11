@@ -168,13 +168,11 @@ public abstract class Relation extends Predicate implements Serializable {
 	/**
 	 * Extend the relation's schema by adding an extra attribute
 	 */
-	//TODO this method breaks immutability it should certainly be removed
-	public void appendAttribute(Attribute attribute) {
-		Attribute[] destination = new Attribute[this.attributes.length + 1];
-		System.arraycopy(this.attributes, 0, destination, 0, this.attributes.length);
-		destination[this.attributes.length] = attribute;
-		this.attributes = destination;
-		this.attributePositions.put(attribute.getName(), this.attributes.length);
+	public static Relation appendAttribute(Relation r, Attribute attribute) {
+		Attribute[] destination = new Attribute[r.attributes.length + 1];
+		System.arraycopy(r.attributes, 0, destination, 0, r.attributes.length);
+		destination[r.attributes.length] = attribute;
+		return Relation.create(r.name, destination, r.accessMethods, r.foreignKeys, r.isEquality());
 	}
 
 	@Override

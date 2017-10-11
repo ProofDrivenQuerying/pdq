@@ -25,7 +25,6 @@ import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
 import uk.ac.ox.cs.pdq.test.RegressionTest;
 import uk.ac.ox.cs.pdq.test.RegressionTestException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Runs regression tests for the optimised explorer. Runs a search with and
  * without optimisation (global equivalence, global dominance) and compares the

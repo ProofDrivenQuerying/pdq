@@ -40,7 +40,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Searches the proof space employing several optimisations (similar to the OptimizedExplorer) in order to reach faster the best proof.
  * Performs chasing at intervals

@@ -49,7 +49,6 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
 
-// TODO: Auto-generated Javadoc
 /**
  * Runs regression tests regarding the planner.
  * 
@@ -163,7 +162,7 @@ private static FileWriter summary = null;
 				try {
 					summary = new FileWriter(new File("summary.txt"));
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
 			}

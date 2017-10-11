@@ -14,7 +14,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SimpleNode;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 
-// TODO: Auto-generated Javadoc
 /**
  *
  * Simple cost propagator. This propagates information through the search space when a node has been updated; information

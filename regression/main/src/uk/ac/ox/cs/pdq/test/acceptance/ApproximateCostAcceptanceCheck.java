@@ -10,7 +10,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 
-// TODO: Auto-generated Javadoc
 /**
  * Acceptance test request the expected plan cost to be within an order of 
  * magnitude of the expected plan cost to pass.

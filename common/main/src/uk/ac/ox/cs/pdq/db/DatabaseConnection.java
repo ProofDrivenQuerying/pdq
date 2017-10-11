@@ -31,8 +31,6 @@ public class DatabaseConnection implements AutoCloseable {
 	private boolean isInitialized = false;
 
 	/** Open database connections. */
-	// TOCOMMENT: this should be done with org.apache.commons.dbcp2 connection
-	// pooling.
 	protected List<Connection> synchronousConnections = Lists.newArrayList();
 
 	/** Map schema relation to database tables. */
@@ -261,7 +259,6 @@ public class DatabaseConnection implements AutoCloseable {
 
 	/**
 	 * Map from relation names to the main memory objects existing for these names.
-	 * TOCOMMENT: See issue 168
 	 */
 	public Map<String, Relation> getRelationNamesToDatabaseTables() {
 		return this.relationNamesToDatabaseTables;

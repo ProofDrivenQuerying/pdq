@@ -4,12 +4,12 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.runtime.util.AccessException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Class that checks if the data are consistent w.r.t. the schema dependencies
  * @author Efi Tsamoura
  *
  */
+//TOCOMMENT KILL THIS
 
 public abstract class DataValidation {
 	

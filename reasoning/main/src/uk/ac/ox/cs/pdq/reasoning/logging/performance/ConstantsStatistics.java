@@ -12,7 +12,6 @@ import uk.ac.ox.cs.pdq.util.EventHandler;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
 
-// TODO: Auto-generated Javadoc
 /**
  * Keeps a set of constant observed so far and report on its cardinality.
  *

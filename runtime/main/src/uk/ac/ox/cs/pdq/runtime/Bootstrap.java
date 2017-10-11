@@ -27,7 +27,6 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.runtime.io.DataReader;
 
-// TODO: Auto-generated Javadoc
 /**
  * Bootstrapping class for starting the runtime. 
  * 

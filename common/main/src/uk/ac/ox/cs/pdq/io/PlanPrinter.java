@@ -94,7 +94,7 @@ public class PlanPrinter {
 				ret += "shape=invtriangle\n";
 			} else 
 			if (t instanceof DependentJoinTerm) {
-				ret += "Conditions:" + ((DependentJoinTerm)t).getFollowupJoinConditions() + "\n"; 
+				ret += "Conditions:" + ((DependentJoinTerm)t).getJoinConditions() + "\n"; 
 				ret += "LeftRight positions:" + ((DependentJoinTerm)t).getPositionsInLeftChildThatAreInputToRightChild() + "\n"; 
 				ret += "\",shape=polygon,sides=5\n";
 			} else {

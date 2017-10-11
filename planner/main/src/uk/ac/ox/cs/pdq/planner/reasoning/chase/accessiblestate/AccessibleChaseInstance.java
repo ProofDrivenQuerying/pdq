@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
-// TODO: Auto-generated Javadoc
 /**
  * Extends the state of a chase configuration with methods specific to the accessible schema.
  *

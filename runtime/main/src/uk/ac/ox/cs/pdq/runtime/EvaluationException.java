@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.runtime;
 
-// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred during an evaluation (of plan or query).
  * 
@@ -28,8 +27,6 @@ public class EvaluationException extends Exception {
 	}
 
 	/**
-	 * TOCOMMENT: DIFFERENTIATE CONSTRUCTORS
-	 *
 	 * @param cause Throwable
 	 */
 	public EvaluationException(Throwable cause) {
@@ -37,8 +34,6 @@ public class EvaluationException extends Exception {
 	}
 
 	/**
-	 * TOCOMMENT: DIFFERENTIATE CONSTRUCTORS
-	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.
 	 */

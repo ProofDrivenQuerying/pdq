@@ -19,7 +19,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Runs EGD and TGD chase using parallel chase steps.
  * (From modern dependency theory notes)

@@ -23,7 +23,6 @@ import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Explores the linear space of configurations. 
  * The configurations that are explored are stored in a tree and each configuration maps to a plan. 

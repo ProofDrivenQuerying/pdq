@@ -6,7 +6,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 
-// TODO: Auto-generated Javadoc
 /**
  * Transforms linear chase configurations to left-deep plans. 
  *
@@ -14,7 +13,6 @@ import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
  */
 public class LeftDeepPlanGenerator {
 
-	//TODO comment
 	/**
 	 * Creates a linear plan using the subplans of the input sequence of nodes.
 	 *

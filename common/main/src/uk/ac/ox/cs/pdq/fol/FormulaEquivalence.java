@@ -17,8 +17,8 @@ public class FormulaEquivalence {
 	/**
 	 * Quickly attempts to determine if two formulas are equivalent to one
 	 * another. 
-	 * TOCOMMENT what does the following line mean?
-	 * Assumes structures are homomorphic, and atom order match
+	 * TOCOMMENT Move it to data sources. 
+	 * Returns true in case the predicates are the same and the same constants and variables.
 	 * 
 	 * May return false negatives.
 	 *

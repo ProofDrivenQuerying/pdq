@@ -128,7 +128,7 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 			return 1.0;
 		}
 		else if(o instanceof DependentJoinTerm) {
-			Condition predicate = ((DependentJoinTerm) o).getFollowupJoinConditions();
+			Condition predicate = ((DependentJoinTerm) o).getJoinConditions();
 			if (predicate instanceof SimpleCondition) 
 				return 1.0;
 			else if (predicate instanceof ConjunctiveCondition) 

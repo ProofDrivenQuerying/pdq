@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 
-// TODO: Auto-generated Javadoc
 /**
  * Abstract path-to-success propagation. Propagation takes place either when a
  * new success node is found or when the newly created node is globally

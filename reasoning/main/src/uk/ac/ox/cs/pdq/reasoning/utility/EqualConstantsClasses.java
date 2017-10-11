@@ -16,7 +16,6 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.reasoning.chase.ChaseException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Keeps the multiple classes of equal constants created during EGD chasing.
  *

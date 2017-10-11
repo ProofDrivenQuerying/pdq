@@ -19,7 +19,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Utility;
 import com.google.common.collect.Lists;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Informally, a fact is candidate for exposure if all its input chase constants are already accessible. 
  * The formal definition of candidate facts is given below:

@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Nested loop implementation for n-ary joins.
  * 

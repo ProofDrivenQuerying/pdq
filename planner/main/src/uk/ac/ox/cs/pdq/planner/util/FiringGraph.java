@@ -11,7 +11,6 @@ import org.jgrapht.graph.DefaultEdge;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 
-// TODO: Auto-generated Javadoc
 /**
  * Maintains information w.r.t. chasing plus answers proximity queries
  *

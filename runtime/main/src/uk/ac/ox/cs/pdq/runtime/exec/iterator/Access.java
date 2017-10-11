@@ -18,7 +18,6 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Access over a relation, where the input are provided by the parent operator.
  * 

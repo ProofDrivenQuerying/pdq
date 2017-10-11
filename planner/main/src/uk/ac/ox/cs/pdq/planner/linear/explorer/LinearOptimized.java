@@ -54,7 +54,6 @@ import uk.ac.ox.cs.pdq.planner.util.IndexedDirectedGraph;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Searches the proof space employing several optimisations heuristics
  * in order to reach faster the best plan.
@@ -298,7 +297,6 @@ public class LinearOptimized extends LinearExplorer {
 					// If there exists at least one query match
 					if (!matches.isEmpty()) {
 						freshNode.setStatus(NodeStatus.SUCCESSFUL);
-						//TODO post this event?
 						this.updateBestPlan(selectedNode, freshNode, matches.get(0));
 					}
 				}

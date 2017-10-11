@@ -16,22 +16,25 @@ public final class Conjunction extends Formula {
 
 	protected final Formula[] children;
 
-	/**  TOCOMMENT: THIS COMMENT DOES NOT MAKE SENSE The unary operator. */
+	/**
+	 * The operator.
+	 * @see {@link LogicalSymbols}
+	 */
 	protected final LogicalSymbols operator = LogicalSymbols.AND;
 
-	/**  Cached string representation of the atom. */
+	/** Cached string representation of the atom. */
 	private String toString = null;
 
-	/**  Cached list of atoms. */
+	/** Cached list of atoms. */
 	private Atom[] atoms;
 
-	/**  Cached list of terms. */
+	/** Cached list of terms. */
 	private Term[] terms;
 
-	/**  Cached list of free variables. */
+	/** Cached list of free variables. */
 	private Variable[] freeVariables;
 
-	/**  Cached list of bound variables. */
+	/** Cached list of bound variables. */
 	private Variable[] boundVariables;
 
 	private Conjunction(Formula... children) {
@@ -41,17 +44,16 @@ public final class Conjunction extends Formula {
 	}
 
 	public static Formula of(Formula... children) {
-		if(children.length == 2) 
+		if (children.length == 2)
 			return Conjunction.create(children[0], children[1]);
-		else if(children.length > 2) {
+		else if (children.length > 2) {
 			Formula[] destination = new Formula[children.length - 1];
 			System.arraycopy(children, 1, destination, 0, children.length - 1);
 			Formula right = Conjunction.of(destination);
 			return Conjunction.create(children[0], right);
-		}
-		else if(children.length == 1) 
+		} else if (children.length == 1)
 			return children[0];
-		else 
+		else
 			throw new java.lang.RuntimeException("Illegal number of arguments");
 	}
 
@@ -61,7 +63,7 @@ public final class Conjunction extends Formula {
 	 */
 	@Override
 	public String toString() {
-		if(this.toString == null) 
+		if (this.toString == null)
 			this.toString = "(" + this.children[0].toString() + " & " + this.children[1].toString() + ")";
 		return this.toString;
 	}
@@ -79,7 +81,7 @@ public final class Conjunction extends Formula {
 
 	@Override
 	public Atom[] getAtoms() {
-		if(this.atoms == null) {
+		if (this.atoms == null) {
 			Set<Atom> atoms = new LinkedHashSet<>();
 			atoms.addAll(Arrays.asList(this.children[0].getAtoms()));
 			atoms.addAll(Arrays.asList(this.children[1].getAtoms()));
@@ -90,7 +92,7 @@ public final class Conjunction extends Formula {
 
 	@Override
 	public Term[] getTerms() {
-		if(this.terms == null) {
+		if (this.terms == null) {
 			Set<Term> terms = new LinkedHashSet<>();
 			terms.addAll(Arrays.asList(this.children[0].getTerms()));
 			terms.addAll(Arrays.asList(this.children[1].getTerms()));
@@ -101,7 +103,7 @@ public final class Conjunction extends Formula {
 
 	@Override
 	public Variable[] getFreeVariables() {
-		if(this.freeVariables == null) {
+		if (this.freeVariables == null) {
 			Set<Variable> variables = new LinkedHashSet<>();
 			variables.addAll(Arrays.asList(this.children[0].getFreeVariables()));
 			variables.addAll(Arrays.asList(this.children[1].getFreeVariables()));
@@ -112,7 +114,7 @@ public final class Conjunction extends Formula {
 
 	@Override
 	public Variable[] getBoundVariables() {
-		if(this.boundVariables == null) {
+		if (this.boundVariables == null) {
 			Set<Variable> variables = new LinkedHashSet<>();
 			variables.addAll(Arrays.asList(this.children[0].getBoundVariables()));
 			variables.addAll(Arrays.asList(this.children[1].getBoundVariables()));

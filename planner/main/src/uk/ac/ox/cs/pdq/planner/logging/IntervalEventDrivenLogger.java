@@ -6,7 +6,6 @@ import uk.ac.ox.cs.pdq.util.EventHandler;
 
 import com.google.common.eventbus.Subscribe;
 
-// TODO: Auto-generated Javadoc
 /**
  * This logger works as a proxy to other progress logger, and performs a log
  * every time a Explorer event is thrown, modulo some predefined intervals.

@@ -21,7 +21,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.runtime.util.AccessException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Class that checks if the data is consistent w.r.t. the schema dependencies
  * The homomorphisms are found using SQL queries. The database facts (relation tuples) have to be stored in a database.
@@ -129,7 +128,7 @@ public final class DataValidationImplementation extends DataValidation{
 			 * there exists another set of facts F2 that satisfies the right-hand side of the input dependency w.r.t F1 
 			 */
 			for (Match match: matchings) {
-				//TOCOMMENT match should be used here? 
+				//TOCOMMENT match should be used here? ask Michael 
 				List<Match> subMatchings = this.manager.getTriggers(new Dependency[]{Dependency.create(constraint.getHeadAtoms(), constraint.getBodyAtoms())},TriggerProperty.ACTIVE,null);//, HomomorphismProperty.createMapProperty(m.getMapping()));
 				if (subMatchings.isEmpty()) {
 					throw new java.lang.IllegalArgumentException("Data does not satisfy constraint " + constraint.toString() );

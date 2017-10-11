@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.reasoning.chase;
 
-// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred during chasing.
  *

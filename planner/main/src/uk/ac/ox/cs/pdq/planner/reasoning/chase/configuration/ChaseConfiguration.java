@@ -22,7 +22,6 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * 	Proof configurations or configurations are associated with
 	(i) a collection of facts using initial chase constants called the output
@@ -60,7 +59,7 @@ public abstract class ChaseConfiguration implements Configuration {
 	/**  Output constants. */
 	protected final Collection<Constant> output;
 
-	/**  Proper output constants. */
+	/** "Proper" output constants, where proper means it does not contain constants that are inputs. */
 	protected final Collection<Constant> properOutput;
 	
 	/**
@@ -83,8 +82,8 @@ public abstract class ChaseConfiguration implements Configuration {
 	}
 	
 	/**
- * TOCOMMENT: WHAT IS IT
-	 *
+	 * All output expect the input constants.
+	 * 
 	 * @param input the input
 	 * @param output the output
 	 * @return the proper output
@@ -147,8 +146,7 @@ public abstract class ChaseConfiguration implements Configuration {
 	}
 
 	/**
-	 *TOCOMMENT: WHAT IS IT 
-	 * @return the configuration's proper output facts
+	 * @return the configuration's output facts that does not contain any input constants.
 	 */
 	public Collection<Constant> getProperOutput() {
 		return this.properOutput;
@@ -206,7 +204,6 @@ public abstract class ChaseConfiguration implements Configuration {
 		return this.properOutput.isEmpty();
 	}
 
-	//TODO this should go to Configuration? 
 	/**
 	 *
 	 * @return true if the configuration has no input constants

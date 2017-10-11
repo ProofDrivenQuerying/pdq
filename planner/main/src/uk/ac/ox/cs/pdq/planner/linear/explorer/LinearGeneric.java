@@ -30,7 +30,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Exhaustively searches the proof space
  *

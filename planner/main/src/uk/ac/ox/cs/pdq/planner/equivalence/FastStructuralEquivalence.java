@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.planner.equivalence;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Fast equivalence.
  * According to this implementation two configurations c and c' are equivalent if the have the same inferred accessible facts.

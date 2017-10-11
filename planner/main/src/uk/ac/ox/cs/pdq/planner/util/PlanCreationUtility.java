@@ -41,7 +41,6 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-// TODO: Auto-generated Javadoc
 /**
  * 
  * @author Efthymia Tsamoura
@@ -139,7 +138,6 @@ public class PlanCreationUtility {
 		return false;
 	}
 
-	//TODO implement this method
 	private static Map<Integer, TypedConstant> computeInputConstants(AccessMethod method, Term[] terms) {
 		Map<Integer, TypedConstant> ret = new HashMap<>();
 		for(Integer i: method.getInputs()) {
@@ -205,16 +203,11 @@ public class PlanCreationUtility {
 			Atom[] atoms = query.getAtoms();
 			for (Atom atom:atoms) {
 				Predicate s = atom.getPredicate();
-				if (s instanceof Relation) {
-					List<Integer> pos = Utility.search(atom.getTerms(), t);
-					if (!pos.isEmpty()) {
-						types[i] = ((Relation) s).getAttribute(pos.get(0)).getType();
-						assigned = true;
-						break;
-					}
-				} else {
-					//TODO we need to study this case
-					System.out.println("Breakpoint here: " + s + " should be a relation");
+				List<Integer> pos = Utility.search(atom.getTerms(), t);
+				if (!pos.isEmpty()) {
+					types[i] = ((Relation) s).getAttribute(pos.get(0)).getType();
+					assigned = true;
+					break;
 				}
 			}
 			if (!assigned) 

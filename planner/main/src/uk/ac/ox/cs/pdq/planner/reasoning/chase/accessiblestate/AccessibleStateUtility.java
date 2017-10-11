@@ -18,7 +18,6 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Utility.
  *
@@ -92,7 +91,7 @@ public class AccessibleStateUtility {
 	}
 
 	/**
- *TOCOMMENT: WHAT ARE THESE!!!!
+	 * All Terms sorted out from the input facts where the fact is from the Accessible table. Simply put these are the accessible terms.
 	 *
 	 * @param facts the facts
 	 * @return the multimap

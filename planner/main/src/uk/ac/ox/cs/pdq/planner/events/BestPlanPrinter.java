@@ -6,7 +6,6 @@ import uk.ac.ox.cs.pdq.util.EventHandler;
 
 import com.google.common.eventbus.Subscribe;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class BestPlanPrinter.
  */

@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.reasoning.utility;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
-// TODO: Auto-generated Javadoc
 /**
  * Finds the dependencies that should be considered during chasing.
  * The returned dependencies are most likely to lead to triggers that are not already satisfied.  

@@ -97,6 +97,7 @@ public class RuntimeTest extends RegressionTest {
 		/** The validation. */
 		@Parameter(names = { "-d", "--data-validation" },
 				required = false, description = "If true, we check whether the data satisfy the schema dependencies or not. Default is false")
+		//TOCOMMENT KILL THIS
 		private boolean validation = false;
 
 		/**
