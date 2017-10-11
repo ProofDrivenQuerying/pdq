@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.planner.dag.explorer;
+package uk.ac.ox.cs.pdq.test.planner.dag.explorer.parallel;
 
 import static org.mockito.Mockito.when;
 
