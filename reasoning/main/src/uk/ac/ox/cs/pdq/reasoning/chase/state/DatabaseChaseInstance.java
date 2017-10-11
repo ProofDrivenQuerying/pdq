@@ -49,6 +49,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
+import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
@@ -115,7 +116,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		super(connection);
 		this.addFacts(Sets.newHashSet(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, Utility.generateCanonicalMapping(query)).getAtoms()));
 		this.classes = new EqualConstantsClasses();
-		this.constantsToAtoms = createdConstantsMap(this.facts);
+		this.constantsToAtoms = ReasonerUtility.createdConstantsMap(this.facts);
 		this.indexConstraints();
 		this.indexLastAttributeOfAllRelations();
 	}
@@ -143,7 +144,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Preconditions.checkNotNull(facts);
 		this.addFacts(facts);
 		this.classes = new EqualConstantsClasses();
-		this.constantsToAtoms = createdConstantsMap(this.facts);
+		this.constantsToAtoms = ReasonerUtility.createdConstantsMap(this.facts);
 		this.indexConstraints();
 		this.indexLastAttributeOfAllRelations();
 	}
@@ -175,25 +176,6 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		this.facts = facts;
 		this.classes = classes;
 		this.constantsToAtoms = constants;
-	}
-
-	/**
-	 *
-	 * 
-	 * @param facts
-	 * @return a map of each constant to the atom and the position inside this atom
-	 *         where it appears. An exception is thrown when there is an equality in
-	 *         the input
-	 */
-	// TOCOMMENT: What does this do exactly? where is it used?
-	protected static Multimap<Constant, Atom> createdConstantsMap(Collection<Atom> facts) {
-		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
-		for (Atom fact : facts) {
-			Preconditions.checkArgument(!fact.isEquality());
-			for (Term term : fact.getTerms())
-				constantsToAtoms.put((Constant) term, fact);
-		}
-		return constantsToAtoms;
 	}
 
 	/**

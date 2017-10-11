@@ -9,10 +9,15 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Term;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
 /**
@@ -88,6 +93,24 @@ public class ReasonerUtility {
 		return null;
 	}
 	
+	/**
+	 * Extracts all constants from the terms of the given facts.
+	 * 
+	 * @param facts
+	 * @return a map of each constant to the atom and the position inside this atom
+	 *         where it appears. An exception is thrown when there is an equality in
+	 *         the input
+	 */
+	public static Multimap<Constant, Atom> createdConstantsMap(Collection<Atom> facts) {
+		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
+		for (Atom fact : facts) {
+			Preconditions.checkArgument(!fact.isEquality());
+			for (Term term : fact.getTerms())
+				constantsToAtoms.put((Constant) term, fact);
+		}
+		return constantsToAtoms;
+	}
+
 	/**
 	 * 
 	 * @param dependencies

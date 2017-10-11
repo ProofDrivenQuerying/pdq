@@ -43,6 +43,7 @@ import uk.ac.ox.cs.pdq.planner.util.FiringGraph;
 import uk.ac.ox.cs.pdq.planner.util.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
+import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 /**
  * The Class AccessibleDatabaseListState.
@@ -88,7 +89,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 				createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema), 
 				maintainProvenance == true ? new MapFiringGraph() : null,
 				new EqualConstantsClasses(),
-				createdConstantsMap(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
+				ReasonerUtility.createdConstantsMap(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
 				AccessibleStateUtility.getInferredAccessibleAtoms(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
 				new LinkedHashSet<Atom>(),
 				AccessibleStateUtility.createAtomsMap(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
@@ -105,7 +106,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 		this(	facts, 
 				maintainProvenance == true ? new MapFiringGraph() : null,
 				new EqualConstantsClasses(),
-				createdConstantsMap(facts),
+				ReasonerUtility.createdConstantsMap(facts),
 				AccessibleStateUtility.getInferredAccessibleAtoms(facts),
 				new LinkedHashSet<Atom>(),
 				AccessibleStateUtility.createAtomsMap(facts),
