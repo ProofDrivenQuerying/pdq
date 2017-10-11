@@ -85,8 +85,7 @@ public abstract class AbstractXMLWriter<T> implements Writer<T> {
 	/**
 	 * Writes a stand-alone tag with the given QName and attributes to the 
 	 * given output.
-	 * TOCOMMENT: HOW DIFFERENT FROM PREVIOUS?
-	 *
+	 * Same as the previous, but it getts the properties as an attribute map.
 	 * @param out 
 	 * @param qname 
 	 * @param attributes 

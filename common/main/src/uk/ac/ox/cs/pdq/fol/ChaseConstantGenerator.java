@@ -35,8 +35,7 @@ public final class ChaseConstantGenerator {
 	private static Map<String, String> cachedLabelledNulls = new LinkedHashMap<>();
 
 	/**
-	 * TOCOMMENT The follwoing three methods probably return a new skolem name. Gets
-	 * the name.
+	 * Gets the name if it exists, or generates a new skolem name.
 	 *
 	 * @param dependency
 	 *            The input dependency
@@ -66,7 +65,7 @@ public final class ChaseConstantGenerator {
 	}
 
 	/**
-	 * Gets the name.
+	 * Gets the name by generating a new skolem name.
 	 *
 	 * @param prefix
 	 *            the prefix
@@ -77,7 +76,7 @@ public final class ChaseConstantGenerator {
 	}
 
 	/**
-	 * Gets the name.
+	 * Gets a new name (Canonical constant)
 	 *
 	 * @return a fresh constant name with the default prefix.
 	 */

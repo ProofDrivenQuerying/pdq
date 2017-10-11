@@ -296,7 +296,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 				}
 				if (p != null && !p.isEmpty()) {
 					for (@SuppressWarnings("unused") String s: p) {
-						//TOCOMMENT s supposed to be used in this for loop right?
+						//s is not used since we want to use the tuple's value instead of the value in xml. 
 						result.put(m.getParameterizedName(p), value);
 					}
 				} else {
