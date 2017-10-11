@@ -7,8 +7,7 @@ import java.util.Properties;
 import uk.ac.ox.cs.pdq.io.Writer;
 
 /**
- * TOCOMMENT: what is experiment sample elements
- * Writes experiment sample elements to XML.
+ * Mostly unused, outdated by jaxb IO implementation.
  *
  * @author Julien Leblay
  * @param <T> the generic type
