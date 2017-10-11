@@ -307,8 +307,6 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	}
 
 	/**
-	 * TODO TICKET THIS - we need to think what will happen with a map firing graph in the
-	 * presence of EGDs.
 	 * 
 	 * Applies chase steps for EGDs. An exception is thrown when a match does not
 	 * come from an EGD or from different EGDs. The following steps are performed:

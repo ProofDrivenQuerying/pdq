@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -19,7 +18,6 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.utility.Result;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -31,7 +29,6 @@ import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.Runtime;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
@@ -49,7 +46,6 @@ import uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion.AcceptanceResult;
 import uk.ac.ox.cs.pdq.test.acceptance.ExpectedCardinalityAcceptanceCheck;
 import uk.ac.ox.cs.pdq.test.acceptance.SetEquivalentResultSetsAcceptanceCheck;
 import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
-import uk.ac.ox.cs.pdq.test.util.DataValidationImplementation;
 
 /**
  * Runs regression tests for the runtime, evaluated plans may come in
@@ -80,9 +76,6 @@ public class RuntimeTest extends RegressionTest {
 	/** The full. */
 	private final boolean full;
 
-	/** The validation. */
-	private final boolean validation;
-
 	/**
 	 * The Class RuntimeTestCommand.
 	 */
@@ -93,12 +86,6 @@ public class RuntimeTest extends RegressionTest {
 		@Parameter(names = { "-f", "--full-run" }, required = false,
 				description = "If true, the planner is used to create a plan, otherwise the plan is read from file. Default is false")
 		private boolean full = false;
-
-		/** The validation. */
-		@Parameter(names = { "-d", "--data-validation" },
-				required = false, description = "If true, we check whether the data satisfy the schema dependencies or not. Default is false")
-		//TOCOMMENT KILL THIS
-		private boolean validation = false;
 
 		/**
 		 * Instantiates a new runtime test command.
@@ -112,7 +99,7 @@ public class RuntimeTest extends RegressionTest {
 		 */
 		@Override
 		public void execute() throws RegressionTestException, IOException, ReflectiveOperationException {
-			new RuntimeTest(this.full, this.validation).recursiveRun(new File(getInput()));
+			new RuntimeTest(this.full).recursiveRun(new File(getInput()));
 		}
 	}
 
@@ -125,9 +112,8 @@ public class RuntimeTest extends RegressionTest {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 * @throws RegressionTestException the regression test exception
 	 */
-	public RuntimeTest(boolean fr, boolean dv) throws ReflectiveOperationException, IOException, RegressionTestException {
+	public RuntimeTest(boolean fr) throws ReflectiveOperationException, IOException, RegressionTestException {
 		this.full = fr;
-		this.validation = dv;
 	}
 
 	/**
@@ -142,28 +128,6 @@ public class RuntimeTest extends RegressionTest {
 	@Override
 	protected boolean run(File directory) throws RegressionTestException, IOException, ReflectiveOperationException {
 		return this.loadCase(directory, this.full);
-	}
-
-	/**
-	 * Validate data.
-	 *
-	 * @param directory File
-	 * @param schema Schema
-	 * @param query Query
-	 * @throws EvaluationException the evaluation exception
-	 * @throws SQLException 
-	 */
-	//TOCOMMENT KILL THIS
-	private static void validateData(File directory, Schema schema, ConjunctiveQuery query) throws EvaluationException, SQLException {
-		DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));	
-		try  
-		{
-			DatabaseChaseInstance dbinst = new DatabaseChaseInstance(query,new DatabaseConnection(dbParams, schema));
-			DataValidationImplementation dataValidator = new DataValidationImplementation(schema, dbinst);
-			dataValidator.validate();
-		} catch (Exception e) {
-			throw new EvaluationException(e.getMessage(), e);
-		}
 	}
 
 	/**
@@ -215,10 +179,6 @@ public class RuntimeTest extends RegressionTest {
 				this.out.println("\tSKIP: Could not read schema/query in " + directory.getAbsolutePath());
 				return true;
 			}
-			if (this.validation) {
-				validateData(directory, schema, query);
-			}
-
 			Entry<RelationalTerm, Cost> plan = this.obtainPlan(directory, schema, query, full);
 			if (plan == null) {
 				this.out.println("\tSKIP: Plan is empty in " + directory.getAbsolutePath());
