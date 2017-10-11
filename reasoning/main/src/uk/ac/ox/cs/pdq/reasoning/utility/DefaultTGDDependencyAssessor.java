@@ -1,12 +1,12 @@
 package uk.ac.ox.cs.pdq.reasoning.utility;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import com.beust.jcommander.internal.Lists;
-import com.beust.jcommander.internal.Sets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -54,9 +54,9 @@ public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor
 	 */
 	public DefaultTGDDependencyAssessor(Dependency[] dependencies) {
 		Preconditions.checkNotNull(dependencies);
-		this.dependencies = Lists.newArrayList();
-		List<Dependency> egds = Lists.newArrayList();
-		List<Dependency> tgds = Lists.newArrayList();
+		this.dependencies = new ArrayList<Dependency>();
+		List<Dependency> egds = new ArrayList<Dependency>();
+		List<Dependency> tgds = new ArrayList<Dependency>();
 		
 		//Build the dependency map
 		for(Dependency dependency:dependencies) {
@@ -85,7 +85,7 @@ public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor
 	 */
 	@Override
 	public Dependency[] getDependencies(ChaseInstance state) {
-		Collection<Dependency> constraints = Sets.newLinkedHashSet();
+		Collection<Dependency> constraints = new LinkedHashSet<>();
 		Collection<Atom> newFacts = null;
 		if(this.stateFacts == null) 
 			newFacts = state.getFacts();
@@ -114,7 +114,7 @@ public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor
 				}
 			}
 		}
-		this.stateFacts = Sets.newLinkedHashSet();
+		this.stateFacts = new LinkedHashSet<>();
 		this.stateFacts.addAll(state.getFacts());
 		return constraints.toArray(new Dependency[constraints.size()]);
 	}
