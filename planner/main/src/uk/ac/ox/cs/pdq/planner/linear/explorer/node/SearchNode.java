@@ -18,7 +18,6 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * The linear plans that are visited during exploration are organised into a tree. 
  * The nodes of this tree correspond to (partial) linear configurations. 

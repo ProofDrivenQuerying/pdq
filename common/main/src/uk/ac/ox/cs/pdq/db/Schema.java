@@ -130,7 +130,7 @@ public class Schema {
 	}
 
 	/**
-	 * Gets the (TOCOMMENT primary) key dependencies.
+	 * Gets the primary-key dependencies.
 	 *
 	 * @return the EGDs that come from the relations keys
 	 */

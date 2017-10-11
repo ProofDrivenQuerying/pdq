@@ -22,7 +22,6 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
 
-// TODO: Auto-generated Javadoc
 /**
  * Tests the WhiteBox cost estimator.
  *

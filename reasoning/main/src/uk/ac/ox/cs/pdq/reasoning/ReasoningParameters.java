@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.Parameters;
 
-// TODO: Auto-generated Javadoc
 /**
  * Holds the parameters of a reasoning session.
  *

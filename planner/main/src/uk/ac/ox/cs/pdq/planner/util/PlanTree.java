@@ -11,7 +11,6 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
-// TODO: Auto-generated Javadoc
 /**
  * A tree of search nodes.
  *

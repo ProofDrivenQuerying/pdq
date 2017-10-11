@@ -20,7 +20,6 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * Removes the redundant accesses and the redundant follow-up joins from a successful configuration path.
  *

@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.db.Attribute;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * TupleIterator defines a top-level class for all physical operators.
  * 

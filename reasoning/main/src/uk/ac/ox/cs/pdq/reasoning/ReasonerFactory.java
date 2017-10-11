@@ -12,7 +12,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
-// TODO: Auto-generated Javadoc
 /**
  * Creates reasoners based on the input arguments
  * 

@@ -290,7 +290,6 @@ public abstract class SQLStatementBuilder {
 		if (rule instanceof Atom) {
 			body = rule;
 		} else if (rule instanceof TGD) {
-			// TOCOMMENT this body should be the argument not the TGD
 			body = ((TGD) rule).getBody();
 		} else if (rule instanceof EGD) {
 			body = ((EGD) rule).getBody();

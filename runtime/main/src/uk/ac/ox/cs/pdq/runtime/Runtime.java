@@ -34,7 +34,6 @@ import uk.ac.ox.cs.pdq.runtime.query.QueryEvaluatorFactory;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 import uk.ac.ox.cs.pdq.util.EventHandler;
 
-// TODO: Auto-generated Javadoc
 /**
  * 
  * Top level class for runtime evaluating plans and queries.

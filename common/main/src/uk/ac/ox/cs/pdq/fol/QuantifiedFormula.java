@@ -22,7 +22,9 @@ public class QuantifiedFormula extends Formula {
 
 	protected final Formula child;
 
-	/**  TOCOMMENT: NOT SURE IF THIS IS OK The unary operator. */
+	/**  The operator. 
+	 * @see LogicalSymbols 
+	 */
 	protected final LogicalSymbols operator;
 
 	/**  The quantified variables. */

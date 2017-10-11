@@ -7,7 +7,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 
-// TODO: Auto-generated Javadoc
 /**
  * Go to class for executing plan.
  * This class can be seen as a PlanExecutor factory, i.e. it will choose the
@@ -24,11 +23,9 @@ public final class SetupPlanExecutor {
 	 */
 	public static enum ControlFlows {
 		
-		/** TOCOMMENT */
 		@EnumParameterValue(description="Control flow where parent request tuples from their children.")
 		PULL,
 
-		/** TOCOMMENT. */
 		@EnumParameterValue(description="Control flow where children inform their parent when tuple are available")
 		PUSH
 	}

@@ -51,7 +51,6 @@ import uk.ac.ox.cs.pdq.test.acceptance.SetEquivalentResultSetsAcceptanceCheck;
 import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
 import uk.ac.ox.cs.pdq.test.util.DataValidationImplementation;
 
-// TODO: Auto-generated Javadoc
 /**
  * Runs regression tests for the runtime, evaluated plans may come in
  * pre-serialized plan files or directly from the planner.

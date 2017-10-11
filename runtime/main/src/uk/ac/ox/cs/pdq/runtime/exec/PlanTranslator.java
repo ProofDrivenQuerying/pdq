@@ -21,7 +21,6 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.Selection;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.SymmetricMemoryHashJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 
-// TODO: Auto-generated Javadoc
 /**
  * Translate logical plans to physical relation plans.
  * TOCOMMENT: ALL COMMENTS APPEAR TO BE OUT OF DATE

@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.Attribute;
 
-// TODO: Auto-generated Javadoc
 /**
  * Projection operator.
  * 

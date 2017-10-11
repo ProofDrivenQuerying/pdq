@@ -5,7 +5,6 @@ import com.google.common.base.CaseFormat;
 import uk.ac.ox.cs.pdq.logging.StatKey;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Static collection of keys to be used in reasoning statistics collections.
  *

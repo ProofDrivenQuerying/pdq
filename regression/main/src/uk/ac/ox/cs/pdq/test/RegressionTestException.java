@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.test;
 
-// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred during a regression test.
  * 

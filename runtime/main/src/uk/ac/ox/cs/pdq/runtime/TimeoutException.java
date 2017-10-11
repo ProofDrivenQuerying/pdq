@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.runtime;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred when an evaluation time out is reached.
  * 

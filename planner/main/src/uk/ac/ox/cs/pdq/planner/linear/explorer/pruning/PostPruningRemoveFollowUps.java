@@ -32,7 +32,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-// TODO: Auto-generated Javadoc
 /**
  * Removes the redundant accesses and the redundant follow-up joins from a successful configuration path.
  *

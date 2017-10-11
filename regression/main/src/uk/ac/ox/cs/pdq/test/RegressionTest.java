@@ -10,7 +10,6 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.Parameters;
 
-// TODO: Auto-generated Javadoc
 /**
  * Runs regression tests.
  * 

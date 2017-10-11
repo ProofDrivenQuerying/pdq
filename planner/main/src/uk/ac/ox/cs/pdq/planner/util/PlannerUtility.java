@@ -21,7 +21,6 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PlannerUtility.
  *

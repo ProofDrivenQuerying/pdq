@@ -10,7 +10,6 @@ import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.db.Attribute;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Scan over a relation
  * Julien: although this class is only marginally used, please do not delete.

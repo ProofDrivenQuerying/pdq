@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.planner.util;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
-// TODO: Auto-generated Javadoc
 /**
  * A tree.
  *

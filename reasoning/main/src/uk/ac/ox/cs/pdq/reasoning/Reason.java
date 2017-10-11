@@ -24,7 +24,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-// TODO: Auto-generated Javadoc
 /**
  * Bootstrapping class for starting the reasoner. 
  * 
@@ -172,8 +171,6 @@ public class Reason {
 //			//Creates a chase state that consists of the canonical database of the input query.
 			ChaseInstance state = new DatabaseChaseInstance(query,new DatabaseConnection(dbParams, schema));		
 			reasoner.reasonUntilTermination(state, schema.getDependencies());
-			
-			//TODO show something 
 			
 		} catch (Throwable e) {
 			log.error("Planning aborted: " + e.getMessage(), e);

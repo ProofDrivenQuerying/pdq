@@ -10,7 +10,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
 
-// TODO: Auto-generated Javadoc
 /**
  * Acceptance test request the expected and observed plans to have the same cost
  * to pass.

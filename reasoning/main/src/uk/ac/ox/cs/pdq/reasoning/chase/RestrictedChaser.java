@@ -16,7 +16,6 @@ import uk.ac.ox.cs.pdq.reasoning.utility.DefaultTGDDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.TGDDependencyAssessor;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * (From modern dependency theory notes)
  * Runs the chase algorithm applying only active triggers. 

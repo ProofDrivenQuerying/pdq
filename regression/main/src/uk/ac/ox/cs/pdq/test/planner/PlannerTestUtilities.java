@@ -29,7 +29,12 @@ public class PlannerTestUtilities {
 		DIFFERENT}
 
 	/**
-	 * TOCOMMENT: WHAT IS THIS?.
+	 * <pre>
+	 * This is an advanced equals method that can return
+	 *  - Levels.DIFFERENT in case they have different cost 
+	 *  - Levels.IDENTICAL in case the two relationalTerm is the same 
+	 *  - Levels.EQUIVALENT in case the two relationalTerm is different but have the same cost. 
+	 * </pre>
 	 *
 	 * @param o Plan
 	 * @return Levels

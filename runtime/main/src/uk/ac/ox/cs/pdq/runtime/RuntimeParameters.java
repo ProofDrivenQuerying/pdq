@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.runtime.exec.SetupPlanExecutor.ControlFlows;
 
-// TODO: Auto-generated Javadoc
 /**
  * Hold the configuration of a runtime execution.
  * 
@@ -70,8 +69,7 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	protected ControlFlows controlFlow = ControlFlows.PULL;
 	
 	/**
-	 * TOCOMMENT
-	 *
+	 * PULL or PUSH
 	 * @return ControlFlows
 	 */
 	public ControlFlows getControlFlow() {

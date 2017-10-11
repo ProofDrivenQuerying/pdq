@@ -6,7 +6,6 @@ import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import com.google.common.eventbus.EventBus;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Interface for all query evaluators. Provides a mean to evaluate a query
  * and get its result.

@@ -15,7 +15,6 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 
 import com.google.common.collect.Sets;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ReasonerUtility.
  *

@@ -56,7 +56,7 @@ public class UtilityTest {
 
 	@Test
 	public void testGetEGDs1() {
-		EGD egds = Utility.getEGDs(this.R, this.R.getKey().getAttributes());
+		EGD egds = Utility.getEGD(this.R, this.R.getKey().getAttributes());
 		Assert.assertNotNull(egds);
 		Assert.assertNotNull(egds.getAtoms());
 		Assert.assertEquals(3, egds.getAtoms().length);
@@ -72,12 +72,12 @@ public class UtilityTest {
 
 	@Test(expected = RuntimeException.class)
 	public void testGetEGDs2() {
-		Utility.getEGDs(this.S, this.S.getKey().getAttributes());
+		Utility.getEGD(this.S, this.S.getKey().getAttributes());
 	}
 
 	@Test
 	public void testGetEGDs3() {
-		EGD egds = Utility.getEGDs(this.T, this.T.getKey().getAttributes());
+		EGD egds = Utility.getEGD(this.T, this.T.getKey().getAttributes());
 		Assert.assertNotNull(egds);
 		Assert.assertNotNull(egds.getAtoms());
 		Assert.assertEquals(3, egds.getAtoms().length);

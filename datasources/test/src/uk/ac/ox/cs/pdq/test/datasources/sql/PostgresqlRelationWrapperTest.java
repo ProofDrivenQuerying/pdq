@@ -140,7 +140,6 @@ public class PostgresqlRelationWrapperTest {
 		Object[] nameColumn = result.getColumn(1);
 		String[] actual = Arrays.copyOf(nameColumn, nameColumn.length, String[].class);
 		
-		//// TODO: Ask Efi about appropriate use of getColumn - how specify the generic?
 		//// Compare to how getColumn would look using the Stream API.
 		Assert.assertArrayEquals(expected.getData().toArray(new String[0]), actual);
 		
@@ -157,7 +156,6 @@ public class PostgresqlRelationWrapperTest {
 		
 		// Construct the inputs by hand.
 		expected = new Table(inputAttributes);
-		// TODO: Float is appropriate ACCTBAL attribute type? Values must match existing data.  
 		expected.appendRow(ttFloat.createTuple((Object[]) Arrays.copyOf(new Float[] {1.22f}, 1)));
 		expected.appendRow(ttFloat.createTuple((Object[]) Arrays.copyOf(new Float[] {0.89f}, 1)));
 		inputs = expected.iterator(); 
@@ -177,7 +175,6 @@ public class PostgresqlRelationWrapperTest {
 		
 		// Construct the inputs by hand.
 		expected = new Table(inputAttributes);
-		// TODO: Values must match existing data.
 		expected.appendRow(ttInteger.createTuple((Object[]) Arrays.copyOf(new Integer[] {2}, 1)));
 		expected.appendRow(ttInteger.createTuple((Object[]) Arrays.copyOf(new Integer[] {1}, 1)));
 		expected.appendRow(ttInteger.createTuple((Object[]) Arrays.copyOf(new Integer[] {4}, 1)));
@@ -199,7 +196,6 @@ public class PostgresqlRelationWrapperTest {
 		
 		// Construct the inputs by hand.
 		expected = new Table(inputAttributes);
-		// TODO:   Values must match existing data.
 		expected.appendRow(ttIntegerStringFloat.createTuple((Object[]) Arrays.copyOf(new Object[] {12345678, "MR CUSTOMER", 0.89f}, 3)));
 		expected.appendRow(ttIntegerStringFloat.createTuple((Object[]) Arrays.copyOf(new Object[] {12345678, "MRS CUSTOMER", 2.16f}, 3)));
 		expected.appendRow(ttIntegerStringFloat.createTuple((Object[]) Arrays.copyOf(new Object[] {12345678, "MS CUSTOMER", 11.22f}, 3)));

@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.planner.linear.cost;
 
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
-// TODO: Auto-generated Javadoc
 /**
  * Property of a cost model to be propagated across node of a search space.
  *

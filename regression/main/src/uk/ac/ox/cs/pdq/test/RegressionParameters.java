@@ -7,7 +7,6 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-// TODO: Auto-generated Javadoc
 /**
  * Hold the initialConfig of an execution.
  * 

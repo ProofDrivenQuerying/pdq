@@ -5,7 +5,6 @@ import static uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion.AcceptanceLeve
 
 import uk.ac.ox.cs.pdq.datasources.utility.Result;
 
-// TODO: Auto-generated Javadoc
 /**
  * Acceptance test request the expected and observed results to be equivalent
  * under set semantics.

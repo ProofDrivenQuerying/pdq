@@ -56,7 +56,9 @@ public class Reference implements Cloneable, Serializable {
 
 	/**
 	 * Constructor for Reference.
-	 * @param rf Reference
+	 * 
+	 * @param rf
+	 *            Reference
 	 */
 	public Reference(Reference rf) {
 	}
@@ -84,8 +86,8 @@ public class Reference implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Sets the sequence value within the owning key. Please note that you
-	 * should not change the value once the reference has been added to a key.
+	 * Sets the sequence value within the owning key. Please note that you should
+	 * not change the value once the reference has been added to a key.
 	 *
 	 * @param sequenceValue
 	 *            The sequence value
@@ -95,8 +97,10 @@ public class Reference implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns the local column.
-	 * TOCOMMENT: WHAT IS LOCAL?
+	 * A reference is usually implemented as a foreign key in an rdbms table. The
+	 * local attribute is this foreign-key attribute in the table, while foreign
+	 * attribute is the pointed attribute from the remote table. Returns the local
+	 * column.
 	 *
 	 * @return The local column
 	 */
@@ -134,9 +138,11 @@ public class Reference implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns the name of the local column.
-	 * TOCOMMENT: WHAT IS THE LOCAL COLUMN?
-	 *
+	 * A reference is usually implemented as a foreign key in an rdbms table. The
+	 * local attribute is this foreign-key attribute in the table, while foreign
+	 * attribute is the pointed attribute from the remote table. Returns the local
+	 * column name.
+	 * 
 	 * @return The column name
 	 */
 	public String getLocalAttributeName() {
@@ -144,8 +150,8 @@ public class Reference implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Sets the name of the local column. Note that you should not use this
-	 * method when manipulating the model manually. Rather use the
+	 * Sets the name of the local column. Note that you should not use this method
+	 * when manipulating the model manually. Rather use the
 	 * {@link #setLocalAttribute(Attribute)} method.
 	 *
 	 * @param localAttributeName
@@ -168,8 +174,8 @@ public class Reference implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Sets the name of the remote column. Note that you should not use this
-	 * method when manipulating the model manually. Rather use the
+	 * Sets the name of the remote column. Note that you should not use this method
+	 * when manipulating the model manually. Rather use the
 	 * {@link #setForeignAttribute(Attribute)} method.
 	 *
 	 * @param foreignAttributeName
@@ -184,6 +190,7 @@ public class Reference implements Cloneable, Serializable {
 
 	/**
 	 * {@inheritDoc}
+	 * 
 	 * @return Object
 	 * @throws CloneNotSupportedException
 	 */
@@ -199,7 +206,9 @@ public class Reference implements Cloneable, Serializable {
 
 	/**
 	 * {@inheritDoc}
-	 * @param obj Object
+	 * 
+	 * @param obj
+	 *            Object
 	 * @return boolean
 	 */
 	@Override
@@ -209,8 +218,7 @@ public class Reference implements Cloneable, Serializable {
 		}
 		if (obj instanceof Reference) {
 			Reference other = (Reference) obj;
-			return new EqualsBuilder().append(this._localAttributeName, other._localAttributeName)
-					.append(this._foreignAttributeName, other._foreignAttributeName).isEquals();
+			return new EqualsBuilder().append(this._localAttributeName, other._localAttributeName).append(this._foreignAttributeName, other._foreignAttributeName).isEquals();
 		}
 		return false;
 	}
@@ -221,8 +229,8 @@ public class Reference implements Cloneable, Serializable {
 	 *
 	 * @param otherRef
 	 *            The other reference
-	 * @return <code>true</code> if this reference is equal (ignoring case) to
-	 *         the given one
+	 * @return <code>true</code> if this reference is equal (ignoring case) to the
+	 *         given one
 	 */
 	public boolean equalsIgnoreCase(Reference otherRef) {
 		return (otherRef != null) && this._localAttributeName.equalsIgnoreCase(otherRef._localAttributeName)
@@ -231,6 +239,7 @@ public class Reference implements Cloneable, Serializable {
 
 	/**
 	 * {@inheritDoc}
+	 * 
 	 * @return int
 	 */
 	@Override
@@ -240,6 +249,7 @@ public class Reference implements Cloneable, Serializable {
 
 	/**
 	 * {@inheritDoc}
+	 * 
 	 * @return String
 	 */
 	@Override

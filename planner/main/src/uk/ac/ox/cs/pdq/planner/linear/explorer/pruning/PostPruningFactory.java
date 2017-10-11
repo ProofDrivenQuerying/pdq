@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * Creates plan post-pruning objects.
  *

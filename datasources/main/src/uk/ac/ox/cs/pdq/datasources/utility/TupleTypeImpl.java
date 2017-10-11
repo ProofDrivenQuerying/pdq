@@ -7,12 +7,11 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.NotImplementedException;
 
-import uk.ac.ox.cs.pdq.db.DataType;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.util.Typed;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+
+import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.util.Typed;
 
 /**
  * A tuple type implementation.
@@ -184,7 +183,6 @@ class TupleTypeImpl implements TupleType {
 			final Type nthOther = other.getType(i);
 			assert nthType != null;
 			assert nthOther != null;
-			// TODO: find an efficient way to type check accounting for (un)boxing
 			if (nthType instanceof Class
 					&& nthOther instanceof Class
 					&& !((Class<?>) nthType).isAssignableFrom((Class<?>) nthOther)) {
@@ -226,11 +224,8 @@ class TupleTypeImpl implements TupleType {
 				if (nthType instanceof Class
 						&& !((Class<?>) nthType).isAssignableFrom(nthValue.getClass())) {
 					return false;
-				} else if (nthType instanceof DataType
-						&& !(((DataType) nthType).isAssignableFrom(nthValue))) {
-					return false;
 				} else if (!(nthType instanceof Type)) {
-					throw new NotImplementedException("");
+					throw new NotImplementedException("Unknown type : " + nthType);
 				}
 			}
 		}

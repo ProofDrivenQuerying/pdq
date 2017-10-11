@@ -21,7 +21,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DataType;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -247,7 +246,7 @@ public class Utility {
 	 * @param keys the keys
 	 * @return 		a collection of EGDs for the input relation and keys
 	 */
-	public static EGD getEGDs(Predicate predicate, Attribute[] attributes, Attribute[] keys) {
+	public static EGD getEGD(Predicate predicate, Attribute[] attributes, Attribute[] keys) {
 		Term[] leftTerms = Utility.typedToTerms(attributes);
 		Term[] copiedTerms = leftTerms.clone();
 		//Keeps the terms that should be equal
@@ -273,15 +272,14 @@ public class Utility {
 	}
 
 	/**
-	 * TOCOMMENT why plural in the name of the method?
 	 * Constructs an EGD for the given relation and key attibutes.
 	 *
 	 * @param relation the relation
 	 * @param keys the key attirbutes
 	 * @return the EGD representing the primary key
 	 */
-	public static EGD getEGDs(Relation relation, Attribute[] keys) {
-		return getEGDs(Predicate.create(relation.getName(), relation.getArity()), relation.getAttributes(), keys);
+	public static EGD getEGD(Relation relation, Attribute[] keys) {
+		return getEGD(Predicate.create(relation.getName(), relation.getArity()), relation.getAttributes(), keys);
 	}
 
 	public static List<TypedConstant> getTypedConstants(Formula formula) {
@@ -315,7 +313,7 @@ public class Utility {
 	}
 
 	/**
-	 * TOCOMMENT the next 3 methods are discussed in #42
+	 * see #42
 	 * 
 	 * Generate canonical mapping.
 	 *
@@ -371,9 +369,6 @@ public class Utility {
 		if (type instanceof Class) {
 			return ((Class<?>) type).getSimpleName();
 		}
-		if (type instanceof DataType) {
-			return ((DataType) type).getName();
-		}
 		return type.toString();
 
 	}
@@ -389,9 +384,6 @@ public class Utility {
 	public static String canonicalName(Type type) {
 		if (type instanceof Class) {
 			return ((Class<?>) type).getCanonicalName();
-		}
-		if (type instanceof DataType) {
-			return ((DataType) type).getName();
 		}
 		return type.toString();
 

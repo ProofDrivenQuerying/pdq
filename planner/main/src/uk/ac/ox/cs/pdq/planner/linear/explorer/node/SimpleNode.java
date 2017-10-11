@@ -7,7 +7,6 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
  * Tree nodes that keep the single best path to success.
  * Used when costing plans using a simple cost function.
