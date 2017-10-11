@@ -20,6 +20,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.Source;
+import uk.ac.ox.cs.pdq.datasources.utility.FormulaEquivalence;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Cache;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
@@ -31,7 +32,6 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.FormulaEquivalence;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;

@@ -1,10 +1,19 @@
-package uk.ac.ox.cs.pdq.fol;
+package uk.ac.ox.cs.pdq.datasources.utility;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Disjunction;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Implication;
+import uk.ac.ox.cs.pdq.fol.Negation;
+import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
+import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
@@ -17,7 +26,6 @@ public class FormulaEquivalence {
 	/**
 	 * Quickly attempts to determine if two formulas are equivalent to one
 	 * another. 
-	 * TOCOMMENT Move it to data sources. 
 	 * Returns true in case the predicates are the same and the same constants and variables.
 	 * 
 	 * May return false negatives.
