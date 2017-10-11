@@ -6,7 +6,6 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.db.Instance;
 import uk.ac.ox.cs.pdq.db.Match;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 
@@ -30,7 +29,7 @@ public interface ChaseInstance extends Instance{
 	 * @return
 	 * 		the list of matches of the input query to the facts of this state.
 	 */
-	List<Match> getMatches(ConjunctiveQuery query, LimitToThisOrAllInstances l);
+	List<Match> getMatches(ConjunctiveQuery query);
 	
 	/**
 	 * (Candidate match definition).
@@ -43,8 +42,7 @@ public interface ChaseInstance extends Instance{
 	 * @param t 		The TriggerProperty constraints that should be satisfied 
 	 * @return 		the list of matches (both candidates and not candidates) of the input dependencies in this database instance.
 	 */
-	//TOCOMMENT: I can "push" the argument limitToFacts inside the implementation - this property can be removed.
-	List<Match> getTriggers(Dependency[] dependencies, TriggerProperty t, LimitToThisOrAllInstances limitToFacts);
+	List<Match> getTriggers(Dependency[] dependencies, TriggerProperty t);
 	
 	/**
 	 * Checks if is failed.

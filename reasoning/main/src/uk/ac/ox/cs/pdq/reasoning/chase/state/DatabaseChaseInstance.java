@@ -643,13 +643,13 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 *            An input query
 	 * @return the list of matches of the input query to the facts of this state.
 	 */
-	public List<Match> getMatches(ConjunctiveQuery query, LimitToThisOrAllInstances l) {
+	public List<Match> getMatches(ConjunctiveQuery query) {
 		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();
 		// Create a new query out of each input query that references only the cleaned
 		// predicates
 		ConjunctiveQuery converted = this.convert(query);
 		// Create an SQL statement for the cleaned query
-		Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(converted, l, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(converted, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
 		queries.add(Triple.of((Formula) query, pair.getLeft(), pair.getRight()));
 		return this.answerQueries(queries);
 	}
@@ -658,13 +658,13 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * Same as above but it does not replaces the free variables in the query with
 	 * the canonical constants. This function is only used for unit testing.
 	 */
-	public List<Match> getMatchesNoSubstitution(ConjunctiveQuery query, LimitToThisOrAllInstances l) {
+	public List<Match> getMatchesNoSubstitution(ConjunctiveQuery query) {
 		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();
 		// Create a new query out of each input query that references only the cleaned
 		// predicates
 		ConjunctiveQuery converted = this.convert(query);
 		// Create an SQL statement for the cleaned query
-		Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(converted, l, new HashMap<Variable, Constant>());
+		Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(converted, new HashMap<Variable, Constant>());
 		queries.add(Triple.of((Formula) query, pair.getLeft(), pair.getRight()));
 		return this.answerQueries(queries);
 	}
@@ -677,13 +677,13 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * Collection, uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty,
 	 * uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts)
 	 */
-	public List<Match> getTriggers(Dependency[] dependencies, TriggerProperty t, LimitToThisOrAllInstances limitToThisOrAllInstances) {
+	public List<Match> getTriggers(Dependency[] dependencies, TriggerProperty t) {
 		Preconditions.checkNotNull(dependencies);
 		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();
 		// Create a new query out of each input query that references only the clean
 		// predicates
 		for (Dependency source : dependencies) {
-			Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(source, t, limitToThisOrAllInstances);
+			Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(source, t);
 			queries.add(Triple.of((Formula) source, pair.getLeft(), pair.getRight()));
 		}
 		return this.answerQueries(queries);
@@ -711,15 +711,6 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			return ConjunctiveQuery.create(((ConjunctiveQuery) source).getFreeVariables(), (Conjunction) Conjunction.of(body));
 	}
 
-	/**
-	 * Enumeration that holds the option to execute a query limiting the answers to
-	 * facts of this DatabaseChaseInstance, or to facts of the entire database.
-	 *
-	 */
-	public static enum LimitToThisOrAllInstances {
-		ALL, THIS
-	}
-
 	public void setDatabaseConnection(DatabaseConnection connection) {
 		this.databaseConnection = connection;
 	}
@@ -741,7 +732,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 *         triggers (active or not depends on t) for the input dependency, and
 	 *         (b) a map with the attributes to be projected. 
 	 */
-	public Pair<String, LinkedHashMap<String, Variable>> createSQLQuery(Dependency dep, TriggerProperty t, LimitToThisOrAllInstances l) {
+	public Pair<String, LinkedHashMap<String, Variable>> createSQLQuery(Dependency dep, TriggerProperty t) {
 		boolean isEGD = (dep instanceof EGD);
 		int freshcounter = 0;
 		Atom[] extendedBodyAtoms = extendAtomsWithInstanceIDAttribute(dep.getBodyAtoms(), freshcounter);
@@ -760,7 +751,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		WhereCondition factproperties = null;
 		if (facts != null && !facts.isEmpty())
 			factproperties = this.databaseConnection.getSQLStatementBuilder().enforceStateMembership(extendedBodyAtoms, this.databaseConnection.getRelationNamesToDatabaseTables(),
-					((l.equals(LimitToThisOrAllInstances.THIS)) ? this.facts : null));
+					this.facts);
 		else
 			factproperties = new WhereCondition();
 
@@ -795,7 +786,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			WhereCondition nestedFactproperties = null;
 			if (facts != null && !facts.isEmpty())
 				nestedFactproperties = this.databaseConnection.getSQLStatementBuilder().enforceStateMembership(extendedHeadAtoms,
-						this.databaseConnection.getRelationNamesToDatabaseTables(), ((l.equals(LimitToThisOrAllInstances.THIS)) ? this.facts : null));
+						this.databaseConnection.getRelationNamesToDatabaseTables(), this.facts );
 			else
 				nestedFactproperties = new WhereCondition();
 			predicates2.addCondition(nestedFactproperties);
@@ -826,7 +817,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 *         homomorphisms of the input query, and (b) a map with the attributes
 	 *         to be projected. 
 	 */
-	public Pair<String, LinkedHashMap<String, Variable>> createSQLQuery(ConjunctiveQuery source, LimitToThisOrAllInstances l, Map<Variable, Constant> finalProjectionMapping) {
+	public Pair<String, LinkedHashMap<String, Variable>> createSQLQuery(ConjunctiveQuery source, Map<Variable, Constant> finalProjectionMapping) {
 		String query = "";
 		SQLStatementBuilder stb = this.databaseConnection.getSQLStatementBuilder();
 		FromCondition from = stb.createFromStatement(source.getAtoms());
@@ -838,8 +829,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 
 		WhereCondition factproperties = null;
 		if (facts != null && !facts.isEmpty())
-			factproperties = stb.enforceStateMembership(source.getAtoms(), this.databaseConnection.getRelationNamesToDatabaseTables(),
-					((l.equals(LimitToThisOrAllInstances.THIS)) ? this.facts : null));
+			factproperties = stb.enforceStateMembership(source.getAtoms(), this.databaseConnection.getRelationNamesToDatabaseTables(),this.facts);
 		else
 			factproperties = new WhereCondition();
 

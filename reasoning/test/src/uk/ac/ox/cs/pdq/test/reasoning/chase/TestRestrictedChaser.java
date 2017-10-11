@@ -36,7 +36,6 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
@@ -414,7 +413,7 @@ public class TestRestrictedChaser extends PdqTest {
 						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("c_constant_3")),
 						Atom.create(D, Variable.create("z"), Variable.create("z"))));
 
-		List<Match> matches = this.state.getMatchesNoSubstitution(query1, LimitToThisOrAllInstances.THIS);
+		List<Match> matches = this.state.getMatchesNoSubstitution(query1);
 		Assert.assertEquals(5, matches.size());
 	}
 
@@ -505,7 +504,7 @@ public class TestRestrictedChaser extends PdqTest {
 						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("TC1")), Atom.create(D, Variable.create("x"), Variable.create("y")),
 						Atom.create(E, Variable.create("x"), Variable.create("y"), TypedConstant.create("TC1"))));
 
-		List<Match> matches = this.state.getMatchesNoSubstitution(query1, LimitToThisOrAllInstances.THIS);
+		List<Match> matches = this.state.getMatchesNoSubstitution(query1);
 		Assert.assertEquals(5, matches.size());
 	}
 
@@ -579,7 +578,7 @@ public class TestRestrictedChaser extends PdqTest {
 						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("TC1")), Atom.create(D, Variable.create("x"), Variable.create("y")),
 						Atom.create(E, TypedConstant.create("TC2"), Variable.create("y"), Variable.create("y"))));
 
-		List<Match> matches = this.state.getMatchesNoSubstitution(query1, LimitToThisOrAllInstances.THIS);
+		List<Match> matches = this.state.getMatchesNoSubstitution(query1);
 		Assert.assertEquals(5, matches.size());
 	}
 

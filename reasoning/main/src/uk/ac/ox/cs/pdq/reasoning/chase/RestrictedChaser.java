@@ -10,7 +10,6 @@ import uk.ac.ox.cs.pdq.logging.SimpleStatisticsCollector;
 import uk.ac.ox.cs.pdq.logging.SimpleStatisticsCollector.StatisticsRecord;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultTGDDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.TGDDependencyAssessor;
@@ -63,7 +62,7 @@ public class RestrictedChaser extends Chaser {
 				StatisticsRecord r = (statistics instanceof SimpleStatisticsCollector) ?((SimpleStatisticsCollector)statistics).addNewRecord("getTriggers"):null;
 				List<Match> matches = null;
 				try {
-					matches = instance.getTriggers(new Dependency[]{dependency}, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
+					matches = instance.getTriggers(new Dependency[]{dependency}, TriggerProperty.ACTIVE);
 				} finally {
 					if (r!=null) r.setEndTime();
 				}

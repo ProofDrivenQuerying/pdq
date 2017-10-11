@@ -27,7 +27,6 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 
@@ -94,7 +93,7 @@ public class TestGetTriggers extends PdqTest {
 		Atom f25 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k6"), UntypedConstant.create("c"), TypedConstant.create(new String("Michael")) });
 
 		state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25));
-		List<Match> matches = state.getTriggers(new Dependency[] { this.tgd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
+		List<Match> matches = state.getTriggers(new Dependency[] { this.tgd }, TriggerProperty.ACTIVE);
 		Assert.assertEquals(6, matches.size());
 	}
 
@@ -127,7 +126,7 @@ public class TestGetTriggers extends PdqTest {
 		Atom f25 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("p"), TypedConstant.create(new String("Michael")) });
 
 		state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25));
-		List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
+		List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE);
 		Assert.assertEquals(8, matches.size());
 	}
 
@@ -161,7 +160,7 @@ public class TestGetTriggers extends PdqTest {
 		Atom eq2 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c3"));
 
 		state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
-		List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ALL, LimitToThisOrAllInstances.THIS);
+		List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ALL);
 		Assert.assertEquals(8, matches.size());
 	}
 
@@ -206,7 +205,7 @@ public class TestGetTriggers extends PdqTest {
 		Atom eq2 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c3"));
 		for (DatabaseChaseInstance state : chaseState) {
 			state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
-			List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
+			List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE);
 			Assert.assertEquals(6, matches.size());
 			try {
 				this.setup();
@@ -249,7 +248,7 @@ public class TestGetTriggers extends PdqTest {
 		Atom f27 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c2") });
 
 		state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, f26, f27));
-		List<Match> matches = state.getTriggers(new Dependency[] { this.tgd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
+		List<Match> matches = state.getTriggers(new Dependency[] { this.tgd }, TriggerProperty.ACTIVE);
 		Assert.assertEquals(4, matches.size());
 	}
 
@@ -278,7 +277,7 @@ public class TestGetTriggers extends PdqTest {
 		Atom f26 = Atom.create(this.rel3, new Term[] { UntypedConstant.create("r1"), UntypedConstant.create("UntypedConstant1") });
 		Atom f27 = Atom.create(this.rel3, new Term[] { UntypedConstant.create("r2"), UntypedConstant.create("UntypedConstant2") });
 		state.addFacts(Lists.newArrayList(f20, f21, f22, f26, f27));
-		List<Match> matches = state.getTriggers(new Dependency[] { this.tgd2 }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
+		List<Match> matches = state.getTriggers(new Dependency[] { this.tgd2 }, TriggerProperty.ACTIVE);
 		Assert.assertEquals(1, matches.size());
 	}
 
@@ -357,7 +356,7 @@ public class TestGetTriggers extends PdqTest {
 					new Atom[] { Atom.create(A, Variable.create("x"), Variable.create("y")),
 							Atom.create(B, Variable.create("y"), Variable.create("y"), TypedConstant.create("TC1")), Atom.create(C, Variable.create("y")) },
 					new Atom[] { Atom.create(D, TypedConstant.create("TC2"), Variable.create("z")) }) };
-			List<Match> matches = state.getTriggers(d, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
+			List<Match> matches = state.getTriggers(d, TriggerProperty.ACTIVE);
 			Assert.assertFalse(matches.isEmpty());
 			Assert.assertEquals(4, matches.size());
 		} catch (SQLException e) {

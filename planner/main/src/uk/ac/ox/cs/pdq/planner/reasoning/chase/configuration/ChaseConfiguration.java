@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -192,7 +191,7 @@ public abstract class ChaseConfiguration implements Configuration {
 	 * @throws PlannerException the planner exception
 	 */
 	public List<Match> matchesQuery(ConjunctiveQuery query) throws PlannerException {
-		return this.state.getMatches(query,LimitToThisOrAllInstances.THIS);
+		return this.state.getMatches(query);
 	}
 
 	/**
