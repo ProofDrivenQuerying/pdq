@@ -439,7 +439,7 @@ public class AtomTest {
 				TypedConstant.create("x1"), TypedConstant.create("x4")
 		};
 		Atom p = Atom.create(s, t);
-		Assert.assertTrue("Fact terms must contain schema constants only", p.isFact());
+		Assert.assertTrue("Fact terms must contain schema constants only", p.isGround());
 	}
 
 	/**
@@ -449,6 +449,6 @@ public class AtomTest {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{Variable.create("x1"), Variable.create("x2"), UntypedConstant.create("x3"), Variable.create("x1"), TypedConstant.create("x4")};
 		Atom p = Atom.create(s, t);
-		Assert.assertFalse("Fact terms must contain schema constants only", p.isFact());
+		Assert.assertFalse("Fact terms must contain schema constants only", p.isGround());
 	}
 }

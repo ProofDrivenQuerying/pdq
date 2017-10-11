@@ -118,11 +118,9 @@ public class Atom extends Formula {
 	
 	/**
 	 * Checks if is fact.
-	 * TOCOMMENT: I GUESS THIS SHOULD be isGround() RENAME!
-	 *
 	 * @return Boolean
 	 */
-	public Boolean isFact() {
+	public Boolean isGround() {
 		for(Term term:this.terms) {
 			if(term instanceof Variable) {
 				return false;
