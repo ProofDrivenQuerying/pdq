@@ -7,7 +7,6 @@ import org.junit.Assert;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.db.Attribute;
 
-// TODO: Auto-generated Javadoc
 /**
  * The empty iterator is used to model iterator of an empty set.
  * Its hasNext() method always return false, next() throws a 

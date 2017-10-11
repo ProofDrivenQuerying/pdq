@@ -67,6 +67,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	}
 
 	/**
+	 *	Creates a single "insert into XYZ" statement with all the terms of each fact.
 	 * Make inserts.
 	 *
 	 * @param facts the facts
@@ -104,8 +105,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	}
 
 	/**
-	 * TOCOMMENT: EXPLAIN DIFFERENCE FROM PRIOR
-	 *
+	 *	Creates a single "insert into XYZ" statement with all the facts.
 	 * @param facts the facts
 	 * @param toDatabaseTables the dbrelations
 	 * @return insert statements that add the input fact to the fact database.

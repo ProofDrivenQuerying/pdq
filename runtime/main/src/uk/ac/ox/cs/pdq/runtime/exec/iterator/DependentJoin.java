@@ -21,7 +21,6 @@ import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
-// TODO: Auto-generated Javadoc
 /**
  * BindJoinTest is an implementation of a physical dependent open join.
  * 

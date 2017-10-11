@@ -29,13 +29,13 @@ public class ConjunctiveQuery extends Formula {
 	private String toString = null;
 
 	/** 
-	 * TOCOMMENT we should get rid of this when we fix #42
+	 * see #42
 	 * 
 	 * The grounding. */
 	protected final Map<Variable, Constant> canonicalSubstitution;
 	
 	/**  
-	 * TOCOMMENT we should get rid of this when we fix #42, together with the grounding field a few lines below, they are very confusing.
+	 * See #42, together with the grounding field a few lines below, they are very confusing.
 	 * 
 	 * Map of query's free variables to chase constants. */
 	protected final Map<Variable, Constant> canonicalSubstitutionOfFreeVariables;
@@ -110,8 +110,7 @@ public class ConjunctiveQuery extends Formula {
 		return false;
 	}
 	/**
-	 * TOCOMMENT the next 3 methods are discussed in #42
-	 * 
+	 * see #42
 	 * Generate canonical mapping.
 	 *
 	 * @param formula the body

@@ -2,7 +2,10 @@ package uk.ac.ox.cs.pdq.planner;
 
 import java.sql.SQLException;
 import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -19,9 +22,11 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.logging.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.DynamicStatistics;
 import uk.ac.ox.cs.pdq.logging.StatKey;
@@ -107,18 +112,23 @@ public class ExplorationSetUp {
 		this.reasoningParams = reasoningParams;
 		this.databaseParams = databaseParams;
 		final Attribute Fact = Attribute.create(Integer.class, "InstanceID");
-		addAdditionalAttributeToSchema(schema, Fact);
+		this.schema = addAdditionalAttributeToSchema(schema, Fact);
 		this.statsLogger = statsLogger;
-		this.schema = schema;
 		this.accessibleSchema = new AccessibleSchema(schema);
 	}
 
 	//add an extra attribute
-	private void addAdditionalAttributeToSchema(Schema schema, Attribute atribute) {
-		for(int index = 0; index < schema.getNumberOfRelations(); ++index) {
-			if (schema.getRelation(index).getAttribute("InstanceID") == null)
-				schema.getRelation(index).appendAttribute(atribute);
+	private Schema addAdditionalAttributeToSchema(Schema schema, Attribute atribute) {
+		Relation[] relations = schema.getRelations();
+		for(int index = 0; index < relations.length; ++index) {
+			if (relations[index].getAttribute("InstanceID") == null) {
+				relations[index] = Relation.appendAttribute(relations[index],atribute);
+			}
 		}
+		List<Dependency> deps = new ArrayList<>();
+		deps.addAll(Arrays.asList(schema.getDependencies()));
+		deps.addAll(Arrays.asList(schema.getKeyDependencies()));
+		return new Schema(relations,deps.toArray(new Dependency[deps.size()]));
 	}
 
 	/**

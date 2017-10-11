@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.runtime.exec;
 
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred in the middleware.
  * 

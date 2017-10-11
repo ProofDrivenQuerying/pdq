@@ -9,7 +9,6 @@ import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
-// TODO: Auto-generated Javadoc
 /**
  * MemoryScan over an in-memory relation or simply a collection of tuples.
  * 

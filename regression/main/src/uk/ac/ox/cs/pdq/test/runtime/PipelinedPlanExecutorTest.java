@@ -26,7 +26,6 @@ import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Tests the correctness of pipelined executor.
  *

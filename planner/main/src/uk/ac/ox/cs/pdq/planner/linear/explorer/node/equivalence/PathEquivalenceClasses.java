@@ -15,7 +15,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Sets;
 
-// TODO: Auto-generated Javadoc
 /**
  * Collections of paths that have equivalent configurations.
  * Each node of the path is saturated using the chase and is associated with a unique configuration.

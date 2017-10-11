@@ -6,7 +6,6 @@ import java.util.Set;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
-// TODO: Auto-generated Javadoc
 /**
  * Configurations represent a state in the search space for a plan. They include derived facts and a corresponding  query plan.
  * Linear configurations are mapped to left-deep plans.

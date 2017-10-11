@@ -18,7 +18,7 @@ public class DependentJoinTerm extends RelationalTerm {
 	protected final RelationalTerm[] children = new RelationalTerm[2];
 
 	/** The join conditions. */
-	protected final Condition followupJoinConditions;
+	protected final Condition joinConditions;
 	
 	/** Input positions for the right hand child**/
 	protected final Map<Integer,Integer> positionsInRightChildThatAreBoundFromLeftChild;
@@ -30,22 +30,20 @@ public class DependentJoinTerm extends RelationalTerm {
 		super(AlgebraUtilities.computeInputAttributesForDependentJoinTerm(child1, child2), AlgebraUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
-/* TOCOMMENT: What is being asserted here??? This is crucial
- * for understanding what this term means */
+		// The first child most have at least one output that can be used as an input for the second.
 		Assert.assertTrue(CollectionUtils.containsAny(Arrays.asList(child1.getOutputAttributes()),Arrays.asList(child2.getInputAttributes())));
 		this.children[0] = child1;
 		this.children[1] = child2;
 		this.positionsInRightChildThatAreBoundFromLeftChild = AlgebraUtilities.computePositionsInRightChildThatAreBoundFromLeftChild(child1, child2);
-/* TOCOMMENT: What  are follow-up Join?? */
-		this.followupJoinConditions = AlgebraUtilities.computeJoinConditions(this.children);
+		this.joinConditions = AlgebraUtilities.computeJoinConditions(this.children);
 	}
 	
 	public Map<Integer,Integer> getPositionsInLeftChildThatAreInputToRightChild() {
 		return this.positionsInRightChildThatAreBoundFromLeftChild;
 	}
 	
-	public Condition getFollowupJoinConditions() {
-		return this.followupJoinConditions;
+	public Condition getJoinConditions() {
+		return this.joinConditions;
 	}
 
 	@Override
@@ -54,7 +52,7 @@ public class DependentJoinTerm extends RelationalTerm {
 			StringBuilder result = new StringBuilder();
 			result.append("DependentJoin");
 			result.append('{');
-			result.append('[').append(this.followupJoinConditions).append(']');
+			result.append('[').append(this.joinConditions).append(']');
 			result.append(this.children[0].toString());
 			result.append(',');
 			result.append(this.children[1].toString());

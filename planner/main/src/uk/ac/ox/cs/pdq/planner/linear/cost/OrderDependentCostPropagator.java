@@ -18,7 +18,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-// TODO: Auto-generated Javadoc
 /**
  *
  * Black box cost propagator. When a node has been updated, this class propogates information about search nodes in the search space, their plans and associated costs.

@@ -11,7 +11,6 @@ import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Join is a top-level class for all join implementations.
  * 

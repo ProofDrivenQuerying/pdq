@@ -222,18 +222,18 @@ public class RelationalTermTest extends PdqTest {
 		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
 		Assert.assertArrayEquals(new Attribute[] {a,b,c,b,c}, plan1.getOutputAttributes());
 		Assert.assertArrayEquals(new Attribute[] {}, plan1.getInputAttributes());
-		Assert.assertNotNull(plan1.getFollowupJoinConditions());
-		Assert.assertTrue(plan1.getFollowupJoinConditions() instanceof ConjunctiveCondition);
-		Assert.assertNotNull(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions());
-		Assert.assertEquals(2,((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions().length);
-		Assert.assertNotNull(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0]);
-		Assert.assertNotNull(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1]);
-		Assert.assertTrue(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0] instanceof AttributeEqualityCondition);
-		Assert.assertEquals(1, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0]).getPosition());
-		Assert.assertEquals(3, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0]).getOther());
-		Assert.assertTrue(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1] instanceof AttributeEqualityCondition);
-		Assert.assertEquals(2, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1]).getPosition());
-		Assert.assertEquals(4, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1]).getOther());
+		Assert.assertNotNull(plan1.getJoinConditions());
+		Assert.assertTrue(plan1.getJoinConditions() instanceof ConjunctiveCondition);
+		Assert.assertNotNull(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions());
+		Assert.assertEquals(2,((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions().length);
+		Assert.assertNotNull(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0]);
+		Assert.assertNotNull(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1]);
+		Assert.assertTrue(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0] instanceof AttributeEqualityCondition);
+		Assert.assertEquals(1, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0]).getPosition());
+		Assert.assertEquals(3, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0]).getOther());
+		Assert.assertTrue(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1] instanceof AttributeEqualityCondition);
+		Assert.assertEquals(2, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1]).getPosition());
+		Assert.assertEquals(4, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1]).getOther());
 		
 		
 		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild());
@@ -253,18 +253,18 @@ public class RelationalTermTest extends PdqTest {
 		
 		Assert.assertArrayEquals(new Attribute[] {a,b,c,b,c}, plan1.getOutputAttributes());
 		Assert.assertArrayEquals(new Attribute[] {}, plan1.getInputAttributes());
-		Assert.assertNotNull(plan1.getFollowupJoinConditions());
-		Assert.assertTrue(plan1.getFollowupJoinConditions() instanceof ConjunctiveCondition);
-		Assert.assertNotNull(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions());
-		Assert.assertEquals(2,((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions().length);
-		Assert.assertNotNull(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0]);
-		Assert.assertNotNull(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1]);
-		Assert.assertTrue(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0] instanceof AttributeEqualityCondition);
-		Assert.assertEquals(1, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0]).getPosition());
-		Assert.assertEquals(3, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0]).getOther());
-		Assert.assertTrue(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1] instanceof AttributeEqualityCondition);
-		Assert.assertEquals(2, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1]).getPosition());
-		Assert.assertEquals(4, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1]).getOther());
+		Assert.assertNotNull(plan1.getJoinConditions());
+		Assert.assertTrue(plan1.getJoinConditions() instanceof ConjunctiveCondition);
+		Assert.assertNotNull(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions());
+		Assert.assertEquals(2,((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions().length);
+		Assert.assertNotNull(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0]);
+		Assert.assertNotNull(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1]);
+		Assert.assertTrue(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0] instanceof AttributeEqualityCondition);
+		Assert.assertEquals(1, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0]).getPosition());
+		Assert.assertEquals(3, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0]).getOther());
+		Assert.assertTrue(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1] instanceof AttributeEqualityCondition);
+		Assert.assertEquals(2, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1]).getPosition());
+		Assert.assertEquals(4, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1]).getOther());
 		
 		
 		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild());
@@ -284,18 +284,18 @@ public class RelationalTermTest extends PdqTest {
 		
 		Assert.assertArrayEquals(new Attribute[] {a,b,c,b,c}, plan1.getOutputAttributes());
 		Assert.assertArrayEquals(new Attribute[] {}, plan1.getInputAttributes());
-		Assert.assertNotNull(plan1.getFollowupJoinConditions());
-		Assert.assertTrue(plan1.getFollowupJoinConditions() instanceof ConjunctiveCondition);
-		Assert.assertNotNull(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions());
-		Assert.assertEquals(2,((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions().length);
-		Assert.assertNotNull(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0]);
-		Assert.assertNotNull(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1]);
-		Assert.assertTrue(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0] instanceof AttributeEqualityCondition);
-		Assert.assertEquals(1, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0]).getPosition());
-		Assert.assertEquals(3, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0]).getOther());
-		Assert.assertTrue(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1] instanceof AttributeEqualityCondition);
-		Assert.assertEquals(2, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1]).getPosition());
-		Assert.assertEquals(4, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1]).getOther());
+		Assert.assertNotNull(plan1.getJoinConditions());
+		Assert.assertTrue(plan1.getJoinConditions() instanceof ConjunctiveCondition);
+		Assert.assertNotNull(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions());
+		Assert.assertEquals(2,((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions().length);
+		Assert.assertNotNull(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0]);
+		Assert.assertNotNull(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1]);
+		Assert.assertTrue(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0] instanceof AttributeEqualityCondition);
+		Assert.assertEquals(1, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0]).getPosition());
+		Assert.assertEquals(3, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0]).getOther());
+		Assert.assertTrue(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1] instanceof AttributeEqualityCondition);
+		Assert.assertEquals(2, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1]).getPosition());
+		Assert.assertEquals(4, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1]).getOther());
 		
 		
 		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild());
@@ -316,18 +316,18 @@ public class RelationalTermTest extends PdqTest {
 		
 		Assert.assertArrayEquals(new Attribute[] {a,b,c,b,c}, plan1.getOutputAttributes());
 		Assert.assertArrayEquals(new Attribute[] {}, plan1.getInputAttributes());
-		Assert.assertNotNull(plan1.getFollowupJoinConditions());
-		Assert.assertTrue(plan1.getFollowupJoinConditions() instanceof ConjunctiveCondition);
-		Assert.assertNotNull(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions());
-		Assert.assertEquals(2,((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions().length);
-		Assert.assertNotNull(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0]);
-		Assert.assertNotNull(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1]);
-		Assert.assertTrue(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0] instanceof AttributeEqualityCondition);
-		Assert.assertEquals(1, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0]).getPosition());
-		Assert.assertEquals(3, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[0]).getOther());
-		Assert.assertTrue(((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1] instanceof AttributeEqualityCondition);
-		Assert.assertEquals(2, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1]).getPosition());
-		Assert.assertEquals(4, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getFollowupJoinConditions()).getSimpleConditions()[1]).getOther());
+		Assert.assertNotNull(plan1.getJoinConditions());
+		Assert.assertTrue(plan1.getJoinConditions() instanceof ConjunctiveCondition);
+		Assert.assertNotNull(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions());
+		Assert.assertEquals(2,((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions().length);
+		Assert.assertNotNull(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0]);
+		Assert.assertNotNull(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1]);
+		Assert.assertTrue(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0] instanceof AttributeEqualityCondition);
+		Assert.assertEquals(1, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0]).getPosition());
+		Assert.assertEquals(3, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[0]).getOther());
+		Assert.assertTrue(((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1] instanceof AttributeEqualityCondition);
+		Assert.assertEquals(2, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1]).getPosition());
+		Assert.assertEquals(4, ((AttributeEqualityCondition)((ConjunctiveCondition)plan1.getJoinConditions()).getSimpleConditions()[1]).getOther());
 		
 		
 		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild());

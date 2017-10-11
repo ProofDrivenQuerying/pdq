@@ -16,7 +16,6 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.reasoning.chase.ChaseException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Class of chase constants that are equal under the schema constraints.
  * @author Efthymia Tsamoura

@@ -26,7 +26,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Utility;
 
-// TODO: Auto-generated Javadoc
 /**
  * Type of configurations met in the linear world.
  * Each linear chase configuration is associated with a set of facts, 

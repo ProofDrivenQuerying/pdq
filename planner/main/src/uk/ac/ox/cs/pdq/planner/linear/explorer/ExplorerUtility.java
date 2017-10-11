@@ -15,7 +15,6 @@ import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 import com.google.common.base.Preconditions;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Utility class.
  *

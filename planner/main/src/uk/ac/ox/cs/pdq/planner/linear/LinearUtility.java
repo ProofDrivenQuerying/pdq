@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LinearUtility.
  *

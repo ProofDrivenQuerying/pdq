@@ -6,7 +6,6 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
-// TODO: Auto-generated Javadoc
 /**
  * (From A. C. Onet) 
  * The chase procedure is an iteration of steps that either adds a new tuple to satisfy

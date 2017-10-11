@@ -16,7 +16,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
-// TODO: Auto-generated Javadoc
 /**
 	Finds for each chase round which dependencies
 	are most likely to be fired and returns those dependencies.

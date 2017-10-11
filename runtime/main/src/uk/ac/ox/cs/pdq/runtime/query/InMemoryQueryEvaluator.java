@@ -41,7 +41,6 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * In-memory query evaluator.
  * 

@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.runtime.util;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * BottomUpAccess exception implementation .
  *

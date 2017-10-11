@@ -97,6 +97,7 @@ public class RuntimeTest extends RegressionTest {
 		/** The validation. */
 		@Parameter(names = { "-d", "--data-validation" },
 				required = false, description = "If true, we check whether the data satisfy the schema dependencies or not. Default is false")
+		//TOCOMMENT KILL THIS
 		private boolean validation = false;
 
 		/**
@@ -152,6 +153,7 @@ public class RuntimeTest extends RegressionTest {
 	 * @throws EvaluationException the evaluation exception
 	 * @throws SQLException 
 	 */
+	//TOCOMMENT KILL THIS
 	private static void validateData(File directory, Schema schema, ConjunctiveQuery query) throws EvaluationException, SQLException {
 		DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));	
 		try  

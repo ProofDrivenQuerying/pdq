@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-// TODO: Auto-generated Javadoc
 /**
  * High-level acceptance criterion.
  *

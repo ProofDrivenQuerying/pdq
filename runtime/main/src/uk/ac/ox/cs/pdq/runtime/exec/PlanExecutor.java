@@ -5,7 +5,6 @@ import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 
 import com.google.common.eventbus.EventBus;
 
-// TODO: Auto-generated Javadoc
 /**
  * Top class for all plan executors.
  * 

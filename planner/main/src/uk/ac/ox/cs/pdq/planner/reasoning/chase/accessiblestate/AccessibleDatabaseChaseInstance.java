@@ -44,7 +44,6 @@ import uk.ac.ox.cs.pdq.planner.util.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AccessibleDatabaseListState.
  *
@@ -465,8 +464,4 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 			}
 	}
 	
-//	//TOCOMMENT: verify that this is constructed correrctly
-//	public FiringGraph getFiringGraph() {
-//		return this.graph;
-//	}
 }

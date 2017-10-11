@@ -254,7 +254,8 @@ public class Utility {
 		int i = 0;
 		for(Attribute typed:attributes) {
 			if(!Arrays.asList(keys).contains(typed)) {
-				Term term = Variable.create(String.valueOf("?" + typed));//TOCOMMENT why are we using a "?" here?
+				// the ? is a naming convention, could be anything.
+				Term term = Variable.create(String.valueOf("?" + typed));
 				copiedTerms[i] = term;
 				tobeEqual.put(leftTerms[i], term);
 			}

@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.io.Reader;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-//TODO: Auto-generated Javadoc
 /**
 * Read facts from input stream, and returns then as Collections of Atoms.
 * 

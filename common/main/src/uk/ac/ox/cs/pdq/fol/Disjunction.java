@@ -17,8 +17,9 @@ public final class Disjunction extends Formula {
 
 	protected final Formula[] children;
 
-	/**  TOCOMMENT: COMMENT MAKES NO SENSE The unary operator. */
-	protected final LogicalSymbols operator = LogicalSymbols.OR;
+//	TO COMMENT: COMMENT MAKES NO SENSE The unary operator. */
+// doesn't seem to make sense since it is not used.	
+//	protected final LogicalSymbols operator = LogicalSymbols.OR;
 
 	/**  Cached string representation of the atom. */
 	private String toString = null;

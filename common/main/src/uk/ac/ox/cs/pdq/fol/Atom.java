@@ -118,7 +118,7 @@ public class Atom extends Formula {
 	
 	/**
 	 * Checks if is fact.
-	 * TOCOMMENT: I GUESS THIS SHOULD be isGround()
+	 * TOCOMMENT: I GUESS THIS SHOULD be isGround() RENAME!
 	 *
 	 * @return Boolean
 	 */

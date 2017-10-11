@@ -25,7 +25,6 @@ import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
 import uk.ac.ox.cs.pdq.test.RegressionTest;
 import uk.ac.ox.cs.pdq.test.RegressionTestException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Runs the planner with simple and black box cost estimators and compares the resulting plans.
  * An exception is thrown when the planner finds a plan in one case but not the other. 

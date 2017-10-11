@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Runs the chase for k chase rounds.
  * The difference with the restricted chase algorithm is

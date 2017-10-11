@@ -19,7 +19,6 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The entry point for the regression package.
  *
@@ -40,7 +39,7 @@ public class Bootstrap {
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
 	private boolean help;
 	
-	/** The output. TOCOMMENT: of what?*/
+	/** The output stream. usually console or file. Console by default.*/
 	protected PrintStream out;
 
 	/**
@@ -96,16 +95,22 @@ public class Bootstrap {
 	 */
 	public static abstract class Command {
 
-		/** TOCOMMENT: the name of what?. */
+		/**
+		 * Command name. Must not contain arguments or parameters
+		 */
 		public final String name;
 		
-		/** TO COMMENT: The input to what? */
+		/**
+		 * Command inputs or parameters
+		 */
 		@Parameter(names = { "-i", "--input" }, required = true,
 				description = "Path to the regression test case directories.",
 				validateWith=DirectoryValidator.class)
 		private String input;
 
-		/**  */
+		/**
+		 * Parameter mappings to override in the input.
+		 */
 		@DynamicParameter(names = "-D", required = false, 
 				description = "Force the given parameters across all the test in the suite, "
 						+ "ignoring those that may be specified in each parameter file. "
@@ -142,9 +147,7 @@ public class Bootstrap {
 		}
 
 		/**
-		 * 
-		 * TOCOMMENT: what is this?
-		 *
+		 * This map will be used to override plannar parameters.
 		 * @return the parameter overrides
 		 */
 		public Map<String, String> getParameterOverrides() {

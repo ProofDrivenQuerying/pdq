@@ -9,7 +9,6 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-// TODO: Auto-generated Javadoc
 /**
  * Tree nodes that keep every path to success.
  * Used when costing plans using a blackbox cost function.

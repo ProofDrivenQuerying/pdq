@@ -22,7 +22,6 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import uk.ac.ox.cs.pdq.runtime.util.TupleOutputLimitEnforcer;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Alternate executor for plans, based on the Volcano iterator model.
  * The input logical plan into a physical operator tree, 

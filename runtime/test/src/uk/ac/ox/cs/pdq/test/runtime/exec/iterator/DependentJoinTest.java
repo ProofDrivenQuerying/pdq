@@ -657,7 +657,6 @@ public class DependentJoinTest {
 		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
 		inputConstants.put(6, TypedConstant.create("AUTOMOBILE"));
 
-		// TODO:
 		// The following construction fails due to the naming convention used in TPC-H. The 
 		// NATIONKEY attribute is prefixed with C_ in the left child output attributes (from CUSTOMER),
 		// and with N_ in the right child input attributes (from NATION), so the DependentJoin
@@ -729,7 +728,6 @@ public class DependentJoinTest {
 		// WITH right_child AS (SELECT * FROM CUSTOMER WHERE CUSTOMER.c_mktsegment='AUTOMOBILE'), left_child AS (SELECT * FROM NATION) SELECT count(*) FROM left_child, right_child WHERE left_child.n_nationkey = right_child.c_nationkey;
 
 		Assert.assertEquals(29752, result.size());
-		// TODO: 
 		// - check the column names if possible (or number of columns if not)
 		// - check that the common attributes (by name) have common values.
 
@@ -741,7 +739,7 @@ public class DependentJoinTest {
 		/*
 		 * Plan: DependentJoin(Selection(Access1), Access2)
 		 */
-		Condition suppkeyCondition = ConstantEqualityCondition.create(0, TypedConstant.create(22)); // TODO.
+		Condition suppkeyCondition = ConstantEqualityCondition.create(0, TypedConstant.create(22)); 
 		Selection selection = new Selection(suppkeyCondition, new Access(postgresqlRelationSupplier, amFree));
 
 		DependentJoin target = new DependentJoin(selection, 
@@ -999,7 +997,7 @@ public class DependentJoinTest {
 		Assert.assertEquals(0, djRight.getInputAttributes().length);
 
 		// For the outer-right selection condition, select on the SHIP-PRIORITY attribute.
-		Condition condition = ConstantEqualityCondition.create(15, TypedConstant.create(2L)); // TODO.
+		Condition condition = ConstantEqualityCondition.create(15, TypedConstant.create(2L)); 
 		Join target = new NestedLoopJoin(djLeft, new Selection(condition, djRight));
 
 		//Execute the plan
@@ -1055,7 +1053,7 @@ public class DependentJoinTest {
 		DependentJoin djLeft = new DependentJoin(new Access(postgresqlRelationCustomer, amFree), selectionLeftRight);
 		
 		// For the outer-left selection condition, select on the SHIP-PRIORITY attribute.
-		Condition conditionLeft = ConstantEqualityCondition.create(15, TypedConstant.create(2L)); // TODO.
+		Condition conditionLeft = ConstantEqualityCondition.create(15, TypedConstant.create(2L)); 
 		Selection selectionLeft = new Selection(conditionLeft, djLeft);
 		
 		DependentJoin target = new DependentJoin(selectionLeft, djRight);

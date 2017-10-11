@@ -6,9 +6,8 @@ import java.sql.Statement;
 import java.util.Queue;
 import java.util.concurrent.Callable;
 
-// 
-/** TOCOMMENT: WHAT DOES IT DO???
- *
+ /**
+  * Executes sql updates
  * @author Efthymia Tsamoura
  */
 public class ExecuteSynchronousSQLUpdateThread implements Callable<Boolean> {

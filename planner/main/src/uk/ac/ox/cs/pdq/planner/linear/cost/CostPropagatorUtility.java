@@ -11,7 +11,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.util.IndexedDirectedGraph;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PropagatorUtils.
  *

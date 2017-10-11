@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * CrossProduct implements a n-ary cartesian product in a nested-loop fashion.
  * 
