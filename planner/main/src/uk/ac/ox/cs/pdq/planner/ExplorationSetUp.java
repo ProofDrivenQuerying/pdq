@@ -114,7 +114,7 @@ public class ExplorationSetUp {
 		final Attribute Fact = Attribute.create(Integer.class, "InstanceID");
 		this.schema = addAdditionalAttributeToSchema(schema, Fact);
 		this.statsLogger = statsLogger;
-		this.accessibleSchema = new AccessibleSchema(schema);
+		this.accessibleSchema = new AccessibleSchema(this.schema);
 	}
 
 	//add an extra attribute
