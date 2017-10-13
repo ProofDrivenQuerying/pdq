@@ -3,6 +3,8 @@ package uk.ac.ox.cs.pdq.io.jaxb.adapted;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
@@ -52,6 +54,16 @@ public class AdaptedConstant extends AdaptedVariable {
 				ret = TypedConstant.create(new Integer(Integer.parseInt(value)));
 			}catch (NumberFormatException e) {
 				ret = TypedConstant.create(value);
+			}
+		} else if (type!=null && type == java.sql.Date.class) {
+			SimpleDateFormat sdfmt1 = new SimpleDateFormat("yyyy-MM-dd");
+			java.util.Date dDate;
+			try {
+				dDate = sdfmt1.parse( value );
+				ret = TypedConstant.create(new java.sql.Date(dDate.getTime()));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		} else {
 			Constructor<?> constructor=null;

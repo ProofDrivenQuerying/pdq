@@ -38,6 +38,14 @@ public class CostIOManager extends IOManager {
 		AdaptedRelationalTermWithCost customer = (AdaptedRelationalTermWithCost) jaxbUnmarshaller.unmarshal(planFile);
 		return customer.getCost();
 	}
+	public static RelationalTerm readRelationalTermFromRelationaltermWithCost(File planFile, Schema schema) throws FileNotFoundException, JAXBException {
+		if (!planFile.exists())
+			throw new FileNotFoundException(planFile.getAbsolutePath());
+		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedRelationalTermWithCost.class);
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		AdaptedRelationalTermWithCost customer = (AdaptedRelationalTermWithCost) jaxbUnmarshaller.unmarshal(planFile);
+		return customer.toRelationalTerm();
+	}
 
 	public static void writeRelationalTermAndCost(File targetPlanFile, RelationalTerm plan, Cost cost) throws JAXBException {
 		AdaptedRelationalTermWithCost rt = new AdaptedRelationalTermWithCost(plan);

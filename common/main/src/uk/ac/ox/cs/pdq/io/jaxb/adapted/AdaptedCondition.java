@@ -83,6 +83,8 @@ public class AdaptedCondition {
 		if ("AttributeEqualityCondition".equals(type)) {
 			return AttributeEqualityCondition.create(position, other);
 		} else if ("ConstantEqualityCondition".equals(type)) {
+			if (position2==null)
+				position2 = position;
 			return ConstantEqualityCondition.create(position2, (TypedConstant)constant);
 		} else if ("ConjunctiveCondition".equals(type)) {
 			if (predicates!=null) {
