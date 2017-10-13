@@ -29,8 +29,8 @@
                 <renamings name="c58" type="java.lang.String"/>
                 <renamings name="c59" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
-                    <accessMethod name="chembl_target_component_limited_2"/>
-                    <relation name="TargetComponentLimited">
+                    <accessMethod name="chembl_target_component_free"/>
+                    <relation name="TargetComponentFree">
                         <attribute name="accession" type="java.lang.String"/>
                         <attribute name="component_id" type="java.lang.String"/>
                         <attribute name="component_type" type="java.lang.String"/>
@@ -39,9 +39,7 @@
                         <attribute name="protein_classification_id" type="java.lang.String"/>
                         <attribute name="sequence" type="java.lang.String"/>
                         <attribute name="tax_id" type="java.lang.String"/>
-                        <access-method name="chembl_target_component_limited"/>
-                        <access-method name="chembl_target_component_limited_1"/>
-                        <access-method name="chembl_target_component_limited_2"/>
+                        <access-method name="chembl_target_component_free"/>
                     </relation>
                 </RelationalTerm>
             </RelationalTerm>
@@ -66,7 +64,7 @@
             <renamings name="c53" type="java.lang.String"/>
             <renamings name="c54" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
-                <accessMethod name="pubmed_pubshort_11"/>
+                <accessMethod name="pubmed_pubshort_14"/>
                 <relation name="PublicationShort">
                     <attribute name="id" type="java.lang.String"/>
                     <attribute name="source" type="java.lang.String"/>

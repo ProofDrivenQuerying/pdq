@@ -31,8 +31,8 @@
                 <renamings name="c40" type="java.lang.String"/>
                 <renamings name="c41" type="java.lang.Boolean"/>
                 <RelationalTerm type="AccessTerm">
-                    <accessMethod name="reactome_pathway_1"/>
-                    <relation name="PathwayBySpecies">
+                    <accessMethod name="reactome_pathway_2"/>
+                    <relation name="PathwayById">
                         <attribute name="pathwayId" type="java.lang.Integer"/>
                         <attribute name="pathwayName" type="java.lang.String"/>
                         <attribute name="stableIdentifier" type="java.lang.String"/>
@@ -43,7 +43,7 @@
                         <attribute name="organism" type="java.lang.String"/>
                         <attribute name="doi" type="java.lang.String"/>
                         <attribute name="hasDiagram" type="java.lang.Boolean"/>
-                        <access-method name="reactome_pathway_1"/>
+                        <access-method name="reactome_pathway_2"/>
                     </relation>
                 </RelationalTerm>
             </RelationalTerm>
@@ -68,7 +68,7 @@
             <renamings name="c39" type="java.lang.String"/>
             <renamings name="c65" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
-                <accessMethod name="pubmed_pubshort_7"/>
+                <accessMethod name="pubmed_pubshort_1"/>
                 <relation name="PublicationShort">
                     <attribute name="id" type="java.lang.String"/>
                     <attribute name="source" type="java.lang.String"/>

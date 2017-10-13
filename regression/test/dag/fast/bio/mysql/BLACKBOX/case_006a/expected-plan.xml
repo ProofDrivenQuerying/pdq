@@ -1,198 +1,82 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plan type="dag" cost="66712.5" control-flow="TOP_DOWN">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c3284" type="java.lang.Integer"/>
-<attribute name="c3285" type="java.lang.String"/>
-<attribute name="c3286" type="java.lang.String"/>
-<attribute name="c3287" type="java.lang.String"/>
-<attribute name="c3288" type="java.lang.Boolean"/>
-<attribute name="c3289" type="java.lang.String"/>
-<attribute name="c3290" type="java.lang.String"/>
-<attribute name="c3291" type="java.lang.String"/>
-<attribute name="c3292" type="java.lang.Boolean"/>
-</outputs>
-<project>
-<attribute name="c3284" type="java.lang.Integer"/>
-<attribute name="c3285" type="java.lang.String"/>
-<attribute name="c3286" type="java.lang.String"/>
-<attribute name="c3287" type="java.lang.String"/>
-<attribute name="c3288" type="java.lang.Boolean"/>
-<attribute name="c3289" type="java.lang.String"/>
-<attribute name="c3290" type="java.lang.String"/>
-<attribute name="c3291" type="java.lang.String"/>
-<attribute name="c3292" type="java.lang.Boolean"/>
-</project>
-<child>
-<operator type="DEPENDENT_JOIN" param="1">
-<outputs>
-<attribute name="c3289" type="java.lang.String"/>
-<attribute name="c3290" type="java.lang.String"/>
-<attribute name="c3284" type="java.lang.Integer"/>
-<attribute name="c3285" type="java.lang.String"/>
-<attribute name="c3286" type="java.lang.String"/>
-<attribute name="c3287" type="java.lang.String"/>
-<attribute name="c3288" type="java.lang.Boolean"/>
-<attribute name="c3289" type="java.lang.String"/>
-<attribute name="c3290" type="java.lang.String"/>
-<attribute name="c3291" type="java.lang.String"/>
-<attribute name="c3292" type="java.lang.Boolean"/>
-<attribute name="c3290" type="java.lang.String"/>
-<attribute name="c3293" type="java.lang.String"/>
-<attribute name="c3294" type="java.lang.String"/>
-<attribute name="c3295" type="java.lang.String"/>
-<attribute name="c3296" type="java.lang.String"/>
-<attribute name="c3297" type="java.lang.String"/>
-<attribute name="c3298" type="java.lang.String"/>
-</outputs>
-<children>
-<operator type="DEPENDENT_JOIN" param="1">
-<outputs>
-<attribute name="c3289" type="java.lang.String"/>
-<attribute name="c3290" type="java.lang.String"/>
-<attribute name="c3284" type="java.lang.Integer"/>
-<attribute name="c3285" type="java.lang.String"/>
-<attribute name="c3286" type="java.lang.String"/>
-<attribute name="c3287" type="java.lang.String"/>
-<attribute name="c3288" type="java.lang.Boolean"/>
-<attribute name="c3289" type="java.lang.String"/>
-<attribute name="c3290" type="java.lang.String"/>
-<attribute name="c3291" type="java.lang.String"/>
-<attribute name="c3292" type="java.lang.Boolean"/>
-</outputs>
-<children>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c3289" type="java.lang.String"/>
-<attribute name="c3290" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="organismId" type="java.lang.String"/>
-<attribute name="organism" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="OrganismFree" access-method="reactome_species_1">
-<outputs>
-<attribute name="organismId" type="java.lang.String"/>
-<attribute name="organism" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c3284" type="java.lang.Integer"/>
-<attribute name="c3285" type="java.lang.String"/>
-<attribute name="c3286" type="java.lang.String"/>
-<attribute name="c3287" type="java.lang.String"/>
-<attribute name="c3288" type="java.lang.Boolean"/>
-<attribute name="c3289" type="java.lang.String"/>
-<attribute name="c3290" type="java.lang.String"/>
-<attribute name="c3291" type="java.lang.String"/>
-<attribute name="c3292" type="java.lang.Boolean"/>
-</outputs>
-<project>
-<attribute name="pathwayId" type="java.lang.Integer"/>
-<attribute name="pathwayName" type="java.lang.String"/>
-<attribute name="stableIdentifier" type="java.lang.String"/>
-<attribute name="goBiologicalProcess" type="java.lang.String"/>
-<attribute name="isInferred" type="java.lang.Boolean"/>
-<attribute name="organismId" type="java.lang.String"/>
-<attribute name="organism" type="java.lang.String"/>
-<attribute name="doi" type="java.lang.String"/>
-<attribute name="hasDiagram" type="java.lang.Boolean"/>
-</project>
-<child>
-<operator type="SELECT">
-<outputs>
-<attribute name="pathwayId" type="java.lang.Integer"/>
-<attribute name="pathwayName" type="java.lang.String"/>
-<attribute name="stableIdentifier" type="java.lang.String"/>
-<attribute name="goBiologicalProcess" type="java.lang.String"/>
-<attribute name="isInDisease" type="java.lang.Boolean"/>
-<attribute name="isInferred" type="java.lang.Boolean"/>
-<attribute name="organismId" type="java.lang.String"/>
-<attribute name="organism" type="java.lang.String"/>
-<attribute name="doi" type="java.lang.String"/>
-<attribute name="hasDiagram" type="java.lang.Boolean"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="4" value="false"/>
-</conjunction>
-<child>
-<operator type="ACCESS" relation="PathwayBySpecies" access-method="reactome_pathway_1">
-<outputs>
-<attribute name="pathwayId" type="java.lang.Integer"/>
-<attribute name="pathwayName" type="java.lang.String"/>
-<attribute name="stableIdentifier" type="java.lang.String"/>
-<attribute name="goBiologicalProcess" type="java.lang.String"/>
-<attribute name="isInDisease" type="java.lang.Boolean"/>
-<attribute name="isInferred" type="java.lang.Boolean"/>
-<attribute name="organismId" type="java.lang.String"/>
-<attribute name="organism" type="java.lang.String"/>
-<attribute name="doi" type="java.lang.String"/>
-<attribute name="hasDiagram" type="java.lang.Boolean"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c3290" type="java.lang.String"/>
-<attribute name="c3293" type="java.lang.String"/>
-<attribute name="c3294" type="java.lang.String"/>
-<attribute name="c3295" type="java.lang.String"/>
-<attribute name="c3296" type="java.lang.String"/>
-<attribute name="c3297" type="java.lang.String"/>
-<attribute name="c3298" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="organism" type="java.lang.String"/>
-<attribute name="pref_name" type="java.lang.String"/>
-<attribute name="species_group_flag" type="java.lang.String"/>
-<attribute name="target_chembl_id" type="java.lang.String"/>
-<attribute name="target_component_accession" type="java.lang.String"/>
-<attribute name="target_component_id" type="java.lang.String"/>
-<attribute name="target_component_type" type="java.lang.String"/>
-</project>
-<child>
-<operator type="SELECT">
-<outputs>
-<attribute name="organism" type="java.lang.String"/>
-<attribute name="pref_name" type="java.lang.String"/>
-<attribute name="species_group_flag" type="java.lang.String"/>
-<attribute name="target_chembl_id" type="java.lang.String"/>
-<attribute name="target_component_accession" type="java.lang.String"/>
-<attribute name="target_component_id" type="java.lang.String"/>
-<attribute name="target_component_type" type="java.lang.String"/>
-<attribute name="target_type" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="7" value="SINGLE PROTEIN"/>
-</conjunction>
-<child>
-<operator type="ACCESS" relation="TargetLimited" access-method="chembl_target_limited_1">
-<outputs>
-<attribute name="organism" type="java.lang.String"/>
-<attribute name="pref_name" type="java.lang.String"/>
-<attribute name="species_group_flag" type="java.lang.String"/>
-<attribute name="target_chembl_id" type="java.lang.String"/>
-<attribute name="target_component_accession" type="java.lang.String"/>
-<attribute name="target_component_id" type="java.lang.String"/>
-<attribute name="target_component_type" type="java.lang.String"/>
-<attribute name="target_type" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-</child>
-</operator>
-</plan>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="ProjectionTerm">
+    <projections name="c15" type="java.lang.Integer"/>
+    <projections name="c16" type="java.lang.String"/>
+    <projections name="c17" type="java.lang.String"/>
+    <projections name="c18" type="java.lang.String"/>
+    <projections name="c19" type="java.lang.Boolean"/>
+    <projections name="c20" type="java.lang.String"/>
+    <projections name="c21" type="java.lang.String"/>
+    <projections name="c22" type="java.lang.String"/>
+    <projections name="c23" type="java.lang.Boolean"/>
+    <RelationalTerm type="JoinTerm">
+        <RelationalTerm type="SelectionTerm">
+            <predicate type="ConjunctiveCondition">
+                <predicates position="4" type="ConstantEqualityCondition">
+                    <constant type="java.lang.Boolean" value="false"/>
+                </predicates>
+            </predicate>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c15" type="java.lang.Integer"/>
+                <renamings name="c16" type="java.lang.String"/>
+                <renamings name="c17" type="java.lang.String"/>
+                <renamings name="c18" type="java.lang.String"/>
+                <renamings name="false" type="java.lang.Boolean"/>
+                <renamings name="c19" type="java.lang.Boolean"/>
+                <renamings name="c20" type="java.lang.String"/>
+                <renamings name="c21" type="java.lang.String"/>
+                <renamings name="c22" type="java.lang.String"/>
+                <renamings name="c23" type="java.lang.Boolean"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="reactome_pathway_1"/>
+                    <relation name="PathwayBySpecies">
+                        <attribute name="pathwayId" type="java.lang.Integer"/>
+                        <attribute name="pathwayName" type="java.lang.String"/>
+                        <attribute name="stableIdentifier" type="java.lang.String"/>
+                        <attribute name="goBiologicalProcess" type="java.lang.String"/>
+                        <attribute name="isInDisease" type="java.lang.Boolean"/>
+                        <attribute name="isInferred" type="java.lang.Boolean"/>
+                        <attribute name="organismId" type="java.lang.String"/>
+                        <attribute name="organism" type="java.lang.String"/>
+                        <attribute name="doi" type="java.lang.String"/>
+                        <attribute name="hasDiagram" type="java.lang.Boolean"/>
+                        <access-method name="reactome_pathway_1"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="SelectionTerm">
+            <predicate type="ConjunctiveCondition">
+                <predicates position="7" type="ConstantEqualityCondition">
+                    <constant value="SINGLE PROTEIN"/>
+                </predicates>
+            </predicate>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c21" type="java.lang.String"/>
+                <renamings name="c24" type="java.lang.String"/>
+                <renamings name="c25" type="java.lang.String"/>
+                <renamings name="c26" type="java.lang.String"/>
+                <renamings name="c27" type="java.lang.String"/>
+                <renamings name="c28" type="java.lang.String"/>
+                <renamings name="c29" type="java.lang.String"/>
+                <renamings name="SINGLE PROTEIN" type="java.lang.String"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="chembl_target_limited_1"/>
+                    <relation name="TargetLimited">
+                        <attribute name="organism" type="java.lang.String"/>
+                        <attribute name="pref_name" type="java.lang.String"/>
+                        <attribute name="species_group_flag" type="java.lang.String"/>
+                        <attribute name="target_chembl_id" type="java.lang.String"/>
+                        <attribute name="target_component_accession" type="java.lang.String"/>
+                        <attribute name="target_component_id" type="java.lang.String"/>
+                        <attribute name="target_component_type" type="java.lang.String"/>
+                        <attribute name="target_type" type="java.lang.String"/>
+                        <access-method name="chembl_target_limited"/>
+                        <access-method name="chembl_target_limited_1"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="1.1163547701476998E13" type="DoubleCost"/>
+</RelationalTermWithCost>
