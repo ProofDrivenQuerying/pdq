@@ -68,7 +68,7 @@
             <renamings name="c39" type="java.lang.String"/>
             <renamings name="c65" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
-                <accessMethod name="pubmed_pubshort_1"/>
+                <accessMethod name="pubmed_pubshort_15"/>
                 <relation name="PublicationShort">
                     <attribute name="id" type="java.lang.String"/>
                     <attribute name="source" type="java.lang.String"/>
