@@ -29,6 +29,7 @@ public class TotalNumberOfOutputTuplesPerAccessCostEstimator implements OrderInd
 
 	/**
 	 * Instantiates a new total erspi cost estimator.
+	 * TOCOMMENT: WHAT IS ERSPI?
 	 *
 	 * @param stats the stats
 	 * @param catalog 		The database statistics
