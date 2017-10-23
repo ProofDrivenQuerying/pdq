@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.planner.dominance;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
@@ -33,6 +35,7 @@ public class SuccessDominance {
 	 * @param simpleFunction Boolean
 	 */
 	public SuccessDominance(OrderIndependentCostEstimator estimator) {
+		Preconditions.checkNotNull(estimator);
 		this.costEstimatorForOpenPlans = estimator;
 	}
 
@@ -44,11 +47,10 @@ public class SuccessDominance {
 	 * @return true if the source plan is success dominated by the target
 	 */
 	public boolean isDominated(RelationalTerm source, Cost sourceCost, RelationalTerm target, Cost targetCost) {
-		if(source.isClosed() && target.isClosed() && sourceCost.greaterThan(targetCost)) 
-			return true;
-		else if(this.costEstimatorForOpenPlans != null && this.costEstimatorForOpenPlans.cost(source).greaterThan(this.costEstimatorForOpenPlans.cost(target))) 
-			return true;
-		return false;
+		if(source.isClosed() && target.isClosed()) 
+			return sourceCost.greaterThan(targetCost);
+		
+		return this.costEstimatorForOpenPlans.cost(source).greaterThan(this.costEstimatorForOpenPlans.cost(target)); 
 	}
 
 	/**

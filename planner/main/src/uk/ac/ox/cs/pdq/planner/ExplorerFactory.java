@@ -97,7 +97,7 @@ public class ExplorerFactory {
 			ReasoningParameters reasoningParameters, DatabaseParameters dbParams) throws Exception {
 
 		Dominance[] dominance = new DominanceFactory(parameters.getDominanceType()).getInstance();
-		SuccessDominance successDominance = new SuccessDominanceFactory(parameters.getSuccessDominanceType()).getInstance();
+		SuccessDominance successDominance = new SuccessDominanceFactory().getInstance();
 		
 		NodeFactory nodeFactory = null;
 		PostPruning postPruning = null;

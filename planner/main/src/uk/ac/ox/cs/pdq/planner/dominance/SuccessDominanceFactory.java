@@ -26,8 +26,7 @@ public class SuccessDominanceFactory {
 	 * @param type DominanceTypes
 	 * @param costEstimator the cost estimator
 	 */
-	public SuccessDominanceFactory(SuccessDominanceTypes type) {
-		Preconditions.checkNotNull(type);
+	public SuccessDominanceFactory() {
 	}
 	
 	/**
