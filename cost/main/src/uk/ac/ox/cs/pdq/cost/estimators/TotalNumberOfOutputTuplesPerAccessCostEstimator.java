@@ -28,8 +28,7 @@ public class TotalNumberOfOutputTuplesPerAccessCostEstimator implements OrderInd
 	protected final Catalog catalog;
 
 	/**
-	 * Instantiates a new total erspi cost estimator.
-	 * TOCOMMENT: WHAT IS ERSPI?
+	 * Instantiates a new total erspi (NumberOfOutputTuplesPerAccess) cost estimator.
 	 *
 	 * @param stats the stats
 	 * @param catalog 		The database statistics
