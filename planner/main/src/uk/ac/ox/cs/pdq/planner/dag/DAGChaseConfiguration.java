@@ -25,9 +25,6 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 
 	/**  TOCOMMENT: WHAT*/
 	private final Integer height;
-
-	/**  TOCOMMENT: WHAT*/
-	private final Integer bushiness;
 	
 	/**  True if the configuration is a left-deep one. */
 	private Boolean isLeftDeep = null;
@@ -48,14 +45,12 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 			AccessibleChaseInstance state, 
 			Collection<Constant> input,
 			Collection<Constant> output, 
-			Integer height,
-			Integer bushiness
+			Integer height
 			) {
 		super(state, input, output);
 		Preconditions.checkNotNull(this.getInput());
 		Preconditions.checkNotNull(this.getOutput());
 		this.height = height;
-		this.bushiness = bushiness;
 	}
 
 	/* (non-Javadoc)
@@ -70,14 +65,6 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 	@Override
 	public Integer getHeight() {
 		return this.height;
-	}
-
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getBushiness()
-	 */
-	@Override
-	public Integer getBushiness() {
-		return this.bushiness;
 	}
 
 	/* (non-Javadoc)

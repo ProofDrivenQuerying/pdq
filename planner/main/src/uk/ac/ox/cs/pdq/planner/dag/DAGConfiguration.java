@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.dag;
 
 import java.util.Collection;
-import java.util.List;
 
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
@@ -26,12 +25,6 @@ public interface DAGConfiguration extends Configuration {
 	 * @return the id of this configuration
 	 */
 	Integer getId();
-	
-	/**
-	 *
-	 * @return the bushiness of this configuration
-	 */
-	Integer getBushiness();
 
 	/**
 	 *
@@ -50,17 +43,5 @@ public interface DAGConfiguration extends Configuration {
 	 * @return the collection of ApplyRule sub-configurations
 	 */
 	Collection<ApplyRule> getApplyRules();
-	
-	/**
-	 *
-	 * @return the ApplyRule sub-configurations (ordered by appearance) of the input configuration
-	 */
-	List<ApplyRule> getApplyRulesList();
-	
-//	/* (non-Javadoc)
-//	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#clone()
-//	 */
-//	@Override
-//	DAGConfiguration clone();
 
 }

@@ -1,22 +1,15 @@
 package uk.ac.ox.cs.pdq.planner.dag;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.FactDominance;
@@ -24,7 +17,6 @@ import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 
 /**
@@ -60,23 +52,6 @@ public class ConfigurationUtility {
 	 */
 	public static Collection<ApplyRule> getApplyRules(DAGConfiguration configuration) {
 		Collection<ApplyRule> ret = new LinkedHashSet<>();
-		if(configuration instanceof BinaryConfiguration) {
-			ret.addAll(getApplyRules(((BinaryConfiguration) configuration).getLeft()));
-			ret.addAll(getApplyRules(((BinaryConfiguration) configuration).getRight()));
-		}
-		else 
-			ret.add((ApplyRule) configuration);
-		return ret;
-	}
-
-	/**
-	 * TOCOMMENT: WHAT IS THIS
-	 *
-	 * @param configuration the configuration
-	 * @return 		the ApplyRule sub-configurations (ordered by appearance) of the input configuration
-	 */
-	public static List<ApplyRule> getApplyRulesList(DAGConfiguration configuration) {
-		List<ApplyRule> ret = new ArrayList<>();
 		if(configuration instanceof BinaryConfiguration) {
 			ret.addAll(getApplyRules(((BinaryConfiguration) configuration).getLeft()));
 			ret.addAll(getApplyRules(((BinaryConfiguration) configuration).getRight()));
@@ -172,19 +147,6 @@ public class ConfigurationUtility {
 		output.addAll(right.getOutput());
 		return output;
 	}
-
-	/**
-	 *
-	 * @param left the left
-	 * @param right the right
-	 * @return the bushiness of the binary configuration composed from the left and right input configurations
-	 */
-	public static Integer getBushiness(DAGChaseConfiguration left, DAGChaseConfiguration right) {
-		int bushiness = left.getBushiness() + right.getBushiness();
-		if(right instanceof BinaryConfiguration) 
-			bushiness++;
-		return bushiness;
-	}
 	
 	/**
 	 *
@@ -209,19 +171,6 @@ public class ConfigurationUtility {
 				return false;
 		}
 		return true;
-	}
-
-	/**
-	 * Validate.
-	 *
-	 * @param left the left
-	 * @param right the right
-	 * @param validators the validators
-	 * @return 		true if the binary configuration composed from the left and right input configurations passes the validation tests,
-	 * 		i.e., satisfies given shape restrictions.
-	 */
-	public static boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right, List<Validator> validators) {
-		return validate(left, right, validators, -1);
 	}
 
 	/**
@@ -267,7 +216,6 @@ public class ConfigurationUtility {
 			Cost costOfBestPlan,
 			CostEstimator costEstimator, 
 			SuccessDominance successDominance) {
-		//BinaryConfiguration.BinaryConfigurationTypes type = getCombinationType(left, right);
 		if (isNonTrivial(left, right)) {
 			if(bestPlan == null) 
 				return true;
@@ -276,58 +224,6 @@ public class ConfigurationUtility {
 			return !successDominance.isDominated(plan, cost, bestPlan, costOfBestPlan);
 		}
 		return false;
-	}
-	
-	/**
-	 *
-	 * @param configuration the configuration
-	 * @param constants the constants
-	 * @param accessibleSchema the accessible schema
-	 * @return 		the output facts of the input configuration that are sufficient to make each input constant accessible
-	 */
-	public static Collection<Set<Atom>> getMinimalSetThatExposesConstants(DAGChaseConfiguration configuration, Collection<Constant> constants) {
-		Collection<Set<Atom>> ret = new LinkedHashSet<>();
-		Collection<ApplyRule> applyRules = configuration.getApplyRules();
-		//Create all combinations of the constituting ApplyRule configurations
-		Set<Set<ApplyRule>> sets = Sets.powerSet(Sets.newLinkedHashSet(applyRules));
-
-		//For each combination of ApplyRule configurations
-		for(Set<ApplyRule> set:sets) {
-			//The set of facts (that came from the ApplyRule configurations of this iteration) that
-			//are sufficient to make each input constant accessible
-			Set<Atom> minimalSet = new LinkedHashSet<>();
-			//The output constants of the minimalSet of facts
-			Set<Constant> observed = new LinkedHashSet<>();
-			//The constants that are still inaccessible
-			Set<Constant> remaining = Sets.newLinkedHashSet(constants);
-
-			for(ApplyRule applyRule:set) {
-				Relation baseRelation = applyRule.getRelation();
-				Relation infAccRelation = Relation.create(AccessibleSchema.inferredAccessiblePrefix + baseRelation.getName(), baseRelation.getAttributes(), new AccessMethod[]{}, baseRelation.isEquality());
-				Collection<Atom> facts = applyRule.getFacts();
-				if(observed.containsAll(applyRule.getInput())) {
-					/*
-					 * If the input constants of the current fact are all provided by previously added facts
-					 * and makes at least one of the remaining constants accessible
-					 * then add it to the minimal set
-					 */
-					for(Atom fact:facts) {
-						Set<Constant> properOutput = Utility.getTypedAndUntypedConstants(fact);
-						properOutput.removeAll(applyRule.getInput());
-						if(!Sets.intersection(remaining, properOutput).isEmpty()) {
-							remaining.removeAll(properOutput);
-							observed.addAll(properOutput);
-							minimalSet.add(Atom.create(infAccRelation, fact.getTerms()));
-						}
-					}
-				}
-
-				if(remaining.isEmpty()) {
-					ret.add(minimalSet);
-				}
-			}
-		}
-		return ret;
 	}
 
 }

@@ -197,9 +197,9 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 			//The output non-dominated configurations
 			Set<DAGChaseConfiguration> output  =
 					Collections.newSetFromMap(new ConcurrentHashMap<DAGChaseConfiguration, Boolean>());
-			//The output non-dominated and successful (and not closed) configurations
-			Set<DAGChaseConfiguration> successfulConfigurations =
-					Collections.newSetFromMap(new ConcurrentHashMap<DAGChaseConfiguration, Boolean>());
+//			//The output non-dominated and successful (and not closed) configurations
+//			Set<DAGChaseConfiguration> successfulConfigurations =
+//					Collections.newSetFromMap(new ConcurrentHashMap<DAGChaseConfiguration, Boolean>());
 			List<Callable<DAGChaseConfiguration>> threads = new ArrayList<>();
 			for (int j = 0; j < this.mtcontext.getParallelThreads(); ++j) {
 				//Create the threads that will iterate over the input configurations to find the non-dominated ones,
@@ -211,8 +211,9 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 						bestConfiguration,
 						this.mtcontext.getSuccessDominances()[j],
 						this.mtcontext.getDominances()[j],
-						output,
-						successfulConfigurations
+						output
+						//,
+//						successfulConfigurations
 						));
 			}
 
@@ -249,7 +250,6 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 			executorService.shutdown();
 			return new ExplorationResults(
 					Lists.newArrayList(output),
-					successfulConfigurations,
 					configuration
 					);
 		} catch (InterruptedException | ExecutionException e) {

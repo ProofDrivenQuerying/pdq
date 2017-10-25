@@ -58,7 +58,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 			AccessibilityAxiom rule,
 			Set<Atom> facts
 			) {		
-		super(state, PlannerUtility.getInputConstants(rule, facts), Utility.getUntypedConstants(facts), 1, 0);
+		super(state, PlannerUtility.getInputConstants(rule, facts), Utility.getUntypedConstants(facts), 1);
 		Preconditions.checkNotNull(rule);
 		Preconditions.checkNotNull(facts);
 		this.rule = rule;

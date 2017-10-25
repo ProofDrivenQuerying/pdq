@@ -1,17 +1,14 @@
 package uk.ac.ox.cs.pdq.planner.dag;
 
 import java.util.Collection;
-import java.util.List;
 
-
+import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-
-import com.google.common.base.Preconditions;
 
 
 /**
@@ -36,9 +33,6 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	
 	/**  The configuration's ApplyRule sub-configurations. */
 	private final Collection<ApplyRule> rules;
-
-	/**  The configuration's ApplyRule sub-configurations ordered according to their appearance. */
-	private final List<ApplyRule> rulesList;
 	
 	/**
 	 * Instantiates a new binary configuration.
@@ -53,8 +47,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 		super(left.getState().merge(right.getState()),
 				ConfigurationUtility.getInput(left, right),
 				ConfigurationUtility.getOutput(left, right),
-				left.getHeight() + right.getHeight(),
-				ConfigurationUtility.getBushiness(left, right)
+				left.getHeight() + right.getHeight()
 				);
 		Preconditions.checkNotNull(left);
 		Preconditions.checkNotNull(right);
@@ -62,7 +55,6 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 		this.right = right;
 		this.plan = PlanCreationUtility.createPlan(left.getPlan(), right.getPlan());
 		this.rules = ConfigurationUtility.getApplyRules(this);
-		this.rulesList = ConfigurationUtility.getApplyRulesList(this);
 	}
 	
 	/**
@@ -80,8 +72,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 		super(state,
 				ConfigurationUtility.getInput(left, right),
 				ConfigurationUtility.getOutput(left, right),
-				left.getHeight() + right.getHeight(),
-				ConfigurationUtility.getBushiness(left, right)
+				left.getHeight() + right.getHeight()
 				);
 		Preconditions.checkNotNull(left);
 		Preconditions.checkNotNull(right);
@@ -89,7 +80,6 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 		this.right = right;
 		this.plan = PlanCreationUtility.createPlan(left.getPlan(), right.getPlan());
 		this.rules = ConfigurationUtility.getApplyRules(this);
-		this.rulesList = ConfigurationUtility.getApplyRulesList(this);
 	}
 
 	/**
@@ -150,12 +140,5 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	 */
 	public Collection<ApplyRule> getApplyRules() {
 		return this.rules;
-	}
-
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getApplyRulesList()
-	 */
-	public List<ApplyRule> getApplyRulesList() {
-		return this.rulesList;
 	}
 }

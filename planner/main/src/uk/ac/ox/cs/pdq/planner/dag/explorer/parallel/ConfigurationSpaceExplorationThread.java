@@ -45,9 +45,6 @@ public class ConfigurationSpaceExplorationThread implements Callable<DAGChaseCon
 	/**  The output non-dominated and not successful configurations. */
 	private final Set<DAGChaseConfiguration> output;
 
-	/**  The output non-dominated and successful (and not closed) configurations. */
-	private final Set<DAGChaseConfiguration> successful;
-
 	/**
 	 * Instantiates a new exploration thread.
 	 *
@@ -59,7 +56,6 @@ public class ConfigurationSpaceExplorationThread implements Callable<DAGChaseCon
 	 * @param successDominance 		Performs success dominance checks
 	 * @param dominance the dominance
 	 * @param output 		The output non-dominated and not successful configurations
-	 * @param successfulConfigurations 		The output non-dominated and successful (and not closed) configurations
 	 */
 	public ConfigurationSpaceExplorationThread(
 			ConjunctiveQuery query,
@@ -68,17 +64,14 @@ public class ConfigurationSpaceExplorationThread implements Callable<DAGChaseCon
 			DAGChaseConfiguration best,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
-			Set<DAGChaseConfiguration> output,
-			Set<DAGChaseConfiguration> successfulConfigurations
+			Set<DAGChaseConfiguration> output
 			) {	
 		Preconditions.checkNotNull(query);
-	
 		this.best = best == null ? null : best.clone();
 		this.query = query;
 		this.input = input;
 		this.equivalenceClasses = equivalenceClasses;
 		this.output = output;
-		this.successful = successfulConfigurations;
 		this.successDominance = successDominance;
 		this.dominance = dominance;
 	}
@@ -96,7 +89,6 @@ public class ConfigurationSpaceExplorationThread implements Callable<DAGChaseCon
 		//Poll the next configuration
 		while((configuration = this.input.poll()) != null) {			
 			// This dominance related stuff needs to be checked, unit tested and then added again.
-			
 			//If the configuration is not dominated
 			DAGChaseConfiguration dominator = this.equivalenceClasses.dominate(this.dominance, configuration);
 			if (dominator != null
@@ -110,11 +102,9 @@ public class ConfigurationSpaceExplorationThread implements Callable<DAGChaseCon
 					if(!dominated.isEmpty()) {
 						this.output.removeAll(dominated);
 						this.equivalenceClasses.removeAll(dominated);
-						this.successful.removeAll(dominated);
 					}
 					//Check for query match
-					boolean matchesQuery = false;
-					if (configuration.isClosed() && (matchesQuery = configuration.isSuccessful(this.query)) == true) {
+					if (configuration.isClosed() && configuration.isSuccessful(this.query) == true) {
 						this.setBestConfiguration(configuration);
 						//log.trace(this.bestConfiguration + "\t" + this.bestConfiguration.getPlan().getCost());
 					}
@@ -122,9 +112,6 @@ public class ConfigurationSpaceExplorationThread implements Callable<DAGChaseCon
 					else {
 						this.equivalenceClasses.addEntry(configuration);
 						this.output.add(configuration);
-					}
-					if(matchesQuery) {
-						this.successful.add(configuration);
 					}
 				}
 			}
