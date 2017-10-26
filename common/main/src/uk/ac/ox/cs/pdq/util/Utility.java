@@ -15,13 +15,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.junit.Assert;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ChaseConstantGenerator;
@@ -467,9 +467,9 @@ public class Utility {
 	 * @param fact An input fact
 	 * @return The list of attributes coming from this fact
 	 */
-	public static Attribute[] getAttributes(Atom fact) {
-		Assert.assertTrue(fact.getPredicate() instanceof Relation);
-		return ((Relation) fact.getPredicate()).getAttributes();
+	public static Attribute[] getAttributes(Atom fact, Schema schema) {
+		
+		return schema.getRelation(fact.getPredicate().getName()).getAttributes();
 	}
 
 //	/**

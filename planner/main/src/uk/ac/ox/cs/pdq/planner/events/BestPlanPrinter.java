@@ -1,10 +1,10 @@
 package uk.ac.ox.cs.pdq.planner.events;
 
+import com.google.common.eventbus.Subscribe;
+
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.util.EventHandler;
-
-import com.google.common.eventbus.Subscribe;
 
 /**
  * The Class BestPlanPrinter.

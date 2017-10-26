@@ -225,7 +225,7 @@ public class SQLStatementBuilderTest extends PdqTest {
 	private void addFacts(Collection<Atom> facts, DatabaseConnection databaseConnection) {
 		Queue<String> queries = new ConcurrentLinkedQueue<>();
 		if(databaseConnection.getSQLStatementBuilder() instanceof DerbyStatementBuilder) {
-			queries.addAll(databaseConnection.getSQLStatementBuilder().createInsertStatements(facts, databaseConnection.getRelationNamesToDatabaseTables()));
+			queries.addAll(databaseConnection.getSQLStatementBuilder().createInsertStatements(facts, databaseConnection.getRelationNamesToDatabaseTables(), databaseConnection.getSchema()));
 		}
 		else {
 			Map<Predicate, List<Atom>> clusters = Utility.clusterAtomsWithSamePredicateName(facts);

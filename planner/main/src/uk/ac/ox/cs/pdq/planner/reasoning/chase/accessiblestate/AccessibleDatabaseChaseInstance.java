@@ -20,10 +20,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Match;
-import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -251,7 +249,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 					this.derivedInferredAccessibleAtoms.add(fact);
 					this.inferredAccessibleAtoms.add(fact);
 				}
-				else if (fact.getPredicate().equals(AccessibleSchema.accessibleRelation)) 
+				else if (fact.getPredicate().getName().equals(AccessibleSchema.accessibleRelation.getName())) 
 					this.accessibleTerms.put(fact.getTerm(0), fact);
 				else 
 					this.atomsMap.put(fact.getPredicate(), fact);
@@ -310,11 +308,11 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 			Atom accessedFact = Atom.create(fact.getPredicate(), fact.getTerms());
 			createdFacts.add(accessedFact);
 			Predicate predicate = null;
-			if(fact.getPredicate() instanceof Relation) {
-				Relation relation = (Relation) fact.getPredicate();
-				predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality());
-			}
-			else 
+//			if(fact.getPredicate() instanceof Relation) {
+//				Relation relation = (Relation) fact.getPredicate();
+//				predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality());
+//			}
+//			else 
 				predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getPredicate().getArity());
 			Atom inferredAccessibleFact = Atom.create(predicate, fact.getTerms());
 			createdFacts.add(inferredAccessibleFact);
@@ -351,11 +349,11 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 			while (iterator.hasNext()) {
 				Atom fact = iterator.next();
 				Predicate predicate = null;
-				if(fact.getPredicate() instanceof Relation) {
-					Relation relation = (Relation) fact.getPredicate();
-					predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality());
-				}
-				else 
+//				if(fact.getPredicate() instanceof Relation) {
+//					Relation relation = (Relation) fact.getPredicate();
+//					predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality());
+//				}
+//				else 
 					predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getPredicate().getArity());
 				Atom accessedFact = Atom.create(predicate, fact.getTerms());
 				Collection<Term> inputTerms = uk.ac.ox.cs.pdq.util.Utility.getTerms(accessedFact,axiom.getAccessMethod().getInputs());

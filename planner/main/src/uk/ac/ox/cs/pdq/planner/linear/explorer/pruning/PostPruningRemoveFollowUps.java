@@ -9,14 +9,16 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import uk.ac.ox.cs.pdq.db.Match;
-import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -27,10 +29,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * Removes the redundant accesses and the redundant follow-up joins from a successful configuration path.
@@ -238,30 +236,20 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		Collection<Atom> inputAccessibleFacts = new LinkedHashSet<>();
 		Atom inferredAccessibleFact = null;
 		for(Atom fact:facts) {
-			if(fact.getPredicate().equals(AccessibleSchema.accessibleRelation)) {
+			if(fact.getPredicate().getName().equals(AccessibleSchema.accessibleRelation.getName())) {
 				Set<Constant> constants = Utility.getUntypedConstants(fact);
 				if(!constants.isEmpty()) {
 					inputTerms.addAll(constants);
 					inputAccessibleFacts.add(fact);
 				}
 			}
-			else if(fact.getPredicate() instanceof Relation) {
+			else {
+				//Relation r = schema.getRelation(fact.getPredicate().getName());
 				outputTerms.addAll(Utility.getTypedAndUntypedConstants(fact));
 				//Relation relation = (Relation) fact.getPredicate();
 				//inferredAccessibleFact = new Atom(this.accessibleSchema.getInferredAccessibleRelation(relation), fact.getTerms() );
-				Predicate predicate = null;
-				if(fact.getPredicate() instanceof Relation) {
-					Relation relation = (Relation) fact.getPredicate();
-					predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality());
-				}
-				else 
-					predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getPredicate().getArity());
+				Predicate predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getPredicate().getArity());
 				inferredAccessibleFact = Atom.create(predicate, fact.getTerms());
-				
-				
-			}
-			else {
-				throw new java.lang.IllegalArgumentException();
 			}
 		}
 		outputTerms.removeAll(inputTerms);

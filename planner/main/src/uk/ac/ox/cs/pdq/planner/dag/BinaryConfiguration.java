@@ -3,15 +3,13 @@ package uk.ac.ox.cs.pdq.planner.dag;
 import java.util.Collection;
 import java.util.List;
 
-
+import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-
-import com.google.common.base.Preconditions;
 
 
 /**

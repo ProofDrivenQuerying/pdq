@@ -131,12 +131,7 @@ public class AccessibleSchema extends Schema {
 		}
 		else if (f instanceof Atom) {
 			Predicate predicate = null;
-			if(((Atom)f).getPredicate() instanceof Relation) {
-				Relation relation = (Relation) ((Atom)f).getPredicate();
-				predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality());
-			}
-			else 
-				predicate = Predicate.create(inferredAccessiblePrefix + ((Atom)f).getPredicate().getName(), ((Atom)f).getPredicate().getArity());
+			predicate = Predicate.create(inferredAccessiblePrefix + ((Atom)f).getPredicate().getName(), ((Atom)f).getPredicate().getArity());
 			return Atom.create(predicate, ((Atom)f).getTerms());
 		}
 		else 

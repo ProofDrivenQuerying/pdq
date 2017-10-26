@@ -304,12 +304,12 @@ public class TestRestrictedChaser extends PdqTest {
 		int qFacts = 0;
 		while (iterator.hasNext()) {
 			Atom fact = iterator.next();
-			if (fact.getPredicate().equals(D)) {
+			if (fact.getPredicate().getName().equals(D.getName())) {
 				dFacts++;
 				if (fact.getTerms()[0].toString().startsWith("k"))
 					dFactHasK++;
 			}
-			if (fact.getPredicate().equals(Q)) {
+			if (fact.getPredicate().getName().equals(Q.getName())) {
 				qFacts++;
 				Assert.assertEquals("a_5", fact.getTerms()[0].toString());
 			}

@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.base.Preconditions;
 
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.AtomAdapter;
 
 /**
@@ -175,6 +176,10 @@ public class Atom extends Formula {
 	
     public static Atom create(Predicate predicate, Term... arguments) {
         return Cache.atom.retrieve(new Atom(predicate, arguments));
+    }
+    
+    public static Atom create(Relation predicate, Term... arguments) {
+        return Cache.atom.retrieve(new Atom(Predicate.create(predicate.getName(),predicate.getArity(),predicate.isEquality()) , arguments));
     }
     
     /** 

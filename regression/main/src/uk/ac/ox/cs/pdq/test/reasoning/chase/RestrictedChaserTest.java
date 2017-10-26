@@ -16,11 +16,11 @@ import com.google.common.eventbus.EventBus;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
@@ -260,7 +260,7 @@ public class RestrictedChaserTest {
 		int index1 = pred.indexOf("(");
 		int index2 = pred.indexOf(")");
 		String relationName = (String) pred.subSequence(0, index1);
-		Predicate predicate = schema.getRelation(relationName);
+		Relation predicate = schema.getRelation(relationName);
 		if(predicate==null)
 			return null;
 		String terms = (String) pred.subSequence(index1 + 1, index2);

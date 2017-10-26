@@ -4,13 +4,13 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.google.common.base.Preconditions;
+import com.google.common.eventbus.Subscribe;
+
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.logging.StatisticsLogger;
 import uk.ac.ox.cs.pdq.util.EventHandler;
-
-import com.google.common.base.Preconditions;
-import com.google.common.eventbus.Subscribe;
 
 /**
  * Keeps a set of constant observed so far and report on its cardinality.

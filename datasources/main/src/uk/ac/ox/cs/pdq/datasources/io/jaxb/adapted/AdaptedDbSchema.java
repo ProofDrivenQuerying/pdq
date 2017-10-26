@@ -33,6 +33,7 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -257,8 +258,8 @@ public class AdaptedDbSchema {
 			ForeignKey fk = new ForeignKey("FK_for_LG" + gd.getId());
 			Atom left = gd.getBody().getAtoms()[0];
 			Atom right = gd.getHead().getAtoms()[0];
-			Relation leftRel = (Relation) left.getPredicate();
-			Relation rightRel = (Relation) right.getPredicate();
+			Relation leftRel = getRelation(left.getPredicate());
+			Relation rightRel = getRelation(right.getPredicate());
 			fk.setForeignRelation(rightRel);
 			fk.setForeignRelationName(rightRel.getName());
 			for (Variable v:CollectionUtils.intersection(Arrays.asList(left.getVariables()), Arrays.asList(right.getVariables()))) {
@@ -269,14 +270,21 @@ public class AdaptedDbSchema {
 			}
 		}
 	}
-	
+	private Relation getRelation(Predicate p) {
+		for (Relation r:relations) {
+			if (r.getName().equals(p.getName())) {
+				return r;
+			}
+		}
+		return null;
+	}
 	private Collection<LinearGuarded> findFKDependency(Relation r,List<Dependency> allDependencies) {
 		Set<LinearGuarded> result = new LinkedHashSet<>();
 		if (allDependencies != null) {
 			for (Dependency dependency: allDependencies) {
 				if (dependency instanceof LinearGuarded
 						&& ((LinearGuarded) dependency).getHead().getAtoms().length == 1
-						&& ((LinearGuarded) dependency).getGuard().getPredicate().equals(r)) {
+						&& ((LinearGuarded) dependency).getGuard().getPredicate().getName().equals(r.getName())) {
 					result.add((LinearGuarded) dependency);
 				}
 			}

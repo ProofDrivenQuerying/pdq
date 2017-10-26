@@ -1,10 +1,10 @@
 package uk.ac.ox.cs.pdq.planner.logging;
 
+import com.google.common.eventbus.Subscribe;
+
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.util.EventHandler;
-
-import com.google.common.eventbus.Subscribe;
 
 /**
  * This logger works as a proxy to other progress logger, and performs a log

@@ -3,6 +3,8 @@ package uk.ac.ox.cs.pdq.planner.linear.explorer.node;
 import java.util.Random;
 import java.util.Set;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -10,8 +12,6 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
-
-import com.google.common.base.Preconditions;
 
 /**
  * Creates plan tree nodes .

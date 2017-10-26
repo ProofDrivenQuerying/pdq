@@ -8,16 +8,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.junit.Assert;
+
+import com.google.common.base.Joiner;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
-
-import com.google.common.base.Joiner;
 
 /**
  * Builds queries for detecting homomorphisms in MySQL.
@@ -75,11 +75,11 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override
-	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, Relation> relationNamesToDatabaseTables) {
+	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, Relation> relationNamesToDatabaseTables,Schema schema) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
-			Assert.assertTrue(fact.getPredicate() instanceof Relation);
-			Relation relation = (Relation) fact.getPredicate();
+			//Assert.assertTrue(fact.getPredicate() instanceof Relation);
+			Relation relation = schema.getRelation(fact.getPredicate().getName());
 			String insertInto = "INSERT IGNORE INTO " + databaseName+"." + fact.getPredicate().getName() + " " + "VALUES ( ";
 			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
 				Term term = fact.getTerm(termIndex);

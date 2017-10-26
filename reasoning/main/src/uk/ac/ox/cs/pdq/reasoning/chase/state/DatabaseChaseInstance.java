@@ -32,6 +32,7 @@ import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.sql.FromCondition;
 import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
@@ -689,7 +690,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		// Create a new query out of each input query that references only the clean
 		// predicates
 		for (Dependency source : dependencies) {
-			Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(source, t);
+			Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(source, t,canonicalDatabaseInstance.getDatabaseConnection().getSchema());
 			queries.add(Triple.of((Formula) source, pair.getLeft(), pair.getRight()));
 		}
 		return canonicalDatabaseInstance.answerQueries(queries);
@@ -738,7 +739,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 *         triggers (active or not depends on t) for the input dependency, and
 	 *         (b) a map with the attributes to be projected. 
 	 */
-	public Pair<String, LinkedHashMap<String, Variable>> createSQLQuery(Dependency dep, TriggerProperty t) {
+	public Pair<String, LinkedHashMap<String, Variable>> createSQLQuery(Dependency dep, TriggerProperty t,Schema schema) {
 		boolean isEGD = (dep instanceof EGD);
 		int freshcounter = 0;
 		Atom[] extendedBodyAtoms = extendAtomsWithInstanceIDAttribute(dep.getBodyAtoms(), freshcounter);
@@ -749,10 +750,10 @@ public class DatabaseChaseInstance implements ChaseInstance {
 
 		String query = "";
 		FromCondition from = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createFromStatement(extendedBodyAtoms);
-		SelectCondition projections = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createProjections(extendedBodyAtoms);
+		SelectCondition projections = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createProjections(extendedBodyAtoms,schema);
 		WhereCondition where = new WhereCondition();
-		WhereCondition equalities = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createAttributeEqualities(extendedBodyAtoms);
-		WhereCondition constantEqualities = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createEqualitiesWithConstants(extendedBodyAtoms);
+		WhereCondition equalities = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createAttributeEqualities(extendedBodyAtoms,schema);
+		WhereCondition constantEqualities = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createEqualitiesWithConstants(extendedBodyAtoms,schema);
 
 		WhereCondition factproperties = null;
 		if (facts != null && !facts.isEmpty())
@@ -762,7 +763,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			factproperties = new WhereCondition();
 
 		if (isEGD) {
-			WhereCondition activenessFilter = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createEGDActivenessFilter((EGD) dep, extendedBodyAtoms);
+			WhereCondition activenessFilter = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createEGDActivenessFilter((EGD) dep, extendedBodyAtoms,schema);
 			if (!activenessFilter.isEmpty())
 				where.addCondition(activenessFilter);
 			if (((EGD) dep).isFromFunctionalDependency()) {
@@ -780,12 +781,12 @@ public class DatabaseChaseInstance implements ChaseInstance {
 
 		if (t.equals(TriggerProperty.ACTIVE)) {
 			FromCondition from2 = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createFromStatement(extendedHeadAtoms);
-			SelectCondition nestedProjections = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createProjections(extendedHeadAtoms);
+			SelectCondition nestedProjections = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createProjections(extendedHeadAtoms,schema);
 			WhereCondition predicates2 = new WhereCondition();
-			WhereCondition nestedAttributeEqualities = (!(isEGD)) ? canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createAttributeEqualities(allExtendedAtoms)
+			WhereCondition nestedAttributeEqualities = (!(isEGD)) ? canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createAttributeEqualities(allExtendedAtoms,schema)
 					: uk.ac.ox.cs.pdq.reasoning.chase.Utility.createNestedAttributeEqualitiesForActiveTriggers(extendedBodyAtoms, extendedHeadAtoms,
-							canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder());
-			WhereCondition nestedConstantEqualities = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createEqualitiesWithConstants(allExtendedAtoms);
+							canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder(),schema);
+			WhereCondition nestedConstantEqualities = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createEqualitiesWithConstants(allExtendedAtoms,schema);
 			predicates2.addCondition(nestedAttributeEqualities);
 			predicates2.addCondition(nestedConstantEqualities);
 
@@ -827,11 +828,11 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		String query = "";
 		SQLStatementBuilder stb = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder();
 		FromCondition from = stb.createFromStatement(source.getAtoms());
-		SelectCondition projections = stb.createProjections(source.getAtoms());
+		SelectCondition projections = stb.createProjections(source.getAtoms(),canonicalDatabaseInstance.getDatabaseConnection().getSchema());
 		WhereCondition where = new WhereCondition();
-		WhereCondition equalities = stb.createAttributeEqualities(source.getAtoms());
-		WhereCondition constantEqualities = stb.createEqualitiesWithConstants(source.getAtoms());
-		WhereCondition equalitiesWithProjectedVars = stb.createEqualitiesRespectingInputMapping(source.getAtoms(), finalProjectionMapping);
+		WhereCondition equalities = stb.createAttributeEqualities(source.getAtoms(),canonicalDatabaseInstance.getDatabaseConnection().getSchema());
+		WhereCondition constantEqualities = stb.createEqualitiesWithConstants(source.getAtoms(),canonicalDatabaseInstance.getDatabaseConnection().getSchema());
+		WhereCondition equalitiesWithProjectedVars = stb.createEqualitiesRespectingInputMapping(source.getAtoms(), finalProjectionMapping,canonicalDatabaseInstance.getDatabaseConnection().getSchema());
 
 		WhereCondition factproperties = null;
 		if (facts != null && !facts.isEmpty())

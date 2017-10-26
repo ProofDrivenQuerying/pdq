@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.runtime.query;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -14,18 +13,12 @@ import org.apache.log4j.Logger;
 
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
-import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.datasources.utility.BooleanResult;
 import uk.ac.ox.cs.pdq.datasources.utility.Result;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -33,9 +26,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.CartesianProduct;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.IsEmpty;
-import uk.ac.ox.cs.pdq.runtime.exec.iterator.MemoryScan;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Projection;
-import uk.ac.ox.cs.pdq.runtime.exec.iterator.Selection;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.SymmetricMemoryHashJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
@@ -57,6 +48,8 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	
 	/**  The query to be evaluated. */
 	private final ConjunctiveQuery query;
+
+	private Schema schema;
 
 	/**
 	 * Constructor for InMemoryQueryEvaluator.
@@ -91,7 +84,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 				}
 				return new BooleanResult(!result);
 			}
-			Table result = new Table(RuntimeUtilities.getAttributesCorrespondingToFreeVariables(this.query));
+			Table result = new Table(RuntimeUtilities.getAttributesCorrespondingToFreeVariables(this.query,this.schema));
 			while(phyPlan.hasNext()) {
 				Tuple t = phyPlan.next();
 				result.appendRow(t);
@@ -130,7 +123,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 		if (query.isBoolean()) {
 			result = new IsEmpty(result);
 		} else {
-			result = new Projection(RuntimeUtilities.getAttributesCorrespondingToFreeVariables(query), result);
+			result = new Projection(RuntimeUtilities.getAttributesCorrespondingToFreeVariables(query,this.schema), result);
 		}
 		return result;
 	}
@@ -143,44 +136,45 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 * @throws EvaluationException the evaluation exception
 	 */
 	private TupleIterator makeScans(Atom atom) throws EvaluationException {
-		if (!(atom.getPredicate() instanceof InMemoryTableWrapper)) {
-			throw new EvaluationException(
-					atom.getPredicate().getClass().getSimpleName() +
-					" relations not supported in In-Mem query evaluator.");
-		}
-		InMemoryTableWrapper r = (InMemoryTableWrapper) atom.getPredicate();
-		SimpleCondition[] conditions = this.computeSelectionConditions(r.getAttributes(), atom.getTerms()); 
-		if (conditions.length == 0) 
-			return new MemoryScan(r.getAttributes(), r.getData());
-		return new Selection(ConjunctiveCondition.create(conditions), new MemoryScan(r.getAttributes(), r.getData()));
+//		if (!(atom.getPredicate() instanceof InMemoryTableWrapper)) {
+//			throw new EvaluationException(
+//					atom.getPredicate().getClass().getSimpleName() +
+//					" relations not supported in In-Mem query evaluator.");
+//		}
+//		InMemoryTableWrapper r = (InMemoryTableWrapper) atom.getPredicate();
+//		SimpleCondition[] conditions = this.computeSelectionConditions(r.getAttributes(), atom.getTerms()); 
+//		if (conditions.length == 0) 
+//			return new MemoryScan(r.getAttributes(), r.getData());
+//		return new Selection(ConjunctiveCondition.create(conditions), new MemoryScan(r.getAttributes(), r.getData()));
+		return null;
 	}
-
-	/**
-	 * Make selection predicates.
-	 *
-	 * @param attributes List<Attribute>
-	 * @param terms List<Term>
-	 * @return List<Atom>
-	 */
-	private SimpleCondition[] computeSelectionConditions(Attribute[] attributes, Term[] terms) {
-		List<SimpleCondition> result = new ArrayList<>();
-		Map<Term, Integer> positions = new LinkedHashMap<>();
-		int i = 0;
-		for (Term t: terms) {
-			if (t instanceof TypedConstant) {
-				result.add(ConstantEqualityCondition.create(i, (TypedConstant) t));
-			} else {
-				Integer position = positions.get(t);
-				if (position != null) {
-					result.add(AttributeEqualityCondition.create(position, i));
-				} else {
-					positions.put(t, i);
-				}
-			}
-			i++;
-		}
-		return result.toArray(new SimpleCondition[result.size()]);
-	}
+//
+//	/**
+//	 * Make selection predicates.
+//	 *
+//	 * @param attributes List<Attribute>
+//	 * @param terms List<Term>
+//	 * @return List<Atom>
+//	 */
+//	private SimpleCondition[] computeSelectionConditions(Attribute[] attributes, Term[] terms) {
+//		List<SimpleCondition> result = new ArrayList<>();
+//		Map<Term, Integer> positions = new LinkedHashMap<>();
+//		int i = 0;
+//		for (Term t: terms) {
+//			if (t instanceof TypedConstant) {
+//				result.add(ConstantEqualityCondition.create(i, (TypedConstant) t));
+//			} else {
+//				Integer position = positions.get(t);
+//				if (position != null) {
+//					result.add(AttributeEqualityCondition.create(position, i));
+//				} else {
+//					positions.put(t, i);
+//				}
+//			}
+//			i++;
+//		}
+//		return result.toArray(new SimpleCondition[result.size()]);
+//	}
 	
 	/**
 	 * Make joins.

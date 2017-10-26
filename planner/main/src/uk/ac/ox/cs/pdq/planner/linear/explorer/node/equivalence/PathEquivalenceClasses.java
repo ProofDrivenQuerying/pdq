@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Sets;
+
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
 /**
  * Collections of paths that have equivalent configurations.

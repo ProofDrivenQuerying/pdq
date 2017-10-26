@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.test.runtime.exec.iterator;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,7 +31,6 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.Access;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Join;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.NestedLoopJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Selection;
-import uk.ac.ox.cs.pdq.runtime.exec.iterator.SymmetricMemoryHashJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 
 public class NestedLoopJoinTest {

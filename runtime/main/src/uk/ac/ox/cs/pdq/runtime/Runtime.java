@@ -132,7 +132,7 @@ public class Runtime {
 
 		for (Atom fact: this.facts) {
 			InMemoryRelation w = relations.get(fact.getPredicate().getName());
-			Attribute[] attributes = ((Relation) fact.getPredicate()).getAttributes();
+			Attribute[] attributes = this.schema.getRelation(fact.getPredicate().getName()).getAttributes();
 			TupleType type = types.get(w);
 			if (type == null) {
 				type = TupleType.DefaultFactory.createFromTyped(attributes);

@@ -3,11 +3,11 @@ package uk.ac.ox.cs.pdq.planner.linear.explorer.node;
 import java.util.List;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
+import uk.ac.ox.cs.pdq.planner.PlannerException;
+import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 
 /**
  * Tree nodes that keep every path to success.

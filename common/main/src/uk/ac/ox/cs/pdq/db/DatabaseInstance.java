@@ -65,8 +65,9 @@ public class DatabaseInstance {
 		try {
 			Queue<String> queries = new ConcurrentLinkedQueue<>();
 			if(this.databaseConnection.getSQLStatementBuilder() instanceof DerbyStatementBuilder) {
-				queries.addAll(this.databaseConnection.getSQLStatementBuilder().createInsertStatements(facts, this.databaseConnection.getRelationNamesToDatabaseTables()));
-			}
+				queries.addAll(this.databaseConnection.getSQLStatementBuilder().createInsertStatements(
+						facts, this.databaseConnection.getRelationNamesToDatabaseTables(),this.databaseConnection.getSchema()));
+			} 
 			else {
 				Map<Predicate, List<Atom>> clusters = Utility.clusterAtomsWithSamePredicateName(facts);
 				//Find the total number of tuples that will be inserted in the database

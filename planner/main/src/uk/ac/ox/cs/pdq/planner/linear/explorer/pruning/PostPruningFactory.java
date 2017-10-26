@@ -1,12 +1,12 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer.pruning;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PostPruningTypes;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-
-import com.google.common.base.Preconditions;
 
 /**
  * Creates plan post-pruning objects.

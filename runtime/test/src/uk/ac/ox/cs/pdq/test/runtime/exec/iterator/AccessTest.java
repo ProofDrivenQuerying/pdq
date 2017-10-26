@@ -5,23 +5,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-
 import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
-import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.Condition;
-import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.datasources.sql.PostgresqlRelationWrapper;
 import uk.ac.ox.cs.pdq.datasources.sql.SQLRelationWrapper;
@@ -34,15 +25,9 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.runtime.TimeoutException;
 import uk.ac.ox.cs.pdq.runtime.exec.PipelinedPlanExecutor.TimeoutChecker;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Access;
-import uk.ac.ox.cs.pdq.runtime.exec.iterator.DependentJoin;
-import uk.ac.ox.cs.pdq.runtime.exec.iterator.Join;
-import uk.ac.ox.cs.pdq.runtime.exec.iterator.NestedLoopJoin;
-import uk.ac.ox.cs.pdq.runtime.exec.iterator.Projection;
-import uk.ac.ox.cs.pdq.runtime.exec.iterator.Selection;
-import uk.ac.ox.cs.pdq.runtime.exec.iterator.SymmetricMemoryHashJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 
-@SuppressWarnings("unused")
+
 public class AccessTest {
 
 	AccessMethod amFree = AccessMethod.create("free_access",new Integer[] {});
@@ -399,7 +384,7 @@ public class AccessTest {
 		 *  Access on relation NATION taking dynamic input. 
 		 */
 		// Construct an Access instance requiring input on the 0'th attribute.
-		Access target = new Access(postgresqlRelationNation, am0);
+		//Access target = new Access(postgresqlRelationNation, am0);
 
 		//// Q: how to execute an Access with dynamic input?
 		//// i.e. from where does the dynamic input come in the case of an Access?  

@@ -171,14 +171,13 @@ public class DatabaseConnection implements AutoCloseable {
 	 *         x_i maps to the i-th relation's attribute
 	 */
 	private Relation createDatabaseRelation(Relation relation) {
-		String attrPrefix = "x";
 		Attribute[] attributes = new Attribute[relation.getArity()];
 		for (int index = 0; index < relation.getArity(); index++) {
 			Attribute attribute = relation.getAttribute(index);
 			if (Integer.class.isAssignableFrom((Class<?>) attribute.getType()) && attribute.getName().equals("InstanceID"))
 				attributes[index] = Attribute.create(Integer.class, "InstanceID");
 			else
-				attributes[index] = Attribute.create(String.class, attrPrefix + index);
+				attributes[index] = Attribute.create(String.class, attribute.getName());
 		}
 		return Relation.create(relation.getName(), attributes, relation.isEquality());
 	}

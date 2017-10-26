@@ -8,7 +8,6 @@ import java.util.Properties;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.RelationAdapter;
 
 /**
@@ -18,7 +17,7 @@ import uk.ac.ox.cs.pdq.io.jaxb.adapters.RelationAdapter;
  * @author Julien Leblay
  */
 @XmlJavaTypeAdapter(RelationAdapter.class)
-public abstract class Relation extends Predicate implements Serializable {
+public class Relation implements Serializable {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -9222721018270749836L;
 
@@ -44,6 +43,49 @@ public abstract class Relation extends Predicate implements Serializable {
 	protected ForeignKey[] foreignKeys;
 
 	protected PrimaryKey primaryKey;
+	
+	/**  Predicate name. */
+	protected final String name;
+
+	/**  Predicate arity. */
+	protected final Integer arity;
+
+	/**  true, if this is the signature for an equality predicate. */
+	protected final Boolean isEquality;
+
+	/**
+	 * Gets the name of the predicate.
+	 *
+	 * @return the name of the predicate.
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * Gets the arity of the predicate.
+	 *
+	 * @return the arity of the predicate.
+	 */
+//	public int getArity() {
+//		return this.arity;
+//	}
+	//@Override
+	public int getArity() {
+		return this.attributes.length;
+	}
+
+	/**
+	 * Checks if this is an equality predicate.
+	 *
+	 * @return true if the signature is of an equality predicate,
+	 * false otherwise
+	 */
+	public boolean isEquality() {
+		return this.isEquality;
+	}
+
+	
 
 	/** 
 	 * Properties associated with this relation; these may be SQL
@@ -73,7 +115,10 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	protected Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality) {
-		super(name, attributes.length, isEquality);
+		//super(name, attributes.length, isEquality);
+		this.name = name;
+		arity = attributes.length;
+		this.isEquality = isEquality;
 		this.attributes = attributes.clone();
 		Map<String, Integer> positions = new LinkedHashMap<>();
 		for (int attributeIndex = 0; attributeIndex < attributes.length; ++attributeIndex) 
@@ -91,15 +136,6 @@ public abstract class Relation extends Predicate implements Serializable {
 		this.foreignKeys = foreignKeys.clone();
 	}
 
-	@Override
-	public String getName() {
-		return this.name;
-	}
-
-	@Override
-	public int getArity() {
-		return this.attributes.length;
-	}
 
 	public Attribute[] getAttributes() {
 		return this.attributes.clone();

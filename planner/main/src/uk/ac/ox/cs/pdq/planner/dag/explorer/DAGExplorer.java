@@ -6,8 +6,6 @@ import com.google.common.eventbus.EventBus;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
@@ -87,7 +85,7 @@ public abstract class DAGExplorer extends Explorer {
 		
 		this.parameters = parameters;
 		this.query = query;
-		checkQueryForPredicatesInsteadOfRelations(accessibleQuery);
+//		checkQueryForPredicatesInsteadOfRelations(accessibleQuery);
 		this.accessibleQuery = accessibleQuery;
 		this.accessibleSchema = accessibleSchema;
 		this.chaser = chaser;
@@ -95,15 +93,15 @@ public abstract class DAGExplorer extends Explorer {
 		this.costEstimator = costEstimator;
 	}
 	
-	/** Uses Preconditions to throw exception in case the query contains predicates instead of Relations.
-	 * @param query
-	 */
-	private static void checkQueryForPredicatesInsteadOfRelations(ConjunctiveQuery query) {
-		Atom[] atoms = query.getAtoms();
-		for (Atom atom:atoms) {
-			Preconditions.checkArgument(atom.getPredicate() instanceof Relation,"" + atom.getPredicate() + " should be an instance of Relation.");
-		}
-	}
+//	/** Uses Preconditions to throw exception in case the query contains predicates instead of Relations.
+//	 * @param query
+//	 */
+//	private static void checkQueryForPredicatesInsteadOfRelations(ConjunctiveQuery query) {
+//		Atom[] atoms = query.getAtoms();
+////		for (Atom atom:atoms) {
+////			Preconditions.checkArgument(atom.getPredicate() instanceof Relation,"" + atom.getPredicate() + " should be an instance of Relation.");
+////		}
+//	}
 
 	/**
 	 * Updates the minimum cost configuration/plan.
@@ -118,7 +116,7 @@ public abstract class DAGExplorer extends Explorer {
 		}
 		this.bestConfiguration = configuration;
 		//Add the final projection to the best plan
-		this.bestPlan = PlanCreationUtility.createFinalProjection(this.accessibleQuery, this.bestConfiguration.getPlan());
+		this.bestPlan = PlanCreationUtility.createFinalProjection(this.accessibleQuery, this.bestConfiguration.getPlan(),this.connection.getSchema());
 		this.bestCost = configuration.getCost();
 		this.eventBus.post(this);
 		this.eventBus.post(this.getBestPlan());

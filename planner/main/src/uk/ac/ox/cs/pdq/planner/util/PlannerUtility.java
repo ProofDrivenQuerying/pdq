@@ -4,19 +4,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -91,11 +88,11 @@ public class PlannerUtility {
 		for (int atomIndex = 0; atomIndex < query.getNumberOfAtoms(); ++atomIndex) {
 			Atom queryAtom = query.getAtom(atomIndex);
 			Predicate predicate = null;
-			if(queryAtom.getPredicate() instanceof Relation) {
-				Relation relation = (Relation) queryAtom.getPredicate();
-				predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality());
-			}
-			else 
+//			if(queryAtom.getPredicate() instanceof Relation) {
+//				Relation relation = schema.getRelation(queryAtom.getPredicate().getName());
+//				predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality());
+//			}
+//			else 
 				predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + queryAtom.getPredicate().getName(), queryAtom.getPredicate().getArity());
 			atoms[atomIndex] = Atom.create(predicate, queryAtom.getTerms());
 		}

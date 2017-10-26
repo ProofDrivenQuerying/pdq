@@ -8,6 +8,8 @@ import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -17,8 +19,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
-
-import com.google.common.base.Preconditions;
 
 /**
  * Removes the redundant accesses and the redundant follow-up joins from a successful configuration path.
@@ -77,7 +77,7 @@ public abstract class PostPruning {
 			if (queryFact.getPredicate().getName().startsWith(AccessibleSchema.inferredAccessiblePrefix)) 
 				qF.add(queryFact);
 			else 
-				Preconditions.checkState(queryFact.getPredicate().equals(AccessibleSchema.accessibleRelation));
+				Preconditions.checkState(queryFact.getPredicate().getName().equals(AccessibleSchema.accessibleRelation.getName()));
 		}
 		Collection<Atom> factsToExpose = this.findExposedFactsThatAreSufficientToLeadToQueryMatch(searchNodePath, qF);
 		if(this.isPruned) 

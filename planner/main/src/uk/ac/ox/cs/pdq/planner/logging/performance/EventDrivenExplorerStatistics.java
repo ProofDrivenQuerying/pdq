@@ -1,12 +1,12 @@
 package uk.ac.ox.cs.pdq.planner.logging.performance;
 
+import com.google.common.eventbus.Subscribe;
+
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.logging.StatisticsLogger;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.util.EventHandler;
-
-import com.google.common.eventbus.Subscribe;
 
 /**
  * Statistics logger to high-level explorer informations.

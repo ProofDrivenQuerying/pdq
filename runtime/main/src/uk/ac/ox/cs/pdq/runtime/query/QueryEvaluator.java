@@ -1,9 +1,9 @@
 package uk.ac.ox.cs.pdq.runtime.query;
 
+import com.google.common.eventbus.EventBus;
+
 import uk.ac.ox.cs.pdq.datasources.utility.Result;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
-
-import com.google.common.eventbus.EventBus;
 
 
 /**

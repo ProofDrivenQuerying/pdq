@@ -23,6 +23,7 @@ import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -48,8 +49,8 @@ public class SQLViewWrapper extends View implements RelationAccessWrapper {
 	 * @param properties the properties
 	 * @param view View
 	 */
-	public SQLViewWrapper(Properties properties, View view) {
-		this(properties, view.getViewToRelationDependency(), view.getAccessMethods());
+	public SQLViewWrapper(Properties properties, View view,Schema schema) {
+		this(properties, view.getViewToRelationDependency(), view.getAccessMethods(),schema);
 	}
 
 	/**
@@ -58,8 +59,8 @@ public class SQLViewWrapper extends View implements RelationAccessWrapper {
 	 * @param properties the properties
 	 * @param definition LinearGuarded
 	 */
-	public SQLViewWrapper(Properties properties, LinearGuarded definition) {
-		this(properties, definition, null);
+	public SQLViewWrapper(Properties properties, LinearGuarded definition,Schema schema) {
+		this(properties, definition, null,schema);
 	}
 
 	/**
@@ -69,8 +70,8 @@ public class SQLViewWrapper extends View implements RelationAccessWrapper {
 	 * @param definition LinearGuarded
 	 * @param methods List<AccessMethod>
 	 */
-	public SQLViewWrapper(Properties properties, LinearGuarded definition, AccessMethod[] methods) {
-		super(definition, methods);
+	public SQLViewWrapper(Properties properties, LinearGuarded definition, AccessMethod[] methods,Schema schema) {
+		super(definition, methods,schema);
 		this.properties.putAll(properties);
 	}
 

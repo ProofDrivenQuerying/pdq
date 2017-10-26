@@ -2,10 +2,10 @@ package uk.ac.ox.cs.pdq.planner.linear.explorer.node;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
-
-import com.google.common.collect.Lists;
 
 /**
  * Tree nodes that keep the single best path to success.

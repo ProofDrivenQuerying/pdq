@@ -31,11 +31,11 @@ import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -194,7 +194,7 @@ public class PlanCreationUtility {
 	 * @param query the q
 	 * @return the tuple type of the input query
 	 */
-	private static Type[] computeVariableTypes(ConjunctiveQuery query) {
+	private static Type[] computeVariableTypes(ConjunctiveQuery query,Schema schema) {
 		Variable[] freeVariables = query.getFreeVariables();
 		Type[] types = new Class<?>[query.getFreeVariables().length];
 		boolean assigned = false;
@@ -203,10 +203,10 @@ public class PlanCreationUtility {
 			Variable t = freeVariables[i];
 			Atom[] atoms = query.getAtoms();
 			for (Atom atom:atoms) {
-				Predicate s = atom.getPredicate();
+				Relation s = schema.getRelation(atom.getPredicate().getName());
 				List<Integer> pos = Utility.search(atom.getTerms(), t);
 				if (!pos.isEmpty()) {
-					types[i] = ((Relation) s).getAttribute(pos.get(0)).getType();
+					types[i] = s.getAttribute(pos.get(0)).getType();
 					assigned = true;
 					break;
 				}
@@ -224,9 +224,9 @@ public class PlanCreationUtility {
 	 * @param plan LogicalOperator
 	 * @return Projection
 	 */
-	public static ProjectionTerm createFinalProjection(ConjunctiveQuery query, RelationalTerm plan) {
+	public static ProjectionTerm createFinalProjection(ConjunctiveQuery query, RelationalTerm plan, Schema schema) {
 		List<Attribute> projections = new ArrayList<>();
-		Type[] variableTypes = computeVariableTypes(query);
+		Type[] variableTypes = computeVariableTypes(query,schema);
 		Variable[] freeVariables = query.getFreeVariables();
 		for (int index = 0; index < freeVariables.length; ++index)  {
 			Constant constant = ChaseConfiguration.getFilteredSubstitutions().get(query).get(freeVariables[index]);

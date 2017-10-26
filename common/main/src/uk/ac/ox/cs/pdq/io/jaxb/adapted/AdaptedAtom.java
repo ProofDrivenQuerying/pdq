@@ -84,11 +84,10 @@ public class AdaptedAtom {
 
 	public Formula toFormula() {
 		try {
+			Relation r = null;
 			if (terms2 != null) {
 				if (AdaptedSchema.getCurrentSchema()!=null) {
-					Relation r = AdaptedSchema.getCurrentSchema().getRelation(predicateName);
-					if (r !=null)
-						predicate = r;
+					r = AdaptedSchema.getCurrentSchema().getRelation(predicateName);
 				}
 				if (predicate==null)
 					predicate = Predicate.create(predicateName, terms2.length,"EQUALITY".equals(predicateName));
@@ -96,8 +95,8 @@ public class AdaptedAtom {
 				for (int i = 0; i < terms2.length; i++) {
 					AdaptedVariable v = terms2[i];
 					if (v instanceof AdaptedConstant) {
-						if (predicate instanceof Relation) {
-							newTerms[i] = ((AdaptedConstant) v).toConstant(((Relation)predicate).getAttribute(i).getType());
+						if (r instanceof Relation) {
+							newTerms[i] = ((AdaptedConstant) v).toConstant((r).getAttribute(i).getType());
 						} else {
 							newTerms[i] = ((AdaptedConstant) v).toConstant();
 						}

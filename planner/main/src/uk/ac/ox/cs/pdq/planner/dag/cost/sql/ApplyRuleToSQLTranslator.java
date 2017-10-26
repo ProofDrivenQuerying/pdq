@@ -12,18 +12,18 @@ import java.util.Set;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
-import uk.ac.ox.cs.pdq.util.Utility;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Translates an ApplyRule configuration to an SQL query.
@@ -59,11 +59,11 @@ public class ApplyRuleToSQLTranslator {
 	 * @param configuration 		The configuration to translate
 	 * @param toProject 		 Constants that should be projected out. These are chase constants that appear in multiple ApplyRules of the same configuration
 	 */
-	public ApplyRuleToSQLTranslator(ApplyRule configuration, Collection<Constant> toProject) {
+	public ApplyRuleToSQLTranslator(ApplyRule configuration, Collection<Constant> toProject, Schema schema) {
 		Preconditions.checkNotNull(configuration);
 		this.configuration = configuration;
 		this.toProject = toProject;
-		this.translate();
+		this.translate(schema);
 	}
 
 	/**
@@ -87,13 +87,13 @@ public class ApplyRuleToSQLTranslator {
 	/**
 	 * Translate.
 	 */
-	private void translate() {
+	private void translate(Schema schema) {
 		Map<Atom,String> factToAlias = this.makeAliases(this.configuration);
 		//Find possible join predicates among different facts of the ApplyRule
-		Set<String> joinConditions = this.makeJoinConditions(this.configuration, factToAlias);
+		Set<String> joinConditions = this.makeJoinConditions(this.configuration, factToAlias,schema);
 		//Find possible filtering predicates
-		Set<String> filteringConditions = this.makeFilteringConditions(this.configuration, factToAlias);
-		Pair<Map<Constant,String>, Map<Constant,String>> mappings = this.makeSelectConditions(this.configuration, this.toProject, factToAlias);
+		Set<String> filteringConditions = this.makeFilteringConditions(this.configuration, factToAlias, schema);
+		Pair<Map<Constant,String>, Map<Constant,String>> mappings = this.makeSelectConditions(this.configuration, this.toProject, factToAlias, schema);
 		this.toProjectToExpression = mappings.getLeft();
 		this.toProjectToAlias = mappings.getRight();
 
@@ -127,10 +127,10 @@ public class ApplyRuleToSQLTranslator {
 	 * @param factToAlias the fact to alias
 	 * @return join and selection predicates based on the facts of the ApplyRule configuration
 	 */
-	private Set<String> makeJoinConditions(ApplyRule configuration, Map<Atom,String> factToAlias) {
+	private Set<String> makeJoinConditions(ApplyRule configuration, Map<Atom,String> factToAlias,Schema schema) {
 		Set<String> joinConditions = new HashSet<>();
-		joinConditions.addAll(this.makeInterFactJoinConditions(configuration, factToAlias));
-		joinConditions.addAll(this.makeIntraFactJoinConditions(configuration, factToAlias));
+		joinConditions.addAll(this.makeInterFactJoinConditions(configuration, factToAlias,schema));
+		joinConditions.addAll(this.makeIntraFactJoinConditions(configuration, factToAlias,schema));
 		return joinConditions;
 	}
 
@@ -141,7 +141,7 @@ public class ApplyRuleToSQLTranslator {
 	 * @param factToAlias the fact to alias
 	 * @return join predicates among different facts of the ApplyRule configuration
 	 */
-	private Set<String> makeInterFactJoinConditions(ApplyRule configuration, Map<Atom,String> factToAlias) {
+	private Set<String> makeInterFactJoinConditions(ApplyRule configuration, Map<Atom,String> factToAlias, Schema schema) {
 		Set<String> joinConditions = new HashSet<>();
 		List<Atom> facts = Lists.newArrayList(configuration.getFacts());
 		for(int i = 0; i < facts.size() - 1; ++i) {
@@ -153,8 +153,8 @@ public class ApplyRuleToSQLTranslator {
 					List<Integer> pi = Utility.getTermPositions(fi,constant);
 					List<Integer> pj = Utility.getTermPositions(fj, constant);
 					if(pi.size() > 0 && pj.size() > 0) {
-						Attribute ai = ((Relation)fi.getPredicate()).getAttribute(pi.get(0));
-						Attribute aj = ((Relation)fj.getPredicate()).getAttribute(pj.get(0));
+						Attribute ai = schema.getRelation(fi.getPredicate().getName()).getAttribute(pi.get(0));
+						Attribute aj = schema.getRelation(fj.getPredicate().getName()).getAttribute(pj.get(0));
 						joinConditions.add(factToAlias.get(fi) + "." + ai.toString() + "=" + factToAlias.get(fj) + "." + aj.toString());
 					}
 				}
@@ -170,7 +170,7 @@ public class ApplyRuleToSQLTranslator {
 	 * @param factToAlias the fact to alias
 	 * @return selection predicates within single facts of the ApplyRule configuration
 	 */
-	private Set<String> makeIntraFactJoinConditions(ApplyRule configuration, Map<Atom,String> factToAlias) {
+	private Set<String> makeIntraFactJoinConditions(ApplyRule configuration, Map<Atom,String> factToAlias,Schema schema) {
 		Set<String> joinConditions = new HashSet<>();
 		List<Atom> facts = Lists.newArrayList(configuration.getFacts());
 		for(int i = 0; i < facts.size(); ++i) {
@@ -179,8 +179,9 @@ public class ApplyRuleToSQLTranslator {
 				List<Integer> joinPositions = Utility.getTermPositions(fi, constant);
 				if(joinPositions.size() > 1) {
 					for(int pi = 0; pi < joinPositions.size() - 1; ++pi) {
-						Attribute ai = ((Relation)fi.getPredicate()).getAttribute(joinPositions.get(pi));
-						Attribute aj = ((Relation)fi.getPredicate()).getAttribute(joinPositions.get(pi+1));
+						Attribute ai = schema.getRelation(fi.getPredicate().getName()).getAttribute(pi);
+						Attribute aj = schema.getRelation(fi.getPredicate().getName()).getAttribute(pi+1);
+						
 						joinConditions.add(factToAlias.get(fi) + "." + ai.toString() + "=" + factToAlias.get(fi) + "." + aj.toString());
 					}
 				}
@@ -196,7 +197,7 @@ public class ApplyRuleToSQLTranslator {
 	 * @param factToAlias the fact to alias
 	 * @return filtering predicates based on the ApplyRule facts
 	 */
-	private Set<String> makeFilteringConditions(ApplyRule configuration, Map<Atom,String> factToAlias) {
+	private Set<String> makeFilteringConditions(ApplyRule configuration, Map<Atom,String> factToAlias, Schema schema) {
 		Set<String> filteringConditions = new HashSet<>();
 		List<Atom> facts = Lists.newArrayList(configuration.getFacts());
 		for(Atom fact:facts) {
@@ -204,7 +205,7 @@ public class ApplyRuleToSQLTranslator {
 			for(Term term:fact.getTerms()) {
 				if(!term.isUntypedConstant() && !term.isVariable()) {
 					String constant = Utility.format(((TypedConstant)term));
-					Attribute ai = ((Relation)fact.getPredicate()).getAttribute(i);
+					Attribute ai = schema.getRelation(fact.getPredicate().getName()).getAttribute(i);
 					filteringConditions.add(factToAlias.get(fact) + "." + ai.toString() + "=" + constant);
 				}
 				i++;
@@ -222,7 +223,7 @@ public class ApplyRuleToSQLTranslator {
 	 * @param factToAlias the fact to alias
 	 * @return a SQL clause for each constant that will be projected out
 	 */
-	private Pair<Map<Constant,String>, Map<Constant,String>> makeSelectConditions(ApplyRule configuration, Collection<Constant> toProject, Map<Atom,String> factToAlias) {
+	private Pair<Map<Constant,String>, Map<Constant,String>> makeSelectConditions(ApplyRule configuration, Collection<Constant> toProject, Map<Atom,String> factToAlias,Schema schema) {
 		Map<Constant,String> toProjectToAlias =  new HashMap<>();
 		Map<Constant,String> toProjectToExpression  =  new HashMap<>();
 
@@ -241,7 +242,7 @@ public class ApplyRuleToSQLTranslator {
 			for(Atom fact:configuration.getFacts()) {
 				List<Integer> p = Utility.getTermPositions(fact, constant);
 				if(!p.isEmpty()) {
-					Attribute a = ((Relation)fact.getPredicate()).getAttribute(p.get(0));
+					Attribute a = schema.getRelation(fact.getPredicate().getName()).getAttribute(p.get(0));
 					String alias = COLUMN_ALIAS_PREFIX + i++;
 					String expression = factToAlias.get(fact) + "." + a.toString() + " AS " + alias;
 					toProjectToAlias.put(constant, alias);
@@ -266,7 +267,7 @@ public class ApplyRuleToSQLTranslator {
 		int i = 0;
 		int size = factToAlias.entrySet().size();
 		for(Entry<Atom, String> entry:factToAlias.entrySet()) {
-			sql += ((Relation)entry.getKey().getPredicate()).getName() + " AS " + entry.getValue();
+			sql += entry.getKey().getPredicate().getName() + " AS " + entry.getValue();
 			if(i < size-1) {
 				sql += ",";
 			}

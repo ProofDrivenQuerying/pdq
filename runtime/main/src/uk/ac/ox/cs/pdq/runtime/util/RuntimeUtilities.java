@@ -31,10 +31,10 @@ import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
@@ -127,7 +127,7 @@ public class RuntimeUtilities {
 	 * @param query ConjunctiveQuery
 	 * @return List<Attribute>
 	 */
-	public static Attribute[] getAttributesCorrespondingToFreeVariables(ConjunctiveQuery query) {
+	public static Attribute[] getAttributesCorrespondingToFreeVariables(ConjunctiveQuery query, Schema schema) {
 		Variable[] queryVariables = query.getFreeVariables();
 		Attribute[] result = new Attribute[query.getFreeVariables().length];
 		//for (Variable t:query.getFreeVariables()) {
@@ -135,18 +135,15 @@ public class RuntimeUtilities {
 			Variable t = queryVariables[index];
 			boolean found = false;
 			for (Atom p:query.getAtoms()) {
-				Predicate s = p.getPredicate();
-				if (s instanceof Relation) {
-					Relation r = (Relation) s;
-					int i = 0;
-					for (Term v : p.getTerms()) {
-						if (v.equals(t)) {
-							result[index] = Attribute.create(r.getAttribute(i).getType(), t.toString());
-							found = true;
-							break;
-						}
-						i++;
+				Relation r = schema.getRelation(p.getPredicate().getName());
+				int i = 0;
+				for (Term v : p.getTerms()) {
+					if (v.equals(t)) {
+						result[index] = Attribute.create(r.getAttribute(i).getType(), t.toString());
+						found = true;
+						break;
 					}
+					i++;
 				}
 				if (found) {
 					break;

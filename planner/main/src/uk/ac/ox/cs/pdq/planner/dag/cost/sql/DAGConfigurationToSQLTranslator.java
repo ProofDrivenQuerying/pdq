@@ -9,12 +9,13 @@ import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 
 /**
  * Translates a left-deep configuration, where all ApplyRule configurations have input-free bindings, into an SQL query.
@@ -36,11 +37,11 @@ public class DAGConfigurationToSQLTranslator {
 	 * Constructor for DAGConfigurationToSQLTranslator.
 	 * @param configuration DAGConfiguration<S>
 	 */
-	public DAGConfigurationToSQLTranslator(DAGConfiguration configuration) {
+	public DAGConfigurationToSQLTranslator(DAGConfiguration configuration,Schema schema) {
 		Preconditions.checkNotNull(configuration);
 		Preconditions.checkArgument(configuration.isLeftDeep());
 		this.configuration = configuration;
-		this.translate();
+		this.translate(schema);
 	}
 
 	/**
@@ -55,14 +56,14 @@ public class DAGConfigurationToSQLTranslator {
 	/**
 	 * Translate.
 	 */
-	private void translate() {
+	private void translate(Schema schema) {
 
 		Map<ApplyRule, String> applyRuleToAlias = this.makeAliases(this.configuration);
 		Map<ApplyRule, ApplyRuleToSQLTranslator> applyRuleToTranslator = new HashMap<>();
 		Collection<Constant> joinConstants = this.findJoinConstants(this.configuration);
 		//Create the SQL queries for each constituting ApplyRule configuration
 		for(ApplyRule applyRule:this.configuration.getApplyRules()) {
-			ApplyRuleToSQLTranslator translator = new ApplyRuleToSQLTranslator(applyRule, joinConstants);
+			ApplyRuleToSQLTranslator translator = new ApplyRuleToSQLTranslator(applyRule, joinConstants, schema);
 			applyRuleToTranslator.put(applyRule, translator);
 		}
 		//Find possible join predicates among different ApplyRules

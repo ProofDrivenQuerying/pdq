@@ -37,7 +37,7 @@ public class AdaptedView extends AdaptedRelation {
 
 	public View toRelation() {
 		if (getDependency() != null) {
-			return new View(getDependency(), getAccessMethods());
+			return new View(getDependency(), getAccessMethods(),AdaptedSchema.getCurrentSchema().toSchema());
 		}
 		if (getAccessMethods() != null) {
 			Attribute[] attr = getAttributes();

@@ -26,6 +26,7 @@ import com.google.common.collect.Multimap;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -67,7 +68,7 @@ public abstract class SQLStatementBuilder {
 	 *            map to the relation objects
 	 * @return insert statements that add the input fact to the fact database.
 	 */
-	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, Relation> relationNamesToDatabaseTables) {
+	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, Relation> relationNamesToDatabaseTables,Schema schema) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact : facts) {
 			Assert.assertTrue(relationNamesToDatabaseTables.containsKey(fact.getPredicate().getName()));
@@ -355,7 +356,7 @@ public abstract class SQLStatementBuilder {
 	 *         variables. If the input is a query we project the attributes that map
 	 *         to its free variables.
 	 */
-	public SelectCondition createProjections(Atom[] atoms) {
+	public SelectCondition createProjections(Atom[] atoms,Schema schema) {
 		LinkedHashMap<String, Variable> projected = new LinkedHashMap<>();
 		List<Variable> attributes = new ArrayList<>();
 		for (Atom fact : atoms) {
@@ -369,7 +370,7 @@ public abstract class SQLStatementBuilder {
 				// if (term instanceof Variable && !attributes.contains(((Variable)
 				// term).getSymbol())) {
 				if (term instanceof Variable && !attributes.contains(term)) {
-					projected.put(createProjectionStatementForArgument(index, (Relation) fact.getPredicate(), alias), (Variable) term);
+					projected.put(createProjectionStatementForArgument(index, schema.getRelation(fact.getPredicate().getName()), alias), (Variable) term);
 					attributes.add(((Variable) term));
 				}
 			}
@@ -377,7 +378,7 @@ public abstract class SQLStatementBuilder {
 		return new SelectCondition(projected);
 	}
 
-	public WhereCondition createAttributeEqualities(Atom[] source) {
+	public WhereCondition createAttributeEqualities(Atom[] source,Schema schema) {
 		List<String> attributePredicates = new ArrayList<String>();
 		Collection<Term> terms = Utility.getTerms(source);
 		terms = Utility.removeDuplicates(terms);
@@ -390,13 +391,13 @@ public abstract class SQLStatementBuilder {
 				for (Integer pos : positions) {
 					if (leftPosition == null) {
 						leftPosition = pos;
-						leftRelation = (Relation) fact.getPredicate();
+						leftRelation = schema.getRelation(fact.getPredicate().getName());
 						synchronized (this.aliases) {
 							leftAlias = this.aliases.get(fact);
 						}
 					} else {
 						Integer rightPosition = pos;
-						Relation rightRelation = (Relation) fact.getPredicate();
+						Relation rightRelation = schema.getRelation(fact.getPredicate().getName());
 						String rightAlias = null;
 						synchronized (this.aliases) {
 							rightAlias = this.aliases.get(fact);
@@ -416,7 +417,7 @@ public abstract class SQLStatementBuilder {
 	 * Creates a WhereCondition for and EGD to make sure only active triggers will be returned by the query.
 	 * 
 	 */
-	public WhereCondition createEGDActivenessFilter(EGD dep, Atom[] source) {
+	public WhereCondition createEGDActivenessFilter(EGD dep, Atom[] source,Schema schema) {
 		List<String> attributePredicates = new ArrayList<String>();
 		Collection<Term> terms = Utility.getTerms(source);
 		terms = Utility.removeDuplicates(terms);
@@ -434,7 +435,7 @@ public abstract class SQLStatementBuilder {
 							synchronized (this.aliases) {
 								result.append(this.aliases.get(fact) == null ? fact.getPredicate().getName() : this.aliases.get(fact));
 							}
-							result.append(".").append(((Relation) fact.getPredicate()).getAttribute(pos).getName());
+							result.append(".").append(schema.getRelation(fact.getPredicate().getName()).getAttribute(pos).getName());
 							leftEqualities.add(result.toString());
 						}
 						if (right != null && right.equals(fact.getTerm(pos))) {
@@ -442,7 +443,7 @@ public abstract class SQLStatementBuilder {
 							synchronized (this.aliases) {
 								result.append(this.aliases.get(fact) == null ? fact.getPredicate().getName() : this.aliases.get(fact));
 							}
-							result.append(".").append(((Relation) fact.getPredicate()).getAttribute(pos).getName());
+							result.append(".").append(schema.getRelation(fact.getPredicate().getName()).getAttribute(pos).getName());
 							rightEqualities.add(result.toString());
 						}
 					}
@@ -457,7 +458,7 @@ public abstract class SQLStatementBuilder {
 		return new WhereCondition(attributePredicates);
 	}
 
-	public WhereCondition createEqualitiesWithConstants(Atom[] source) {
+	public WhereCondition createEqualitiesWithConstants(Atom[] source,Schema schema) {
 		List<String> constantPredicates = new ArrayList<>();
 		for (Atom fact : source) {
 			String alias = null;
@@ -468,7 +469,7 @@ public abstract class SQLStatementBuilder {
 				Term term = fact.getTerm(index);
 				if (!term.isVariable() && !term.isUntypedConstant()) {
 					StringBuilder eq = new StringBuilder();
-					eq.append(alias == null ? fact.getPredicate().getName() : alias).append(".").append(((Relation) fact.getPredicate()).getAttribute(index).getName()).append('=');
+					eq.append(alias == null ? fact.getPredicate().getName() : alias).append(".").append(schema.getRelation(fact.getPredicate().getName()).getAttribute(index).getName()).append('=');
 					eq.append("'").append(((TypedConstant) term).toString()).append("'");
 					constantPredicates.add(eq.toString());
 				}
@@ -489,12 +490,12 @@ public abstract class SQLStatementBuilder {
 				alias = this.aliases.get(fact);
 			}
 			setPredicates.add(createSQLMembershipExpression(relationNamesToRelationObjects.get(fact.getPredicate().getName()).getArity() - 1, factIDs,
-					(Relation) fact.getPredicate(), alias));
+					relationNamesToRelationObjects.get(fact.getPredicate().getName()), alias));
 		}
 		return new WhereCondition(setPredicates);
 	}
 
-	public WhereCondition createEqualitiesRespectingInputMapping(Atom[] source, Map<Variable, Constant> mapping) {
+	public WhereCondition createEqualitiesRespectingInputMapping(Atom[] source, Map<Variable, Constant> mapping,Schema schema) {
 		List<String> constantPredicates = new ArrayList<>();
 		for (Entry<Variable, Constant> pair : mapping.entrySet()) {
 			for (Atom fact : source) {
@@ -503,7 +504,7 @@ public abstract class SQLStatementBuilder {
 					StringBuilder eq = new StringBuilder();
 					synchronized (this.aliases) {
 						eq.append(this.aliases.get(fact) == null ? fact.getPredicate().getName() : this.aliases.get(fact)).append(".")
-						.append(((Relation) fact.getPredicate()).getAttribute(index).getName()).append('=');
+						.append(schema.getRelation(fact.getPredicate().getName()).getAttribute(index).getName()).append('=');
 					}
 					eq.append("'").append(pair.getValue()).append("'");
 					constantPredicates.add(eq.toString());

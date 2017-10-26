@@ -82,7 +82,7 @@ public class AccessibleStateUtility {
 	public static Multimap<Predicate, Atom> createAtomsMap(Collection<Atom> facts) {
 		Multimap<Predicate, Atom> atomsMap = LinkedHashMultimap.create();
 		for(Atom fact:facts) {
-			if (!(fact.getPredicate().equals(AccessibleSchema.accessibleRelation)) && 
+			if (!(fact.getPredicate().getName().equals(AccessibleSchema.accessibleRelation.getName())) && 
 					!(fact.getPredicate().getName().startsWith(AccessibleSchema.inferredAccessiblePrefix))) {
 				atomsMap.put(fact.getPredicate(), fact);
 			}
@@ -99,7 +99,7 @@ public class AccessibleStateUtility {
 	public static Multimap<Term,Atom> getAllTermsAppearingInAccessibleFacts(Collection<Atom> facts) {
 		Multimap<Term,Atom> accessibleTerms = LinkedHashMultimap.create();
 		for(Atom fact:facts) {
-			if (fact.getPredicate().equals(AccessibleSchema.accessibleRelation)) 
+			if (fact.getPredicate().getName().equals(AccessibleSchema.accessibleRelation.getName())) 
 				accessibleTerms.put(fact.getTerm(0), fact);
 		}
 		return accessibleTerms;

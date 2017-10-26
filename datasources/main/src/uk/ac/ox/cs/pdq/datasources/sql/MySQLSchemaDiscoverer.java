@@ -25,6 +25,7 @@ import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.utility.Utility;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -41,6 +42,8 @@ import uk.ac.ox.cs.pdq.util.Triple;
  */
 public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	
+	private Map<String, Relation> relationMap;
+
 	/*
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.discovery.sql.AbstractSQLSchemaDiscoverer#getRelationsDiscoveryStatement(java.lang.String)
@@ -102,7 +105,11 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	protected View getViewInstance(Properties props, String viewName,
 			Map<String, Relation> relationMap) {
 		String definition = this.getViewDefinition(viewName);
-		return new SQLViewWrapper(props, this.parseViewDefinition(viewName, definition, relationMap));
+		return new SQLViewWrapper(props, this.parseViewDefinition(viewName, definition, relationMap),convertRelationMapToSchema(relationMap));
+	}
+	private Schema convertRelationMapToSchema(Map<String, Relation> relationMap2) {
+		Relation r[] = relationMap2.values().toArray(new Relation[relationMap2.values().size()]);
+		return new Schema(r);
 	}
 
 	/**
@@ -165,7 +172,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 */
 	protected LinearGuarded parseViewDefinition(String viewName, String viewDef, Map<String, Relation> relationMap) {
 		Preconditions.checkArgument(viewDef != null && !viewDef.isEmpty());
-		
+		this.relationMap = relationMap;
 		Matcher m = Pattern.compile(TOP_PATTERN, Pattern.CASE_INSENSITIVE).matcher(viewDef);
 		String select = null;
 		String from = null;
@@ -317,7 +324,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 			Iterator<Atom> it = predMap.values().iterator();
 			while (it.hasNext()) {
 				pred = it.next();
-				index = ((Relation) pred.getPredicate()).getAttributePosition(attribute);
+				index = relationMap.get(pred.getPredicate().getName()).getAttributePosition(attribute);
 				if (index >= 0) {
 					break;
 				}
@@ -325,11 +332,11 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		} else {
 			pred = predMap.get(alias);
 			if (pred != null) {
-				index = ((Relation) pred.getPredicate()).getAttributePosition(attribute);
+				index = relationMap.get(pred.getPredicate().getName()).getAttributePosition(attribute);
 			}
 		}
 		if (renamed != null && !renamed.isEmpty()){
-			att = Attribute.create(((Relation) pred.getPredicate()).getAttribute(index).getType(), renamed);
+			att = Attribute.create(relationMap.get(pred.getPredicate().getName()).getAttribute(index).getType(), renamed);
 		}
 		return new Triple<>(pred, index, att);
 	}

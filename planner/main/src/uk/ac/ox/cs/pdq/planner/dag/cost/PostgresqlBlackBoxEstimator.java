@@ -12,16 +12,17 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import uk.ac.ox.cs.pdq.cost.DoubleCost;
+import com.google.common.eventbus.EventBus;
+
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters.BlackBoxQueryTypes;
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.cost.sql.DAGConfigurationToSQLTranslator;
-
-import com.google.common.eventbus.EventBus;
 
 /**
  * Translates a configuration directly to an SQL
@@ -126,7 +127,7 @@ public class PostgresqlBlackBoxEstimator implements OrderDependentCostEstimator 
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#estimateCost(uk.ac.ox.cs.pdq.util.Costable)
 	 */
 //	public Cost estimateCost(DAGChaseConfiguration configuration) {
-	public Cost cost(DAGChaseConfiguration configuration) {
+	public Cost cost(DAGChaseConfiguration configuration,Schema schema) {
 		double result = Double.POSITIVE_INFINITY;
 		if(this.stats != null){this.stats.start(COST_ESTIMATION_TIME);}
 		if (configuration.isClosed()) {
@@ -135,7 +136,7 @@ public class PostgresqlBlackBoxEstimator implements OrderDependentCostEstimator 
 			case SQL_WITH:
 				throw new java.lang.UnsupportedOperationException();
 			default:
-				sql.append(new DAGConfigurationToSQLTranslator(configuration).getSql());
+				sql.append(new DAGConfigurationToSQLTranslator(configuration,schema).getSql());
 				break;
 			}
 			try(
