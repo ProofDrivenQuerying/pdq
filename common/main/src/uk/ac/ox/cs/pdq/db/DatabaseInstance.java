@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -41,15 +40,13 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * 
  * @author Gabor
  */
-public abstract class DatabaseInstance implements Instance {
+public class DatabaseInstance {
 	protected static Logger log = Logger.getLogger(DatabaseInstance.class);
 	
 	/** Number of parallel threads. **/
 	protected final long timeout = 3600000;
 	protected final TimeUnit unit = TimeUnit.MILLISECONDS;
 	protected final static int insertCacheSize = 1000; 
-
-	protected Set<String> existingIndices =  new LinkedHashSet<String>();
 
 	/** Statements that drop the query indices. */
 	Set<String> dropQueryIndexStatements = Sets.newLinkedHashSet();
@@ -182,7 +179,7 @@ public abstract class DatabaseInstance implements Instance {
 	 * - a map of projected variables
 	 * @return matches of the queries
 	 */
-	protected List<Match> answerQueries(Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries) {
+	public List<Match> answerQueries(Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries) {
 		List<Match> result = new LinkedList<>();
 		//Run the SQL query statements in multiple threads
 		try {
@@ -198,7 +195,7 @@ public abstract class DatabaseInstance implements Instance {
 					// derby doesn't like the USE databaseName command, so we switch it off.
 					dbName = null;
 				}
-				threads.add(new ExecuteSQLQueryThread(queries, this.databaseConnection.getSchema().getConstants(), this.getDatabaseConnection().getSynchronousConnections(j), dbName));
+				threads.add(new ExecuteSQLQueryThread(queries, this.databaseConnection.getSchema().getConstants(), this.databaseConnection.getSynchronousConnections(j), dbName));
 			}
 			long start = System.currentTimeMillis();
 			try {
@@ -224,7 +221,7 @@ public abstract class DatabaseInstance implements Instance {
 		return result;
 	}
 	
-	protected DatabaseConnection getDatabaseConnection() {
+	public DatabaseConnection getDatabaseConnection() {
 		return this.databaseConnection;
 	}
 
@@ -238,6 +235,18 @@ public abstract class DatabaseInstance implements Instance {
 			executorService.shutdownNow();
 		//is this the right thing to do?
 		this.databaseConnection.close();
+	}
+
+	/** This function should not exist and it should never be called.
+	 * @param connection
+	 */
+	public void setDatabaseConnection(DatabaseConnection connection) {
+		System.out.println("DatabaseInstance.setDatabaseConnection()");
+		this.databaseConnection = connection;
+	}
+
+	public String getDatabaseName() {
+		return databaseConnection.getDatabaseParameters().getDatabaseName();
 	}
 
 }

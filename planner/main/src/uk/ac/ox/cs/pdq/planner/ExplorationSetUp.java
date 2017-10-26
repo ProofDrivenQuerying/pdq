@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -24,7 +23,6 @@ import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.logging.ChainedStatistics;
@@ -264,11 +262,7 @@ public class ExplorationSetUp {
 			throw e;
 		} finally {
 			try {
-				new DatabaseInstance(databaseConnection) {
-					@Override
-					public Collection<Atom> getFacts() {
-						return null;
-					}}.close();
+				new DatabaseInstance(databaseConnection).close();
 			} catch (Exception e) {
 				this.handleEarlyTermination(explorer);
 				e.printStackTrace();

@@ -50,8 +50,6 @@ public class DatabaseConnection implements AutoCloseable {
 
 	private boolean isDerby = false;
 	
-	private String databaseName = null;
-
 	public DatabaseConnection(DatabaseParameters databaseParameters, Schema schema) throws SQLException {
 		this(databaseParameters, schema, 1);
 	}
@@ -97,7 +95,6 @@ public class DatabaseConnection implements AutoCloseable {
 			Statement st = this.synchronousConnections.get(0).createStatement();
 			st.execute("create schema " + database);
 		}
-		this.databaseName = database;
 		this.schema = schema;
 		this.relationNamesToDatabaseTables = new LinkedHashMap<>();
 
@@ -287,9 +284,4 @@ public class DatabaseConnection implements AutoCloseable {
 	public int getNumberOfSynchronousConnections() {
 		return this.synchronousConnections.size();
 	}
-	
-	public String getDatabaseName() {
-		return databaseName;
-	}
-
 }

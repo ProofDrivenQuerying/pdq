@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
+import org.apache.log4j.Logger;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
@@ -62,7 +63,9 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * @author Efthymia Tsamoura
  *
  */
-public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInstance {
+public class DatabaseChaseInstance implements ChaseInstance {
+	protected static Logger log = Logger.getLogger(DatabaseInstance.class);
+	protected final DatabaseInstance canonicalDatabaseInstance; 
 	/** The _is failed. */
 	private boolean _isFailed = false;
 
@@ -91,7 +94,10 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 
 	// used to create an "instanceID" unique per instance
 	private Integer hash = null;
+	
+	protected Set<String> existingIndices =  new LinkedHashSet<String>();
 
+	
 	/**
 	 * Instantiates a new DatabaseChaseInstance in order to chase a (canonical
 	 * database of a query). It creates and executes SQL in order to insert the
@@ -113,7 +119,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 *             the facts.
 	 */
 	public DatabaseChaseInstance(ConjunctiveQuery query, DatabaseConnection connection) throws SQLException {
-		super(connection);
+		canonicalDatabaseInstance = new DatabaseInstance(connection);
 		this.addFacts(Sets.newHashSet(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, Utility.generateCanonicalMapping(query)).getAtoms()));
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = ReasonerUtility.createdConstantsMap(this.facts);
@@ -123,8 +129,8 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 
 	@Override
 	public void deleteFacts(Collection<Atom> facts) {
-		super.deleteFacts(facts);
-		globalFactsPerDatabase.remove(super.getDatabaseConnection().getDatabaseName());
+		canonicalDatabaseInstance.deleteFacts(facts);
+		globalFactsPerDatabase.remove(canonicalDatabaseInstance.getDatabaseName());
 	}
 
 	public static void resetFacts() {
@@ -140,7 +146,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 *            the facts
 	 */
 	public DatabaseChaseInstance(Collection<Atom> facts, DatabaseConnection connection) throws SQLException {
-		super(connection);
+		canonicalDatabaseInstance = new DatabaseInstance(connection);
 		Preconditions.checkNotNull(facts);
 		this.addFacts(facts);
 		this.classes = new EqualConstantsClasses();
@@ -169,7 +175,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 *            The database connection to the RDBMS
 	 */
 	protected DatabaseChaseInstance(Collection<Atom> facts, EqualConstantsClasses classes, Multimap<Constant, Atom> constants, DatabaseConnection connection) {
-		super(connection);
+		canonicalDatabaseInstance = new DatabaseInstance(connection);
 		Preconditions.checkNotNull(facts);
 		Preconditions.checkNotNull(classes);
 		Preconditions.checkNotNull(constants);
@@ -187,17 +193,17 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	public void indexConstraints() throws SQLException {
 		List<String> statementBuffer = new ArrayList<>();
 		try {
-			Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
+			Statement sqlStatement = canonicalDatabaseInstance.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
 			Relation equalityRelation = this.createDatabaseEqualityRelation();
-			this.databaseConnection.getRelationNamesToDatabaseTables().put(QNames.EQUALITY.toString(), equalityRelation);
-			String statement = this.databaseConnection.getSQLStatementBuilder().createTableStatement(equalityRelation);
+			canonicalDatabaseInstance.getDatabaseConnection().getRelationNamesToDatabaseTables().put(QNames.EQUALITY.toString(), equalityRelation);
+			String statement = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createTableStatement(equalityRelation);
 			sqlStatement.addBatch(statement);
 			statementBuffer.add(statement);
 			// Create indices for the joins in the body of the dependencies
 			Set<String> joinIndexes = Sets.newLinkedHashSet();
-			for (Dependency constraint : this.databaseConnection.getSchema().getDependencies())
-				joinIndexes.addAll(this.databaseConnection.getSQLStatementBuilder()
-						.setupIndices(false, this.databaseConnection.getRelationNamesToDatabaseTables(), constraint, this.existingIndices).getLeft());
+			for (Dependency constraint : canonicalDatabaseInstance.getDatabaseConnection().getSchema().getDependencies())
+				joinIndexes.addAll(canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder()
+						.setupIndices(false, canonicalDatabaseInstance.getDatabaseConnection().getRelationNamesToDatabaseTables(), constraint, this.existingIndices).getLeft());
 			for (String b : joinIndexes) {
 				sqlStatement.addBatch(b);
 				statementBuffer.add(b);
@@ -219,9 +225,9 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * @throws SQLException
 	 */
 	private void indexLastAttributeOfAllRelations() throws SQLException {
-		Statement sqlStatement = this.databaseConnection.getSynchronousConnections().get(0).createStatement();
-		for (Relation relation : this.databaseConnection.getRelationNamesToDatabaseTables().values())
-			sqlStatement.addBatch(this.databaseConnection.getSQLStatementBuilder().createColumnIndexStatement(relation, relation.getAttribute(relation.getArity() - 1)));
+		Statement sqlStatement = canonicalDatabaseInstance.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
+		for (Relation relation : canonicalDatabaseInstance.getDatabaseConnection().getRelationNamesToDatabaseTables().values())
+			sqlStatement.addBatch(canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createColumnIndexStatement(relation, relation.getAttribute(relation.getArity() - 1)));
 		sqlStatement.executeBatch();
 	}
 
@@ -498,10 +504,10 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			LinkedHashSet<Atom> factsToAddToTheDatabase = new LinkedHashSet<Atom>();
 			newFacts.addAll(this.facts);
 			/* copy existing facts */
-			Collection<Atom> globalDatabaseFacts = globalFactsPerDatabase.get(super.getDatabaseConnection().getDatabaseName());
+			Collection<Atom> globalDatabaseFacts = globalFactsPerDatabase.get(canonicalDatabaseInstance.getDatabaseName());
 			if (globalDatabaseFacts == null) {
 				globalDatabaseFacts = new HashSet<>();
-				globalFactsPerDatabase.put(super.getDatabaseConnection().getDatabaseName(), globalDatabaseFacts);
+				globalFactsPerDatabase.put(canonicalDatabaseInstance.getDatabaseName(), globalDatabaseFacts);
 			}
 			for (Atom factToAdd : factsToAdd) {
 				/*
@@ -521,7 +527,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			globalDatabaseFacts.addAll(factsToAddToTheDatabase);
 			newFacts.addAll(factsToAddToTheDatabase);
 			/* The actual adding of the facts to the db */
-			super.addFacts(extendFactsUsingInstanceID(factsToAddToTheDatabase));
+			canonicalDatabaseInstance.addFacts(extendFactsUsingInstanceID(factsToAddToTheDatabase));
 			this.facts = newFacts;
 		} catch (Throwable t) {
 			System.err.println("Could not add facts: " + this.facts);
@@ -572,7 +578,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Atom[] result = new Atom[atoms.length];
 		for (int atomIndex = 0; atomIndex < atoms.length; ++atomIndex) {
 			Atom atom = atoms[atomIndex];
-			Relation relation = this.databaseConnection.getRelationNamesToDatabaseTables().get(atom.getPredicate().getName());
+			Relation relation = canonicalDatabaseInstance.getDatabaseConnection().getRelationNamesToDatabaseTables().get(atom.getPredicate().getName());
 			try {
 				relation.getAttributePosition("InstanceID");
 			} catch (NullPointerException e) {
@@ -597,7 +603,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		constantsToAtoms.putAll(this.constantsToAtoms);
 		try {
-			return new DatabaseChaseInstance(Sets.newHashSet(this.facts), this.getDatabaseConnection().clone());
+			return new DatabaseChaseInstance(Sets.newHashSet(this.facts), canonicalDatabaseInstance.getDatabaseConnection().clone());
 		} catch (SQLException e) {
 			throw new RuntimeException("Cloning a DatabaseChaseInstance failed due to an SQL exception " + e);
 		}
@@ -629,7 +635,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		constantsToAtoms.putAll(this.constantsToAtoms);
 		constantsToAtoms.putAll(((DatabaseChaseInstance) s).constantsToAtoms);
 
-		return new DatabaseChaseInstance(facts, classes, constantsToAtoms, this.getDatabaseConnection());
+		return new DatabaseChaseInstance(facts, classes, constantsToAtoms, canonicalDatabaseInstance.getDatabaseConnection());
 	}
 
 	/**
@@ -651,7 +657,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		// Create an SQL statement for the cleaned query
 		Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(converted, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
 		queries.add(Triple.of((Formula) query, pair.getLeft(), pair.getRight()));
-		return this.answerQueries(queries);
+		return canonicalDatabaseInstance.answerQueries(queries);
 	}
 
 	/**
@@ -666,7 +672,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		// Create an SQL statement for the cleaned query
 		Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(converted, new HashMap<Variable, Constant>());
 		queries.add(Triple.of((Formula) query, pair.getLeft(), pair.getRight()));
-		return this.answerQueries(queries);
+		return canonicalDatabaseInstance.answerQueries(queries);
 	}
 
 	/*
@@ -686,7 +692,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(source, t);
 			queries.add(Triple.of((Formula) source, pair.getLeft(), pair.getRight()));
 		}
-		return this.answerQueries(queries);
+		return canonicalDatabaseInstance.answerQueries(queries);
 	}
 
 	/**
@@ -712,7 +718,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	}
 
 	public void setDatabaseConnection(DatabaseConnection connection) {
-		this.databaseConnection = connection;
+		canonicalDatabaseInstance.setDatabaseConnection(connection);
 	}
 
 	/**
@@ -742,26 +748,26 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		System.arraycopy(extendedHeadAtoms, 0, allExtendedAtoms, extendedBodyAtoms.length, extendedHeadAtoms.length);
 
 		String query = "";
-		FromCondition from = this.databaseConnection.getSQLStatementBuilder().createFromStatement(extendedBodyAtoms);
-		SelectCondition projections = this.databaseConnection.getSQLStatementBuilder().createProjections(extendedBodyAtoms);
+		FromCondition from = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createFromStatement(extendedBodyAtoms);
+		SelectCondition projections = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createProjections(extendedBodyAtoms);
 		WhereCondition where = new WhereCondition();
-		WhereCondition equalities = this.databaseConnection.getSQLStatementBuilder().createAttributeEqualities(extendedBodyAtoms);
-		WhereCondition constantEqualities = this.databaseConnection.getSQLStatementBuilder().createEqualitiesWithConstants(extendedBodyAtoms);
+		WhereCondition equalities = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createAttributeEqualities(extendedBodyAtoms);
+		WhereCondition constantEqualities = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createEqualitiesWithConstants(extendedBodyAtoms);
 
 		WhereCondition factproperties = null;
 		if (facts != null && !facts.isEmpty())
-			factproperties = this.databaseConnection.getSQLStatementBuilder().enforceStateMembership(extendedBodyAtoms, this.databaseConnection.getRelationNamesToDatabaseTables(),
+			factproperties = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().enforceStateMembership(extendedBodyAtoms, canonicalDatabaseInstance.getDatabaseConnection().getRelationNamesToDatabaseTables(),
 					this.facts);
 		else
 			factproperties = new WhereCondition();
 
 		if (isEGD) {
-			WhereCondition activenessFilter = this.databaseConnection.getSQLStatementBuilder().createEGDActivenessFilter((EGD) dep, extendedBodyAtoms);
+			WhereCondition activenessFilter = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createEGDActivenessFilter((EGD) dep, extendedBodyAtoms);
 			if (!activenessFilter.isEmpty())
 				where.addCondition(activenessFilter);
 			if (((EGD) dep).isFromFunctionalDependency()) {
 				WhereCondition egdProperties = uk.ac.ox.cs.pdq.reasoning.chase.Utility.createConditionForEGDsCreatedFromFunctionalDependencies(extendedBodyAtoms,
-						this.databaseConnection.getRelationNamesToDatabaseTables(), this.databaseConnection.getSQLStatementBuilder());
+						canonicalDatabaseInstance.getDatabaseConnection().getRelationNamesToDatabaseTables(), canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder());
 				if (egdProperties != null)
 					where.addCondition(egdProperties);
 			}
@@ -770,30 +776,30 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		where.addCondition(constantEqualities);
 		where.addCondition(factproperties);
 
-		query = this.databaseConnection.getSQLStatementBuilder().buildSQLQuery(projections, from, where);
+		query = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().buildSQLQuery(projections, from, where);
 
 		if (t.equals(TriggerProperty.ACTIVE)) {
-			FromCondition from2 = this.databaseConnection.getSQLStatementBuilder().createFromStatement(extendedHeadAtoms);
-			SelectCondition nestedProjections = this.databaseConnection.getSQLStatementBuilder().createProjections(extendedHeadAtoms);
+			FromCondition from2 = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createFromStatement(extendedHeadAtoms);
+			SelectCondition nestedProjections = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createProjections(extendedHeadAtoms);
 			WhereCondition predicates2 = new WhereCondition();
-			WhereCondition nestedAttributeEqualities = (!(isEGD)) ? this.databaseConnection.getSQLStatementBuilder().createAttributeEqualities(allExtendedAtoms)
+			WhereCondition nestedAttributeEqualities = (!(isEGD)) ? canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createAttributeEqualities(allExtendedAtoms)
 					: uk.ac.ox.cs.pdq.reasoning.chase.Utility.createNestedAttributeEqualitiesForActiveTriggers(extendedBodyAtoms, extendedHeadAtoms,
-							this.databaseConnection.getSQLStatementBuilder());
-			WhereCondition nestedConstantEqualities = this.databaseConnection.getSQLStatementBuilder().createEqualitiesWithConstants(allExtendedAtoms);
+							canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder());
+			WhereCondition nestedConstantEqualities = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createEqualitiesWithConstants(allExtendedAtoms);
 			predicates2.addCondition(nestedAttributeEqualities);
 			predicates2.addCondition(nestedConstantEqualities);
 
 			WhereCondition nestedFactproperties = null;
 			if (facts != null && !facts.isEmpty())
-				nestedFactproperties = this.databaseConnection.getSQLStatementBuilder().enforceStateMembership(extendedHeadAtoms,
-						this.databaseConnection.getRelationNamesToDatabaseTables(), this.facts );
+				nestedFactproperties = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().enforceStateMembership(extendedHeadAtoms,
+						canonicalDatabaseInstance.getDatabaseConnection().getRelationNamesToDatabaseTables(), this.facts );
 			else
 				nestedFactproperties = new WhereCondition();
 			predicates2.addCondition(nestedFactproperties);
 
-			String nestedQuery = this.databaseConnection.getSQLStatementBuilder().buildSQLQuery(nestedProjections, from2, predicates2);
+			String nestedQuery = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().buildSQLQuery(nestedProjections, from2, predicates2);
 
-			query = this.databaseConnection.getSQLStatementBuilder().nestQueries(query, where, nestedQuery);
+			query = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().nestQueries(query, where, nestedQuery);
 		}
 
 		log.trace(dep);
@@ -819,7 +825,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 */
 	public Pair<String, LinkedHashMap<String, Variable>> createSQLQuery(ConjunctiveQuery source, Map<Variable, Constant> finalProjectionMapping) {
 		String query = "";
-		SQLStatementBuilder stb = this.databaseConnection.getSQLStatementBuilder();
+		SQLStatementBuilder stb = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder();
 		FromCondition from = stb.createFromStatement(source.getAtoms());
 		SelectCondition projections = stb.createProjections(source.getAtoms());
 		WhereCondition where = new WhereCondition();
@@ -829,7 +835,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 
 		WhereCondition factproperties = null;
 		if (facts != null && !facts.isEmpty())
-			factproperties = stb.enforceStateMembership(source.getAtoms(), this.databaseConnection.getRelationNamesToDatabaseTables(),this.facts);
+			factproperties = stb.enforceStateMembership(source.getAtoms(), canonicalDatabaseInstance.getDatabaseConnection().getRelationNamesToDatabaseTables(),this.facts);
 		else
 			factproperties = new WhereCondition();
 
@@ -849,11 +855,17 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	@Override
 	public int hashCode() {
 		if (this.hash == null)
-			this.hash = Objects.hash(this.facts, this.databaseConnection);
+			this.hash = Objects.hash(this.facts, canonicalDatabaseInstance.getDatabaseConnection());
 		return this.hash;
 	}
 
 	public int getInstanceId() {
 		return this.hashCode();
 	}
+
+	public void close() throws Exception {
+		if (canonicalDatabaseInstance!=null)
+			canonicalDatabaseInstance.close();
+	}
+
 }

@@ -82,27 +82,9 @@ public class SqlRacer {
 			dcPostgresSql = new DatabaseConnection(DatabaseParameters.Postgres, this.schema,PARALLEL_THREADS);
 			dcDerby = new DatabaseConnection(DatabaseParameters.Derby, this.schema);
 
-			derbyInstance = new DatabaseInstance(dcDerby) {
-				
-				@Override
-				public Collection<Atom> getFacts() {
-					return null;
-				}
-			};			
-			postgresInstance = new DatabaseInstance(dcPostgresSql) {
-				
-				@Override
-				public Collection<Atom> getFacts() {
-					return null;
-				}
-			};			
-			mySqlInstance = new DatabaseInstance(dcMySql) {
-				
-				@Override
-				public Collection<Atom> getFacts() {
-					return null;
-				}
-			};			
+			derbyInstance = new DatabaseInstance(dcDerby);			
+			postgresInstance = new DatabaseInstance(dcPostgresSql);			
+			mySqlInstance = new DatabaseInstance(dcMySql);			
 			setupThreads();
 		} catch (SQLException e) {
 			throw e;
