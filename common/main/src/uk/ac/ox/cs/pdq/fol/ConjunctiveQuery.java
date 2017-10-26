@@ -25,13 +25,13 @@ public class ConjunctiveQuery extends Formula {
 
 	protected final Formula child;
 	
-	/**  Cashed string representation of the atom. */
+	/**  Cached string representation of the atom. */
 	private String toString = null;
 
-	/**  Cashed list of free variables. */
+	/**  Cached list of free variables. */
 	protected final Variable[] freeVariables;
 
-	/**  Cashed list of bound variables. */
+	/**  Cached list of bound variables. */
 	private final Variable[] boundVariables;
 	
 	private final Atom[] atoms;
@@ -99,7 +99,7 @@ public class ConjunctiveQuery extends Formula {
 	}
 	
 	/**
-	 * Checks if the query is boolean boolean.
+	 * Checks if the query is a boolean query or not. 
 	 *
 	 */
 	public boolean isBoolean() {
