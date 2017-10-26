@@ -649,13 +649,13 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 *            An input query
 	 * @return the list of matches of the input query to the facts of this state.
 	 */
-	public List<Match> getMatches(ConjunctiveQuery query) {
+	public List<Match> getMatches(ConjunctiveQuery query, Map<Variable, Constant> substitutions) {
 		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();
 		// Create a new query out of each input query that references only the cleaned
 		// predicates
 		ConjunctiveQuery converted = this.convert(query);
 		// Create an SQL statement for the cleaned query
-		Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(converted, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(converted, substitutions);
 		queries.add(Triple.of((Formula) query, pair.getLeft(), pair.getRight()));
 		return canonicalDatabaseInstance.answerQueries(queries);
 	}

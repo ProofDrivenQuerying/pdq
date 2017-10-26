@@ -99,7 +99,7 @@ public class TestLinearGeneric extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, scenario1.getSchema(), 3);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(scenario1.getQuery(), scenario1.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(scenario1.getQuery());
 
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -206,7 +206,7 @@ public class TestLinearGeneric extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, scenario2.getSchema(), 3);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(scenario2.getQuery(), scenario2.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(scenario2.getQuery());
 
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -271,7 +271,7 @@ public class TestLinearGeneric extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, scenario3.getSchema(), 4);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(scenario3.getQuery(), scenario3.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(scenario3.getQuery());
 
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -420,7 +420,7 @@ public class TestLinearGeneric extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
 
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -477,7 +477,7 @@ public class TestLinearGeneric extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery(), ts.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery());
 
 		// Create database connection
 		DatabaseConnection databaseConnection = null;

@@ -104,32 +104,5 @@ public class PlannerUtility {
 		else 
 			return ConjunctiveQuery.create(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms));
 	}
-
-	/**
-	 * Accessible.
-	 *
-	 * @param <Q> the generic type
-	 * @param query the query
-	 * @param canonicalMapping the canonical mapping
-	 * @return the accessible query
-	 * @see uk.ac.ox.cs.pdq.fol.Query#createAccessibleQuery(AccessibleSchema)
-	 */
-	public static ConjunctiveQuery createAccessibleQuery(ConjunctiveQuery query, Map<Variable, Constant> canonicalMapping) {
-		Atom[] atoms = new Atom[query.getNumberOfAtoms()];
-		for (int atomIndex = 0; atomIndex < query.getNumberOfAtoms(); ++atomIndex) {
-			Atom queryAtom = query.getAtom(atomIndex);
-			Predicate predicate = null;
-			if(queryAtom.getPredicate() instanceof Relation) {
-				Relation relation = (Relation) queryAtom.getPredicate();
-				predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality());
-			}
-			else 
-				predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + queryAtom.getPredicate().getName(), queryAtom.getPredicate().getArity());
-			atoms[atomIndex] = Atom.create(predicate, queryAtom.getTerms());
-		}
-		if(atoms.length == 1) 
-			return ConjunctiveQuery.create(query.getFreeVariables(), atoms[0], canonicalMapping);
-		else 
-			return ConjunctiveQuery.create(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms), canonicalMapping);
-	}
+	
 }

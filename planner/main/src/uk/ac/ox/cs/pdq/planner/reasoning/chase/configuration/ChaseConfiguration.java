@@ -1,7 +1,9 @@
 package uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import com.google.common.collect.Lists;
@@ -13,6 +15,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
@@ -60,6 +63,9 @@ public abstract class ChaseConfiguration implements Configuration {
 
 	/** "Proper" output constants, where proper means it does not contain constants that are inputs. */
 	protected final Collection<Constant> properOutput;
+
+	private static Map<ConjunctiveQuery, Map<Variable, Constant>> substitutions = new HashMap<>();
+	private static Map<ConjunctiveQuery, Map<Variable, Constant>> substitutionsFiltered = new HashMap<>();
 	
 	/**
 	 * Instantiates a new chase configuration.
@@ -191,7 +197,13 @@ public abstract class ChaseConfiguration implements Configuration {
 	 * @throws PlannerException the planner exception
 	 */
 	public List<Match> matchesQuery(ConjunctiveQuery query) throws PlannerException {
-		return this.state.getMatches(query);
+		if (!getFilteredSubstitutions().containsKey(query)) {
+			Map<Variable, Constant> substitution = ConjunctiveQuery.generateSubstitutionToCanonicalVariables(query.getChild(0));
+			for(Variable variable:query.getBoundVariables()) 
+				substitution.remove(variable);
+			getFilteredSubstitutions().put(query,substitution);
+		}
+		return this.state.getMatches(query,getFilteredSubstitutions().get(query));
 	}
 
 	/**
@@ -256,6 +268,18 @@ public abstract class ChaseConfiguration implements Configuration {
 	
 	public Integer getId() {
 		return this.id;
+	}
+
+	public static Map<ConjunctiveQuery, Map<Variable, Constant>> getSubstitutions() {
+		return substitutions;
+	}
+
+	public static void setSubstitutions(Map<ConjunctiveQuery, Map<Variable, Constant>> substitutions) {
+		ChaseConfiguration.substitutions = substitutions;
+	}
+
+	public static Map<ConjunctiveQuery, Map<Variable, Constant>> getFilteredSubstitutions() {
+		return ChaseConfiguration.substitutionsFiltered;
 	}
 	
 

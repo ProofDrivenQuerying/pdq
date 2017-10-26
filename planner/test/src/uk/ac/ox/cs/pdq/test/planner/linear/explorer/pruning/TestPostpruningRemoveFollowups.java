@@ -183,7 +183,7 @@ public class TestPostpruningRemoveFollowups {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
 
 		// Create database connection
 		DatabaseConnection databaseConnection = null;

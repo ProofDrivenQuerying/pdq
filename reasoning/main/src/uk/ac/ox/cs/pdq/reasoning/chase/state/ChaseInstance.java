@@ -3,11 +3,14 @@ package uk.ac.ox.cs.pdq.reasoning.chase.state;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.Instance;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
  *
@@ -26,10 +29,11 @@ public interface ChaseInstance extends Instance{
 	 * mapping each free variable into the corresponding element is called a match for Q′ in v.
 	 * @param query
 	 * 		An input query
+	 * @param substitutions 
 	 * @return
 	 * 		the list of matches of the input query to the facts of this state.
 	 */
-	List<Match> getMatches(ConjunctiveQuery query);
+	List<Match> getMatches(ConjunctiveQuery query, Map<Variable, Constant> substitutions);
 	
 	/**
 	 * (Candidate match definition).

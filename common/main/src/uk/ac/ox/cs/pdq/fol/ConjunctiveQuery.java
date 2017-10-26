@@ -28,18 +28,6 @@ public class ConjunctiveQuery extends Formula {
 	/**  Cashed string representation of the atom. */
 	private String toString = null;
 
-	/** 
-	 * see #42
-	 * 
-	 * The grounding. */
-	protected final Map<Variable, Constant> canonicalSubstitution;
-	
-	/**  
-	 * See #42, together with the grounding field a few lines below, they are very confusing.
-	 * 
-	 * Map of query's free variables to chase constants. */
-	protected final Map<Variable, Constant> canonicalSubstitutionOfFreeVariables;
-	
 	/**  Cashed list of free variables. */
 	protected final Variable[] freeVariables;
 
@@ -52,18 +40,13 @@ public class ConjunctiveQuery extends Formula {
 	 * Builds a query given a set of free variables and its conjunction.
 	 * The query is grounded using the input mapping of variables to constants.
 	 */
-	private ConjunctiveQuery(Variable[] freeVariables, Conjunction child, Map<Variable, Constant> canonicalSubstitution) {
+	private ConjunctiveQuery(Variable[] freeVariables, Conjunction child) {
 		//Check that the body is a conjunction of positive atoms
 		Assert.assertTrue(isConjunctionOfAtoms(child));
 		Assert.assertTrue(Arrays.asList(child.getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
 		this.child = child;
 		this.freeVariables = freeVariables.clone();
 		this.boundVariables = ArrayUtils.removeElements(child.getFreeVariables(), freeVariables);
-		this.canonicalSubstitution = canonicalSubstitution;
-		this.canonicalSubstitutionOfFreeVariables = new LinkedHashMap<>();
-		this.canonicalSubstitutionOfFreeVariables.putAll(canonicalSubstitution);
-		for(Variable variable:this.getBoundVariables()) 
-			this.canonicalSubstitutionOfFreeVariables.remove(variable);
 		this.atoms = child.getAtoms();
 	}
 	
@@ -71,33 +54,14 @@ public class ConjunctiveQuery extends Formula {
 	 * Builds a query given a set of free variables and an atom.
 	 * The query is grounded using the input mapping of variables to constants.
 	 */
-	private ConjunctiveQuery(Variable[] freeVariables, Atom child, Map<Variable, Constant> canonicalSubstitution) {
+	private ConjunctiveQuery(Variable[] freeVariables, Atom child) {
 		//Check that the body is a conjunction of positive atoms
 		Assert.assertTrue(isConjunctionOfAtoms(child));
 		Assert.assertTrue(Arrays.asList(child.getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
 		this.child = child;
 		this.freeVariables = freeVariables.clone();
 		this.boundVariables = ArrayUtils.removeElements(child.getFreeVariables(), freeVariables);
-		this.canonicalSubstitution = canonicalSubstitution;
-		this.canonicalSubstitutionOfFreeVariables = new LinkedHashMap<>();
-		this.canonicalSubstitutionOfFreeVariables.putAll(canonicalSubstitution);
-		for(Variable variable:this.getBoundVariables()) 
-			this.canonicalSubstitutionOfFreeVariables.remove(variable);
 		this.atoms = child.getAtoms();
-	}
-	
-	/**
-	 * Builds a query given a set of free variables and its conjunction.
-	 */
-	private ConjunctiveQuery(Variable[] freeVariables, Conjunction child) {
-		this(freeVariables, child, generateSubstitutionToCanonicalVariables(child));
-	}
-	
-	/**
-	 * Builds a query given a set of free variables and an atom.
-	 */
-	private ConjunctiveQuery(Variable[] freeVariables, Atom child) {
-		this(freeVariables, child, generateSubstitutionToCanonicalVariables(child));
 	}
 	
 	private static boolean isConjunctionOfAtoms(Formula formula) {
@@ -142,21 +106,6 @@ public class ConjunctiveQuery extends Formula {
 		return this.getFreeVariables().length == 0;
 	}
 	
-	/**
-	 * Gets the mapping of the free query variables to canonical constants.
-	 *
-	 * @return a map of query's free variables to its canonical constants.
-	 * Given a CQ Q, the canonical database of Q is the instance which has for each atom R(\vec{v}) 
-	 * in Q a corresponding fact for relation R with \vec{v} as a tuple. The canonical constants are the constants of the canonical database of Q
-	 */
-	public Map<Variable, Constant> getSubstitutionOfFreeVariablesToCanonicalConstants() {
-		return this.canonicalSubstitutionOfFreeVariables;
-	}
-	
-	public Map<Variable, Constant> getSubstitutionToCanonicalConstants() {
-		return this.canonicalSubstitution;
-	}
-
 	@Override
 	public java.lang.String toString() {
 		if(this.toString == null) {
@@ -205,16 +154,7 @@ public class ConjunctiveQuery extends Formula {
 	public Variable[] getBoundVariables() {
 		return this.boundVariables.clone();
 	}
-	
-	
-    public static ConjunctiveQuery create(Variable[] freeVariables, Conjunction child, Map<Variable, Constant> canonicalSubstitution) {
-        return Cache.conjunctiveQuery.retrieve(new ConjunctiveQuery(freeVariables, child, canonicalSubstitution));
-    }
-    
-    public static ConjunctiveQuery create(Variable[] freeVariables, Atom child, Map<Variable, Constant> canonicalSubstitution) {
-        return Cache.conjunctiveQuery.retrieve(new ConjunctiveQuery(freeVariables, child, canonicalSubstitution));
-    }
-    
+
     public static ConjunctiveQuery create(Variable[] freeVariables, Conjunction child) {
         return Cache.conjunctiveQuery.retrieve(new ConjunctiveQuery(freeVariables, child));
     }

@@ -4,7 +4,9 @@ import java.sql.SQLException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -24,7 +26,9 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.DynamicStatistics;
 import uk.ac.ox.cs.pdq.logging.StatKey;
@@ -32,6 +36,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.logging.performance.ConstantsStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.EventDrivenExplorerStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -198,8 +203,17 @@ public class ExplorationSetUp {
 			this.schema.addConstants(Utility.getTypedConstants(query));
 			this.accessibleSchema.addConstants(Utility.getTypedConstants(query));
 		}
-
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		Map<Variable, Constant> substitution = ConjunctiveQuery.generateSubstitutionToCanonicalVariables(query.getChild(0));
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
+		substitutionFiltered.putAll(substitution);
+		for(Variable variable:query.getBoundVariables()) 
+			substitutionFiltered.remove(variable);
+		ChaseConfiguration.getSubstitutions().put(query,substitution);
+		ChaseConfiguration.getFilteredSubstitutions().put(query,substitutionFiltered);
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
+		ChaseConfiguration.getSubstitutions().put(accessibleQuery,substitution);
+		ChaseConfiguration.getFilteredSubstitutions().put(accessibleQuery,substitutionFiltered);
+		
 		Explorer explorer = null;
 		DatabaseConnection databaseConnection = new DatabaseConnection(this.databaseParams,this.accessibleSchema);
 

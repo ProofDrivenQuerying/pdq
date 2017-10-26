@@ -84,7 +84,7 @@ public class TestLinearOptimized extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, ts.getSchema(),3);
 		
 		//Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery(), ts.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery());
 	
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -204,7 +204,7 @@ public class TestLinearOptimized extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, ts.getSchema(),3);
 		
 		//Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery(), ts.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery());
 	
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -293,7 +293,7 @@ public class TestLinearOptimized extends PdqTest {
 		
 		
 		//Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery(), ts.getQuery().getSubstitutionOfFreeVariablesToCanonicalConstants());
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery());
 	
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
