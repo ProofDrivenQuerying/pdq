@@ -1,8 +1,6 @@
 package uk.ac.ox.cs.pdq.fol;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -72,30 +70,6 @@ public class ConjunctiveQuery extends Formula {
 			return true;
 		}
 		return false;
-	}
-	/**
-	 * see #42
-	 * Generate canonical mapping.
-	 *
-	 * @param formula the body
-	 * @return 		a mapping of variables of the input conjunction to constants. 
-	 * 		A fresh constant is created for each variable of the conjunction. 
-	 * 		This method is invoked by the conjunctive query constructor when the constructor is called with empty input canonical mapping.
-	 */
-	public static Map<Variable, Constant> generateSubstitutionToCanonicalVariables(Formula formula) {
-		Map<Variable, Constant> canonicalMapping = new LinkedHashMap<>();
-			for (Atom atom: formula.getAtoms()) {
-				for (Term t: atom.getTerms()) {
-					if (t.isVariable()) {
-						Constant c = canonicalMapping.get(t);
-						if (c == null) {
-							c = UntypedConstant.create(ChaseConstantGenerator.getName());
-							canonicalMapping.put((Variable) t, c);
-						}
-					}
-				}
-			}
-		return canonicalMapping;
 	}
 	
 	/**

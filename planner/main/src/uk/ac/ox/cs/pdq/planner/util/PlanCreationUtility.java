@@ -229,7 +229,7 @@ public class PlanCreationUtility {
 		Type[] variableTypes = computeVariableTypes(query,schema);
 		Variable[] freeVariables = query.getFreeVariables();
 		for (int index = 0; index < freeVariables.length; ++index)  {
-			Constant constant = ChaseConfiguration.getFilteredSubstitutions().get(query).get(freeVariables[index]);
+			Constant constant = ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().get(query).get(freeVariables[index]);
 			Attribute attribute = Attribute.create(variableTypes[index], ((UntypedConstant)constant).getSymbol());
 			Assert.assertTrue(Arrays.asList(plan.getOutputAttributes()).contains(attribute));
 			projections.add(attribute);

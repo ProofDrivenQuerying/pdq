@@ -124,7 +124,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	private static Collection<Atom> createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(ConjunctiveQuery query, Schema schema) {
 		// Gets the canonical database of the query
 		List<Atom> facts = new ArrayList<>(); 
-		facts.addAll(Arrays.asList(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, ChaseConfiguration.getSubstitutions().get(query)).getAtoms()));
+		facts.addAll(Arrays.asList(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, ChaseConfiguration.getCanonicalSubstitution().get(query)).getAtoms()));
 		// Create the Accessible(.) facts
 		// One Accessible(.) is being created for every schema constant
 		for (TypedConstant constant:uk.ac.ox.cs.pdq.util.Utility.getTypedConstants(query)) 

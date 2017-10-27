@@ -203,16 +203,16 @@ public class ExplorationSetUp {
 			this.schema.addConstants(Utility.getTypedConstants(query));
 			this.accessibleSchema.addConstants(Utility.getTypedConstants(query));
 		}
-		Map<Variable, Constant> substitution = ConjunctiveQuery.generateSubstitutionToCanonicalVariables(query.getChild(0));
+		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query.getChild(0));
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
 		substitutionFiltered.putAll(substitution);
 		for(Variable variable:query.getBoundVariables()) 
 			substitutionFiltered.remove(variable);
-		ChaseConfiguration.getSubstitutions().put(query,substitution);
-		ChaseConfiguration.getFilteredSubstitutions().put(query,substitutionFiltered);
+		ChaseConfiguration.getCanonicalSubstitution().put(query,substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
-		ChaseConfiguration.getSubstitutions().put(accessibleQuery,substitution);
-		ChaseConfiguration.getFilteredSubstitutions().put(accessibleQuery,substitutionFiltered);
+		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 		
 		Explorer explorer = null;
 		DatabaseConnection databaseConnection = new DatabaseConnection(this.databaseParams,this.accessibleSchema);
