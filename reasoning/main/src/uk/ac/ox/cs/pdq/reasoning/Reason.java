@@ -22,7 +22,6 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Bootstrapping class for starting the reasoner. 
@@ -159,9 +158,6 @@ public class Reason {
 			if (schema == null || query == null) {
 				throw new IllegalStateException("Schema and query must be provided.");
 			}
-			schema.addConstants(Utility.getTypedConstants(query));
-			
-			
 			ReasonerFactory reasonerFactory = new ReasonerFactory(
 					new EventBus(),
 					true,

@@ -27,7 +27,6 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Tests the restricted chase implementation.
@@ -196,7 +195,6 @@ public class RestrictedChaserTest {
 				if (schema == null || query == null) {
 					throw new IllegalStateException("Schema and query must be provided.");
 				}
-				schema.addConstants(Utility.getTypedConstants(query));
 				RestrictedChaser reasoner = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
 
 				DatabaseConnection dbcon = new DatabaseConnection(DatabaseParameters.Derby,schema);
@@ -268,9 +266,8 @@ public class RestrictedChaserTest {
 		Term[] variables = new Term[strings.length];
 		for(int stringIndex = 0; stringIndex < strings.length; ++stringIndex) {
 			String term = strings[stringIndex];
-			TypedConstant constant = schema.getConstant(term);
-			if(constant != null) 
-				variables[stringIndex] = TypedConstant.create(constant);
+			if(term.startsWith("_Typed")) 
+				variables[stringIndex] = TypedConstant.deSerializeTypedConstant(term);
 			else 
 				variables[stringIndex] = UntypedConstant.create(term);
 		}

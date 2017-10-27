@@ -1,7 +1,11 @@
 package uk.ac.ox.cs.pdq.db;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.junit.Assert;
 
@@ -103,5 +107,109 @@ public class TypedConstant extends Constant implements Typed, Serializable, Comp
 			return ((Integer) this.value).equals(o.value);
 		else
 			return this.value.equals(o.value);
+	}
+
+	/**
+	 * When a TypedConstant was converted into a string by the serializeToString() method, thismathod can reverse it and create a TypedConstant object out of that String.
+	 * 
+	 * TypedConstants are serialised as: <br>
+	 * <code> "_Typed" + ((TypedConstant)term).getType() + "_" + ((TypedConstant)term).getValue(); </code> 
+	 * @param serializedTypedConstant
+	 * @return
+	 */
+	public static TypedConstant deSerializeTypedConstant(String serializedTypedConstant) {
+		if (serializedTypedConstant != null && serializedTypedConstant.startsWith("_Typed")) {
+			String typeAndValue = serializedTypedConstant.substring(6);
+			String type = typeAndValue.substring(6, typeAndValue.indexOf('_'));
+			String value = typeAndValue.substring(typeAndValue.indexOf('_') + 1);
+			return TypedConstant.create(convertStringToType(value, convertStringToType(type)));
+		}
+		return null;
+	}
+
+	/**
+	 * Converts a given value to a required type. For example the string "500" can
+	 * be converted to an Integer, Double, etc typed java objects.
+	 * 
+	 * @param value
+	 * @param type
+	 * @return
+	 */
+	public static Object convertStringToType(String value, Type type) {
+		if (type == null || value == null) {
+			return value;
+		}
+		if (type == Double.class) {
+			return new Double(Double.parseDouble(value));
+		} else if (type == Integer.class) {
+			try {
+				return new Integer(Integer.parseInt(value));
+			} catch (NumberFormatException e) {
+				return value;
+			}
+		} else if (type == java.sql.Date.class) {
+			SimpleDateFormat sdfmt1 = new SimpleDateFormat("yyyy-MM-dd");
+			java.util.Date dDate;
+			try {
+				dDate = sdfmt1.parse(value);
+				return new java.sql.Date(dDate.getTime());
+			} catch (ParseException e) {
+				return value;
+			}
+		} else if (type == java.util.Date.class) {
+			SimpleDateFormat sdfmt1 = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				return sdfmt1.parse(value);
+			} catch (ParseException e) {
+				return value;
+			}
+		} else {
+			try {
+				Constructor<?> constructor = Class.forName(type.getTypeName()).getConstructor(String.class);
+				if (constructor == null) {
+					return value;
+				}
+				return constructor.newInstance(value);
+			} catch (Exception e) {
+				return value;
+			}
+		}
+	}
+
+	/**
+	 * Converts a String to a type object. For example the "Integer.class" or the
+	 * "java.lang.Integer" strings will be returned as the Integer java type.
+	 * 
+	 * @param typeString
+	 * @return
+	 */
+	public static Type convertStringToType(String typeString) {
+		Type type = null;
+		if (typeString != null && typeString.equalsIgnoreCase("String.class"))
+			type = String.class;
+		else if (typeString != null && typeString.equalsIgnoreCase("Integer.class"))
+			type = Integer.class;
+		else if (typeString != null && typeString.equalsIgnoreCase("Double.class"))
+			type = Double.class;
+		else if (typeString != null && typeString.equalsIgnoreCase("Date.class"))
+			type = Date.class;
+		else {
+			try {
+				type = Class.forName(typeString);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		return type;
+	}
+
+	/**
+	 * Converts this TypedConstant into a string that can be parsed back to a
+	 * TypedConstant Object.
+	 * 
+	 * @return
+	 */
+	public String serializeToString() {
+		return "_Typed" + getType() + "_" + getValue();
 	}
 }

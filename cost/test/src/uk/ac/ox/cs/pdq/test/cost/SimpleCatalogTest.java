@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.test.cost;
 
-import java.util.Arrays;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,7 +10,6 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
@@ -46,7 +43,6 @@ public class SimpleCatalogTest extends PdqTest {
 		Relation relation2 = Relation.create("R2", new Attribute[] { Attribute.create(Integer.class, "r2_attribute") }, new AccessMethod[] { am2 });
 		Schema schema = new Schema(new Relation[] { relation1, relation2 });
 		try {
-			schema.addConstants(Arrays.asList(new TypedConstant[] { TypedConstant.create("C1"), TypedConstant.create("C1") }));
 			SimpleCatalog catalog = new SimpleCatalog(schema, "test//catalog.properties");
 			Assert.assertNotNull(catalog);
 			Assert.assertTrue(13.0 == catalog.getCost(relation1, am1));

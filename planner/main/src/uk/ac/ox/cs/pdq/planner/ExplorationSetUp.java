@@ -42,7 +42,6 @@ import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.EventHandler;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Provides high level functions for finding an optimal plan for a query with
@@ -196,12 +195,7 @@ public class ExplorationSetUp {
 		boolean collectStats = this.statsLogger != null;
 		if (noDep) {
 			this.schema = new Schema(this.schema.getRelations());
-			this.schema.addConstants(Utility.getTypedConstants(query));
 			this.accessibleSchema = new AccessibleSchema(this.schema);
-		}
-		else {
-			this.schema.addConstants(Utility.getTypedConstants(query));
-			this.accessibleSchema.addConstants(Utility.getTypedConstants(query));
 		}
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query.getChild(0));
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 

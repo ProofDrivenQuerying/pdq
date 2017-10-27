@@ -190,7 +190,11 @@ public class SQLStatementBuilderTest extends PdqTest {
 			for (int i = 2; i <= columnsNumber-1; i++) {
 				columnValue = rs.getString(i);
 				if (print) System.out.print(columnValue + "\t");
-				Assert.assertEquals(EXPECTED_RESULTS[i - 1][expectedIndex], columnValue);
+				if (columnValue.startsWith("_Typed")) {
+					Assert.assertTrue(columnValue.contains(EXPECTED_RESULTS[i - 1][expectedIndex]));
+				} else {
+					Assert.assertEquals(EXPECTED_RESULTS[i - 1][expectedIndex], columnValue);
+				}
 			}
 			if (print) System.out.println("");
 		}

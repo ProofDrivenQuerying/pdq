@@ -196,7 +196,7 @@ public class DatabaseInstance {
 					// derby doesn't like the USE databaseName command, so we switch it off.
 					dbName = null;
 				}
-				threads.add(new ExecuteSQLQueryThread(queries, this.databaseConnection.getSchema().getConstants(), this.databaseConnection.getSynchronousConnections(j), dbName));
+				threads.add(new ExecuteSQLQueryThread(queries, this.databaseConnection.getSynchronousConnections(j), dbName));
 			}
 			long start = System.currentTimeMillis();
 			try {

@@ -27,7 +27,6 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Holds unconditional statistics.
@@ -610,7 +609,6 @@ public class SimpleCatalog implements Catalog{
 			if (schema == null || query == null) {
 				throw new IllegalStateException("Schema and query must be provided.");
 			}
-			schema.addConstants(Utility.getTypedConstants(query));
 			SimpleCatalog catalog = new SimpleCatalog(schema, catalogfile);
 			log.trace(catalog.toString());
 		} catch (FileNotFoundException e) {

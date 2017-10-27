@@ -38,17 +38,12 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 	 * - a map of projected variables **/
 	protected final Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries;
 	
-	/** List of database constants **/
-	protected final Map<String, TypedConstant> constants;
-
 	private String databaseName;
 
 	public ExecuteSQLQueryThread(Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries, 
-			Map<String, TypedConstant> constants,
 			Connection connection, String databaseName) {
 		this.connection = connection;
 		this.queries = queries;
-		this.constants = constants;
 		this.databaseName = databaseName;
 	}
 	
@@ -84,7 +79,10 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 						for(Entry<String, Variable> variables:projectedVariables.entrySet()) {
 							Variable variable = variables.getValue();
 							String assigned = resultSet.getString(f);
-							TypedConstant constant = this.constants.get(assigned);
+							TypedConstant constant = null;
+							if (assigned!= null && assigned.startsWith("_Typed")) {
+								constant = TypedConstant.deSerializeTypedConstant(assigned); 
+							} 
 							Constant constantTerm = constant != null ? constant : UntypedConstant.create(assigned);
 							map.put(variable, constantTerm);
 							f++;

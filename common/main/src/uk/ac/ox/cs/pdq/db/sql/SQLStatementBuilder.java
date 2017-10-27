@@ -470,7 +470,7 @@ public abstract class SQLStatementBuilder {
 				if (!term.isVariable() && !term.isUntypedConstant()) {
 					StringBuilder eq = new StringBuilder();
 					eq.append(alias == null ? fact.getPredicate().getName() : alias).append(".").append(schema.getRelation(fact.getPredicate().getName()).getAttribute(index).getName()).append('=');
-					eq.append("'").append(((TypedConstant) term).toString()).append("'");
+					eq.append("'").append(((TypedConstant)term).serializeToString()).append("'");
 					constantPredicates.add(eq.toString());
 				}
 			}

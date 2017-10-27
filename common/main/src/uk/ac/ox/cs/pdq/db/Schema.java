@@ -2,7 +2,6 @@
 package uk.ac.ox.cs.pdq.db;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.SchemaAdapter;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * A database schema.
@@ -33,9 +31,6 @@ public class Schema {
 
 	/** The schema dependencies. */
 	protected final Dependency[] nonEgdDependencies;
-
-	/** A map from a constant's name to the constant object. */
-	protected final Map<String, TypedConstant> constants = new LinkedHashMap<>();
 
 	/** The EGDs of the keys*. */
 	protected final EGD[] egdDependencies;
@@ -96,11 +91,6 @@ public class Schema {
 		// }
 		// this.egdDependencies = EGDs.toArray(new EGD[EGDs.size()]);
 
-		for (Dependency dependency : this.nonEgdDependencies) {
-			for (TypedConstant constant : Utility.getTypedConstants(dependency)) {
-				this.constants.put(constant.toString(), constant);
-			}
-		}
 	}
 
 	/**
@@ -176,35 +166,6 @@ public class Schema {
 		}
 		result.append("\n}");
 		return result.toString();
-	}
-
-	/**
-	 * Updates the schema constants with the input map.
-	 *
-	 * @param constants
-	 *            the constants
-	 */
-	public void addConstants(Collection<TypedConstant> constants) {
-		for (TypedConstant constant : constants)
-			this.constants.put(constant.toString(), constant);
-	}
-
-	/**
-	 *
-	 * @return the schema constants
-	 */
-	public Map<String, TypedConstant> getConstants() {
-		return this.constants;
-	}
-
-	/**
-	 *
-	 * @param name
-	 *            the name
-	 * @return the constant with the given name
-	 */
-	public TypedConstant getConstant(String name) {
-		return this.constants.get(name);
 	}
 
 	/**
