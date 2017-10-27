@@ -77,10 +77,6 @@ public class ExplorationSetUp {
 	/**   */
 	private Schema schema;
 
-
-	/** The external cost estimator. */
-	private CostEstimator externalCostEstimator = null;
-
 	/** The auxiliary schema, including axioms capturing access methods  */
 	private AccessibleSchema accessibleSchema;
 
@@ -150,15 +146,6 @@ public class ExplorationSetUp {
 	}
 
 	/**
-	 * Sets the cost estimator.
-	 *
-	 * @param estimator CostEstimator<?>
-	 */
-	public void setCostEstimator(CostEstimator estimator) {
-		this.externalCostEstimator = estimator;
-	}
-
-	/**
 	 * Search a best plan for the given schema and query.
 	 *
 	 * @param <P> the generic type
@@ -207,9 +194,7 @@ public class ExplorationSetUp {
 
 		try{
 			// Top-level initialisations
-			CostEstimator costEstimator = this.externalCostEstimator;
-			if (costEstimator == null) 
-				costEstimator = CostEstimatorFactory.getEstimator(this.costParams, this.schema);
+			CostEstimator costEstimator = CostEstimatorFactory.getEstimator(this.costParams, this.schema);
 
 			Chaser reasoner = new ReasonerFactory(this.eventBus, collectStats, this.reasoningParams).getInstance();
 			
