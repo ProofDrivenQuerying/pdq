@@ -215,6 +215,7 @@ public class LinearKChase extends LinearExplorer {
 	
 		Cost cost = this.costEstimator.cost(freshNode.getConfiguration().getPlan());
 		freshNode.getConfiguration().setCost(cost);
+		freshNode.setCostOfBestPlanFromRoot(cost);
 		
 		this.planTree.addVertex(freshNode);
 		this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
@@ -234,7 +235,7 @@ public class LinearKChase extends LinearExplorer {
 		/* If at least one node in the plan tree dominates the newly created node, then kill the newly created node   */
 		if (!domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
 			this.stats.start(MILLI_DOMINANCE);
-			SearchNode dominatingNode = ExplorerUtility.isDominated(ExplorerUtility.getNodesThatAreFullyChased(this.planTree), freshNode);
+			SearchNode dominatingNode = ExplorerUtility.isCostAndFactDominated(ExplorerUtility.getNodesThatAreFullyChased(this.planTree), freshNode);
 			this.stats.stop(MILLI_DOMINANCE);
 			if(dominatingNode != null) {
 				domination = true;

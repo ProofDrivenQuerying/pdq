@@ -1,10 +1,7 @@
 package uk.ac.ox.cs.pdq.planner.dominance;
 
-import com.google.common.base.Preconditions;
-
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
-import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
 
 /**
  * Creates success dominance detectors using the input parameters.
