@@ -9,7 +9,6 @@ import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
@@ -94,7 +93,7 @@ public class ExplorerFactory {
 			DatabaseConnection connection,
 			CostEstimator costEstimator,
 			PlannerParameters parameters,
-			ReasoningParameters reasoningParameters, DatabaseParameters dbParams) throws Exception {
+			ReasoningParameters reasoningParameters) throws Exception {
 
 		Dominance[] dominance = new DominanceFactory(parameters.getDominanceType()).getInstance();
 		SuccessDominance successDominance = new SuccessDominanceFactory().getInstance();

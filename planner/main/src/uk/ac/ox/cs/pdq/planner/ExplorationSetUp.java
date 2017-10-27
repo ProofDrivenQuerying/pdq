@@ -224,8 +224,7 @@ public class ExplorationSetUp {
 					databaseConnection,
 					costEstimator,
 					this.plannerParams,
-					this.reasoningParams, 
-					this.databaseParams);
+					this.reasoningParams);
 
 			// Chain all statistics collectors
 			if (collectStats) {
