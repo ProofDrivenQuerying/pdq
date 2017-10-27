@@ -6,13 +6,11 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Dependency;
@@ -63,10 +61,9 @@ public class AccessibleSchema extends Schema {
 	 * @param dependencies 		list if schema dependencies
 	 * @param constantsMap 		Map of schema constant names to constants
 	 */
-	private AccessibleSchema(Relation[] relations, Dependency[] dependencies, Map<String, TypedConstant> constantsMap) {
+	private AccessibleSchema(Relation[] relations, Dependency[] dependencies) {
 		super(computeAccessibleSchemaRelations(relations), computeAccessibleSchemaAxioms(relations, dependencies));
 		this.originalDependencies = dependencies.clone();
-		this.constants.putAll(constantsMap);
 		this.accessibilityAxioms = lastComputedaccessibilityAxioms.clone();
 		this.inferredAccessibilityAxioms = lastComputedinferredAccessibilityAxioms.clone();
 	}
@@ -76,7 +73,7 @@ public class AccessibleSchema extends Schema {
 	 * @param schema Schema
 	 */
 	public AccessibleSchema(Schema schema) {
-		this(schema.getRelations(), schema.getDependencies(), schema.getConstants());
+		this(schema.getRelations(), schema.getDependencies());
 	}
 
 	/**

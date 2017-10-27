@@ -59,10 +59,6 @@ public class TestAccessibleSchema extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 		Assert.assertNotNull(accessibleSchema);
 
-		// constants
-		Assert.assertEquals(2, accessibleSchema.getConstants().size());
-		Assert.assertEquals(TypedConstant.create("constant1"), accessibleSchema.getConstant("constant1"));
-		Assert.assertEquals(TypedConstant.create("constant2"), accessibleSchema.getConstant("constant2"));
 		// accessibility axioms
 		Assert.assertNotNull(accessibleSchema.getAccessibilityAxioms());
 		Assert.assertEquals(8, accessibleSchema.getAccessibilityAxioms().length);

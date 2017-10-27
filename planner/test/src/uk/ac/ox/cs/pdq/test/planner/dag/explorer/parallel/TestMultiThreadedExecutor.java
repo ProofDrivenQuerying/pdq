@@ -5,8 +5,10 @@ import static org.mockito.Mockito.when;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -29,6 +31,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -49,6 +52,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
@@ -112,6 +116,15 @@ public class TestMultiThreadedExecutor extends PdqTest {
 
 		// Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery());
+		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(ts.getQuery());
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
+		substitutionFiltered.putAll(substitution);
+		for(Variable variable:ts.getQuery().getBoundVariables()) 
+			substitutionFiltered.remove(variable);
+		ChaseConfiguration.getCanonicalSubstitution().put(ts.getQuery(),substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
+		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
 		DatabaseConnection connection = null;
@@ -250,6 +263,15 @@ public class TestMultiThreadedExecutor extends PdqTest {
 
 		// Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery());
+		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(ts.getQuery());
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
+		substitutionFiltered.putAll(substitution);
+		for(Variable variable:ts.getQuery().getBoundVariables()) 
+			substitutionFiltered.remove(variable);
+		ChaseConfiguration.getCanonicalSubstitution().put(ts.getQuery(),substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
+		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
 		DatabaseConnection connection = null;

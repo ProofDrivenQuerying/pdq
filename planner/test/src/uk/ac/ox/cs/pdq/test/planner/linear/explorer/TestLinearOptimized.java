@@ -3,6 +3,8 @@ package uk.ac.ox.cs.pdq.test.planner.linear.explorer;
 import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
@@ -21,9 +23,9 @@ import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
@@ -38,6 +40,7 @@ import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimized;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
@@ -85,7 +88,16 @@ public class TestLinearOptimized extends PdqTest {
 		
 		//Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery());
-	
+		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(ts.getQuery());
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
+		substitutionFiltered.putAll(substitution);
+		for(Variable variable:ts.getQuery().getBoundVariables()) 
+			substitutionFiltered.remove(variable);
+		ChaseConfiguration.getCanonicalSubstitution().put(ts.getQuery(),substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
+		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
@@ -205,7 +217,16 @@ public class TestLinearOptimized extends PdqTest {
 		
 		//Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery());
-	
+		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(ts.getQuery());
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
+		substitutionFiltered.putAll(substitution);
+		for(Variable variable:ts.getQuery().getBoundVariables()) 
+			substitutionFiltered.remove(variable);
+		ChaseConfiguration.getCanonicalSubstitution().put(ts.getQuery(),substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
+		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
@@ -294,7 +315,16 @@ public class TestLinearOptimized extends PdqTest {
 		
 		//Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery());
-	
+		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(ts.getQuery());
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
+		substitutionFiltered.putAll(substitution);
+		for(Variable variable:ts.getQuery().getBoundVariables()) 
+			substitutionFiltered.remove(variable);
+		ChaseConfiguration.getCanonicalSubstitution().put(ts.getQuery(),substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
+		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
@@ -380,9 +410,6 @@ public class TestLinearOptimized extends PdqTest {
 	private void assertAccessibleSchema(AccessibleSchema accessibleSchema, Schema schema, int numberOfAxioms) {
 		Assert.assertNotNull(accessibleSchema);
 		
-		// constants
-		Assert.assertEquals(1,accessibleSchema.getConstants().size());
-		Assert.assertEquals(TypedConstant.create(5),accessibleSchema.getConstant("5"));
 		// accessibility axioms
 		Assert.assertNotNull(accessibleSchema.getAccessibilityAxioms());
 		Assert.assertEquals(numberOfAxioms,accessibleSchema.getAccessibilityAxioms().length);

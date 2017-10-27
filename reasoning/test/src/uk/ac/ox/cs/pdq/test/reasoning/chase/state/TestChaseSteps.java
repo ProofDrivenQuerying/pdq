@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
@@ -53,7 +52,6 @@ public class TestChaseSteps extends PdqTest {
 	public void setupMocks() throws SQLException {
 		MockitoAnnotations.initMocks(this);
 		this.schema = new Schema(new Relation[] { this.rel2 }, new Dependency[] { this.egd });
-		this.schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
 	}
 
 	public void setConnection(DatabaseConnection dc) {

@@ -23,7 +23,6 @@ import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes;
 import uk.ac.ox.cs.pdq.runtime.exec.SetupPlanExecutor;
 import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 
 /**
@@ -97,8 +96,6 @@ public class PipelinedPlanExecutorTest {
 				if (schema == null || query == null) {
 					throw new IllegalStateException("Schema and query must be provided.");
 				}
-
-				schema.addConstants(Utility.getTypedConstants(query));
 
 				Entry<RelationalTerm, Cost> plan = PlannerTestUtilities.obtainPlan(PATH + p, schema); //readPlan(PATH + p, schema, query);
 

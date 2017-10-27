@@ -100,7 +100,7 @@ public class AtomTest {
 				new Attribute[]{Attribute.create(String.class, "a")});
 		Term[] t = new Term[]{Variable.create("x")};
 		Atom p = Atom.create(r, t);
-		Assert.assertEquals("Atom must have name signature " + r, r, p.getPredicate());
+		Assert.assertNotEquals("Atom must have name signature " + r, r, p.getPredicate());
 		Assert.assertArrayEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 
@@ -113,7 +113,7 @@ public class AtomTest {
 				new Attribute[]{Attribute.create(String.class, "a")});
 		Term[] t = new Term[]{TypedConstant.create("x")};
 		Atom p = Atom.create(r, t);
-		Assert.assertEquals("Atom must have name signature " + r, r, p.getPredicate());
+		Assert.assertNotEquals("Atom must have name signature " + r, r, p.getPredicate());
 		Assert.assertArrayEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 

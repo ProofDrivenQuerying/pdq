@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -22,6 +24,8 @@ import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
@@ -34,6 +38,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.SelectorOfPairsOfConfigurationsToCom
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
@@ -71,6 +76,15 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 
 		// Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery());
+		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(ts.getQuery());
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
+		substitutionFiltered.putAll(substitution);
+		for(Variable variable:ts.getQuery().getBoundVariables()) 
+			substitutionFiltered.remove(variable);
+		ChaseConfiguration.getCanonicalSubstitution().put(ts.getQuery(),substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
+		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
 		DatabaseConnection connection = null;
@@ -89,6 +103,7 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
 		try {
+			
 			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser,
 					connection);
 			Set<String> predicateNames = new HashSet<>();
@@ -189,6 +204,15 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 
 		// Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery());
+		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(ts.getQuery());
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
+		substitutionFiltered.putAll(substitution);
+		for(Variable variable:ts.getQuery().getBoundVariables()) 
+			substitutionFiltered.remove(variable);
+		ChaseConfiguration.getCanonicalSubstitution().put(ts.getQuery(),substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
+		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
 		DatabaseConnection connection = null;

@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.test.planner.reasoning.chase.accessiblestate;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
@@ -25,12 +25,16 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
@@ -56,7 +60,6 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		this.InferredAccessibleR = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R2", new Attribute[] { at21, at22, instanceID }, new AccessMethod[] {});
 		Schema schema = new Schema(new Relation[] { this.rel2, this.S_s });
 		this.connection = new DatabaseConnection(DatabaseParameters.Derby, schema);
-		schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
 		this.accessibleSchema = new AccessibleSchema(schema);
 	}
 
@@ -513,7 +516,15 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		TestScenario ts = getStandardScenario1();
 		// Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
-		
+		ConjunctiveQuery query = ts.getQuery();
+		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
+		substitutionFiltered.putAll(substitution);
+		for(Variable variable:query.getBoundVariables()) 
+			substitutionFiltered.remove(variable);
+		ChaseConfiguration.getCanonicalSubstitution().put(query,substitution);
+		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
+
 		// Create database connection
 		DatabaseConnection connection = null;
 		

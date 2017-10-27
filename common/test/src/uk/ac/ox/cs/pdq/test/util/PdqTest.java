@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.test.util;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
@@ -8,8 +7,6 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import org.mockito.MockitoAnnotations;
-
-import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
@@ -176,7 +173,6 @@ public class PdqTest {
 
 		// Create schema
 		Schema schema = new Schema(relations);
-		schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(5)));
 		TestScenario ts = new TestScenario();
 		ts.setSchema(schema);
 		ts.setQuery(query);
@@ -215,7 +211,6 @@ public class PdqTest {
 
 		// Create schema
 		Schema schema = new Schema(relations);
-		schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(5)));
 		TestScenario ts = new TestScenario();
 		ts.setSchema(schema);
 		ts.setQuery(query);
@@ -271,7 +266,6 @@ public class PdqTest {
 
 		// Create schema
 		Schema schema = new Schema(relations);
-		schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(5)));
 		TestScenario ts = new TestScenario();
 		ts.setSchema(schema);
 		ts.setQuery(query);
@@ -314,7 +308,6 @@ public class PdqTest {
 
 		// Create schema
 		Schema schema = new Schema(relations);
-		schema.addConstants(Arrays.asList(new TypedConstant[] { TypedConstant.create(1), TypedConstant.create(2) }));
 		TestScenario ts = new TestScenario();
 		ts.setSchema(schema);
 		ts.setQuery(query);
@@ -365,7 +358,6 @@ public class PdqTest {
 
 		// Create schema
 		Schema schema = new Schema(relations);
-		schema.addConstants(Arrays.asList(new TypedConstant[] { TypedConstant.create(1), TypedConstant.create(2) }));
 		TestScenario ts = new TestScenario();
 		ts.setSchema(schema);
 		ts.setQuery(query);
@@ -407,7 +399,6 @@ public class PdqTest {
 
 		// Create schema
 		Schema schema = new Schema(relations);
-		schema.addConstants(Arrays.asList(new TypedConstant[] { TypedConstant.create(1), TypedConstant.create(2) }));
 		TestScenario ts = new TestScenario();
 		ts.setSchema(schema);
 		ts.setQuery(query);

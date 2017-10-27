@@ -11,7 +11,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
@@ -60,7 +59,6 @@ public class TestParallelEGDChaser extends PdqTest {
 		super.setup();
 		DatabaseChaseInstance.resetFacts();
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2 }, new Dependency[] { this.tgd });
-		this.schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
 		this.setConnection(new DatabaseConnection(DatabaseParameters.Derby, this.schema));
 		this.chaser = new ParallelEGDChaser(new StatisticsCollector(true, new EventBus()));
 	}
@@ -179,7 +177,6 @@ public class TestParallelEGDChaser extends PdqTest {
 			constants.add(TypedConstant.create("a_" + (i - 1)));
 			constants.add(TypedConstant.create("a_" + i));
 		}
-		s.addConstants(constants);
 		try {
 			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(DatabaseParameters.Derby, s));
 		} catch (SQLException e) {
@@ -274,7 +271,6 @@ public class TestParallelEGDChaser extends PdqTest {
 		Collection<TypedConstant> constants = new ArrayList<>();
 		for (int i = 0; i <= 10; i++)
 			constants.add(TypedConstant.create("a_" + i));
-		s.addConstants(constants);
 		List<Atom> facts = new ArrayList<>();
 		facts.add(Atom.create(D, new Term[] { TypedConstant.create("a_1") }));
 		facts.add(Atom.create(C, new Term[] { TypedConstant.create("a_5") }));
@@ -377,7 +373,6 @@ public class TestParallelEGDChaser extends PdqTest {
 		for (int i = 1; i <= 5; i++)
 			constants.add(TypedConstant.create("z" + i));
 		constants.add(TypedConstant.create("c_constant_3"));
-		s.addConstants(constants);
 
 		List<Atom> facts = new ArrayList<>();
 		// producing garbage:
@@ -607,7 +602,6 @@ public class TestParallelEGDChaser extends PdqTest {
 	 */
 	public void createSchema() {
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2 }, new Dependency[] { this.tgd });
-		this.schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
 	}
 
 	/**
