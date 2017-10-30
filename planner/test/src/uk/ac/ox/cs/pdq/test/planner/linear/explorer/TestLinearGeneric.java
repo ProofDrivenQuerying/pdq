@@ -44,6 +44,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.PlanPrinter;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
@@ -109,10 +110,10 @@ public class TestLinearGeneric extends PdqTest {
 		substitutionFiltered.putAll(substitution);
 		for(Variable variable:query.getBoundVariables()) 
 			substitutionFiltered.remove(variable);
-		ChaseConfiguration.getCanonicalSubstitution().put(query,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
-		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(query,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 
 		// Create database connection
@@ -227,10 +228,10 @@ public class TestLinearGeneric extends PdqTest {
 		substitutionFiltered.putAll(substitution);
 		for(Variable variable:query.getBoundVariables()) 
 			substitutionFiltered.remove(variable);
-		ChaseConfiguration.getCanonicalSubstitution().put(query,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
-		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(query,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -301,10 +302,10 @@ public class TestLinearGeneric extends PdqTest {
 		substitutionFiltered.putAll(substitution);
 		for(Variable variable:scenario3.getQuery().getBoundVariables()) 
 			substitutionFiltered.remove(variable);
-		ChaseConfiguration.getCanonicalSubstitution().put(scenario3.getQuery(),substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(scenario3.getQuery(),substitutionFiltered);
-		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(scenario3.getQuery(),substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(scenario3.getQuery(),substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -453,17 +454,8 @@ public class TestLinearGeneric extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
-		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
-		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
-		substitutionFiltered.putAll(substitution);
-		for(Variable variable:query.getBoundVariables()) 
-			substitutionFiltered.remove(variable);
-		ChaseConfiguration.getCanonicalSubstitution().put(query,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
-		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
-
+		ConjunctiveQuery accessibleQuery = ExplorationSetUp.generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(query);
+		
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
@@ -525,10 +517,10 @@ public class TestLinearGeneric extends PdqTest {
 		substitutionFiltered.putAll(substitution);
 		for(Variable variable:ts.getQuery().getBoundVariables()) 
 			substitutionFiltered.remove(variable);
-		ChaseConfiguration.getCanonicalSubstitution().put(ts.getQuery(),substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
-		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(ts.getQuery(),substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
 		DatabaseConnection databaseConnection = null;

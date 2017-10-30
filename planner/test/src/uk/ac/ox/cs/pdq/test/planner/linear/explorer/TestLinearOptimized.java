@@ -30,6 +30,7 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
@@ -93,10 +94,10 @@ public class TestLinearOptimized extends PdqTest {
 		substitutionFiltered.putAll(substitution);
 		for(Variable variable:ts.getQuery().getBoundVariables()) 
 			substitutionFiltered.remove(variable);
-		ChaseConfiguration.getCanonicalSubstitution().put(ts.getQuery(),substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
-		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(ts.getQuery(),substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -222,10 +223,10 @@ public class TestLinearOptimized extends PdqTest {
 		substitutionFiltered.putAll(substitution);
 		for(Variable variable:ts.getQuery().getBoundVariables()) 
 			substitutionFiltered.remove(variable);
-		ChaseConfiguration.getCanonicalSubstitution().put(ts.getQuery(),substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
-		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(ts.getQuery(),substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
@@ -320,10 +321,10 @@ public class TestLinearOptimized extends PdqTest {
 		substitutionFiltered.putAll(substitution);
 		for(Variable variable:ts.getQuery().getBoundVariables()) 
 			substitutionFiltered.remove(variable);
-		ChaseConfiguration.getCanonicalSubstitution().put(ts.getQuery(),substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
-		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(ts.getQuery(),substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(ts.getQuery(),substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		//Create database connection
 		DatabaseConnection databaseConnection = null;

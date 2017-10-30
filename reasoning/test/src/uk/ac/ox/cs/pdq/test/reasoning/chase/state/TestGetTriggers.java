@@ -171,14 +171,14 @@ public class TestGetTriggers extends PdqTest {
 	@Test
 	public void test_getMatches4a100timesDerbyMysqlAndPostgres() throws SQLException {
 		System.out.print("[");
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 25; i++) {
 			System.out.print(" ");
 		}
 		System.out.print("]");
 		System.out.println("");
 		System.out.print("[");
 		try {
-			for (int i = 0; i < 100; i++) {
+			for (int i = 0; i < 25; i++) {
 				test_getMatches4();
 				if (i % 1 == 0)
 					System.out.print(".");

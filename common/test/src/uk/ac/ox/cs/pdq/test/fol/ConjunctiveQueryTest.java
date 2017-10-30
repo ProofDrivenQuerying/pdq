@@ -47,7 +47,7 @@ public class ConjunctiveQueryTest {
 				new Variable[]{Variable.create("x1"), Variable.create("x3")}, 
 				(Conjunction) Conjunction.of(p2, p3));
 		Assert.assertArrayEquals("ConjunctiveQuery atoms must match that of atom list", new Atom[]{p2, p3}, q.getAtoms());
-		Assert.assertEquals("ConjunctiveQuery body must match that of construction", Conjunction.of(p2, p3), q.getChild(0));
+		Assert.assertEquals("ConjunctiveQuery body must match that of construction", Conjunction.of(p2, p3), q.getBody());
 		Assert.assertArrayEquals("ConjunctiveQuery bound variables must match that of construction", new Variable[]{}, q.getBoundVariables());
 		Assert.assertArrayEquals("ConjunctiveQuery free variables must match that of construction", 
 				new Variable[]{Variable.create("x1"), Variable.create("x3")}, 

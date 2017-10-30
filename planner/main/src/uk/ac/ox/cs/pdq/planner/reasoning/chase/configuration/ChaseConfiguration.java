@@ -21,6 +21,7 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
@@ -223,13 +224,7 @@ public abstract class ChaseConfiguration implements Configuration {
 	 *             the planner exception
 	 */
 	public List<Match> matchesQuery(ConjunctiveQuery query) throws PlannerException {
-		if (!getCanonicalSubstitutionOfFreeVariables().containsKey(query)) {
-			Map<Variable, Constant> substitution = generateSubstitutionToCanonicalVariables(query.getChild(0));
-			for (Variable variable : query.getBoundVariables())
-				substitution.remove(variable);
-			getCanonicalSubstitutionOfFreeVariables().put(query, substitution);
-		}
-		return this.state.getMatches(query, getCanonicalSubstitutionOfFreeVariables().get(query));
+		return this.state.getMatches(query, ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().get(query));
 	}
 
 	/**

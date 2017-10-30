@@ -30,6 +30,7 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
@@ -522,8 +523,8 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		substitutionFiltered.putAll(substitution);
 		for(Variable variable:query.getBoundVariables()) 
 			substitutionFiltered.remove(variable);
-		ChaseConfiguration.getCanonicalSubstitution().put(query,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(query,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
 
 		// Create database connection
 		DatabaseConnection connection = null;

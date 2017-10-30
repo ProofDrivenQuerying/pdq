@@ -5,6 +5,7 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,9 +26,13 @@ import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ChaseConstantGenerator;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.DynamicStatistics;
@@ -36,7 +41,6 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.logging.performance.ConstantsStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.EventDrivenExplorerStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -78,6 +82,15 @@ public class ExplorationSetUp {
 
 	/**   */
 	private Schema schema;
+	
+	/**
+	 * For each query it stores a Map of variables to chase constants.
+	 */
+	private static Map<ConjunctiveQuery, Map<Variable, Constant>> canonicalSubstitution = new HashMap<>();
+	/**
+	 * Same as above but it contains substitution for free variables only.
+	 */
+	private static Map<ConjunctiveQuery, Map<Variable, Constant>> canonicalSubstitutionOfFreeVariables = new HashMap<>();
 
 
 	/** The external cost estimator. */
@@ -197,16 +210,7 @@ public class ExplorationSetUp {
 			this.schema = new Schema(this.schema.getRelations());
 			this.accessibleSchema = new AccessibleSchema(this.schema);
 		}
-		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query.getChild(0));
-		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
-		substitutionFiltered.putAll(substitution);
-		for(Variable variable:query.getBoundVariables()) 
-			substitutionFiltered.remove(variable);
-		ChaseConfiguration.getCanonicalSubstitution().put(query,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
-		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+		ConjunctiveQuery accessibleQuery = generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(query);
 		
 		Explorer explorer = null;
 		DatabaseConnection databaseConnection = new DatabaseConnection(this.databaseParams,this.accessibleSchema);
@@ -311,5 +315,47 @@ public class ExplorationSetUp {
 				this.eventBus.post(ex);
 			}
 		}
+	}
+	
+	
+	/**
+	 * Generate canonical mapping.
+	 *
+	 * @param formula
+	 *            the body
+	 * @return a mapping of variables of the input conjunction to constants. A fresh
+	 *         constant is created for each variable of the conjunction. This method
+	 *         is invoked by the conjunctive query constructor when the constructor
+	 *         is called with empty input canonical mapping.
+	 */
+	public static ConjunctiveQuery generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(ConjunctiveQuery query) {
+		Map<Variable, Constant> canonicalMapping = new LinkedHashMap<>();
+		for (Atom atom : query.getBody().getAtoms()) {
+			for (Term t : atom.getTerms()) {
+				if (t.isVariable()) {
+					Constant c = canonicalMapping.get(t);
+					if (c == null) {
+						c = UntypedConstant.create(ChaseConstantGenerator.getName());
+						canonicalMapping.put((Variable) t, c);
+					}
+				}
+			}
+		}
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
+		substitutionFiltered.putAll(canonicalMapping);
+		for(Variable variable:query.getBody().getBoundVariables()) 
+			substitutionFiltered.remove(variable);
+		canonicalSubstitution.put(query,canonicalMapping);
+		canonicalSubstitutionOfFreeVariables.put(query,substitutionFiltered);
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
+		canonicalSubstitution.put(accessibleQuery,canonicalMapping);
+		canonicalSubstitutionOfFreeVariables.put(accessibleQuery,substitutionFiltered);
+		return accessibleQuery;
+	}
+	public static Map<ConjunctiveQuery, Map<Variable, Constant>> getCanonicalSubstitution() {
+		return canonicalSubstitution;
+	}
+	public static Map<ConjunctiveQuery, Map<Variable, Constant>> getCanonicalSubstitutionOfFreeVariables() {
+		return canonicalSubstitutionOfFreeVariables;
 	}
 }

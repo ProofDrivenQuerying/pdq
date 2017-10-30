@@ -143,6 +143,13 @@ public class ConjunctiveQuery extends Formula {
 		return this.child;
 	}
 
+	/** Same as getChild(0), sice it can have only one child.
+	 * @return
+	 */
+	public Formula getBody() {
+		return this.child;
+	}
+
 	@Override
 	public int getNumberOfChildlen() {
 		return 1;

@@ -39,7 +39,7 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
@@ -229,7 +229,7 @@ public class PlanCreationUtility {
 		Type[] variableTypes = computeVariableTypes(query,schema);
 		Variable[] freeVariables = query.getFreeVariables();
 		for (int index = 0; index < freeVariables.length; ++index)  {
-			Constant constant = ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().get(query).get(freeVariables[index]);
+			Constant constant = ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().get(query).get(freeVariables[index]);
 			Attribute attribute = Attribute.create(variableTypes[index], ((UntypedConstant)constant).getSymbol());
 			Assert.assertTrue(Arrays.asList(plan.getOutputAttributes()).contains(attribute));
 			projections.add(attribute);

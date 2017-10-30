@@ -26,6 +26,7 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -124,10 +125,10 @@ public class TestLinearKchase extends PdqTest {
 		substitutionFiltered.putAll(substitution);
 		for(Variable variable:query.getBoundVariables()) 
 			substitutionFiltered.remove(variable);
-		ChaseConfiguration.getCanonicalSubstitution().put(query,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
-		ChaseConfiguration.getCanonicalSubstitution().put(accessibleQuery,substitution);
-		ChaseConfiguration.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(query,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
