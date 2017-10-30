@@ -34,10 +34,10 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.MatchFactory;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.FiringGraph;
 import uk.ac.ox.cs.pdq.planner.util.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
@@ -124,7 +124,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	private static Collection<Atom> createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(ConjunctiveQuery query, Schema schema) {
 		// Gets the canonical database of the query
 		List<Atom> facts = new ArrayList<>(); 
-		facts.addAll(Arrays.asList(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, ChaseConfiguration.getCanonicalSubstitution().get(query)).getAtoms()));
+		facts.addAll(Arrays.asList(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, ExplorationSetUp.getCanonicalSubstitution().get(query)).getAtoms()));
 		// Create the Accessible(.) facts
 		// One Accessible(.) is being created for every schema constant
 		for (TypedConstant constant:uk.ac.ox.cs.pdq.util.Utility.getTypedConstants(query)) 
