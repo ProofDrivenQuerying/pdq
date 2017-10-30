@@ -217,6 +217,8 @@ public class DatabaseConnection implements AutoCloseable {
 	@Override
 	public void close() throws Exception {
 		boolean drop = false;
+		if (synchronousConnections.isEmpty()) 
+			return; // already closed.
 		try {
 			this.dropDatabase();
 			drop = true;

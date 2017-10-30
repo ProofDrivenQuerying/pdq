@@ -24,6 +24,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -77,8 +78,10 @@ public abstract class SQLStatementBuilder {
 			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
 				Term term = fact.getTerm(termIndex);
 				if (!term.isVariable())
-					if (String.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
-						insertInto += "'" + term + "'";
+					if (term instanceof TypedConstant && !(fact.getNumberOfTerms() == termIndex+1))
+						insertInto += "'" +  ((TypedConstant)term).serializeToString() + "'";
+					else if (String.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
+						insertInto += "'" +  term + "'";
 					else if (Integer.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
 						insertInto += term;
 					else if (Double.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
@@ -356,7 +359,7 @@ public abstract class SQLStatementBuilder {
 	 *         variables. If the input is a query we project the attributes that map
 	 *         to its free variables.
 	 */
-	public SelectCondition createProjections(Atom[] atoms,Schema schema) {
+	public SelectCondition createProjections(Atom[] atoms, DatabaseConnection databaseConnection) {
 		LinkedHashMap<String, Variable> projected = new LinkedHashMap<>();
 		List<Variable> attributes = new ArrayList<>();
 		for (Atom fact : atoms) {
@@ -370,7 +373,7 @@ public abstract class SQLStatementBuilder {
 				// if (term instanceof Variable && !attributes.contains(((Variable)
 				// term).getSymbol())) {
 				if (term instanceof Variable && !attributes.contains(term)) {
-					projected.put(createProjectionStatementForArgument(index, schema.getRelation(fact.getPredicate().getName()), alias), (Variable) term);
+					projected.put(createProjectionStatementForArgument(index, databaseConnection.getRelationNamesToDatabaseTables().get(fact.getPredicate().getName()), alias), (Variable) term);
 					attributes.add(((Variable) term));
 				}
 			}

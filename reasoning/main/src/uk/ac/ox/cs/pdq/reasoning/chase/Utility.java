@@ -13,8 +13,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.WhereCondition;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -165,20 +165,21 @@ public class Utility {
 	 * @param source the source
 	 * @return 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
 	 */
-	public static WhereCondition createNestedAttributeEqualitiesForActiveTriggers(Atom[] extendedBodyAtoms, Atom[] extendedHeadAtoms, SQLStatementBuilder builder,Schema schema) {
+	public static WhereCondition createNestedAttributeEqualitiesForActiveTriggers(Atom[] extendedBodyAtoms, Atom[] extendedHeadAtoms, DatabaseConnection dc) {
 		List<String> attributePredicates = new ArrayList<String>();
 		//The right atom should be an equality
 		//We add additional checks to be sure that we have to do with EGDs
 		for(Atom rightAtom:extendedHeadAtoms) {
-			Relation rightRelation = schema.getRelation(rightAtom.getPredicate().getName());
-			String rightAlias = builder.aliases.get(rightAtom);
+			
+			Relation rightRelation = dc.getRelationNamesToDatabaseTables().get(rightAtom.getPredicate().getName());
+			String rightAlias = dc.getSQLStatementBuilder().aliases.get(rightAtom);
 			Map<Integer,Pair<String,Attribute>> rightToLeft = new HashMap<Integer,Pair<String,Attribute>>();
 			for(Term term:rightAtom.getTerms()) {
 				List<Integer> rightPositions = uk.ac.ox.cs.pdq.util.Utility.search(rightAtom.getTerms(), term); //all the positions for the same term should be equated
 				Preconditions.checkArgument(rightPositions.size() == 1);
 				for(Atom leftAtom:extendedBodyAtoms) {
-					Relation leftRelation = schema.getRelation(leftAtom.getPredicate().getName());
-					String leftAlias = builder.aliases.get(leftAtom);
+					Relation leftRelation = dc.getRelationNamesToDatabaseTables().get(leftAtom.getPredicate().getName());
+					String leftAlias = dc.getSQLStatementBuilder().aliases.get(leftAtom);
 					List<Integer> leftPositions = uk.ac.ox.cs.pdq.util.Utility.search(leftAtom.getTerms(), term); 
 					Preconditions.checkArgument(leftPositions.size() <= 1);
 					if(leftPositions.size() == 1) {

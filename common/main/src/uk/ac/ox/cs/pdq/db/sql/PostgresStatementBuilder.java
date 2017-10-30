@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -155,11 +156,14 @@ public class PostgresStatementBuilder extends SQLStatementBuilder {
 			String tuple = "(";
 			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
 				Term term = fact.getTerm(termIndex);
-				if (!term.isVariable()) 
+				if (term instanceof TypedConstant == termIndex < fact.getNumberOfTerms()-1) {
+					tuple += "'" + ((TypedConstant)term).serializeToString() + "'";
+				} else if (!term.isVariable()) 
 					tuple += "'" + term + "'";
 				if(termIndex < fact.getNumberOfTerms() - 1)
 					tuple += ",";
 			}
+			
 			tuple += ")";
 			tuples.add(tuple);
 		}

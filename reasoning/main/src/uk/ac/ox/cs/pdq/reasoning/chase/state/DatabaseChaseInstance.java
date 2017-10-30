@@ -750,7 +750,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 
 		String query = "";
 		FromCondition from = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createFromStatement(extendedBodyAtoms);
-		SelectCondition projections = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createProjections(extendedBodyAtoms,schema);
+		SelectCondition projections = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createProjections(extendedBodyAtoms,canonicalDatabaseInstance.getDatabaseConnection());
 		WhereCondition where = new WhereCondition();
 		WhereCondition equalities = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createAttributeEqualities(extendedBodyAtoms,schema);
 		WhereCondition constantEqualities = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createEqualitiesWithConstants(extendedBodyAtoms,schema);
@@ -781,11 +781,11 @@ public class DatabaseChaseInstance implements ChaseInstance {
 
 		if (t.equals(TriggerProperty.ACTIVE)) {
 			FromCondition from2 = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createFromStatement(extendedHeadAtoms);
-			SelectCondition nestedProjections = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createProjections(extendedHeadAtoms,schema);
+			SelectCondition nestedProjections = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createProjections(extendedHeadAtoms,canonicalDatabaseInstance.getDatabaseConnection());
 			WhereCondition predicates2 = new WhereCondition();
 			WhereCondition nestedAttributeEqualities = (!(isEGD)) ? canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createAttributeEqualities(allExtendedAtoms,schema)
 					: uk.ac.ox.cs.pdq.reasoning.chase.Utility.createNestedAttributeEqualitiesForActiveTriggers(extendedBodyAtoms, extendedHeadAtoms,
-							canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder(),schema);
+							canonicalDatabaseInstance.getDatabaseConnection());
 			WhereCondition nestedConstantEqualities = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder().createEqualitiesWithConstants(allExtendedAtoms,schema);
 			predicates2.addCondition(nestedAttributeEqualities);
 			predicates2.addCondition(nestedConstantEqualities);
@@ -828,7 +828,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		String query = "";
 		SQLStatementBuilder stb = canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder();
 		FromCondition from = stb.createFromStatement(source.getAtoms());
-		SelectCondition projections = stb.createProjections(source.getAtoms(),canonicalDatabaseInstance.getDatabaseConnection().getSchema());
+		SelectCondition projections = stb.createProjections(source.getAtoms(),canonicalDatabaseInstance.getDatabaseConnection());
 		WhereCondition where = new WhereCondition();
 		WhereCondition equalities = stb.createAttributeEqualities(source.getAtoms(),canonicalDatabaseInstance.getDatabaseConnection().getSchema());
 		WhereCondition constantEqualities = stb.createEqualitiesWithConstants(source.getAtoms(),canonicalDatabaseInstance.getDatabaseConnection().getSchema());
