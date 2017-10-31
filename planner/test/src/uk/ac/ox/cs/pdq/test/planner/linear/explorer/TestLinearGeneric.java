@@ -368,7 +368,7 @@ public class TestLinearGeneric extends PdqTest {
 	 * 
 	 * For three input tables we should get 244 plans.
 	 */
-	// @Test //works but too slow (around 4 minutes) to execute.
+	//@Test //works but too slow (around 4 minutes) to execute.
 	public void test1ExplorationThreeRelationsDerby() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3, DatabaseParameters.Derby);
 		Assert.assertEquals(244, exploredPlans.size());

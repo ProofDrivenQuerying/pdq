@@ -356,7 +356,7 @@ public class ExplorationSetUp {
 		}
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
 		substitutionFiltered.putAll(canonicalMapping);
-		for (Variable variable : query.getBody().getBoundVariables())
+		for (Variable variable : query.getBoundVariables())
 			substitutionFiltered.remove(variable);
 		canonicalSubstitution.put(query, canonicalMapping);
 		canonicalSubstitutionOfFreeVariables.put(query, substitutionFiltered);
