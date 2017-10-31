@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,15 +72,6 @@ public abstract class ChaseConfiguration implements Configuration {
 	 * that are inputs.
 	 */
 	protected final Collection<Constant> properOutput;
-
-	/**
-	 * For each query it stores a Map of variables to chase constants.
-	 */
-	private static Map<ConjunctiveQuery, Map<Variable, Constant>> canonicalSubstitution = new HashMap<>();
-	/**
-	 * Same as above but it contains substitution for free variables only.
-	 */
-	private static Map<ConjunctiveQuery, Map<Variable, Constant>> canonicalSubstitutionOfFreeVariables = new HashMap<>();
 
 	/**
 	 * Instantiates a new chase configuration.
@@ -321,20 +311,6 @@ public abstract class ChaseConfiguration implements Configuration {
 
 	public Integer getId() {
 		return this.id;
-	}
-
-	/**
-	 * @return For each query it stores a Map of variables to chase constants.
-	 */
-	public static Map<ConjunctiveQuery, Map<Variable, Constant>> getCanonicalSubstitution() {
-		return ChaseConfiguration.canonicalSubstitution;
-	}
-
-	/**
-	 * @return Same as above but it contains substitution for free variables only.
-	 */
-	public static Map<ConjunctiveQuery, Map<Variable, Constant>> getCanonicalSubstitutionOfFreeVariables() {
-		return ChaseConfiguration.canonicalSubstitutionOfFreeVariables;
 	}
 
 }
