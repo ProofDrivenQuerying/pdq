@@ -6,13 +6,15 @@ import java.util.LinkedHashSet;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-import com.google.common.base.Preconditions;
-
+import uk.ac.ox.cs.pdq.planner.dominance.FactDominance;
+import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.equivalence.FactEquivalence;
 import uk.ac.ox.cs.pdq.planner.equivalence.FastFactEquivalence;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
+
+import com.google.common.base.Preconditions;
 
 
 /**
@@ -59,12 +61,15 @@ public class ExplorerUtility {
 	 * @param childNode the child node
 	 * @return a parent node that dominates the child
 	 */
-	public static <N extends SearchNode> N isDominated(Collection<N> parentsNodes, N childNode) {
+	public static <N extends SearchNode> N isCostAndFactDominated(Collection<N> parentsNodes, N childNode) {
+		FactDominance factDominance = new FastFactDominance(false);
 		for (N parentNode: parentsNodes) {
 			if (!parentNode.equals(childNode)
-					//					&& !parentNode.getStatus().equals(NodeStatus.FAKE_TERMINAL)
-					&& !parentNode.getStatus().equals(NodeStatus.TERMINAL)
-					&& childNode.isDominatedBy(parentNode)) {
+					&& !parentNode.getStatus().equals(NodeStatus.TERMINAL) &&
+					childNode.getCostOfBestPlanFromRoot() != null &&
+					parentNode.getCostOfBestPlanFromRoot() != null &&
+					childNode.getCostOfBestPlanFromRoot().greaterOrEquals(parentNode.getCostOfBestPlanFromRoot()) &&
+					factDominance.isDominated(childNode.getConfiguration(), parentNode.getConfiguration())) {
 				return parentNode;
 			}
 		}

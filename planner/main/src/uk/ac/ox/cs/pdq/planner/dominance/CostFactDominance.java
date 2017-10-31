@@ -61,8 +61,6 @@ public class CostFactDominance implements Dominance{
 						return true;
 					else 
 						return false;
-					
-					//costDominated = source.getCost().greaterOrEquals(target.getCost());
 				} else if(this.costEstimatorForOpenPlans != null) {
 					strictlyCostDominated = this.costEstimatorForOpenPlans.cost(source.getPlan()).greaterThan(this.costEstimatorForOpenPlans.cost(target.getPlan()));
 					if(strictlyCostDominated && factDominated || strictlyFactDominated && this.costEstimatorForOpenPlans.cost(source.getPlan()).greaterOrEquals(this.costEstimatorForOpenPlans.cost(target.getPlan()))) 

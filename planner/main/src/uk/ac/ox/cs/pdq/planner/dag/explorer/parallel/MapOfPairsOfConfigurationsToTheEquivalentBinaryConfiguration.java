@@ -21,6 +21,7 @@ import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
  */
 public class MapOfPairsOfConfigurationsToTheEquivalentBinaryConfiguration {
 	
+	
 	/** The representatives. */
 	private final Map<Pair<DAGEquivalenceClass,DAGEquivalenceClass>,DAGChaseConfiguration> representatives  = new ConcurrentHashMap<>();
 

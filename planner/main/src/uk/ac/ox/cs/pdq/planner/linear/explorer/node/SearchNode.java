@@ -10,8 +10,6 @@ import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.planner.dominance.FactDominance;
-import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
@@ -41,9 +39,6 @@ public abstract class SearchNode implements Cloneable{
 		
 		/**  A node under which no path will not be explored. */
 		TERMINAL,
-		
-//		/** The fake terminal. */
-//		FAKE_TERMINAL
 	}
 
 	/** Status of the current node. ONGOING by default */
@@ -146,16 +141,6 @@ public abstract class SearchNode implements Cloneable{
 	public void close(Chaser chaser, Dependency[] dependencies) throws PlannerException, LimitReachedException {
 		this.configuration.reasonUntilTermination(chaser, dependencies);
 		this.isFullyChased = true;
-	}
-
-	/**
-	 * Checks if is dominated by.
-	 *
-	 * @param target the target
-	 * @return true if the current node is globally dominated by the input one
-	 */
-	public boolean isDominatedBy(SearchNode target) {
-		return new Dominance().isDominated(this, target);
 	}
 	
 	/* (non-Javadoc)
@@ -360,33 +345,6 @@ public abstract class SearchNode implements Cloneable{
 
 	public void setCostOfBestPlanFromRoot(Cost costOfBestPlanFromRoot) {
 		this.costOfBestPlanFromRoot = costOfBestPlanFromRoot;
-	}
-
-	/**
-	 * The Class Dominance.
-	 *
-	 * @author Efthymia Tsamoura
-	 */
-	private class Dominance {
-		
-		/** The fact dominance. */
-		private final FactDominance factDominance = new FastFactDominance(false);
-
-		/**
-		 * Checks if is dominated.
-		 *
-		 * @param source SearchNode
-		 * @param target SearchNode
-		 * @return true if the source is dominated by the target
-		 */
-		public boolean isDominated(SearchNode source, SearchNode target) {
-			if(source.costOfBestPlanFromRoot != null &&
-					target.costOfBestPlanFromRoot != null &&
-					source.costOfBestPlanFromRoot.greaterOrEquals(target.costOfBestPlanFromRoot)) {
-				return this.factDominance.isDominated(source.getConfiguration(), target.getConfiguration());
-			}
-			return false;
-		}
 	}
 
 }

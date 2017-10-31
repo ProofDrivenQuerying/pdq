@@ -239,7 +239,7 @@ public class LinearOptimized extends LinearExplorer {
 		// If at least one node in the plan tree dominates the newly created node, then zombify the newly created node
 		if (!domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
 			this.stats.start(MILLI_DOMINANCE);
-			SearchNode dominatingNode = ExplorerUtility.isDominated(this.planTree.vertexSet(), freshNode);
+			SearchNode dominatingNode = ExplorerUtility.isCostAndFactDominated(this.planTree.vertexSet(), freshNode);
 			this.stats.stop(MILLI_DOMINANCE);
 			if(dominatingNode != null) {
 				domination = true;

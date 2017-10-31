@@ -4,10 +4,8 @@ import java.sql.SQLException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -27,13 +25,8 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ChaseConstantGenerator;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.DynamicStatistics;
 import uk.ac.ox.cs.pdq.logging.StatKey;
@@ -46,22 +39,15 @@ import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.EventHandler;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
- * Main entry point for chasing, where all properties are gathered and used to
- * create various objects like explorer,reasoner,cost estimator, etc...
- * <li>- implements an easy to use search function that has a query as input and
- * returns plans with costs for the given query over the previously configured
- * schema.</li><br>
- * <li>- Also creates and manages an eventBus.</li><br>
- * <li>- converts query into AccessibleQuery and maintains a map of its
- * variables to chase-constants.</li><br>
- * <li>- converts schema to add InstanceIDs</li><br>
- * 
+ * Provides high level functions for finding an optimal plan for a query with
+ * respect to a schema, dependencies and access restrictions.
+ *
  * @author Julien Leblay
  * @author Efthymia Tsamoura
  * @author George Konstantinidis
- * @author Gabor
  *
  */
 public class ExplorationSetUp {
@@ -69,53 +55,39 @@ public class ExplorationSetUp {
 	/** The log. */
 	protected static Logger log = Logger.getLogger(ExplorationSetUp.class);
 
-	/** Input parameters. */
+	/**  Input parameters. */
 	private PlannerParameters plannerParams;
-
-	/** Input parameters. */
+	
+	/**  Input parameters. */
 	private CostParameters costParams;
-
+	
 	/**  */
 	private ReasoningParameters reasoningParams;
-
+	
 	/**  */
 	private DatabaseParameters databaseParams;
+
 
 	/**   */
 	private EventBus eventBus = new EventBus();
 
-	/** Statistics collector. */
+	/**  Statistics collector. */
 	private ChainedStatistics statsLogger;
 
 	/**   */
 	private Schema schema;
 
-	/**
-	 * For each query it stores a Map of variables to chase constants.
-	 */
-	private static Map<ConjunctiveQuery, Map<Variable, Constant>> canonicalSubstitution = new HashMap<>();
-	/**
-	 * Same as above but it contains substitution for free variables only.
-	 */
-	private static Map<ConjunctiveQuery, Map<Variable, Constant>> canonicalSubstitutionOfFreeVariables = new HashMap<>();
-
-	/** The external cost estimator. */
-	private CostEstimator externalCostEstimator = null;
-
-	/** The auxiliary schema, including axioms capturing access methods */
+	/** The auxiliary schema, including axioms capturing access methods  */
 	private AccessibleSchema accessibleSchema;
 
+	
 	/**
 	 * Instantiates a new exploration set up.
 	 *
-	 * @param planParams
-	 *            the plan params
-	 * @param costParams
-	 *            the cost params
-	 * @param reasoningParams
-	 *            the reasoning params
-	 * @param schema
-	 *            the schema
+	 * @param planParams the plan params
+	 * @param costParams the cost params
+	 * @param reasoningParams the reasoning params
+	 * @param schema the schema
 	 */
 	public ExplorationSetUp(PlannerParameters planParams, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters dbParams, Schema schema) {
 		this(planParams, costParams, reasoningParams, dbParams, schema, null);
@@ -124,19 +96,13 @@ public class ExplorationSetUp {
 	/**
 	 * Instantiates a new exploration set up.
 	 *
-	 * @param params
-	 *            the params
-	 * @param costParams
-	 *            the cost params
-	 * @param reasoningParams
-	 *            the reasoning params
-	 * @param schema
-	 *            the schema
-	 * @param statsLogger
-	 *            the stats logger
+	 * @param params the params
+	 * @param costParams the cost params
+	 * @param reasoningParams the reasoning params
+	 * @param schema the schema
+	 * @param statsLogger the stats logger
 	 */
-	public ExplorationSetUp(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters databaseParams, Schema schema,
-			ChainedStatistics statsLogger) {
+	public ExplorationSetUp(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters databaseParams, Schema schema, ChainedStatistics statsLogger) {
 		this.plannerParams = params;
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
@@ -147,25 +113,24 @@ public class ExplorationSetUp {
 		this.accessibleSchema = new AccessibleSchema(this.schema);
 	}
 
-	// add an extra attribute
+	//add an extra attribute
 	private Schema addAdditionalAttributeToSchema(Schema schema, Attribute atribute) {
 		Relation[] relations = schema.getRelations();
-		for (int index = 0; index < relations.length; ++index) {
+		for(int index = 0; index < relations.length; ++index) {
 			if (relations[index].getAttribute("InstanceID") == null) {
-				relations[index] = Relation.appendAttribute(relations[index], atribute);
+				relations[index] = Relation.appendAttribute(relations[index],atribute);
 			}
 		}
 		List<Dependency> deps = new ArrayList<>();
 		deps.addAll(Arrays.asList(schema.getDependencies()));
 		deps.addAll(Arrays.asList(schema.getKeyDependencies()));
-		return new Schema(relations, deps.toArray(new Dependency[deps.size()]));
+		return new Schema(relations,deps.toArray(new Dependency[deps.size()]));
 	}
 
 	/**
 	 * Register event handler.
 	 *
-	 * @param handler
-	 *            EventHandler
+	 * @param handler EventHandler
 	 */
 	public void registerEventHandler(EventHandler handler) {
 		this.eventBus.register(handler);
@@ -174,83 +139,77 @@ public class ExplorationSetUp {
 	/**
 	 * Register the given event homoChecker.
 	 *
-	 * @param handler
-	 *            EventHandler
+	 * @param handler EventHandler
 	 */
 	public void unregisterEventHandler(EventHandler handler) {
 		this.eventBus.unregister(handler);
 	}
 
 	/**
-	 * Sets the cost estimator.
-	 *
-	 * @param estimator
-	 *            CostEstimator<?>
-	 */
-	public void setCostEstimator(CostEstimator estimator) {
-		this.externalCostEstimator = estimator;
-	}
-
-	/**
 	 * Search a best plan for the given schema and query.
 	 *
-	 * @param <P>
-	 *            the generic type
-	 * @param query
-	 *            the query
+	 * @param <P> the generic type
+	 * @param query the query
 	 * @return a pair whose first element is the best plan found if any, null
 	 *         otherwise, and the second is a mapping from the variables of the
 	 *         input query to the constant generated in the initial grounded
 	 *         operation.
-	 * @throws PlannerException
-	 *             the planner exception
-	 * @throws SQLException
+	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
 	public Entry<RelationalTerm, Cost> search(ConjunctiveQuery query) throws PlannerException, SQLException {
-		return this.search(query, false);
+		return this.search(query,false);
 	}
-
+	
 	/**
 	 * Search for a best plan for the given schema and query.
 	 *
-	 * @param <S>
-	 *            the generic type
-	 * @param <P>
-	 *            the generic type
-	 * @param query
-	 *            the query
-	 * @param noDep
-	 *            if true, dependencies in the schema are disabled and planning
-	 *            occur taking only into account access-based axioms.
+	 * @param <S> the generic type
+	 * @param <P> the generic type
+	 * @param query the query
+	 * @param noDep if true, dependencies in the schema are disabled and
+	 *         planning occur taking only into account access-based axioms.
 	 * @return a pair whose first element is the best plan found if any, null
 	 *         otherwise, and the second is a mapping from the variables of the
 	 *         input query to the constant generated in the initial grounded
 	 *         operation.
-	 * @throws PlannerException
-	 *             the planner exception
-	 * @throws SQLException
+	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
 	public Entry<RelationalTerm, Cost> search(ConjunctiveQuery query, boolean noDep) throws PlannerException, SQLException {
 		boolean collectStats = this.statsLogger != null;
 		if (noDep) {
 			this.schema = new Schema(this.schema.getRelations());
+			this.schema.addConstants(Utility.getTypedConstants(query));
 			this.accessibleSchema = new AccessibleSchema(this.schema);
 		}
-		ConjunctiveQuery accessibleQuery = generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(query);
+		else {
+			this.schema.addConstants(Utility.getTypedConstants(query));
+			this.accessibleSchema.addConstants(Utility.getTypedConstants(query));
+		}
 
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
 		Explorer explorer = null;
-		DatabaseConnection databaseConnection = new DatabaseConnection(this.databaseParams, this.accessibleSchema);
+		DatabaseConnection databaseConnection = new DatabaseConnection(this.databaseParams,this.accessibleSchema);
 
-		try {
+		try{
 			// Top-level initialisations
-			CostEstimator costEstimator = this.externalCostEstimator;
-			if (costEstimator == null)
-				costEstimator = CostEstimatorFactory.getEstimator(this.costParams, this.schema);
+			CostEstimator costEstimator = CostEstimatorFactory.getEstimator(this.costParams, this.schema);
 
 			Chaser reasoner = new ReasonerFactory(this.eventBus, collectStats, this.reasoningParams).getInstance();
-
-			explorer = ExplorerFactory.createExplorer(this.eventBus, collectStats, this.schema, this.accessibleSchema, query, accessibleQuery, reasoner, databaseConnection,
-					costEstimator, this.plannerParams, this.reasoningParams, this.databaseParams);
+			
+			explorer = ExplorerFactory.createExplorer(
+					this.eventBus, 
+					collectStats,
+					this.schema,
+					this.accessibleSchema,
+					query,
+					accessibleQuery,
+					reasoner,
+					databaseConnection,
+					costEstimator,
+					this.plannerParams,
+					this.reasoningParams);
 
 			// Chain all statistics collectors
 			if (collectStats) {
@@ -273,7 +232,7 @@ public class ExplorationSetUp {
 			explorer.setMaxRounds(this.plannerParams.getMaxIterations().doubleValue());
 			explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
-			if (explorer.getBestPlan() != null && explorer.getBestCost() != null)
+			if(explorer.getBestPlan() != null && explorer.getBestCost() != null)
 				return new AbstractMap.SimpleEntry<RelationalTerm, Cost>(explorer.getBestPlan(), explorer.getBestCost());
 			else
 				return null;
@@ -282,14 +241,18 @@ public class ExplorationSetUp {
 			throw e;
 		} catch (Exception e) {
 			this.handleEarlyTermination(explorer);
-			log.error(e.getMessage(), e);
+			log.error(e.getMessage(),e);
 			throw new PlannerException(e);
 		} catch (Throwable e) {
 			this.handleEarlyTermination(explorer);
 			throw e;
 		} finally {
 			try {
-				new DatabaseInstance(databaseConnection).close();
+				new DatabaseInstance(databaseConnection) {
+					@Override
+					public Collection<Atom> getFacts() {
+						return null;
+					}}.close();
 			} catch (Exception e) {
 				this.handleEarlyTermination(explorer);
 				e.printStackTrace();
@@ -303,19 +266,25 @@ public class ExplorationSetUp {
 	 * @return StatKeys[]
 	 */
 	private static StatKey[] displayColumns() {
-		return new StatKey[] { CostStatKeys.COST_ESTIMATION_COUNT, CostStatKeys.COST_ESTIMATION_TIME, PlannerStatKeys.GENERATED_FACTS, PlannerStatKeys.CANDIDATES,
-				PlannerStatKeys.CUMULATED_CANDIDATES, PlannerStatKeys.EQUIVALENCE_CLASSES, PlannerStatKeys.AVG_EQUIVALENCE_CLASSES, PlannerStatKeys.MED_EQUIVALENCE_CLASSES,
-				PlannerStatKeys.FILTERED, PlannerStatKeys.MILLI_REASONING, PlannerStatKeys.MILLI_UPDATE, PlannerStatKeys.MILLI_UPDATE_QUERY_DEPENDENCIES,
-				PlannerStatKeys.MILLI_BLOCKING_CHECK, PlannerStatKeys.MILLI_SELECT_IC, PlannerStatKeys.MILLI_DETECT_CANDIDATES, PlannerStatKeys.MILLI_CLOSE,
-				PlannerStatKeys.MILLI_QUERY_MATCH, PlannerStatKeys.MILLI_DOMINANCE, PlannerStatKeys.DOMINANCE_PRUNING, PlannerStatKeys.MILLI_EQUIVALENCE,
-				PlannerStatKeys.EQUIVALENCE_PRUNING, PlannerStatKeys.HIGHER_COST_PRUNING };
+		return new StatKey[] {
+				CostStatKeys.COST_ESTIMATION_COUNT, CostStatKeys.COST_ESTIMATION_TIME,
+				PlannerStatKeys.GENERATED_FACTS, PlannerStatKeys.CANDIDATES,
+				PlannerStatKeys.CUMULATED_CANDIDATES, PlannerStatKeys.EQUIVALENCE_CLASSES,
+				PlannerStatKeys.AVG_EQUIVALENCE_CLASSES, PlannerStatKeys.MED_EQUIVALENCE_CLASSES,
+				PlannerStatKeys.FILTERED, PlannerStatKeys.MILLI_REASONING, PlannerStatKeys.MILLI_UPDATE,
+				PlannerStatKeys.MILLI_UPDATE_QUERY_DEPENDENCIES,
+				PlannerStatKeys.MILLI_BLOCKING_CHECK, PlannerStatKeys.MILLI_SELECT_IC,
+				PlannerStatKeys.MILLI_DETECT_CANDIDATES, PlannerStatKeys.MILLI_CLOSE,
+				PlannerStatKeys.MILLI_QUERY_MATCH, PlannerStatKeys.MILLI_DOMINANCE,
+				PlannerStatKeys.DOMINANCE_PRUNING, PlannerStatKeys.MILLI_EQUIVALENCE,
+				PlannerStatKeys.EQUIVALENCE_PRUNING, PlannerStatKeys.HIGHER_COST_PRUNING
+		};
 	}
 
 	/**
 	 * Handle early termination.
 	 *
-	 * @param ex
-	 *            Explorer<?>
+	 * @param ex Explorer<?>
 	 */
 	private void handleEarlyTermination(Explorer ex) {
 		if (ex != null) {
@@ -324,48 +293,5 @@ public class ExplorationSetUp {
 				this.eventBus.post(ex);
 			}
 		}
-	}
-
-	/**
-	 * Generate canonical mapping.
-	 *
-	 * @param formula
-	 *            the body
-	 * @return a mapping of variables of the input conjunction to constants. A fresh
-	 *         constant is created for each variable of the conjunction. This method
-	 *         is invoked by the conjunctive query constructor when the constructor
-	 *         is called with empty input canonical mapping.
-	 */
-	public static ConjunctiveQuery generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(ConjunctiveQuery query) {
-		Map<Variable, Constant> canonicalMapping = new LinkedHashMap<>();
-		for (Atom atom : query.getBody().getAtoms()) {
-			for (Term t : atom.getTerms()) {
-				if (t.isVariable()) {
-					Constant c = canonicalMapping.get(t);
-					if (c == null) {
-						c = UntypedConstant.create(ChaseConstantGenerator.getName());
-						canonicalMapping.put((Variable) t, c);
-					}
-				}
-			}
-		}
-		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
-		substitutionFiltered.putAll(canonicalMapping);
-		for (Variable variable : query.getBody().getBoundVariables())
-			substitutionFiltered.remove(variable);
-		canonicalSubstitution.put(query, canonicalMapping);
-		canonicalSubstitutionOfFreeVariables.put(query, substitutionFiltered);
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
-		canonicalSubstitution.put(accessibleQuery, canonicalMapping);
-		canonicalSubstitutionOfFreeVariables.put(accessibleQuery, substitutionFiltered);
-		return accessibleQuery;
-	}
-
-	public static Map<ConjunctiveQuery, Map<Variable, Constant>> getCanonicalSubstitution() {
-		return canonicalSubstitution;
-	}
-
-	public static Map<ConjunctiveQuery, Map<Variable, Constant>> getCanonicalSubstitutionOfFreeVariables() {
-		return canonicalSubstitutionOfFreeVariables;
 	}
 }
