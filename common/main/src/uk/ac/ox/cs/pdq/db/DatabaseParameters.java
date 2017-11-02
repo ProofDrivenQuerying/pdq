@@ -27,7 +27,7 @@ public class DatabaseParameters extends Parameters {
 
 	public static final DatabaseParameters MySql = getDefaultForMySql();
 	public static final DatabaseParameters Postgres = getDefaultForPostgres();
-	public static final DatabaseParameters Derby = new DatabaseParameters();
+	public static final DatabaseParameters Derby = getDefaultForDerby();
 	public static final DatabaseParameters Empty = new DatabaseParameters();
 	
 	/**
@@ -41,6 +41,16 @@ public class DatabaseParameters extends Parameters {
 		DatabaseParameters dbParam = new DatabaseParameters();
 		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
 		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+		dbParam.setDatabaseName("pdq");
+		dbParam.setDatabaseUser("root");
+		dbParam.setDatabasePassword("root");
+		return dbParam; 
+	}
+	
+	private static DatabaseParameters getDefaultForDerby() {
+		DatabaseParameters dbParam = new DatabaseParameters();
+		dbParam.setConnectionUrl("jdbc:derby:memory:{1};create=true");
+		dbParam.setDatabaseDriver("org.apache.derby.jdbc.EmbeddedDriver");
 		dbParam.setDatabaseName("pdq");
 		dbParam.setDatabaseUser("root");
 		dbParam.setDatabasePassword("root");
