@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.NotImplementedException;
 
+import uk.ac.ox.cs.pdq.data.cache.FactCache;
 import uk.ac.ox.cs.pdq.data.memory.MemoryQuery;
 import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
 import uk.ac.ox.cs.pdq.data.sql.DerbyDatabaseInstance;
@@ -33,57 +34,50 @@ import uk.ac.ox.cs.pdq.fol.Atom;
  */
 public class DatabaseManager {
 	private DatabaseParameters parameters;
-	private PhysicalDatabaseInstance databaseInstance;
+	protected PhysicalDatabaseInstance databaseInstance;
 	private String databaseName; // formal name, mainly for debugging purposes, default is "PdqTest"
-	private String databaseInstanceID; // unique ID generated for this instance.
-	private boolean isVirtualDatabase = true;
+	protected String databaseInstanceID; // unique ID generated for this instance.
 	private Class<? extends PhysicalQuery> queryClass;
 	/**
-	 * A database manager is active from the time it has successfully initialised connection(s) to a database until the connection(s) are closed.
+	 * Weather or not caching is allowed. In general it is always true expect when we use memory cache.
+	 */
+	protected boolean isMemoryDb=false;
+	private FactCache cache=null;
+	/**
+	 * A database manager is active from the time it has successfully initialised
+	 * connection(s) to a database until the connection(s) are closed.
 	 */
 	private boolean isActive = false;
-	private static List<DatabaseManager> managers = new ArrayList<>(); 
 
-	/**
-	 * Creates database manager and connection if needed based on the parameters.
-	 * 
-	 * @param parameters
-	 * @throws DatabaseException 
-	 */
-	public DatabaseManager(DatabaseParameters parameters) throws DatabaseException {
+	protected DatabaseManager(DatabaseParameters parameters) throws DatabaseException {
 		this.parameters = (DatabaseParameters) parameters.clone();
 		databaseName = parameters.getDatabaseName();
 		if (databaseName == null) {
 			databaseName = "PdqTest";
 			this.parameters.setDatabaseName(databaseName);
 		}
-		String virtual = parameters.getProperty("database.isvirtual");
-		if (virtual!=null && !virtual.isEmpty()) {
-			isVirtualDatabase = Boolean.parseBoolean(virtual);
-		}
 		databaseInstanceID = databaseName + "_" + System.currentTimeMillis() + "_" + this.hashCode();
 		databaseInstance = initializeDatabaseInstance();
 		initialiseConnections();
-		managers.add(this);
+		if (!isMemoryDb && !(this instanceof VirtualMultiInstanceDatabaseManager)) {
+			cache = new FactCache(databaseInstanceID);
+		}
 	}
 
 	/**
-	 * Creates a new DatabaseManager from an existing one. Shares the database
-	 * connections but points to a different database, different set of facts.
+	 * Creates database manager and connection if needed based on the parameters.
 	 * 
-	 * @param parent
-	 * @param newDatabaseName
-	 * @throws DatabaseException 
+	 * @param parameters
+	 * @throws DatabaseException
 	 */
-	public DatabaseManager(DatabaseManager parent, String newDatabaseName) throws DatabaseException {
-		databaseName = newDatabaseName;
-		this.parameters = (DatabaseParameters) parent.parameters.clone();
-		this.parameters.setDatabaseName(databaseName);
-		databaseInstanceID = databaseName + "_" + System.currentTimeMillis() + "_" + this.hashCode();
-		isVirtualDatabase = parent.isVirtualDatabase();
-		databaseInstance = initializeDatabaseInstance();
-		initialiseConnections();
-		managers.add(this);
+	public static DatabaseManager create(DatabaseParameters parameters) throws DatabaseException {
+		String virtual = parameters.getProperty("database.isvirtual");
+		if (virtual != null && !virtual.isEmpty()) {
+			if (Boolean.parseBoolean(virtual)) {
+				return new VirtualMultiInstanceDatabaseManager(parameters);
+			}
+		}
+		return new DatabaseManager(parameters);
 	}
 
 	/**
@@ -106,6 +100,7 @@ public class DatabaseManager {
 			return new MySqlDatabaseInstance(parameters);
 		}
 		if (parameters.getDatabaseDriver().contains("memory")) {
+			isMemoryDb=true;
 			queryClass = MemoryQuery.class;
 			return new MySqlDatabaseInstance(parameters);
 		}
@@ -114,6 +109,10 @@ public class DatabaseManager {
 
 	public String getDatabaseInstanceID() {
 		return databaseInstanceID;
+	}
+
+	public void setDatabaseInstanceID(String instanceID) {
+		databaseInstanceID = instanceID;
 	}
 
 	public String getDatabaseName() {
@@ -128,62 +127,57 @@ public class DatabaseManager {
 	 * Connections are shared across DatabaseManagers
 	 * 
 	 * @param parameters
-	 * @throws DatabaseException 
+	 * @throws DatabaseException
 	 */
 	private void initialiseConnections() throws DatabaseException {
-		List<PhysicalDatabaseInstance> instances = new ArrayList<>(); 
-		for (DatabaseManager manager:managers) {
-			if (manager.isActive) {
-				instances.add(manager.databaseInstance);
-			}
-		}
-		databaseInstance.initialiseConnections(parameters,instances);
+		databaseInstance.initialiseConnections(parameters);
 		isActive = true;
 	}
-	
+
 	/**
-	 * Closes the connection for this instance and all other instances that shares the connections with this one, and optionally drops the database.
+	 * Closes the connection for this instance and all other instances that shares
+	 * the connections with this one, and optionally drops the database.
 	 * 
 	 * @param dropDatabase
 	 */
-	public void closeConnections(boolean dropDatabase) {
+	public void shutdown(boolean dropDatabase) throws DatabaseException {
 		databaseInstance.closeConnections(dropDatabase);
 		isActive = false;
-		managers.remove(this);
 	}
 
 	/**
 	 * Creates a canonical database for the schema.
 	 * 
 	 * @param schema
+	 * @throws DatabaseException
 	 */
-	public void initialiseDatabaseForSchema(Schema schema) {
+	public void initialiseDatabaseForSchema(Schema schema) throws DatabaseException {
 		databaseInstance.initialiseDatabaseForSchema(schema);
 	}
 
 	/**
 	 * Drops the database.
 	 */
-	public void dropDatabase() {
+	public void dropDatabase() throws DatabaseException {
 		databaseInstance.dropDatabase();
 	}
 
-	public Collection<Atom> addFacts(Collection<Atom> facts) {
-		return databaseInstance.addFacts(facts);
+	public Collection<Atom> addFacts(Collection<Atom> facts) throws DatabaseException {
+		if (isMemoryDb || this instanceof VirtualMultiInstanceDatabaseManager) {
+			databaseInstance.addFacts(facts);
+			return new ArrayList<>();
+		}
+		Collection<Atom> newFacts = cache.addFacts(facts);
+		// only add whats new
+		databaseInstance.addFacts(newFacts);
+		return newFacts;
 	}
 
-	public void deleteFacts(Collection<Atom> facts) {
+	public void deleteFacts(Collection<Atom> facts) throws DatabaseException {
 		databaseInstance.deleteFacts(facts);
-	}
-
-	/**
-	 * Opposite of addfacts, the actual implementation decides if it will be given
-	 * from cache or by reading the database.
-	 * 
-	 * @return
-	 */
-	public Collection<Atom> getFacts() {
-		return databaseInstance.getFacts();
+		if (!isMemoryDb && !(this instanceof VirtualMultiInstanceDatabaseManager)) {
+			cache.removeFacts(facts);
+		}
 	}
 
 	/**
@@ -192,8 +186,11 @@ public class DatabaseManager {
 	 * 
 	 * @return
 	 */
-	public Collection<Atom> getCachedFacts() {
-		return databaseInstance.getCachedFacts();
+	public Collection<Atom> getCachedFacts() throws DatabaseException {
+		if (isMemoryDb || this instanceof VirtualMultiInstanceDatabaseManager) {
+			throw new DatabaseException("Caching is disabled.");
+		}
+		return cache.getFacts();
 	}
 
 	/**
@@ -201,11 +198,11 @@ public class DatabaseManager {
 	 * 
 	 * @return
 	 */
-	public Collection<Atom> getFactsFromPhysicalDatabase() {
+	public Collection<Atom> getFactsFromPhysicalDatabase() throws DatabaseException {
 		return databaseInstance.getFactsFromPhysicalDatabase();
 	}
 
-	public List<Match> answerQueries(List<PhysicalQuery> queries) {
+	public List<Match> answerQueries(Collection<PhysicalQuery> queries) throws DatabaseException {
 		return databaseInstance.answerQueries(queries);
 	}
 
@@ -215,32 +212,19 @@ public class DatabaseManager {
 	 * @param update
 	 * @return
 	 */
-	public int executeUpdates(List<PhysicalDatabaseCommand> update) {
+	public int executeUpdates(List<PhysicalDatabaseCommand> update) throws DatabaseException {
 		return databaseInstance.executeUpdates(update);
 	}
 
-	/** Has active (not closed but initialised) connections.
+	/**
+	 * Has active (not closed but initialised) connections.
+	 * 
 	 * @return
 	 */
 	public boolean isActive() {
 		return isActive;
 	}
 
-	/**
-	 * Closes all connections, closes all instances.
-	 */
-	public static void shutdown() {
-		for (DatabaseManager manager:managers) {
-			if (manager.isActive) {
-				manager.closeConnections(false);
-			}
-		}
-	}
-
-	public boolean isVirtualDatabase() {
-		return isVirtualDatabase;
-	}
-	
 	protected Class<? extends PhysicalQuery> getQueryClass() {
 		return queryClass;
 	}

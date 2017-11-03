@@ -138,7 +138,7 @@ public class PostgresStatementBuilder extends SQLStatementBuilder {
 			result.append(" PRIMARY KEY ").append("(").append(keyAttributes).append(")");
 		}
 		result.append(')');
-		log.trace(relation);
+		log.trace(relation); 
 		log.trace(result);
 		return result.toString();
 	}

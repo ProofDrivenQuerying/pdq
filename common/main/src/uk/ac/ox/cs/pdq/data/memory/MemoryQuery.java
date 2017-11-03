@@ -28,7 +28,7 @@ public class MemoryQuery extends PhysicalQuery {
 	}
 
 	public MemoryQuery(ConjunctiveQuery source, Map<Variable, Constant> finalProjectionMapping, PhysicalDatabaseInstance instance) {
-		super(source.getBody());
+		super(source);
 		// SQLStatementBuilder stb =
 		// canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder();
 		// FromCondition from = stb.createFromStatement(source.getAtoms());

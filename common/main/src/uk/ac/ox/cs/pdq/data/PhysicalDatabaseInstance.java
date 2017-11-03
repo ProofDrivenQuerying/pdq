@@ -1,13 +1,24 @@
 package uk.ac.ox.cs.pdq.data;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
+import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
  * Represents a physical database instance such as a postgres sql database. All
@@ -24,66 +35,55 @@ public abstract class PhysicalDatabaseInstance {
 	 * implementation will attempt to connect to the remote server. In-memory
 	 * database will only initialise itself using the given parameters.
 	 * 
-	 * @param parameters - Parameters that specify the type of the database and describes how to connect to it.
-	 * @param existingInstances - to avoid using too many connections the existing instances can be listed and the connections can be shared.
+	 * @param parameters
+	 *            - Parameters that specify the type of the database and describes
+	 *            how to connect to it.
 	 */
-	protected abstract void initialiseConnections(DatabaseParameters parameters, List<PhysicalDatabaseInstance> existingInstances) throws DatabaseException;
+	protected abstract void initialiseConnections(DatabaseParameters parameters) throws DatabaseException;
 
 	/**
 	 * Closes the connection and optionally drops the database.
 	 * 
 	 * @param dropDatabase
 	 */
-	protected abstract void closeConnections(boolean dropDatabase);
+	protected abstract void closeConnections(boolean dropDatabase) throws DatabaseException ;
 
 	/**
 	 * Creates a canonical database for the schema.
 	 * 
 	 * @param schema
+	 * @throws DatabaseException
 	 */
-	protected abstract void initialiseDatabaseForSchema(Schema schema);
+	protected abstract void initialiseDatabaseForSchema(Schema schema) throws DatabaseException;
 
 	/**
 	 * Drops the database.
 	 */
-	protected abstract void dropDatabase();
+	protected abstract void dropDatabase() throws DatabaseException ;
 
 	/**
-	 * Adds facts to the datbase. Returns the added facts. If this database allows
-	 * duplicates it will return the input facts, but if it is not then it will
-	 * return a subset that contains only the new facts.
-	 * 
-	 * @param facts
-	 * @return
+	 * Adds facts to the database. 
 	 */
-	protected abstract Collection<Atom> addFacts(Collection<Atom> facts);
+	protected abstract void addFacts(Collection<Atom> facts) throws DatabaseException;
 
-	protected abstract void deleteFacts(Collection<Atom> facts);
-
-	/**
-	 * Opposite of addfacts, the actual implementation decides if it will be given
-	 * from cache or by reading the database.
-	 * 
-	 * @return
-	 */
-	protected abstract Collection<Atom> getFacts();
-
-	/**
-	 * In case the implementation has in-memory cache this can be used to get the
-	 * cached data.
-	 * 
-	 * @return
-	 */
-	protected abstract Collection<Atom> getCachedFacts();
+	protected abstract void deleteFacts(Collection<Atom> facts) throws DatabaseException;
 
 	/**
 	 * Actual reading from the underlying data structure.
 	 * 
 	 * @return
 	 */
-	protected abstract Collection<Atom> getFactsFromPhysicalDatabase();
+	protected abstract Collection<Atom> getFactsFromPhysicalDatabase() throws DatabaseException;
 
-	protected abstract List<Match> answerQueries(List<PhysicalQuery> queries);
+	/**
+	 * Gets all facts from relation R
+	 * 
+	 * @param r
+	 * @return
+	 */
+	protected abstract Collection<Atom> getFactsOfRelation(Relation r) throws DatabaseException;
+
+	protected abstract List<Match> answerQueries(Collection<PhysicalQuery> queries) throws DatabaseException;
 
 	/**
 	 * Executes a change in the database such as deleting facts or creating tables.
@@ -91,5 +91,55 @@ public abstract class PhysicalDatabaseInstance {
 	 * @param update
 	 * @return
 	 */
-	protected abstract int executeUpdates(List<PhysicalDatabaseCommand> update);
+	protected abstract int executeUpdates(List<PhysicalDatabaseCommand> update) throws DatabaseException;
+	
+	
+	protected static ArrayList<Atom> getAtomsFromMatches(List<Match> matches, Relation r) {
+		ArrayList<Atom> ret = new ArrayList<>();
+		for (Match m: matches) {
+			List<Term> terms = new ArrayList<>();
+			for (Term t:m.getFormula().getTerms()) {
+				Term newTerm = m.getMapping().get(t);
+				if (newTerm!=null)
+					terms.add(newTerm);
+			}
+			ret.add(Atom.create(r, terms.toArray(new Term[terms.size()])));
+		}
+		return ret;
+	}
+
+	protected static ConjunctiveQuery createQuery(Relation r) {
+		ArrayList<Variable> freeVariables = new ArrayList<>();
+		ArrayList<Variable> body = new ArrayList<>();
+		for (int i = 0; i < r.getAttributes().length; i++) {
+			freeVariables.add(Variable.create("x"+i));
+			body.add(Variable.create("x"+i));
+		}
+		return ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), Atom.create(r,body.toArray(new Term[body.size()])));
+	}
+	
+	public static ConjunctiveQuery createQuery(Relation r, String databaseInstanceID) {
+		ArrayList<Variable> freeVariables = new ArrayList<>();
+		ArrayList<Variable> body = new ArrayList<>();
+		for (int i = 0; i < r.getAttributes().length-1; i++) {
+			freeVariables.add(Variable.create("x"+i));
+			body.add(Variable.create("x"+i));
+		}
+		Variable factID = Variable.create("DBFactID");
+		body.add(factID);
+		Conjunction conjunction = Conjunction.create(
+				Atom.create(r,body.toArray(new Term[body.size()])), 
+				Atom.create(VirtualMultiInstanceDatabaseManager.factIdInstanceIdMappingTable,new Term[] {factID,TypedConstant.create(databaseInstanceID)}));
+		return ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), conjunction );
+	}
+
+	public static Map<Variable, Constant> createProjectionMapping(Relation r, ConjunctiveQuery q) {
+		Map<Variable, Constant> results = new HashMap<Variable, Constant>();
+		for (int i = 0; i < r.getAttributes().length-1; i++) {
+			results.put(Variable.create("x"+i), UntypedConstant.create("x"+i));
+		}
+		return results;
+	}
+
+	
 }

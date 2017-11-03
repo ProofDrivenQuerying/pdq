@@ -1,12 +1,12 @@
 package uk.ac.ox.cs.pdq.data.sql;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +18,9 @@ import uk.ac.ox.cs.pdq.db.DatabaseUtilities;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
@@ -34,12 +37,14 @@ public class SQLDatabaseConnection {
 	/** Open database connections. */
 	protected List<Connection> synchronousConnections = Lists.newArrayList();
 	private boolean isDerby;
+	private DatabaseParameters databaseParameters;
 
 	/** Initialises configured amount of connections to the configured database.
 	 * @param parameters
 	 * @throws SQLException 
 	 */
 	protected SQLDatabaseConnection(DatabaseParameters databaseParameters) throws SQLException {
+		this.databaseParameters = databaseParameters;
 		String threadNumber = databaseParameters.getProperty("synchronousThreadsNumber");
 		if (threadNumber != null && !threadNumber.isEmpty()) {
 			try {
@@ -112,18 +117,43 @@ public class SQLDatabaseConnection {
 	 * @throws SQLException 
 	 */
 	protected List<Match> executeQuery(SQLQuery query) throws SQLException {
-		List<Match> ret = new ArrayList<>();
-		PreparedStatement st = synchronousConnections.get(0).prepareStatement("select * from r1");
-		ResultSet rs = st.executeQuery();
-		while (rs.next()) {
-			Map<Variable, Constant> map = new HashMap<>();
-			for (int column=0; column < query.getFormula().getTerms().length; column++) {
-				String value = rs.getString(column);
-				map.put((Variable)query.getFormula().getTerms()[column], TypedConstant.create(value));
+		List<Match> results = new ArrayList<>();
+			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
+			Formula source = query.getFormula();
+			String sQuery = query.convertToSqlQueryString(databaseParameters.getDatabaseName());
+			//LinkedHashMap<String, Variable> projectedVariables = query.getProjectedVariables();
+			if (databaseParameters.getDatabaseName()!=null) {
+				try {
+					sqlStatement.execute("USE " + databaseParameters.getDatabaseName() +";\n");
+				}catch(Throwable t) {
+					System.err.println("Problem while switching to database: \"" + databaseParameters.getDatabaseName() + "\". " + t.getMessage());
+				}
 			}
-			ret.add(Match.create(query.getFormula(),map)); 		
-		}
-		return ret;
+			ResultSet resultSet = sqlStatement.executeQuery(sQuery);
+			try {
+				while (resultSet.next()) {
+					int f = 1;
+					Map<Variable, Constant> map = new LinkedHashMap<>();
+					for(Term term:source.getTerms()) {
+						if (term instanceof Variable) {
+							Variable variable = (Variable) term;
+							String assigned = resultSet.getString(f);
+							TypedConstant constant = null;
+							if (assigned!= null && assigned.startsWith("_Typed")) {
+								constant = TypedConstant.deSerializeTypedConstant(assigned); 
+							} 
+							Constant constantTerm = constant != null ? constant : UntypedConstant.create(assigned);
+							map.put(variable, constantTerm);
+							f++;
+						}
+					}
+					results.add(Match.create(source,map));
+				}
+			}finally {
+				if (resultSet!=null)
+					resultSet.close();
+			}
+		return results;
 	}
 	
 	/** Executes an update and returns the number of affected rows. Uses pre-configured amount of threads.
@@ -136,5 +166,16 @@ public class SQLDatabaseConnection {
 	
 	protected boolean isDerby() {
 		return isDerby;
+	}
+	protected Statement createStatement() throws SQLException {
+		return synchronousConnections.get(0).createStatement();
+	}
+	
+	protected int[] executeStatements(Collection<String> statements) throws SQLException {
+		Statement st = synchronousConnections.get(0).createStatement();
+		for (String statement:statements) {
+			st.addBatch(statement);
+		}
+		return st.executeBatch();
 	}
 }

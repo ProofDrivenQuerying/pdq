@@ -6,8 +6,10 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.data.PhysicalDatabaseCommand;
 import uk.ac.ox.cs.pdq.data.PhysicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.data.PhysicalQuery;
+import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 
@@ -24,7 +26,7 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	}
 
 	@Override
-	protected void initialiseConnections(DatabaseParameters parameters,List<PhysicalDatabaseInstance> existingInstances) {
+	protected void initialiseConnections(DatabaseParameters parameters) {
 
 	}
 
@@ -47,9 +49,7 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	}
 
 	@Override
-	protected Collection<Atom> addFacts(Collection<Atom> facts) {
-		// TODO Auto-generated method stub
-		return null;
+	protected void addFacts(Collection<Atom> facts) throws DatabaseException {
 	}
 
 	@Override
@@ -59,25 +59,13 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	}
 
 	@Override
-	protected Collection<Atom> getFacts() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected Collection<Atom> getCachedFacts() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	protected Collection<Atom> getFactsFromPhysicalDatabase() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected List<Match> answerQueries(List<PhysicalQuery> queries) {
+	protected List<Match> answerQueries(Collection<PhysicalQuery> queries) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -86,5 +74,11 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	protected int executeUpdates(List<PhysicalDatabaseCommand> update) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	protected Collection<Atom> getFactsOfRelation(Relation r) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
