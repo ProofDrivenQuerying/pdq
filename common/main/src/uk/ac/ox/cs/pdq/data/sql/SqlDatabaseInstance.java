@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.data.sql;
 
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
