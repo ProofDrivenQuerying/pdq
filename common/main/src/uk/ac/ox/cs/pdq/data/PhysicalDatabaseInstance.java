@@ -2,22 +2,17 @@ package uk.ac.ox.cs.pdq.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
@@ -96,6 +91,7 @@ public abstract class PhysicalDatabaseInstance {
 	
 	protected static ArrayList<Atom> getAtomsFromMatches(List<Match> matches, Relation r) {
 		ArrayList<Atom> ret = new ArrayList<>();
+		Predicate predicate = Predicate.create(r.getName(), r.getArity(),r.isEquality());
 		for (Match m: matches) {
 			List<Term> terms = new ArrayList<>();
 			for (Term t:m.getFormula().getTerms()) {
@@ -103,7 +99,7 @@ public abstract class PhysicalDatabaseInstance {
 				if (newTerm!=null)
 					terms.add(newTerm);
 			}
-			ret.add(Atom.create(r, terms.toArray(new Term[terms.size()])));
+			ret.add(Atom.create(predicate, terms.toArray(new Term[terms.size()])));
 		}
 		return ret;
 	}
@@ -117,29 +113,4 @@ public abstract class PhysicalDatabaseInstance {
 		}
 		return ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), Atom.create(r,body.toArray(new Term[body.size()])));
 	}
-	
-	public static ConjunctiveQuery createQuery(Relation r, String databaseInstanceID) {
-		ArrayList<Variable> freeVariables = new ArrayList<>();
-		ArrayList<Variable> body = new ArrayList<>();
-		for (int i = 0; i < r.getAttributes().length-1; i++) {
-			freeVariables.add(Variable.create("x"+i));
-			body.add(Variable.create("x"+i));
-		}
-		Variable factID = Variable.create("DBFactID");
-		body.add(factID);
-		Conjunction conjunction = Conjunction.create(
-				Atom.create(r,body.toArray(new Term[body.size()])), 
-				Atom.create(VirtualMultiInstanceDatabaseManager.factIdInstanceIdMappingTable,new Term[] {factID,TypedConstant.create(databaseInstanceID)}));
-		return ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), conjunction );
-	}
-
-	public static Map<Variable, Constant> createProjectionMapping(Relation r, ConjunctiveQuery q) {
-		Map<Variable, Constant> results = new HashMap<Variable, Constant>();
-		for (int i = 0; i < r.getAttributes().length-1; i++) {
-			results.put(Variable.create("x"+i), UntypedConstant.create("x"+i));
-		}
-		return results;
-	}
-
-	
 }

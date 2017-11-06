@@ -71,17 +71,9 @@ public class PostgresDatabaseInstance extends SqlDatabaseInstance {
 			String insertInto = "INSERT INTO " + databaseParameters.getDatabaseName()+"." + fact.getPredicate().getName() + " " + "VALUES ( ";
 			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
 				Term term = fact.getTerm(termIndex);
-				if (!term.isVariable()) 
-					if (String.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
-						insertInto += "'" + term + "'";
-					else if (Integer.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
-						insertInto +=  term;
-					else if (Double.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
-						insertInto +=  term;
-					else if (Float.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
-						insertInto +=  term;
-					else 
-						throw new RuntimeException("Unsupported type");
+				if (!term.isVariable()) {
+					insertInto +=  convertTermToSQLString(relation.getAttribute(termIndex), term);
+				}
 				if(termIndex < fact.getNumberOfTerms() -1)
 					insertInto +=  ",";
 			}

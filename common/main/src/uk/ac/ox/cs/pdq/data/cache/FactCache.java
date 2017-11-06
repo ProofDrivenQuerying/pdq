@@ -84,4 +84,13 @@ public class FactCache {
 			return cache.removeAll(facts);
 		}
 	}
+	
+	/**
+	 *  Clears the cache.
+	 */
+	public void clearCache() {
+		synchronized (LOCK) {
+			cache.clear();
+		}
+	}
 }

@@ -35,7 +35,7 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 public class SQLDatabaseConnection {
 	private int synchronousThreadsNumber = 10;
 	/** Open database connections. */
-	protected List<Connection> synchronousConnections = Lists.newArrayList();
+	private List<Connection> synchronousConnections = Lists.newArrayList();
 	private boolean isDerby;
 	private DatabaseParameters databaseParameters;
 
@@ -115,21 +115,19 @@ public class SQLDatabaseConnection {
 	 * @param query
 	 * @return
 	 * @throws SQLException 
+	 * @throws DatabaseException 
 	 */
-	protected List<Match> executeQuery(SQLQuery query) throws SQLException {
+	protected List<Match> executeQuery(SQLQuery query) throws SQLException, DatabaseException {
 		List<Match> results = new ArrayList<>();
 			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
 			Formula source = query.getFormula();
 			String sQuery = query.convertToSqlQueryString(databaseParameters.getDatabaseName());
-			//LinkedHashMap<String, Variable> projectedVariables = query.getProjectedVariables();
-			if (databaseParameters.getDatabaseName()!=null) {
-				try {
-					sqlStatement.execute("USE " + databaseParameters.getDatabaseName() +";\n");
-				}catch(Throwable t) {
-					System.err.println("Problem while switching to database: \"" + databaseParameters.getDatabaseName() + "\". " + t.getMessage());
-				}
+			ResultSet resultSet = null;
+			try {
+				resultSet = sqlStatement.executeQuery(sQuery);
+			}catch(Throwable t) {
+				throw new DatabaseException("Error while executing query: " + sQuery,t);
 			}
-			ResultSet resultSet = sqlStatement.executeQuery(sQuery);
 			try {
 				while (resultSet.next()) {
 					int f = 1;
@@ -167,15 +165,25 @@ public class SQLDatabaseConnection {
 	protected boolean isDerby() {
 		return isDerby;
 	}
-	protected Statement createStatement() throws SQLException {
-		return synchronousConnections.get(0).createStatement();
-	}
 	
 	protected int[] executeStatements(Collection<String> statements) throws SQLException {
-		Statement st = synchronousConnections.get(0).createStatement();
-		for (String statement:statements) {
-			st.addBatch(statement);
+		Statement st = null;
+		try {
+			st = synchronousConnections.get(0).createStatement();
+			for (String statement:statements) {
+				st.addBatch(statement);
+			}
+			return st.executeBatch();
+		}catch(SQLException e) {
+			System.err.println("Error while executing batch commands: " + statements);
+			if (st != null) {
+				try {
+					System.err.println("SQL warnings: " + st.getWarnings());
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+			throw e;
 		}
-		return st.executeBatch();
 	}
 }

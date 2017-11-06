@@ -18,15 +18,16 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 
 public class MySqlDatabaseInstance extends SqlDatabaseInstance {
-	
+
 	public MySqlDatabaseInstance(DatabaseParameters parameters) {
 		super(parameters);
 	}
-	
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.homomorphism.AbstractHomomorphismStatementBuilder#setupStatements(java.lang.String)
+	 * 
+	 * @see uk.ac.ox.cs.pdq.homomorphism.AbstractHomomorphismStatementBuilder#
+	 * setupStatements(java.lang.String)
 	 */
 	@Override
 	public Collection<String> createDatabaseStatements(String databaseName) {
@@ -39,7 +40,9 @@ public class MySqlDatabaseInstance extends SqlDatabaseInstance {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.homomorphism.AbstractHomomorphismStatementBuilder#cleanupStatements(java.lang.String)
+	 * 
+	 * @see uk.ac.ox.cs.pdq.homomorphism.AbstractHomomorphismStatementBuilder#
+	 * cleanupStatements(java.lang.String)
 	 */
 	@Override
 	public Collection<String> createDropStatements(String databaseName) {
@@ -60,35 +63,29 @@ public class MySqlDatabaseInstance extends SqlDatabaseInstance {
 	}
 
 	/**
-	 *	Creates a single "insert into XYZ" statement with all the terms of each fact.
+	 * Creates a single "insert into XYZ" statement with all the terms of each fact.
 	 * Make inserts.
 	 *
-	 * @param facts the facts
-	 * @param toDatabaseTables the dbrelations
+	 * @param facts
+	 *            the facts
+	 * @param toDatabaseTables
+	 *            the dbrelations
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override
 	public Collection<String> createInsertStatements(Collection<Atom> facts) {
 		Collection<String> result = new LinkedList<>();
-		for (Atom fact:facts) {
-			//Assert.assertTrue(fact.getPredicate() instanceof Relation);
+		for (Atom fact : facts) {
+			// Assert.assertTrue(fact.getPredicate() instanceof Relation);
 			Relation relation = this.schema.getRelation(fact.getPredicate().getName());
-			String insertInto = "INSERT IGNORE INTO " + databaseParameters.getDatabaseName()+"." + fact.getPredicate().getName() + " " + "VALUES ( ";
+			String insertInto = "INSERT IGNORE INTO " + databaseParameters.getDatabaseName() + "." + fact.getPredicate().getName() + " " + "VALUES ( ";
 			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
 				Term term = fact.getTerm(termIndex);
-				if (!term.isVariable()) 
-					if (String.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
-						insertInto += "'" + term + "'";
-					else if (Integer.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
-						insertInto +=  term;
-					else if (Double.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
-						insertInto +=  term;
-					else if (Float.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
-						insertInto +=  term;
-					else 
-						throw new RuntimeException("Unsupported type");
-				if(termIndex < fact.getNumberOfTerms() -1)
-					insertInto +=  ",";
+				if (!term.isVariable()) {
+					insertInto += convertTermToSQLString(relation.getAttribute(termIndex), term);
+				}
+				if (termIndex < fact.getNumberOfTerms() - 1)
+					insertInto += ",";
 			}
 			insertInto += ")";
 			result.add(insertInto);
@@ -97,25 +94,28 @@ public class MySqlDatabaseInstance extends SqlDatabaseInstance {
 	}
 
 	/**
-	 *	Creates a single "insert into XYZ" statement with all the facts.
-	 * @param facts the facts
-	 * @param toDatabaseTables the dbrelations
+	 * Creates a single "insert into XYZ" statement with all the facts.
+	 * 
+	 * @param facts
+	 *            the facts
+	 * @param toDatabaseTables
+	 *            the dbrelations
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override
 	public String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts) {
-		
-		String insertInto = "INSERT IGNORE INTO " + databaseParameters.getDatabaseName()+"." + predicate.getName() + "\n" + "VALUES" + "\n";
+
+		String insertInto = "INSERT IGNORE INTO " + databaseParameters.getDatabaseName() + "." + predicate.getName() + "\n" + "VALUES" + "\n";
 		List<String> tuples = new ArrayList<String>();
-		for (Atom fact:facts) {
+		for (Atom fact : facts) {
 			String tuple = "(";
 			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
 				Term term = fact.getTerm(termIndex);
-				if (term instanceof TypedConstant == termIndex < fact.getNumberOfTerms()-1) {
-					tuple += "'" + ((TypedConstant)term).serializeToString() + "'";
-				} else if (!term.isVariable()) 
+				if (term instanceof TypedConstant == termIndex < fact.getNumberOfTerms() - 1) {
+					tuple += "'" + ((TypedConstant) term).serializeToString() + "'";
+				} else if (!term.isVariable())
 					tuple += "'" + term + "'";
-				if(termIndex < fact.getNumberOfTerms() - 1)
+				if (termIndex < fact.getNumberOfTerms() - 1)
 					tuple += ",";
 			}
 			tuple += ")";
@@ -124,13 +124,12 @@ public class MySqlDatabaseInstance extends SqlDatabaseInstance {
 		insertInto += Joiner.on(",\n").join(tuples) + ";";
 		return insertInto;
 	}
-	
-	
+
 	@Override
 	public String createDeleteStatement(Atom fact) {
 		return super.createDeleteStatement(fact) + ";";
 	}
-	
+
 	/**
 	 * Creates the table statement.
 	 *
@@ -173,6 +172,6 @@ public class MySqlDatabaseInstance extends SqlDatabaseInstance {
 		}
 		result.append(')');
 		return result.toString();
-	}	
-	
+	}
+
 }

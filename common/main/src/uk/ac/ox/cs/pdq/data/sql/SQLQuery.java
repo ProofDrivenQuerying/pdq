@@ -3,14 +3,11 @@ package uk.ac.ox.cs.pdq.data.sql;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.data.PhysicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.data.PhysicalQuery;
 import uk.ac.ox.cs.pdq.db.sql.FromCondition;
 import uk.ac.ox.cs.pdq.db.sql.SelectCondition;
 import uk.ac.ox.cs.pdq.db.sql.WhereCondition;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
@@ -25,51 +22,11 @@ public class SQLQuery extends PhysicalQuery {
 	private String SqlQueryString;
 	private WhereCondition where;
 
-	/** The formula must be conjunctiveQuery or Dependency
-	 * @param formula
-	 */
-	public SQLQuery(Formula formula) {
-		super(formula);
-	}
-
-	public SQLQuery(ConjunctiveQuery source, Map<Variable, Constant> finalProjectionMapping, PhysicalDatabaseInstance instance) {
-		super(source);
-		// SQLStatementBuilder stb =
-		// canonicalDatabaseInstance.getDatabaseConnection().getSQLStatementBuilder();
-		// FromCondition from = stb.createFromStatement(source.getAtoms());
-		// projections =
-		// stb.createProjections(source.getAtoms(),canonicalDatabaseInstance.getDatabaseConnection());
-		// where = new WhereCondition();
-		// WhereCondition equalities =
-		// stb.createAttributeEqualities(source.getAtoms(),canonicalDatabaseInstance.getDatabaseConnection().getSchema());
-		// WhereCondition constantEqualities =
-		// stb.createEqualitiesWithConstants(source.getAtoms(),canonicalDatabaseInstance.getDatabaseConnection().getSchema());
-		// WhereCondition equalitiesWithProjectedVars =
-		// stb.createEqualitiesRespectingInputMapping(source.getAtoms(),
-		// finalProjectionMapping,canonicalDatabaseInstance.getDatabaseConnection().getSchema());
-		//
-		// WhereCondition factproperties = null;
-		// if (facts != null && !facts.isEmpty())
-		// factproperties = stb.enforceStateMembership(source.getAtoms(),
-		// canonicalDatabaseInstance.getDatabaseConnection().getRelationNamesToDatabaseTables(),this.facts);
-		// else
-		// factproperties = new WhereCondition();
-		//
-		// where.addCondition(equalities);
-		// where.addCondition(constantEqualities);
-		// where.addCondition(equalitiesWithProjectedVars);
-		// where.addCondition(factproperties);
-		//
-		// SqlQueryString = stb.buildSQLQuery(projections, from, where);
-
-	}
-
 	/**
-	 * @param string
+	 * @param source
 	 */
-	public SQLQuery(Formula formula, String string) {
-		super(formula);
-		SqlQueryString = string;
+	protected SQLQuery(ConjunctiveQuery source) {
+		super(source);
 	}
 
 	/**
@@ -89,19 +46,15 @@ public class SQLQuery extends PhysicalQuery {
 	public void setProjections(SelectCondition projections) {
 		this.projections = projections;
 	}
-	public static SQLQuery createSQLQuery(ConjunctiveQuery source, Map<Variable, Constant> finalProjectionMapping, SqlDatabaseInstance instance) {
+	public static SQLQuery createSQLQuery(ConjunctiveQuery source, SqlDatabaseInstance instance) {
 		String query = "";
 		FromCondition from = instance.createFromStatement(source.getAtoms());
 		SelectCondition projections = instance.createProjections(source.getAtoms());
 		WhereCondition where = new WhereCondition();
 		WhereCondition equalities = instance.createAttributeEqualities(source.getAtoms(),instance.schema);
 		WhereCondition constantEqualities = instance.createEqualitiesWithConstants(source.getAtoms(),instance.schema);
-//		WhereCondition equalitiesWithProjectedVars = instance.createEqualitiesRespectingInputMapping(source.getAtoms(), finalProjectionMapping,instance.schema);
-
 		where.addCondition(equalities);
 		where.addCondition(constantEqualities);
-	//	where.addCondition(equalitiesWithProjectedVars);
-
 		query = instance.buildSQLQuery(projections, from, where);
 		SQLQuery sqlQuery = new SQLQuery(source);
 		sqlQuery.setProjections(projections);

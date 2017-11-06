@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.NotImplementedException;
 
 import uk.ac.ox.cs.pdq.data.cache.FactCache;
+import uk.ac.ox.cs.pdq.data.memory.MemoryDatabaseInstance;
 import uk.ac.ox.cs.pdq.data.memory.MemoryQuery;
 import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
 import uk.ac.ox.cs.pdq.data.sql.DerbyDatabaseInstance;
@@ -87,6 +88,11 @@ public class DatabaseManager {
 	 * @return
 	 */
 	private PhysicalDatabaseInstance initializeDatabaseInstance() {
+		if (parameters.getDatabaseDriver().equalsIgnoreCase(MemoryDatabaseInstance.class.getName())) {
+			isMemoryDb=true;
+			queryClass = MemoryQuery.class;
+			return new MemoryDatabaseInstance(parameters);
+		}
 		if (parameters.getDatabaseDriver().contains("postgres")) {
 			queryClass = SQLQuery.class;
 			return new PostgresDatabaseInstance(parameters);
@@ -97,11 +103,6 @@ public class DatabaseManager {
 		}
 		if (parameters.getDatabaseDriver().contains("mysql")) {
 			queryClass = SQLQuery.class;
-			return new MySqlDatabaseInstance(parameters);
-		}
-		if (parameters.getDatabaseDriver().contains("memory")) {
-			isMemoryDb=true;
-			queryClass = MemoryQuery.class;
 			return new MySqlDatabaseInstance(parameters);
 		}
 		throw new NotImplementedException("Unknown database type: " + parameters.getDatabaseDriver());
@@ -187,7 +188,12 @@ public class DatabaseManager {
 	 * @return
 	 */
 	public Collection<Atom> getCachedFacts() throws DatabaseException {
-		if (isMemoryDb || this instanceof VirtualMultiInstanceDatabaseManager) {
+		if (isMemoryDb) {
+			// in case of memory db the physical and the cached is the same.
+			return databaseInstance.getFactsFromPhysicalDatabase();
+		}
+		
+		if (this instanceof VirtualMultiInstanceDatabaseManager) {
 			throw new DatabaseException("Caching is disabled.");
 		}
 		return cache.getFacts();

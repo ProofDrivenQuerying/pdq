@@ -92,45 +92,29 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 	@Override
 	protected void initialiseDatabaseForSchema(Schema schema) throws DatabaseException {
 		this.schema = schema;
-		Statement sqlStatement = null;
+		//Statement sqlStatement = null;
 		List<String> commandBuffer = new ArrayList<String>();
 		try {
-			sqlStatement = this.connection.createStatement();
+			//sqlStatement = this.connection.createStatement();
 			for (String sql : createDatabaseStatements(databaseParameters.getDatabaseName())) {
 				commandBuffer.add(sql);
-				sqlStatement.addBatch(sql);
+			//	sqlStatement.addBatch(sql);
 			}
 			// Create the database tables and create column indices
 			for (Relation relation : schema.getRelations()) {
 				String command = createTableStatement(relation);
-				sqlStatement.addBatch(command);
+				//sqlStatement.addBatch(command);
 				commandBuffer.add(command);
 			}
-			sqlStatement.executeBatch();
+			//sqlStatement.executeBatch();
+			this.connection.executeStatements(commandBuffer);
 		} catch (Throwable t) {
-			if (sqlStatement != null) {
-				try {
-					System.err.println("SQL warnings: " + sqlStatement.getWarnings());
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				System.err.println("Batch commands: " + commandBuffer);
-			}
 			t.printStackTrace();
 			if (t instanceof java.sql.BatchUpdateException) {
 				if (((java.sql.BatchUpdateException)t).getNextException() !=null)
 					((java.sql.BatchUpdateException)t).getNextException().printStackTrace();
 			}
 			throw new DatabaseException("DB init failed.", t);
-		} finally {
-			if (sqlStatement != null)
-				try {
-					sqlStatement.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 		}
 	}
 	protected abstract Collection<String> createDatabaseStatements(String databaseName);
@@ -176,8 +160,8 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 	protected Collection<Atom> getFactsOfRelation(Relation r) throws DatabaseException {
 		try {
 			ArrayList<Atom> ret = new ArrayList<>();
-			Formula formula = createQuery(r);
-			List<Match> matches = connection.executeQuery(new SQLQuery(formula,"Select * from " + databaseParameters.getDatabaseName() + "." + r.getName()));
+			ConjunctiveQuery formula = createQuery(r);
+			List<Match> matches = connection.executeQuery(new SQLQuery(formula));
 			ret = getAtomsFromMatches(matches,r);
 			return ret;
 		} catch (SQLException e) {
@@ -272,7 +256,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 		String termInSqlString = ""; 
 		if (!term.isVariable()) {
 			
-			if (term instanceof TypedConstant && !"DatabaseInstanceID".equals(a.getName()) && !"FactId".equals(a.getName()) && ((TypedConstant) term).getType()==String.class)
+			if (a.getType() == String.class && term instanceof TypedConstant && !"DatabaseInstanceID".equals(a.getName()) && !"FactId".equals(a.getName()))
 				termInSqlString += "'" +  ((TypedConstant)term).serializeToString() + "'";
 			else if (String.class.isAssignableFrom((Class<?>) a.getType()))
 				termInSqlString += "'" +  term + "'";

@@ -4,6 +4,7 @@ import java.io.File;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.Parameters;
+import uk.ac.ox.cs.pdq.data.memory.MemoryDatabaseInstance;
 
 
 /**
@@ -28,6 +29,7 @@ public class DatabaseParameters extends Parameters {
 	public static final DatabaseParameters MySql = getDefaultForMySql();
 	public static final DatabaseParameters Postgres = getDefaultForPostgres();
 	public static final DatabaseParameters Derby = getDefaultForDerby();
+	public static final DatabaseParameters Memory = getDefaultForMemory();
 	public static final DatabaseParameters Empty = new DatabaseParameters();
 	
 	/**
@@ -44,6 +46,14 @@ public class DatabaseParameters extends Parameters {
 		dbParam.setDatabaseName("pdq");
 		dbParam.setDatabaseUser("root");
 		dbParam.setDatabasePassword("root");
+		return dbParam; 
+	}
+	
+	private static DatabaseParameters getDefaultForMemory() {
+		DatabaseParameters dbParam = new DatabaseParameters();
+		dbParam.setDatabaseDriver(MemoryDatabaseInstance.class.getName());
+		dbParam.setDatabaseName("pdq");
+		//dbParam.setProperty("database.isvirtual","true");		
 		return dbParam; 
 	}
 	

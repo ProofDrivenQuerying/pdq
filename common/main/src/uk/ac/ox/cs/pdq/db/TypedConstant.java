@@ -49,6 +49,10 @@ public class TypedConstant extends Constant implements Typed, Serializable, Comp
 
 	@Override
 	public String toString() {
+		if (getValue() instanceof Date) {
+			SimpleDateFormat sdfmt1 = new SimpleDateFormat("yyyy-MM-dd");
+			return sdfmt1.format(getValue());
+		}
 		return this.value.toString();
 	}
 
@@ -210,6 +214,10 @@ public class TypedConstant extends Constant implements Typed, Serializable, Comp
 	 * @return
 	 */
 	public String serializeToString() {
+		if (getValue() instanceof Date) {
+			SimpleDateFormat sdfmt1 = new SimpleDateFormat("yyyy-MM-dd");
+			return "_Typed" + getType() + "_" + sdfmt1.format(getValue());
+		}
 		return "_Typed" + getType() + "_" + getValue();
 	}
 }

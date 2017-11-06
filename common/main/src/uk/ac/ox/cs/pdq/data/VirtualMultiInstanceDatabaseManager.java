@@ -3,14 +3,13 @@ package uk.ac.ox.cs.pdq.data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import uk.ac.ox.cs.pdq.data.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
-import uk.ac.ox.cs.pdq.data.sql.SQLQuery;
-import uk.ac.ox.cs.pdq.data.sql.SqlDatabaseInstance;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
@@ -31,7 +30,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  * Replaces the DatabaseManager to create multiple virtual database instances
  * over one physical instance. The main idea is: <br>
  * - every fact gets extended with a fact ID and this object will maintain a
- * maping table where each factID paired with an InstanceID, and we allow
+ * mapping table where each factID paired with an InstanceID, and we allow
  * querying facts of one specific instance or in the entire table.
  * 
  * 
@@ -40,8 +39,11 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  */
 public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	private Schema extendedSchema;
+	private Schema originalSchema;
 	private Collection<String> databaseInstanceIDs;
-	private static final Attribute FACT_ID_ATTRIBUTE = Attribute.create(String.class, "FactId");
+	protected static final String FACT_ID_TABLE_NAME = "DBFactID";
+	protected static final Attribute FACT_ID_ATTRIBUTE = Attribute.create(String.class, "FactId");
+	protected static final Variable FACT_ID_VARIABLE = Variable.create(FACT_ID_TABLE_NAME);
 	protected static final Relation factIdInstanceIdMappingTable = Relation.create("InstanceIdMapping",
 			new Attribute[] { FACT_ID_ATTRIBUTE, Attribute.create(String.class, "DatabaseInstanceID") }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
 
@@ -69,7 +71,8 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	 */
 	@Override
 	public void initialiseDatabaseForSchema(Schema schema) throws DatabaseException {
-		extendedSchema = extendSchemaWithFactIDs(schema);
+		this.originalSchema = schema;
+		this.extendedSchema = extendSchemaWithFactIDs(schema);
 		super.initialiseDatabaseForSchema(extendedSchema);
 	}
 
@@ -83,7 +86,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		}
 		List<Atom> extendedFacts = new ArrayList<>();
 		extendedFacts.addAll(extendFactsWithFactID(factsToAdd));
-		extendedFacts.addAll(getFactsMapping(factsToAdd));
+		extendedFacts.addAll(getFactsMapping(factsToAdd, this.databaseInstanceID));
 		super.addFacts(extendedFacts);
 		return factsToAdd;
 	}
@@ -95,7 +98,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 
 		// only deletes the mapping of this fact to this instance, does not delete the
 		// actual fact.
-		super.deleteFacts(getFactsMapping(facts));
+		super.deleteFacts(getFactsMapping(facts, this.databaseInstanceID));
 	}
 
 	/**
@@ -108,7 +111,8 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		if (!isMemoryDb) {
 			return multiCache.getFacts(databaseInstanceID);
 		} else {
-			throw new DatabaseException("Caching is disabled.");
+			// in case of memory storage cached or not is the same
+			return this.getFactsFromPhysicalDatabase();
 		}
 	}
 
@@ -121,49 +125,38 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		Collection<Atom> results = new ArrayList<>();
 		for (Relation r : this.extendedSchema.getRelations()) {
 			Collection<PhysicalQuery> queries = new ArrayList<>();
-			// queries.add(PhysicalQuery.create(this,
-			// PhysicalDatabaseInstance.createQuery(r,databaseInstanceID)));
-			ConjunctiveQuery q = PhysicalDatabaseInstance.createQuery(r, databaseInstanceID);
-			Map<Variable, Constant> finalProjectionMapping = PhysicalDatabaseInstance.createProjectionMapping(r, q);
-			queries.add(SQLQuery.createSQLQuery(q, finalProjectionMapping, (SqlDatabaseInstance) this.databaseInstance));
-			results.addAll(removeFactID(PhysicalDatabaseInstance.getAtomsFromMatches(super.answerQueries(queries), r)));
+			ConjunctiveQuery q = createQuery(r, databaseInstanceID);
+			queries.add(PhysicalQuery.create(this, q));
+			results.addAll(removeFactID(PhysicalDatabaseInstance.getAtomsFromMatches(super.answerQueries(queries), r), originalSchema));
 		}
 		return results;
 	}
 
 	public List<Match> answerQueries(Collection<PhysicalQuery> queries) throws DatabaseException {
 		Collection<PhysicalQuery> newQueries = new ArrayList<>();
+		Map<ConjunctiveQuery, ConjunctiveQuery> oldAndNewQueries = new HashMap<>();
 		for (PhysicalQuery q : queries) {
-			ConjunctiveQuery extendedCQ = extendQuery((ConjunctiveQuery) q.getFormula());
-			newQueries.add(PhysicalQuery.create(this,
-					PhysicalDatabaseInstance.createProjectionMapping(this.extendedSchema.getRelation(q.getFormula().getAtoms()[0].getPredicate().getName()), extendedCQ),
-					extendedCQ));
+			ConjunctiveQuery extendedCQ = extendQuery((ConjunctiveQuery) q.getFormula(), this.databaseInstanceID);
+			oldAndNewQueries.put(extendedCQ, (ConjunctiveQuery) q.getFormula());
+			newQueries.add(PhysicalQuery.create(this, extendedCQ));
+
 		}
-		return super.answerQueries(newQueries);
+		List<Match> result = new ArrayList<Match>();
+		List<Match> matches = super.answerQueries(newQueries);
+		for (Match m : matches) {
+			result.add(Match.create(oldAndNewQueries.get(m.getFormula()), removeFactID(m.getMapping())));
+		}
+		return result;
 	}
 
-	private ConjunctiveQuery extendQuery(ConjunctiveQuery formula) {
-		Conjunction newConjunction = addFactIdToConjunction(formula.getBody());
-		return ConjunctiveQuery.create(formula.getFreeVariables(), newConjunction);
-	}
-
-	private Conjunction addFactIdToConjunction(Formula body) {
-		if (body instanceof Atom) {
-			ArrayList<Term> terms = new ArrayList<>();
-			terms.addAll(Arrays.asList(body.getTerms()));
-			Variable factID = Variable.create("DBFactID");
-			terms.add(factID);
-			return Conjunction.create(Atom.create(((Atom) body).getPredicate(), terms.toArray(new Term[terms.size()])),
-					Atom.create(VirtualMultiInstanceDatabaseManager.factIdInstanceIdMappingTable, new Term[] { factID, TypedConstant.create(databaseInstanceID) }));
-
-		} else {
-			Conjunction con = (Conjunction)body;
-			List<Formula> newChildren = new ArrayList<>();
-			for (Formula child:con.getChildren()) {
-				newChildren.add(addFactIdToConjunction(child));
+	private Map<Variable, Constant> removeFactID(Map<Variable, Constant> mapping) {
+		Map<Variable, Constant> results = new HashMap<>();
+		for (Variable v : mapping.keySet()) {
+			if (!v.equals(FACT_ID_VARIABLE)) {
+				results.put(v, mapping.get(v));
 			}
-			return Conjunction.create(newChildren.toArray(new Formula[newChildren.size()]));
 		}
+		return results;
 	}
 
 	/**
@@ -175,6 +168,29 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	public int executeUpdates(List<PhysicalDatabaseCommand> update) throws DatabaseException {
 		// UNFINISHED
 		return super.executeUpdates(update);
+	}
+
+	private static ConjunctiveQuery extendQuery(ConjunctiveQuery formula, String databaseInstanceID) {
+		Conjunction newConjunction = addFactIdToConjunction(formula.getBody(), databaseInstanceID);
+		return ConjunctiveQuery.create(formula.getFreeVariables(), newConjunction);
+	}
+
+	private static Conjunction addFactIdToConjunction(Formula body, String databaseInstanceID) {
+		if (body instanceof Atom) {
+			ArrayList<Term> terms = new ArrayList<>();
+			terms.addAll(Arrays.asList(body.getTerms()));
+			terms.add(FACT_ID_VARIABLE);
+			return Conjunction.create(Atom.create(((Atom) body).getPredicate(), terms.toArray(new Term[terms.size()])),
+					Atom.create(VirtualMultiInstanceDatabaseManager.factIdInstanceIdMappingTable, new Term[] { FACT_ID_VARIABLE, TypedConstant.create(databaseInstanceID) }));
+
+		} else {
+			Conjunction con = (Conjunction) body;
+			List<Formula> newChildren = new ArrayList<>();
+			for (Formula child : con.getChildren()) {
+				newChildren.add(addFactIdToConjunction(child, databaseInstanceID));
+			}
+			return Conjunction.create(newChildren.toArray(new Formula[newChildren.size()]));
+		}
 	}
 
 	/*
@@ -189,7 +205,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		databaseInstanceIDs.add(instanceID);
 	}
 
-	private Schema extendSchemaWithFactIDs(Schema schema) {
+	private static Schema extendSchemaWithFactIDs(Schema schema) {
 		Relation newRelations[] = new Relation[schema.getRelations().length + 1];
 		int index = 0;
 		for (Relation r : schema.getRelations()) {
@@ -206,7 +222,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		return new Schema(newRelations, deps.toArray(new Dependency[deps.size()]));
 	}
 
-	private Collection<Atom> extendFactsWithFactID(Collection<Atom> facts) {
+	private static Collection<Atom> extendFactsWithFactID(Collection<Atom> facts) {
 		List<Atom> extendedFacts = new ArrayList<>();
 		for (Atom fact : facts) {
 			Atom extendedAtom = Atom.create(fact.getPredicate(), extendTerms(fact.getTerms(), "" + fact.hashCode()));
@@ -215,7 +231,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		return extendedFacts;
 	}
 
-	private Collection<Atom> getFactsMapping(Collection<Atom> facts) {
+	private static Collection<Atom> getFactsMapping(Collection<Atom> facts, String databaseInstanceID) {
 		List<Atom> extendedFacts = new ArrayList<>();
 		for (Atom fact : facts) {
 			Atom atomMapping = Atom.create(factIdInstanceIdMappingTable, TypedConstant.create("" + fact.hashCode()), TypedConstant.create(databaseInstanceID));
@@ -224,28 +240,48 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		return extendedFacts;
 	}
 
-	private Term[] extendTerms(Term[] terms, String factID) {
+	private static Term[] extendTerms(Term[] terms, String factID) {
 		List<Term> newTerms = new ArrayList<>();
 		newTerms.addAll(Arrays.asList(terms));
 		newTerms.add(TypedConstant.create(factID));
 		return newTerms.toArray(new Term[newTerms.size()]);
 	}
 
-	private Collection<Atom> removeFactID(Collection<Atom> facts) {
+	private static Collection<Atom> removeFactID(Collection<Atom> facts, Schema originalSchema) {
 		List<Atom> newFacts = new ArrayList<>();
 		for (Atom fact : facts) {
 			if (fact.getPredicate().getName().equals(factIdInstanceIdMappingTable.getName()))
 				continue;
-			newFacts.add(Atom.create(fact.getPredicate(), removeFactIdFromTerms(fact.getTerms())));
+			if (originalSchema.getRelation(fact.getPredicate().getName()).getArity() < fact.getTerms().length) {
+				// SQL database query returns the factID, we need to remove it.
+				newFacts.add(Atom.create(originalSchema.getRelation(fact.getPredicate().getName()), removeFactIdFromTerms(fact.getTerms())));
+			} else {
+				// memory DB will return exactly the free variables we needed. 
+				newFacts.add(Atom.create(originalSchema.getRelation(fact.getPredicate().getName()), fact.getTerms()));
+			}
 		}
 		return newFacts;
 	}
 
-	private Term[] removeFactIdFromTerms(Term[] terms) {
+	private static Term[] removeFactIdFromTerms(Term[] terms) {
 		List<Term> newTerms = new ArrayList<>();
 		newTerms.addAll(Arrays.asList(terms));
 		newTerms.remove(newTerms.size() - 1);
 		return newTerms.toArray(new Term[newTerms.size()]);
+	}
+
+	private static ConjunctiveQuery createQuery(Relation r, String databaseInstanceID) {
+		ArrayList<Variable> freeVariables = new ArrayList<>();
+		ArrayList<Variable> body = new ArrayList<>();
+		for (int i = 0; i < r.getAttributes().length - 1; i++) {
+			freeVariables.add(Variable.create("x" + i));
+			body.add(Variable.create("x" + i));
+		}
+		Variable factID = Variable.create(FACT_ID_TABLE_NAME);
+		body.add(factID);
+		Conjunction conjunction = Conjunction.create(Atom.create(r, body.toArray(new Term[body.size()])),
+				Atom.create(VirtualMultiInstanceDatabaseManager.factIdInstanceIdMappingTable, new Term[] { factID, TypedConstant.create(databaseInstanceID) }));
+		return ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), conjunction);
 	}
 
 }
