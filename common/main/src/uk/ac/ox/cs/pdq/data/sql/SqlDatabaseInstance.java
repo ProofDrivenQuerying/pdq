@@ -91,21 +91,16 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 	@Override
 	protected void initialiseDatabaseForSchema(Schema schema) throws DatabaseException {
 		this.schema = schema;
-		//Statement sqlStatement = null;
 		List<String> commandBuffer = new ArrayList<String>();
 		try {
-			//sqlStatement = this.connection.createStatement();
 			for (String sql : createDatabaseStatements(databaseParameters.getDatabaseName())) {
 				commandBuffer.add(sql);
-			//	sqlStatement.addBatch(sql);
 			}
 			// Create the database tables and create column indices
 			for (Relation relation : schema.getRelations()) {
 				String command = createTableStatement(relation);
-				//sqlStatement.addBatch(command);
 				commandBuffer.add(command);
 			}
-			//sqlStatement.executeBatch();
 			this.connection.executeStatements(commandBuffer);
 		} catch (Throwable t) {
 			t.printStackTrace();
