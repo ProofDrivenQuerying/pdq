@@ -68,8 +68,10 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 		}
 		Atom a1 = Atom.create(this.R, new Term[] { TypedConstant.create(13), TypedConstant.create(14), TypedConstant.create(15) });
 		Atom b1 = Atom.create(this.S, new Term[] { TypedConstant.create(13), TypedConstant.create(14) });
+		Atom c1 = Atom.create(this.T, new Term[] { TypedConstant.create(15), TypedConstant.create(16), TypedConstant.create(17) });
 		facts.add(a1);
 		facts.add(b1);
+		facts.add(c1);
 		// ADD
 		manager.addFacts(facts);
 		Collection<Atom> getFacts = manager.getCachedFacts();
@@ -81,7 +83,7 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 		getFacts = manager.getFactsFromPhysicalDatabase();
 		Assert.assertEquals(facts.size(), getFacts.size());
 		
-		//QUERY
+		//SIMPLE QUERY
 		Atom q1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"),Variable.create("z") });
 		Atom q2 = Atom.create(this.S, new Term[] { Variable.create("x"),Variable.create("y") });
 		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { z }, Conjunction.create(q1,q2));
@@ -94,6 +96,25 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 			Assert.assertEquals(TypedConstant.create(15), answer.get(0).getMapping().get(Variable.create("z")));
 		} else {
 			Assert.assertEquals(UntypedConstant.create("15"), answer.get(0).getMapping().get(Variable.create("z")));
+		}
+		
+		//COMPLICATED QUERY
+		Atom aR = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"),Variable.create("z") });
+		Atom aS = Atom.create(this.S, new Term[] { Variable.create("x"),Variable.create("y") });
+		Atom aT = Atom.create(this.T, new Term[] { Variable.create("z"),Variable.create("res1"),Variable.create("res2") });
+		cq = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"),Variable.create("res2") }, (Conjunction)Conjunction.of(aR,aS,aT));
+		q = PhysicalQuery.create(manager, cq);
+		answer = manager.answerQueries(Arrays.asList(new PhysicalQuery[] { q }));
+		Assert.assertEquals(1, answer.size());
+		//Assert.assertEquals(1,answer.get(0).getMapping().size());
+		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("res1")));
+		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("res2")));
+		if (parameters.getDatabaseDriver().contains("memory")) {
+			Assert.assertEquals(TypedConstant.create(16), answer.get(0).getMapping().get(Variable.create("res1")));
+			Assert.assertEquals(TypedConstant.create(17), answer.get(0).getMapping().get(Variable.create("res2")));
+		} else {
+			Assert.assertEquals(UntypedConstant.create("16"), answer.get(0).getMapping().get(Variable.create("res1")));
+			Assert.assertEquals(UntypedConstant.create("17"), answer.get(0).getMapping().get(Variable.create("res2")));
 		}
 		
 		
