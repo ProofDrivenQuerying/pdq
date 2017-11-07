@@ -64,14 +64,11 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 		// add some disjoint test data
 		for (int i = 0; i < 100; i++) {
 			Atom a1 = Atom.create(this.R, new Term[] { TypedConstant.create(10000 + i), TypedConstant.create(20000 + i), TypedConstant.create(30000 + i) });
-			// Atom b1 = Atom.create(this.S, new Term[] { TypedConstant.create(40000 + i),
-			// TypedConstant.create(50000 + i)});
+			facts.add(a1);
 			if (i < 90) {
 				Atom c1 = Atom.create(this.T, new Term[] { TypedConstant.create(30000 + i), TypedConstant.create(20000 + i), TypedConstant.create(90000 + i) });
 				facts.add(c1);
 			}
-			facts.add(a1);
-			// facts.add(b1);
 		}
 		
 		// add test record that represents a not active dependency
@@ -104,7 +101,6 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 		Assert.assertNull(rightFacts.get(0).getMapping().get(Variable.create("z")));
 
 		List<Match> diffFacts = manager.answerQueryDifferences(left, right);
-		System.out.println(diffFacts);
 		Assert.assertEquals(1, diffFacts.size());
 		Assert.assertTrue(diffFacts.get(0).getMapping().containsKey(Variable.create("z")));
 		Assert.assertEquals(TypedConstant.create(115),diffFacts.get(0).getMapping().get(Variable.create("z")));
@@ -118,14 +114,11 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 		// add some disjoint test data
 		for (int i = 0; i < 100; i++) {
 			Atom a1 = Atom.create(this.R, new Term[] { TypedConstant.create(10000 + i), TypedConstant.create(20000 + i), TypedConstant.create(30000 + i) });
-			// Atom b1 = Atom.create(this.S, new Term[] { TypedConstant.create(40000 + i),
-			// TypedConstant.create(50000 + i)});
 			if (i < 90) {
 				Atom c1 = Atom.create(this.T, new Term[] { TypedConstant.create(30000 + i), TypedConstant.create(20000 + i), TypedConstant.create(90000 + i) });
 				facts.add(c1);
 			}
 			facts.add(a1);
-			// facts.add(b1);
 		}
 		
 		// add test record that represents a not active dependency
@@ -144,7 +137,6 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 		facts.add(c2);
 		manager.addFacts(facts);
 		
-
 		// form queries
 		Atom q1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		Atom q2 = Atom.create(this.S, new Term[] { Variable.create("x"), Variable.create("y")});
