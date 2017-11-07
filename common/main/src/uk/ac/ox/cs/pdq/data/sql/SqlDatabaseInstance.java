@@ -64,7 +64,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 	public static final String ALIAS_PREFIX = "A";
 	protected Schema schema;
 	
-	public SqlDatabaseInstance(DatabaseParameters parameters) {
+	protected SqlDatabaseInstance(DatabaseParameters parameters) {
 		this.databaseParameters = parameters;
 	}
 
@@ -184,16 +184,9 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 		return 0;
 	}
 
-	public Collection<String> createDropStatements(String databaseName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	abstract protected Collection<String> createDropStatements(String databaseName);
 
-	public String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	abstract protected String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts);
 
 	/**
 	 * Creates SQL insert statements, for the input facts.
@@ -204,7 +197,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 	 *            map to the relation objects
 	 * @return insert statements that add the input fact to the fact database.
 	 */
-	public Collection<String> createInsertStatements(Collection<Atom> facts) {
+	protected Collection<String> createInsertStatements(Collection<Atom> facts) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact : facts) {
 			Relation relation = this.schema.getRelation(fact.getPredicate().getName());
@@ -232,7 +225,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 	 * @return a set of statements that delete the input facts from the fact
 	 *         database.
 	 */
-	public String createDeleteStatement(Atom fact) {
+	protected String createDeleteStatement(Atom fact) {
 		String deleteFrom = "DELETE FROM " + databaseParameters.getDatabaseName() + "." + fact.getPredicate().getName() + " " + "WHERE ";
 		Relation r = schema.getRelation(fact.getPredicate().getName());
 		int index = 0;
@@ -272,7 +265,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 	 *            the table to create
 	 * @return a SQL statement that creates the fact table of the given relation
 	 */
-	public String createTableStatement(Relation relation) {
+	protected String createTableStatement(Relation relation) {
 		StringBuilder result = new StringBuilder();
 		result.append("CREATE TABLE " + databaseParameters.getDatabaseName() + ".").append(relation.getName()).append('(');
 		for (int attributeIndex = 0; attributeIndex < relation.getArity(); ++attributeIndex) {
@@ -381,7 +374,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 	 *            the relation map
 	 * @return the collection
 	 */
-	public Collection<String> createTruncateTableStatements(Atom[] queryRelations, Map<String, Relation> toDatabaseRelation) {
+	protected Collection<String> createTruncateTableStatements(Atom[] queryRelations, Map<String, Relation> toDatabaseRelation) {
 		Set<String> result = new LinkedHashSet<>();
 		for (Atom pred : queryRelations)
 			result.add("TRUNCATE TABLE  " + databaseParameters.getDatabaseName() + "." + toDatabaseRelation.get(pred.getPredicate().getName()).getName());
@@ -398,7 +391,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 	 * @return a SQL statement that creates an index for the bag and fact attributes
 	 *         of the database tables
 	 */
-	public String createColumnIndexStatement(Relation relation, Attribute column) {
+	protected String createColumnIndexStatement(Relation relation, Attribute column) {
 		return "CREATE INDEX idx_" + relation.getName() + "_" + column.getName() + " ON " + databaseParameters.getDatabaseName() + "." +  relation.getName() + "(" + column.getName() + ")";
 	}
 
@@ -415,7 +408,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 	 *            the constraint indices
 	 * @return the pair
 	 */
-	public Pair<Collection<String>, Collection<String>> setupIndices(boolean isForQuery, Map<String, Relation> relationNamesToDatabaseTables, Formula rule,
+	protected Pair<Collection<String>, Collection<String>> setupIndices(boolean isForQuery, Map<String, Relation> relationNamesToDatabaseTables, Formula rule,
 			Set<String> existingIndices) {
 		Formula body = null;
 		if (rule instanceof Atom) {
@@ -460,7 +453,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 		return new ImmutablePair<Collection<String>, Collection<String>>(createIndices, dropIndices);
 	}
 
-	public FromCondition createFromStatement(Atom[] facts) {
+	protected FromCondition createFromStatement(Atom[] facts) {
 		List<String> relations = new ArrayList<String>();
 		for (Atom fact : facts) {
 			String aliasName = null;
@@ -486,7 +479,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 	 *         variables. If the input is a query we project the attributes that map
 	 *         to its free variables.
 	 */
-	public SelectCondition createProjections(Atom[] atoms) {
+	protected SelectCondition createProjections(Atom[] atoms) {
 		LinkedHashMap<String, Variable> projected = new LinkedHashMap<>();
 		List<Variable> attributes = new ArrayList<>();
 		for (Atom fact : atoms) {
@@ -508,7 +501,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 		return new SelectCondition(projected);
 	}
 
-	public WhereCondition createAttributeEqualities(Atom[] source,Schema schema) {
+	protected WhereCondition createAttributeEqualities(Atom[] source,Schema schema) {
 		List<String> attributePredicates = new ArrayList<String>();
 		Collection<Term> terms = Utility.getTerms(source);
 		terms = Utility.removeDuplicates(terms);
@@ -601,12 +594,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 					StringBuilder eq = new StringBuilder();
 					String leftSide = alias == null ? fact.getPredicate().getName() : alias; 
 					eq.append(leftSide).append(".").append(schema.getRelation(fact.getPredicate().getName()).getAttribute(index).getName()).append('=');
-					if ("DatabaseInstanceID".equals(schema.getRelation(fact.getPredicate().getName()).getAttribute(index).getName()) ||
-						"InstanceIdMapping".equals(fact.getPredicate().getName())) {
-						eq.append("'").append(term.toString()).append("'");
-					} else {
-						eq.append("'").append(((TypedConstant)term).serializeToString()).append("'");
-					}
+					eq.append(convertTermToSQLString(schema.getRelation(fact.getPredicate().getName()).getAttribute(index),term));
 					constantPredicates.add(eq.toString());
 				}
 			}

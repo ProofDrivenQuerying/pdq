@@ -76,7 +76,7 @@ public class Cache {
 	            		object1.mapping.size() != object2.mapping.size())
 	                return false;
 	            for(java.util.Map.Entry<Variable, Constant> entry:object1.mapping.entrySet()) {
-	            	if(!object2.mapping.containsKey(entry.getKey()) || object2.mapping.get(entry.getKey()).equals(entry.getValue())) 
+	            	if(!object2.mapping.containsKey(entry.getKey()) || !object2.mapping.get(entry.getKey()).equals(entry.getValue())) 
 	            		return false;
 	            }
 	            return true;

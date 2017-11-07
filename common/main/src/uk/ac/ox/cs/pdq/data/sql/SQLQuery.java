@@ -61,6 +61,9 @@ public class SQLQuery extends PhysicalQuery {
 		sqlQuery.setSqlQueryString(query);
 		return sqlQuery;
 	}
+	public static SQLQuery createQueryDifference(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery, SqlDatabaseInstance databaseInstance) {
+		return null;
+	}
 
 	public String convertToSqlQueryString(String databaseName) {
 		if (SqlQueryString==null) {
@@ -92,4 +95,5 @@ public class SQLQuery extends PhysicalQuery {
 	public String toString() {
 		return "SQLQuery - " + super.toString() + " / SQL: " + SqlQueryString;
 	}
+
 }

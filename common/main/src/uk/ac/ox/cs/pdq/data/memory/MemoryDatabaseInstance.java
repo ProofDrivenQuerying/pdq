@@ -99,25 +99,49 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 		ConjunctiveQuery q = (ConjunctiveQuery) query.getFormula();
 		Variable[] freeVariables = q.getFreeVariables();
 		Collection<Match> results = new ArrayList<>();
-		Collection<Atom> matchingFacts = null;
-		if (((ConjunctiveQuery) query.getFormula()).getBody() instanceof Atom) {
-			matchingFacts = getFactsOfRelation(facts.getFacts(), ((Atom) ((ConjunctiveQuery) query.getFormula()).getBody()).getPredicate().getName(),
-					((MemoryQuery) query).getConstantEqualityConditions());
-		} else {
-			matchingFacts = search(this.facts.getFacts(), (Conjunction) ((ConjunctiveQuery) query.getFormula()).getBody(), ((MemoryQuery) query).getAttributeEqualityConditions(),
-					((MemoryQuery) query).getConstantEqualityConditions());
-		}
+		
+		// get matching Atoms
+		Collection<Atom> matchingFacts = getMatchingFactsForQuery(this.facts.getFacts(), (MemoryQuery)query);
+		
+		// create Variable - Constant matching form Atoms
 		for (Atom a : matchingFacts) {
 			Map<Variable, Constant> mapping;
-			try {
-				mapping = createMapping(freeVariables, a, q);
-			} catch (Exception e) {
-				throw new DatabaseException("Error in answere queries", e);
-			}
+			mapping = createMapping(freeVariables, a, q);
 			if (!mapping.isEmpty())
 				results.add(Match.create(q, mapping));
 		}
+		
+		// check for query difference. If it is a simple query we can return the results.
+		if (((MemoryQuery) query).getRightQuery()==null) {
+			return results;
+		}
+		
+		// Need to run the Right side query
+		ConjunctiveQuery qRight = (ConjunctiveQuery) ((MemoryQuery) query).getRightQuery().getFormula();
+		Variable[] freeVariablesRight = ((MemoryQuery) query).getRightQuery().getFormula().getFreeVariables();
+		Collection<Atom> matchingFactsRight = getMatchingFactsForQuery(this.facts.getFacts(), ((MemoryQuery) query).getRightQuery());
+		
+		// check for matching, and remove the results that are appearing on both sides.
+		for (Atom a : matchingFactsRight) {
+			Map<Variable, Constant> mapping;
+			Map<Variable, Constant> mappingShort;
+			mapping = createMapping(freeVariablesRight, a, qRight);
+			if (!mapping.isEmpty()) {
+				mappingShort = createMapping(freeVariables, a, q);
+				results.remove(Match.create(q, mappingShort));
+			}
+		}
 		return results;
+	}
+
+	private Collection<Atom> getMatchingFactsForQuery(Collection<Atom> facts, MemoryQuery query) {
+		if (((ConjunctiveQuery) query.getFormula()).getBody() instanceof Atom) {
+			return getFactsOfRelation(facts, ((Atom) ((ConjunctiveQuery) query.getFormula()).getBody()).getPredicate().getName(),
+					query.getConstantEqualityConditions());
+		} else { 
+			return search(facts, (Conjunction) ((ConjunctiveQuery) query.getFormula()).getBody(), query.getAttributeEqualityConditions(),
+					((MemoryQuery) query).getConstantEqualityConditions());
+		}
 	}
 
 	/**
@@ -132,7 +156,7 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	 * @return
 	 * @throws Exception
 	 */
-	private Map<Variable, Constant> createMapping(Variable[] freeVariables, Atom acurrentFact, ConjunctiveQuery q) throws Exception {
+	private Map<Variable, Constant> createMapping(Variable[] freeVariables, Atom acurrentFact, ConjunctiveQuery q) throws DatabaseException {
 		if (acurrentFact.getPredicate().getName().startsWith("ConjunctionOf")) {
 			String originalPredicateName = acurrentFact.getPredicate().getName();
 			String subPredicateNames = originalPredicateName.substring("ConjunctionOf".length() + 1, originalPredicateName.length() - 1);
@@ -183,14 +207,14 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	 * 
 	 * @throws Exception
 	 */
-	private int getIndexFor(String predicateName, Variable variable, Atom queryAtom, ConjunctiveQuery q) throws Exception {
+	private int getIndexFor(String predicateName, Variable variable, Atom queryAtom, ConjunctiveQuery q) throws DatabaseException {
 		if (!predicateName.contains("ConjunctionOf")) {
 			for (int i = 0; i < queryAtom.getTerms().length; i++) {
 				if (queryAtom.getTerm(i).equals(variable)) {
 					return i;
 				}
 			}
-			throw new Exception("Variable not found! V: " + variable + " Query: " + queryAtom);
+			throw new DatabaseException("Variable not found! V: " + variable + " Query: " + queryAtom);
 		}
 		String originalPredicateName = predicateName;
 		String subPredicateNames = originalPredicateName.substring("ConjunctionOf".length() + 1, originalPredicateName.length() - 1);
@@ -202,7 +226,7 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 					return i;
 				}
 			}
-			throw new Exception("Variable not found! V: " + variable + " Query: " + queryAtom);
+			throw new DatabaseException("Variable not found! V: " + variable + " Query: " + queryAtom);
 		} else {
 			int shift = -1;
 			for (int i = 0; i < q.getAtoms().length; i++) {
@@ -212,7 +236,7 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 				}
 			}
 			if (shift < 0)
-				throw new Exception("LeftPredicate not found! predicate name: " + leftPredicateName + " Query: " + queryAtom);
+				throw new DatabaseException("LeftPredicate not found! predicate name: " + leftPredicateName + " Query: " + queryAtom);
 			return shift + getIndexFor(rightPredicateName, variable, queryAtom, q);
 		}
 	}

@@ -149,14 +149,28 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	private Map<Variable, Constant> removeFactID(Map<Variable, Constant> mapping) {
-		Map<Variable, Constant> results = new HashMap<>();
-		for (Variable v : mapping.keySet()) {
-			if (!v.equals(FACT_ID_VARIABLE)) {
-				results.put(v, mapping.get(v));
-			}
+	/**
+	 * Similar to the answer queries, but it will execute two queries and returns
+	 * the difference between the two sets of results.
+	 * 
+	 * @param leftQuery
+	 * @param rightQuery
+	 * @return
+	 * @throws DatabaseException
+	 */
+	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
+		ConjunctiveQuery extendedLQ = extendQuery(leftQuery, this.databaseInstanceID);
+		ConjunctiveQuery extendedRQ = extendQuery(rightQuery, this.databaseInstanceID);
+		Map<ConjunctiveQuery, ConjunctiveQuery> oldAndNewQueries = new HashMap<>();
+		//	ConjunctiveQuery extendedCQ = extendQuery((ConjunctiveQuery) q.getFormula(), this.databaseInstanceID);
+		oldAndNewQueries.put(extendedLQ, leftQuery);
+		oldAndNewQueries.put(extendedRQ, rightQuery);
+		List<Match> result = new ArrayList<Match>();
+		List<Match> matches = super.answerQueryDifferences(extendedLQ,extendedRQ);
+		for (Match m : matches) {
+			result.add(Match.create(oldAndNewQueries.get(m.getFormula()), removeFactID(m.getMapping())));
 		}
-		return results;
+		return result;
 	}
 
 	/**
@@ -168,6 +182,28 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	public int executeUpdates(List<PhysicalDatabaseCommand> update) throws DatabaseException {
 		// UNFINISHED
 		return super.executeUpdates(update);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * uk.ac.ox.cs.pdq.data.DatabaseManager#setDatabaseInstanceID(java.lang.String)
+	 */
+	@Override
+	public void setDatabaseInstanceID(String instanceID) {
+		super.setDatabaseInstanceID(instanceID);
+		databaseInstanceIDs.add(instanceID);
+	}
+
+	private Map<Variable, Constant> removeFactID(Map<Variable, Constant> mapping) {
+		Map<Variable, Constant> results = new HashMap<>();
+		for (Variable v : mapping.keySet()) {
+			if (!v.equals(FACT_ID_VARIABLE)) {
+				results.put(v, mapping.get(v));
+			}
+		}
+		return results;
 	}
 
 	private static ConjunctiveQuery extendQuery(ConjunctiveQuery formula, String databaseInstanceID) {
@@ -191,18 +227,6 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 			}
 			return Conjunction.create(newChildren.toArray(new Formula[newChildren.size()]));
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * uk.ac.ox.cs.pdq.data.DatabaseManager#setDatabaseInstanceID(java.lang.String)
-	 */
-	@Override
-	public void setDatabaseInstanceID(String instanceID) {
-		super.setDatabaseInstanceID(instanceID);
-		databaseInstanceIDs.add(instanceID);
 	}
 
 	private static Schema extendSchemaWithFactIDs(Schema schema) {
@@ -256,7 +280,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 				// SQL database query returns the factID, we need to remove it.
 				newFacts.add(Atom.create(originalSchema.getRelation(fact.getPredicate().getName()), removeFactIdFromTerms(fact.getTerms())));
 			} else {
-				// memory DB will return exactly the free variables we needed. 
+				// memory DB will return exactly the free variables we needed.
 				newFacts.add(Atom.create(originalSchema.getRelation(fact.getPredicate().getName()), fact.getTerms()));
 			}
 		}

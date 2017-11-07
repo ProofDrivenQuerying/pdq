@@ -27,6 +27,10 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  */
 public class MemoryQuery extends PhysicalQuery {
 	/**
+	 * This will be used in case this query was created by the difference of two conjunctive query.
+	 */
+	protected MemoryQuery rightQuery;
+	/**
 	 * Attribute equality condition means that the left and right side of a
 	 * Conjunction has one or more variable that needs to have the same value. These
 	 * conditions are stored under the corresponding Conjunction object in this map.
@@ -40,6 +44,9 @@ public class MemoryQuery extends PhysicalQuery {
 	 */
 	private Map<String, List<ConstantEqualityCondition>> constantEqualityConditions;
 
+	/** Normal query that can be answered by a MemoryDatabaseInstance
+	 * @param source
+	 */
 	public MemoryQuery(ConjunctiveQuery source) {
 		super(source);
 		attributeEqualityConditions = new HashMap<>();
@@ -53,6 +60,15 @@ public class MemoryQuery extends PhysicalQuery {
 				initConstantEqualityConditions(a);
 			}
 		}
+	}
+
+	/** This query will represent the difference between two Queries.
+	 * @param leftQuery
+	 * @param rightQuery
+	 */
+	public MemoryQuery(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) {
+		this(leftQuery);
+		this.rightQuery = new MemoryQuery(rightQuery);
 	}
 
 	/**
@@ -135,5 +151,9 @@ public class MemoryQuery extends PhysicalQuery {
 	 */
 	public Map<String, List<ConstantEqualityCondition>> getConstantEqualityConditions() {
 		return constantEqualityConditions;
+	}
+
+	public MemoryQuery getRightQuery() {
+		return rightQuery;
 	}
 }

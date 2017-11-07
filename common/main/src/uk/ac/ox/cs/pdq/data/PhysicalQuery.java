@@ -14,9 +14,9 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
 
 /**
- * This is a query that was created from formulas such as ConjunctiveQuery or
- * a dependency activeness check, but converted to the language of a physical database such as
- * SQL.
+ * This is a query that was created from formulas such as ConjunctiveQuery or a
+ * dependency activeness check, but converted to the language of a physical
+ * database such as SQL.
  * 
  * @author Gabor
  *
@@ -24,7 +24,9 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 public class PhysicalQuery extends PhysicalDatabaseCommand {
 	protected Formula formula;
 
-	/** The formula must be conjunctiveQuery or Dependency
+	/**
+	 * The formula must be conjunctiveQuery or Dependency
+	 * 
 	 * @param formula
 	 */
 	protected PhysicalQuery(Formula formula) {
@@ -33,31 +35,53 @@ public class PhysicalQuery extends PhysicalDatabaseCommand {
 	}
 
 	public String toString() {
-		return "PhysicalQuery ("+formula+")";
+		return "PhysicalQuery (" + formula + ")";
 	}
 
 	public static PhysicalQuery create(DatabaseManager manager, ConjunctiveQuery query) throws DatabaseException {
 		try {
 			if (manager.getQueryClass() == SQLQuery.class) {
-				SQLQuery q = SQLQuery.createSQLQuery(query, (SqlDatabaseInstance)manager.databaseInstance);
+				SQLQuery q = SQLQuery.createSQLQuery(query, (SqlDatabaseInstance) manager.databaseInstance);
 				return q;
 			}
 			if (manager.getQueryClass() == MemoryQuery.class) {
 				MemoryQuery q = new MemoryQuery(query);
 				return q;
-			} 
-			
+			}
+
 			Class<? extends PhysicalQuery> qclass = manager.getQueryClass();
 			Constructor<? extends PhysicalQuery> constructor;
 			constructor = qclass.getConstructor(Formula.class);
 			PhysicalQuery q = constructor.newInstance(query);
 			return q;
 		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			throw new DatabaseException("Failed to create query from : "+ query + " using manager: "+ manager + ".",e);
+			throw new DatabaseException("Failed to create query from : " + query + " using manager: " + manager + ".", e);
 		}
 	}
 
 	public Formula getFormula() {
 		return formula;
+	}
+
+	protected static PhysicalQuery createQueryDifference(DatabaseManager manager, ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
+		try {
+			if (manager.getQueryClass() == SQLQuery.class) {
+				SQLQuery q = SQLQuery.createQueryDifference(leftQuery, rightQuery, (SqlDatabaseInstance) manager.databaseInstance);
+				return q;
+			}
+
+			if (manager.getQueryClass() == MemoryQuery.class) {
+				MemoryQuery q = new MemoryQuery(leftQuery, rightQuery);
+				return q;
+			}
+			Class<? extends PhysicalQuery> qclass = manager.getQueryClass();
+			Constructor<? extends PhysicalQuery> constructor;
+			constructor = qclass.getConstructor(Formula.class, Formula.class);
+			PhysicalQuery q = constructor.newInstance(leftQuery, rightQuery);
+			return q;
+		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			throw new DatabaseException("Failed to create query from l: " + leftQuery + ", r:" + rightQuery + " using manager: " + manager + ".", e);
+		}
+
 	}
 }

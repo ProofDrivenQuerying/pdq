@@ -2,6 +2,8 @@ package uk.ac.ox.cs.pdq.db;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -47,4 +49,16 @@ public class Match {
     public static Match create(Formula formula, Map<Variable, Constant> mapping) {
         return Cache.match.retrieve(new Match(formula, mapping));
     }
+    
+	@Override
+	public int hashCode() {
+		HashCodeBuilder builder = new HashCodeBuilder(17, 37);
+		builder.append(formula);
+		for (Variable v: mapping.keySet()) {
+			builder.append(v);
+			builder.append(mapping.get(v));
+		}
+		return builder.toHashCode();
+	}
+
 }

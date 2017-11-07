@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 
 /**
  * Main database management entry point. Creates and manages connections,
@@ -211,6 +212,12 @@ public class DatabaseManager {
 	public List<Match> answerQueries(Collection<PhysicalQuery> queries) throws DatabaseException {
 		return databaseInstance.answerQueries(queries);
 	}
+	
+	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
+		Collection<PhysicalQuery> queries = new ArrayList<>();
+		queries.add(PhysicalQuery.createQueryDifference(this, leftQuery, rightQuery));
+		return databaseInstance.answerQueries(queries);
+	}
 
 	/**
 	 * Executes a change in the database such as deleting facts or creating tables.
@@ -234,4 +241,5 @@ public class DatabaseManager {
 	protected Class<? extends PhysicalQuery> getQueryClass() {
 		return queryClass;
 	}
+
 }
