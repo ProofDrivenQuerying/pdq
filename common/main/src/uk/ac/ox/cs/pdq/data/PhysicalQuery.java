@@ -10,11 +10,12 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
+import uk.ac.ox.cs.pdq.data.memory.MemoryNestedQuery;
 import uk.ac.ox.cs.pdq.data.memory.MemoryQuery;
 import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
-import uk.ac.ox.cs.pdq.data.sql.SQLQuery;
+import uk.ac.ox.cs.pdq.data.sql.SQLNestedSelect;
+import uk.ac.ox.cs.pdq.data.sql.SQLSelect;
 import uk.ac.ox.cs.pdq.data.sql.SqlDatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -33,7 +34,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  * @author Gabor
  *
  */
-public class PhysicalQuery {
+public abstract class PhysicalQuery {
 	/**
 	 * The main ConjunctiveQuery or the left Query in case we have query
 	 * differences.
@@ -45,11 +46,7 @@ public class PhysicalQuery {
 	 * schema, since we need Attribute names and types.
 	 */
 	protected Schema schema;
-	/**
-	 * This will be used in case this query was created by the difference of two
-	 * conjunctive query.
-	 */
-	protected PhysicalQuery rightQuery;
+	
 	/**
 	 * Attribute equality condition means that the left and right side of a
 	 * Conjunction has one or more variable that needs to have the same value. These
@@ -60,7 +57,7 @@ public class PhysicalQuery {
 	/**
 	 * Property mappings between schema and query for each Atom of this conjunctiveQuery.
 	 */
-	protected Collection<QueryAtom> queryAtoms;
+	protected Collection<ConjunctiveQueryDescriptor> queryAtoms;
 
 	/**
 	 * The formula must be conjunctiveQuery or Dependency
@@ -81,25 +78,19 @@ public class PhysicalQuery {
 
 	}
 
-	protected PhysicalQuery(ConjunctiveQuery leftQuery, PhysicalQuery rightQuery, Schema schema) {
-		this(leftQuery, schema);
-		this.rightQuery = rightQuery;
-
-	}
-
 	/**
-	 * Populates a QueryAtom object for the current atom. 
+	 * Populates a ConjunctiveQueryDescriptor object for the current atom. 
 	 */
-	private Collection<QueryAtom> initQueryAtoms(Atom atom,Variable[] freeVariables) {
-		Collection<QueryAtom> results = new ArrayList<>();
+	private Collection<ConjunctiveQueryDescriptor> initQueryAtoms(Atom atom,Variable[] freeVariables) {
+		Collection<ConjunctiveQueryDescriptor> results = new ArrayList<>();
 		
 		Relation r = this.schema.getRelation(atom.getPredicate().getName());
-		QueryAtom queryAtom = new QueryAtom(atom,r);
+		ConjunctiveQueryDescriptor queryAtom = new ConjunctiveQueryDescriptor(atom,r);
 		
 		// get constant equalities
 		for (int i = 0; i < atom.getTerms().length; i++) {
 			if (atom.getTerms()[i] instanceof TypedConstant) {
-				queryAtom.addConstantEqualityCondition(ConstantEqualityCondition.create(i, (TypedConstant) atom.getTerms()[i]));
+				queryAtom.addConstantEqualityCondition(queryAtom.getAttributeAtIndex(i), (TypedConstant) atom.getTerms()[i]);
 			}
 		}
 		
@@ -174,14 +165,12 @@ public class PhysicalQuery {
 	 * 
 	 * @return
 	 */
-	public Collection<QueryAtom> getQueryAtoms() {
+	public Collection<ConjunctiveQueryDescriptor> getQueryAtoms() {
 		return queryAtoms;
 	}
 
-	protected PhysicalQuery getRightQuery() {
-		return rightQuery;
-	}
-
+	abstract protected PhysicalQuery getRightQuery();
+	
 	public String toString() {
 		return "PhysicalQuery (" + conjunctiveQuery + ")";
 	}
@@ -192,8 +181,8 @@ public class PhysicalQuery {
 
 	public static PhysicalQuery create(DatabaseManager manager, ConjunctiveQuery query) throws DatabaseException {
 		try {
-			if (manager.getQueryClass() == SQLQuery.class) {
-				SQLQuery q = new SQLQuery(query, (SqlDatabaseInstance) manager.databaseInstance);
+			if (manager.getQueryClass() == SQLSelect.class) {
+				SQLSelect q = new SQLSelect(query, (SqlDatabaseInstance) manager.databaseInstance);
 				return q;
 			}
 			if (manager.getQueryClass() == MemoryQuery.class) {
@@ -213,13 +202,13 @@ public class PhysicalQuery {
 
 	public static PhysicalQuery createQueryDifference(DatabaseManager manager, ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
 		try {
-			if (manager.getQueryClass() == SQLQuery.class) {
-				SQLQuery q = new SQLQuery(leftQuery, new SQLQuery(rightQuery, (SqlDatabaseInstance) manager.databaseInstance), (SqlDatabaseInstance) manager.databaseInstance);
+			if (manager.getQueryClass() == SQLSelect.class) {
+				SQLSelect q = new SQLNestedSelect(leftQuery, new SQLSelect(rightQuery, (SqlDatabaseInstance) manager.databaseInstance), (SqlDatabaseInstance) manager.databaseInstance);
 				return q;
 			}
 
 			if (manager.getQueryClass() == MemoryQuery.class) {
-				MemoryQuery q = new MemoryQuery(leftQuery, new MemoryQuery(rightQuery,manager.getSchema()),manager.getSchema());
+				MemoryNestedQuery q = new MemoryNestedQuery(leftQuery, new MemoryQuery(rightQuery,manager.getSchema()),manager.getSchema());
 				return q;
 			}
 			Class<? extends PhysicalQuery> qclass = manager.getQueryClass();

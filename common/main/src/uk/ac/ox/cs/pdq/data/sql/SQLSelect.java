@@ -10,10 +10,9 @@ import com.google.common.base.Joiner;
 
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
+import uk.ac.ox.cs.pdq.data.ConjunctiveQueryDescriptor;
 import uk.ac.ox.cs.pdq.data.PhysicalQuery;
-import uk.ac.ox.cs.pdq.data.QueryAtom;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -26,33 +25,15 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  * @author Gabor
  *
  */
-public class SQLQuery extends PhysicalQuery {
-	private String sqlQueryString;
-	private List<String> whereConditions = new ArrayList<>();
-	private List<String> fromTableName = new ArrayList<>();
-	private String select;
-	public SQLQuery(ConjunctiveQuery source, SqlDatabaseInstance instance) {
+public class SQLSelect extends PhysicalQuery {
+	protected String sqlQueryString;
+	protected List<String> whereConditions = new ArrayList<>();
+	protected List<String> fromTableName = new ArrayList<>();
+	protected String select;
+	
+	public SQLSelect(ConjunctiveQuery source, SqlDatabaseInstance instance) {
 		super(source, instance.schema);
 		sqlQueryString = init(source, instance);
-	}
-
-	public SQLQuery(ConjunctiveQuery left, SQLQuery right, SqlDatabaseInstance instance) {
-		super(left, right, instance.schema);
-		sqlQueryString = init(left, instance);
-		List<String> differentConditions = getDiferences(this.whereConditions,right.whereConditions);
-		List<String> differentTableNames = getDiferences(this.fromTableName,right.fromTableName);
-		
-		sqlQueryString += " AND \n NOT EXISTS ( " + right.select + " FROM " + Joiner.on(",").join(differentTableNames) +
-				" WHERE " + Joiner.on(",").join(differentConditions) + " )";
-	}
-	
-	private List<String> getDiferences(List<String> list1, List<String> list2) {
-		List<String> results = new ArrayList<>();
-		for (String cond:list2) {
-			if (!list1.contains(cond))
-				results.add(cond);
-		}
-		return results;
 	}
 
 	private String init(ConjunctiveQuery source, SqlDatabaseInstance instance) {
@@ -61,7 +42,7 @@ public class SQLQuery extends PhysicalQuery {
 		boolean first = true;
 		
 		// SELECT free variables			
-		for (QueryAtom a: this.getQueryAtoms()) {
+		for (ConjunctiveQueryDescriptor a: this.getQueryAtoms()) {
 			for (Variable v: a.getFreeVariableToPosition().keySet()) {
 				if (!first)
 					query += " , ";
@@ -75,7 +56,7 @@ public class SQLQuery extends PhysicalQuery {
 		// WHERE CONSTANT EQUALITY CONDITIONS
 		boolean whereAdded = false;
 		first = true;
-		for (QueryAtom a: this.getQueryAtoms()) {
+		for (ConjunctiveQueryDescriptor a: this.getQueryAtoms()) {
 			if (a.hasConstantEqualityCondition()) {
 				if (!whereAdded) {
 					query += " WHERE ";
@@ -85,9 +66,8 @@ public class SQLQuery extends PhysicalQuery {
 					query += " AND ";
 				}
 				first = false;
-				for (ConstantEqualityCondition cec : a.getConstantEqualityConditions()) {
-					Attribute attribute = a.getAttributeAtIndex(cec.getPosition());
-					query += " " + dbNameDot+a.getRelation().getName() + "." + attribute.getName() + " = " + SqlDatabaseInstance.convertTermToSQLString(attribute, cec.getConstant()) + " ";
+				for (Attribute attribute : a.getConstantEqualityConditions().keySet()) {
+					query += " " + dbNameDot+a.getRelation().getName() + "." + attribute.getName() + " = " + SqlDatabaseInstance.convertTermToSQLString(attribute, a.getConstantEqualityConditions().get(attribute)) + " ";
 				}
 			}
 		}
@@ -107,7 +87,7 @@ public class SQLQuery extends PhysicalQuery {
 				}
 				first = false;
 				AttributeEqualityCondition aec = (AttributeEqualityCondition)condition;
-				QueryAtom atomLeft = QueryAtom.findAtomFor(queryAtoms, conjunction.getAtoms()[0].getPredicate().getName());
+				ConjunctiveQueryDescriptor atomLeft = ConjunctiveQueryDescriptor.findAtomFor(queryAtoms, conjunction.getAtoms()[0].getPredicate().getName());
 				int shift = 0;
 				int atomIndex =1;
 				while (aec.getOther()>=shift + conjunction.getAtoms()[atomIndex].getTerms().length) {
@@ -115,7 +95,7 @@ public class SQLQuery extends PhysicalQuery {
 					atomIndex++;
 				}
 				String rightRelationName = conjunction.getAtoms()[atomIndex].getPredicate().getName();
-				String rightAttributeName = QueryAtom.findAtomFor(queryAtoms,rightRelationName).getAttributeAtIndex(aec.getOther()-shift).getName();
+				String rightAttributeName = ConjunctiveQueryDescriptor.findAtomFor(queryAtoms,rightRelationName).getAttributeAtIndex(aec.getOther()-shift).getName();
 				String newCondition = dbNameDot + atomLeft.getRelation().getName() + "." + atomLeft.getAttributeAtIndex(aec.getPosition()).getName() + " = " + 
 						dbNameDot + rightRelationName + "." + rightAttributeName;
 				whereConditions.add(newCondition);
@@ -126,8 +106,8 @@ public class SQLQuery extends PhysicalQuery {
 		return query;		
 	}
 	
-	private String getTableNamesPartOfQuery(Collection<QueryAtom> atoms, String databaseName) {
-		for (QueryAtom a:atoms) {
+	private String getTableNamesPartOfQuery(Collection<ConjunctiveQueryDescriptor> atoms, String databaseName) {
+		for (ConjunctiveQueryDescriptor a:atoms) {
 			fromTableName.add(databaseName + "." + a.getRelation().getName());
 		}
 		return Joiner.on(",").join(fromTableName); 
@@ -162,7 +142,12 @@ public class SQLQuery extends PhysicalQuery {
 	 */
 	@Override
 	public String toString() {
-		return "SQLQuery - " + super.toString() + " / SQL: " + sqlQueryString;
+		return "SQLSelect - " + super.toString() + " / SQL: " + sqlQueryString;
+	}
+
+	@Override
+	protected PhysicalQuery getRightQuery() {
+		return null;
 	}
 
 }

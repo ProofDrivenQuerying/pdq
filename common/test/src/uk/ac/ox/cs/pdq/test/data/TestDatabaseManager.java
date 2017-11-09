@@ -66,6 +66,14 @@ public class TestDatabaseManager extends PdqTest {
 		Assert.assertEquals(facts, getFacts);
 		getFacts = manager.getFactsFromPhysicalDatabase();
 		Assert.assertEquals(facts.size(), getFacts.size());
+		
+		// Test duplicated storage - stored data should not change when we add the same set twice
+		manager.addFacts(facts);
+		getFacts = manager.getCachedFacts();
+		Assert.assertEquals(facts, getFacts);
+		getFacts = manager.getFactsFromPhysicalDatabase();
+		Assert.assertEquals(facts.size(), getFacts.size());
+		
 		// DELETE
 		manager.deleteFacts(facts);
 		getFacts = manager.getCachedFacts();

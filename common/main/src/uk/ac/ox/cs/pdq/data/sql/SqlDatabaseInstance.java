@@ -143,7 +143,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 		try {
 			ArrayList<Atom> ret = new ArrayList<>();
 			ConjunctiveQuery formula = createQuery(r);
-			List<Match> matches = connection.executeQuery(new SQLQuery(formula, this));
+			List<Match> matches = connection.executeQuery(new SQLSelect(formula, this));
 			ret = getAtomsFromMatches(matches,r);
 			return ret;
 		} catch (SQLException e) {
@@ -158,7 +158,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 		List<Match> ret = new ArrayList<>();
 		for (PhysicalQuery q:queries) {
 			try {
-				ret.addAll(connection.executeQuery((SQLQuery)q));
+				ret.addAll(connection.executeQuery((SQLSelect)q));
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new DatabaseException("Error while executing query: " + q,e);

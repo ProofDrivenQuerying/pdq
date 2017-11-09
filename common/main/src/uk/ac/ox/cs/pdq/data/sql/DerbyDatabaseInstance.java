@@ -5,7 +5,6 @@ import java.util.LinkedList;
 
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 
@@ -42,16 +41,6 @@ public class DerbyDatabaseInstance extends SqlDatabaseInstance {
 		"WHERE schemaname='" + databaseName + "'"
 		);
 		return ret;
-	}
-
-	/**
-	 * Clone.
-	 *
-	 * @return DerbyHomomorphismStatementBuilder
-	 */
-	@Override
-	public DerbyStatementBuilder clone() {
-		return new DerbyStatementBuilder();
 	}
 
 	/* (non-Javadoc)

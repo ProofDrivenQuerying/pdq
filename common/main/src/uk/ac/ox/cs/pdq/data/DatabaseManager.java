@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
 import uk.ac.ox.cs.pdq.data.sql.DerbyDatabaseInstance;
 import uk.ac.ox.cs.pdq.data.sql.MySqlDatabaseInstance;
 import uk.ac.ox.cs.pdq.data.sql.PostgresDatabaseInstance;
-import uk.ac.ox.cs.pdq.data.sql.SQLQuery;
+import uk.ac.ox.cs.pdq.data.sql.SQLSelect;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -96,15 +96,15 @@ public class DatabaseManager {
 			return new MemoryDatabaseInstance(parameters);
 		}
 		if (parameters.getDatabaseDriver().contains("postgres")) {
-			queryClass = SQLQuery.class;
+			queryClass = SQLSelect.class;
 			return new PostgresDatabaseInstance(parameters);
 		}
 		if (parameters.getDatabaseDriver().contains("derby")) {
-			queryClass = SQLQuery.class;
+			queryClass = SQLSelect.class;
 			return new DerbyDatabaseInstance(parameters);
 		}
 		if (parameters.getDatabaseDriver().contains("mysql")) {
-			queryClass = SQLQuery.class;
+			queryClass = SQLSelect.class;
 			return new MySqlDatabaseInstance(parameters);
 		}
 		throw new NotImplementedException("Unknown database type: " + parameters.getDatabaseDriver());

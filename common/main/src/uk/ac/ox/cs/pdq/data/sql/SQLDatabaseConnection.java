@@ -26,7 +26,7 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
  * Represents a configurable amount of connections to external database servers
- * such as Derby, MySql or Postgres. Can execute an SQLQuery or an SQLUpdate
+ * such as Derby, MySql or Postgres. Can execute an SQLSelect or an SQLUpdate
  * using single thread or multiple threads.
  * 
  * @author Gabor
@@ -115,7 +115,7 @@ public class SQLDatabaseConnection {
 	 * @throws SQLException 
 	 * @throws DatabaseException 
 	 */
-	protected List<Match> executeQuery(SQLQuery query) throws SQLException, DatabaseException {
+	protected List<Match> executeQuery(SQLSelect query) throws SQLException, DatabaseException {
 		List<Match> results = new ArrayList<>();
 			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
 			ConjunctiveQuery source = query.getConjunctiveQuery();

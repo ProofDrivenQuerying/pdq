@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.data.memory;
 
-import uk.ac.ox.cs.pdq.data.PhysicalQuery;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 
@@ -11,15 +10,19 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
  * @author Gabor
  *
  */
-public class MemoryQuery extends PhysicalQuery {
+public class MemoryNestedQuery extends MemoryQuery {
+
+	private MemoryQuery rightQuery;
 
 	/**
-	 * Normal query that can be answered by a MemoryDatabaseInstance
+	 * This query will represent the difference between two Queries.
 	 * 
-	 * @param source
+	 * @param leftQuery
+	 * @param rightQuery
 	 */
-	public MemoryQuery(ConjunctiveQuery source, Schema schema) {
-		super(source, schema);
+	public MemoryNestedQuery(ConjunctiveQuery leftQuery, MemoryQuery rightQuery, Schema schema) {
+		super(leftQuery, schema);
+		this.rightQuery = rightQuery;
 	}
 
 	/*
@@ -33,6 +36,6 @@ public class MemoryQuery extends PhysicalQuery {
 	}
 
 	protected MemoryQuery getRightQuery() {
-		return null;
+		return rightQuery;
 	}
 }

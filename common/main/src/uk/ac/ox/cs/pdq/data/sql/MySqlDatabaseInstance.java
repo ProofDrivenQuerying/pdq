@@ -12,7 +12,6 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -51,15 +50,6 @@ public class MySqlDatabaseInstance extends SqlDatabaseInstance {
 			// the default database that we connect to should never be dropped
 			result.add("DROP DATABASE " + databaseName);
 		return result;
-	}
-
-	/**
-	 *
-	 * @return MySQLHomomorphismStatementBuilder
-	 */
-	@Override
-	public MySQLStatementBuilder clone() {
-		return new MySQLStatementBuilder();
 	}
 
 	/**

@@ -9,13 +9,13 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
+import uk.ac.ox.cs.pdq.data.ConjunctiveQueryDescriptor;
 import uk.ac.ox.cs.pdq.data.PhysicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.data.PhysicalQuery;
-import uk.ac.ox.cs.pdq.data.QueryAtom;
 import uk.ac.ox.cs.pdq.data.cache.FactCache;
 import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -134,7 +134,7 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 		return results;
 	}
 
-	private Collection<Atom> getMatchingFactsForQuery(Collection<Atom> facts, MemoryQuery query) {
+	private Collection<Atom> getMatchingFactsForQuery(Collection<Atom> facts, MemoryQuery query) throws DatabaseException {
 		if (((ConjunctiveQuery) query.getConjunctiveQuery()).getBody() instanceof Atom) {
 			return getFactsOfRelation(facts, ((Atom) ((ConjunctiveQuery) query.getConjunctiveQuery()).getBody()).getPredicate().getName(),
 					query.getQueryAtoms());
@@ -259,9 +259,10 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	 *            Attribute equality conditions are applied when we read a relation
 	 *            with the getFactsOfRelation function.
 	 * @return
+	 * @throws DatabaseException 
 	 */
 	private Collection<Atom> search(Collection<Atom> facts, Conjunction currentConjunction, Map<Conjunction, ConjunctiveCondition> conditions,
-			Collection<QueryAtom> queryAtoms) {
+			Collection<ConjunctiveQueryDescriptor> queryAtoms) throws DatabaseException {
 		Collection<Atom> results = new ArrayList<>();
 		Collection<Atom> leftFacts = null;
 		Collection<Atom> rightFacts = null;
@@ -337,17 +338,22 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	 * @param queryAtoms
 	 *            optional conditions, will be evaluated when given.
 	 * @return filtered list of facts.
+	 * @throws DatabaseException 
 	 */
-	private Collection<Atom> getFactsOfRelation(Collection<Atom> facts, String relationName, Collection<QueryAtom> queryAtoms) {
+	private Collection<Atom> getFactsOfRelation(Collection<Atom> facts, String relationName, Collection<ConjunctiveQueryDescriptor> queryAtoms) throws DatabaseException {
 		Collection<Atom> results = new ArrayList<>();
-		QueryAtom qa = QueryAtom.findAtomFor(queryAtoms, relationName);
+		ConjunctiveQueryDescriptor qa = ConjunctiveQueryDescriptor.findAtomFor(queryAtoms, relationName);
 		for (Atom f : facts) {
 			// loop over all data
 			if (f.getPredicate().getName().equals(relationName)) {
 				boolean matching = true;
 				if (qa!=null && qa.hasConstantEqualityCondition()) {
-					for (ConstantEqualityCondition condition : qa.getConstantEqualityConditions()) {
-						if (!f.getTerm(condition.getPosition()).equals(condition.getConstant())) {
+					for (Attribute attribute : qa.getConstantEqualityConditions().keySet()) {
+						int index = Arrays.asList(qa.getRelation().getAttributes()).indexOf(attribute);
+						if (index<0) {
+							throw new DatabaseException("Attribute " + attribute + " not found in relation: " + qa.getRelation());
+						}
+						if (!f.getTerm(index).equals(qa.getConstantEqualityConditions().get(attribute))) {
 							matching = false;
 						}
 					}
@@ -360,7 +366,7 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	}
 
 	@Override
-	protected Collection<Atom> getFactsOfRelation(Relation r) {
+	protected Collection<Atom> getFactsOfRelation(Relation r) throws DatabaseException {
 		return getFactsOfRelation(this.facts.getFacts(), r.getName(), new ArrayList<>());
 	}
 

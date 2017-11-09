@@ -12,7 +12,6 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.sql.PostgresStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -23,10 +22,11 @@ public class PostgresDatabaseInstance extends SqlDatabaseInstance {
 		super(parameters);
 	}
 
-
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.homomorphism.AbstractHomomorphismStatementBuilder#setupStatements(java.lang.String)
+	 * 
+	 * @see uk.ac.ox.cs.pdq.homomorphism.AbstractHomomorphismStatementBuilder#
+	 * setupStatements(java.lang.String)
 	 */
 	@Override
 	public Collection<String> createDatabaseStatements(String databaseName) {
@@ -39,7 +39,9 @@ public class PostgresDatabaseInstance extends SqlDatabaseInstance {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.homomorphism.AbstractHomomorphismStatementBuilder#cleanupStatements(java.lang.String)
+	 * 
+	 * @see uk.ac.ox.cs.pdq.homomorphism.AbstractHomomorphismStatementBuilder#
+	 * cleanupStatements(java.lang.String)
 	 */
 	@Override
 	public Collection<String> createDropStatements(String databaseName) {
@@ -50,40 +52,102 @@ public class PostgresDatabaseInstance extends SqlDatabaseInstance {
 		return result;
 	}
 
-	@Override
-	public PostgresStatementBuilder clone() {
-		return new PostgresStatementBuilder();
-	}
-
 	/**
 	 * Make inserts.
 	 *
-	 * @param facts the facts
-	 * @param toDatabaseTables the dbrelations
+	 * @param facts
+	 *            the facts
+	 * @param toDatabaseTables
+	 *            the dbrelations
 	 * @return insert statements that add the input fact to the fact database.
+	 * 
+	 * 
+	 *  <pre> Better solution:
+	 * This example uses exception handling to perform either UPDATE or INSERT, as appropriate:
+
+			CREATE TABLE db (a INT PRIMARY KEY, b TEXT);
+			
+			CREATE FUNCTION merge_db(key INT, data TEXT) RETURNS VOID AS
+			$$
+			BEGIN
+			    LOOP
+			        -- first try to update the key
+			        UPDATE db SET b = data WHERE a = key;
+			        IF found THEN
+			            RETURN;
+			        END IF;
+			        -- not there, so try to insert the key
+			        -- if someone else inserts the same key concurrently,
+			        -- we could get a unique-key failure
+			        BEGIN
+			            INSERT INTO db(a,b) VALUES (key, data);
+			            RETURN;
+			        EXCEPTION WHEN unique_violation THEN
+			            -- Do nothing, and loop to try the UPDATE again.
+			        END;
+			    END LOOP;
+			END;
+			$$
+			LANGUAGE plpgsql;
+			
+			SELECT merge_db(1, 'david');
+			SELECT merge_db(1, 'dennis');
+	 * </pre>
+	 * 
+	 * 
+	 * 
 	 */
 	@Override
 	public Collection<String> createInsertStatements(Collection<Atom> facts) {
 		Collection<String> result = new LinkedList<>();
-		for (Atom fact:facts) {
-//			Assert.assertTrue(fact.getPredicate() instanceof Relation);
+		for (Atom fact : facts) {
+			// Assert.assertTrue(fact.getPredicate() instanceof Relation);
 			Relation relation = this.schema.getRelation(fact.getPredicate().getName());
-			String insertInto = "INSERT INTO " + databaseParameters.getDatabaseName()+"." + fact.getPredicate().getName() + " " + "VALUES ( ";
+			String insertInto = "INSERT INTO " + databaseParameters.getDatabaseName() + "." + fact.getPredicate().getName() + " " + "VALUES ( ";
 			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
 				Term term = fact.getTerm(termIndex);
 				if (!term.isVariable()) {
-					insertInto +=  convertTermToSQLString(relation.getAttribute(termIndex), term);
+					insertInto += convertTermToSQLString(relation.getAttribute(termIndex), term);
 				}
-				if(termIndex < fact.getNumberOfTerms() -1)
-					insertInto +=  ",";
+				if (termIndex < fact.getNumberOfTerms() - 1)
+					insertInto += ",";
 			}
 			insertInto += ")";
 			result.add(insertInto);
 		}
 		return result;
 	}
-	
-	/** 
+
+	/**
+	 * Creates "insert into ..." statements from a set of facts. The predicate must
+	 * define the table name where we want to insert.
+	 *
+	 * @return insert statements that add the input fact to the fact database.
+	 */
+	@Override
+	public String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts) {
+		String insertInto = "INSERT INTO " + databaseParameters.getDatabaseName() + "." + predicate.getName() + "\n" + "VALUES" + "\n";
+		List<String> tuples = new ArrayList<String>();
+		for (Atom fact : facts) {
+			String tuple = "(";
+			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
+				Term term = fact.getTerm(termIndex);
+				if (term instanceof TypedConstant == termIndex < fact.getNumberOfTerms() - 1) {
+					tuple += "'" + ((TypedConstant) term).serializeToString() + "'";
+				} else if (!term.isVariable())
+					tuple += "'" + term + "'";
+				if (termIndex < fact.getNumberOfTerms() - 1)
+					tuple += ",";
+			}
+
+			tuple += ")";
+			tuples.add(tuple);
+		}
+		insertInto += Joiner.on(",\n").join(tuples) + ";";
+		return insertInto;
+	}
+
+	/**
 	 * Creates the "create table ..." statement for a relation
 	 */
 	@Override
@@ -93,24 +157,24 @@ public class PostgresDatabaseInstance extends SqlDatabaseInstance {
 		for (int attributeIndex = 0; attributeIndex < relation.getArity(); ++attributeIndex) {
 			Attribute attribute = relation.getAttribute(attributeIndex);
 			result.append(' ').append(attribute.getName());
-			if (String.class.isAssignableFrom((Class<?>) attribute.getType())) 
+			if (String.class.isAssignableFrom((Class<?>) attribute.getType()))
 				result.append(" VARCHAR(500)");
-			else if (Integer.class.isAssignableFrom((Class<?>) attribute.getType())) 
+			else if (Integer.class.isAssignableFrom((Class<?>) attribute.getType()))
 				result.append(" INT");
-			else if (Double.class.isAssignableFrom((Class<?>) attribute.getType())) 
+			else if (Double.class.isAssignableFrom((Class<?>) attribute.getType()))
 				result.append(" DOUBLE");
-			else if (Float.class.isAssignableFrom((Class<?>) attribute.getType())) 
+			else if (Float.class.isAssignableFrom((Class<?>) attribute.getType()))
 				result.append(" FLOAT");
-			else 
+			else
 				throw new RuntimeException("Unsupported type");
-			if(attributeIndex < relation.getArity() -1)
+			if (attributeIndex < relation.getArity() - 1)
 				result.append(", ");
 		}
 		String keyAttributes = null;
 		PrimaryKey pk = relation.getKey();
 		if (pk != null) {
-			for (Attribute a:pk.getAttributes()) {
-				if (keyAttributes==null) {
+			for (Attribute a : pk.getAttributes()) {
+				if (keyAttributes == null) {
 					keyAttributes = "";
 				} else {
 					keyAttributes += ",";
@@ -124,40 +188,13 @@ public class PostgresDatabaseInstance extends SqlDatabaseInstance {
 		return result.toString();
 	}
 
-	/**
-	 * Creates "insert into ..." statements from a set of facts. The predicate must define the table name where we want to insert.
-	 *
-	 * @return insert statements that add the input fact to the fact database.
-	 */
-	@Override
-	public String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts) {
-		String insertInto = "INSERT INTO " + databaseParameters.getDatabaseName()+"." + predicate.getName() + "\n" + "VALUES" + "\n";
-		List<String> tuples = new ArrayList<String>();
-		for (Atom fact:facts) {
-			String tuple = "(";
-			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
-				Term term = fact.getTerm(termIndex);
-				if (term instanceof TypedConstant == termIndex < fact.getNumberOfTerms()-1) {
-					tuple += "'" + ((TypedConstant)term).serializeToString() + "'";
-				} else if (!term.isVariable()) 
-					tuple += "'" + term + "'";
-				if(termIndex < fact.getNumberOfTerms() - 1)
-					tuple += ",";
-			}
-			
-			tuple += ")";
-			tuples.add(tuple);
-		}
-		insertInto += Joiner.on(",\n").join(tuples) + ";";
-		return insertInto;
-	}
-	
 	public String getDatabaseName() {
 		return null;
 	}
+
 	@Override
 	public String createDeleteStatement(Atom fact) {
 		return super.createDeleteStatement(fact) + ";";
 	}
-	
+
 }
