@@ -11,7 +11,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.data.DatabaseManager;
-import uk.ac.ox.cs.pdq.data.PhysicalQuery;
 import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -92,8 +91,7 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 		Atom q1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		Atom q2 = Atom.create(this.S, new Term[] { Variable.create("x"), Variable.create("y") });
 		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { z }, Conjunction.create(q1, q2));
-		PhysicalQuery q = PhysicalQuery.create(manager, cq);
-		List<Match> answer = manager.answerQueries(Arrays.asList(new PhysicalQuery[] { q }));
+		List<Match> answer = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("z")));
 		if (parameters.getDatabaseDriver().contains("memory")) {
@@ -107,8 +105,7 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 		Atom aS = Atom.create(this.S, new Term[] { Variable.create("x"), Variable.create("y") });
 		Atom aT = Atom.create(this.T, new Term[] { Variable.create("z"), Variable.create("res1"), Variable.create("res2") });
 		cq = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"), Variable.create("res2") }, (Conjunction) Conjunction.of(aR, aS, aT));
-		q = PhysicalQuery.create(manager, cq);
-		answer = manager.answerQueries(Arrays.asList(new PhysicalQuery[] { q }));
+		answer = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("res1")));
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("res2")));
@@ -163,8 +160,7 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 		// SIMPLE QUERY
 		Atom q1 = Atom.create(this.R, new Term[] { TypedConstant.create(10000 + 51), Variable.create("y"), Variable.create("z") });
 		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { y, z }, q1);
-		PhysicalQuery q = PhysicalQuery.create(manager, cq);
-		List<Match> answer = manager.answerQueries(Arrays.asList(new PhysicalQuery[] { q }));
+		List<Match> answer = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("z")));
 		if (parameters.getDatabaseDriver().contains("memory")) {
@@ -178,8 +174,7 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 		Atom aS = Atom.create(this.S, new Term[] { TypedConstant.create(13), Variable.create("y") });
 		Atom aT = Atom.create(this.T, new Term[] { Variable.create("z"), Variable.create("res1"), Variable.create("res2") });
 		cq = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"), Variable.create("res2") }, (Conjunction) Conjunction.of(aR, aS, aT));
-		q = PhysicalQuery.create(manager, cq);
-		answer = manager.answerQueries(Arrays.asList(new PhysicalQuery[] { q }));
+		answer = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("res1")));
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("res2")));

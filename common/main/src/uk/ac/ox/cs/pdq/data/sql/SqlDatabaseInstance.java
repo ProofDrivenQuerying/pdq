@@ -21,7 +21,6 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
-import uk.ac.ox.cs.pdq.data.PhysicalDatabaseCommand;
 import uk.ac.ox.cs.pdq.data.PhysicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.data.PhysicalQuery;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -155,7 +154,7 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 		try {
 			ArrayList<Atom> ret = new ArrayList<>();
 			ConjunctiveQuery formula = createQuery(r);
-			List<Match> matches = connection.executeQuery(new SQLQuery(formula));
+			List<Match> matches = connection.executeQuery(new SQLQuery(formula, this));
 			ret = getAtomsFromMatches(matches,r);
 			return ret;
 		} catch (SQLException e) {
@@ -177,11 +176,6 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 			}
 		}
 		return ret;
-	}
-
-	@Override
-	protected int executeUpdates(List<PhysicalDatabaseCommand> update) {
-		return 0;
 	}
 
 	abstract protected Collection<String> createDropStatements(String databaseName);

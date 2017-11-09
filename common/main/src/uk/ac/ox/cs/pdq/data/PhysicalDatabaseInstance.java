@@ -80,15 +80,6 @@ public abstract class PhysicalDatabaseInstance {
 
 	protected abstract List<Match> answerQueries(Collection<PhysicalQuery> queries) throws DatabaseException;
 
-	/**
-	 * Executes a change in the database such as deleting facts or creating tables.
-	 * 
-	 * @param update
-	 * @return
-	 */
-	protected abstract int executeUpdates(List<PhysicalDatabaseCommand> update) throws DatabaseException;
-	
-	
 	protected static ArrayList<Atom> getAtomsFromMatches(List<Match> matches, Relation r) {
 		ArrayList<Atom> ret = new ArrayList<>();
 		Predicate predicate = Predicate.create(r.getName(), r.getArity(),r.isEquality());

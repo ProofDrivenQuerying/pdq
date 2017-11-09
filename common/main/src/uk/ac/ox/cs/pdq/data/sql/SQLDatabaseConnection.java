@@ -17,8 +17,8 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.DatabaseUtilities;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -37,14 +37,12 @@ public class SQLDatabaseConnection {
 	/** Open database connections. */
 	private List<Connection> synchronousConnections = Lists.newArrayList();
 	private boolean isDerby;
-	private DatabaseParameters databaseParameters;
 
 	/** Initialises configured amount of connections to the configured database.
 	 * @param parameters
 	 * @throws SQLException 
 	 */
 	protected SQLDatabaseConnection(DatabaseParameters databaseParameters) throws SQLException {
-		this.databaseParameters = databaseParameters;
 		String threadNumber = databaseParameters.getProperty("synchronousThreadsNumber");
 		if (threadNumber != null && !threadNumber.isEmpty()) {
 			try {
@@ -120,8 +118,8 @@ public class SQLDatabaseConnection {
 	protected List<Match> executeQuery(SQLQuery query) throws SQLException, DatabaseException {
 		List<Match> results = new ArrayList<>();
 			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
-			Formula source = query.getFormula();
-			String sQuery = query.convertToSqlQueryString(databaseParameters.getDatabaseName());
+			ConjunctiveQuery source = query.getConjunctiveQuery();
+			String sQuery = query.getSqlQueryString();
 			ResultSet resultSet = null;
 			try {
 				resultSet = sqlStatement.executeQuery(sQuery);
@@ -132,7 +130,7 @@ public class SQLDatabaseConnection {
 				while (resultSet.next()) {
 					int f = 1;
 					Map<Variable, Constant> map = new LinkedHashMap<>();
-					for(Term term:source.getTerms()) {
+					for(Term term:source.getFreeVariables()) {
 						if (term instanceof Variable) {
 							Variable variable = (Variable) term;
 							String assigned = resultSet.getString(f);
@@ -152,14 +150,6 @@ public class SQLDatabaseConnection {
 					resultSet.close();
 			}
 		return results;
-	}
-	
-	/** Executes an update and returns the number of affected rows. Uses pre-configured amount of threads.
-	 * @param update
-	 * @return
-	 */
-	protected int executeUpdate(SQLUpdate update) {
-		return 0;
 	}
 	
 	protected boolean isDerby() {

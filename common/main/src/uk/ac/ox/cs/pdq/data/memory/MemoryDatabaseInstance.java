@@ -11,9 +11,9 @@ import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
-import uk.ac.ox.cs.pdq.data.PhysicalDatabaseCommand;
 import uk.ac.ox.cs.pdq.data.PhysicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.data.PhysicalQuery;
+import uk.ac.ox.cs.pdq.data.QueryAtom;
 import uk.ac.ox.cs.pdq.data.cache.FactCache;
 import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
@@ -83,7 +83,7 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	protected List<Match> answerQueries(Collection<PhysicalQuery> queries) throws DatabaseException {
 		List<Match> matches = new ArrayList<>();
 		for (PhysicalQuery query : queries) {
-			matches.addAll(answerQuery(query));
+			matches.addAll(answerQuery((MemoryQuery)query));
 		}
 		return matches;
 	}
@@ -93,10 +93,10 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	 * @return
 	 * @throws DatabaseException
 	 */
-	private Collection<Match> answerQuery(PhysicalQuery query) throws DatabaseException {
+	private Collection<Match> answerQuery(MemoryQuery query) throws DatabaseException {
 		if (!(query instanceof MemoryQuery))
 			throw new DatabaseException("Only MemoryQuery can be answered in MemoryDatabaseInstance!" + query);
-		ConjunctiveQuery q = (ConjunctiveQuery) query.getFormula();
+		ConjunctiveQuery q = (ConjunctiveQuery) query.getConjunctiveQuery();
 		Variable[] freeVariables = q.getFreeVariables();
 		Collection<Match> results = new ArrayList<>();
 		
@@ -117,8 +117,8 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 		}
 		
 		// Need to run the Right side query
-		ConjunctiveQuery qRight = (ConjunctiveQuery) ((MemoryQuery) query).getRightQuery().getFormula();
-		Variable[] freeVariablesRight = ((MemoryQuery) query).getRightQuery().getFormula().getFreeVariables();
+		ConjunctiveQuery qRight = (ConjunctiveQuery) ((MemoryQuery) query).getRightQuery().getConjunctiveQuery();
+		Variable[] freeVariablesRight = ((MemoryQuery) query).getRightQuery().getConjunctiveQuery().getFreeVariables();
 		Collection<Atom> matchingFactsRight = getMatchingFactsForQuery(this.facts.getFacts(), ((MemoryQuery) query).getRightQuery());
 		
 		// check for matching, and remove the results that are appearing on both sides.
@@ -135,12 +135,12 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	}
 
 	private Collection<Atom> getMatchingFactsForQuery(Collection<Atom> facts, MemoryQuery query) {
-		if (((ConjunctiveQuery) query.getFormula()).getBody() instanceof Atom) {
-			return getFactsOfRelation(facts, ((Atom) ((ConjunctiveQuery) query.getFormula()).getBody()).getPredicate().getName(),
-					query.getConstantEqualityConditions());
+		if (((ConjunctiveQuery) query.getConjunctiveQuery()).getBody() instanceof Atom) {
+			return getFactsOfRelation(facts, ((Atom) ((ConjunctiveQuery) query.getConjunctiveQuery()).getBody()).getPredicate().getName(),
+					query.getQueryAtoms());
 		} else { 
-			return search(facts, (Conjunction) ((ConjunctiveQuery) query.getFormula()).getBody(), query.getAttributeEqualityConditions(),
-					((MemoryQuery) query).getConstantEqualityConditions());
+			return search(facts, (Conjunction) ((ConjunctiveQuery) query.getConjunctiveQuery()).getBody(), query.getAttributeEqualityConditions(),
+					((MemoryQuery) query).getQueryAtoms());
 		}
 	}
 
@@ -255,13 +255,13 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	 *            Attribute equality conditions grouped in ConjunctiveCondition
 	 *            objects. For simplicity the whole map is passed down and each
 	 *            search round will find it's own set of conditions in it.
-	 * @param equalityConditionsPerRelations
+	 * @param queryAtoms
 	 *            Attribute equality conditions are applied when we read a relation
 	 *            with the getFactsOfRelation function.
 	 * @return
 	 */
 	private Collection<Atom> search(Collection<Atom> facts, Conjunction currentConjunction, Map<Conjunction, ConjunctiveCondition> conditions,
-			Map<String, List<ConstantEqualityCondition>> equalityConditionsPerRelations) {
+			Collection<QueryAtom> queryAtoms) {
 		Collection<Atom> results = new ArrayList<>();
 		Collection<Atom> leftFacts = null;
 		Collection<Atom> rightFacts = null;
@@ -269,13 +269,13 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 		// get facts for each side of the conjunction. This could be a recursive call in
 		// case we have nested conjunctions.
 		if (currentConjunction.getChild(0) instanceof Atom)
-			leftFacts = getFactsOfRelation(facts, ((Atom) currentConjunction.getChild(0)).getPredicate().getName(), equalityConditionsPerRelations);
+			leftFacts = getFactsOfRelation(facts, ((Atom) currentConjunction.getChild(0)).getPredicate().getName(), queryAtoms);
 		if (currentConjunction.getChild(0) instanceof Conjunction)
-			leftFacts = search(facts, (Conjunction) currentConjunction.getChild(0), conditions, equalityConditionsPerRelations);
+			leftFacts = search(facts, (Conjunction) currentConjunction.getChild(0), conditions, queryAtoms);
 		if (currentConjunction.getChild(1) instanceof Atom)
-			rightFacts = getFactsOfRelation(facts, ((Atom) currentConjunction.getChild(1)).getPredicate().getName(), equalityConditionsPerRelations);
+			rightFacts = getFactsOfRelation(facts, ((Atom) currentConjunction.getChild(1)).getPredicate().getName(), queryAtoms);
 		if (currentConjunction.getChild(1) instanceof Conjunction)
-			rightFacts = search(facts, (Conjunction) currentConjunction.getChild(1), conditions, equalityConditionsPerRelations);
+			rightFacts = search(facts, (Conjunction) currentConjunction.getChild(1), conditions, queryAtoms);
 
 		ConjunctiveCondition condition = conditions.get(currentConjunction);
 		if (condition != null) {
@@ -334,18 +334,19 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	 *            input facts to seatch in.
 	 * @param relationName
 	 *            facts that we are interested in.
-	 * @param equalityConditionsPerRelations
+	 * @param queryAtoms
 	 *            optional conditions, will be evaluated when given.
 	 * @return filtered list of facts.
 	 */
-	private Collection<Atom> getFactsOfRelation(Collection<Atom> facts, String relationName, Map<String, List<ConstantEqualityCondition>> equalityConditionsPerRelations) {
+	private Collection<Atom> getFactsOfRelation(Collection<Atom> facts, String relationName, Collection<QueryAtom> queryAtoms) {
 		Collection<Atom> results = new ArrayList<>();
+		QueryAtom qa = QueryAtom.findAtomFor(queryAtoms, relationName);
 		for (Atom f : facts) {
 			// loop over all data
 			if (f.getPredicate().getName().equals(relationName)) {
 				boolean matching = true;
-				if (equalityConditionsPerRelations.containsKey(relationName)) {
-					for (ConstantEqualityCondition condition : equalityConditionsPerRelations.get(relationName)) {
+				if (qa!=null && qa.hasConstantEqualityCondition()) {
+					for (ConstantEqualityCondition condition : qa.getConstantEqualityConditions()) {
 						if (!f.getTerm(condition.getPosition()).equals(condition.getConstant())) {
 							matching = false;
 						}
@@ -359,13 +360,8 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	}
 
 	@Override
-	protected int executeUpdates(List<PhysicalDatabaseCommand> update) throws DatabaseException {
-		throw new DatabaseException("executeUpdates not implemented in MemoryDatabaseInstance!");
-	}
-
-	@Override
 	protected Collection<Atom> getFactsOfRelation(Relation r) {
-		return getFactsOfRelation(this.facts.getFacts(), r.getName(), new HashMap<>());
+		return getFactsOfRelation(this.facts.getFacts(), r.getName(), new ArrayList<>());
 	}
 
 	/*

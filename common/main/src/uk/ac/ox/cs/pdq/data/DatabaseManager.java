@@ -50,6 +50,7 @@ public class DatabaseManager {
 	 * connection(s) to a database until the connection(s) are closed.
 	 */
 	private boolean isActive = false;
+	private Schema schema;
 
 	protected DatabaseManager(DatabaseParameters parameters) throws DatabaseException {
 		this.parameters = (DatabaseParameters) parameters.clone();
@@ -154,6 +155,7 @@ public class DatabaseManager {
 	 * @throws DatabaseException
 	 */
 	public void initialiseDatabaseForSchema(Schema schema) throws DatabaseException {
+		this.schema = schema;		
 		databaseInstance.initialiseDatabaseForSchema(schema);
 	}
 
@@ -209,24 +211,20 @@ public class DatabaseManager {
 		return databaseInstance.getFactsFromPhysicalDatabase();
 	}
 
-	public List<Match> answerQueries(Collection<PhysicalQuery> queries) throws DatabaseException {
-		return databaseInstance.answerQueries(queries);
+	public List<Match> answerQueries(Collection<ConjunctiveQuery> queries) throws DatabaseException {
+		List<PhysicalQuery> queriesOverRealDatabaseInstance = new ArrayList<>();
+		for (ConjunctiveQuery cq:queries) {
+			PhysicalQuery q = PhysicalQuery.create(this, cq);
+			queriesOverRealDatabaseInstance.add(q);
+		}
+
+		return databaseInstance.answerQueries(queriesOverRealDatabaseInstance);
 	}
 	
 	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
 		Collection<PhysicalQuery> queries = new ArrayList<>();
 		queries.add(PhysicalQuery.createQueryDifference(this, leftQuery, rightQuery));
 		return databaseInstance.answerQueries(queries);
-	}
-
-	/**
-	 * Executes a change in the database such as deleting facts or creating tables.
-	 * 
-	 * @param update
-	 * @return
-	 */
-	public int executeUpdates(List<PhysicalDatabaseCommand> update) throws DatabaseException {
-		return databaseInstance.executeUpdates(update);
 	}
 
 	/**
@@ -240,6 +238,10 @@ public class DatabaseManager {
 
 	protected Class<? extends PhysicalQuery> getQueryClass() {
 		return queryClass;
+	}
+
+	protected Schema getSchema() {
+		return schema;
 	}
 
 }

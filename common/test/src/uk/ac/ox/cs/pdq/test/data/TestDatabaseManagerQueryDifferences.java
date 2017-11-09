@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.data.DatabaseManager;
-import uk.ac.ox.cs.pdq.data.PhysicalQuery;
 import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -30,28 +29,24 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  */
 public class TestDatabaseManagerQueryDifferences extends PdqTest {
 
-	//
-	// @Test
-	// public void largeTableTestDerby() throws DatabaseException {
-	// largeTableTest(DatabaseParameters.Derby);
-	// largeTableTestWithConstantsInQuery(DatabaseParameters.Derby);
-	//
-	// }
-	//
-	// @Test
-	// public void largeTableTestMySql() throws DatabaseException {
-	// largeTableTest(DatabaseParameters.MySql);
-	// largeTableTestWithConstantsInQuery(DatabaseParameters.MySql);
-	// }
-	//
-	// @Test
-	// public void largeTableTestPostgres() throws DatabaseException {
-	// largeTableTest(DatabaseParameters.Postgres);
-	// largeTableTestWithConstantsInQuery(DatabaseParameters.Postgres);
-	// }
+	 @Test
+	 public void largeTableQueryDifferenceDerby() throws DatabaseException {
+		 largeTableQueryDifferenceTGD(DatabaseParameters.Derby);
+		 largeTableQueryDifferenceEGD(DatabaseParameters.Derby);
+	 }
+	 @Test
+	 public void largeTableQueryDifferenceMySql() throws DatabaseException {
+		 largeTableQueryDifferenceTGD(DatabaseParameters.MySql);
+		 largeTableQueryDifferenceEGD(DatabaseParameters.MySql);
+	 }
+	 @Test
+	 public void largeTableQueryDifferencePostgres() throws DatabaseException {
+		 largeTableQueryDifferenceTGD(DatabaseParameters.Postgres);
+		 largeTableQueryDifferenceEGD(DatabaseParameters.Postgres);
+	 }
 
 	@Test
-	public void simpleDatabaseCreatioMemory() throws DatabaseException {
+	public void largeTableQueryDifferenceMemory() throws DatabaseException {
 		largeTableQueryDifferenceTGD(DatabaseParameters.Memory);
 		largeTableQueryDifferenceEGD(DatabaseParameters.Memory);
 	}
@@ -94,11 +89,12 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 
 		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"), Variable.create("res2")  }, (Conjunction)Conjunction.of(q1, q2, q3));
 		// check left and right queries
-		List<Match> leftFacts = manager.answerQueries(Arrays.asList(new PhysicalQuery[] { PhysicalQuery.create(manager, left) }));
+		
+		List<Match> leftFacts = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { left }));
 		Assert.assertEquals(2, leftFacts.size());
-		List<Match> rightFacts = manager.answerQueries(Arrays.asList(new PhysicalQuery[] { PhysicalQuery.create(manager, right) }));
+		List<Match> rightFacts = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { right }));
 		Assert.assertEquals(1, rightFacts.size());
-		Assert.assertNull(rightFacts.get(0).getMapping().get(Variable.create("z")));
+	//	Assert.assertNull(rightFacts.get(0).getMapping().get(Variable.create("z")));
 
 		List<Match> diffFacts = manager.answerQueryDifferences(left, right);
 		Assert.assertEquals(1, diffFacts.size());
@@ -145,9 +141,9 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 
 		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("res1") }, (Conjunction)Conjunction.of(q1, q2, q3));
 		// check left and right queries
-		List<Match> leftFacts = manager.answerQueries(Arrays.asList(new PhysicalQuery[] { PhysicalQuery.create(manager, left) }));
+		List<Match> leftFacts = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { left }));
 		Assert.assertEquals(2, leftFacts.size());
-		List<Match> rightFacts = manager.answerQueries(Arrays.asList(new PhysicalQuery[] { PhysicalQuery.create(manager, right) }));
+		List<Match> rightFacts = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { right }));
 		Assert.assertEquals(1, rightFacts.size());
 		Assert.assertNull(rightFacts.get(0).getMapping().get(Variable.create("z")));
 

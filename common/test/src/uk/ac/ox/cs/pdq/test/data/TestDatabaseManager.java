@@ -13,7 +13,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.data.DatabaseManager;
-import uk.ac.ox.cs.pdq.data.PhysicalQuery;
 import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -134,8 +133,7 @@ public class TestDatabaseManager extends PdqTest {
 		// Normal query
 		Atom a1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y, z }, a1);
-		PhysicalQuery q = PhysicalQuery.create(manager, cq);
-		List<Match> answer = manager.answerQueries(Arrays.asList(new PhysicalQuery[] { q }));
+		List<Match> answer = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 
 		// switching back to first instance
@@ -221,8 +219,7 @@ public class TestDatabaseManager extends PdqTest {
 		// Normal query
 		Atom a1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z"), Variable.create("i") });
 		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y, z }, a1);
-		PhysicalQuery q = PhysicalQuery.create(manager, cq);
-		List<Match> answer = manager.answerQueries(Arrays.asList(new PhysicalQuery[] { q }));
+		List<Match> answer = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 
 		// switching back to first instance

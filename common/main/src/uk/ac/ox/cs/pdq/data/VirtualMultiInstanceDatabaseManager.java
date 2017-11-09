@@ -124,25 +124,35 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	public Collection<Atom> getFactsFromPhysicalDatabase() throws DatabaseException {
 		Collection<Atom> results = new ArrayList<>();
 		for (Relation r : this.extendedSchema.getRelations()) {
-			Collection<PhysicalQuery> queries = new ArrayList<>();
+			if (r.equals(factIdInstanceIdMappingTable))
+				continue;
+			Collection<ConjunctiveQuery> queries = new ArrayList<>();
 			ConjunctiveQuery q = createQuery(r, databaseInstanceID);
-			queries.add(PhysicalQuery.create(this, q));
+			queries.add(q);
 			results.addAll(removeFactID(PhysicalDatabaseInstance.getAtomsFromMatches(super.answerQueries(queries), r), originalSchema));
 		}
 		return results;
 	}
 
-	public List<Match> answerQueries(Collection<PhysicalQuery> queries) throws DatabaseException {
-		Collection<PhysicalQuery> newQueries = new ArrayList<>();
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.data.DatabaseManager#answerQueries(java.util.Collection)
+	 */
+	public List<Match> answerQueries(Collection<ConjunctiveQuery> queries) throws DatabaseException {
+		Collection<ConjunctiveQuery> queriesWitchInstanceIDs = new ArrayList<>();
 		Map<ConjunctiveQuery, ConjunctiveQuery> oldAndNewQueries = new HashMap<>();
-		for (PhysicalQuery q : queries) {
-			ConjunctiveQuery extendedCQ = extendQuery((ConjunctiveQuery) q.getFormula(), this.databaseInstanceID);
-			oldAndNewQueries.put(extendedCQ, (ConjunctiveQuery) q.getFormula());
-			newQueries.add(PhysicalQuery.create(this, extendedCQ));
 
+		// extend queries with factIDs,
+		for (ConjunctiveQuery q : queries) {
+			ConjunctiveQuery extendedCQ = extendQuery(q, this.databaseInstanceID);
+			oldAndNewQueries.put(extendedCQ, q);
+			queriesWitchInstanceIDs.add(extendedCQ);
 		}
+		
+		// Answer new queries
+		List<Match> matches = super.answerQueries(queriesWitchInstanceIDs);
+		
+		// Remove unnecessary factIDs from the answer
 		List<Match> result = new ArrayList<Match>();
-		List<Match> matches = super.answerQueries(newQueries);
 		for (Match m : matches) {
 			result.add(Match.create(oldAndNewQueries.get(m.getFormula()), removeFactID(m.getMapping())));
 		}
@@ -171,17 +181,6 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 			result.add(Match.create(oldAndNewQueries.get(m.getFormula()), removeFactID(m.getMapping())));
 		}
 		return result;
-	}
-
-	/**
-	 * Executes a change in the database such as deleting facts or creating tables.
-	 * 
-	 * @param update
-	 * @return
-	 */
-	public int executeUpdates(List<PhysicalDatabaseCommand> update) throws DatabaseException {
-		// UNFINISHED
-		return super.executeUpdates(update);
 	}
 
 	/*
