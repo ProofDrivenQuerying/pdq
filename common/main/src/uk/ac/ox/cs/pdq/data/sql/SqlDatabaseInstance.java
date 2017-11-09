@@ -2,20 +2,16 @@ package uk.ac.ox.cs.pdq.data.sql;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.LinkedHashMultimap;
@@ -30,21 +26,14 @@ import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.sql.FromCondition;
-import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
-import uk.ac.ox.cs.pdq.db.sql.SelectCondition;
-import uk.ac.ox.cs.pdq.db.sql.WhereCondition;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Represents a physical database that speaks SQL. Such as Derby, MySQL or
@@ -360,22 +349,6 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 	}
 
 	/**
-	 * Clear tables.
-	 *
-	 * @param queryRelations
-	 *            the query relations
-	 * @param toDatabaseRelation
-	 *            the relation map
-	 * @return the collection
-	 */
-	protected Collection<String> createTruncateTableStatements(Atom[] queryRelations, Map<String, Relation> toDatabaseRelation) {
-		Set<String> result = new LinkedHashSet<>();
-		for (Atom pred : queryRelations)
-			result.add("TRUNCATE TABLE  " + databaseParameters.getDatabaseName() + "." + toDatabaseRelation.get(pred.getPredicate().getName()).getName());
-		return result;
-	}
-
-	/**
 	 * Creates the table non join indexes.
 	 *
 	 * @param relation
@@ -446,274 +419,5 @@ public abstract class SqlDatabaseInstance extends PhysicalDatabaseInstance {
 		}
 		return new ImmutablePair<Collection<String>, Collection<String>>(createIndices, dropIndices);
 	}
-
-	protected FromCondition createFromStatement(Atom[] facts) {
-		List<String> relations = new ArrayList<String>();
-		for (Atom fact : facts) {
-			String aliasName = null;
-			synchronized (this.aliases) {
-				aliasName = this.aliases.get(fact);
-				if (aliasName == null) {
-					aliasName = SQLStatementBuilder.ALIAS_PREFIX + GlobalCounterProvider.getNext("SQLStatmentBuilder.aliasCounter");
-					this.aliases.put(fact, aliasName);
-				}
-			}
-			relations.add(this.createTableAliasingExpression(aliasName, fact.getPredicate()));
-		}
-		return new FromCondition(relations);
-	}
-
-	/**
-	 * Creates the projection statements.
-	 *
-	 * @param source
-	 *            the source
-	 * @return the attributes that will be projected. If the input is an egd or tgd
-	 *         we project the attributes that map to universally quantified
-	 *         variables. If the input is a query we project the attributes that map
-	 *         to its free variables.
-	 */
-	protected SelectCondition createProjections(Atom[] atoms) {
-		LinkedHashMap<String, Variable> projected = new LinkedHashMap<>();
-		List<Variable> attributes = new ArrayList<>();
-		for (Atom fact : atoms) {
-			String alias = null;
-			synchronized (this.aliases) {
-				alias = this.aliases.get(fact);
-			}
-			for (int index = 0; index < fact.getNumberOfTerms(); ++index) {
-				Term term = fact.getTerm(index);
-				// Most likely broken if replaced with working one.
-				// if (term instanceof Variable && !attributes.contains(((Variable)
-				// term).getSymbol())) {
-				if (term instanceof Variable && !attributes.contains(term)) {
-					projected.put(createProjectionStatementForArgument(index, this.schema.getRelation(fact.getPredicate().getName()), alias), (Variable) term);
-					attributes.add(((Variable) term));
-				}
-			}
-		}
-		return new SelectCondition(projected);
-	}
-
-	protected WhereCondition createAttributeEqualities(Atom[] source,Schema schema) {
-		List<String> attributePredicates = new ArrayList<String>();
-		Collection<Term> terms = Utility.getTerms(source);
-		terms = Utility.removeDuplicates(terms);
-		for (Term term : terms) {
-			Integer leftPosition = null;
-			Relation leftRelation = null;
-			String leftAlias = null;
-			for (Atom fact : source) {
-				List<Integer> positions = Utility.search(fact.getTerms(), term); // all the positions for the same term should be equated
-				for (Integer pos : positions) {
-					if (leftPosition == null) {
-						leftPosition = pos;
-						leftRelation = schema.getRelation(fact.getPredicate().getName());
-						synchronized (this.aliases) {
-							leftAlias = this.aliases.get(fact);
-						}
-					} else {
-						Integer rightPosition = pos;
-						Relation rightRelation = schema.getRelation(fact.getPredicate().getName());
-						String rightAlias = null;
-						synchronized (this.aliases) {
-							rightAlias = this.aliases.get(fact);
-						}
-						StringBuilder result = new StringBuilder();
-						result.append(leftAlias == null ? leftRelation.getName() : leftAlias).append(".").append(leftRelation.getAttribute(leftPosition).getName()).append('=');
-						result.append(rightAlias == null ? rightRelation.getName() : rightAlias).append(".").append(rightRelation.getAttribute(rightPosition).getName());
-						attributePredicates.add(result.toString());
-					}
-				}
-			}
-		}
-		return new WhereCondition(attributePredicates);
-	}
-
-	/**
-	 * Creates a WhereCondition for and EGD to make sure only active triggers will be returned by the query.
-	 * 
-	 */
-	public WhereCondition createEGDActivenessFilter(EGD dep, Atom[] source,Schema schema) {
-		List<String> attributePredicates = new ArrayList<String>();
-		Collection<Term> terms = Utility.getTerms(source);
-		terms = Utility.removeDuplicates(terms);
-		if (dep != null) {
-			Term right = dep.getHead().getAtoms()[0].getTerm(1);
-			Term left = dep.getHead().getAtoms()[0].getTerm(0);
-			ArrayList<String> leftEqualities = new ArrayList<>();
-			ArrayList<String> rightEqualities = new ArrayList<>();
-			for (Term term : terms) {
-				for (Atom fact : source) {
-					List<Integer> positions = Utility.search(fact.getTerms(), term); // all the positions for the same term should be equated
-					for (Integer pos : positions) {
-						if (left != null && left.equals(fact.getTerm(pos))) {
-							StringBuilder result = new StringBuilder();
-							synchronized (this.aliases) {
-								result.append(this.aliases.get(fact) == null ? fact.getPredicate().getName() : this.aliases.get(fact));
-							}
-							result.append(".").append(schema.getRelation(fact.getPredicate().getName()).getAttribute(pos).getName());
-							leftEqualities.add(result.toString());
-						}
-						if (right != null && right.equals(fact.getTerm(pos))) {
-							StringBuilder result = new StringBuilder();
-							synchronized (this.aliases) {
-								result.append(this.aliases.get(fact) == null ? fact.getPredicate().getName() : this.aliases.get(fact));
-							}
-							result.append(".").append(schema.getRelation(fact.getPredicate().getName()).getAttribute(pos).getName());
-							rightEqualities.add(result.toString());
-						}
-					}
-				}
-			}
-			for (String s1 : leftEqualities) {
-				for (String s2 : rightEqualities) {
-					attributePredicates.add(s1 + "<>" + s2);
-				}
-			}
-		}
-		return new WhereCondition(attributePredicates);
-	}
-
-	public WhereCondition createEqualitiesWithConstants(Atom[] source,Schema schema) {
-		List<String> constantPredicates = new ArrayList<>();
-		for (Atom fact : source) {
-			String alias = null;
-			synchronized (this.aliases) {
-				alias = this.aliases.get(fact);
-			}
-			for (int index = 0; index < fact.getNumberOfTerms(); ++index) {
-				Term term = fact.getTerm(index);
-				if (!term.isVariable() && !term.isUntypedConstant()) {
-					StringBuilder eq = new StringBuilder();
-					String leftSide = alias == null ? fact.getPredicate().getName() : alias; 
-					eq.append(leftSide).append(".").append(schema.getRelation(fact.getPredicate().getName()).getAttribute(index).getName()).append('=');
-					eq.append(convertTermToSQLString(schema.getRelation(fact.getPredicate().getName()).getAttribute(index),term));
-					constantPredicates.add(eq.toString());
-				}
-			}
-		}
-		return new WhereCondition(constantPredicates);
-	}
-
-	public WhereCondition enforceStateMembership(Atom[] source, Map<String, Relation> relationNamesToRelationObjects, Collection<Atom> facts) {
-		List<String> setPredicates = new ArrayList<>();
-		List<Object> factIDs = new ArrayList<>();
-		for (Atom atom : facts) {
-			factIDs.add(atom.getId());
-		}
-		for (Atom fact : source) {
-			String alias = null;
-			synchronized (this.aliases) {
-				alias = this.aliases.get(fact);
-			}
-			setPredicates.add(createSQLMembershipExpression(relationNamesToRelationObjects.get(fact.getPredicate().getName()).getArity() - 1, factIDs,
-					relationNamesToRelationObjects.get(fact.getPredicate().getName()), alias));
-		}
-		return new WhereCondition(setPredicates);
-	}
-
-	public WhereCondition createEqualitiesRespectingInputMapping(Atom[] source, Map<Variable, Constant> mapping,Schema schema) {
-		List<String> constantPredicates = new ArrayList<>();
-		for (Entry<Variable, Constant> pair : mapping.entrySet()) {
-			for (Atom fact : source) {
-				int index = Arrays.asList(fact.getTerms()).indexOf(pair.getKey());
-				if (index != -1) {
-					StringBuilder eq = new StringBuilder();
-					synchronized (this.aliases) {
-						eq.append(this.aliases.get(fact) == null ? fact.getPredicate().getName() : this.aliases.get(fact)).append(".")
-						.append(schema.getRelation(fact.getPredicate().getName()).getAttribute(index).getName()).append('=');
-					}
-					eq.append("'").append(pair.getValue()).append("'");
-					constantPredicates.add(eq.toString());
-				}
-			}
-		}
-		return new WhereCondition(constantPredicates);
-	}
-
-	/**
-	 * Creates the sql membership expression.
-	 *
-	 * @param position
-	 *            the position
-	 * @param values
-	 *            the values
-	 * @param relation
-	 *            the relation
-	 * @param alias
-	 *            the alias
-	 * @return the string
-	 */
-	private String createSQLMembershipExpression(int position, List<Object> values, Relation relation, String alias) {
-		StringBuilder result = new StringBuilder();
-		String set = "";
-		int v = 0;
-		for (v = 0; v < values.size() - 1; ++v)
-			set += convertValue(values.get(v)) + ",";
-		set += convertValue(values.get(v));
-		result.append(alias == null ? relation.getName() : alias).append(".").append(relation.getAttribute(position).getName()).append(" IN ").append("(").append(set).append(")");
-		return result.toString();
-	}
-
-	private String convertValue(Object object) {
-		if (object == null)
-			throw new IllegalArgumentException("Null value cannot be converted to SQL statement");
-		if (object instanceof String)
-			return "'" + object + "'";
-		return object.toString();
-	}
-
-	/**
-	 * Creates the projection statement for argument.
-	 *
-	 * @param position
-	 *            the position
-	 * @param relation
-	 *            the relation
-	 * @param alias
-	 *            the alias
-	 * @return the string
-	 */
-	protected String createProjectionStatementForArgument(int position, Relation relation, String alias) {
-		Preconditions.checkNotNull(relation);
-		Preconditions.checkArgument(position >= 0 && position < relation.getArity());
-		StringBuilder result = new StringBuilder();
-		result.append(alias == null ? relation.getName() : alias).append(".").append(relation.getAttribute(position).getName());
-		return result.toString();
-	}
-
-	/**
-	 * Creates the table aliasing expression.
-	 *
-	 * @param alias
-	 *            the alias
-	 * @param relation
-	 *            the relation
-	 * @return the string
-	 */
-	protected String createTableAliasingExpression(String alias, Predicate relation) {
-		Preconditions.checkNotNull(relation);
-		StringBuilder result = new StringBuilder();
-		result.append(relation.getName()).append(" AS ");
-		result.append(alias == null ? relation.getName() : alias);
-		return result.toString();
-	}
-
-	public String buildSQLQuery(SelectCondition select, FromCondition from, WhereCondition where) {
-		String query = "SELECT " + select.getConditionsSQLSubstring() + "\n" + "FROM " + from.getConditionsSQLSubstring(databaseParameters.getDatabaseName());
-		if (!where.isEmpty())
-			query += "\n" + "WHERE " + where.getConditionsSQLSubstring();
-		return query;
-	}
-
-	public String nestQueries(String query, WhereCondition where, String nestedQuery) {
-		if (where.isEmpty())
-			query += "\n" + "WHERE " + " NOT EXISTS" + "\n" + "(" + nestedQuery + ")";
-		else
-			query += "\n" + "AND " + " NOT EXISTS" + "\n" + "(" + nestedQuery + ")";
-		return query;
-	}
-
 
 }

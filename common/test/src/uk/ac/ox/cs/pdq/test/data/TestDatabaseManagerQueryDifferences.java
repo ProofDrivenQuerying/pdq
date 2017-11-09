@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
@@ -99,7 +100,11 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 		List<Match> diffFacts = manager.answerQueryDifferences(left, right);
 		Assert.assertEquals(1, diffFacts.size());
 		Assert.assertTrue(diffFacts.get(0).getMapping().containsKey(Variable.create("z")));
-		Assert.assertEquals(TypedConstant.create(115),diffFacts.get(0).getMapping().get(Variable.create("z")));
+		if (parameters.getDatabaseDriver().contains("memory")) {
+			Assert.assertEquals(TypedConstant.create(115),diffFacts.get(0).getMapping().get(Variable.create("z")));
+		} else {
+			Assert.assertEquals(UntypedConstant.create("115"),diffFacts.get(0).getMapping().get(Variable.create("z")));
+		}
 	}
 	
 	private void largeTableQueryDifferenceEGD(DatabaseParameters parameters) throws DatabaseException {
@@ -151,7 +156,12 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 		System.out.println(diffFacts);
 		Assert.assertEquals(1, diffFacts.size());
 		Assert.assertTrue(diffFacts.get(0).getMapping().containsKey(Variable.create("z")));
-		Assert.assertEquals(TypedConstant.create(115),diffFacts.get(0).getMapping().get(Variable.create("z")));
+		
+		if (parameters.getDatabaseDriver().contains("memory")) {
+			Assert.assertEquals(TypedConstant.create(115),diffFacts.get(0).getMapping().get(Variable.create("z")));
+		} else {
+			Assert.assertEquals(UntypedConstant.create("115"),diffFacts.get(0).getMapping().get(Variable.create("z")));
+		}
 	}
 
 }
