@@ -1,16 +1,14 @@
 package uk.ac.ox.cs.pdq.data.sql;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.google.common.base.Joiner;
 
-import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.data.ConjunctiveQueryDescriptor;
 import uk.ac.ox.cs.pdq.data.PhysicalQuery;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -29,90 +27,69 @@ public class SQLSelect extends PhysicalQuery {
 	protected String sqlQueryString;
 	protected List<String> whereConditions = new ArrayList<>();
 	protected List<String> fromTableName = new ArrayList<>();
-	protected String select;
+	protected List<String> select = new ArrayList<>();
 	
 	public SQLSelect(ConjunctiveQuery source, SqlDatabaseInstance instance) {
 		super(source, instance.schema);
-		sqlQueryString = init(source, instance);
+		initSelect(source, instance.databaseParameters.getDatabaseName());
+		initFrom(source, instance.databaseParameters.getDatabaseName());
+		initWhere(source, instance.databaseParameters.getDatabaseName());
+		sqlQueryString = "SELECT " + Joiner.on(",").join(select) + " FROM " + Joiner.on(",").join(fromTableName);
+		if (!whereConditions.isEmpty())
+			sqlQueryString += " WHERE " + Joiner.on(" AND ").join(whereConditions);
+				
 	}
 
-	private String init(ConjunctiveQuery source, SqlDatabaseInstance instance) {
-		String dbNameDot = instance.databaseParameters.getDatabaseName() + "."; 
-		String query = "SELECT ";
-		boolean first = true;
-		
+	private void initSelect(ConjunctiveQuery source, String databaseName) {
 		// SELECT free variables			
 		for (ConjunctiveQueryDescriptor a: this.getQueryAtoms()) {
+			// loop over all atoms of the query (flattened hierarchy)
 			for (Variable v: a.getFreeVariableToPosition().keySet()) {
-				if (!first)
-					query += " , ";
-				first = false;
-				query += dbNameDot+ a.getRelation().getName() + "." + a.getAttributeAtIndex(a.getFreeVariableToPosition().get(v)).getName();
+				// loop over all free variables of current Atom.
+				select.add(databaseName + "." + a.getRelation().getName() + "." + a.getAttributeAtIndex(a.getFreeVariableToPosition().get(v)).getName());
 			}
 		}
-		select = query;
+	}
+	
+	private void initFrom(ConjunctiveQuery source, String databaseName) {
 		// FROM table names			
-		query += " FROM " + getTableNamesPartOfQuery(this.getQueryAtoms(), instance.databaseParameters.getDatabaseName()) + " ";
+		for (ConjunctiveQueryDescriptor a:this.getQueryAtoms()) {
+			// from each table of the query
+			fromTableName.add(databaseName + "." + a.getRelation().getName());
+		}
+	}
+	
+	private void initWhere(ConjunctiveQuery source, String databaseName) {
 		// WHERE CONSTANT EQUALITY CONDITIONS
-		boolean whereAdded = false;
-		first = true;
 		for (ConjunctiveQueryDescriptor a: this.getQueryAtoms()) {
 			if (a.hasConstantEqualityCondition()) {
-				if (!whereAdded) {
-					query += " WHERE ";
-					whereAdded = true;
-				}
-				if (!first) {
-					query += " AND ";
-				}
-				first = false;
 				for (Attribute attribute : a.getConstantEqualityConditions().keySet()) {
-					query += " " + dbNameDot+a.getRelation().getName() + "." + attribute.getName() + " = " + SqlDatabaseInstance.convertTermToSQLString(attribute, a.getConstantEqualityConditions().get(attribute)) + " ";
+					whereConditions.add(databaseName + "." +a.getRelation().getName() + "." + attribute.getName() + " = " + SqlDatabaseInstance.convertTermToSQLString(attribute, a.getConstantEqualityConditions().get(attribute)));
 				}
 			}
 		}
 		
 		// WHERE ATTRIBUTE EQUALITY CONDITIONS
-		for (Conjunction conjunction: getAttributeEqualityConditions().keySet()) {
-			ConjunctiveCondition attributeEqualities = getAttributeEqualityConditions().get(conjunction);
-			if (attributeEqualities==null || attributeEqualities.getSimpleConditions().length == 0)
+		for (Conjunction conjunction: getMappedConjunctiveQuery().keySet()) {
+			if (getMappedConjunctiveQuery().get(conjunction).getMatchingColumnIndexes().isEmpty())
 				continue;
-			for (SimpleCondition condition:attributeEqualities.getSimpleConditions()) {
-				if (!whereAdded) {
-					query += " WHERE ";
-					whereAdded = true;
-				}
-				if (!first) {
-					query += " AND ";
-				}
-				first = false;
-				AttributeEqualityCondition aec = (AttributeEqualityCondition)condition;
-				ConjunctiveQueryDescriptor atomLeft = ConjunctiveQueryDescriptor.findAtomFor(queryAtoms, conjunction.getAtoms()[0].getPredicate().getName());
+			for (Pair<Integer,Integer> matchingIndexes:getMappedConjunctiveQuery().get(conjunction).getMatchingColumnIndexes()) {
+				ConjunctiveQueryDescriptor atomLeft = getMappedConjunctiveQuery().get(conjunction).getLeftAtom();// ConjunctiveQueryDescriptor.findAtomFor(queryAtoms, conjunction.getAtoms()[0].getPredicate().getName());
 				int shift = 0;
 				int atomIndex =1;
-				while (aec.getOther()>=shift + conjunction.getAtoms()[atomIndex].getTerms().length) {
+				while (matchingIndexes.getRight()>=shift + conjunction.getAtoms()[atomIndex].getTerms().length) {
 					shift += conjunction.getAtoms()[atomIndex].getTerms().length;
 					atomIndex++;
 				}
 				String rightRelationName = conjunction.getAtoms()[atomIndex].getPredicate().getName();
-				String rightAttributeName = ConjunctiveQueryDescriptor.findAtomFor(queryAtoms,rightRelationName).getAttributeAtIndex(aec.getOther()-shift).getName();
-				String newCondition = dbNameDot + atomLeft.getRelation().getName() + "." + atomLeft.getAttributeAtIndex(aec.getPosition()).getName() + " = " + 
-						dbNameDot + rightRelationName + "." + rightAttributeName;
+				String rightAttributeName = ConjunctiveQueryDescriptor.findAtomFor(queryAtoms,rightRelationName).getAttributeAtIndex(matchingIndexes.getRight()-shift).getName();
+				String newCondition = databaseName + "." + atomLeft.getRelation().getName() + "." + atomLeft.getAttributeAtIndex(matchingIndexes.getLeft()).getName() + " = " + 
+						databaseName + "." + rightRelationName + "." + rightAttributeName;
 				whereConditions.add(newCondition);
-				query += newCondition;
 			}
 		}
-		
-		return query;		
 	}
 	
-	private String getTableNamesPartOfQuery(Collection<ConjunctiveQueryDescriptor> atoms, String databaseName) {
-		for (ConjunctiveQueryDescriptor a:atoms) {
-			fromTableName.add(databaseName + "." + a.getRelation().getName());
-		}
-		return Joiner.on(",").join(fromTableName); 
-	}
-
 	public String getSqlQueryString() {
 		return sqlQueryString;
 	}

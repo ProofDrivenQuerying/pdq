@@ -31,13 +31,17 @@ public class SQLNestedSelect extends SQLSelect {
 		List<String> differentTableNames = new ArrayList<String>(right.fromTableName);
 		differentTableNames.removeAll(this.fromTableName);
 		
-		if (sqlQueryString.contains(" WHERE ")) {
-			sqlQueryString += " AND \n ";
-		} else {
+		if (whereConditions.isEmpty()) {
 			sqlQueryString += " WHERE \n ";
+		} else {
+			sqlQueryString += " AND \n ";
 		}
-		sqlQueryString += " NOT EXISTS ( " + right.select + " FROM " + Joiner.on(",").join(differentTableNames) +
-				" WHERE " + Joiner.on(",").join(differentConditions) + " )";
+		sqlQueryString += " NOT EXISTS ( SELECT " + Joiner.on(",").join(right.select) + " FROM " + Joiner.on(",").join(differentTableNames);
+		if (differentConditions.isEmpty()) {
+			sqlQueryString += ")";
+		} else {
+			sqlQueryString += " WHERE " + Joiner.on(" AND ").join(differentConditions) + " )";
+		}
 	}
 	
 	public String getSqlQueryString() {

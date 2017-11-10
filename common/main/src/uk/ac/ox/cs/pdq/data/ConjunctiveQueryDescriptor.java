@@ -34,7 +34,7 @@ public class ConjunctiveQueryDescriptor {
 	 * If this queryAtom contains a free variable we need to know which attribute it corresponds to.
 	 */
 	private Map<Variable,Integer> freeVariablePositions;
-	protected ConjunctiveQueryDescriptor(Atom queryAtom, Relation parentRelation) {
+	public ConjunctiveQueryDescriptor(Atom queryAtom, Relation parentRelation) {
 		this.queryAtom = queryAtom;
 		this.relation = parentRelation;
 		constantEqualityConditions = new HashMap<>();

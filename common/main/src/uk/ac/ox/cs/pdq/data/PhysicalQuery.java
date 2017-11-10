@@ -8,9 +8,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.data.memory.MemoryNestedQuery;
 import uk.ac.ox.cs.pdq.data.memory.MemoryQuery;
 import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
@@ -52,7 +49,7 @@ public abstract class PhysicalQuery {
 	 * Conjunction has one or more variable that needs to have the same value. These
 	 * conditions are stored under the corresponding Conjunction object in this map.
 	 */
-	private Map<Conjunction, ConjunctiveCondition> attributeEqualityConditions;
+	private Map<Conjunction, MappedConjunctiveQuery> mappedConjunctiveQuery;
 
 	/**
 	 * Property mappings between schema and query for each Atom of this conjunctiveQuery.
@@ -67,7 +64,7 @@ public abstract class PhysicalQuery {
 	protected PhysicalQuery(ConjunctiveQuery formula, Schema schema) {
 		this.conjunctiveQuery = formula;
 		this.schema = schema;
-		attributeEqualityConditions = new HashMap<>();
+		mappedConjunctiveQuery= new HashMap<>();
 		queryAtoms = new ArrayList<>();
 		for (Atom a : formula.getAtoms()) {
 			queryAtoms.addAll(initQueryAtoms(a,formula.getFreeVariables()));
@@ -115,36 +112,28 @@ public abstract class PhysicalQuery {
 	 * @param variables
 	 */
 	private void initAttributeEqualityConditions(Conjunction con, Variable[] variables) {
-		Collection<SimpleCondition> predicates = new ArrayList<>();
 		if (con.getChild(0) instanceof Atom && con.getChild(1) instanceof Atom) {
+			MappedConjunctiveQuery map = new MappedConjunctiveQuery(findQueryAtomDescriptor((Atom)con.getChild(0)), findQueryAtomDescriptor((Atom)con.getChild(1)), con);
+			mappedConjunctiveQuery.put(con, map );
 			for (Variable v : variables) {
 				int leftIndex = Arrays.asList(con.getChild(0).getTerms()).indexOf(v);
 				int rightIndex = Arrays.asList(con.getChild(1).getTerms()).indexOf(v);
 				if (leftIndex >= 0 && rightIndex >= 0) {
-					predicates.add(AttributeEqualityCondition.create(leftIndex, rightIndex));
+					map.addMatchingColumnIndexes(leftIndex, rightIndex);
 				}
-			}
-			if (predicates.size() > 0) {
-				ConjunctiveCondition cc = ConjunctiveCondition.create(predicates.toArray(new SimpleCondition[predicates.size()]));
-				attributeEqualityConditions.put(con, cc);
 			}
 		} else {
+			MappedConjunctiveQuery map = new MappedConjunctiveQuery(findQueryAtomDescriptor((Atom)con.getChild(0)), mappedConjunctiveQuery.get(con.getChild(1)), con);
+			mappedConjunctiveQuery.put(con, map );
 			for (Variable v : variables) {
 				int leftIndex = Arrays.asList(con.getChild(0).getTerms()).indexOf(v);
 				int rightIndex = Arrays.asList(con.getChild(1).getTerms()).indexOf(v);
 				if (leftIndex >= 0 && rightIndex >= 0) {
-					predicates.add(AttributeEqualityCondition.create(leftIndex, rightIndex));
+					map.addMatchingColumnIndexes(leftIndex, rightIndex);
 				}
 			}
-			if (predicates.size() > 0) {
-				ConjunctiveCondition cc = ConjunctiveCondition.create(predicates.toArray(new SimpleCondition[predicates.size()]));
-				if (con.getChild(0) instanceof Conjunction) {
-					initAttributeEqualityConditions((Conjunction) con.getChild(0), variables);
-				}
-				if (con.getChild(1) instanceof Conjunction) {
-					initAttributeEqualityConditions((Conjunction) con.getChild(1), variables);
-				}
-				attributeEqualityConditions.put(con, cc);
+			if (con.getChild(1) instanceof Conjunction) {
+				initAttributeEqualityConditions((Conjunction) con.getChild(1), variables);
 			}
 		}
 	}
@@ -155,8 +144,8 @@ public abstract class PhysicalQuery {
 	 * 
 	 * @return
 	 */
-	public Map<Conjunction, ConjunctiveCondition> getAttributeEqualityConditions() {
-		return attributeEqualityConditions;
+	public Map<Conjunction, MappedConjunctiveQuery> getMappedConjunctiveQuery() {
+		return mappedConjunctiveQuery;
 	}
 
 	/**
@@ -221,5 +210,12 @@ public abstract class PhysicalQuery {
 		}
 
 	}
-
+	protected ConjunctiveQueryDescriptor findQueryAtomDescriptor(Atom a) {
+		for (ConjunctiveQueryDescriptor atomDescriptor:queryAtoms) {
+			if (a.equals(atomDescriptor.getConjunctiveQueryAtom())) {
+				return atomDescriptor;
+			}
+		}
+		return null;
+	}
 }

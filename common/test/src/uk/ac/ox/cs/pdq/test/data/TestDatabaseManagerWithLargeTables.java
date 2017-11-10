@@ -53,7 +53,7 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 	}
 
 	@Test
-	public void simpleDatabaseCreatioMemory() throws DatabaseException {
+	public void largeTableTestMemory() throws DatabaseException {
 		largeTableTest(DatabaseParameters.Memory);
 		largeTableTestWithConstantsInQuery(DatabaseParameters.Memory);
 	}

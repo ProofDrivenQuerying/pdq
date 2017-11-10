@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
+import org.apache.commons.lang3.tuple.Pair;
+
 import uk.ac.ox.cs.pdq.data.ConjunctiveQueryDescriptor;
+import uk.ac.ox.cs.pdq.data.MappedConjunctiveQuery;
 import uk.ac.ox.cs.pdq.data.PhysicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.data.PhysicalQuery;
 import uk.ac.ox.cs.pdq.data.cache.FactCache;
@@ -96,6 +96,7 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	private Collection<Match> answerQuery(MemoryQuery query) throws DatabaseException {
 		if (!(query instanceof MemoryQuery))
 			throw new DatabaseException("Only MemoryQuery can be answered in MemoryDatabaseInstance!" + query);
+		
 		ConjunctiveQuery q = (ConjunctiveQuery) query.getConjunctiveQuery();
 		Variable[] freeVariables = q.getFreeVariables();
 		Collection<Match> results = new ArrayList<>();
@@ -139,8 +140,7 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 			return getFactsOfRelation(facts, ((Atom) ((ConjunctiveQuery) query.getConjunctiveQuery()).getBody()).getPredicate().getName(),
 					query.getQueryAtoms());
 		} else { 
-			return search(facts, (Conjunction) ((ConjunctiveQuery) query.getConjunctiveQuery()).getBody(), query.getAttributeEqualityConditions(),
-					((MemoryQuery) query).getQueryAtoms());
+			return search(facts, (Conjunction) ((ConjunctiveQuery) query.getConjunctiveQuery()).getBody(), query.getMappedConjunctiveQuery());
 		}
 	}
 
@@ -261,37 +261,29 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	 * @return
 	 * @throws DatabaseException 
 	 */
-	private Collection<Atom> search(Collection<Atom> facts, Conjunction currentConjunction, Map<Conjunction, ConjunctiveCondition> conditions,
-			Collection<ConjunctiveQueryDescriptor> queryAtoms) throws DatabaseException {
+	private Collection<Atom> search(Collection<Atom> facts, Conjunction currentConjunction, Map<Conjunction, MappedConjunctiveQuery> mappedConjunctiveQuery) throws DatabaseException {
 		Collection<Atom> results = new ArrayList<>();
 		Collection<Atom> leftFacts = null;
 		Collection<Atom> rightFacts = null;
-
+		MappedConjunctiveQuery currentMap = mappedConjunctiveQuery.get(currentConjunction);
 		// get facts for each side of the conjunction. This could be a recursive call in
 		// case we have nested conjunctions.
-		if (currentConjunction.getChild(0) instanceof Atom)
-			leftFacts = getFactsOfRelation(facts, ((Atom) currentConjunction.getChild(0)).getPredicate().getName(), queryAtoms);
-		if (currentConjunction.getChild(0) instanceof Conjunction)
-			leftFacts = search(facts, (Conjunction) currentConjunction.getChild(0), conditions, queryAtoms);
-		if (currentConjunction.getChild(1) instanceof Atom)
-			rightFacts = getFactsOfRelation(facts, ((Atom) currentConjunction.getChild(1)).getPredicate().getName(), queryAtoms);
-		if (currentConjunction.getChild(1) instanceof Conjunction)
-			rightFacts = search(facts, (Conjunction) currentConjunction.getChild(1), conditions, queryAtoms);
+		leftFacts = getFactsOfRelation(facts, currentMap.getLeftAtom());
+		if (currentMap.getRightSideAtom() != null)
+			rightFacts = getFactsOfRelation(facts, currentMap.getRightSideAtom());
+		else
+			rightFacts = search(facts, (Conjunction) currentConjunction.getChild(1), mappedConjunctiveQuery);
 
-		ConjunctiveCondition condition = conditions.get(currentConjunction);
-		if (condition != null) {
+		if (!currentMap.getMatchingColumnIndexes().isEmpty()) {
 			// We have conditions for this conjunction so it is a
 			// dependent join case
 			for (Atom fLeft : leftFacts) {
 				for (Atom fRight : rightFacts) {
 					boolean matchesAllConditions = true;
 					// check if we match all conditions
-					for (SimpleCondition cs : condition.getSimpleConditions()) {
-						if (cs instanceof AttributeEqualityCondition) {
-							AttributeEqualityCondition acs = (AttributeEqualityCondition) cs;
-							if (fLeft.getTerm(acs.getPosition()) != fRight.getTerm(acs.getOther())) {
-								matchesAllConditions = false;
-							}
+					for (Pair<Integer, Integer> indexPair : currentMap.getMatchingColumnIndexes()) {
+						if (fLeft.getTerm(indexPair.getLeft()) != fRight.getTerm(indexPair.getRight())) {
+							matchesAllConditions = false;
 						}
 					}
 					// create new record. For example A(1,2) joined with B(3,4) will create a record
@@ -341,24 +333,27 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 	 * @throws DatabaseException 
 	 */
 	private Collection<Atom> getFactsOfRelation(Collection<Atom> facts, String relationName, Collection<ConjunctiveQueryDescriptor> queryAtoms) throws DatabaseException {
-		Collection<Atom> results = new ArrayList<>();
 		ConjunctiveQueryDescriptor qa = ConjunctiveQueryDescriptor.findAtomFor(queryAtoms, relationName);
+		return getFactsOfRelation(facts,qa);
+	}
+	
+	/**
+	 * List of facts that has the same predicate and matches the constant equality conditions.
+	 * @throws DatabaseException
+	 */
+	private Collection<Atom> getFactsOfRelation(Collection<Atom> facts, ConjunctiveQueryDescriptor qa) throws DatabaseException {
+		Collection<Atom> results = new ArrayList<>();
 		for (Atom f : facts) {
 			// loop over all data
-			if (f.getPredicate().getName().equals(relationName)) {
+			if (f.getPredicate().getName().equals(qa.getRelation().getName())) {
 				boolean matching = true;
-				if (qa!=null && qa.hasConstantEqualityCondition()) {
-					for (Attribute attribute : qa.getConstantEqualityConditions().keySet()) {
-						int index = Arrays.asList(qa.getRelation().getAttributes()).indexOf(attribute);
-						if (index<0) {
-							throw new DatabaseException("Attribute " + attribute + " not found in relation: " + qa.getRelation());
-						}
-						if (!f.getTerm(index).equals(qa.getConstantEqualityConditions().get(attribute))) {
-							matching = false;
-						}
+				for (Attribute attribute : qa.getConstantEqualityConditions().keySet()) {
+					int index = Arrays.asList(qa.getRelation().getAttributes()).indexOf(attribute);
+					if (!f.getTerm(index).equals(qa.getConstantEqualityConditions().get(attribute))) {
+						matching = false;
 					}
 				}
-				if (matching)
+				if (matching) // if there were no constants in the query or the constant is the same in this fact then we can add it.
 					results.add(f);
 			}
 		}
@@ -367,7 +362,7 @@ public class MemoryDatabaseInstance extends PhysicalDatabaseInstance {
 
 	@Override
 	protected Collection<Atom> getFactsOfRelation(Relation r) throws DatabaseException {
-		return getFactsOfRelation(this.facts.getFacts(), r.getName(), new ArrayList<>());
+		return getFactsOfRelation(this.facts.getFacts(), new ConjunctiveQueryDescriptor(Atom.create(Predicate.create(r.getName(), 1),Variable.create("any")),r));
 	}
 
 	/*
