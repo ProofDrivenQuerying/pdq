@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.data.cache;
+package uk.ac.ox.cs.pdq.databasemanagement.cache;
 
 import java.util.Collection;
 import java.util.HashMap;

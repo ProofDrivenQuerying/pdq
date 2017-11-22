@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.data;
+package uk.ac.ox.cs.pdq.databasemanagement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.data.cache.MultiInstanceFactCache;
-import uk.ac.ox.cs.pdq.data.sql.DatabaseException;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
@@ -23,11 +23,12 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
- * Replaces the DatabaseManager to create multiple virtual database instances
+ * Replaces the OLD_DatabaseManager to create multiple virtual database instances
  * over one physical instance. The main idea is: <br>
  * - every fact gets extended with a fact ID and this object will maintain a
  * mapping table where each factID paired with an InstanceID, and we allow
@@ -59,8 +60,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		super(parameters);
 		databaseInstanceIDs = new LinkedList<>();
 		databaseInstanceIDs.add(getDatabaseInstanceID());
-		if (!isMemoryDb)
-			multiCache = new MultiInstanceFactCache();
+		multiCache = new MultiInstanceFactCache();
 	}
 
 	/**
@@ -76,26 +76,18 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		super.initialiseDatabaseForSchema(extendedSchema);
 	}
 
-	public Collection<Atom> addFacts(Collection<Atom> facts) throws DatabaseException {
+	public void addFacts(Collection<Atom> facts) throws DatabaseException {
 		Collection<Atom> factsToAdd = null;
-		if (!isMemoryDb) {
-			// only add what's new.
-			factsToAdd = multiCache.addFacts(facts, databaseInstanceID);
-		} else {
-			factsToAdd = facts;
-		}
+		// only add what's new.
+		factsToAdd = multiCache.addFacts(facts, databaseInstanceID);
 		List<Atom> extendedFacts = new ArrayList<>();
 		extendedFacts.addAll(extendFactsWithFactID(factsToAdd));
 		extendedFacts.addAll(getFactsMapping(factsToAdd, this.databaseInstanceID));
 		super.addFacts(extendedFacts);
-		return factsToAdd;
 	}
 
 	public void deleteFacts(Collection<Atom> facts) throws DatabaseException {
-		if (!isMemoryDb) {
-			multiCache.deleteFacts(facts, databaseInstanceID);
-		}
-
+		multiCache.deleteFacts(facts, databaseInstanceID);
 		// only deletes the mapping of this fact to this instance, does not delete the
 		// actual fact.
 		super.deleteFacts(getFactsMapping(facts, this.databaseInstanceID));
@@ -108,12 +100,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	 * @return
 	 */
 	public Collection<Atom> getCachedFacts() throws DatabaseException {
-		if (!isMemoryDb) {
-			return multiCache.getFacts(databaseInstanceID);
-		} else {
-			// in case of memory storage cached or not is the same
-			return this.getFactsFromPhysicalDatabase();
-		}
+		return multiCache.getFacts(databaseInstanceID);
 	}
 
 	/**
@@ -129,13 +116,13 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 			Collection<ConjunctiveQuery> queries = new ArrayList<>();
 			ConjunctiveQuery q = createQuery(r, databaseInstanceID);
 			queries.add(q);
-			results.addAll(removeFactID(PhysicalDatabaseInstance.getAtomsFromMatches(super.answerQueries(queries), r), originalSchema));
+			results.addAll(removeFactID(getAtomsFromMatches(super.answerQueries(queries), r), originalSchema));
 		}
 		return results;
 	}
 
 	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.data.DatabaseManager#answerQueries(java.util.Collection)
+	 * @see uk.ac.ox.cs.pdq.data.OLD_DatabaseManager#answerQueries(java.util.Collection)
 	 */
 	public List<Match> answerQueries(Collection<ConjunctiveQuery> queries) throws DatabaseException {
 		Collection<ConjunctiveQuery> queriesWitchInstanceIDs = new ArrayList<>();
@@ -187,7 +174,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * uk.ac.ox.cs.pdq.data.DatabaseManager#setDatabaseInstanceID(java.lang.String)
+	 * uk.ac.ox.cs.pdq.data.OLD_DatabaseManager#setDatabaseInstanceID(java.lang.String)
 	 */
 	@Override
 	public void setDatabaseInstanceID(String instanceID) {
@@ -305,6 +292,20 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		Conjunction conjunction = Conjunction.create(Atom.create(r, body.toArray(new Term[body.size()])),
 				Atom.create(VirtualMultiInstanceDatabaseManager.factIdInstanceIdMappingTable, new Term[] { factID, TypedConstant.create(databaseInstanceID) }));
 		return ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), conjunction);
+	}
+	private static ArrayList<Atom> getAtomsFromMatches(List<Match> matches, Relation r) {
+		ArrayList<Atom> ret = new ArrayList<>();
+		Predicate predicate = Predicate.create(r.getName(), r.getArity(),r.isEquality());
+		for (Match m: matches) {
+			List<Term> terms = new ArrayList<>();
+			for (Term t:m.getFormula().getTerms()) {
+				Term newTerm = m.getMapping().get(t);
+				if (newTerm!=null)
+					terms.add(newTerm);
+			}
+			ret.add(Atom.create(predicate, terms.toArray(new Term[terms.size()])));
+		}
+		return ret;
 	}
 
 }
