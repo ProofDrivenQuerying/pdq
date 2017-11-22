@@ -13,7 +13,7 @@ public class CartesianProductTerm extends RelationalTerm {
 
 	protected final RelationalTerm[] children = new RelationalTerm[2];
 
-	/**  Cashed string representation. */
+	/**  Cached string representation. */
 	protected String toString = null;
 
 	private CartesianProductTerm(RelationalTerm child1, RelationalTerm child2) {

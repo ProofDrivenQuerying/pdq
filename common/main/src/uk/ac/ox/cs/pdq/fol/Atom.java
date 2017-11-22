@@ -30,10 +30,10 @@ public class Atom extends Formula {
 	/**  The terms of this atom. */
 	protected final Term[] terms;
 
-	/**   Cashed string representation of the atom. */
+	/**   Cached string representation of the atom. */
 	protected String toString = null;
 	
-	/**  Cashed list of free variables. */
+	/**  Cached list of free variables. */
 	private Variable[] freeVariables = null;
 
 	

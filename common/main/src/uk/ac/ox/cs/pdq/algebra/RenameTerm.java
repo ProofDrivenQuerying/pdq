@@ -16,7 +16,7 @@ public class RenameTerm extends RelationalTerm {
 
 	protected final Attribute[] renamings;
 
-	/**  Cashed string representation. */
+	/**  Cached string representation. */
 	private String toString = null;
 
 	private RenameTerm(Attribute[] renamings, RelationalTerm child) {

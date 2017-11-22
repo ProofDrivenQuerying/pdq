@@ -16,7 +16,7 @@ public class SelectionTerm extends RelationalTerm {
 	/** The predicate associated with this selection. */
 	protected final Condition selectionCondition;
 
-	/**  Cashed string representation. */
+	/**  Cached string representation. */
 	private String toString = null;
 
 	private SelectionTerm(Condition selectionCondition, RelationalTerm child) {

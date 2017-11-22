@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class Clause implements Serializable{
 	private static final long serialVersionUID = -4433034581780675663L;
 
-	/**   Cashed string representation of the literal. */
+	/**   Cached string representation of the literal. */
 	private String toString = null;
 	
 	protected final Literal[] literals;

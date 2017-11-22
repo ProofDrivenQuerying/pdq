@@ -23,7 +23,7 @@ public class DependentJoinTerm extends RelationalTerm {
 	/** Input positions for the right hand child**/
 	protected final Map<Integer,Integer> positionsInRightChildThatAreBoundFromLeftChild;
 
-	/**  Cashed string representation. */
+	/**  Cached string representation. */
 	protected String toString = null;
 
 	private DependentJoinTerm(RelationalTerm child1, RelationalTerm child2) {

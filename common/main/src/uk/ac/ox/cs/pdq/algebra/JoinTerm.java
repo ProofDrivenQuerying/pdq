@@ -15,7 +15,7 @@ public class JoinTerm extends RelationalTerm {
 	/** The join conditions. */
 	protected final Condition joinConditions;
 
-	/**  Cashed string representation. */
+	/**  Cached string representation. */
 	protected String toString = null;
 	
 	private JoinTerm(RelationalTerm child1, RelationalTerm child2) {

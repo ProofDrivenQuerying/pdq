@@ -28,7 +28,7 @@ public class AccessTerm extends RelationalTerm {
 	/**  The constants used to call the underlying access method. */
 	protected final Map<Integer, TypedConstant> inputConstants;
 
-	/**  Cashed string representation. */
+	/**  Cached string representation. */
 	protected String toString = null;
 
 	private AccessTerm(Relation relation, AccessMethod accessMethod) {
