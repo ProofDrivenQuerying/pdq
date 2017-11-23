@@ -4,6 +4,10 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 
+/**
+ * @author Gabor
+ *
+ */
 public class CreateTable extends Command {
 	/**
 	 * SQL specific type for strings. Normally it can be TEXT, VCHAR, VARCHAR etc.

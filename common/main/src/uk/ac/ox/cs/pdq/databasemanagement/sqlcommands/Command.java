@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Term;
 
+/**
+ * @author Gabor
+ *
+ */
 public class Command implements DerbyStatement, MySqlStatement, PostgresStatement {
 	public static final String DATABASENAME = "{DATABASENAME}";
 	protected Map<String,String> replaceTagsMySql = new HashMap<>();
@@ -32,7 +35,7 @@ public class Command implements DerbyStatement, MySqlStatement, PostgresStatemen
 	}
 	
 	@Override
-	public List<String> toPostgresStatement(String databaseName, Schema schema) {
+	public List<String> toPostgresStatement(String databaseName) {
 		List<String> newStatements = replaceTags(statements,DATABASENAME,databaseName);
 		for (String key:replaceTagsPostgres.keySet()) {
 			newStatements = replaceTags(newStatements,key,replaceTagsPostgres.get(key));
@@ -41,7 +44,7 @@ public class Command implements DerbyStatement, MySqlStatement, PostgresStatemen
 	}
 
 	@Override
-	public List<String> toMySqlStatement(String databaseName, Schema schema) {
+	public List<String> toMySqlStatement(String databaseName) {
 		List<String> newStatements = replaceTags(statements,DATABASENAME,databaseName);
 		for (String key:replaceTagsMySql.keySet()) {
 			newStatements = replaceTags(newStatements,key,replaceTagsMySql.get(key));
@@ -50,7 +53,7 @@ public class Command implements DerbyStatement, MySqlStatement, PostgresStatemen
 	}
 
 	@Override
-	public List<String> toDerbyStatement(String databaseName, Schema schema) {
+	public List<String> toDerbyStatement(String databaseName) {
 		List<String> newStatements = replaceTags(statements,DATABASENAME,databaseName);
 		for (String key:replaceTagsDerby.keySet()) {
 			newStatements = replaceTags(newStatements,key,replaceTagsDerby.get(key));

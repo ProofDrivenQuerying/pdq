@@ -6,6 +6,10 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 
+/**
+ * @author Gabor
+ *
+ */
 public class Insert extends Command {
 
 	/**
@@ -21,6 +25,9 @@ public class Insert extends Command {
 	public Insert(Atom fact, Schema schema) {
 		this.terms = fact.getTerms();
 		tableName = fact.getPredicate().getName();
+		if (schema.getRelation(tableName)==null) {
+			System.out.println();
+		}
 		attributes = schema.getRelation(tableName).getAttributes();
 		replaceTagsMySql.put(IGNORE, "IGNORE");
 		replaceTagsDerby.put(IGNORE, "");

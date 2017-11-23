@@ -29,39 +29,40 @@ public class ExecutionManager {
 		}
 	}
 
-	public void shutdown() {
+	public void shutdown() throws DatabaseException {
 		for (int i = 0; i < threads.size(); i++)
 			threads.get(i).shutdown();
 	}
 
 	public List<Match> execute(List<Command> commands) throws DatabaseException {
-		Collection<Task> results = new ArrayList<>();
 		List<Match> returnValues = new ArrayList<>();
 		int poolSize = this.parameters.getNumberOfThreads();
-		int executing = 3; // assume not all thread are free;
-		if (poolSize > commands.size()) {
-			for (Command command : commands) {
-				// start each task on a different thread
-				executing++;
-				results.add(startTask(command));
-				if (poolSize <= executing) {
-					for (Task result : results) 
-						returnValues.addAll(result.getReturnValues());
-					results.clear();
-					executing = 3;
-				}
-			}
-			for (Task result : results) {
-				// collect results
-				List<Match> values = result.getReturnValues();
-				returnValues.addAll(values);
-			}
-		} else if (poolSize<=1) {
+		if (poolSize<=1) {
 			// forced synchronous mode
 			for (Command command : commands) {
 				List<Match> values = startTask(command).getReturnValues();
 				returnValues.addAll(values);
 			}
+			return returnValues;
+		}
+			
+		int executing = 1; // assume not all thread are free;
+		Collection<Task> results = new ArrayList<>();
+		for (Command command : commands) {
+			// start each task on a different thread
+			executing++;
+			results.add(startTask(command));
+			if (poolSize <= executing) {
+				for (Task result : results) 
+					returnValues.addAll(result.getReturnValues());
+				results.clear();
+				executing = 1;
+			}
+		}
+		for (Task result : results) {
+			// collect results
+			List<Match> values = result.getReturnValues();
+			returnValues.addAll(values);
 		}
 		return returnValues;
 	}

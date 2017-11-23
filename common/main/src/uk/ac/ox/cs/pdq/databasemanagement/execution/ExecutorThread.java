@@ -164,16 +164,16 @@ public class ExecutorThread extends Thread {
 		List<String> statements = null;
 		switch (driverType) {
 		case Derby:
-			statements = command.toDerbyStatement(databaseName, null);
+			statements = command.toDerbyStatement(databaseName);
 			break;
 		case MySql:
-			statements = command.toMySqlStatement(databaseName, null);
+			statements = command.toMySqlStatement(databaseName);
 			break;
 		case Postgres:
-			statements = command.toPostgresStatement(databaseName, null);
+			statements = command.toPostgresStatement(databaseName);
 			break;
 		}
-		System.out.println("Executing " + statements);
+		//System.out.println("Executing " + statements);
 		if (command instanceof Query) {
 			List<Match> results = new ArrayList<>();
 			for (String statement:statements) {
@@ -193,7 +193,7 @@ public class ExecutorThread extends Thread {
 			return new ArrayList<>(); 
 		} catch (SQLException e) {
 			if (e.getNextException()!=null)
-				throw new DatabaseException("Error while executing update: " + statements, e.getNextException());
+				throw new DatabaseException("Error while executing update: " + e.getMessage() + " - "+ statements, e.getNextException());
 			throw new DatabaseException("Error while executing update: " + statements, e);
 		} catch (Throwable t) {
 			throw new DatabaseException("Error while executing update: " + statements, t);
@@ -240,12 +240,25 @@ public class ExecutorThread extends Thread {
 	/**
 	 * Will immediately terminate this thread if it is in a waiting state, but will
 	 * finish current execution before shutting down.
+	 * @throws DatabaseException in case of timeout while shutting down.
 	 */
-	public void shutdown() {
+	public void shutdown() throws DatabaseException {
 		shutdown = true;
 		synchronized (manager.TASKS_LOCK) {
 			// wake up the thread
 			manager.TASKS_LOCK.notify();
+		}
+		int timeoutCounter = 0;
+		while (connection!=null) {
+			timeoutCounter++;
+			if (timeoutCounter > 200) {
+				throw new DatabaseException("Database connection thread won't shut down!");
+			}
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -255,6 +268,7 @@ public class ExecutorThread extends Thread {
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
+		connection = null;
 	}
 
 	public List<Match> getResultsAndReset() throws Throwable {

@@ -6,12 +6,12 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.databasemanagement.execution.ExecutionManager;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BulkInsert;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateDatabase;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateTable;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Delete;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Insert;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Query;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -97,11 +97,12 @@ public class DatabaseManager {
 	}
 
 	public void addFacts(Collection<Atom> facts) throws DatabaseException {
-		List<Command> inserts = new ArrayList<>();
-		for (Atom a: facts) {
-			inserts.add(new Insert(a,schema));
-		}
-		executor.execute(inserts);
+//		List<Command> inserts = new ArrayList<>();
+//		for (Atom a: facts) {
+//			inserts.add(new Insert(a,schema));
+//		}
+//		executor.execute(inserts);
+		executor.execute(new BulkInsert(facts, schema));
 	}
 
 	public void deleteFacts(Collection<Atom> facts) throws DatabaseException {
