@@ -41,6 +41,7 @@ public class ExecutorThread extends Thread {
 
 	private DriverType driverType;
 	private String databaseName = null;
+	private boolean isExecuting;
 
 	public ExecutorThread(DatabaseParameters databaseParameters, ExecutionManager manager) throws DatabaseException {
 		// this.parameters = databaseParameters;
@@ -67,7 +68,11 @@ public class ExecutorThread extends Thread {
 		if (driverType == null)
 			throw new DatabaseException("Invalid driver type!" + driver);
 		try {
-			connection = DatabaseUtilities.getConnection(driver, url, database, username, password);
+			String dbToConnect = database;
+			if (!driver.contains("derby") && database.contains("_work")) {
+				dbToConnect = database.substring(0, database.indexOf("_work"));
+			}
+			connection = DatabaseUtilities.getConnection(driver, url, dbToConnect, username, password);
 		} catch (SQLException e) {
 			throw new DatabaseException("Connection failed to url: " + url + " using database: " + database + ", driver: " + driver, e);
 		}
@@ -129,7 +134,12 @@ public class ExecutorThread extends Thread {
 				task.notify();
 			}
 			try {
-				results = execute(task.getCommand());
+				isExecuting = true;
+				try {
+					results = execute(task.getCommand());
+				} finally {
+					isExecuting = false;
+				}
 			} catch (Throwable t) {
 				resultException = t;
 			}
@@ -138,40 +148,74 @@ public class ExecutorThread extends Thread {
 				// wake up the one waiting for the results.
 				RESULTS_LOCK.notify();
 			}
+			boolean isFinished = true;
+			// wait for results to be read, so we can start monitoring new tasks.
+			while (isFinished) {
+				synchronized (RESULTS_LOCK) {
+					isFinished = this.isFinished;
+					try {
+						if (isFinished)
+							RESULTS_LOCK.wait(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 		}
 
 		closeConnection();
 	}
 
 	private List<Match> execute(Command command) throws DatabaseException, SQLException {
-		List<String> stamenet = null;
+		List<String> statements = null;
 		switch (driverType) {
 		case Derby:
-			stamenet = command.toDerbyStatement(databaseName, null);
+			statements = command.toDerbyStatement(databaseName, null);
 			break;
 		case MySql:
-			stamenet = command.toMySqlStatement(databaseName, null);
+			statements = command.toMySqlStatement(databaseName, null);
 			break;
 		case Postgres:
-			stamenet = command.toPostgresStatement(databaseName, null);
+			statements = command.toPostgresStatement(databaseName, null);
 			break;
 		}
-		
+		System.out.println("Executing " + statements);
 		if (command instanceof Query) {
-			return executeQuery(stamenet, (Query)command);
+			List<Match> results = new ArrayList<>();
+			for (String statement:statements) {
+				results.addAll(executeQuery(statement, (Query)command));
+			}
+			return results;
+		} else {
+			return executeUpdate(statements, command);
 		}
-
-		return null;
+	}
+	private List<Match> executeUpdate(List<String> statements, Command command) throws DatabaseException, SQLException {
+		Statement sqlStmt = null;
+		try {
+			sqlStmt = connection.createStatement();
+			for (String s:statements) sqlStmt.addBatch(s);
+			sqlStmt.executeBatch();
+			return new ArrayList<>(); 
+		} catch (SQLException e) {
+			if (e.getNextException()!=null)
+				throw new DatabaseException("Error while executing update: " + statements, e.getNextException());
+			throw new DatabaseException("Error while executing update: " + statements, e);
+		} catch (Throwable t) {
+			throw new DatabaseException("Error while executing update: " + statements, t);
+		} finally {
+			if (sqlStmt!=null)
+				sqlStmt.close();
+		}
 	}
 
-	private List<Match> executeQuery(List<String> stamenet, Query command) throws DatabaseException, SQLException {
+	private List<Match> executeQuery(String statements, Query command) throws DatabaseException, SQLException {
 		List<Match> results = new ArrayList<>(); 
 		ResultSet resultSet = null;
 		try {
-			if (stamenet.size()==1)
-				resultSet = connection.createStatement().executeQuery(stamenet.get(0));
+			resultSet = connection.createStatement().executeQuery(statements);
 		} catch (Throwable t) {
-			throw new DatabaseException("Error while executing query: " + stamenet, t);
+			throw new DatabaseException("Error while executing query: " + statements, t);
 		}
 		try {
 			while (resultSet.next()) {
@@ -236,14 +280,13 @@ public class ExecutorThread extends Thread {
 		}
 		// give results and reset status.
 		synchronized (RESULTS_LOCK) {
-			try {
-				if (resultException != null)
-					throw resultException;
-				return results;
-			} finally {
-				isFinished = false;
-				results = null;
-			}
+			if (resultException != null)
+				throw resultException;
+			this.isFinished = false;
+			List<Match> ret = this.results;
+			this.results = null;
+			RESULTS_LOCK.notify(); // wake up the thread and continue executing tasks.
+			return ret;
 		}
 	}
 

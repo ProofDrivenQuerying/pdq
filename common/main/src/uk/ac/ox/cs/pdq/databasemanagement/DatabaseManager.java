@@ -7,6 +7,7 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.databasemanagement.execution.ExecutionManager;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateDatabase;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateTable;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Delete;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
@@ -18,6 +19,8 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Term;
 
 /**
  * Main database management entry point. Creates and manages connections,
@@ -83,6 +86,7 @@ public class DatabaseManager {
 	 */
 	public void initialiseDatabaseForSchema(Schema schema) throws DatabaseException {
 		this.schema = schema;	
+		executor.execute(new CreateDatabase());
 		executor.execute(new CreateTable(schema.getRelations()));
 	}
 
@@ -119,7 +123,7 @@ public class DatabaseManager {
 		for (Relation r: schema.getRelations()) {
 			queries.add(new Query(r));
 		}
-		return convertMatchesToAtoms(executor.execute(queries),schema); 
+		return convertMatchesToAtoms(executor.execute(queries),queries); 
 	}
 
 	public List<Match> answerQueries(Collection<ConjunctiveQuery> queries) throws DatabaseException {
@@ -131,8 +135,22 @@ public class DatabaseManager {
 		return executor.execute(commands);
 	}
 	
-	private List<Atom> convertMatchesToAtoms(List<Match> matches,Schema schema) {
-		return null;
+	protected static List<Atom> convertMatchesToAtoms(List<Match> matches, List<Command> queries) throws DatabaseException {
+		List<Atom> ret = new ArrayList<>();
+		for (Match m: matches) {
+			if (m.getFormula().getAtoms().length > 1) {
+				throw new DatabaseException("Only single table query results can be converted to a list of atoms!");
+			}
+			Atom queriedTable = m.getFormula().getAtoms()[0];
+			List<Term> terms = new ArrayList<>();
+			for (Term t:m.getFormula().getTerms()) {
+				Term newTerm = m.getMapping().get(t);
+				if (newTerm!=null)
+					terms.add(newTerm);
+			}
+			ret.add(Atom.create(queriedTable.getPredicate(), terms.toArray(new Term[terms.size()])));
+		}
+		return ret;
 	}
 
 	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {

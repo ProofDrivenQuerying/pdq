@@ -19,6 +19,9 @@ public class ExecutionManager {
 	public ExecutionManager(DatabaseParameters parameters) throws DatabaseException {
 		this.parameters = parameters;
 		threads = new ArrayList<>();
+		if (parameters.getDatabaseDriver().contains("derby")) {
+			this.parameters.setNumberOfThreads(1); // derby can't handle more then one connection.
+		}
 		for (int i = 0; i < this.parameters.getNumberOfThreads(); i++) {
 			ExecutorThread thread = new ExecutorThread(parameters, this);
 			thread.start();
@@ -33,17 +36,43 @@ public class ExecutionManager {
 
 	public List<Match> execute(List<Command> commands) throws DatabaseException {
 		Collection<Task> results = new ArrayList<>();
-		for (Command command : commands) {
-			results.add(execute(command));
-		}
 		List<Match> returnValues = new ArrayList<>();
-		for (Task result : results) {
-			returnValues.addAll(result.getReturnValues());
+		int poolSize = this.parameters.getNumberOfThreads();
+		int executing = 3; // assume not all thread are free;
+		if (poolSize > commands.size()) {
+			for (Command command : commands) {
+				// start each task on a different thread
+				executing++;
+				results.add(startTask(command));
+				if (poolSize <= executing) {
+					for (Task result : results) 
+						returnValues.addAll(result.getReturnValues());
+					results.clear();
+					executing = 3;
+				}
+			}
+			for (Task result : results) {
+				// collect results
+				List<Match> values = result.getReturnValues();
+				returnValues.addAll(values);
+			}
+		} else if (poolSize<=1) {
+			// forced synchronous mode
+			for (Command command : commands) {
+				List<Match> values = startTask(command).getReturnValues();
+				returnValues.addAll(values);
+			}
 		}
 		return returnValues;
 	}
 
-	public Task execute(Command command) {
+	public void execute(Command command) throws DatabaseException {
+		Task ret = startTask(command);
+		// must read return values even if there is no results to receive exceptions and to reset the thread state to accept more tasks.
+		ret.getReturnValues();
+		return;
+	}
+	protected Task startTask(Command command) {
 		Task task = new Task(command);
 		synchronized (TASKS_LOCK) {
 			// adding new task to the queue

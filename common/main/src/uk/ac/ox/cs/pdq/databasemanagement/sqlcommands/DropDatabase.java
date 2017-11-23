@@ -28,6 +28,7 @@ public class DropDatabase extends Command {
 
 	@Override
 	public List<String> toDerbyStatement(String databaseName, Schema schema) {
+		// derby database does not need to be dropped.
 		return new ArrayList<>();
 	}
 

@@ -10,12 +10,15 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
+import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
@@ -47,22 +50,30 @@ public class TestDatabaseManager extends PdqTest {
 	}
 
 	private void simpleDatabaseCreation(DatabaseParameters parameters) throws DatabaseException {
+		Relation R = Relation.create("R", new Attribute[] { a_s, b_s, c_s }, new AccessMethod[] { this.method0, this.method2 });
+		Relation S = Relation.create("S", new Attribute[] { b_s, c_s }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+		Relation T = Relation.create("T", new Attribute[] { b_s, c_s, d_s }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+		
 		DatabaseManager manager = new DatabaseManager(parameters);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
-		Atom a1 = Atom.create(this.R, new Term[] { TypedConstant.create(12), TypedConstant.create(13), TypedConstant.create(14) });
+		// ADD facts
+		Atom a1 = Atom.create(this.R, new Term[] { UntypedConstant.create("12"), UntypedConstant.create("13"), UntypedConstant.create("14") });
+		Atom a2 = Atom.create(this.R, new Term[] { TypedConstant.create(12), TypedConstant.create(13), TypedConstant.create(14) });
 		List<Atom> facts = new ArrayList<>();
-		// ADD
 		facts.add(a1);
+		facts.add(a2);
 		manager.addFacts(facts);
 		Collection<Atom> getFacts = manager.getFactsFromPhysicalDatabase();
 		Assert.assertEquals(facts, getFacts);
+		Assert.assertTrue(facts.size() == getFacts.size() && 
+                facts.containsAll(getFacts));		
 		getFacts = manager.getFactsFromPhysicalDatabase();
 		Assert.assertEquals(facts.size(), getFacts.size());
 		
 		// Test duplicated storage - stored data should not change when we add the same set twice
 		manager.addFacts(facts);
 		getFacts = manager.getFactsFromPhysicalDatabase();
-		Assert.assertEquals(facts.size(), getFacts.size());
+		Assert.assertEquals(facts.size()*2, getFacts.size());
 		
 		// DELETE
 		manager.deleteFacts(facts);

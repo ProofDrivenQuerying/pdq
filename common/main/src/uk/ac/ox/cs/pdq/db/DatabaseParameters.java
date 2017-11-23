@@ -78,7 +78,7 @@ public class DatabaseParameters extends Parameters {
 	
 	private static DatabaseParameters getDefaultForMemory() {
 		DatabaseParameters dbParam = new DatabaseParameters();
-		dbParam.setDatabaseDriver("MemoryDatabaseInstance");
+		//dbParam.setDatabaseDriver("MemoryDatabaseInstance");
 		dbParam.setNumberOfThreads(DEFAULT_NUMBER_OF_THREADS);
 		dbParam.setDatabaseName("pdq");
 		return dbParam; 

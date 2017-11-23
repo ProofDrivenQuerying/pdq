@@ -1,51 +1,24 @@
 package uk.ac.ox.cs.pdq.databasemanagement.sqlcommands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
 
 public class CreateTable extends Command {
 	/**
-	 * SQL specific type. Normally it can be TEXT, VCHAR, VARCHAR etc.
+	 * SQL specific type for strings. Normally it can be TEXT, VCHAR, VARCHAR etc.
 	 */
-	private String typeNameForText;
+	private final String STRING_TYPE_NAME = "{TYPENAME}";
 
 	public CreateTable(Relation[] relations) {
 		super();
-	}
-
-	@Override
-	public List<String> toPostgresStatement(String databaseName, Schema schema) {
-		typeNameForText = "VARCHAR(500)";
-		List<String> statements = new ArrayList<String>();
-		for (Relation r : schema.getRelations()) {
+		replaceTagsMySql.put(STRING_TYPE_NAME, "TEXT");
+		replaceTagsDerby.put(STRING_TYPE_NAME, "VARCHAR(500)");
+		replaceTagsPostgres.put(STRING_TYPE_NAME, "VARCHAR(500)");
+		
+		for (Relation r : relations) {
 			statements.add(createTableStatement(r));
 		}
-		return replaceTags(statements, DATABASENAME, databaseName);
-	}
-
-	@Override
-	public List<String> toMySqlStatement(String databaseName, Schema schema) {
-		typeNameForText = "TEXT";
-		List<String> statements = new ArrayList<String>();
-		for (Relation r : schema.getRelations()) {
-			statements.add(createTableStatement(r));
-		}
-		return replaceTags(statements, DATABASENAME, databaseName);
-	}
-
-	@Override
-	public List<String> toDerbyStatement(String databaseName, Schema schema) {
-		typeNameForText = "VARCHAR(500)";
-		List<String> statements = new ArrayList<String>();
-		for (Relation r : schema.getRelations()) {
-			statements.add(createTableStatement(r));
-		}
-		return replaceTags(statements, DATABASENAME, databaseName);
 	}
 
 	public String createTableStatement(Relation relation) {
@@ -56,7 +29,7 @@ public class CreateTable extends Command {
 			result.append(' ').append(attribute.getName());
 			if (String.class.isAssignableFrom((Class<?>) attribute.getType())) {
 				result.append(' ');
-				result.append(typeNameForText);
+				result.append(STRING_TYPE_NAME);
 			} else if (Integer.class.isAssignableFrom((Class<?>) attribute.getType()))
 				result.append(" INT");
 			else if (Double.class.isAssignableFrom((Class<?>) attribute.getType()))
