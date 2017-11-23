@@ -16,7 +16,7 @@ public class FactCache {
 	/**
 	 * Optional name for this set.
 	 */
-	private String databaseInstanceID;
+	private int databaseInstanceID;
 	/**
 	 * The actual data
 	 */
@@ -32,7 +32,7 @@ public class FactCache {
 	 * @param databaseInstanceID
 	 *            - optional name.
 	 */
-	public FactCache(String databaseInstanceID) {
+	public FactCache(int databaseInstanceID) {
 		this.databaseInstanceID = databaseInstanceID;
 		cache = new HashSet<>();
 	}
@@ -70,7 +70,7 @@ public class FactCache {
 	/**
 	 * @return optional name of this cache, could be null.
 	 */
-	public String getDatabaseInstanceID() {
+	public int getDatabaseInstanceID() {
 		return databaseInstanceID;
 	}
 

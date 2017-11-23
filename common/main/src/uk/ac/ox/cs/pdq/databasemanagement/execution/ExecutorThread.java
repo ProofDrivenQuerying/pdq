@@ -41,7 +41,6 @@ public class ExecutorThread extends Thread {
 
 	private DriverType driverType;
 	private String databaseName = null;
-	private boolean isExecuting;
 
 	public ExecutorThread(DatabaseParameters databaseParameters, ExecutionManager manager) throws DatabaseException {
 		// this.parameters = databaseParameters;
@@ -134,12 +133,7 @@ public class ExecutorThread extends Thread {
 				task.notify();
 			}
 			try {
-				isExecuting = true;
-				try {
-					results = execute(task.getCommand());
-				} finally {
-					isExecuting = false;
-				}
+				results = execute(task.getCommand());
 			} catch (Throwable t) {
 				resultException = t;
 			}

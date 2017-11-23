@@ -7,15 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.common.base.Joiner;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Formula;
@@ -99,22 +96,18 @@ public class Query extends Command {
 				if (freeVariables.contains(term)) {
 					String relName = a.getPredicate().getName();
 					Attribute attribute = schema.getRelation(relName ).getAttribute(i);
-					select.add(DATABASENAME + "." + getAlias(relName) + "." + attribute.getName());
+					select.add(getAlias(relName) + "." + attribute.getName());
 				}
 			}
 		}
 	}
 
 	private void initFrom() {
-		List<Variable> freeVariables = Arrays.asList(formula.getFreeVariables());
 		// FROM table names
 		for (Atom a : formula.getAtoms()) {
 			// loop over all atoms of the query (flattened hierarchy)
-			if (!Collections.disjoint(freeVariables, Arrays.asList(a.getTerms()))) {
-				// they have common elements
-				String name = getAlias(a.getPredicate().getName());
-				fromTableName.add(DATABASENAME + "." + a.getPredicate().getName() + " AS " + name);
-			}
+			String name = getAlias(a.getPredicate().getName());
+			fromTableName.add(DATABASENAME + "." + a.getPredicate().getName() + " AS " + name);
 		}
 	}
 	
@@ -159,7 +152,7 @@ public class Query extends Command {
 							Attribute attributeLeft = schema.getRelation(tableNameLeft).getAttribute(i);
 							
 							String tableNameRight = b.getPredicate().getName();
-							Attribute attributeRight = schema.getRelation(tableNameRight).getAttribute(i);
+							Attribute attributeRight = schema.getRelation(tableNameRight).getAttribute(j);
 							// Attribute equality condition
 							whereConditions.add(getAlias(tableNameLeft) + "." + attributeLeft.getName() + " = "
 									+ getAlias(tableNameRight) + "." + attributeRight.getName());

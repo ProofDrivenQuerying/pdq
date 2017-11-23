@@ -41,12 +41,12 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	private Schema extendedSchema;
 	private Schema originalSchema;
-	private Collection<String> databaseInstanceIDs;
+	private Collection<Integer> databaseInstanceIDs;
 	protected static final String FACT_ID_TABLE_NAME = "DBFactID";
-	protected static final Attribute FACT_ID_ATTRIBUTE = Attribute.create(String.class, "FactId");
+	protected static final Attribute FACT_ID_ATTRIBUTE = Attribute.create(Integer.class, "FactId");
 	protected static final Variable FACT_ID_VARIABLE = Variable.create(FACT_ID_TABLE_NAME);
 	protected static final Relation factIdInstanceIdMappingTable = Relation.create("InstanceIdMapping",
-			new Attribute[] { FACT_ID_ATTRIBUTE, Attribute.create(String.class, "DatabaseInstanceID") }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+			new Attribute[] { FACT_ID_ATTRIBUTE, Attribute.create(Integer.class, "DatabaseInstanceID") }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
 
 	private MultiInstanceFactCache multiCache;
 
@@ -177,7 +177,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	 * uk.ac.ox.cs.pdq.data.OLD_DatabaseManager#setDatabaseInstanceID(java.lang.String)
 	 */
 	@Override
-	public void setDatabaseInstanceID(String instanceID) {
+	public void setDatabaseInstanceID(int instanceID) {
 		super.setDatabaseInstanceID(instanceID);
 		databaseInstanceIDs.add(instanceID);
 	}
@@ -192,12 +192,12 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		return results;
 	}
 
-	private static ConjunctiveQuery extendQuery(ConjunctiveQuery formula, String databaseInstanceID) {
+	private static ConjunctiveQuery extendQuery(ConjunctiveQuery formula, int databaseInstanceID) {
 		Conjunction newConjunction = addFactIdToConjunction(formula.getBody(), databaseInstanceID);
 		return ConjunctiveQuery.create(formula.getFreeVariables(), newConjunction);
 	}
 
-	private static Conjunction addFactIdToConjunction(Formula body, String databaseInstanceID) {
+	private static Conjunction addFactIdToConjunction(Formula body, int databaseInstanceID) {
 		if (body instanceof Atom) {
 			ArrayList<Term> terms = new ArrayList<>();
 			terms.addAll(Arrays.asList(body.getTerms()));
@@ -235,22 +235,22 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	private static Collection<Atom> extendFactsWithFactID(Collection<Atom> facts) {
 		List<Atom> extendedFacts = new ArrayList<>();
 		for (Atom fact : facts) {
-			Atom extendedAtom = Atom.create(fact.getPredicate(), extendTerms(fact.getTerms(), "" + fact.hashCode()));
+			Atom extendedAtom = Atom.create(fact.getPredicate(), extendTerms(fact.getTerms(), fact.hashCode()));
 			extendedFacts.add(extendedAtom);
 		}
 		return extendedFacts;
 	}
 
-	private static Collection<Atom> getFactsMapping(Collection<Atom> facts, String databaseInstanceID) {
+	private static Collection<Atom> getFactsMapping(Collection<Atom> facts, int databaseInstanceID) {
 		List<Atom> extendedFacts = new ArrayList<>();
 		for (Atom fact : facts) {
-			Atom atomMapping = Atom.create(factIdInstanceIdMappingTable, TypedConstant.create("" + fact.hashCode()), TypedConstant.create(databaseInstanceID));
+			Atom atomMapping = Atom.create(factIdInstanceIdMappingTable, TypedConstant.create(fact.hashCode()), TypedConstant.create(databaseInstanceID));
 			extendedFacts.add(atomMapping);
 		}
 		return extendedFacts;
 	}
 
-	private static Term[] extendTerms(Term[] terms, String factID) {
+	private static Term[] extendTerms(Term[] terms, int factID) {
 		List<Term> newTerms = new ArrayList<>();
 		newTerms.addAll(Arrays.asList(terms));
 		newTerms.add(TypedConstant.create(factID));
@@ -280,7 +280,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		return newTerms.toArray(new Term[newTerms.size()]);
 	}
 
-	private static ConjunctiveQuery createQuery(Relation r, String databaseInstanceID) {
+	private static ConjunctiveQuery createQuery(Relation r, int databaseInstanceID) {
 		ArrayList<Variable> freeVariables = new ArrayList<>();
 		ArrayList<Variable> body = new ArrayList<>();
 		for (int i = 0; i < r.getAttributes().length - 1; i++) {

@@ -19,7 +19,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 
 /**
@@ -39,7 +38,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 public class DatabaseManager {
 	private DatabaseParameters parameters;
 	private String databaseName; // formal name, mainly for debugging purposes, default is "PdqTest"
-	protected String databaseInstanceID; // unique ID generated for this instance.
+	protected int databaseInstanceID; // unique ID generated for this instance.
 	private ExecutionManager executor;
 	/**
 	 * A database manager is active from the time it has successfully initialised
@@ -54,15 +53,15 @@ public class DatabaseManager {
 			databaseName = "PdqTest";
 			this.parameters.setDatabaseName(databaseName);
 		}
-		databaseInstanceID = databaseName + "_" + System.currentTimeMillis() + "_" + this.hashCode();
+		databaseInstanceID = this.hashCode();
 		executor = new ExecutionManager(this.parameters);
 	}
 
-	public String getDatabaseInstanceID() {
+	public int getDatabaseInstanceID() {
 		return databaseInstanceID;
 	}
 
-	public void setDatabaseInstanceID(String instanceID) {
+	public void setDatabaseInstanceID(int instanceID) {
 		databaseInstanceID = instanceID;
 	}
 
