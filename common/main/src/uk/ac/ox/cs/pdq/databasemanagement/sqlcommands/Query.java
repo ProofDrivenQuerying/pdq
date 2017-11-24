@@ -32,13 +32,31 @@ public class Query extends Command {
 	 */
 	private Map<String, String> aliases = new HashMap<>();
 
-	private Term[] resultTerms;
-	private ConjunctiveQuery formula;
-	private Schema schema;
+	protected Term[] resultTerms;
+	protected ConjunctiveQuery formula;
+	protected Schema schema;
 
+	protected Map<String,String> aliasKeyToTable = new HashMap<>();
+	/**
+	 * Where conditions with table name alias keys
+	 */
 	protected List<String> whereConditions = new ArrayList<>();
+	/**
+	 * Select * From XYZ tables with aliases.
+	 */
 	protected List<String> fromTableName = new ArrayList<>();
+	protected List<String> fromTableNameNoAliases = new ArrayList<>();
+	/**
+	 * Select XYZ
+	 */
 	protected List<String> select = new ArrayList<>();
+
+	/**
+	 * Default constructor is only protected since it shouldn't be used externally,
+	 * it is only needed for extending this class.
+	 */
+	protected Query() {
+	}
 
 	/**
 	 * creates a select reading all data from given relation
@@ -95,7 +113,7 @@ public class Query extends Command {
 				Term term = a.getTerm(i);
 				if (freeVariables.contains(term)) {
 					String relName = a.getPredicate().getName();
-					Attribute attribute = schema.getRelation(relName ).getAttribute(i);
+					Attribute attribute = schema.getRelation(relName).getAttribute(i);
 					select.add(getAlias(relName) + "." + attribute.getName());
 				}
 			}
@@ -108,7 +126,16 @@ public class Query extends Command {
 			// loop over all atoms of the query (flattened hierarchy)
 			String name = getAlias(a.getPredicate().getName());
 			fromTableName.add(DATABASENAME + "." + a.getPredicate().getName() + " AS " + name);
+			fromTableNameNoAliases.add(DATABASENAME + "." + a.getPredicate().getName());
 		}
+	}
+
+	protected void storeKeyValuePairs(String key, String value) {
+		aliasKeyToTable.put(key, value);
+		replaceTagsMySql.put(key, value);
+		replaceTagsDerby.put(key, value);
+		replaceTagsPostgres.put(key, value);
+		
 	}
 	
 	private synchronized String getAlias(String name) {
@@ -124,38 +151,42 @@ public class Query extends Command {
 
 	private void initConstantEqualityConditions() {
 		for (Atom a : formula.getAtoms()) {
-			for (int i=0; i < a.getTerms().length; i++) {
+			for (int i = 0; i < a.getTerms().length; i++) {
 				if (a.getTerm(i) instanceof Constant) {
 					// constant equality condition.
+					String aliasKey = "{TABLE_ALIAS_"+a.getPredicate().getName()+"}";
 					String tableName = a.getPredicate().getName();
 					Attribute attribute = schema.getRelation(tableName).getAttribute(i);
-					whereConditions.add(getAlias(tableName) + "." + attribute.getName() + " = "
-							+ convertTermToSQLString(attribute, a.getTerm(i)));
+					whereConditions.add(aliasKey + "." + attribute.getName() + " = " + convertTermToSQLString(attribute, a.getTerm(i)));
+					storeKeyValuePairs(aliasKey, getAlias(tableName));
 				}
 			}
 		}
 	}
-	
+
 	private void initAttributeEqualityConditions() {
-		for (int ai=0; ai < formula.getAtoms().length-1; ai++) {
+		for (int ai = 0; ai < formula.getAtoms().length - 1; ai++) {
 			Atom a = formula.getAtoms()[ai];
-			for (int i=0; i < a.getTerms().length; i++) {
+			for (int i = 0; i < a.getTerms().length; i++) {
 				if (a.getTerm(i) instanceof Constant) {
 					// constant equality condition takes care of this case
 					continue;
 				}
-				for (int bi = ai+1; bi < formula.getAtoms().length; bi++) {
+				for (int bi = ai + 1; bi < formula.getAtoms().length; bi++) {
 					Atom b = formula.getAtoms()[bi];
-					for (int j=0; j < b.getTerms().length; j++) {
+					for (int j = 0; j < b.getTerms().length; j++) {
 						if (a.getTerm(i).equals(b.getTerm(j))) {
 							String tableNameLeft = a.getPredicate().getName();
 							Attribute attributeLeft = schema.getRelation(tableNameLeft).getAttribute(i);
-							
+							String aliasLeftKey = "{TABLE_ALIAS_"+a.getPredicate().getName()+"}";
+							String aliasRightKey = "{TABLE_ALIAS_"+b.getPredicate().getName()+"}";
+
 							String tableNameRight = b.getPredicate().getName();
 							Attribute attributeRight = schema.getRelation(tableNameRight).getAttribute(j);
 							// Attribute equality condition
-							whereConditions.add(getAlias(tableNameLeft) + "." + attributeLeft.getName() + " = "
-									+ getAlias(tableNameRight) + "." + attributeRight.getName());
+							whereConditions.add(aliasLeftKey + "." + attributeLeft.getName() + " = " + aliasRightKey + "." + attributeRight.getName());
+							storeKeyValuePairs(aliasLeftKey, getAlias(tableNameLeft));
+							storeKeyValuePairs(aliasRightKey, getAlias(tableNameRight));
 						}
 					}
 				}

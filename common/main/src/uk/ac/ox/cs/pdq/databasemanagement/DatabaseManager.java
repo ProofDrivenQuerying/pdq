@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.databasemanagement;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateTable;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Delete;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Query;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.QueryDifference;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -154,7 +156,8 @@ public class DatabaseManager {
 	}
 
 	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
-		return null;
+		QueryDifference diff = new QueryDifference(leftQuery, rightQuery, schema);
+		return executor.execute(Arrays.asList(new Command[] {diff}));
 	}
 
 	protected Schema getSchema() {
