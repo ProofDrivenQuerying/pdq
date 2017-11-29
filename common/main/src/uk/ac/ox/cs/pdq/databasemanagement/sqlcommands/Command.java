@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
  * @author Gabor
  *
  */
-public class Command implements DerbyStatement, MySqlStatement, PostgresStatement {
+public class Command {
 	public static final String DATABASENAME = "{DATABASENAME}";
 	protected Map<String,String> replaceTagsMySql = new HashMap<>();
 	protected Map<String,String> replaceTagsDerby = new HashMap<>();
@@ -34,7 +34,6 @@ public class Command implements DerbyStatement, MySqlStatement, PostgresStatemen
 		return "" + statements;
 	}
 	
-	@Override
 	public List<String> toPostgresStatement(String databaseName) {
 		List<String> newStatements = replaceTags(statements,DATABASENAME,databaseName);
 		for (String key:replaceTagsPostgres.keySet()) {
@@ -43,7 +42,6 @@ public class Command implements DerbyStatement, MySqlStatement, PostgresStatemen
 		return newStatements;
 	}
 
-	@Override
 	public List<String> toMySqlStatement(String databaseName) {
 		List<String> newStatements = replaceTags(statements,DATABASENAME,databaseName);
 		for (String key:replaceTagsMySql.keySet()) {
@@ -52,7 +50,6 @@ public class Command implements DerbyStatement, MySqlStatement, PostgresStatemen
 		return newStatements;
 	}
 
-	@Override
 	public List<String> toDerbyStatement(String databaseName) {
 		List<String> newStatements = replaceTags(statements,DATABASENAME,databaseName);
 		for (String key:replaceTagsDerby.keySet()) {

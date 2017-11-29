@@ -125,18 +125,18 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	 * @see uk.ac.ox.cs.pdq.data.OLD_DatabaseManager#answerQueries(java.util.Collection)
 	 */
 	public List<Match> answerQueries(Collection<ConjunctiveQuery> queries) throws DatabaseException {
-		Collection<ConjunctiveQuery> queriesWitchInstanceIDs = new ArrayList<>();
+		Collection<ConjunctiveQuery> queriesWithInstanceIDs = new ArrayList<>();
 		Map<ConjunctiveQuery, ConjunctiveQuery> oldAndNewQueries = new HashMap<>();
 
 		// extend queries with factIDs,
 		for (ConjunctiveQuery q : queries) {
 			ConjunctiveQuery extendedCQ = extendQuery(q, this.databaseInstanceID);
 			oldAndNewQueries.put(extendedCQ, q);
-			queriesWitchInstanceIDs.add(extendedCQ);
+			queriesWithInstanceIDs.add(extendedCQ);
 		}
 		
 		// Answer new queries
-		List<Match> matches = super.answerQueries(queriesWitchInstanceIDs);
+		List<Match> matches = super.answerQueries(queriesWithInstanceIDs);
 		
 		// Remove unnecessary factIDs from the answer
 		List<Match> result = new ArrayList<Match>();

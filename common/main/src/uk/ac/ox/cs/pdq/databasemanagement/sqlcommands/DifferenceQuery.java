@@ -12,19 +12,19 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
  * @author Gabor
  *
  */
-public class QueryDifference extends Query {
-	private Query left;
-	private Query right;
+public class DifferenceQuery extends BasicSelect {
+	private BasicSelect left;
+	private BasicSelect right;
 
-	public QueryDifference(Query left, Query right, Schema schema) {
+	public DifferenceQuery(BasicSelect left, BasicSelect right, Schema schema) {
 		this.left = left;
 		this.right = right;
 		this.schema = schema;
 		init();
 	}
-	public QueryDifference(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery, Schema schema) {
-		this.left = new Query(schema, leftQuery);
-		this.right = new Query(schema, rightQuery);
+	public DifferenceQuery(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery, Schema schema) {
+		this.left = new BasicSelect(schema, leftQuery);
+		this.right = new BasicSelect(schema, rightQuery);
 		init();
 	}
 

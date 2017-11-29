@@ -25,7 +25,7 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
  * @author Gabor
  *
  */
-public class Query extends Command {
+public class BasicSelect extends Command {
 	/**
 	 * Alias provider for this Query instance. The content aliases are globally
 	 * unique.
@@ -55,14 +55,14 @@ public class Query extends Command {
 	 * Default constructor is only protected since it shouldn't be used externally,
 	 * it is only needed for extending this class.
 	 */
-	protected Query() {
+	protected BasicSelect() {
 	}
 
 	/**
 	 * creates a select reading all data from given relation
 	 * 
 	 */
-	public Query(Relation r) {
+	public BasicSelect(Relation r) {
 		super();
 		List<Variable> variables = new ArrayList<>();
 		for (Attribute a : r.getAttributes()) {
@@ -74,7 +74,7 @@ public class Query extends Command {
 		statements.add("select * from " + DATABASENAME + "." + r.getName());
 	}
 
-	public Query(Schema schema, ConjunctiveQuery cq) {
+	public BasicSelect(Schema schema, ConjunctiveQuery cq) {
 		this.schema = schema;
 		formula = cq;
 		resultTerms = formula.getFreeVariables();

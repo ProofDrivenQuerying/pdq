@@ -13,8 +13,8 @@ import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateDatabase;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateTable;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Delete;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Query;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.QueryDifference;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DifferenceQuery;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -123,7 +123,7 @@ public class DatabaseManager {
 	public Collection<Atom> getFactsFromPhysicalDatabase() throws DatabaseException {
 		List<Command> queries = new ArrayList<>();
 		for (Relation r: schema.getRelations()) {
-			queries.add(new Query(r));
+			queries.add(new BasicSelect(r));
 		}
 		return convertMatchesToAtoms(executor.execute(queries),queries); 
 	}
@@ -131,7 +131,7 @@ public class DatabaseManager {
 	public List<Match> answerQueries(Collection<ConjunctiveQuery> queries) throws DatabaseException {
 		List<Command> commands = new ArrayList<>();
 		for (ConjunctiveQuery cq:queries) {
-			Query q = new Query(this.schema, cq);
+			BasicSelect q = new BasicSelect(this.schema, cq);
 			commands.add(q);
 		}
 		return executor.execute(commands);
@@ -156,7 +156,7 @@ public class DatabaseManager {
 	}
 
 	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
-		QueryDifference diff = new QueryDifference(leftQuery, rightQuery, schema);
+		DifferenceQuery diff = new DifferenceQuery(leftQuery, rightQuery, schema);
 		return executor.execute(Arrays.asList(new Command[] {diff}));
 	}
 

@@ -13,7 +13,7 @@ import com.google.common.base.Strings;
 
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Query;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.DatabaseUtilities;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -174,10 +174,10 @@ public class ExecutorThread extends Thread {
 			break;
 		}
 		//System.out.println("Executing " + statements);
-		if (command instanceof Query) {
+		if (command instanceof BasicSelect) {
 			List<Match> results = new ArrayList<>();
 			for (String statement:statements) {
-				results.addAll(executeQuery(statement, (Query)command));
+				results.addAll(executeQuery(statement, (BasicSelect)command));
 			}
 			return results;
 		} else {
@@ -203,7 +203,7 @@ public class ExecutorThread extends Thread {
 		}
 	}
 
-	private List<Match> executeQuery(String statements, Query command) throws DatabaseException, SQLException {
+	private List<Match> executeQuery(String statements, BasicSelect command) throws DatabaseException, SQLException {
 		List<Match> results = new ArrayList<>(); 
 		ResultSet resultSet = null;
 		try {
