@@ -26,6 +26,7 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
  * Replaces the OLD_DatabaseManager to create multiple virtual database instances
@@ -43,8 +44,8 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	private Schema originalSchema;
 	private Collection<Integer> databaseInstanceIDs;
 	protected static final String FACT_ID_TABLE_NAME = "DBFactID";
-	protected static final Attribute FACT_ID_ATTRIBUTE = Attribute.create(Integer.class, "FactId");
-	protected static final Variable FACT_ID_VARIABLE = Variable.create(FACT_ID_TABLE_NAME);
+	protected static final String FACT_ID_ATTRIBUTE_NAME = "FactId";
+	protected static final Attribute FACT_ID_ATTRIBUTE = Attribute.create(Integer.class, FACT_ID_ATTRIBUTE_NAME);
 	protected static final Relation factIdInstanceIdMappingTable = Relation.create("InstanceIdMapping",
 			new Attribute[] { FACT_ID_ATTRIBUTE, Attribute.create(Integer.class, "DatabaseInstanceID") }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
 
@@ -185,7 +186,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	private Map<Variable, Constant> removeFactID(Map<Variable, Constant> mapping) {
 		Map<Variable, Constant> results = new HashMap<>();
 		for (Variable v : mapping.keySet()) {
-			if (!v.equals(FACT_ID_VARIABLE)) {
+			if (!v.getSymbol().startsWith(FACT_ID_ATTRIBUTE_NAME + "_")) {
 				results.put(v, mapping.get(v));
 			}
 		}
@@ -201,9 +202,10 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		if (body instanceof Atom) {
 			ArrayList<Term> terms = new ArrayList<>();
 			terms.addAll(Arrays.asList(body.getTerms()));
-			terms.add(FACT_ID_VARIABLE);
+			Variable factId = Variable.create(FACT_ID_ATTRIBUTE_NAME + "_" + GlobalCounterProvider.getNext(FACT_ID_ATTRIBUTE_NAME));
+			terms.add(factId);
 			return Conjunction.create(Atom.create(((Atom) body).getPredicate(), terms.toArray(new Term[terms.size()])),
-					Atom.create(VirtualMultiInstanceDatabaseManager.factIdInstanceIdMappingTable, new Term[] { FACT_ID_VARIABLE, TypedConstant.create(databaseInstanceID) }));
+					Atom.create(VirtualMultiInstanceDatabaseManager.factIdInstanceIdMappingTable, new Term[] { factId, TypedConstant.create(databaseInstanceID) }));
 
 		} else {
 			Conjunction con = (Conjunction) body;

@@ -52,6 +52,16 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 		largeTableQueryDifferenceEGD(DatabaseParameters.Memory);
 	}
 
+	/**
+	 * Example: 
+	 * Left query: exists[x,y](R(x,y,z) & S(x,y))
+	 * Right query:exists[x,y,z](R(x,y,z) & (S(x,y) & T(z,res1,res2)))
+	 * 
+	 * The result should be all facts that only satisfy the first query, but not the second one.
+	 * 
+	 * @param parameters
+	 * @throws DatabaseException
+	 */
 	private void largeTableQueryDifferenceTGD(DatabaseParameters parameters) throws DatabaseException {
 		DatabaseManager manager = new DatabaseManager(parameters);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));

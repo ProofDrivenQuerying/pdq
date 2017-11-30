@@ -10,6 +10,12 @@ package uk.ac.ox.cs.pdq.databasemanagement.sqlcommands;
  */
 public class CreateDatabase extends DropDatabase {
 
+	/**
+	 * The create and Drop database is the same since we can't risk dropping a
+	 * database and not re-creating it immediately (in such case the database have
+	 * to be re-created manually, since most database provider does not allow remote
+	 * connection to a database that does not exists.)
+	 */
 	public CreateDatabase() {
 		super();
 	}

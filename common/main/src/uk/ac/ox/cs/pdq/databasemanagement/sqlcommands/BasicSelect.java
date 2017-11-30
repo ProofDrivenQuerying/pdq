@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.google.common.base.Joiner;
 
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -22,6 +23,9 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
+ * This class represents a SQL query. Can be created from a CQ, or a simple
+ * relation (when you want to get all data from that relation)
+ * 
  * @author Gabor
  *
  */
@@ -32,19 +36,43 @@ public class BasicSelect extends Command {
 	 */
 	private Map<String, String> aliases = new HashMap<>();
 
+	/**
+	 * The query will produce a JDBC result set, this array will show how to process
+	 * that result set, by telling which result column maps to what Variable.
+	 */
 	protected Term[] resultTerms;
+	/**
+	 * The original CQ. It is mandatory, even if we created this BasicSelect from a
+	 * Relation object.
+	 */
 	protected ConjunctiveQuery formula;
+	/**
+	 * Schema is needed to know the type of the attributes.
+	 */
 	protected Schema schema;
 
-	protected Map<String,String> aliasKeyToTable = new HashMap<>();
 	/**
-	 * Where conditions with table name alias keys
+	 * The table aliases have to be used multiple times in a large query. This local
+	 * map holds the mapping from alias to table name.
+	 */
+	protected Map<String, String> aliasKeyToTable = new HashMap<>();
+	/**
+	 * Where conditions with table name alias keys. Every element of this list is an
+	 * independent condition that needs to be printed after the WHERE keyword and
+	 * connected with ANDs.
 	 */
 	protected List<String> whereConditions = new ArrayList<>();
 	/**
-	 * Select * From XYZ tables with aliases.
+	 * The part of the SQL query that comes after the FROM part but before the WHERE
+	 * part. Example: "Select * From X,Y,Z" The list will contain 3 elements:X,Y and
+	 * Z.
 	 */
 	protected List<String> fromTableName = new ArrayList<>();
+
+	/**
+	 * Same as above but this contains the actual table name and not an alias. This
+	 * is needed to create large nested queries.
+	 */
 	protected List<String> fromTableNameNoAliases = new ArrayList<>();
 	/**
 	 * Select XYZ
@@ -74,7 +102,15 @@ public class BasicSelect extends Command {
 		statements.add("select * from " + DATABASENAME + "." + r.getName());
 	}
 
-	public BasicSelect(Schema schema, ConjunctiveQuery cq) {
+	/**
+	 * Creates a select based on a CQ.
+	 * 
+	 * @param schema
+	 *            - needed for the attribute types.
+	 * @param cq
+	 * @throws DatabaseException 
+	 */
+	public BasicSelect(Schema schema, ConjunctiveQuery cq) throws DatabaseException {
 		this.schema = schema;
 		formula = cq;
 		resultTerms = formula.getFreeVariables();
@@ -88,18 +124,10 @@ public class BasicSelect extends Command {
 		statements.add(sqlQueryString);
 	}
 
-	public Term[] getResultTerms() {
-		return resultTerms;
-	}
-
-	public void setResultTerms(Term[] resultTerms) {
-		this.resultTerms = resultTerms;
-	}
-
-	public Formula getFormula() {
-		return formula;
-	}
-
+	/**
+	 * Creates the part of the query that comes after the SELECT keyword, but before
+	 * the FROM keyword.
+	 */
 	private void initSelect() {
 		List<Variable> freeVariables = Arrays.asList(formula.getFreeVariables());
 		// SELECT free variables
@@ -120,6 +148,10 @@ public class BasicSelect extends Command {
 		}
 	}
 
+	/**
+	 * Creates the part of the query thet comes after the "FROM" part but before the
+	 * WHERE part.
+	 */
 	private void initFrom() {
 		// FROM table names
 		for (Atom a : formula.getAtoms()) {
@@ -130,14 +162,29 @@ public class BasicSelect extends Command {
 		}
 	}
 
-	protected void storeKeyValuePairs(String key, String value) {
+	/**
+	 * Stores the mapping for alias table names, and also for the different SQL
+	 * dialect. This is needed to be processed last to support further modification
+	 * of this select such as NestedSelect works in the DifferenceQuery class.
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	protected void storeReplacementKeyValuePairs(String key, String value) {
 		aliasKeyToTable.put(key, value);
 		replaceTagsMySql.put(key, value);
 		replaceTagsDerby.put(key, value);
 		replaceTagsPostgres.put(key, value);
-		
+
 	}
-	
+
+	/**
+	 * Retrieves the existing alias of creates a new one for the given table name.
+	 * 
+	 * @param name
+	 *            actual name of the table in the database.
+	 * @return the alias name of the table.
+	 */
 	private synchronized String getAlias(String name) {
 		if (aliases.containsKey(name)) {
 			String aliasName = aliases.get(name);
@@ -149,48 +196,90 @@ public class BasicSelect extends Command {
 		}
 	}
 
-	private void initConstantEqualityConditions() {
+	/**
+	 * When a CQ contains a constant we have to create a corresponding where
+	 * condition. This function searches for these constants and generates the where
+	 * conditions.
+	 * @throws DatabaseException 
+	 */
+	private void initConstantEqualityConditions() throws DatabaseException {
 		for (Atom a : formula.getAtoms()) {
 			for (int i = 0; i < a.getTerms().length; i++) {
 				if (a.getTerm(i) instanceof Constant) {
 					// constant equality condition.
-					String aliasKey = "{TABLE_ALIAS_"+a.getPredicate().getName()+"}";
+					String aliasKey = "{TABLE_ALIAS_" + a.getPredicate().getName() + "}";
 					String tableName = a.getPredicate().getName();
 					Attribute attribute = schema.getRelation(tableName).getAttribute(i);
 					whereConditions.add(aliasKey + "." + attribute.getName() + " = " + convertTermToSQLString(attribute, a.getTerm(i)));
-					storeKeyValuePairs(aliasKey, getAlias(tableName));
+					storeReplacementKeyValuePairs(aliasKey, getAlias(tableName));
 				}
 			}
 		}
 	}
 
+	/**
+	 * When a CQ has more then one atom, some variables can appear multiple times.
+	 * These cases are the attribute equality conditions, and we have to find them
+	 * and create corresponding SQL WHERE conditions from them.
+	 */
 	private void initAttributeEqualityConditions() {
+		// go over each atom of the CQ.
 		for (int ai = 0; ai < formula.getAtoms().length - 1; ai++) {
+			// the current atom is "a", its index is "ai"
 			Atom a = formula.getAtoms()[ai];
+
+			// go over all terms of this current atom.
 			for (int i = 0; i < a.getTerms().length; i++) {
+				// constant equality conditions are not checked in this function, so we skip
+				// constants.
 				if (a.getTerm(i) instanceof Constant) {
-					// constant equality condition takes care of this case
 					continue;
 				}
+				// loop over the atoms of the query, make sure we only check for new possible
+				// matches.
 				for (int bi = ai + 1; bi < formula.getAtoms().length; bi++) {
+					// the current atom is "b" its index is "bi"
 					Atom b = formula.getAtoms()[bi];
+					// go over the terms of this atom as well.
 					for (int j = 0; j < b.getTerms().length; j++) {
+						// in case the current variable is the same in both a and b atoms, we have a
+						// match.
 						if (a.getTerm(i).equals(b.getTerm(j))) {
+
+							// figure out the table and column name for both left and right sides,
+							// respecting table aliases.
 							String tableNameLeft = a.getPredicate().getName();
 							Attribute attributeLeft = schema.getRelation(tableNameLeft).getAttribute(i);
-							String aliasLeftKey = "{TABLE_ALIAS_"+a.getPredicate().getName()+"}";
-							String aliasRightKey = "{TABLE_ALIAS_"+b.getPredicate().getName()+"}";
+							String aliasLeftKey = "{TABLE_ALIAS_" + a.getPredicate().getName() + "}";
+							String aliasRightKey = "{TABLE_ALIAS_" + b.getPredicate().getName() + "}";
 
 							String tableNameRight = b.getPredicate().getName();
 							Attribute attributeRight = schema.getRelation(tableNameRight).getAttribute(j);
 							// Attribute equality condition
 							whereConditions.add(aliasLeftKey + "." + attributeLeft.getName() + " = " + aliasRightKey + "." + attributeRight.getName());
-							storeKeyValuePairs(aliasLeftKey, getAlias(tableNameLeft));
-							storeKeyValuePairs(aliasRightKey, getAlias(tableNameRight));
+							storeReplacementKeyValuePairs(aliasLeftKey, getAlias(tableNameLeft));
+							storeReplacementKeyValuePairs(aliasRightKey, getAlias(tableNameRight));
 						}
 					}
 				}
 			}
 		}
 	}
+
+	/**
+	 * List of Variables that needs to be mapped to the JDBC resultSet.
+	 * 
+	 * @return
+	 */
+	public Term[] getResultTerms() {
+		return resultTerms;
+	}
+
+	/**
+	 * @return the ConjunctiveQuery.
+	 */
+	public Formula getFormula() {
+		return formula;
+	}
+
 }

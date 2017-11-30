@@ -1,12 +1,15 @@
 package uk.ac.ox.cs.pdq.databasemanagement.sqlcommands;
 
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 
 /**
+ * Represents an INSERT statement. It is for a single record (fact) bulk insert
+ * is implemented as a separate class.
+ * 
  * @author Gabor
  *
  */
@@ -20,24 +23,48 @@ public class Insert extends Command {
 	 * Attributes of the terms above.
 	 */
 	private Attribute[] attributes;
+	/**
+	 * Name of the table we are inserting to.
+	 */
 	private String tableName;
+	/**
+	 * Keyword for IGNORE. this can be used by MySQL only.
+	 */
 	private final String IGNORE = "{IGNORE}";
-	public Insert(Atom fact, Schema schema) {
+
+	/** Constructs this Insert statement.
+	 * @param fact the fact to be added.
+	 * @param schema - for relation name and attribute types.
+	 * @throws DatabaseException  - in case the fact contains something that is not a constant.
+	 */
+	public Insert(Atom fact, Schema schema) throws DatabaseException {
+		// get the terms
 		this.terms = fact.getTerms();
 		tableName = fact.getPredicate().getName();
-		if (schema.getRelation(tableName)==null) {
-			System.out.println();
+		
+		// check if we have the table
+		if (schema.getRelation(tableName) == null) {
+			throw new DatabaseException("Table name for fact: " + fact + " not found in schema: " + schema); 
 		}
+		
+		// get the attributes
 		attributes = schema.getRelation(tableName).getAttributes();
+		
+		// add mapping for dialects
 		replaceTagsMySql.put(IGNORE, "IGNORE");
 		replaceTagsDerby.put(IGNORE, "");
 		replaceTagsPostgres.put(IGNORE, "");
 
+		// build the actual INSERT INTO statement
 		String insertInto = "INSERT " + IGNORE + " INTO " + DATABASENAME + "." + fact.getPredicate().getName() + " " + "VALUES ( ";
 		for (int termIndex = 0; termIndex < terms.length; ++termIndex) {
 			Term term = terms[termIndex];
 			if (!term.isVariable()) {
+				// convert the constant term to a string
 				insertInto += convertTermToSQLString(attributes[termIndex], term);
+			} else {
+				// Variables are not allowed to be stored.
+				throw new DatabaseException("It is not allowed to insert Variables to the database: " + fact); 
 			}
 			if (termIndex < fact.getNumberOfTerms() - 1)
 				insertInto += ",";
@@ -45,23 +72,4 @@ public class Insert extends Command {
 		insertInto += ")";
 		this.statements.add(insertInto);
 	}
-	
-	protected static String convertTermToSQLString(Attribute a, Term term) {
-		String termInSqlString = ""; 
-		if (!term.isVariable()) {
-			if (a.getType() == String.class && term instanceof TypedConstant /*&& !"DatabaseInstanceID".equals(a.getName()) && !"FactId".equals(a.getName())*/)
-				termInSqlString += "'" +  ((TypedConstant)term).serializeToString() + "'";
-			else if (String.class.isAssignableFrom((Class<?>) a.getType()))
-				termInSqlString += "'" +  term + "'";
-			else if (Integer.class.isAssignableFrom((Class<?>) a.getType()))
-				termInSqlString += term;
-			else if (Double.class.isAssignableFrom((Class<?>) a.getType()))
-				termInSqlString += term;
-			else if (Float.class.isAssignableFrom((Class<?>) a.getType()))
-				termInSqlString += term;
-		} else
-				throw new RuntimeException("Unsupported type");
-		return termInSqlString;
-	}
-
 }

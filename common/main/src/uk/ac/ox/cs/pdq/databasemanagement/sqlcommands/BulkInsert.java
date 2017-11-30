@@ -8,28 +8,55 @@ import java.util.Map;
 
 import com.google.common.base.Joiner;
 
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 
 /**
+ * For large amount of data it could be more effective to use the bulk insert
+ * function of the Database provider. It is not implemented in Derby, so this
+ * class will map itself to a list a single insert commands when used with
+ * Derby.
+ * 
  * @author Gabor
  *
  */
 public class BulkInsert extends Command {
+	/**
+	 * Key for the "IGNORE" keyword that MySQL uses.
+	 */
 	private final String IGNORE = "{IGNORE}";
+	/**
+	 * Facts to be inserted.
+	 */
 	private Collection<Atom> facts;
+	/**
+	 * Schema is needed to map attribute types. (the Atoms only know the predicates
+	 * and predicates do not have proper attributes with types.
+	 */
 	private Schema schema;
 
-	public BulkInsert(Collection<Atom> facts, Schema schema) {
+	/**
+	 * Constructs a single SQL statement that inserts a list of records (facts) into
+	 * a database table. In case there are facts for multiple relations it will
+	 * create one bulk insert for each relation.
+	 * 
+	 * @param facts
+	 *            to store.
+	 * @param schema
+	 *            for attribute types.
+	 * @throws DatabaseException 
+	 */
+	public BulkInsert(Collection<Atom> facts, Schema schema) throws DatabaseException {
 		this.facts = facts;
 		this.schema = schema;
 		replaceTagsMySql.put(IGNORE, "IGNORE");
 		replaceTagsDerby.put(IGNORE, "");
 		replaceTagsPostgres.put(IGNORE, "");
+		// Group facts by relation.
 		Map<Predicate, List<Atom>> groupedFacts = new HashMap<>();
 		for (Atom a : facts) {
 			if (groupedFacts.containsKey(a.getPredicate())) {
@@ -41,6 +68,7 @@ public class BulkInsert extends Command {
 			}
 		}
 
+		// create a single insert for each relation group.
 		for (Predicate p : groupedFacts.keySet()) {
 			// loop over all groups
 			String tableName = p.getName();
@@ -66,36 +94,21 @@ public class BulkInsert extends Command {
 		}
 	}
 
-	protected static String convertTermToSQLString(Attribute a, Term term) {
-		String termInSqlString = "";
-		if (!term.isVariable()) {
-			if (a.getType() == String.class && term instanceof TypedConstant /*
-																				 * && !"DatabaseInstanceID".equals(a.getName()) && !"FactId".equals(a.getName())
-																				 */)
-				termInSqlString += "'" + ((TypedConstant) term).serializeToString() + "'";
-			else if (String.class.isAssignableFrom((Class<?>) a.getType()))
-				termInSqlString += "'" + term + "'";
-			else if (Integer.class.isAssignableFrom((Class<?>) a.getType()))
-				termInSqlString += term;
-			else if (Double.class.isAssignableFrom((Class<?>) a.getType()))
-				termInSqlString += term;
-			else if (Float.class.isAssignableFrom((Class<?>) a.getType()))
-				termInSqlString += term;
-		} else
-			throw new RuntimeException("Unsupported type");
-		return termInSqlString;
-	}
-	/* 
-	 * Derby does not support bulk inserts, so we need to create independent inserts.
+	/*
+	 * Derby does not support bulk inserts, so we need to create independent
+	 * inserts.
 	 * 
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command#toDerbyStatement(java.lang.String, uk.ac.ox.cs.pdq.db.Schema)
+	 * 
+	 * @see
+	 * uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command#toDerbyStatement(java.
+	 * lang.String, uk.ac.ox.cs.pdq.db.Schema)
 	 */
 	@Override
-	public List<String> toDerbyStatement(String databaseName) {
+	public List<String> toDerbyStatement(String databaseName) throws DatabaseException {
 		List<String> result = new ArrayList<>();
-		for (Atom fact: facts) {
-			result.addAll(new Insert(fact,schema).toDerbyStatement(databaseName));
+		for (Atom fact : facts) {
+			result.addAll(new Insert(fact, schema).toDerbyStatement(databaseName));
 		}
 		return result;
 	}
