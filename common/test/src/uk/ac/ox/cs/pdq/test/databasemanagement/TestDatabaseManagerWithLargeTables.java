@@ -28,13 +28,34 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
- * tests the creation and basic usages of a database.
+ * tests the DatabaseManager with a relatively 2 different queries.
  * 
  * @author Gabor
  *
  */
 public class TestDatabaseManagerWithLargeTables extends PdqTest {
-
+	/**
+	 * First half of the test: 
+	 * <pre>
+	 * We have SCHEMA with tables: R(a,b,c) S(b,c) T(b,c,d) each attribute is an
+	 * integer attribute.
+	 *
+	 * First query: exists[x,y](R(x,y,z) & S(x,y)) 
+	 * Second query: exists[x,y,z](R(x,y,z) & (S(x,y) & T(z,res1,res2)))
+	 * </pre>
+	 * 
+	 * Second half of the test:
+	 * <pre>
+	 * We have SCHEMA with tables: R(a,b,c) S(b,c) T(b,c,d) each attribute is an
+	 * integer attribute.
+	 *
+	 * First query: exists[x,y](R(x,y,z) & S(x,y)) 
+	 * Second query: exists[x,y,z](R(x,y,z) & (S(x,y) & T(z,res1,res2)))
+	 * </pre>
+	 * For each query the example data provides one match.
+	 * This test case uses Derby. the following ones are the same, but they are using MySQL, Postgres etc.
+	 * @throws DatabaseException
+	 */
 	@Test
 	public void largeTableTestDerby() throws DatabaseException {
 		largeTableTest(DatabaseParameters.Derby);
@@ -60,6 +81,18 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 		largeTableTestWithConstantsInQuery(DatabaseParameters.Memory);
 	}
 
+	/**
+	 * <pre>
+	 * We have SCHEMA with tables: R(a,b,c) S(b,c) T(b,c,d) each attribute is an
+	 * integer attribute.
+	 *
+	 * First query: exists[x,y](R(x,y,z) & S(x,y)) 
+	 * Second query: exists[x,y,z](R(x,y,z) & (S(x,y) & T(z,res1,res2)))
+	 * </pre>
+	 * 
+	 * @param parameters
+	 * @throws DatabaseException
+	 */
 	private void largeTableTest(DatabaseParameters parameters) throws DatabaseException {
 		DatabaseManager manager = new DatabaseManager(parameters);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
@@ -131,6 +164,17 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 		manager.shutdown();
 	}
 
+	/**
+	 * Same as above but the tables have string attributes and the two query looks like:
+	 * <pre>
+	 * CQ1: 
+	 *    []R(10051,y,z)
+	 * CQ2:
+	 *  exists[x,y,z](R(x,y,z) & (S(13,y) & T(z,res1,res2)))
+	 * </pre>
+	 * @param parameters
+	 * @throws DatabaseException
+	 */
 	private void largeTableTestWithConstantsInQuery(DatabaseParameters parameters) throws DatabaseException {
 		DatabaseManager manager = new DatabaseManager(parameters);
 		Relation R = Relation.create("R", new Attribute[] { a_s, b_s, c_s }, new AccessMethod[] { this.method0, this.method2 });

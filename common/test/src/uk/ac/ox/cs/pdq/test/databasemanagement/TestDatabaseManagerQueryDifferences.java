@@ -23,41 +23,62 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
- * tests the creation and basic usages of a database.
+ * tests the creation and basic usages of a database manager. Does not tests the
+ * virtual dbm.
  * 
  * @author Gabor
  *
  */
 public class TestDatabaseManagerQueryDifferences extends PdqTest {
 
-	 @Test
-	 public void largeTableQueryDifferenceDerby() throws DatabaseException {
-		 largeTableQueryDifferenceTGD(DatabaseParameters.Derby);
-		 largeTableQueryDifferenceEGD(DatabaseParameters.Derby);
-	 }
-	 @Test
-	 public void largeTableQueryDifferenceMySql() throws DatabaseException {
-		 largeTableQueryDifferenceTGD(DatabaseParameters.MySql);
-		 largeTableQueryDifferenceEGD(DatabaseParameters.MySql);
-	 }
-	 @Test
-	 public void largeTableQueryDifferencePostgres() throws DatabaseException {
-		 largeTableQueryDifferenceTGD(DatabaseParameters.Postgres);
-		 largeTableQueryDifferenceEGD(DatabaseParameters.Postgres);
-	 }
+	/**
+	 * In this first part of the test we create the following query difference: Left
+	 * query: exists[x,y](R(x,y,z) & S(x,y)) Right query:exists[x,y,z](R(x,y,z) &
+	 * (S(x,y) & T(z,res1,res2)))
+	 * 
+	 * Second part of the test: Left query: exists[x,y](R(x,y,z) & S(x,y)) Right
+	 * query:exists[x,y,z,res2](R(x,y,z) & (S(x,y) & T(res1,res2,z)))
+	 * 
+	 * The result should be all facts that only satisfy the first query, but not the
+	 * second one. In both cases there should be one record that matches these query
+	 * differences.
+	 * 
+	 * In this test case we are using Derby as database provider the next test cases
+	 * are using mySQL, postres etc, but the test case is the same, the database
+	 * driver is the only difference.
+	 * 
+	 * @throws DatabaseException
+	 */
+	@Test
+	public void largeTableQueryDifferenceDerby() throws DatabaseException {
+		largeTableQueryDifferenceTGD(DatabaseParameters.Derby);
+		largeTableQueryDifferenceEGD(DatabaseParameters.Derby);
+	}
 
-	//@Test
+	@Test
+	public void largeTableQueryDifferenceMySql() throws DatabaseException {
+		largeTableQueryDifferenceTGD(DatabaseParameters.MySql);
+		largeTableQueryDifferenceEGD(DatabaseParameters.MySql);
+	}
+
+	@Test
+	public void largeTableQueryDifferencePostgres() throws DatabaseException {
+		largeTableQueryDifferenceTGD(DatabaseParameters.Postgres);
+		largeTableQueryDifferenceEGD(DatabaseParameters.Postgres);
+	}
+
+	// @Test
 	public void largeTableQueryDifferenceMemory() throws DatabaseException {
 		largeTableQueryDifferenceTGD(DatabaseParameters.Memory);
 		largeTableQueryDifferenceEGD(DatabaseParameters.Memory);
 	}
 
 	/**
-	 * Example: 
-	 * Left query: exists[x,y](R(x,y,z) & S(x,y))
-	 * Right query:exists[x,y,z](R(x,y,z) & (S(x,y) & T(z,res1,res2)))
+	 * In this test: Left query: exists[x,y](R(x,y,z) & S(x,y)) Right
+	 * query:exists[x,y,z](R(x,y,z) & (S(x,y) & T(z,res1,res2)))
 	 * 
-	 * The result should be all facts that only satisfy the first query, but not the second one.
+	 * The result should be all facts that only satisfy the first query, but not the
+	 * second one. With the test data there is only one fact satisfying this.
 	 * 
 	 * @param parameters
 	 * @throws DatabaseException
@@ -66,7 +87,7 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 		DatabaseManager manager = new DatabaseManager(parameters);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
 		List<Atom> facts = new ArrayList<>();
-		
+
 		// add some disjoint test data
 		for (int i = 0; i < 100; i++) {
 			Atom a1 = Atom.create(this.R, new Term[] { TypedConstant.create(10000 + i), TypedConstant.create(20000 + i), TypedConstant.create(30000 + i) });
@@ -76,7 +97,7 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 				facts.add(c1);
 			}
 		}
-		
+
 		// add test record that represents a not active dependency
 		Atom a1 = Atom.create(this.R, new Term[] { TypedConstant.create(13), TypedConstant.create(14), TypedConstant.create(15) });
 		Atom b1 = Atom.create(this.S, new Term[] { TypedConstant.create(13), TypedConstant.create(14) });
@@ -90,38 +111,47 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 		facts.add(a2);
 		facts.add(b2);
 		manager.addFacts(facts);
-		
 
 		// form queries
 		Atom q1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
-		Atom q2 = Atom.create(this.S, new Term[] { Variable.create("x"), Variable.create("y")});
+		Atom q2 = Atom.create(this.S, new Term[] { Variable.create("x"), Variable.create("y") });
 		Atom q3 = Atom.create(this.T, new Term[] { Variable.create("z"), Variable.create("res1"), Variable.create("res2") });
-		ConjunctiveQuery left = ConjunctiveQuery.create(new Variable[] { z}, Conjunction.create(q1, q2));
+		ConjunctiveQuery left = ConjunctiveQuery.create(new Variable[] { z }, Conjunction.create(q1, q2));
 
-		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"), Variable.create("res2")  }, (Conjunction)Conjunction.of(q1, q2, q3));
+		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"), Variable.create("res2") }, (Conjunction) Conjunction.of(q1, q2, q3));
 		// check left and right queries
-		
+
 		List<Match> leftFacts = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { left }));
 		Assert.assertEquals(2, leftFacts.size());
 		List<Match> rightFacts = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { right }));
 		Assert.assertEquals(1, rightFacts.size());
-	//	Assert.assertNull(rightFacts.get(0).getMapping().get(Variable.create("z")));
+		// Assert.assertNull(rightFacts.get(0).getMapping().get(Variable.create("z")));
 
 		List<Match> diffFacts = manager.answerQueryDifferences(left, right);
 		Assert.assertEquals(1, diffFacts.size());
 		Assert.assertTrue(diffFacts.get(0).getMapping().containsKey(Variable.create("z")));
 		if (parameters.getDatabaseDriver().contains("memory")) {
-			Assert.assertEquals(TypedConstant.create(115),diffFacts.get(0).getMapping().get(Variable.create("z")));
+			Assert.assertEquals(TypedConstant.create(115), diffFacts.get(0).getMapping().get(Variable.create("z")));
 		} else {
-			Assert.assertEquals(UntypedConstant.create("115"),diffFacts.get(0).getMapping().get(Variable.create("z")));
+			Assert.assertEquals(UntypedConstant.create("115"), diffFacts.get(0).getMapping().get(Variable.create("z")));
 		}
 	}
-	
+
+	/**
+	 * In this test: Left query: exists[x,y](R(x,y,z) & S(x,y)) Right
+	 * query:exists[x,y,z,res2](R(x,y,z) & (S(x,y) & T(res1,res2,z)))
+	 * 
+	 * The result should be all facts that only satisfy the first query, but not the
+	 * second one.
+	 * 
+	 * @param parameters
+	 * @throws DatabaseException
+	 */
 	private void largeTableQueryDifferenceEGD(DatabaseParameters parameters) throws DatabaseException {
 		DatabaseManager manager = new DatabaseManager(parameters);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
 		List<Atom> facts = new ArrayList<>();
-		
+
 		// add some disjoint test data
 		for (int i = 0; i < 100; i++) {
 			Atom a1 = Atom.create(this.R, new Term[] { TypedConstant.create(10000 + i), TypedConstant.create(20000 + i), TypedConstant.create(30000 + i) });
@@ -131,7 +161,7 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 			}
 			facts.add(a1);
 		}
-		
+
 		// add test record that represents a not active dependency
 		Atom a1 = Atom.create(this.R, new Term[] { TypedConstant.create(13), TypedConstant.create(14), TypedConstant.create(15) });
 		Atom b1 = Atom.create(this.S, new Term[] { TypedConstant.create(13), TypedConstant.create(14) });
@@ -147,14 +177,14 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 		facts.add(b2);
 		facts.add(c2);
 		manager.addFacts(facts);
-		
+
 		// form queries
 		Atom q1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
-		Atom q2 = Atom.create(this.S, new Term[] { Variable.create("x"), Variable.create("y")});
+		Atom q2 = Atom.create(this.S, new Term[] { Variable.create("x"), Variable.create("y") });
 		Atom q3 = Atom.create(this.T, new Term[] { Variable.create("res1"), Variable.create("res2"), Variable.create("z") });
-		ConjunctiveQuery left = ConjunctiveQuery.create(new Variable[] { z}, Conjunction.create(q1, q2));
+		ConjunctiveQuery left = ConjunctiveQuery.create(new Variable[] { z }, Conjunction.create(q1, q2));
 
-		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("res1") }, (Conjunction)Conjunction.of(q1, q2, q3));
+		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("res1") }, (Conjunction) Conjunction.of(q1, q2, q3));
 		// check left and right queries
 		List<Match> leftFacts = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { left }));
 		Assert.assertEquals(2, leftFacts.size());
@@ -166,11 +196,11 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 		System.out.println(diffFacts);
 		Assert.assertEquals(1, diffFacts.size());
 		Assert.assertTrue(diffFacts.get(0).getMapping().containsKey(Variable.create("z")));
-		
+
 		if (parameters.getDatabaseDriver().contains("memory")) {
-			Assert.assertEquals(TypedConstant.create(115),diffFacts.get(0).getMapping().get(Variable.create("z")));
+			Assert.assertEquals(TypedConstant.create(115), diffFacts.get(0).getMapping().get(Variable.create("z")));
 		} else {
-			Assert.assertEquals(UntypedConstant.create("115"),diffFacts.get(0).getMapping().get(Variable.create("z")));
+			Assert.assertEquals(UntypedConstant.create("115"), diffFacts.get(0).getMapping().get(Variable.create("z")));
 		}
 	}
 

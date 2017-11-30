@@ -30,69 +30,87 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
- * tests the creation and basic usages of a database.
- * simpleDatabaseCreationXYZ test:
- *   - create database
- *   - create tables
- *   - add facts,
- *   - retrieve facts
- *   - delete facts
- *  virtualDatabaseCreationXYZ test: 
- *   - same as above but checking the cache functions as well.
- *   
- *   XYZ in test names refer to
- *    - Derby
- *    - MySql
- *    - Postgres
- *    - Memory
- *     
+ * tests the creation and basic usages of a database. simpleDatabaseCreationXYZ
+ * test: - create database - create tables - add facts, - retrieve facts -
+ * delete facts virtualDatabaseCreationXYZ test: - same as above but checking
+ * the cache functions as well.
+ * 
+ * XYZ in test names refer to - Derby - MySql - Postgres - Memory
+ * 
  * @author Gabor
  *
  */
 public class TestDatabaseManager extends PdqTest {
 
+	/**
+	 * tests the database manager creating a database for a single relation that
+	 * contains string attributes. No queries, just add and get facts. Uses Derby
+	 * database provider
+	 * 
+	 * @throws DatabaseException
+	 */
 	@Test
 	public void simpleDatabaseCreationDerby() throws DatabaseException {
 		simpleDatabaseCreation(DatabaseParameters.Derby);
 	}
 
+	/**
+	 * tests the database manager creating a database for a single relation that
+	 * contains string attributes. No queries, just add and get facts. Uses MySQL
+	 * database provider
+	 * 
+	 * @throws DatabaseException
+	 */
 	@Test
 	public void simpleDatabaseCreationMySql() throws DatabaseException {
 		simpleDatabaseCreation(DatabaseParameters.MySql);
 	}
 
+	/**
+	 * tests the database manager creating a database for a single relation that
+	 * contains string attributes. No queries, just add and get facts. Uses Postgres
+	 * database provider
+	 * 
+	 * @throws DatabaseException
+	 */
 	@Test
 	public void simpleDatabaseCreationPostgres() throws DatabaseException {
 		simpleDatabaseCreation(DatabaseParameters.Postgres);
 	}
 
-	//@Test
+	// @Test
 	public void simpleDatabaseCreatioMemory() throws DatabaseException {
 		simpleDatabaseCreation(DatabaseParameters.Memory);
 	}
 
+	/**
+	 * tests the database manager creating a database for a single relation that
+	 * contains string attributes. No queries, just add and get facts.
+	 * 
+	 * @param parameters
+	 * @throws DatabaseException
+	 */
 	private void simpleDatabaseCreation(DatabaseParameters parameters) throws DatabaseException {
 		Relation R = Relation.create("R", new Attribute[] { a_s, b_s, c_s }, new AccessMethod[] { this.method0, this.method2 });
-		Relation S = Relation.create("S", new Attribute[] { b_s, c_s }, new AccessMethod[] { this.method0, this.method1, this.method2 });
-		Relation T = Relation.create("T", new Attribute[] { b_s, c_s, d_s }, new AccessMethod[] { this.method0, this.method1, this.method2 });
-		
+
 		DatabaseManager manager = new DatabaseManager(parameters);
-		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
+		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R }));
 		// ADD facts
-		Atom a1 = Atom.create(this.R, new Term[] { UntypedConstant.create("12"), UntypedConstant.create("13"), UntypedConstant.create("14") });
-		Atom a2 = Atom.create(this.R, new Term[] { TypedConstant.create(12), TypedConstant.create(13), TypedConstant.create(14) });
+		Atom a1 = Atom.create(R, new Term[] { UntypedConstant.create("12"), UntypedConstant.create("13"), UntypedConstant.create("14") });
+		Atom a2 = Atom.create(R, new Term[] { TypedConstant.create(12), TypedConstant.create(13), TypedConstant.create(14) });
 		List<Atom> facts = new ArrayList<>();
 		facts.add(a1);
 		facts.add(a2);
 		manager.addFacts(facts);
 		Collection<Atom> getFacts = manager.getFactsFromPhysicalDatabase();
 		Assert.assertTrue(facts.size() == getFacts.size() && facts.containsAll(getFacts));
-		
-		// Test duplicated storage - stored data should not change when we add the same set twice
+
+		// Test duplicated storage - stored data should not change when we add the same
+		// set twice
 		manager.addFacts(facts);
 		getFacts = manager.getFactsFromPhysicalDatabase();
-		Assert.assertEquals(facts.size()*2, getFacts.size());
-		
+		Assert.assertEquals(facts.size() * 2, getFacts.size());
+
 		// DELETE
 		manager.deleteFacts(facts);
 		getFacts = manager.getFactsFromPhysicalDatabase();
@@ -101,13 +119,25 @@ public class TestDatabaseManager extends PdqTest {
 		manager.shutdown();
 	}
 
+	/**
+	 * Tests the basic functions of the VirtualDatabaseManager, using first a single
+	 * table with Int attributes, then repeats the same test with String attributes.
+	 * 
+	 * This case test the Derby driver.
+	 */
 	@Test
 	public void virtualDatabaseCreationDerby() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 		virtualDatabaseCreationInt(DatabaseParameters.Derby);
 		virtualDatabaseCreationString(DatabaseParameters.Derby);
 	}
-
+	
+	/**
+	 * Tests the basic functions of the VirtualDatabaseManager, using first a single
+	 * table with Int attributes, then repeats the same test with String attributes.
+	 * 
+	 * This case test the MySQL driver.
+	 */
 	@Test
 	public void virtualDatabaseCreationMySql() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
@@ -115,6 +145,12 @@ public class TestDatabaseManager extends PdqTest {
 		virtualDatabaseCreationString(DatabaseParameters.MySql);
 	}
 
+	/**
+	 * Tests the basic functions of the VirtualDatabaseManager, using first a single
+	 * table with Int attributes, then repeats the same test with String attributes.
+	 * 
+	 * This case test the Postgres driver.
+	 */
 	@Test
 	public void virtualDatabaseCreationPostgres() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
@@ -122,19 +158,29 @@ public class TestDatabaseManager extends PdqTest {
 		virtualDatabaseCreationString(DatabaseParameters.Postgres);
 	}
 
-	//@Test
+	// @Test
 	public void virtualDatabaseCreationMemory() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 		virtualDatabaseCreationInt(DatabaseParameters.Memory);
 		virtualDatabaseCreationString(DatabaseParameters.Memory);
 	}
 
+	/**
+	 * Tests the VirtualMultiInstanceDatabaseManager by creating 2 instances and
+	 * adding facts to each, checking if we get back only the facts that we added to
+	 * the current instance.
+	 * 
+	 * Uses a schema with only one relation that has integer attributes.
+	 * 
+	 * Also tests a basic query: []R(x,y,z) that should retrieve all data from the
+	 * table in the given database instance.
+	 */
 	private void virtualDatabaseCreationInt(DatabaseParameters parameters) throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		// create a simple manager
 		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(parameters);
 		int instanceID1 = manager.getDatabaseInstanceID();
-		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
+		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R }));
 		Atom[] facts = new Atom[] { Atom.create(this.R, new Term[] { TypedConstant.create(1), TypedConstant.create(10), TypedConstant.create(100) }) };
 		manager.addFacts(Arrays.asList(facts));
 		// Assert.assertEquals(/*1*/0,manager.getCachedFacts().size());
@@ -193,14 +239,6 @@ public class TestDatabaseManager extends PdqTest {
 	/**
 	 * Same as the virtualDatabaseCreationInt but the tables have String constants
 	 * 
-	 * @param parameters
-	 * @throws DatabaseException
-	 * @throws NoSuchMethodException  
-	 * @throws SecurityException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
 	 */
 	private void virtualDatabaseCreationString(DatabaseParameters parameters) throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -217,7 +255,7 @@ public class TestDatabaseManager extends PdqTest {
 		p.setProperty("database.isvirtual", Boolean.TRUE.toString());
 		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(p);
 		int instanceID1 = manager.getDatabaseInstanceID();
-		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R_s, S_s, T_s }));
+		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R_s }));
 		Atom[] facts = new Atom[] {
 				Atom.create(this.R_s, new Term[] { TypedConstant.create("A1"), TypedConstant.create(dDate), TypedConstant.create(100), TypedConstant.create(13) }) };
 		manager.addFacts(Arrays.asList(facts));
