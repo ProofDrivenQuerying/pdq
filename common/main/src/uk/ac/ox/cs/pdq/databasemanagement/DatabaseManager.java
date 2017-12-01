@@ -37,16 +37,12 @@ import uk.ac.ox.cs.pdq.fol.Term;
  * @author Gabor
  *
  */
-/**
- * @author Gabor
- *
- */
 public class DatabaseManager {
 	/**
 	 * Database parameters such as connection url, credentials etc.
 	 */
-	private DatabaseParameters parameters;
-	private String databaseName; // formal name, mainly for debugging purposes, default is "PdqTest"
+	protected DatabaseParameters parameters;
+	protected String databaseName; // formal name, mainly for debugging purposes, default is "PdqTest"
 	protected int databaseInstanceID; // unique ID generated for this instance.
 	/**
 	 * The execution manager is responsible to manage connections and parallel
@@ -57,7 +53,7 @@ public class DatabaseManager {
 	 * A database manager is active from the time it has successfully initialised
 	 * connection(s) to a database until the connection(s) are closed.
 	 */
-	private Schema schema;
+	protected Schema schema;
 
 	/**
 	 * Creates a database manager. Initialises connections by creating an executor
@@ -99,6 +95,12 @@ public class DatabaseManager {
 		executor = new ExecutionManager(this.parameters);
 	}
 
+	/** Empty constructor for the Memory Database Manager.
+	 * @throws DatabaseException
+	 */
+	protected DatabaseManager() throws DatabaseException {
+	}
+	
 	// INTERFACE FUNCTIONS
 	/**
 	 * Creates an empty canonical database for the schema. Table names will be the

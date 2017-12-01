@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.databasemanagement.cache;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -44,6 +45,20 @@ public class MultiInstanceFactCache {
 	}
 
 	/**
+	 * get all facts from a certain relation in the given instance.
+	 * 
+	 * @param relationName
+	 * @param instanceId
+	 * @return
+	 */
+	public List<Atom> getFactsOfRelation(String relationName, int instanceId) {
+		if (!multiCache.containsKey(instanceId)) {
+			multiCache.put(instanceId, new FactCache(instanceId));
+		}
+		return multiCache.get(instanceId).getFactsOfRelation(relationName);
+	}
+
+	/**
 	 * Delete facts from the cache.
 	 */
 	public boolean deleteFacts(Collection<Atom> facts, int instanceId) {
@@ -52,4 +67,9 @@ public class MultiInstanceFactCache {
 		}
 		return multiCache.get(instanceId).removeFacts(facts);
 	}
+
+	public void clearCache(int instanceId) {
+		multiCache.get(instanceId).clearCache();
+	}
+
 }

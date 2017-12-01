@@ -78,11 +78,6 @@ public class TestDatabaseManager extends PdqTest {
 		simpleDatabaseCreation(DatabaseParameters.Postgres);
 	}
 
-	// @Test
-	public void simpleDatabaseCreatioMemory() throws DatabaseException {
-		simpleDatabaseCreation(DatabaseParameters.Memory);
-	}
-
 	/**
 	 * tests the database manager creating a database for a single relation that
 	 * contains string attributes. No queries, just add and get facts.
@@ -158,12 +153,6 @@ public class TestDatabaseManager extends PdqTest {
 		virtualDatabaseCreationString(DatabaseParameters.Postgres);
 	}
 
-	// @Test
-	public void virtualDatabaseCreationMemory() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException {
-		virtualDatabaseCreationInt(DatabaseParameters.Memory);
-		virtualDatabaseCreationString(DatabaseParameters.Memory);
-	}
 
 	/**
 	 * Tests the VirtualMultiInstanceDatabaseManager by creating 2 instances and

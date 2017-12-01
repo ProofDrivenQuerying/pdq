@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,14 +41,13 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	private Schema extendedSchema;
 	private Schema originalSchema;
-	private Collection<Integer> databaseInstanceIDs;
 	protected static final String FACT_ID_TABLE_NAME = "DBFactID";
 	protected static final String FACT_ID_ATTRIBUTE_NAME = "FactId";
 	protected static final Attribute FACT_ID_ATTRIBUTE = Attribute.create(Integer.class, FACT_ID_ATTRIBUTE_NAME);
 	protected static final Relation factIdInstanceIdMappingTable = Relation.create("InstanceIdMapping",
 			new Attribute[] { FACT_ID_ATTRIBUTE, Attribute.create(Integer.class, "DatabaseInstanceID") }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
 
-	private MultiInstanceFactCache multiCache;
+	protected MultiInstanceFactCache multiCache;
 
 	/**
 	 * Creates database manager and connection if needed based on the parameters.
@@ -59,9 +57,11 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	 */
 	public VirtualMultiInstanceDatabaseManager(DatabaseParameters parameters) throws DatabaseException {
 		super(parameters);
-		databaseInstanceIDs = new LinkedList<>();
-		databaseInstanceIDs.add(getDatabaseInstanceID());
 		multiCache = new MultiInstanceFactCache();
+	}
+	
+	protected VirtualMultiInstanceDatabaseManager() throws DatabaseException {
+		super();
 	}
 
 	/**
@@ -160,7 +160,6 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		ConjunctiveQuery extendedLQ = extendQuery(leftQuery, this.databaseInstanceID);
 		ConjunctiveQuery extendedRQ = extendQuery(rightQuery, this.databaseInstanceID);
 		Map<ConjunctiveQuery, ConjunctiveQuery> oldAndNewQueries = new HashMap<>();
-		//	ConjunctiveQuery extendedCQ = extendQuery((ConjunctiveQuery) q.getFormula(), this.databaseInstanceID);
 		oldAndNewQueries.put(extendedLQ, leftQuery);
 		oldAndNewQueries.put(extendedRQ, rightQuery);
 		List<Match> result = new ArrayList<Match>();
@@ -169,18 +168,6 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 			result.add(Match.create(oldAndNewQueries.get(m.getFormula()), removeFactID(m.getMapping())));
 		}
 		return result;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * uk.ac.ox.cs.pdq.data.OLD_DatabaseManager#setDatabaseInstanceID(java.lang.String)
-	 */
-	@Override
-	public void setDatabaseInstanceID(int instanceID) {
-		super.setDatabaseInstanceID(instanceID);
-		databaseInstanceIDs.add(instanceID);
 	}
 
 	private Map<Variable, Constant> removeFactID(Map<Variable, Constant> mapping) {

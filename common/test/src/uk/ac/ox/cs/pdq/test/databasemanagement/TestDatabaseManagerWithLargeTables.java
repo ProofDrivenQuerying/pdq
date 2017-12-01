@@ -75,12 +75,6 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 		largeTableTestWithConstantsInQuery(DatabaseParameters.Postgres);
 	}
 
-	// @Test
-	public void largeTableTestMemory() throws DatabaseException {
-		largeTableTest(DatabaseParameters.Memory);
-		largeTableTestWithConstantsInQuery(DatabaseParameters.Memory);
-	}
-
 	/**
 	 * <pre>
 	 * We have SCHEMA with tables: R(a,b,c) S(b,c) T(b,c,d) each attribute is an
