@@ -10,7 +10,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -28,12 +28,12 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
- * tests the DatabaseManager with a relatively 2 different queries.
+ * tests the DatabaseManager with 2 different queries over a schema with 3 tables, where each table contains minimum 100 facts.
  * 
  * @author Gabor
  *
  */
-public class TestDatabaseManagerWithLargeTables extends PdqTest {
+public class TestLargeTables extends PdqTest {
 	/**
 	 * First half of the test: 
 	 * <pre>
@@ -88,7 +88,7 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 	 * @throws DatabaseException
 	 */
 	private void largeTableTest(DatabaseParameters parameters) throws DatabaseException {
-		DatabaseManager manager = new DatabaseManager(parameters);
+		ExternalDatabaseManager manager = new ExternalDatabaseManager(parameters);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
 		List<Atom> facts = new ArrayList<>();
 		for (int i = 0; i < 100; i++) {
@@ -121,7 +121,7 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 		Atom q1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		Atom q2 = Atom.create(this.S, new Term[] { Variable.create("x"), Variable.create("y") });
 		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { z }, Conjunction.create(q1, q2));
-		List<Match> answer = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
+		List<Match> answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("z")));
 		if (parameters.getDatabaseDriver().contains("memory")) {
@@ -135,7 +135,7 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 		Atom aS = Atom.create(this.S, new Term[] { Variable.create("x"), Variable.create("y") });
 		Atom aT = Atom.create(this.T, new Term[] { Variable.create("z"), Variable.create("res1"), Variable.create("res2") });
 		cq = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"), Variable.create("res2") }, (Conjunction) Conjunction.of(aR, aS, aT));
-		answer = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
+		answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("res1")));
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("res2")));
@@ -170,7 +170,7 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 	 * @throws DatabaseException
 	 */
 	private void largeTableTestWithConstantsInQuery(DatabaseParameters parameters) throws DatabaseException {
-		DatabaseManager manager = new DatabaseManager(parameters);
+		ExternalDatabaseManager manager = new ExternalDatabaseManager(parameters);
 		Relation R = Relation.create("R", new Attribute[] { a_s, b_s, c_s }, new AccessMethod[] { this.method0, this.method2 });
 		Relation S = Relation.create("S", new Attribute[] { b_s, c_s }, new AccessMethod[] { this.method0, this.method1, this.method2 });
 		Relation T = Relation.create("T", new Attribute[] { b_s, c_s, d_s }, new AccessMethod[] { this.method0, this.method1, this.method2 });
@@ -205,7 +205,7 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 		// SIMPLE QUERY
 		Atom q1 = Atom.create(this.R, new Term[] { TypedConstant.create(10000 + 51), Variable.create("y"), Variable.create("z") });
 		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { y, z }, q1);
-		List<Match> answer = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
+		List<Match> answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("z")));
 		Assert.assertEquals(TypedConstant.create(30051), answer.get(0).getMapping().get(Variable.create("z")));
@@ -215,7 +215,7 @@ public class TestDatabaseManagerWithLargeTables extends PdqTest {
 		Atom aS = Atom.create(this.S, new Term[] { TypedConstant.create(13), Variable.create("y") });
 		Atom aT = Atom.create(this.T, new Term[] { Variable.create("z"), Variable.create("res1"), Variable.create("res2") });
 		cq = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"), Variable.create("res2") }, (Conjunction) Conjunction.of(aR, aS, aT));
-		answer = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
+		answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("res1")));
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("res2")));

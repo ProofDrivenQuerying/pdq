@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.databasemanagement.execution;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.db.Match;
 
@@ -24,12 +25,30 @@ public class Task {
 	private Command command;
 
 	/**
+	 * Flag to indicate when the current task is completed or failed.
+	 */
+	private boolean isFinished = false;
+	/**
+	 * A finished task has either results or resultException.
+	 */
+	private List<Match> results;
+	/**
+	 * When the database provider returns an exception insted of data.
+	 */
+	private Throwable resultException;
+
+	private boolean isQuery = false;
+
+	protected Object RESULTS_LOCK = new Object();
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param command
 	 */
 	public Task(Command command) {
 		this.command = command;
+		isQuery = command instanceof BasicSelect;
 	}
 
 	/**
@@ -61,18 +80,69 @@ public class Task {
 		return command;
 	}
 
+	public boolean isFinished() {
+		return isFinished;
+	}
+
+	public void setFinished(boolean isFinished) {
+		this.isFinished = isFinished;
+	}
+
+	protected void setResults(List<Match> results, Throwable exceptionThrown) {
+		synchronized (RESULTS_LOCK) {
+			this.results = results;
+			this.resultException = exceptionThrown;
+			this.isFinished = true;
+			// wake up the one waiting for the results.
+			RESULTS_LOCK.notify();
+		}
+	}
+
+	public boolean isQuery() {
+		return isQuery;
+	}
+
 	/**
 	 * This is a blocking call, after the thread is registered, you can call it to
 	 * wait for the results.
 	 * 
+	 * Returns the results from the latest execution. Throws exception in case the
+	 * last execution was causing an exception.
+	 * 
+	 * Resets the thread state, so it can start working on the next task.
+	 * 
 	 * @return
-	 * @throws DatabaseException
+	 * @throws Throwable
 	 */
-	protected List<Match> getReturnValues() throws DatabaseException {
-		try {
-			return thread.getResultsAndReset();
-		} catch (Throwable e) {
-			throw new DatabaseException("Error while executing command: " + command, e);
+	public List<Match> getReturnValues() throws DatabaseException {
+		boolean isFinished = false;
+		// wait for results to be ready.
+		while (!isFinished) {
+			synchronized (RESULTS_LOCK) {
+				isFinished = this.isFinished;
+				try {
+					if (!isFinished)
+						RESULTS_LOCK.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+		// give results and reset status.
+		synchronized (RESULTS_LOCK) {
+			try {
+				if (resultException != null) {
+					throw new DatabaseException("Error while executing command: " + command, resultException);
+				}
+				List<Match> ret = this.results;
+				return ret;
+			} finally {
+				this.results = null;
+				this.isFinished = false;
+				RESULTS_LOCK.notify(); // wake up the thread and continue executing tasks.
+			}
 		}
 	}
+
 }

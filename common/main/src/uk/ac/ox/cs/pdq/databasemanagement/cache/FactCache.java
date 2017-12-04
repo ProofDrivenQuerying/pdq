@@ -22,7 +22,7 @@ public class FactCache {
 	/**
 	 * The actual data, grouped by relation names.
 	 */
-	private Map<String,Collection<Atom>> cache;
+	private Map<String, Collection<Atom>> cache;
 	/**
 	 * Lock object for synchronising access to the data.
 	 */
@@ -42,20 +42,22 @@ public class FactCache {
 	/**
 	 * Stores facts in the cache.
 	 * 
-	 * @param toAdd
+	 * @param toAdd the facts that were added (new facts only)
 	 */
 	public Collection<Atom> addFacts(Collection<Atom> toAdd) {
 		Collection<Atom> results = new ArrayList<>();
 		synchronized (LOCK) {
-			for (Atom a:toAdd) {
+			for (Atom a : toAdd) {
 				if (cache.containsKey(a.getPredicate().getName())) {
-					if (cache.get(a.getPredicate().getName()).add(a)) {
+					if (!cache.get(a.getPredicate().getName()).contains(a)) {
+						cache.get(a.getPredicate().getName()).add(a);
 						results.add(a);
 					}
 				} else {
 					List<Atom> predicateFacts = new ArrayList<>();
 					predicateFacts.add(a);
-					// we know that the fact is new since we had to create the list for this predicate.
+					// we know that the fact is new since we had to create the list for this
+					// predicate.
 					results.add(a);
 					cache.put(a.getPredicate().getName(), predicateFacts);
 				}
@@ -72,14 +74,16 @@ public class FactCache {
 	public Collection<Atom> getFacts() {
 		ArrayList<Atom> result = new ArrayList<>();
 		synchronized (LOCK) {
-			for (String key:cache.keySet()) {
+			for (String key : cache.keySet()) {
 				result.addAll(cache.get(key));
 			}
 		}
 		return result;
 	}
-	
-	/** Gets all facts of a certain relation. 
+
+	/**
+	 * Gets all facts of a certain relation.
+	 * 
 	 * @param relationName
 	 * @return
 	 */
@@ -102,15 +106,14 @@ public class FactCache {
 
 	/**
 	 * @param facts
-     * @return <tt>true</tt> if this collection changed as a result of the
-     *         call
+	 * @return <tt>true</tt> if this collection changed as a result of the call
 	 */
 	public boolean removeFacts(Collection<Atom> facts) {
 		synchronized (LOCK) {
 			boolean ret = false;
-			for (Atom fact: facts) {
+			for (Atom fact : facts) {
 				Collection<Atom> listOfFacts = cache.get(fact.getPredicate().getName());
-				if (listOfFacts!=null) {
+				if (listOfFacts != null) {
 					if (listOfFacts.remove(fact)) {
 						ret = true;
 					}
@@ -119,12 +122,39 @@ public class FactCache {
 			return ret;
 		}
 	}
+
 	/**
-	 *  Clears the cache.
+	 * Clears the cache.
 	 */
 	public void clearCache() {
 		synchronized (LOCK) {
 			cache.clear();
 		}
+	}
+
+	/**
+	 * checks each input fact if it is already added or not. The return list is the
+	 * same as the return value of the addFacts function, but this function will not
+	 * change the content of the cache.
+	 * 
+	 * @param newToThisInstance
+	 * @return
+	 */
+	public Collection<Atom> checkExists(Collection<Atom> newToThisInstance) {
+		Collection<Atom> results = new ArrayList<>();
+		synchronized (LOCK) {
+			for (Atom a : newToThisInstance) {
+				if (cache.containsKey(a.getPredicate().getName())) {
+					if (!cache.get(a.getPredicate().getName()).contains(a)) {
+						results.add(a);
+					}
+				} else {
+					// we know that the fact is new since the list with this predicate does not
+					// exists yet.
+					results.add(a);
+				}
+			}
+		}
+		return results;
 	}
 }

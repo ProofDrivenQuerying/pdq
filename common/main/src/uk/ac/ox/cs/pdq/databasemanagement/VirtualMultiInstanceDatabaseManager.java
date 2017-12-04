@@ -25,20 +25,23 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
- * Replaces the OLD_DatabaseManager to create multiple virtual database instances
- * over one physical instance. The main idea is: <br>
- * - every fact gets extended with a fact ID and this object will maintain a
- * mapping table where each factID paired with an InstanceID, and we allow
- * querying facts of one specific instance or in the entire table.
+ * Maps multiple database instances into one actual database. This manager will
+ * transparently extend every incoming fact with a factID and maintain a mapping
+ * table where all factIDs will be mapped with an instanceID. Every time it is
+ * needed to answer a query the manager will change the query to reflect the
+ * current instance.
  * 
+ * Uses the built in fact cache to make sure it won't insert duplicated facts.
+ * 
+ * From the user's point of view adding / deleting / querying facts is the same
+ * as it is with the ExternalDatabaseManager.
  * 
  * @author Gabor
  *
  */
-public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
+public class VirtualMultiInstanceDatabaseManager extends ExternalDatabaseManager {
 	private Schema extendedSchema;
 	private Schema originalSchema;
 	protected static final String FACT_ID_TABLE_NAME = "DBFactID";
@@ -59,7 +62,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		super(parameters);
 		multiCache = new MultiInstanceFactCache();
 	}
-	
+
 	protected VirtualMultiInstanceDatabaseManager() throws DatabaseException {
 		super();
 	}
@@ -77,16 +80,40 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		super.initialiseDatabaseForSchema(extendedSchema);
 	}
 
+	/**
+	 * Extends the facts with factId and factId -> InstanceId mappings. Makes sure
+	 * both the facts table and the mapping table is kept unique, no duplicated
+	 * records. This functionality only works if you started from clean database.
+	 * When you connect to an existing database, currently there is no way to
+	 * populate the cache to keep them in sync. Such feature can be implemented when
+	 * needed.
+	 * 
+	 * @see uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager#addFacts(java.util.Collection)
+	 */
 	public void addFacts(Collection<Atom> facts) throws DatabaseException {
-		Collection<Atom> factsToAdd = null;
-		// only add what's new.
-		factsToAdd = multiCache.addFacts(facts, databaseInstanceID);
+		// only add what's new. Each fact has a value and a mapping, this list will show
+		// when the value in the current instance is new or not. If it is new we need to
+		// add the mapping. But we don't know if the value exists in other instances or
+		// not.
 		List<Atom> extendedFacts = new ArrayList<>();
-		extendedFacts.addAll(extendFactsWithFactID(factsToAdd));
-		extendedFacts.addAll(getFactsMapping(factsToAdd, this.databaseInstanceID));
+		Collection<Atom> newFactsInThisInstance = multiCache.addFacts(facts, databaseInstanceID);
+		Collection<Atom> newFactsInAllInstances = multiCache.checkExistsInOtherInstances(newFactsInThisInstance, databaseInstanceID);
+		// we need to add new facts only if they are new to all instances
+		extendedFacts.addAll(extendFactsWithFactID(newFactsInAllInstances));
+		// add mapping for new facts
+		extendedFacts.addAll(getFactsMapping(newFactsInThisInstance, this.databaseInstanceID));
+
+		// write database
 		super.addFacts(extendedFacts);
 	}
 
+	/**
+	 * only deletes the mappings for the current instanceId. A check to see if there
+	 * are other mappings to the same fact can be added, but for sake of operation
+	 * speed it is not added currently.
+	 * 
+	 * @see uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager#deleteFacts(java.util.Collection)
+	 */
 	public void deleteFacts(Collection<Atom> facts) throws DatabaseException {
 		multiCache.deleteFacts(facts, databaseInstanceID);
 		// only deletes the mapping of this fact to this instance, does not delete the
@@ -95,8 +122,8 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	}
 
 	/**
-	 * In case the implementation has in-memory cache this can be used to get the
-	 * cached data.
+	 * Uses the in-memory cache to return all facts of the current
+	 * databaseInsatance.
 	 * 
 	 * @return
 	 */
@@ -105,7 +132,8 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 	}
 
 	/**
-	 * Actual reading from the underlying data structure.
+	 * Reads all data for the current database instance, and then removes the factID
+	 * - instanceID mapping from the results.
 	 * 
 	 * @return
 	 */
@@ -117,15 +145,18 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 			Collection<ConjunctiveQuery> queries = new ArrayList<>();
 			ConjunctiveQuery q = createQuery(r, databaseInstanceID);
 			queries.add(q);
-			results.addAll(removeFactID(getAtomsFromMatches(super.answerQueries(queries), r), originalSchema));
+			results.addAll(removeFactID(getAtomsFromMatches(super.answerConjunctiveQueries(queries), r), originalSchema));
 		}
 		return results;
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.data.OLD_DatabaseManager#answerQueries(java.util.Collection)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * uk.ac.ox.cs.pdq.data.OLD_DatabaseManager#answerQueries(java.util.Collection)
 	 */
-	public List<Match> answerQueries(Collection<ConjunctiveQuery> queries) throws DatabaseException {
+	public List<Match> answerConjunctiveQueries(Collection<ConjunctiveQuery> queries) throws DatabaseException {
 		Collection<ConjunctiveQuery> queriesWithInstanceIDs = new ArrayList<>();
 		Map<ConjunctiveQuery, ConjunctiveQuery> oldAndNewQueries = new HashMap<>();
 
@@ -135,10 +166,10 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 			oldAndNewQueries.put(extendedCQ, q);
 			queriesWithInstanceIDs.add(extendedCQ);
 		}
-		
+
 		// Answer new queries
-		List<Match> matches = super.answerQueries(queriesWithInstanceIDs);
-		
+		List<Match> matches = super.answerConjunctiveQueries(queriesWithInstanceIDs);
+
 		// Remove unnecessary factIDs from the answer
 		List<Match> result = new ArrayList<Match>();
 		for (Match m : matches) {
@@ -163,7 +194,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		oldAndNewQueries.put(extendedLQ, leftQuery);
 		oldAndNewQueries.put(extendedRQ, rightQuery);
 		List<Match> result = new ArrayList<Match>();
-		List<Match> matches = super.answerQueryDifferences(extendedLQ,extendedRQ);
+		List<Match> matches = super.answerQueryDifferences(extendedLQ, extendedRQ);
 		for (Match m : matches) {
 			result.add(Match.create(oldAndNewQueries.get(m.getFormula()), removeFactID(m.getMapping())));
 		}
@@ -180,7 +211,9 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		return results;
 	}
 
-	private static ConjunctiveQuery extendQuery(ConjunctiveQuery formula, int databaseInstanceID) {
+	private static int factIdNameCounter = 0;
+	private static synchronized ConjunctiveQuery extendQuery(ConjunctiveQuery formula, int databaseInstanceID) {
+		factIdNameCounter = 0;
 		Conjunction newConjunction = addFactIdToConjunction(formula.getBody(), databaseInstanceID);
 		return ConjunctiveQuery.create(formula.getFreeVariables(), newConjunction);
 	}
@@ -189,7 +222,7 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 		if (body instanceof Atom) {
 			ArrayList<Term> terms = new ArrayList<>();
 			terms.addAll(Arrays.asList(body.getTerms()));
-			Variable factId = Variable.create(FACT_ID_ATTRIBUTE_NAME + "_" + GlobalCounterProvider.getNext(FACT_ID_ATTRIBUTE_NAME));
+			Variable factId = Variable.create(FACT_ID_ATTRIBUTE_NAME + "_" + factIdNameCounter++);
 			terms.add(factId);
 			return Conjunction.create(Atom.create(((Atom) body).getPredicate(), terms.toArray(new Term[terms.size()])),
 					Atom.create(VirtualMultiInstanceDatabaseManager.factIdInstanceIdMappingTable, new Term[] { factId, TypedConstant.create(databaseInstanceID) }));
@@ -282,19 +315,34 @@ public class VirtualMultiInstanceDatabaseManager extends DatabaseManager {
 				Atom.create(VirtualMultiInstanceDatabaseManager.factIdInstanceIdMappingTable, new Term[] { factID, TypedConstant.create(databaseInstanceID) }));
 		return ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), conjunction);
 	}
+
 	private static ArrayList<Atom> getAtomsFromMatches(List<Match> matches, Relation r) {
 		ArrayList<Atom> ret = new ArrayList<>();
-		Predicate predicate = Predicate.create(r.getName(), r.getArity(),r.isEquality());
-		for (Match m: matches) {
+		Predicate predicate = Predicate.create(r.getName(), r.getArity(), r.isEquality());
+		for (Match m : matches) {
 			List<Term> terms = new ArrayList<>();
-			for (Term t:m.getFormula().getTerms()) {
+			for (Term t : m.getFormula().getTerms()) {
 				Term newTerm = m.getMapping().get(t);
-				if (newTerm!=null)
+				if (newTerm != null)
 					terms.add(newTerm);
 			}
 			ret.add(Atom.create(predicate, terms.toArray(new Term[terms.size()])));
 		}
 		return ret;
+	}
+
+	/**
+	 * Drops the database, and clears the cache for the current instance.
+	 * 
+	 * For safety reasons it recreates the same database, and leaves the empty
+	 * database there. This is needed since most database provider will not allow
+	 * remote connection to a none existing database, so we would force the user to
+	 * manually create an empty database after each usage of this system.
+	 */
+	@Override
+	public void dropDatabase() throws DatabaseException {
+		multiCache.clearCache(databaseInstanceID);
+		super.dropDatabase();
 	}
 
 }

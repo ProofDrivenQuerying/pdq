@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.databasemanagement.cache;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,17 @@ public class MultiInstanceFactCache {
 			multiCache.put(instanceId, new FactCache(instanceId));
 		}
 		return multiCache.get(instanceId).addFacts(facts);
+	}
+	
+	public Collection<Atom> checkExistsInOtherInstances(Collection<Atom> isThisNew, int instanceId) {
+		Collection<Atom> newToThisInstance = new ArrayList<>();
+		newToThisInstance.addAll(isThisNew);
+		for (Integer iId: multiCache.keySet()) {
+			if (iId != instanceId) {
+				newToThisInstance = multiCache.get(iId).checkExists(newToThisInstance);
+			}
+		}
+		return newToThisInstance;
 	}
 
 	/**

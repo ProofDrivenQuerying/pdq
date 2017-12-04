@@ -38,19 +38,6 @@ public class ExecutorThread extends Thread {
 	private final Object RESULTS_LOCK = new Object();
 
 	/**
-	 * Flag to indicate when the current task is completed or failed.
-	 */
-	private boolean isFinished = false;
-	/**
-	 * A finished task has either results or resultException.
-	 */
-	private List<Match> results;
-	/**
-	 * When the database provider returns an exception insted of data.
-	 */
-	private Throwable resultException;
-
-	/**
 	 * The parent manager with the task queue.
 	 */
 	private ExecutionManager manager;
@@ -189,46 +176,16 @@ public class ExecutorThread extends Thread {
 			}
 
 			// execute task
+			
 			try {
-				results = execute(task.getCommand());
+				task.setResults(execute(task.getCommand()),null);
 			} catch (Throwable t) {
-				resultException = t;
+				task.setResults(null,t);
 			}
-
-			// register that task is finished, notify those waiting for the result.
-			synchronized (RESULTS_LOCK) {
-				isFinished = true;
-				// wake up the one waiting for the results.
-				RESULTS_LOCK.notify();
-			}
-
-			// wait for results to be read, so we can start monitoring new tasks.
-			waitForResultsRead();
 		}
 
 		// thread is ending, close the connection.
 		closeConnection();
-	}
-
-	/**
-	 * Waits until this thread is clean and results were read.
-	 */
-	private void waitForResultsRead() {
-		// local copy of the flag isFinished.
-		boolean isFinishedTmp = true;
-		// wait for results to be read, so we can start monitoring new tasks.
-		// in case of shutdown we will stop waiting.
-		while (isFinishedTmp && !shutdown) {
-			synchronized (RESULTS_LOCK) {
-				isFinishedTmp = this.isFinished;
-				try {
-					if (isFinishedTmp)
-						RESULTS_LOCK.wait(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 
 	/**
@@ -307,6 +264,11 @@ public class ExecutorThread extends Thread {
 				sqlStmt.addBatch(s);
 			sqlStmt.executeBatch();
 		} catch (SQLException e) {
+			SQLException looping = e;
+			do {
+				looping.printStackTrace();
+				looping = looping.getNextException();
+			} while (looping != null);
 			if (e.getNextException() != null)
 				throw new DatabaseException("Error while executing update: " + e.getMessage() + " - " + statements, e.getNextException());
 			throw new DatabaseException("Error while executing update: " + statements, e);
@@ -415,41 +377,4 @@ public class ExecutorThread extends Thread {
 		}
 		connection = null;
 	}
-
-	/**
-	 * Returns the results from the latest execution. Throws exception in case the
-	 * last execution was causing an exception.
-	 * 
-	 * Resets the thread state, so it can start working on the next task.
-	 * 
-	 * @return
-	 * @throws Throwable
-	 */
-	public List<Match> getResultsAndReset() throws Throwable {
-		boolean isFinished = false;
-		// wait for results to be ready.
-		while (!isFinished) {
-			synchronized (RESULTS_LOCK) {
-				isFinished = this.isFinished;
-				try {
-					if (!isFinished)
-						RESULTS_LOCK.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-
-		}
-		// give results and reset status.
-		synchronized (RESULTS_LOCK) {
-			if (resultException != null)
-				throw resultException;
-			this.isFinished = false;
-			List<Match> ret = this.results;
-			this.results = null;
-			RESULTS_LOCK.notify(); // wake up the thread and continue executing tasks.
-			return ret;
-		}
-	}
-
 }

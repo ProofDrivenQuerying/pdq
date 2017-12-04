@@ -1,5 +1,10 @@
 package uk.ac.ox.cs.pdq.databasemanagement.sqlcommands;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import uk.ac.ox.cs.pdq.db.Schema;
+
 /**
  * To create a new Database it means we have to drop the already existing one.
  * Also to avoid synchronisation issues dropping a database will create an empty
@@ -16,8 +21,13 @@ public class CreateDatabase extends DropDatabase {
 	 * to be re-created manually, since most database provider does not allow remote
 	 * connection to a database that does not exists.)
 	 */
-	public CreateDatabase() {
-		super();
+	public CreateDatabase(Schema schema) {
+		super(schema);
+	}
+	@Override
+	public List<String> toDerbyStatement(String databaseName) {
+		// derby have to be empty.
+		return new ArrayList<String>();
 	}
 
 }

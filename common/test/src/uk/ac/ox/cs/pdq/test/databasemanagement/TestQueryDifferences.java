@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -23,13 +23,12 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
- * tests the creation and basic usages of a database manager. Does not tests the
- * virtual dbm.
+ * Tests the query differences feature of the database manager
  * 
  * @author Gabor
  *
  */
-public class TestDatabaseManagerQueryDifferences extends PdqTest {
+public class TestQueryDifferences extends PdqTest {
 
 	/**
 	 * In this first part of the test we create the following query difference: Left
@@ -84,7 +83,7 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 	 * @throws DatabaseException
 	 */
 	private void largeTableQueryDifferenceTGD(DatabaseParameters parameters) throws DatabaseException {
-		DatabaseManager manager = new DatabaseManager(parameters);
+		ExternalDatabaseManager manager = new ExternalDatabaseManager(parameters);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
 		List<Atom> facts = new ArrayList<>();
 
@@ -121,9 +120,9 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"), Variable.create("res2") }, (Conjunction) Conjunction.of(q1, q2, q3));
 		// check left and right queries
 
-		List<Match> leftFacts = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { left }));
+		List<Match> leftFacts = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { left }));
 		Assert.assertEquals(2, leftFacts.size());
-		List<Match> rightFacts = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { right }));
+		List<Match> rightFacts = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { right }));
 		Assert.assertEquals(1, rightFacts.size());
 		// Assert.assertNull(rightFacts.get(0).getMapping().get(Variable.create("z")));
 
@@ -148,7 +147,7 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 	 * @throws DatabaseException
 	 */
 	private void largeTableQueryDifferenceEGD(DatabaseParameters parameters) throws DatabaseException {
-		DatabaseManager manager = new DatabaseManager(parameters);
+		ExternalDatabaseManager manager = new ExternalDatabaseManager(parameters);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
 		List<Atom> facts = new ArrayList<>();
 
@@ -186,9 +185,9 @@ public class TestDatabaseManagerQueryDifferences extends PdqTest {
 
 		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("res1") }, (Conjunction) Conjunction.of(q1, q2, q3));
 		// check left and right queries
-		List<Match> leftFacts = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { left }));
+		List<Match> leftFacts = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { left }));
 		Assert.assertEquals(2, leftFacts.size());
-		List<Match> rightFacts = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { right }));
+		List<Match> rightFacts = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { right }));
 		Assert.assertEquals(1, rightFacts.size());
 		Assert.assertNull(rightFacts.get(0).getMapping().get(Variable.create("z")));
 

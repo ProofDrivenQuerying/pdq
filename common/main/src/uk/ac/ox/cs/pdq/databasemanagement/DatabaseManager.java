@@ -1,107 +1,23 @@
 package uk.ac.ox.cs.pdq.databasemanagement;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
-import uk.ac.ox.cs.pdq.databasemanagement.execution.ExecutionManager;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BulkInsert;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateDatabase;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateTable;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Delete;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DifferenceQuery;
-import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
-import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Term;
 
 /**
- * Main database management entry point. Creates and manages connections,
- * different database representations ( SQL or in-memory). No sub classes should
- * be accessed directly, everything goes through this class. <br>
- * Main features: <br>
- * <li>- it can be used without knowing what is the underlying database
- * implementation</li><br>
- * <li>- it can connect to an existing database, or</li><br>
- * <li>- it can create a new empty database, create tables in it and then drop
- * it when it is not needed anymore.</li><br>
+ * This interface describes the public functions of any Database Manager. The
+ * main functionality of a database manager is to store and manage facts,
+ * optionally maintain a cache and answer queries.
  * 
  * @author Gabor
  *
  */
-public class DatabaseManager {
-	/**
-	 * Database parameters such as connection url, credentials etc.
-	 */
-	protected DatabaseParameters parameters;
-	protected String databaseName; // formal name, mainly for debugging purposes, default is "PdqTest"
-	protected int databaseInstanceID; // unique ID generated for this instance.
-	/**
-	 * The execution manager is responsible to manage connections and parallel
-	 * execution of bulk requests.
-	 */
-	private ExecutionManager executor;
-	/**
-	 * A database manager is active from the time it has successfully initialised
-	 * connection(s) to a database until the connection(s) are closed.
-	 */
-	protected Schema schema;
-
-	/**
-	 * Creates a database manager. Initialises connections by creating an executor
-	 * manager.
-	 * 
-	 * <pre>
-	 * Usage:
-	 *  - step 1: 
-	 * 		Construct with the Database parameters, and then 
-	 *  - step 2:
-	 *  	Call the initialiseDatabaseForSchema or the setSchema function. The first will create
-	 * 		the relations as tables, the other assumes they are already created.
-	 *  - step 3:
-	 *    	use the database (get facts, add facts, execute queries, etc)
-	 *  - step 4 (optional) :
-	 *   	drop the database
-	 *  - step 5: 
-	 *    	shut down the database manager by calling the shutdown function. will not delete any data 
-	 *    	(unless the database provider is a memory database)
-	 * </pre>
-	 * @param parameters
-	 *            database parameters, URLs, login names etc.
-	 * @throws DatabaseException
-	 *             - in case connection to the database provider fails.
-	 */
-	public DatabaseManager(DatabaseParameters parameters) throws DatabaseException {
-		this.parameters = (DatabaseParameters) parameters.clone();
-		databaseName = parameters.getDatabaseName();
-
-		// default database name
-		if (databaseName == null) {
-			databaseName = "PdqTest";
-			this.parameters.setDatabaseName(databaseName);
-		}
-		// database unique ID.
-		databaseInstanceID = this.hashCode();
-
-		// Execution manager.
-		executor = new ExecutionManager(this.parameters);
-	}
-
-	/** Empty constructor for the Memory Database Manager.
-	 * @throws DatabaseException
-	 */
-	protected DatabaseManager() throws DatabaseException {
-	}
-	
-	// INTERFACE FUNCTIONS
+public interface DatabaseManager {
 	/**
 	 * Creates an empty canonical database for the schema. Table names will be the
 	 * same as the relation names, and the attribute names will be the same as the
@@ -116,11 +32,7 @@ public class DatabaseManager {
 	 * @param schema
 	 * @throws DatabaseException
 	 */
-	public void initialiseDatabaseForSchema(Schema schema) throws DatabaseException {
-		this.schema = schema;
-		executor.execute(new CreateDatabase());
-		executor.execute(new CreateTable(schema.getRelations()));
-	}
+	public void initialiseDatabaseForSchema(Schema schema) throws DatabaseException;
 
 	/**
 	 * Stores this fact as a record in the database. Table name will be the same as
@@ -136,9 +48,7 @@ public class DatabaseManager {
 	 * @param facts
 	 * @throws DatabaseException
 	 */
-	public void addFacts(Collection<Atom> facts) throws DatabaseException {
-		executor.execute(new BulkInsert(facts, schema));
-	}
+	public void addFacts(Collection<Atom> facts) throws DatabaseException;
 
 	/**
 	 * Deletes a list of facts from the database one by one. (bulk delete is not
@@ -147,26 +57,21 @@ public class DatabaseManager {
 	 * @param facts
 	 * @throws DatabaseException
 	 */
-	public void deleteFacts(Collection<Atom> facts) throws DatabaseException {
-		List<Command> deletes = new ArrayList<>();
-		for (Atom a : facts) {
-			deletes.add(new Delete(a, schema));
-		}
-		executor.execute(deletes);
-	}
+	public void deleteFacts(Collection<Atom> facts) throws DatabaseException;
 
 	/**
 	 * Actual reading from the underlying data structure.
 	 * 
 	 * @return
 	 */
-	public Collection<Atom> getFactsFromPhysicalDatabase() throws DatabaseException {
-		List<Command> queries = new ArrayList<>();
-		for (Relation r : schema.getRelations()) {
-			queries.add(new BasicSelect(r));
-		}
-		return convertMatchesToAtoms(executor.execute(queries), queries);
-	}
+	public Collection<Atom> getFactsFromPhysicalDatabase() throws DatabaseException;
+	/**
+	 * In case the implementation has in-memory cache this can be used to get the
+	 * cached data, otherwise it should return the same as the previous function.
+	 * 
+	 * @return
+	 */
+	public Collection<Atom> getCachedFacts() throws DatabaseException;
 
 	/**
 	 * A list of CQs to be executed parallel. All results are gathered and added to
@@ -176,16 +81,7 @@ public class DatabaseManager {
 	 * @return
 	 * @throws DatabaseException
 	 */
-	public List<Match> answerQueries(Collection<ConjunctiveQuery> queries) throws DatabaseException {
-		List<Command> commands = new ArrayList<>();
-		// convert CQs to BasicSelect sql commands.
-		for (ConjunctiveQuery cq : queries) {
-			BasicSelect q = new BasicSelect(this.schema, cq);
-			commands.add(q);
-		}
-		// execute the SQL command
-		return executor.execute(commands);
-	}
+	public List<Match> answerConjunctiveQueries(Collection<ConjunctiveQuery> queries) throws DatabaseException;
 
 	/**
 	 * Represent a kind of nested select that will tell the difference between two
@@ -205,10 +101,7 @@ public class DatabaseManager {
 	 * @return
 	 * @throws DatabaseException
 	 */
-	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
-		DifferenceQuery diff = new DifferenceQuery(leftQuery, rightQuery, schema);
-		return executor.execute(Arrays.asList(new Command[] { diff }));
-	}
+	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException;
 
 	/**
 	 * Drops the database. For safety reasons it recreates the same database, and
@@ -217,17 +110,13 @@ public class DatabaseManager {
 	 * force the user to manually create an empty database after each usage of this
 	 * system.
 	 */
-	public void dropDatabase() throws DatabaseException {
-		executor.execute(new DropDatabase());
-	}
+	public void dropDatabase() throws DatabaseException;
 
 	/**
 	 * Closes the connection for this instance and all other instances that shares
 	 * the connections with this one
 	 */
-	public void shutdown() throws DatabaseException {
-		executor.shutdown();
-	}
+	public void shutdown() throws DatabaseException;
 
 	/**
 	 * This function is needed when you connect to existing database that you do not
@@ -236,57 +125,24 @@ public class DatabaseManager {
 	 * 
 	 * @param s
 	 */
-	public void setSchema(Schema s) {
-		this.schema = s;
-	}
+	public void setSchema(Schema s);
 
 	/**
-	 * @return the last schema we initialized to
+	 * @return the last schema we initialised to
 	 */
-	protected Schema getSchema() {
-		return schema;
-	}
-
-	public int getDatabaseInstanceID() {
-		return databaseInstanceID;
-	}
-
-	public void setDatabaseInstanceID(int instanceID) {
-		databaseInstanceID = instanceID;
-	}
-
-	public String getDatabaseName() {
-		return databaseName;
-	}
+	public Schema getSchema();
 
 	/**
-	 * The get facts from physical database function returns a list of Atoms instead
-	 * of Matches. This function helps to convert from one to the other.
-	 * 
-	 * @param matches
-	 * @param queries
-	 * @return
-	 * @throws DatabaseException
+	 * @return the current DatabaseID that was set by the setDatabaseInstanceID or
+	 *         the one that was generated/set at initialisation time.
 	 */
-	protected static List<Atom> convertMatchesToAtoms(List<Match> matches, List<Command> queries) throws DatabaseException {
-		List<Atom> ret = new ArrayList<>();
-		for (Match m : matches) {
-			if (m.getFormula().getAtoms().length > 1) {
-				// The results of query "select * from tableX" can be easily parsed by knowing
-				// the attributes of tableX, however a composite result would require to create
-				// a new predicate representing the result columns, and that is not allowed
-				// here.
-				throw new DatabaseException("Only single table query results can be converted to a list of atoms!");
-			}
-			Atom queriedTable = m.getFormula().getAtoms()[0];
-			List<Term> terms = new ArrayList<>();
-			for (Term t : m.getFormula().getTerms()) {
-				Term newTerm = m.getMapping().get(t);
-				if (newTerm != null)
-					terms.add(newTerm);
-			}
-			ret.add(Atom.create(queriedTable.getPredicate(), terms.toArray(new Term[terms.size()])));
-		}
-		return ret;
-	}
+	public int getDatabaseInstanceID();
+
+	public void setDatabaseInstanceID(int instanceID);
+
+	/**
+	 * @return optional name of this database
+	 */
+	public String getDatabaseName();
+
 }

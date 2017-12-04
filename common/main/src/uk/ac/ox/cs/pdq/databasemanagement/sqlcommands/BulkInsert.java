@@ -26,10 +26,6 @@ import uk.ac.ox.cs.pdq.fol.Term;
  */
 public class BulkInsert extends Command {
 	/**
-	 * Key for the "IGNORE" keyword that MySQL uses.
-	 */
-	private final String IGNORE = "{IGNORE}";
-	/**
 	 * Facts to be inserted.
 	 */
 	private Collection<Atom> facts;
@@ -53,9 +49,6 @@ public class BulkInsert extends Command {
 	public BulkInsert(Collection<Atom> facts, Schema schema) throws DatabaseException {
 		this.facts = facts;
 		this.schema = schema;
-		replaceTagsMySql.put(IGNORE, "IGNORE");
-		replaceTagsDerby.put(IGNORE, "");
-		replaceTagsPostgres.put(IGNORE, "");
 		// Group facts by relation.
 		Map<Predicate, List<Atom>> groupedFacts = new HashMap<>();
 		for (Atom a : facts) {
@@ -73,7 +66,7 @@ public class BulkInsert extends Command {
 			// loop over all groups
 			String tableName = p.getName();
 			Attribute[] attributes = schema.getRelation(tableName).getAttributes();
-			String insertInto = "INSERT " + IGNORE + " INTO " + DATABASENAME + "." + tableName + " " + "VALUES ";
+			String insertInto = "INSERT INTO " + DATABASENAME + "." + tableName + " " + "VALUES ";
 			List<String> values = new ArrayList<String>();
 			for (Atom a : groupedFacts.get(p)) {
 				// loop over all tuples belonging to this table

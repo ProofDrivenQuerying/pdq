@@ -147,9 +147,9 @@ public class ExecutionManager {
 
 		synchronized (task) {
 			// wait until a thread takes ownership, and starts working on the task.
-			if (task.getExecutorThread() == null) {
+			while (task.getExecutorThread() == null) {
 				try {
-					task.wait();
+					task.wait(100);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

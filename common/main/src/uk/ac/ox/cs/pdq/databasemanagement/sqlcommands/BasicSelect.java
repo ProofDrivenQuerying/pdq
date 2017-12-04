@@ -2,10 +2,13 @@ package uk.ac.ox.cs.pdq.databasemanagement.sqlcommands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.base.Joiner;
 
@@ -34,7 +37,7 @@ public class BasicSelect extends Command {
 	 * Alias provider for this Query instance. The content aliases are globally
 	 * unique.
 	 */
-	private Map<String, String> aliases = new HashMap<>();
+	private Set<TableAlias> aliases = new HashSet<>();
 
 	/**
 	 * The query will produce a JDBC result set, this array will show how to process
@@ -127,8 +130,9 @@ public class BasicSelect extends Command {
 	/**
 	 * Creates the part of the query that comes after the SELECT keyword, but before
 	 * the FROM keyword.
+	 * @throws DatabaseException 
 	 */
-	private void initSelect() {
+	private void initSelect() throws DatabaseException {
 		List<Variable> freeVariables = Arrays.asList(formula.getFreeVariables());
 		// SELECT free variables
 		for (Atom a : formula.getAtoms()) {
@@ -142,12 +146,12 @@ public class BasicSelect extends Command {
 				if (freeVariables.contains(term)) {
 					String relName = a.getPredicate().getName();
 					Attribute attribute = schema.getRelation(relName).getAttribute(i);
-					select.add(getAlias(relName) + "." + attribute.getName());
+					select.add(getAlias(relName,a.getTerms()).aliasName + "." + attribute.getName());
 				}
 			}
 		}
 	}
-
+	
 	/**
 	 * Creates the part of the query thet comes after the "FROM" part but before the
 	 * WHERE part.
@@ -156,9 +160,9 @@ public class BasicSelect extends Command {
 		// FROM table names
 		for (Atom a : formula.getAtoms()) {
 			// loop over all atoms of the query (flattened hierarchy)
-			String name = getAlias(a.getPredicate().getName());
-			fromTableName.add(DATABASENAME + "." + a.getPredicate().getName() + " AS " + name);
-			fromTableNameNoAliases.add(DATABASENAME + "." + a.getPredicate().getName());
+			TableAlias ta = getAlias(a.getPredicate().getName(), a.getTerms());
+			fromTableName.add(DATABASENAME + "." + a.getPredicate().getName() + " AS " + ta.aliasName);
+			fromTableNameNoAliases.add(ta.toKey());
 		}
 	}
 
@@ -181,19 +185,22 @@ public class BasicSelect extends Command {
 	/**
 	 * Retrieves the existing alias of creates a new one for the given table name.
 	 * 
-	 * @param name
+	 * @param tableName
 	 *            actual name of the table in the database.
 	 * @return the alias name of the table.
 	 */
-	private synchronized String getAlias(String name) {
-		if (aliases.containsKey(name)) {
-			String aliasName = aliases.get(name);
-			return aliasName;
-		} else {
-			String newName = "A" + GlobalCounterProvider.getNext("TableNameAlias");
-			aliases.put(name, newName);
-			return newName;
+	private TableAlias getAlias(String tableName, Term[] terms) {
+		TableAlias ta = new TableAlias();
+		ta.tableName = tableName;
+		ta.setVariables(terms);
+		for (TableAlias taExisting:aliases) {
+			if (ta.equals(taExisting)) {
+				return taExisting;
+			}
 		}
+		ta.aliasName = "A" + GlobalCounterProvider.getNext("TableNameAlias");
+		aliases.add(ta);
+		return ta;
 	}
 
 	/**
@@ -207,11 +214,11 @@ public class BasicSelect extends Command {
 			for (int i = 0; i < a.getTerms().length; i++) {
 				if (a.getTerm(i) instanceof Constant) {
 					// constant equality condition.
-					String aliasKey = "{TABLE_ALIAS_" + a.getPredicate().getName() + "}";
 					String tableName = a.getPredicate().getName();
+					TableAlias tableAlias = getAlias(tableName, a.getTerms());
 					Attribute attribute = schema.getRelation(tableName).getAttribute(i);
-					whereConditions.add(aliasKey + "." + attribute.getName() + " = " + convertTermToSQLString(attribute, a.getTerm(i)));
-					storeReplacementKeyValuePairs(aliasKey, getAlias(tableName));
+					whereConditions.add(tableAlias.toKey() + "." + attribute.getName() + " = " + convertTermToSQLString(attribute, a.getTerm(i)));
+					storeReplacementKeyValuePairs(tableAlias.toKey(), tableAlias.aliasName);
 				}
 			}
 		}
@@ -221,8 +228,9 @@ public class BasicSelect extends Command {
 	 * When a CQ has more then one atom, some variables can appear multiple times.
 	 * These cases are the attribute equality conditions, and we have to find them
 	 * and create corresponding SQL WHERE conditions from them.
+	 * @throws DatabaseException 
 	 */
-	private void initAttributeEqualityConditions() {
+	private void initAttributeEqualityConditions() throws DatabaseException {
 		// go over each atom of the CQ.
 		for (int ai = 0; ai < formula.getAtoms().length - 1; ai++) {
 			// the current atom is "a", its index is "ai"
@@ -249,16 +257,16 @@ public class BasicSelect extends Command {
 							// figure out the table and column name for both left and right sides,
 							// respecting table aliases.
 							String tableNameLeft = a.getPredicate().getName();
-							Attribute attributeLeft = schema.getRelation(tableNameLeft).getAttribute(i);
-							String aliasLeftKey = "{TABLE_ALIAS_" + a.getPredicate().getName() + "}";
-							String aliasRightKey = "{TABLE_ALIAS_" + b.getPredicate().getName() + "}";
-
 							String tableNameRight = b.getPredicate().getName();
+							TableAlias aliasLeft = getAlias(tableNameLeft,a.getTerms());
+							TableAlias aliasRight = getAlias(tableNameRight,b.getTerms());
+
+							Attribute attributeLeft = schema.getRelation(tableNameLeft).getAttribute(i);
 							Attribute attributeRight = schema.getRelation(tableNameRight).getAttribute(j);
 							// Attribute equality condition
-							whereConditions.add(aliasLeftKey + "." + attributeLeft.getName() + " = " + aliasRightKey + "." + attributeRight.getName());
-							storeReplacementKeyValuePairs(aliasLeftKey, getAlias(tableNameLeft));
-							storeReplacementKeyValuePairs(aliasRightKey, getAlias(tableNameRight));
+							whereConditions.add(aliasLeft.toKey() + "." + attributeLeft.getName() + " = " + aliasRight.toKey() + "." + attributeRight.getName());
+							storeReplacementKeyValuePairs(aliasLeft.toKey(), aliasLeft.aliasName);
+							storeReplacementKeyValuePairs(aliasRight.toKey(),aliasRight.aliasName);
 						}
 					}
 				}
@@ -282,4 +290,32 @@ public class BasicSelect extends Command {
 		return formula;
 	}
 
+	public class TableAlias {
+		protected String aliasName="";
+		protected String tableName="";
+		protected Collection<Variable> variables= new ArrayList<>();
+		public void setVariables(Term[] terms) {
+			for (Term t:terms) {
+				if (t.isVariable())
+					variables.add((Variable)t);
+			}
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof TableAlias)
+				return tableName.equals(((TableAlias)obj).tableName) && variables.size() == ((TableAlias)obj).variables.size() &&
+						variables.containsAll(((TableAlias)obj).variables);
+			return false;
+		}
+		@Override
+		public String toString() {
+			return "Alias("+aliasName+") for table("+tableName+") over variables("+variables+")";
+		}
+		public String toKey() {
+			String key = "{" + tableName+"_";
+			for (Variable v:variables) key+=v.getSymbol()+"_";
+			return key + "}";
+		}
+	}
 }

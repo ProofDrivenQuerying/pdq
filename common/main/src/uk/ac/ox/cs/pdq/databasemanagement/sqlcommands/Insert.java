@@ -27,36 +27,32 @@ public class Insert extends Command {
 	 * Name of the table we are inserting to.
 	 */
 	private String tableName;
-	/**
-	 * Keyword for IGNORE. this can be used by MySQL only.
-	 */
-	private final String IGNORE = "{IGNORE}";
 
-	/** Constructs this Insert statement.
-	 * @param fact the fact to be added.
-	 * @param schema - for relation name and attribute types.
-	 * @throws DatabaseException  - in case the fact contains something that is not a constant.
+	/**
+	 * Constructs this Insert statement.
+	 * 
+	 * @param fact
+	 *            the fact to be added.
+	 * @param schema
+	 *            - for relation name and attribute types.
+	 * @throws DatabaseException
+	 *             - in case the fact contains something that is not a constant.
 	 */
 	public Insert(Atom fact, Schema schema) throws DatabaseException {
 		// get the terms
 		this.terms = fact.getTerms();
 		tableName = fact.getPredicate().getName();
-		
+
 		// check if we have the table
 		if (schema.getRelation(tableName) == null) {
-			throw new DatabaseException("Table name for fact: " + fact + " not found in schema: " + schema); 
+			throw new DatabaseException("Table name for fact: " + fact + " not found in schema: " + schema);
 		}
-		
+
 		// get the attributes
 		attributes = schema.getRelation(tableName).getAttributes();
-		
-		// add mapping for dialects
-		replaceTagsMySql.put(IGNORE, "IGNORE");
-		replaceTagsDerby.put(IGNORE, "");
-		replaceTagsPostgres.put(IGNORE, "");
 
 		// build the actual INSERT INTO statement
-		String insertInto = "INSERT " + IGNORE + " INTO " + DATABASENAME + "." + fact.getPredicate().getName() + " " + "VALUES ( ";
+		String insertInto = "INSERT INTO " + DATABASENAME + "." + fact.getPredicate().getName() + " " + "VALUES ( ";
 		for (int termIndex = 0; termIndex < terms.length; ++termIndex) {
 			Term term = terms[termIndex];
 			if (!term.isVariable()) {
@@ -64,7 +60,7 @@ public class Insert extends Command {
 				insertInto += convertTermToSQLString(attributes[termIndex], term);
 			} else {
 				// Variables are not allowed to be stored.
-				throw new DatabaseException("It is not allowed to insert Variables to the database: " + fact); 
+				throw new DatabaseException("It is not allowed to insert Variables to the database: " + fact);
 			}
 			if (termIndex < fact.getNumberOfTerms() - 1)
 				insertInto += ",";

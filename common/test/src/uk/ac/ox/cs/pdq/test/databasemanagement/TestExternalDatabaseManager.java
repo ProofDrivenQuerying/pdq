@@ -12,8 +12,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.VirtualMultiInstanceDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -40,7 +39,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * @author Gabor
  *
  */
-public class TestDatabaseManager extends PdqTest {
+public class TestExternalDatabaseManager extends PdqTest {
 
 	/**
 	 * tests the database manager creating a database for a single relation that
@@ -88,7 +87,7 @@ public class TestDatabaseManager extends PdqTest {
 	private void simpleDatabaseCreation(DatabaseParameters parameters) throws DatabaseException {
 		Relation R = Relation.create("R", new Attribute[] { a_s, b_s, c_s }, new AccessMethod[] { this.method0, this.method2 });
 
-		DatabaseManager manager = new DatabaseManager(parameters);
+		ExternalDatabaseManager manager = new ExternalDatabaseManager(parameters);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R }));
 		// ADD facts
 		Atom a1 = Atom.create(R, new Term[] { UntypedConstant.create("12"), UntypedConstant.create("13"), UntypedConstant.create("14") });
@@ -102,9 +101,12 @@ public class TestDatabaseManager extends PdqTest {
 
 		// Test duplicated storage - stored data should not change when we add the same
 		// set twice
-		manager.addFacts(facts);
+		try {
+			manager.addFacts(facts);
+			Assert.fail("Should have thrown error for insering duplicates");
+		} catch (Exception e) {}
 		getFacts = manager.getFactsFromPhysicalDatabase();
-		Assert.assertEquals(facts.size() * 2, getFacts.size());
+		Assert.assertEquals(facts.size(), getFacts.size());
 
 		// DELETE
 		manager.deleteFacts(facts);
@@ -121,10 +123,10 @@ public class TestDatabaseManager extends PdqTest {
 	 * This case test the Derby driver.
 	 */
 	@Test
-	public void virtualDatabaseCreationDerby() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
+	public void externalDatabaseCreationDerby() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
-		virtualDatabaseCreationInt(DatabaseParameters.Derby);
-		virtualDatabaseCreationString(DatabaseParameters.Derby);
+		externalDatabaseCreationInt(DatabaseParameters.Derby);
+		externalDatabaseCreationString(DatabaseParameters.Derby);
 	}
 	
 	/**
@@ -134,10 +136,10 @@ public class TestDatabaseManager extends PdqTest {
 	 * This case test the MySQL driver.
 	 */
 	@Test
-	public void virtualDatabaseCreationMySql() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
+	public void externalDatabaseCreationMySql() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
-		virtualDatabaseCreationInt(DatabaseParameters.MySql);
-		virtualDatabaseCreationString(DatabaseParameters.MySql);
+		externalDatabaseCreationInt(DatabaseParameters.MySql);
+		externalDatabaseCreationString(DatabaseParameters.MySql);
 	}
 
 	/**
@@ -147,10 +149,10 @@ public class TestDatabaseManager extends PdqTest {
 	 * This case test the Postgres driver.
 	 */
 	@Test
-	public void virtualDatabaseCreationPostgres() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
+	public void externalDatabaseCreationPostgres() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
-		virtualDatabaseCreationInt(DatabaseParameters.Postgres);
-		virtualDatabaseCreationString(DatabaseParameters.Postgres);
+		externalDatabaseCreationInt(DatabaseParameters.Postgres);
+		externalDatabaseCreationString(DatabaseParameters.Postgres);
 	}
 
 
@@ -164,58 +166,40 @@ public class TestDatabaseManager extends PdqTest {
 	 * Also tests a basic query: []R(x,y,z) that should retrieve all data from the
 	 * table in the given database instance.
 	 */
-	private void virtualDatabaseCreationInt(DatabaseParameters parameters) throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException,
+	private void externalDatabaseCreationInt(DatabaseParameters parameters) throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		// create a simple manager
-		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(parameters);
-		int instanceID1 = manager.getDatabaseInstanceID();
+		ExternalDatabaseManager manager = new ExternalDatabaseManager(parameters);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R }));
 		Atom[] facts = new Atom[] { Atom.create(this.R, new Term[] { TypedConstant.create(1), TypedConstant.create(10), TypedConstant.create(100) }) };
 		manager.addFacts(Arrays.asList(facts));
-		// Assert.assertEquals(/*1*/0,manager.getCachedFacts().size());
+		
+		Assert.assertEquals(1,manager.getCachedFacts().size()); // this will do the same as the next line, since this database manager have no cache.
 		Assert.assertEquals(1, manager.getFactsFromPhysicalDatabase().size());
-
-		// create a child of the previous manager, forming a virtual database instance
-		// over the original one.
-		manager.setDatabaseInstanceID(instanceID1 + 1);
-		int instanceID2 = manager.getDatabaseInstanceID();
-		Assert.assertNotEquals(instanceID1, instanceID2);
-
-		Assert.assertEquals(0, manager.getCachedFacts().size());
+		
 		Atom[] facts2 = new Atom[] { Atom.create(this.R, new Term[] { TypedConstant.create(2), TypedConstant.create(20), TypedConstant.create(200) }) };
 		manager.addFacts(Arrays.asList(facts2));
-		Assert.assertEquals(1, manager.getCachedFacts().size());
-		Assert.assertEquals(1, manager.getFactsFromPhysicalDatabase().size());
+		Assert.assertEquals(2, manager.getCachedFacts().size());
+		Assert.assertEquals(2, manager.getFactsFromPhysicalDatabase().size());
 
 		// Normal query
 		Atom a1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y, z }, a1);
-		List<Match> answer = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
-		Assert.assertEquals(1, answer.size());
+		List<Match> answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
+		Assert.assertEquals(2, answer.size());
 
-		// switching back to first instance
-		manager.setDatabaseInstanceID(instanceID1);
-		Assert.assertArrayEquals(facts, manager.getCachedFacts().toArray(new Atom[manager.getCachedFacts().size()]));
 		// Typed untyped difference
 		Collection<Atom> physicalData = manager.getFactsFromPhysicalDatabase();
-		Assert.assertEquals(facts.length, physicalData.size());
-		if (parameters.getDatabaseDriver().contains("memory")) {
-			// the memory DB will give back the TypedConstants
-			Assert.assertEquals(facts[0], physicalData.iterator().next());
-		}
-
-		// attempt to delete none existing fact
+		Assert.assertEquals(2, physicalData.size());
+		
+		// attempt to delete one existing fact
 		manager.deleteFacts(Arrays.asList(facts2));
 		Collection<Atom> getFacts = manager.getCachedFacts();
 		Assert.assertNotNull(getFacts);
 		Assert.assertEquals(1, getFacts.size());
 
-		manager.setDatabaseInstanceID(instanceID2);
-		// delete
-		getFacts = manager.getCachedFacts();
-		Assert.assertNotNull(getFacts);
-		Assert.assertEquals(1, getFacts.size());
-		manager.deleteFacts(Arrays.asList(facts2));
+		// delete the other
+		manager.deleteFacts(Arrays.asList(facts));
 		getFacts = manager.getCachedFacts();
 		Assert.assertNotNull(getFacts);
 		Assert.assertEquals(0, getFacts.size());
@@ -229,7 +213,7 @@ public class TestDatabaseManager extends PdqTest {
 	 * Same as the virtualDatabaseCreationInt but the tables have String constants
 	 * 
 	 */
-	private void virtualDatabaseCreationString(DatabaseParameters parameters) throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException,
+	private void externalDatabaseCreationString(DatabaseParameters parameters) throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		SimpleDateFormat sdfmt1 = new SimpleDateFormat("yyyy-MM-dd");
 		Date dDate = null;
@@ -242,8 +226,7 @@ public class TestDatabaseManager extends PdqTest {
 		// create a simple manager
 		DatabaseParameters p = (DatabaseParameters) parameters.clone();
 		p.setProperty("database.isvirtual", Boolean.TRUE.toString());
-		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(p);
-		int instanceID1 = manager.getDatabaseInstanceID();
+		ExternalDatabaseManager manager = new ExternalDatabaseManager(p);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R_s }));
 		Atom[] facts = new Atom[] {
 				Atom.create(this.R_s, new Term[] { TypedConstant.create("A1"), TypedConstant.create(dDate), TypedConstant.create(100), TypedConstant.create(13) }) };
@@ -251,32 +234,21 @@ public class TestDatabaseManager extends PdqTest {
 		// Assert.assertEquals(/*1*/0,manager.getCachedFacts().size());
 		Assert.assertEquals(1, manager.getFactsFromPhysicalDatabase().size());
 
-		// create a child of the previous manager, forming a virtual database instance
-		// over the original one.
-		manager.setDatabaseInstanceID(instanceID1);
-		manager.setDatabaseInstanceID(instanceID1 + 1);
-		int instanceID2 = manager.getDatabaseInstanceID();
-		Assert.assertNotEquals(instanceID1, instanceID2);
-
-		Assert.assertEquals(0, manager.getCachedFacts().size());
 		Atom[] facts2 = new Atom[] {
 				Atom.create(this.R, new Term[] { TypedConstant.create("B2"), TypedConstant.create("B20"), TypedConstant.create("B200"), TypedConstant.create(14) }) };
 		manager.addFacts(Arrays.asList(facts2));
-		Assert.assertEquals(1, manager.getCachedFacts().size());
-		Assert.assertEquals(1, manager.getFactsFromPhysicalDatabase().size());
+		Assert.assertEquals(2, manager.getCachedFacts().size());
+		Assert.assertEquals(2, manager.getFactsFromPhysicalDatabase().size());
 
 		// Normal query
 		Atom a1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z"), Variable.create("i") });
 		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y, z }, a1);
-		List<Match> answer = manager.answerQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
-		Assert.assertEquals(1, answer.size());
+		List<Match> answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
+		Assert.assertEquals(2, answer.size());
 
-		// switching back to first instance
-		manager.setDatabaseInstanceID(instanceID1);
-		Assert.assertArrayEquals(facts, manager.getCachedFacts().toArray(new Atom[manager.getCachedFacts().size()]));
 		// Typed untyped difference
 		Collection<Atom> physicalData = manager.getFactsFromPhysicalDatabase();
-		Assert.assertEquals(facts.length, physicalData.size());
+		Assert.assertEquals(2, physicalData.size());
 		Atom[] expectedResult = new Atom[] {
 				Atom.create(this.R_s, new Term[] { TypedConstant.create("A1"), TypedConstant.create(dDate), TypedConstant.create(100), UntypedConstant.create("13") }) };
 		if (parameters.getDatabaseDriver().contains("memory")) {
@@ -294,18 +266,17 @@ public class TestDatabaseManager extends PdqTest {
 		Assert.assertNotNull(getFacts);
 		Assert.assertEquals(1, getFacts.size());
 
-		manager.setDatabaseInstanceID(instanceID2);
-		// delete
-		getFacts = manager.getCachedFacts();
-		Assert.assertNotNull(getFacts);
-		Assert.assertEquals(1, getFacts.size());
-		manager.deleteFacts(Arrays.asList(facts2));
-		getFacts = manager.getCachedFacts();
-		Assert.assertNotNull(getFacts);
-		Assert.assertEquals(0, getFacts.size());
-		getFacts = manager.getFactsFromPhysicalDatabase();
-		Assert.assertNotNull(getFacts);
-		Assert.assertEquals(0, getFacts.size());
+		manager.dropDatabase();
+		try {
+			manager.getFactsFromPhysicalDatabase();
+			Assert.fail("Should have thrown exception when read from a dropped database.");
+		} catch (Exception e) {
+		}
+		try {
+			manager.getCachedFacts().size();
+			Assert.fail("Should have thrown exception when read from a dropped database.");
+		} catch (Exception e) {
+		}		
 		manager.shutdown();
 	}
 

@@ -1,7 +1,9 @@
 package uk.ac.ox.cs.pdq.databasemanagement.sqlcommands;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
 
 /**
  * Drops the existing database recursively, and re-creates it. It means the
@@ -14,13 +16,16 @@ import java.util.List;
  *
  */
 public class DropDatabase extends Command {
+	private Schema schema;
+
 	/**
 	 * Constructor, empty since we will implement this command in a language to
 	 * language way, because the way to create and drop databases are usually
 	 * different in each dialect.
 	 */
-	public DropDatabase() {
+	public DropDatabase(Schema schema) {
 		super();
+		this.schema = schema;
 	}
 
 	@Override
@@ -45,11 +50,9 @@ public class DropDatabase extends Command {
 
 	@Override
 	public List<String> toDerbyStatement(String databaseName) {
-		// derby database does not need to be dropped, the database will be destroyed at
-		// the time we close the connection. Deleting the records one by one would take
-		// for ever, so it is best to re-create the DatabaseManager if you need to
-		// restart from scrach.
-		return new ArrayList<>();
+		for (Relation table: schema.getRelations())  
+			statements.add("DROP TABLE " + databaseName + "." + table.getName()); 
+		return statements;
 	}
 
 }

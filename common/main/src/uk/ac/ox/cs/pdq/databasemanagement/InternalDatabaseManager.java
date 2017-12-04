@@ -22,28 +22,32 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
- * Main database management entry point. Creates and manages a database for
- * facts in the memory.
+ * Memory database manager. Does the same as the
+ * {@link VirtualMultiInstanceDatabaseManager} but everything is stored only in
+ * memory.
  * 
  * @author Gabor
  *
  */
-public class MemoryDatabaseManager extends VirtualMultiInstanceDatabaseManager {
+public class InternalDatabaseManager extends VirtualMultiInstanceDatabaseManager {
 
 	private Map<String, Term[]> formulaCache = new HashMap<>(); // used for analysing queries.
 
 	/**
 	 * Creates a database manager with the default databaseName
+	 * 
 	 * @throws DatabaseException
 	 */
-	public MemoryDatabaseManager() throws DatabaseException {
+	public InternalDatabaseManager() throws DatabaseException {
 		this("PdqTest");
 	}
+
 	/**
 	 * Creates a database manager with the given databaseName
+	 * 
 	 * @param databaseName
 	 */
-	public MemoryDatabaseManager(String databaseName) throws DatabaseException {
+	public InternalDatabaseManager(String databaseName) throws DatabaseException {
 		super();
 		this.parameters = DatabaseParameters.Empty;
 		// default database name
@@ -112,10 +116,10 @@ public class MemoryDatabaseManager extends VirtualMultiInstanceDatabaseManager {
 	 * @return
 	 * @throws DatabaseException
 	 */
-	public List<Match> answerQueries(Collection<ConjunctiveQuery> queries) throws DatabaseException {
+	public List<Match> answerConjunctiveQueries(Collection<ConjunctiveQuery> queries) throws DatabaseException {
 		List<Match> matches = new ArrayList<>();
 		for (ConjunctiveQuery q : queries) {
-			matches.addAll(answereQuery(q, this.databaseInstanceID));
+			matches.addAll(answerConjunctiveQuery(q, this.databaseInstanceID));
 		}
 		return matches;
 
@@ -141,12 +145,12 @@ public class MemoryDatabaseManager extends VirtualMultiInstanceDatabaseManager {
 	 */
 	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
 		// execute query left
-		List<Atom> leftFacts = answereConjunctiveQueryRecursively(leftQuery.getBody(), leftQuery, this.databaseInstanceID);
+		List<Atom> leftFacts = answerConjunctiveQueryRecursively(leftQuery.getBody(), leftQuery, this.databaseInstanceID);
 		if (leftFacts == null || leftFacts.isEmpty())
 			return new ArrayList<>();
 
 		// execute right
-		List<Atom> rightFacts = answereConjunctiveQueryRecursively(rightQuery.getBody(), rightQuery, this.databaseInstanceID);
+		List<Atom> rightFacts = answerConjunctiveQueryRecursively(rightQuery.getBody(), rightQuery, this.databaseInstanceID);
 
 		if (rightFacts == null || rightFacts.isEmpty()) {
 			// nothing to sort out, convert to Match objects and go.
@@ -180,24 +184,6 @@ public class MemoryDatabaseManager extends VirtualMultiInstanceDatabaseManager {
 		multiCache.clearCache(this.databaseInstanceID);
 	}
 
-	/**
-	 * This function is needed when you connect to existing database that you do not
-	 * want to initialise for this schema because it already contains the required
-	 * tables (and maybe some data as well)
-	 * 
-	 * @param s
-	 */
-	public void setSchema(Schema s) {
-		this.schema = s;
-	}
-
-	/**
-	 * @return the last schema we initialized to
-	 */
-	protected Schema getSchema() {
-		return schema;
-	}
-
 	public int getDatabaseInstanceID() {
 		return databaseInstanceID;
 	}
@@ -213,9 +199,9 @@ public class MemoryDatabaseManager extends VirtualMultiInstanceDatabaseManager {
 	/**
 	 * Answers a basic CQ over the given instance.
 	 */
-	protected List<Match> answereQuery(ConjunctiveQuery cq, int instanceId) throws DatabaseException {
+	protected List<Match> answerConjunctiveQuery(ConjunctiveQuery cq, int instanceId) throws DatabaseException {
 		// get facts
-		List<Atom> facts = answereConjunctiveQueryRecursively(cq.getBody(), cq, instanceId);
+		List<Atom> facts = answerConjunctiveQueryRecursively(cq.getBody(), cq, instanceId);
 		// return empty list if we have no data
 		if (facts == null || facts.isEmpty())
 			return new ArrayList<>();
@@ -254,7 +240,7 @@ public class MemoryDatabaseManager extends VirtualMultiInstanceDatabaseManager {
 	 * @param instanceId
 	 * @return
 	 */
-	private List<Atom> answereSingleAtomQuery(Atom formula, int instanceId) {
+	private List<Atom> answerSingleAtomQuery(Atom formula, int instanceId) {
 		// single atom query, we can have only attribute equalities
 		String predicateName = ((Atom) formula).getPredicate().getName();
 		List<Atom> facts = multiCache.getFactsOfRelation(predicateName, instanceId);
@@ -263,11 +249,11 @@ public class MemoryDatabaseManager extends VirtualMultiInstanceDatabaseManager {
 		return facts;
 	}
 
-	private List<Atom> answereConjunctiveQueryRecursively(Formula formula, ConjunctiveQuery cq, int instanceId) throws DatabaseException {
+	private List<Atom> answerConjunctiveQueryRecursively(Formula formula, ConjunctiveQuery cq, int instanceId) throws DatabaseException {
 
 		if (formula instanceof Atom) {
 			// single atom case
-			List<Atom> facts = answereSingleAtomQuery((Atom) formula, instanceId);
+			List<Atom> facts = answerSingleAtomQuery((Atom) formula, instanceId);
 			return facts;
 		} else {
 			// atom + atom, or atom + conjunction case.
@@ -279,7 +265,7 @@ public class MemoryDatabaseManager extends VirtualMultiInstanceDatabaseManager {
 				throw new DatabaseException("Invalid conjunction (" + formula + ") in query: " + cq + ", left formula should be an atom.");
 			// conjunction of two atoms
 			// these facts will be filtered by constant equality conditions
-			List<Atom> factsLeft = answereSingleAtomQuery((Atom) fLeft, instanceId);
+			List<Atom> factsLeft = answerSingleAtomQuery((Atom) fLeft, instanceId);
 			if (factsLeft.isEmpty()) {
 				return new ArrayList<>();
 			}
@@ -287,11 +273,11 @@ public class MemoryDatabaseManager extends VirtualMultiInstanceDatabaseManager {
 			int rightArity = 0;
 			String rightName = null;
 			Term[] rightTerms = null;
-			
+
 			// prepare right side atoms
 			if (fRight instanceof Atom) {
 				// the conjunction was made by two atoms.
-				factsRight = answereSingleAtomQuery((Atom) fRight, instanceId);
+				factsRight = answerSingleAtomQuery((Atom) fRight, instanceId);
 				if (factsRight.isEmpty()) {
 					return new ArrayList<>();
 				}
@@ -302,7 +288,7 @@ public class MemoryDatabaseManager extends VirtualMultiInstanceDatabaseManager {
 				// the conjunction was made by an atoms and a conjunction, recursion needed.
 				if (!(fRight instanceof Conjunction))
 					throw new DatabaseException("Invalid conjunction (" + formula + ") in query: " + cq + ", wrong children types.");
-				factsRight = answereConjunctiveQueryRecursively(fRight, cq, instanceId);
+				factsRight = answerConjunctiveQueryRecursively(fRight, cq, instanceId);
 				if (factsRight.isEmpty()) {
 					return new ArrayList<>();
 				}
@@ -311,7 +297,7 @@ public class MemoryDatabaseManager extends VirtualMultiInstanceDatabaseManager {
 				rightTerms = formulaCache.get(rightName);
 			}
 			List<Atom> results = new ArrayList<>();
-			// now we have both left and right side atoms so we 
+			// now we have both left and right side atoms so we
 			// have to create a cross join, accounting with attribute equalities.
 			// first the new cross join predicate needs to be created
 			Predicate joint = Predicate.create(((Atom) fLeft).getPredicate().getName() + "_" + rightName, ((Atom) fLeft).getPredicate().getArity() + rightArity);
@@ -320,10 +306,10 @@ public class MemoryDatabaseManager extends VirtualMultiInstanceDatabaseManager {
 			List<Term> formulaTerms = new ArrayList<>();
 			formulaTerms.addAll(Arrays.asList(fLeft.getTerms()));
 			formulaTerms.addAll(Arrays.asList(rightTerms));
-			
+
 			// we need to cache these terms
 			formulaCache.put(joint.getName(), formulaTerms.toArray(new Term[formulaTerms.size()]));
-			
+
 			// the actual cross join
 			for (Atom lf : factsLeft) {
 				for (Atom rf : factsRight) {

@@ -26,8 +26,16 @@ public class CreateTable extends Command {
 	 */
 	public CreateTable(Relation[] relations) throws DatabaseException {
 		super();
+		
+		int maxlen = 500;
+		for (Relation r:relations) {
+			int newMax = (int) Math.round(1000.0 / r.getAttributes().length);
+			if (maxlen > newMax) {
+				maxlen = newMax;
+			}
+		}
 		// add SQL dialect specific tags
-		replaceTagsMySql.put(STRING_TYPE_NAME, "TEXT");
+		replaceTagsMySql.put(STRING_TYPE_NAME, "VARCHAR("+ maxlen+")"); // mysql doesn't like long unique texts.
 		replaceTagsDerby.put(STRING_TYPE_NAME, "VARCHAR(500)");
 		replaceTagsPostgres.put(STRING_TYPE_NAME, "VARCHAR(500)");
 
@@ -35,6 +43,21 @@ public class CreateTable extends Command {
 		for (Relation r : relations) {
 			statements.add(createTableStatement(r));
 		}
+		// add the UNIQUE constraint to the TABLE.
+		for (Relation r : relations) {
+			statements.add(createUniqueConstraintsStatement(r));
+		}
+	}
+
+	private String createUniqueConstraintsStatement(Relation r) {
+		String stmnt = "ALTER TABLE "+DATABASENAME+"." + r.getName() + " ADD CONSTRAINT " + r.getName() + "_Constraint UNIQUE(";
+		String columnNames = null;
+		for (Attribute a: r.getAttributes()) {
+			if (columnNames == null) columnNames = "";
+			else columnNames += ",";
+			columnNames +=a.getName();
+		}
+		return stmnt + columnNames + ")";
 	}
 
 	/**
