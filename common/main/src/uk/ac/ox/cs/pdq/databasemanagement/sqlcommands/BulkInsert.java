@@ -10,6 +10,7 @@ import com.google.common.base.Joiner;
 
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -44,7 +45,7 @@ public class BulkInsert extends Command {
 	 *            to store.
 	 * @param schema
 	 *            for attribute types.
-	 * @throws DatabaseException 
+	 * @throws DatabaseException
 	 */
 	public BulkInsert(Collection<Atom> facts, Schema schema) throws DatabaseException {
 		this.facts = facts;
@@ -52,6 +53,19 @@ public class BulkInsert extends Command {
 		// Group facts by relation.
 		Map<Predicate, List<Atom>> groupedFacts = new HashMap<>();
 		for (Atom a : facts) {
+
+			// Error checking
+			if (a == null || schema == null)
+				throw new DatabaseException("Cant delete unset fact or from an unset schema. Fact: " + a + ", schema: " + schema);
+			// header
+			Relation r = schema.getRelation(a.getPredicate().getName());
+			if (r == null)
+				throw new DatabaseException("Fact : " + a + " doesn't belong to schema " + schema);
+			// check the attributes
+			if (r.getAttributes().length != a.getTerms().length)
+				throw new DatabaseException("Fact have different number of terms then the attributes of the relation: " + a + ", relation " + r);
+
+			// grouping
 			if (groupedFacts.containsKey(a.getPredicate())) {
 				groupedFacts.get(a.getPredicate()).add(a);
 			} else {

@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.test.util;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
@@ -176,6 +177,24 @@ public class PdqTest {
 		TestScenario ts = new TestScenario();
 		ts.setSchema(schema);
 		ts.setQuery(query);
+		
+		Atom[] facts = new Atom[] {
+				Atom.create(relations[0], new Term[] { TypedConstant.create(12), TypedConstant.create(31), TypedConstant.create(100), TypedConstant.create(10000)}), 
+				Atom.create(relations[0], new Term[] { TypedConstant.create(13), TypedConstant.create(32), TypedConstant.create(101), TypedConstant.create(10000)}), 
+				Atom.create(relations[0], new Term[] { TypedConstant.create(14), TypedConstant.create(33), TypedConstant.create(102), TypedConstant.create(10000)}), 
+				Atom.create(relations[0], new Term[] { TypedConstant.create(15), TypedConstant.create(34), TypedConstant.create(103), TypedConstant.create(10000)}), 
+
+				Atom.create(relations[1], new Term[] { TypedConstant.create(12), TypedConstant.create(31), TypedConstant.create(200), TypedConstant.create(10000)}), 
+				Atom.create(relations[1], new Term[] { TypedConstant.create(13), TypedConstant.create(32), TypedConstant.create(201), TypedConstant.create(10000)}), 
+				Atom.create(relations[1], new Term[] { TypedConstant.create(14), TypedConstant.create(33), TypedConstant.create(202), TypedConstant.create(10000)}), 
+				Atom.create(relations[1], new Term[] { TypedConstant.create(15), TypedConstant.create(34), TypedConstant.create(203), TypedConstant.create(10000)}), 
+
+				Atom.create(relations[2], new Term[] { TypedConstant.create(12), TypedConstant.create(31), TypedConstant.create(300), TypedConstant.create(10000)}), 
+				Atom.create(relations[2], new Term[] { TypedConstant.create(13), TypedConstant.create(32), TypedConstant.create(301), TypedConstant.create(10000)}), 
+				Atom.create(relations[2], new Term[] { TypedConstant.create(14), TypedConstant.create(33), TypedConstant.create(302), TypedConstant.create(10000)}), 
+				Atom.create(relations[2], new Term[] { TypedConstant.create(15), TypedConstant.create(34), TypedConstant.create(303), TypedConstant.create(10000)}), 
+		};
+		ts.setExampleAtoms1(Arrays.asList(facts));
 		return ts;
 	}
 

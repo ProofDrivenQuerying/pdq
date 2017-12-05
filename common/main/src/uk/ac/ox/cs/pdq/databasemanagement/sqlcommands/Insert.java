@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.databasemanagement.sqlcommands;
 
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -23,10 +24,6 @@ public class Insert extends Command {
 	 * Attributes of the terms above.
 	 */
 	private Attribute[] attributes;
-	/**
-	 * Name of the table we are inserting to.
-	 */
-	private String tableName;
 
 	/**
 	 * Constructs this Insert statement.
@@ -39,17 +36,21 @@ public class Insert extends Command {
 	 *             - in case the fact contains something that is not a constant.
 	 */
 	public Insert(Atom fact, Schema schema) throws DatabaseException {
-		// get the terms
-		this.terms = fact.getTerms();
-		tableName = fact.getPredicate().getName();
+		if (fact == null || schema == null)
+			throw new DatabaseException("Cant delete unset fact or from an unset schema. Fact: " + fact + ", schema: " + schema);
+		// header
+		Relation r = schema.getRelation(fact.getPredicate().getName());
 
-		// check if we have the table
-		if (schema.getRelation(tableName) == null) {
-			throw new DatabaseException("Table name for fact: " + fact + " not found in schema: " + schema);
-		}
+		if (r == null)
+			throw new DatabaseException("Fact : " + fact + " doesn't belong to schema " + schema);
 
 		// get the attributes
-		attributes = schema.getRelation(tableName).getAttributes();
+		attributes = r.getAttributes();
+		if (attributes.length != fact.getTerms().length)
+			throw new DatabaseException("Fact have different number of terms then the attributes of the relation: " + fact + ", relation " + r);
+
+		// get the terms
+		this.terms = fact.getTerms();
 
 		// build the actual INSERT INTO statement
 		String insertInto = "INSERT INTO " + DATABASENAME + "." + fact.getPredicate().getName() + " " + "VALUES ( ";
