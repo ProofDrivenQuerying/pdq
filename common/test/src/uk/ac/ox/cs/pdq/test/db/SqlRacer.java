@@ -1,10 +1,8 @@
 package uk.ac.ox.cs.pdq.test.db;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -13,14 +11,19 @@ import org.junit.Before;
 
 import com.google.common.collect.Lists;
 
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.VirtualMultiInstanceDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
+import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -28,7 +31,6 @@ import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * This test when executed as a java application can detect memory leaks in the
@@ -47,44 +49,42 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 public class SqlRacer {
 	private final boolean print = false;
 	protected final static int insertCacheSize = 1000;
-	private int repeat = 1;
-	private final int PARALLEL_THREADS = 10;
-	
+	private int repeat = 2;
 	protected final long timeout = 3600000;
 	private Relation rel1;
 	private Relation rel2;
 	private Relation rel3;
-
+	private final int NUMBER_OF_FACTS = 1000;
 	private TGD tgd;
 	private TGD tgd2;
 	private EGD egd;
 
 	private Schema schema;
-	private final DatabaseConnection dcMySql;
-	private final DatabaseConnection dcPostgresSql;
-	private final DatabaseConnection dcDerby;
-	private DatabaseInstance derbyInstance;
-	private DatabaseInstance postgresInstance;
-	private DatabaseInstance mySqlInstance;
+	private final DatabaseManager dcMySql;
+	private final DatabaseManager dcPostgresSql;
+	private final DatabaseManager dcDerby;
+	private final DatabaseManager dcMemory;
+	private Atom R1;
 	public static void main(String[] args) {
 		try {
 			new SqlRacer();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	public SqlRacer() throws SQLException {
+	public SqlRacer() throws SQLException, DatabaseException {
 		try {
 			setup();
-			dcMySql = new DatabaseConnection(DatabaseParameters.MySql, this.schema,PARALLEL_THREADS);
-			dcPostgresSql = new DatabaseConnection(DatabaseParameters.Postgres, this.schema,PARALLEL_THREADS);
-			dcDerby = new DatabaseConnection(DatabaseParameters.Derby, this.schema);
-
-			derbyInstance = new DatabaseInstance(dcDerby);			
-			postgresInstance = new DatabaseInstance(dcPostgresSql);			
-			mySqlInstance = new DatabaseInstance(dcMySql);			
+			dcMySql = new VirtualMultiInstanceDatabaseManager(DatabaseParameters.MySql);
+			dcPostgresSql = new VirtualMultiInstanceDatabaseManager(DatabaseParameters.Postgres);
+			dcDerby = new VirtualMultiInstanceDatabaseManager(DatabaseParameters.Derby);
+			dcMemory = new InternalDatabaseManager();			
+			dcMySql.initialiseDatabaseForSchema(this.schema);
+			dcPostgresSql.initialiseDatabaseForSchema(this.schema);
+			dcDerby.initialiseDatabaseForSchema(this.schema);
+			dcMemory.initialiseDatabaseForSchema(this.schema);
 			setupThreads();
 		} catch (SQLException e) {
 			throw e;
@@ -108,7 +108,7 @@ public class SqlRacer {
 		Attribute at32 = Attribute.create(String.class, "at32");
 		this.rel3 = Relation.create("R3", new Attribute[] { at31, at32, factId });
 
-		Atom R1 = Atom.create(this.rel1, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
+		R1 = Atom.create(this.rel1, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		Atom R2 = Atom.create(this.rel2, new Term[] { Variable.create("y"), Variable.create("z") });
 		Atom R2p = Atom.create(this.rel2, new Term[] { Variable.create("y"), Variable.create("w") });
 
@@ -124,65 +124,79 @@ public class SqlRacer {
 		Thread mySqlThread = new Thread() {
 			public void run() {
 				try {
-					race(mySqlInstance, dcMySql, "MySql     ");
-				} catch (SQLException e) {
+					race(dcMySql, "MySql     ");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+		};
+		Thread postgresThread = new Thread() {
+			public void run() {
+				try {
+					race(dcPostgresSql, "PostgresSql");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+		};
+
+		Thread derbyThread = new Thread() {
+			public void run() {
+				try {
+					race(dcDerby, "Derby     ");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+		};
+		Thread memoryThread = new Thread() {
+			public void run() {
+				try {
+					race(dcMemory, "Memory    ");
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 
 		};
 		mySqlThread.start();
-		Thread postgresThread = new Thread() {
-			public void run() {
-				try {
-					race(postgresInstance, dcPostgresSql, "PostgresSql");
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-
-		};
 		postgresThread.start();
-
-		Thread derbyThread = new Thread() {
-			public void run() {
-				try {
-					race(derbyInstance, dcDerby, "Derby     ");
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-
-		};
 		derbyThread.start();
-		synchronized (derbyThread) {
-			try {
-				derbyThread.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		memoryThread.start();
 	}
 
-	private void race(DatabaseInstance instance, DatabaseConnection dc, String name) throws SQLException {
+	private void race(DatabaseManager instance, String name) throws SQLException, DatabaseException {
 		long startTime = System.currentTimeMillis();
-		System.out.println(name + "started. Each loop will create and delete 1000 times " + repeat + " amount of facts.");
+		System.out.println(name + "started. Each loop will create and delete "+NUMBER_OF_FACTS+" facts " + repeat + " amount of times.");
 		long counter = 0;
 		while (true) {
+			List<Match> rs = null;
+			ConjunctiveQuery cq = ConjunctiveQuery.create(R1.getVariables(), R1);
+			Collection<Atom> facts = createTestFacts1000();
 			for (int i = 0; i < repeat; i++) {
-				PdqTest.reInitalize(this);
-				Collection<Atom> facts = createTestFacts1000();
+				//PdqTest.reInitalize(this);
+				int resCount = 0;
 				instance.addFacts(facts);
-				Statement sqlStatement = dc.getSynchronousConnections(0).createStatement();
-				ResultSet rs = sqlStatement.executeQuery("select * from "+dc.getDatabaseParameters().getDatabaseName()+".R1");
-				Assert.assertEquals(1000, checkTestFacts(rs, print));
-				rs.close();
+				rs = instance.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] {cq}));
+				resCount = checkTestFacts(rs, print);
+				if (resCount != NUMBER_OF_FACTS) {
+					System.err.println("query result is not "+NUMBER_OF_FACTS+", but " + resCount + " in " + name);
+					Assert.assertEquals(NUMBER_OF_FACTS, checkTestFacts(rs, print));
+				}
 			}
-			Statement sqlStatement = dc.getSynchronousConnections(0).createStatement();
-			int deleted = sqlStatement.executeUpdate("delete from "+dc.getDatabaseParameters().getDatabaseName()+".R1");
-			if (deleted < repeat*1000) {
-				System.err.println(deleted + " amount of tuples were created out of 1000.");
+			instance.deleteFacts(instance.getCachedFacts());
+			rs = instance.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] {cq}));
+			int resCount = checkTestFacts(rs, print);
+			if (resCount != 0) {
+				System.err.println("query result is not "+0+", but " + resCount + " in " + name);
+				Assert.assertEquals(NUMBER_OF_FACTS, checkTestFacts(rs, print));
 			}
+			
+			
+			
 			counter++;
 			if (counter % 10 == 0) {
 				long duration = System.currentTimeMillis() - startTime;
@@ -192,24 +206,22 @@ public class SqlRacer {
 		}
 	}
 
-	private int checkTestFacts(ResultSet rs, boolean print) throws SQLException {
-		ResultSetMetaData rsmd = rs.getMetaData();
-		int columnsNumber = rsmd.getColumnCount();
+	private int checkTestFacts(List<Match> rs, boolean print) throws SQLException {
 		if (print) {
-			for (int i = 1; i <= columnsNumber; i++) {
-				System.out.print(rsmd.getColumnName(i) + "\t");
+			for (Match m: rs) {
+				for (Variable v:m.getMapping().keySet()) {
+					System.out.print(v.getSymbol() + "\t");
+				}
+				System.out.println("");
+				break;
 			}
-			System.out.println("");
 		}
 		int resultsRowCount = 0;
 		
-		while (rs.next()) {
+		for (Match m: rs) {
 			resultsRowCount++;
-			String columnValue = rs.getString(1);
-			if (print)
-				System.out.print(columnValue + "\t");
-			for (int i = 2; i <= columnsNumber; i++) {
-				columnValue = rs.getString(i);
+			for (Variable v:m.getMapping().keySet()) {
+				Constant columnValue = m.getMapping().get(v);
 				if (columnValue!=null)
 				if (print)
 					System.out.print(columnValue + "\t");
@@ -231,7 +243,7 @@ public class SqlRacer {
 	}
 	private Collection<Atom> createTestFacts1000() {
 		List<Atom> l = new ArrayList<>();
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < NUMBER_OF_FACTS; i++) {
 			Atom a = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k"+i), UntypedConstant.create("c"), UntypedConstant.create("c"+i) });
 			l.add(a);
 		}
