@@ -1,14 +1,11 @@
 package uk.ac.ox.cs.pdq.databasemanagement.sqlcommands;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.db.Schema;
 
 /**
- * To create a new Database it means we have to drop the already existing one.
- * Also to avoid synchronisation issues dropping a database will create an empty
- * one immediately, so this class can simply extend DropDatabase.
+ * Creates an empty schema with the given databaseName.
  * 
  * @author Gabor
  *
@@ -16,18 +13,40 @@ import uk.ac.ox.cs.pdq.db.Schema;
 public class CreateDatabase extends DropDatabase {
 
 	/**
-	 * The create and Drop database is the same since we can't risk dropping a
-	 * database and not re-creating it immediately (in such case the database have
-	 * to be re-created manually, since most database provider does not allow remote
-	 * connection to a database that does not exists.)
+	 * Creates a schema. In case of Postgres and MySql it will drop the same schema
+	 * if it exists. Derby is a memory database, so it can't have tables left in it
+	 * from previous execution.
 	 */
 	public CreateDatabase(Schema schema) {
 		super(schema);
 	}
+
+	@Override
+	public List<String> toPostgresStatement(String databaseName) {
+		// drop database (prostgres calls it SCHEMA) and then re- create it and set the
+		// new one as default.
+		statements.add("DROP SCHEMA IF EXISTS " + databaseName + " CASCADE");
+		statements.add("CREATE SCHEMA " + databaseName);
+		statements.add("SET search_path TO " + databaseName);
+		return statements;
+	}
+
+	@Override
+	public List<String> toMySqlStatement(String databaseName) {
+		// drop database (mySql calls it SCHEMA) and then re- create it and set the new
+		// one as default.
+		statements.add("DROP SCHEMA IF EXISTS " + databaseName);
+		statements.add("CREATE DATABASE " + databaseName);
+		statements.add("USE " + databaseName);
+		return statements;
+	}
+
 	@Override
 	public List<String> toDerbyStatement(String databaseName) {
-		// derby have to be empty.
-		return new ArrayList<String>();
+		// derby does not have conditional drop database command.
+		statements.add("CREATE SCHEMA " + databaseName);
+		ignoreErrors = true;
+		return statements;
 	}
 
 }

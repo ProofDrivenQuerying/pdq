@@ -47,7 +47,9 @@ public class DatabaseUtilities {
 			result.setAutoCommit(true);
 			return result;
 		} catch (SQLException e) {
-			if (e.getNextException()!=null)
+			if (e.getMessage() != null && e.getMessage().contains("does not exist")) {
+				log.error("Database " + database + " does not exists. falling back to default connection without database name.");
+			} else if (e.getNextException()!=null)
 				e.getNextException().printStackTrace();
 			else
 				e.printStackTrace();

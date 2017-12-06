@@ -9,11 +9,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.base.Strings;
-
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.DatabaseUtilities;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -69,7 +67,10 @@ public class ExecutorThread extends Thread {
 	 * Database name.
 	 */
 	private String databaseName = null;
-
+	/**
+	 * Extra error logging when set to true.
+	 */
+	boolean debug = true;
 	/**
 	 * Creates a connection to the database provider, and creates a PDQ_WORK schema
 	 * or database in it.
@@ -79,77 +80,44 @@ public class ExecutorThread extends Thread {
 	 * @throws DatabaseException
 	 */
 	public ExecutorThread(DatabaseParameters databaseParameters, ExecutionManager manager) throws DatabaseException {
-		// this.parameters = databaseParameters;
+		super("Executor" + getDriverType(databaseParameters.getDatabaseDriver()) + "_"+GlobalCounterProvider.getNext("ExecutorThread"));
 		this.manager = manager;
 		String driver = databaseParameters.getDatabaseDriver();
 		String url = databaseParameters.getConnectionUrl();
 		String database = databaseParameters.getDatabaseName();
 		String username = databaseParameters.getDatabaseUser();
 		String password = databaseParameters.getDatabasePassword();
-		if (driver.contains("derby")) {
-			driverType = DriverType.Derby;
-			database = validateDatabaseName(database);
-			databaseParameters.setDatabaseName(database);
-			username = "APP_" + GlobalCounterProvider.getNext("DatabaseConnectionName");
-			password = "";
-		}
-		if (driver.toLowerCase().contains("mysql")) {
-			driverType = DriverType.MySql;
-		}
-
-		if (driver.toLowerCase().contains("postgres")) {
-			driverType = DriverType.Postgres;
-		}
-		if (driverType == null)
-			throw new DatabaseException("Invalid driver type!" + driver);
+		driverType = getDriverType(driver);
 		try {
 			String dbToConnect = database;
-			if (!driver.contains("derby") && database.contains("_work")) {
-				dbToConnect = database.substring(0, database.indexOf("_work"));
+			if (database.contains("_WORK")) {
+				dbToConnect = database.substring(0, database.indexOf("_WORK"));
 			}
 			connection = DatabaseUtilities.getConnection(driver, url, dbToConnect, username, password);
 		} catch (SQLException e) {
 			throw new DatabaseException("Connection failed to url: " + url + " using database: " + database + ", driver: " + driver, e);
 		}
-		if (!driver.contains("derby") && !database.contains("_work")) {
-			// In case of postgres and mysql we need to have 2 databases, one we used to
-			// connect to, and a secondary to use.
-			database = database + "_work";
+		if (!database.contains("_WORK")) {
+			// we need to have 2 databases, one we used to connect to, and a secondary to use.
+			database = database + "_WORK";
 			databaseParameters.setDatabaseName(database);
 		}
 		this.databaseName = database;
-		try {
-			if (driver.contains("derby")) {
-				Statement st = connection.createStatement();
-				st.execute("create schema " + database);
-			}
-		} catch (SQLException e) {
-			throw new DatabaseException("Derby database-schema creation failed: " + database, e);
-		}
-
 	}
 
-	/**
-	 * Limits the max lengh of the database name, makes sure it is all uppercase.
-	 * 
-	 * @param databaseIn
-	 * @return
-	 */
-	private String validateDatabaseName(String databaseIn) {
-		String newDatabaseName = databaseIn;
-		if (Strings.isNullOrEmpty(newDatabaseName)) {
-			newDatabaseName = "chase";
+	private static DriverType getDriverType(String driver) throws DatabaseException {
+		
+		DriverType driverType = null;
+		if (driver.contains("derby")) {
+			driverType = DriverType.Derby;
+		} else if (driver.toLowerCase().contains("mysql")) {
+			driverType = DriverType.MySql;
+		} else if (driver.toLowerCase().contains("postgres")) {
+			driverType = DriverType.Postgres;
+		} else {
+			throw new DatabaseException("Unknown Driver: " + driver);
 		}
-		// database name cannot be longer then 128 character, so if it is close we
-		// shorten it,
-		// add current time to make sure it is unique even in case of multiple runs.
-		if (newDatabaseName.length() > 90) {
-			newDatabaseName = newDatabaseName.substring(0, 80) + "__";
-		}
-		newDatabaseName += "_" + System.currentTimeMillis() + "_" + GlobalCounterProvider.getNext("DatabaseConnectionName");
-
-		newDatabaseName = newDatabaseName.toUpperCase();
-		return newDatabaseName;
+		return driverType;
 	}
 
 	/*
@@ -227,21 +195,29 @@ public class ExecutorThread extends Thread {
 			statements = command.toPostgresStatement(databaseName);
 			break;
 		}
-
+		boolean ignoreErrors = command.isIgnoreErrors();
 		// Selects have to be executed by the JDBC interface's executeQuery function,
 		// while inserts and other SQL commands have to be executed by calling the
 		// executeUpdate function. Everything that extends BasicSelect will be executed
 		// as a query, one by one. Updates can be batch executed.
+		
 		if (command instanceof BasicSelect) {
 			List<Match> results = new ArrayList<>();
 			for (String statement : statements) {
 				// queries one by one.
-				results.addAll(executeQuery(statement, (BasicSelect) command));
+				try {
+					results.addAll(executeQuery(statement, (BasicSelect) command));
+				} catch (Throwable t) {
+					if (ignoreErrors)
+						t.printStackTrace();
+					else
+						throw t;
+				}
 			}
 			return results;
 		} else {
 			// batch update.
-			executeUpdate(statements);
+			executeUpdate(statements, ignoreErrors);
 			return new ArrayList<>();
 		}
 	}
@@ -252,17 +228,35 @@ public class ExecutorThread extends Thread {
 	 * 
 	 * @param statements
 	 *            - Commands that are not related to BasicSelect
+	 * @param ignoreErrors 
 	 * @return
 	 * @throws DatabaseException
 	 * @throws SQLException
 	 */
-	private void executeUpdate(List<String> statements) throws DatabaseException, SQLException {
+	private void executeUpdate(List<String> statements, boolean ignoreErrors) throws DatabaseException, SQLException {
 		Statement sqlStmt = null;
 		try {
-			sqlStmt = connection.createStatement();
-			for (String s : statements)
-				sqlStmt.addBatch(s);
-			sqlStmt.executeBatch();
+			if (!ignoreErrors) {
+				// in case we don't have to catch exceptions we can run everything in a batch.
+				sqlStmt = connection.createStatement();
+				for (String s : statements)
+					sqlStmt.addBatch(s);
+				sqlStmt.executeBatch();
+			} else {
+				// IGNORE ERROR
+				// run the statements one by one and handle exceptions.
+				for (String s : statements) {
+					sqlStmt = connection.createStatement();
+					try {
+						sqlStmt.executeUpdate(s);
+					} catch(Throwable t) {
+						if (debug) { 
+							System.err.println("Error while executing " + s);
+							t.printStackTrace();
+						}
+					}
+				}
+			}
 		} catch (SQLException e) {
 			SQLException looping = e;
 			do {

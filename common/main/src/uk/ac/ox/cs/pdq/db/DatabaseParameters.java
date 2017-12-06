@@ -3,7 +3,10 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.base.Strings;
+
 import uk.ac.ox.cs.pdq.Parameters;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 
 /**
@@ -24,13 +27,12 @@ public class DatabaseParameters extends Parameters {
 
 	/**  Properties file path. */
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;
-	static final int DEFAULT_NUMBER_OF_THREADS = 5;
+	static final int DEFAULT_NUMBER_OF_THREADS = 10;
 	static final String NUMBER_OF_THREADS_PROPERTY = "number.of.threads";
 
 	public static final DatabaseParameters MySql = getDefaultForMySql();
 	public static final DatabaseParameters Postgres = getDefaultForPostgres();
 	public static final DatabaseParameters Derby = getDefaultForDerby();
-	public static final DatabaseParameters Memory = getDefaultForMemory();
 	public static final DatabaseParameters Empty = new DatabaseParameters();
 	
 	/** The database driver. */
@@ -76,22 +78,15 @@ public class DatabaseParameters extends Parameters {
 		return dbParam; 
 	}
 	
-	private static DatabaseParameters getDefaultForMemory() {
-		DatabaseParameters dbParam = new DatabaseParameters();
-		//dbParam.setDatabaseDriver("MemoryDatabaseInstance");
-		dbParam.setNumberOfThreads(DEFAULT_NUMBER_OF_THREADS);
-		dbParam.setDatabaseName("pdq");
-		return dbParam; 
-	}
-	
 	private static DatabaseParameters getDefaultForDerby() {
 		DatabaseParameters dbParam = new DatabaseParameters();
 		dbParam.setConnectionUrl("jdbc:derby:memory:{1};create=true");
 		dbParam.setDatabaseDriver("org.apache.derby.jdbc.EmbeddedDriver");
 		dbParam.setDatabaseName("pdq");
-		dbParam.setDatabaseUser("root");
-		dbParam.setDatabasePassword("root");
+		dbParam.setDatabaseUser("APP_" + GlobalCounterProvider.getNext("DatabaseConnectionName"));
+		dbParam.setDatabasePassword("");
 		dbParam.setNumberOfThreads(DEFAULT_NUMBER_OF_THREADS);
+		
 		return dbParam; 
 	}
 	
@@ -102,6 +97,7 @@ public class DatabaseParameters extends Parameters {
 		dbParam.setDatabaseName("pdq");
 		dbParam.setDatabaseUser("postgres");
 		dbParam.setDatabasePassword("root");
+		dbParam.setNumberOfThreads(DEFAULT_NUMBER_OF_THREADS);
 		return dbParam; 
 	}
 
@@ -180,7 +176,25 @@ public class DatabaseParameters extends Parameters {
 	 * @param databaseName String
 	 */
 	public void setDatabaseName(String databaseName) {
-		this.databaseName = databaseName;
+		this.databaseName = validateDatabaseName(databaseName);
+	}
+	/**
+	 * Limits the max lengh of the database name, makes sure it is all uppercase.
+	 * 
+	 * @param databaseIn
+	 * @return
+	 */
+	private String validateDatabaseName(String databaseIn) {
+		String newDatabaseName = databaseIn;
+		if (Strings.isNullOrEmpty(newDatabaseName)) {
+			newDatabaseName = "pdq";
+		}
+		// database name cannot be longer then 128 character, so if it is close we
+		// shorten it,
+		if (newDatabaseName.length() > 126) {
+			newDatabaseName = newDatabaseName.substring(0, 126);
+		}
+		return newDatabaseName;
 	}
 
 	/**

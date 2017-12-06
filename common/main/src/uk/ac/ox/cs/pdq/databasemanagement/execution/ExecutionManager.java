@@ -49,9 +49,6 @@ public class ExecutionManager {
 	public ExecutionManager(DatabaseParameters parameters) throws DatabaseException {
 		this.parameters = parameters;
 		threads = new ArrayList<>();
-		if (parameters.getDatabaseDriver().contains("derby")) {
-			this.parameters.setNumberOfThreads(1); // derby can't handle more then one connection.
-		}
 		for (int i = 0; i < this.parameters.getNumberOfThreads(); i++) {
 			ExecutorThread thread = new ExecutorThread(parameters, this);
 			thread.start();

@@ -40,7 +40,7 @@ public class MultiInstanceFactCache {
 		newToThisInstance.addAll(isThisNew);
 		for (Integer iId: multiCache.keySet()) {
 			if (iId != instanceId) {
-				newToThisInstance = multiCache.get(iId).checkExists(newToThisInstance);
+				newToThisInstance = multiCache.get(iId).contains(newToThisInstance);
 			}
 		}
 		return newToThisInstance;
@@ -82,6 +82,22 @@ public class MultiInstanceFactCache {
 
 	public void clearCache(int instanceId) {
 		multiCache.get(instanceId).clearCache();
+	}
+
+	public Collection<Atom> deleteFactsAndListUnusedFacts(Collection<Atom> facts, int instanceId) {
+		boolean changed = deleteFacts(facts, instanceId);
+		Collection<Atom> results = new ArrayList<>();
+		if (changed) {
+			for (Atom f:facts) {
+				for (Integer iId:multiCache.keySet()) {
+					if (!multiCache.get(iId).containsFact(f)) {
+						results.add(f);
+						break;
+					}
+				}
+			}
+		}
+		return results;
 	}
 
 }

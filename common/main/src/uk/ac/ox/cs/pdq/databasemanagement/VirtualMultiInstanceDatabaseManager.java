@@ -115,7 +115,7 @@ public class VirtualMultiInstanceDatabaseManager extends ExternalDatabaseManager
 	 * @see uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager#deleteFacts(java.util.Collection)
 	 */
 	public void deleteFacts(Collection<Atom> facts) throws DatabaseException {
-		multiCache.deleteFacts(facts, databaseInstanceID);
+		super.deleteFacts(extendFactsWithFactID(multiCache.deleteFactsAndListUnusedFacts(facts, databaseInstanceID)));
 		// only deletes the mapping of this fact to this instance, does not delete the
 		// actual fact.
 		super.deleteFacts(getFactsMapping(facts, this.databaseInstanceID));

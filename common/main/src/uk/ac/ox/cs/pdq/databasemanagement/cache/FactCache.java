@@ -80,6 +80,15 @@ public class FactCache {
 		}
 		return result;
 	}
+	public boolean containsFact(Atom f) {
+		boolean ret = false;
+		synchronized (LOCK) {
+			if (cache.containsKey(f.getPredicate().getName())) {
+				ret = cache.get(f.getPredicate().getName()).contains(f);
+			}
+		}
+		return ret;
+	}
 
 	/**
 	 * Gets all facts of a certain relation.
@@ -138,9 +147,9 @@ public class FactCache {
 	 * change the content of the cache.
 	 * 
 	 * @param newToThisInstance
-	 * @return
+	 * @return not existing facts
 	 */
-	public Collection<Atom> checkExists(Collection<Atom> newToThisInstance) {
+	public Collection<Atom> contains(Collection<Atom> newToThisInstance) {
 		Collection<Atom> results = new ArrayList<>();
 		synchronized (LOCK) {
 			for (Atom a : newToThisInstance) {
@@ -157,4 +166,5 @@ public class FactCache {
 		}
 		return results;
 	}
+
 }
