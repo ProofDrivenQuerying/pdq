@@ -53,6 +53,10 @@ public class Command {
 	protected Map<String, String> replaceTagsPostgres = new HashMap<>();
 
 	/**
+	 * When set to true, it will execute each statement separately and ignore any error.
+	 */
+	protected boolean ignoreErrors = false;
+	/**
 	 * Constructs an empty command.
 	 */
 	public Command() {
@@ -174,6 +178,10 @@ public class Command {
 	@Override
 	public String toString() {
 		return "" + statements;
+	}
+
+	public boolean isIgnoreErrors() {
+		return ignoreErrors;
 	}
 
 }
