@@ -120,7 +120,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 			String tuple = "(";
 			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
 				Term term = fact.getTerm(termIndex);
-				if (term instanceof TypedConstant == termIndex < fact.getNumberOfTerms()-1) {
+				if (term instanceof TypedConstant && termIndex < fact.getNumberOfTerms()-1) {
 					tuple += "'" + ((TypedConstant)term).serializeToString() + "'";
 				} else if (!term.isVariable()) 
 					tuple += "'" + term + "'";
