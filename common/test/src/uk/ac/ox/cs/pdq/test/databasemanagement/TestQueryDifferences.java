@@ -7,7 +7,9 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -66,10 +68,10 @@ public class TestQueryDifferences extends PdqTest {
 		largeTableQueryDifferenceEGD(DatabaseParameters.Postgres);
 	}
 
-	// @Test
+	@Test
 	public void largeTableQueryDifferenceMemory() throws DatabaseException {
-		largeTableQueryDifferenceTGD(DatabaseParameters.Memory);
-		largeTableQueryDifferenceEGD(DatabaseParameters.Memory);
+		largeTableQueryDifferenceTGD(null);
+		largeTableQueryDifferenceEGD(null);
 	}
 
 	/**
@@ -83,7 +85,11 @@ public class TestQueryDifferences extends PdqTest {
 	 * @throws DatabaseException
 	 */
 	private void largeTableQueryDifferenceTGD(DatabaseParameters parameters) throws DatabaseException {
-		ExternalDatabaseManager manager = new ExternalDatabaseManager(parameters);
+		DatabaseManager manager = null; 
+		if (parameters!=null)
+			manager = new ExternalDatabaseManager(parameters);
+		else 
+			manager = new InternalDatabaseManager();
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
 		List<Atom> facts = new ArrayList<>();
 
@@ -129,11 +135,13 @@ public class TestQueryDifferences extends PdqTest {
 		List<Match> diffFacts = manager.answerQueryDifferences(left, right);
 		Assert.assertEquals(1, diffFacts.size());
 		Assert.assertTrue(diffFacts.get(0).getMapping().containsKey(Variable.create("z")));
-		if (parameters.getDatabaseDriver().contains("memory")) {
+		if (manager instanceof InternalDatabaseManager) {
 			Assert.assertEquals(TypedConstant.create(115), diffFacts.get(0).getMapping().get(Variable.create("z")));
 		} else {
 			Assert.assertEquals(UntypedConstant.create("115"), diffFacts.get(0).getMapping().get(Variable.create("z")));
 		}
+		manager.dropDatabase();
+		manager.shutdown();
 	}
 
 	/**
@@ -147,7 +155,11 @@ public class TestQueryDifferences extends PdqTest {
 	 * @throws DatabaseException
 	 */
 	private void largeTableQueryDifferenceEGD(DatabaseParameters parameters) throws DatabaseException {
-		ExternalDatabaseManager manager = new ExternalDatabaseManager(parameters);
+		DatabaseManager manager = null;
+		if (parameters!=null)
+			manager = new ExternalDatabaseManager(parameters);
+		else 
+			manager = new InternalDatabaseManager();
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
 		List<Atom> facts = new ArrayList<>();
 
@@ -196,11 +208,13 @@ public class TestQueryDifferences extends PdqTest {
 		Assert.assertEquals(1, diffFacts.size());
 		Assert.assertTrue(diffFacts.get(0).getMapping().containsKey(Variable.create("z")));
 
-		if (parameters.getDatabaseDriver().contains("memory")) {
+		if (manager instanceof InternalDatabaseManager) {
 			Assert.assertEquals(TypedConstant.create(115), diffFacts.get(0).getMapping().get(Variable.create("z")));
 		} else {
 			Assert.assertEquals(UntypedConstant.create("115"), diffFacts.get(0).getMapping().get(Variable.create("z")));
 		}
+		manager.dropDatabase();
+		manager.shutdown();
 	}
 
 }
