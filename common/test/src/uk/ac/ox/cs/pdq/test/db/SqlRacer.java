@@ -176,19 +176,32 @@ public class SqlRacer {
 			List<Match> rs = null;
 			ConjunctiveQuery cq = ConjunctiveQuery.create(R1.getVariables(), R1);
 			Collection<Atom> facts = createTestFacts1000();
+			long durationAdd =0;
+			long durationQ =0;
+			long durationDel =0;
 			for (int i = 0; i < repeat; i++) {
 				//PdqTest.reInitalize(this);
 				int resCount = 0;
+				
+				long start =  System.currentTimeMillis();
 				instance.addFacts(facts);
+				durationAdd = System.currentTimeMillis() - start;
+				
+				start =  System.currentTimeMillis();
 				rs = instance.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] {cq}));
+				durationQ = System.currentTimeMillis() - start;
+				
 				resCount = checkTestFacts(rs, print);
 				if (resCount != NUMBER_OF_FACTS) {
 					System.err.println("query result is not "+NUMBER_OF_FACTS+", but " + resCount + " in " + name);
 					Assert.assertEquals(NUMBER_OF_FACTS, checkTestFacts(rs, print));
 				}
 			}
+			long start =  System.currentTimeMillis();
 			instance.deleteFacts(instance.getCachedFacts());
 			rs = instance.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] {cq}));
+			durationDel = System.currentTimeMillis() - start;
+			
 			int resCount = checkTestFacts(rs, print);
 			if (resCount != 0) {
 				System.err.println("query result is not "+0+", but " + resCount + " in " + name);
@@ -201,7 +214,7 @@ public class SqlRacer {
 			if (counter % 10 == 0) {
 				long duration = System.currentTimeMillis() - startTime;
 				int loopPer100Second = (int)((((double)counter)/duration)*1000*1000);
-				System.out.println(name + "\t#" + counter + " \tthroughput: \t" + (loopPer100Second/1000.00) + " \tloops per second.");
+				System.out.println(name + "\t#" + counter + " \tthroughput: \t" + (loopPer100Second/1000.00) + " \tloops per second. (Add:"+durationAdd+"ms, Query:"+durationQ+"ms, del:"+durationDel+"ms, )");
 			}
 		}
 	}

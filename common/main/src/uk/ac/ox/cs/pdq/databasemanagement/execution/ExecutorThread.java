@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.databasemanagement.execution;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -9,11 +10,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Strings;
+
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
-import uk.ac.ox.cs.pdq.db.DatabaseUtilities;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -93,7 +95,7 @@ public class ExecutorThread extends Thread {
 			if (database.contains("_WORK")) {
 				dbToConnect = database.substring(0, database.indexOf("_WORK"));
 			}
-			connection = DatabaseUtilities.getConnection(driver, url, dbToConnect, username, password);
+			connection = getConnection(driver, url, dbToConnect, username, password);
 		} catch (SQLException e) {
 			throw new DatabaseException("Connection failed to url: " + url + " using database: " + database + ", driver: " + driver, e);
 		}
@@ -371,4 +373,42 @@ public class ExecutorThread extends Thread {
 		}
 		connection = null;
 	}
+	
+	/**
+	 * Uses the DriverManager to get a JDBC connection to an external database
+	 */
+	private static Connection getConnection(String driver, String url, String database, String username, String password) throws SQLException {
+		if (!Strings.isNullOrEmpty(driver)) {
+			try {
+				Class.forName(driver).newInstance();
+			} catch (ClassNotFoundException e) {
+				throw new IllegalStateException("Could not load chase database driver '" + driver + "'");
+			} catch (InstantiationException e) {
+				throw new RuntimeException(e);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		String u = null;
+		if (url.contains("{1}")) {
+			u = url.replace("{1}", database);
+		} else {
+			u = url + database;
+		}
+		try {
+			Connection result = DriverManager.getConnection(u, username, password);
+			result.setAutoCommit(true);
+			return result;
+		} catch (SQLException e) {
+			if (e.getMessage() != null && e.getMessage().contains("does not exist")) {
+				System.err.println("Database " + database + " does not exists. falling back to default connection without database name.");
+			} else if (e.getNextException()!=null)
+				e.getNextException().printStackTrace();
+			else
+				e.printStackTrace();
+		}
+		Connection result = DriverManager.getConnection(url, username, password);
+		result.setAutoCommit(true);
+		return result;
+	}	
 }
