@@ -11,7 +11,6 @@ import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -41,7 +40,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  * @author Gabor
  *
  */
-public class VirtualMultiInstanceDatabaseManager extends ExternalDatabaseManager {
+public class VirtualMultiInstanceDatabaseManager implements DatabaseManager {
 	private Schema extendedSchema;
 	private Schema originalSchema;
 	protected static final String FACT_ID_TABLE_NAME = "DBFactID";
@@ -51,22 +50,39 @@ public class VirtualMultiInstanceDatabaseManager extends ExternalDatabaseManager
 			new Attribute[] { FACT_ID_ATTRIBUTE, Attribute.create(Integer.class, "DatabaseInstanceID") }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
 
 	protected MultiInstanceFactCache multiCache;
-
+	private ExternalDatabaseManager edm;
+	protected int databaseInstanceID;
+	
 	/**
 	 * Creates database manager and connection if needed based on the parameters.
 	 * 
 	 * @param parameters
 	 * @throws DatabaseException
 	 */
-	public VirtualMultiInstanceDatabaseManager(DatabaseParameters parameters) throws DatabaseException {
-		super(parameters);
-		multiCache = new MultiInstanceFactCache();
+	public VirtualMultiInstanceDatabaseManager(MultiInstanceFactCache cache, ExternalDatabaseManager edm, int databaseInstanceID) throws DatabaseException {
+		this.edm = edm;
+		multiCache = cache;
+		this.databaseInstanceID = databaseInstanceID;
 	}
 
-	protected VirtualMultiInstanceDatabaseManager() throws DatabaseException {
+	
+	/** Used by the Internal DatabaseManager.
+	 * @param cache
+	 * @param databaseInstanceID
+	 * @throws DatabaseException
+	 */
+	protected VirtualMultiInstanceDatabaseManager(MultiInstanceFactCache cache, int databaseInstanceID) throws DatabaseException {
 		super();
+		multiCache = cache;
+		this.databaseInstanceID = databaseInstanceID;
 	}
-
+	
+	public VirtualMultiInstanceDatabaseManager clone(int newDatabaseInstanceID) throws DatabaseException {
+		VirtualMultiInstanceDatabaseManager vmidm = new VirtualMultiInstanceDatabaseManager(multiCache, edm, newDatabaseInstanceID);
+		vmidm.extendedSchema = this.extendedSchema;
+		vmidm.originalSchema = this.originalSchema;
+		return vmidm;
+	}
 	/**
 	 * Creates a canonical database for the schema.
 	 * 
@@ -75,9 +91,8 @@ public class VirtualMultiInstanceDatabaseManager extends ExternalDatabaseManager
 	 */
 	@Override
 	public void initialiseDatabaseForSchema(Schema schema) throws DatabaseException {
-		this.originalSchema = schema;
-		this.extendedSchema = extendSchemaWithFactIDs(schema);
-		super.initialiseDatabaseForSchema(extendedSchema);
+		setSchema(schema);
+		edm.initialiseDatabaseForSchema(extendedSchema);
 	}
 
 	/**
@@ -104,7 +119,7 @@ public class VirtualMultiInstanceDatabaseManager extends ExternalDatabaseManager
 		extendedFacts.addAll(getFactsMapping(newFactsInThisInstance, this.databaseInstanceID));
 
 		// write database
-		super.addFacts(extendedFacts);
+		edm.addFacts(extendedFacts);
 	}
 
 	/**
@@ -115,10 +130,10 @@ public class VirtualMultiInstanceDatabaseManager extends ExternalDatabaseManager
 	 * @see uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager#deleteFacts(java.util.Collection)
 	 */
 	public void deleteFacts(Collection<Atom> facts) throws DatabaseException {
-		super.deleteFacts(extendFactsWithFactID(multiCache.deleteFactsAndListUnusedFacts(facts, databaseInstanceID)));
+		edm.deleteFacts(extendFactsWithFactID(multiCache.deleteFactsAndListUnusedFacts(facts, databaseInstanceID)));
 		// only deletes the mapping of this fact to this instance, does not delete the
 		// actual fact.
-		super.deleteFacts(getFactsMapping(facts, this.databaseInstanceID));
+		edm.deleteFacts(getFactsMapping(facts, this.databaseInstanceID)); 
 	}
 
 	/**
@@ -145,7 +160,7 @@ public class VirtualMultiInstanceDatabaseManager extends ExternalDatabaseManager
 			Collection<ConjunctiveQuery> queries = new ArrayList<>();
 			ConjunctiveQuery q = createQuery(r, databaseInstanceID);
 			queries.add(q);
-			results.addAll(removeFactID(getAtomsFromMatches(super.answerConjunctiveQueries(queries), r), originalSchema));
+			results.addAll(removeFactID(getAtomsFromMatches(edm.answerConjunctiveQueries(queries), r), originalSchema));
 		}
 		return results;
 	}
@@ -168,7 +183,7 @@ public class VirtualMultiInstanceDatabaseManager extends ExternalDatabaseManager
 		}
 
 		// Answer new queries
-		List<Match> matches = super.answerConjunctiveQueries(queriesWithInstanceIDs);
+		List<Match> matches = edm.answerConjunctiveQueries(queriesWithInstanceIDs);
 
 		// Remove unnecessary factIDs from the answer
 		List<Match> result = new ArrayList<Match>();
@@ -194,7 +209,7 @@ public class VirtualMultiInstanceDatabaseManager extends ExternalDatabaseManager
 		oldAndNewQueries.put(extendedLQ, leftQuery);
 		oldAndNewQueries.put(extendedRQ, rightQuery);
 		List<Match> result = new ArrayList<Match>();
-		List<Match> matches = super.answerQueryDifferences(extendedLQ, extendedRQ);
+		List<Match> matches = edm.answerQueryDifferences(extendedLQ, extendedRQ);
 		for (Match m : matches) {
 			result.add(Match.create(oldAndNewQueries.get(m.getFormula()), removeFactID(m.getMapping())));
 		}
@@ -272,11 +287,20 @@ public class VirtualMultiInstanceDatabaseManager extends ExternalDatabaseManager
 		return extendedFacts;
 	}
 
+
+	/**
+	 * Takes a collection of facts and extends them (returns facts with all the same
+	 * plus an extra term) with the id of this instance.
+	 * 
+	 * @param terms
+	 *            the collection of facts to be changed
+	 * @return the input facts each one extended by one term: the instance id
+	 */
 	private static Term[] extendTerms(Term[] terms, int factID) {
-		List<Term> newTerms = new ArrayList<>();
-		newTerms.addAll(Arrays.asList(terms));
-		newTerms.add(TypedConstant.create(factID));
-		return newTerms.toArray(new Term[newTerms.size()]);
+		Term[] newterms = new Term[terms.length + 1];
+		System.arraycopy(terms, 0, newterms, 0, terms.length);
+		newterms[newterms.length - 1] = TypedConstant.create(factID);
+		return newterms;
 	}
 
 	private static Collection<Atom> removeFactID(Collection<Atom> facts, Schema originalSchema) {
@@ -342,7 +366,41 @@ public class VirtualMultiInstanceDatabaseManager extends ExternalDatabaseManager
 	@Override
 	public void dropDatabase() throws DatabaseException {
 		multiCache.clearCache(databaseInstanceID);
-		super.dropDatabase();
+		if (edm!= null) edm.dropDatabase();
+	}
+
+
+	@Override
+	public void shutdown() throws DatabaseException {
+		if (edm!= null) edm.shutdown();
+	}
+
+
+	@Override
+	public void setSchema(Schema schema) {
+		this.originalSchema = schema;
+		this.extendedSchema = extendSchemaWithFactIDs(schema);
+		if (edm!= null) edm.setSchema(schema);
+	}
+
+
+	@Override
+	public Schema getSchema() {
+		return originalSchema;
+	}
+
+
+	@Override
+	public int getDatabaseInstanceID() {
+		return databaseInstanceID;
+	}
+
+
+	@Override
+	public String getDatabaseName() {
+		if (edm!= null) 
+			return edm.getDatabaseName();
+		return this.toString();
 	}
 
 }

@@ -9,7 +9,6 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
-import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -39,7 +38,7 @@ public class InternalDatabaseManager extends VirtualMultiInstanceDatabaseManager
 	 * @throws DatabaseException
 	 */
 	public InternalDatabaseManager() throws DatabaseException {
-		this("PdqTest");
+		this(new MultiInstanceFactCache(),1);
 	}
 
 	/**
@@ -47,18 +46,8 @@ public class InternalDatabaseManager extends VirtualMultiInstanceDatabaseManager
 	 * 
 	 * @param databaseName
 	 */
-	public InternalDatabaseManager(String databaseName) throws DatabaseException {
-		super();
-		this.parameters = DatabaseParameters.Empty;
-		// default database name
-		if (databaseName == null) {
-			databaseName = "PdqTest";
-			this.parameters.setDatabaseName(databaseName);
-		}
-		this.databaseName = databaseName;
-		// database unique ID.
-		databaseInstanceID = this.hashCode();
-		multiCache = new MultiInstanceFactCache();
+	public InternalDatabaseManager(MultiInstanceFactCache cache, int databaseInstanceID) throws DatabaseException {
+		super(cache, databaseInstanceID);
 	}
 
 	@Override
@@ -193,7 +182,7 @@ public class InternalDatabaseManager extends VirtualMultiInstanceDatabaseManager
 	}
 
 	public String getDatabaseName() {
-		return databaseName;
+		return "InternalDatabase";
 	}
 
 	/**

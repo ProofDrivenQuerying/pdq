@@ -12,8 +12,10 @@ import org.junit.Before;
 import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.VirtualMultiInstanceDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
@@ -49,7 +51,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 public class SqlRacer {
 	private final boolean print = false;
 	protected final static int insertCacheSize = 1000;
-	private int repeat = 2;
+	private int repeat = 1;
 	protected final long timeout = 3600000;
 	private Relation rel1;
 	private Relation rel2;
@@ -77,9 +79,10 @@ public class SqlRacer {
 	public SqlRacer() throws SQLException, DatabaseException {
 		try {
 			setup();
-			dcMySql = new VirtualMultiInstanceDatabaseManager(DatabaseParameters.MySql);
-			dcPostgresSql = new VirtualMultiInstanceDatabaseManager(DatabaseParameters.Postgres);
-			dcDerby = new VirtualMultiInstanceDatabaseManager(DatabaseParameters.Derby);
+			dcMySql = new VirtualMultiInstanceDatabaseManager(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.MySql),1);
+			
+			dcPostgresSql = new VirtualMultiInstanceDatabaseManager(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.Postgres),1);
+			dcDerby = new VirtualMultiInstanceDatabaseManager(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.Derby),1);
 			dcMemory = new InternalDatabaseManager();			
 			dcMySql.initialiseDatabaseForSchema(this.schema);
 			dcPostgresSql.initialiseDatabaseForSchema(this.schema);

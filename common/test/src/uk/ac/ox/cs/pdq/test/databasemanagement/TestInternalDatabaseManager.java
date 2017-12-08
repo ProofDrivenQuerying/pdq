@@ -45,7 +45,7 @@ public class TestInternalDatabaseManager extends PdqTest {
 	 */
 	@Test
 	public void largeTableQueryDifferenceTGD() throws DatabaseException {
-		InternalDatabaseManager manager = new InternalDatabaseManager(null);
+		InternalDatabaseManager manager = new InternalDatabaseManager();
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
 		List<Atom> facts = new ArrayList<>();
 
@@ -106,7 +106,7 @@ public class TestInternalDatabaseManager extends PdqTest {
 	 */
 	@Test
 	public void largeTableQueryDifferenceEGD() throws DatabaseException {
-		InternalDatabaseManager manager = new InternalDatabaseManager(null);
+		InternalDatabaseManager manager = new InternalDatabaseManager();
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
 		List<Atom> facts = new ArrayList<>();
 

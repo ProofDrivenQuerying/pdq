@@ -138,8 +138,6 @@ public interface DatabaseManager {
 	 */
 	public int getDatabaseInstanceID();
 
-	public void setDatabaseInstanceID(int instanceID);
-
 	/**
 	 * @return optional name of this database
 	 */

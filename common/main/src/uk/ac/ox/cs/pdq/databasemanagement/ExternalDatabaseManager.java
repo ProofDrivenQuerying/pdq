@@ -54,7 +54,6 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	 */
 	protected DatabaseParameters parameters;
 	protected String databaseName; // formal name, mainly for debugging purposes, default is "PdqTest"
-	protected int databaseInstanceID; // unique ID generated for this instance.
 	/**
 	 * The execution manager is responsible to manage connections and parallel
 	 * execution of bulk requests.
@@ -100,8 +99,6 @@ public class ExternalDatabaseManager implements DatabaseManager {
 			databaseName = "PdqTest";
 			this.parameters.setDatabaseName(databaseName);
 		}
-		// database unique ID.
-		databaseInstanceID = this.hashCode();
 
 		// Execution manager.
 		executor = new ExecutionManager(this.parameters);
@@ -272,11 +269,7 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	}
 
 	public int getDatabaseInstanceID() {
-		return databaseInstanceID;
-	}
-
-	public void setDatabaseInstanceID(int instanceID) {
-		databaseInstanceID = instanceID;
+		return this.hashCode();
 	}
 
 	public String getDatabaseName() {

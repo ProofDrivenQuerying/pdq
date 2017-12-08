@@ -12,7 +12,9 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.VirtualMultiInstanceDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -88,7 +90,7 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 	private void simpleDatabaseCreation(DatabaseParameters parameters) throws DatabaseException {
 		Relation R = Relation.create("R", new Attribute[] { a_s, b_s, c_s }, new AccessMethod[] { this.method0, this.method2 });
 
-		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(parameters);
+		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(new MultiInstanceFactCache(), new ExternalDatabaseManager(parameters),1);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R }));
 		// ADD facts
 		Atom a1 = Atom.create(R, new Term[] { UntypedConstant.create("12"), UntypedConstant.create("13"), UntypedConstant.create("14") });
@@ -107,31 +109,31 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		Assert.assertEquals(facts.size(), getFacts.size());
 		
 		
+		VirtualMultiInstanceDatabaseManager manager2 = manager.clone(2);
 		// new instance
-		manager.setDatabaseInstanceID(manager.getDatabaseInstanceID() + 10);
 		Atom a3 = Atom.create(R, new Term[] { TypedConstant.create(129), TypedConstant.create(139), TypedConstant.create(149) });
 		facts.add(a3);
 		
 		// some these facts exists already with different mappings, one of them is new.
-		manager.addFacts(facts);
-		getFacts = manager.getFactsFromPhysicalDatabase();
+		manager2.addFacts(facts);
+		getFacts = manager2.getFactsFromPhysicalDatabase();
 		Assert.assertTrue(facts.size() == getFacts.size() && facts.containsAll(getFacts));
 
 		// Test duplicated storage - stored data should not change when we add the same
 		// set twice
-		manager.addFacts(facts);
-		getFacts = manager.getFactsFromPhysicalDatabase();
+		manager2.addFacts(facts);
+		getFacts = manager2.getFactsFromPhysicalDatabase();
 		Assert.assertEquals(facts.size(), getFacts.size());
 
 		
 		// DELETE
-		manager.deleteFacts(facts);
-		getFacts = manager.getFactsFromPhysicalDatabase();
+		manager2.deleteFacts(facts);
+		getFacts = manager2.getFactsFromPhysicalDatabase();
 		Assert.assertNotNull(getFacts);
 		Assert.assertEquals(0, getFacts.size());
 		
 		
-		manager.setDatabaseInstanceID(manager.getDatabaseInstanceID() - 10);
+		manager = manager2.clone(1); // switching to "itself" instanceId1
 		
 		facts.remove(a3);
 		getFacts = manager.getFactsFromPhysicalDatabase();
@@ -143,7 +145,8 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		getFacts = manager.getFactsFromPhysicalDatabase();
 		Assert.assertNotNull(getFacts);
 		Assert.assertEquals(0, getFacts.size());
-
+		
+		manager.dropDatabase();
 		manager.shutdown();
 	}
 
@@ -203,7 +206,8 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 	private void virtualDatabaseCreationInt(DatabaseParameters parameters) throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		// create a simple manager
-		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(parameters);
+		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(new MultiInstanceFactCache(), new ExternalDatabaseManager(parameters),1);
+		
 		int instanceID1 = manager.getDatabaseInstanceID();
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R }));
 		Atom[] facts = new Atom[] { Atom.create(this.R, new Term[] { TypedConstant.create(1), TypedConstant.create(10), TypedConstant.create(100) }) };
@@ -213,7 +217,7 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 
 		// create a child of the previous manager, forming a virtual database instance
 		// over the original one.
-		manager.setDatabaseInstanceID(instanceID1 + 1);
+		manager = manager.clone(instanceID1 + 1);
 		int instanceID2 = manager.getDatabaseInstanceID();
 		Assert.assertNotEquals(instanceID1, instanceID2);
 
@@ -230,7 +234,8 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		Assert.assertEquals(1, answer.size());
 
 		// switching back to first instance
-		manager.setDatabaseInstanceID(instanceID1);
+		manager = manager.clone(instanceID1);
+		
 		Assert.assertArrayEquals(facts, manager.getCachedFacts().toArray(new Atom[manager.getCachedFacts().size()]));
 		// Typed untyped difference
 		Collection<Atom> physicalData = manager.getFactsFromPhysicalDatabase();
@@ -246,7 +251,8 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		Assert.assertNotNull(getFacts);
 		Assert.assertEquals(1, getFacts.size());
 
-		manager.setDatabaseInstanceID(instanceID2);
+		manager = manager.clone(instanceID2);
+		
 		// delete
 		getFacts = manager.getCachedFacts();
 		Assert.assertNotNull(getFacts);
@@ -258,6 +264,8 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		getFacts = manager.getFactsFromPhysicalDatabase();
 		Assert.assertNotNull(getFacts);
 		Assert.assertEquals(0, getFacts.size());
+		
+		manager.dropDatabase();
 		manager.shutdown();
 	}
 
@@ -276,9 +284,8 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		}
 
 		// create a simple manager
-		DatabaseParameters p = (DatabaseParameters) parameters.clone();
-		p.setProperty("database.isvirtual", Boolean.TRUE.toString());
-		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(p);
+		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(new MultiInstanceFactCache(), new ExternalDatabaseManager(parameters),1);
+		
 		int instanceID1 = manager.getDatabaseInstanceID();
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R_s }));
 		Atom[] facts = new Atom[] {
@@ -289,8 +296,8 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 
 		// create a child of the previous manager, forming a virtual database instance
 		// over the original one.
-		manager.setDatabaseInstanceID(instanceID1);
-		manager.setDatabaseInstanceID(instanceID1 + 1);
+		manager = manager.clone(instanceID1);
+		manager = manager.clone(instanceID1 + 1);
 		int instanceID2 = manager.getDatabaseInstanceID();
 		Assert.assertNotEquals(instanceID1, instanceID2);
 
@@ -308,7 +315,7 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		Assert.assertEquals(1, answer.size());
 
 		// switching back to first instance
-		manager.setDatabaseInstanceID(instanceID1);
+		manager = manager.clone(instanceID1);
 		Assert.assertArrayEquals(facts, manager.getCachedFacts().toArray(new Atom[manager.getCachedFacts().size()]));
 		// Typed untyped difference
 		Collection<Atom> physicalData = manager.getFactsFromPhysicalDatabase();
@@ -330,7 +337,7 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		Assert.assertNotNull(getFacts);
 		Assert.assertEquals(1, getFacts.size());
 
-		manager.setDatabaseInstanceID(instanceID2);
+		manager = manager.clone(instanceID2);
 		// delete
 		getFacts = manager.getCachedFacts();
 		Assert.assertNotNull(getFacts);
@@ -342,6 +349,8 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		getFacts = manager.getFactsFromPhysicalDatabase();
 		Assert.assertNotNull(getFacts);
 		Assert.assertEquals(0, getFacts.size());
+		
+		manager.dropDatabase();
 		manager.shutdown();
 	}
 	/**
@@ -355,7 +364,8 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 	 * @throws DatabaseException
 	 */
 	private void largeTableQueryDifferenceEGD(DatabaseParameters parameters) throws DatabaseException {
-		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(parameters);
+		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(new MultiInstanceFactCache(), new ExternalDatabaseManager(parameters),1);
+		
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
 		List<Atom> facts = new ArrayList<>();
 
@@ -409,6 +419,9 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		} else {
 			Assert.assertEquals(UntypedConstant.create("115"), diffFacts.get(0).getMapping().get(Variable.create("z")));
 		}
+		manager.dropDatabase();
+		manager.shutdown();
+		
 	}
 
 }

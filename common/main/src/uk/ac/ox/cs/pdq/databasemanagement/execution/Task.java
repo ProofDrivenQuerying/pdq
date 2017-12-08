@@ -29,11 +29,11 @@ public class Task {
 	 */
 	private boolean isFinished = false;
 	/**
-	 * A finished task has either results or resultException.
+	 * A finished task has either results or resultException. The result could be a number of updated records, but it is not implemented yet, or results of a query.
 	 */
-	private List<Match> results;
+	private List<Match> queryResults;
 	/**
-	 * When the database provider returns an exception insted of data.
+	 * When the database provider returns an exception instead of data.
 	 */
 	private Throwable resultException;
 
@@ -90,7 +90,7 @@ public class Task {
 
 	protected void setResults(List<Match> results, Throwable exceptionThrown) {
 		synchronized (RESULTS_LOCK) {
-			this.results = results;
+			this.queryResults = results;
 			this.resultException = exceptionThrown;
 			this.isFinished = true;
 			// wake up the one waiting for the results.
@@ -135,10 +135,10 @@ public class Task {
 				if (resultException != null) {
 					throw new DatabaseException("Error while executing command: " + command, resultException);
 				}
-				List<Match> ret = this.results;
+				List<Match> ret = this.queryResults;
 				return ret;
 			} finally {
-				this.results = null;
+				this.queryResults = null;
 				this.isFinished = false;
 				RESULTS_LOCK.notify(); // wake up the thread and continue executing tasks.
 			}
