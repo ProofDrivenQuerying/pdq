@@ -11,9 +11,13 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -27,8 +31,8 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * Tests the getMatches and the getTriggers methods of the DatabaseChaseInstance
@@ -39,7 +43,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
  */
 public class TestGetTriggers extends PdqTest {
 	private static final int NUMBER_OF_DUMMY_DATA = 100;
-	private static final int PARALLEL_THREADS = 10;
 	protected DatabaseChaseInstance[] chaseState = new DatabaseChaseInstance[3];
 	private final int DERBY = 0;
 	private final int MYSQL = 1;
@@ -48,35 +51,34 @@ public class TestGetTriggers extends PdqTest {
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		for (DatabaseChaseInstance state : chaseState) {
-			if (state!=null) state.close();
-		}
-		DatabaseChaseInstance.resetFacts();
-		this.chaseState[DERBY] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.Derby, this.testSchema1, PARALLEL_THREADS));
-		this.chaseState[MYSQL] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.MySql, this.testSchema1, PARALLEL_THREADS));
-		this.chaseState[POSTGRES] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.Postgres, this.testSchema1, PARALLEL_THREADS));
+		ExternalDatabaseManager edm = new ExternalDatabaseManager(DatabaseParameters.Derby);
+		LogicalDatabaseInstance connection =  new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm ,0);
+		connection.initialiseDatabaseForSchema(this.testSchema1);
+		this.chaseState[DERBY] = new DatabaseChaseInstance(new ArrayList<Atom>(), connection);
+		edm = new ExternalDatabaseManager(DatabaseParameters.MySql);
+		connection =  new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm ,0);
+		connection.initialiseDatabaseForSchema(this.testSchema1);
+		this.chaseState[MYSQL] = new DatabaseChaseInstance(new ArrayList<Atom>(), connection);
+		edm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
+		connection =  new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm ,0);
+		connection.initialiseDatabaseForSchema(this.testSchema1);
+		this.chaseState[POSTGRES] = new DatabaseChaseInstance(new ArrayList<Atom>(), connection);
 	}
+
 
 	@After
 	public void tearDown() throws Exception {
-		for (DatabaseChaseInstance dci : chaseState)
-			dci.close();
+		for (DatabaseChaseInstance dci : chaseState) { 
+			if (dci!=null) dci.close();
+		}
 	}
 
 	@Test
-	public void test_getMatches1Derby() {
-		test_getMatches1(chaseState[DERBY]);
+	public void test_getMatches1() {
+		for (DatabaseChaseInstance dci : chaseState) 		
+			test_getMatches1(dci);
 	}
 
-	@Test
-	public void test_getMatches1MySql() {
-		test_getMatches1(chaseState[MYSQL]);
-	}
-
-	@Test
-	public void test_getMatches1Postgres() {
-		test_getMatches1(chaseState[POSTGRES]);
-	}
 
 	/**
 	 * Uses {@link PdqTest}.testSchema1 as input, creates a set of facts that should
@@ -98,18 +100,9 @@ public class TestGetTriggers extends PdqTest {
 	}
 
 	@Test
-	public void test_getMatches2Derby() {
-		test_getMatches2(chaseState[DERBY]);
-	}
-
-	@Test
-	public void test_getMatches2MySql() {
-		test_getMatches2(chaseState[MYSQL]);
-	}
-
-	@Test
-	public void test_getMatches2Postgres() {
-		test_getMatches2(chaseState[POSTGRES]);
+	public void test_getMatches2() {
+		for (DatabaseChaseInstance dci : chaseState) 		
+			test_getMatches2(dci);
 	}
 
 	/**
@@ -131,18 +124,9 @@ public class TestGetTriggers extends PdqTest {
 	}
 
 	@Test
-	public void test_getMatches3Derby() {
-		test_getMatches3(chaseState[DERBY]);
-	}
-
-	@Test
-	public void test_getMatches3MySql() {
-		test_getMatches3(chaseState[MYSQL]);
-	}
-
-	@Test
-	public void test_getMatches3Postgres() {
-		test_getMatches3(chaseState[POSTGRES]);
+	public void test_getMatches3() {
+		for (DatabaseChaseInstance dci : chaseState) 		
+			test_getMatches3(dci);
 	}
 
 	/**
@@ -207,28 +191,18 @@ public class TestGetTriggers extends PdqTest {
 			state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
 			List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE);
 			Assert.assertEquals(6, matches.size());
-			try {
-				this.setup();
-				DatabaseChaseInstance.resetFacts();				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+//			try {
+//				this.setup();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
 		}
 	}
 
 	@Test
-	public void test_getMatches5Derby() {
-		test_getMatches5(chaseState[DERBY]);
-	}
-
-	@Test
-	public void test_getMatches5MySql() {
-		test_getMatches5(chaseState[MYSQL]);
-	}
-
-	@Test
-	public void test_getMatches5Postgres() {
-		test_getMatches5(chaseState[POSTGRES]);
+	public void test_getMatches5() {
+		for (DatabaseChaseInstance dci : chaseState) 		
+			test_getMatches5(dci);
 	}
 
 	/**
@@ -253,20 +227,11 @@ public class TestGetTriggers extends PdqTest {
 	}
 
 	@Test
-	public void test_getMatches6Derby() {
-		test_getMatches6(chaseState[DERBY]);
+	public void test_getMatches6() {
+		for (DatabaseChaseInstance dci : chaseState) 		
+			test_getMatches6(dci);
 	}
-
-	@Test
-	public void test_getMatches6MySql() {
-		test_getMatches6(chaseState[MYSQL]);
-	}
-
-	@Test
-	public void test_getMatches6Postgres() {
-		test_getMatches6(chaseState[POSTGRES]);
-	}
-
+	
 	/** One last twist with the input atoms. Still uses the same test schema as the onese before.
 	 * @param state
 	 */
@@ -282,28 +247,54 @@ public class TestGetTriggers extends PdqTest {
 	}
 
 	@Test
-	public void testScanario2Derby() throws SQLException {
-		testScanario2(new DatabaseConnection(DatabaseParameters.Derby, createSchemaScanario2()));
+	public void testScanario2Derby() throws SQLException, DatabaseException {
+		try {
+			this.tearDown();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		LogicalDatabaseInstance connection =  null;
+		try {
+			ExternalDatabaseManager edm = new ExternalDatabaseManager(DatabaseParameters.Derby);
+			connection =  new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm ,0);
+			connection.initialiseDatabaseForSchema(createSchemaScanario2());
+			testScanario2(connection);
+		} finally {
+			if (connection != null) {
+				connection.dropDatabase();
+				connection.shutdown();
+			}
+		}
 	}
 
 	@Test
-	public void testScanario2MySql() throws SQLException {
-		testScanario2(new DatabaseConnection(DatabaseParameters.MySql, createSchemaScanario2()));
+	public void testScanario2MySql() throws SQLException, DatabaseException {
+		ExternalDatabaseManager edm = new ExternalDatabaseManager(DatabaseParameters.MySql);
+		LogicalDatabaseInstance connection =  new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm ,0);
+		connection.initialiseDatabaseForSchema(createSchemaScanario2());
+		testScanario2(connection);
+		connection.dropDatabase();
+		connection.shutdown();
 	}
 
 	@Test
-	public void testScanario2Postgres() throws SQLException {
-		testScanario2(new DatabaseConnection(DatabaseParameters.Postgres, createSchemaScanario2()));
+	public void testScanario2Postgres() throws SQLException, DatabaseException {
+		ExternalDatabaseManager edm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
+		LogicalDatabaseInstance connection =  new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm ,0);
+		connection.initialiseDatabaseForSchema(createSchemaScanario2());
+		testScanario2(connection);
+		connection.dropDatabase();
+		connection.shutdown();
 	}
 
 	private Schema createSchemaScanario2() {
 		Relation A = Relation.create("A",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1")});
 		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(Integer.class, "InstanceID") });
-		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2") });
+		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute0")});
 		Relation D = Relation.create("D",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1")});
 		Relation r[] = new Relation[] { A, B, C, D };
 		Schema s = new Schema(r, new Dependency[0]);
 		return s;
@@ -329,7 +320,7 @@ public class TestGetTriggers extends PdqTest {
 	 * 
 	 * @param dc
 	 */
-	public void testScanario2(DatabaseConnection dc) {
+	public void testScanario2(DatabaseManager dc) {
 		try {
 			Relation A = dc.getSchema().getRelation("A");
 			Relation B = dc.getSchema().getRelation("B");
@@ -361,6 +352,14 @@ public class TestGetTriggers extends PdqTest {
 			Assert.assertEquals(4, matches.size());
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
+		} finally {
+			try {
+				dc.dropDatabase();
+				dc.shutdown();
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				Assert.fail();
+			}
 		}
 	}
 

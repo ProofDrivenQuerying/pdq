@@ -20,9 +20,12 @@ import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.logging.CostStatKeys;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -46,6 +49,7 @@ import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.EventHandler;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
  * Main entry point for chasing, where all properties are gathered and used to
@@ -242,7 +246,14 @@ public class ExplorationSetUp {
 		ConjunctiveQuery accessibleQuery = generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(query);
 
 		Explorer explorer = null;
-		DatabaseConnection databaseConnection = new DatabaseConnection(this.databaseParams, this.accessibleSchema);
+		DatabaseManager databaseConnection;
+		try {
+			databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(),
+					new ExternalDatabaseManager(this.databaseParams),GlobalCounterProvider.getNext("DatabaseInstanceId"));
+			databaseConnection.initialiseDatabaseForSchema(this.accessibleSchema);
+		} catch (DatabaseException e1) {
+			throw new PlannerException("Faild to create database",e1);
+		}
 
 		try {
 			// Top-level initialisations
@@ -294,7 +305,10 @@ public class ExplorationSetUp {
 			throw e;
 		} finally {
 			try {
-				new DatabaseInstance(databaseConnection).close();
+				if (databaseConnection!=null) {
+					databaseConnection.dropDatabase();
+					databaseConnection.shutdown();
+				}
 			} catch (Exception e) {
 				this.handleEarlyTermination(explorer);
 				e.printStackTrace();

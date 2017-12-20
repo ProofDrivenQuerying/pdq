@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -27,9 +28,13 @@ import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -72,6 +77,7 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
 public class TestLinearGeneric extends PdqTest {
 
 	private boolean doPrint = false;
+	private LogicalDatabaseInstance connection;
 
 	/**
 	 * Uses Scenario1 from the PdqTest as input, then attempts a couple of
@@ -117,11 +123,12 @@ public class TestLinearGeneric extends PdqTest {
 
 
 		// Create database connection
-		DatabaseConnection databaseConnection = null;
+		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
-		} catch (SQLException e) {
+			databaseConnection = createConnection(DatabaseParameters.Derby, accessibleSchema);
+		} catch (Exception e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 
 		// Create the chaser
@@ -234,11 +241,12 @@ public class TestLinearGeneric extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
-		DatabaseConnection databaseConnection = null;
+		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
-		} catch (SQLException e) {
+			databaseConnection = createConnection(DatabaseParameters.Derby, accessibleSchema);
+		} catch (Exception e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 
 		// Create the chaser
@@ -308,10 +316,10 @@ public class TestLinearGeneric extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
-		DatabaseConnection databaseConnection = null;
+		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
-		} catch (SQLException e) {
+			databaseConnection = createConnection(DatabaseParameters.Derby, accessibleSchema);
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
@@ -410,9 +418,9 @@ public class TestLinearGeneric extends PdqTest {
 		// Create the relations
 		Relation[] relations = new Relation[(int) (numberOfRelations + Math.pow(2.0, numberOfRelations)) + 1];
 		for (int index = 0; index < numberOfRelations; ++index)
-			relations[index] = Relation.create("R" + index, new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+			relations[index] = Relation.create("R" + index, new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
 					new AccessMethod[] { AccessMethod.create(new Integer[0]) });
-		relations[numberOfRelations] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
+		relations[numberOfRelations] = Relation.create("Accessible", new Attribute[] { this.a_s });
 
 		// Create a conjunctive query that joins all relations in the first three
 		// positions
@@ -432,7 +440,7 @@ public class TestLinearGeneric extends PdqTest {
 		int viewIndex = numberOfRelations + 1;
 		Dependency[] dependencies = new Dependency[(powerSet.size() - 1) * 2];
 		for (Set<Atom> set : powerSet) {
-			View view = new View("V" + powersetIndex++, new Attribute[] { this.a, this.b, this.c, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[0]) });
+			View view = new View("V" + powersetIndex++, new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[0]) });
 			relations[viewIndex++] = view;
 			int index = 0;
 			Atom[] head = new Atom[set.size()];
@@ -457,10 +465,10 @@ public class TestLinearGeneric extends PdqTest {
 		ConjunctiveQuery accessibleQuery = ExplorationSetUp.generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(query);
 		
 		// Create database connection
-		DatabaseConnection databaseConnection = null;
+		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(dbParams, accessibleSchema);
-		} catch (SQLException e) {
+			databaseConnection = createConnection(dbParams, accessibleSchema);
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
@@ -485,6 +493,11 @@ public class TestLinearGeneric extends PdqTest {
 		try {
 			explorer = new LinearGeneric(new EventBus(), false, query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
 					parameters.getMaxDepth());
+		} catch (Throwable e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+		try {
 			explorer.explore();
 		} catch (Throwable e) {
 			// exception expected after further exploration fails.
@@ -523,10 +536,10 @@ public class TestLinearGeneric extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
-		DatabaseConnection databaseConnection = null;
+		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
-		} catch (SQLException e) {
+			databaseConnection = createConnection(DatabaseParameters.MySql, accessibleSchema);
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
@@ -604,6 +617,29 @@ public class TestLinearGeneric extends PdqTest {
 		Dependency[] infAccAxioms = accessibleSchema.getInferredAccessibilityAxioms();
 		Assert.assertNotNull(infAccAxioms);
 		Assert.assertEquals(0, infAccAxioms.length);
+	}
+	@After
+	public void tearDown() {
+		if (connection!=null) {
+			try {
+				connection.dropDatabase();
+				connection.shutdown();
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				Assert.fail();
+			}
+		}
+	}
+	
+	private DatabaseManager createConnection(DatabaseParameters params, Schema s) {
+		try {
+			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(params),1);
+			connection.initialiseDatabaseForSchema(s);
+			return connection;
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

@@ -2,7 +2,10 @@ package uk.ac.ox.cs.pdq.reasoning.utility;
 
 import java.util.Collection;
 
-import org.apache.commons.collections4.CollectionUtils;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
@@ -10,11 +13,6 @@ import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 
 /**
 	Finds for each chase round which dependencies
@@ -41,13 +39,6 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 	 * we create a new entry in the map for each R in \sigma **/
 	private final Multimap<String, TGD> tgdMap = ArrayListMultimap.create();
 	
-	/**  True if it is the first time we will perform an EGD round*. */
-	private boolean firstEGDRound = true;
-	
-	/**  True if it is the first time we will perform a TGD round*. */
-	private boolean firstTGDRound = true;
-	
-
 	/**
 	 * Instantiates a new default parallel egd chase dependency assessor.
 	 *
@@ -79,11 +70,7 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 	public Dependency[] getDependencies(ChaseInstance state, EGDROUND round) {
 		Collection<Dependency> constraints = Sets.newHashSet();
 		Collection<Atom> newFacts = null;
-		if(this.stateFacts == null || (round.equals(EGDROUND.EGD) && this.firstEGDRound == true) || 
-				(round.equals(EGDROUND.TGD) && this.firstTGDRound == true)) 
-			newFacts = state.getFacts();
-		else 
-			newFacts = CollectionUtils.subtract(state.getFacts(), this.stateFacts);
+		newFacts = state.getFacts();
 		
 		Multimap<String, Atom> newFactsMap = ArrayListMultimap.create();
 		for(Atom fact:newFacts) 
@@ -107,11 +94,6 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 		
 		this.stateFacts = Sets.newLinkedHashSet();
 		this.stateFacts.addAll(state.getFacts());
-		
-		if(round.equals(EGDROUND.EGD)) 
-			this.firstEGDRound = false;
-		else 
-			this.firstTGDRound = false;
 		
 		return constraints.toArray(new Dependency[constraints.size()]);
 	}

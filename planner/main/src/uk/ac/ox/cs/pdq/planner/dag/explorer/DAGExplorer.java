@@ -5,7 +5,7 @@ import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
@@ -39,7 +39,7 @@ public abstract class DAGExplorer extends Explorer {
 	protected final Chaser chaser;
 
 	/**  Detects homomorphisms during chasing*. */
-	DatabaseConnection connection;
+	DatabaseManager connection;
 
 	/**  Estimates the cost of a plan *. */
 	protected final CostEstimator costEstimator;
@@ -72,7 +72,7 @@ public abstract class DAGExplorer extends Explorer {
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 
-			DatabaseConnection connection,
+			DatabaseManager connection,
 			CostEstimator costEstimator) {
 		super(eventBus, collectStats);
 		Preconditions.checkArgument(parameters != null);

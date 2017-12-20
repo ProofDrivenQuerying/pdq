@@ -3,13 +3,16 @@ package uk.ac.ox.cs.pdq.test.reasoning.chase.state;
 import java.sql.SQLException;
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -44,7 +47,12 @@ public class TestAddingEqualities extends PdqTest {
 		Atom f24 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k5"), UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 
 		try {
-			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20, f21, f22, f23, f24), new DatabaseConnection(DatabaseParameters.Derby, testSchema1));
+			
+			
+			LogicalDatabaseInstance connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.Derby), 0);
+			connection.initialiseDatabaseForSchema(testSchema1);
+			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20, f21, f22, f23, f24), connection ); 
+					
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -238,6 +246,7 @@ public class TestAddingEqualities extends PdqTest {
 		}
 	}
 
+	@After
 	public void tearDown() throws Exception {
 		state.close();
 	}

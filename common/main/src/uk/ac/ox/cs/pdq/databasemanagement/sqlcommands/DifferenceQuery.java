@@ -99,7 +99,7 @@ public class DifferenceQuery extends BasicSelect {
 			sqlQueryString += " AND \n ";
 		}
 		// Nested select part
-		sqlQueryString += " NOT EXISTS ( SELECT " + Joiner.on(",").join(right.select) + " FROM " + Joiner.on(",").join(nestedQueryTableNames);
+		sqlQueryString += " NOT EXISTS ( SELECT " + Joiner.on(",").join(left.select) + " FROM " + Joiner.on(",").join(nestedQueryTableNames);
 
 		// add the where conditions if there are any, and close the nested select
 		if (differentConditions.isEmpty()) {

@@ -105,6 +105,12 @@ public class ExecutorThread extends Thread {
 			databaseParameters.setDatabaseName(database);
 		}
 		this.databaseName = database;
+		try {
+			connection.setAutoCommit(true);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private static DriverType getDriverType(String driver) throws DatabaseException {
@@ -151,6 +157,9 @@ public class ExecutorThread extends Thread {
 				task.setResults(execute(task.getCommand()),null);
 			} catch (Throwable t) {
 				task.setResults(null,t);
+				System.err.println("Execution error while executing: " + task.getCommand());
+				task.getCommand().printCallerStackTrace();
+				//t.printStackTrace();
 			}
 		}
 
@@ -241,9 +250,21 @@ public class ExecutorThread extends Thread {
 			if (!ignoreErrors) {
 				// in case we don't have to catch exceptions we can run everything in a batch.
 				sqlStmt = connection.createStatement();
-				for (String s : statements)
-					sqlStmt.addBatch(s);
-				sqlStmt.executeBatch();
+				if (this.driverType == DriverType.MySql) {
+					for (String s : statements) {
+						try {
+							System.out.println("Executing: " + s);
+							sqlStmt.executeUpdate(s);
+						} catch(Throwable t) {
+							throw new SQLException("Executing update: " + s + " failed.",t);
+						}
+					}
+					
+				} else {
+					for (String s : statements)
+						sqlStmt.addBatch(s);
+					sqlStmt.executeBatch();
+				}
 			} else {
 				// IGNORE ERROR
 				// run the statements one by one and handle exceptions.
@@ -338,6 +359,10 @@ public class ExecutorThread extends Thread {
 	 *             in case of timeout while shutting down.
 	 */
 	public void shutdown() throws DatabaseException {
+		if (shutdown) {
+			// already shutting down.
+			return;
+		}
 		shutdown = true;
 		synchronized (manager.TASKS_LOCK) {
 			// wake up every thread waiting for new tasks.

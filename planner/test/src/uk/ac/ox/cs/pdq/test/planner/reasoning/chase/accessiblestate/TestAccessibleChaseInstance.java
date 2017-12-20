@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -16,9 +17,13 @@ import org.junit.runners.MethodSorters;
 
 import com.google.common.collect.Sets;
 
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -51,16 +56,16 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING) // makes the test executed in an abc order.
 public class TestAccessibleChaseInstance extends PdqTest {
 	private AccessibleDatabaseChaseInstance state;
-	private DatabaseConnection connection;
+	private DatabaseManager connection;
 	protected AccessibleSchema accessibleSchema;
 	protected Relation InferredAccessibleR;
 
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		this.InferredAccessibleR = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R2", new Attribute[] { at21, at22, instanceID }, new AccessMethod[] {});
+		this.InferredAccessibleR = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R2", new Attribute[] { at21, at22 }, new AccessMethod[] {});
 		Schema schema = new Schema(new Relation[] { this.rel2, this.S_s });
-		this.connection = new DatabaseConnection(DatabaseParameters.Derby, schema);
+		//this.connection = createConnection(DatabaseParameters.Derby, schema);
 		this.accessibleSchema = new AccessibleSchema(schema);
 	}
 
@@ -79,7 +84,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test1_groupFactsByAccessMethods() throws SQLException {
-		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -116,7 +121,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test2_groupFactsByAccessMethods() throws SQLException {
-		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -161,7 +166,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test3_groupFactsByAccessMethods() throws SQLException {
-		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -197,7 +202,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test4_groupFactsByAccessMethods() throws SQLException {
-		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -242,7 +247,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test1_getUnexposedFacts() throws SQLException {
-		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Postgres, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -282,7 +287,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test1b_getUnexposedFacts() throws SQLException {
-		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f0b = Atom.create(this.InferredAccessibleR, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
@@ -320,7 +325,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test2_getUnexposedFacts() throws SQLException {
-		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -360,7 +365,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test2b_getUnexposedFacts() throws SQLException {
-		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f0b = Atom.create(this.InferredAccessibleR, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
@@ -403,7 +408,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test3_getUnexposedFacts() throws SQLException {
-		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -442,7 +447,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test4_getUnexposedFacts() throws SQLException {
-		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -483,7 +488,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test4b_getUnexposedFacts() throws SQLException {
-		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -527,13 +532,13 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
 
 		// Create database connection
-		DatabaseConnection connection = null;
+		DatabaseManager connection = null;
 		
 		// Create the chaser
 		RestrictedChaser chaser = new RestrictedChaser(null);
 		
 		try {
-			connection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
+			connection = createConnection(DatabaseParameters.MySql, accessibleSchema);
 			AccessibleChaseInstance state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
 					new AccessibleDatabaseChaseInstance(ts.getQuery(), accessibleSchema, connection, true);
 			chaser.reasonUntilTermination(state, accessibleSchema.getOriginalDependencies());
@@ -575,5 +580,29 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		}
 	}
 	
+	@After
+	public void tearDown() {
+		if (connection!=null) {
+			try {
+				connection.dropDatabase();
+				connection.shutdown();
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				Assert.fail();
+			}
+		}
+	}
+	
+	private DatabaseManager createConnection(DatabaseParameters params, Schema s) {
+		try {
+			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(params),1);
+			connection.initialiseDatabaseForSchema(s);
+			return connection;
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+		return null;
+	}
 		
 }

@@ -8,13 +8,18 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.eventbus.EventBus;
 
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -162,6 +167,8 @@ public class RestrictedChaserTest {
 	/** The password. */
 	String password ="root";
 
+	private LogicalDatabaseInstance dm;
+
 	/**
 	 * Test1.
 	 */
@@ -197,7 +204,7 @@ public class RestrictedChaserTest {
 				}
 				RestrictedChaser reasoner = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
 
-				DatabaseConnection dbcon = new DatabaseConnection(DatabaseParameters.Derby,schema);
+				DatabaseManager dbcon = createConnection(DatabaseParameters.Derby,schema);
 				DatabaseChaseInstance state = new DatabaseChaseInstance(query, dbcon);				
 				
 				reasoner.reasonUntilTermination(state, schema.getDependencies());
@@ -273,6 +280,28 @@ public class RestrictedChaserTest {
 		}
 		return Atom.create(predicate, variables);
 	}
+	@After
+	public void tearDown() {
+		if (dm!=null) {
+			try {
+				dm.dropDatabase();
+				dm.shutdown();
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				Assert.fail();
+			}
+		}
+	}
 
+	private DatabaseManager createConnection(DatabaseParameters params, Schema s) {
+		try {
+			dm = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(params),1);
+			dm.initialiseDatabaseForSchema(s);
+			return dm;
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }

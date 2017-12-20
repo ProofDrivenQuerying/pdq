@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -22,9 +23,12 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -73,6 +77,7 @@ public class TestMultiThreadedExecutor extends PdqTest {
 	boolean twoWay = false;
 
 	boolean printPlans = false;
+	private LogicalDatabaseInstance connection;
 
 	/**
 	 * Tests binary configurations when the MultiThreadedExecutor's twoWay mode
@@ -128,10 +133,12 @@ public class TestMultiThreadedExecutor extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
-		DatabaseConnection connection = null;
 		try {
-			connection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
-		} catch (SQLException e) {
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Derby);
+			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			connection.initialiseDatabaseForSchema(accessibleSchema);
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
@@ -253,6 +260,16 @@ public class TestMultiThreadedExecutor extends PdqTest {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.dropDatabase();
+					connection.shutdown();
+				} catch (DatabaseException e) {
+					e.printStackTrace();
+					Assert.fail();
+				}
+			}
 		}
 	}
 
@@ -275,10 +292,12 @@ public class TestMultiThreadedExecutor extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
-		DatabaseConnection connection = null;
 		try {
-			connection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
-		} catch (SQLException e) {
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Derby);
+			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			connection.initialiseDatabaseForSchema(accessibleSchema);
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
@@ -384,6 +403,16 @@ public class TestMultiThreadedExecutor extends PdqTest {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.dropDatabase();
+					connection.shutdown();
+				} catch (DatabaseException e) {
+					e.printStackTrace();
+					Assert.fail();
+				}
+			}
 		}
 	}
 
@@ -400,13 +429,13 @@ public class TestMultiThreadedExecutor extends PdqTest {
 		Relation[] relations = new Relation[NUMBER_OF_RELATIONS + 1];
 		for (int i = 0; i < relations.length - 1; i++) {
 			if (i % 2 == 0)
-				relations[i] = Relation.create("R" + i, new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+				relations[i] = Relation.create("R" + i, new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
 						new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
 			else
-				relations[i] = Relation.create("R" + i, new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+				relations[i] = Relation.create("R" + i, new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
 						new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
 		}
-		relations[relations.length - 1] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
+		relations[relations.length - 1] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query
 		// R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w')
 		Atom[] atoms = new Atom[relations.length - 1];
@@ -445,10 +474,12 @@ public class TestMultiThreadedExecutor extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
-		DatabaseConnection connection = null;
 		try {
-			connection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
-		} catch (SQLException e) {
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Derby);
+			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			connection.initialiseDatabaseForSchema(accessibleSchema);
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
@@ -526,6 +557,23 @@ public class TestMultiThreadedExecutor extends PdqTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.dropDatabase();
+					connection.shutdown();
+				} catch (DatabaseException e) {
+					e.printStackTrace();
+					Assert.fail();
+				}
+			}
+		}
+	}
+	@After
+	public void tearDown() throws Exception {
+		if (connection!=null) {
+			connection.dropDatabase();
+			connection.shutdown();
 		}
 	}
 

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -20,7 +21,11 @@ import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -58,6 +63,8 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestLinearOptimized extends PdqTest {
 	
+	private LogicalDatabaseInstance connection;
+
 	/**
 	 * Tests the explorer with the Scenario1 input schema and query. Asserts the best plan found should be something like:
 	 * <pre>
@@ -100,11 +107,12 @@ public class TestLinearOptimized extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		//Create database connection
-		DatabaseConnection databaseConnection = null;
+		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
-		} catch (SQLException e) {
+			databaseConnection = createConnection(DatabaseParameters.MySql, accessibleSchema);
+		} catch (Exception e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 		
 		//Create the chaser 
@@ -229,11 +237,12 @@ public class TestLinearOptimized extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		//Create database connection
-		DatabaseConnection databaseConnection = null;
+		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
-		} catch (SQLException e) {
+			databaseConnection = createConnection(DatabaseParameters.MySql, accessibleSchema);
+		} catch (Exception e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 		
 		//Create the chaser 
@@ -327,10 +336,10 @@ public class TestLinearOptimized extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		//Create database connection
-		DatabaseConnection databaseConnection = null;
+		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
-		} catch (SQLException e) {
+			databaseConnection = createConnection(DatabaseParameters.Derby, accessibleSchema);
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
@@ -445,6 +454,29 @@ public class TestLinearOptimized extends PdqTest {
 		Dependency[] infAccAxioms = accessibleSchema.getInferredAccessibilityAxioms();
 		Assert.assertNotNull(infAccAxioms);
 		Assert.assertEquals(0, infAccAxioms.length);
+	}
+	@After
+	public void tearDown() {
+		if (connection!=null) {
+			try {
+				connection.dropDatabase();
+				connection.shutdown();
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				Assert.fail();
+			}
+		}
+	}
+	
+	private DatabaseManager createConnection(DatabaseParameters params, Schema s) {
+		try {
+			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(params),1);
+			connection.initialiseDatabaseForSchema(s);
+			return connection;
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

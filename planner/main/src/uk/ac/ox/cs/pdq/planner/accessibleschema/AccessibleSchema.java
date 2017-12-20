@@ -43,7 +43,7 @@ public class AccessibleSchema extends Schema {
 
 	/**  The accessible relations. */
 	public static final Relation accessibleRelation = Relation.create("Accessible", 
-			new Attribute[]{Attribute.create(String.class, "x0"), Attribute.create(Integer.class, "InstanceID")}, 
+			new Attribute[]{Attribute.create(String.class, "x0") }, 
 			new AccessMethod[]{AccessMethod.create(new Integer[]{})});
 
 	/**  Mapping from a relation-access method pair to an accessibility axioms. */

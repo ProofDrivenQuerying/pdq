@@ -7,14 +7,14 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.databasemanagement.execution.ExecutionManager;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BulkInsert;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateDatabase;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateTable;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Delete;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DifferenceQuery;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -54,6 +54,10 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	 */
 	protected DatabaseParameters parameters;
 	protected String databaseName; // formal name, mainly for debugging purposes, default is "PdqTest"
+	/**
+	 * Flag to show that we are after initialisation but before dropping the database. 
+	 */
+	protected boolean databaseExists = false;
 	/**
 	 * The execution manager is responsible to manage connections and parallel
 	 * execution of bulk requests.
@@ -131,6 +135,7 @@ public class ExternalDatabaseManager implements DatabaseManager {
 		this.schema = schema;
 		executor.execute(new CreateDatabase(schema));
 		executor.execute(new CreateTable(schema.getRelations()));
+		databaseExists = true;
 	}
 
 	/**
@@ -207,6 +212,12 @@ public class ExternalDatabaseManager implements DatabaseManager {
 		// execute the SQL command
 		return executor.execute(commands);
 	}
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager#answerConjunctiveQuery(uk.ac.ox.cs.pdq.fol.ConjunctiveQuery)
+	 */
+	public List<Match> answerConjunctiveQuery(ConjunctiveQuery query) throws DatabaseException {
+		return answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] {query}));
+	}
 
 	/**
 	 * Represent a kind of nested select that will tell the difference between two
@@ -239,7 +250,8 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	 * system.
 	 */
 	public void dropDatabase() throws DatabaseException {
-		executor.execute(new DropDatabase(schema));
+		if (databaseExists) executor.execute(new DropDatabase(schema));
+		databaseExists = false;
 	}
 
 	/**
@@ -247,6 +259,9 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	 * the connections with this one
 	 */
 	public void shutdown() throws DatabaseException {
+		if (databaseExists) {
+			new Exception("Warning, database manager is shutting down, but the database is not dropped yet.").printStackTrace();
+		}
 		executor.shutdown();
 	}
 
@@ -305,5 +320,9 @@ public class ExternalDatabaseManager implements DatabaseManager {
 			ret.add(Atom.create(queriedTable.getPredicate(), terms.toArray(new Term[terms.size()])));
 		}
 		return ret;
+	}
+
+	protected void executeUpdateCommand(Command command) throws DatabaseException {
+		executor.execute(command);
 	}
 }

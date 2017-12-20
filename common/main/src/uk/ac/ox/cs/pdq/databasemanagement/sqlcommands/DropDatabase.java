@@ -26,18 +26,21 @@ public class DropDatabase extends Command {
 
 	@Override
 	public List<String> toPostgresStatement(String databaseName) {
+		statements.clear();
 		statements.add("DROP SCHEMA IF EXISTS " + databaseName + " CASCADE");
 		return statements;
 	}
 
 	@Override
 	public List<String> toMySqlStatement(String databaseName) {
+		statements.clear();
 		statements.add("DROP SCHEMA IF EXISTS " + databaseName);
 		return statements;
 	}
 
 	@Override
 	public List<String> toDerbyStatement(String databaseName) {
+		statements.clear();
 		for (Relation table: schema.getRelations())  
 			statements.add("DROP TABLE " + databaseName + "." + table.getName()); 
 		statements.add("DROP SCHEMA " + databaseName + " RESTRICT");

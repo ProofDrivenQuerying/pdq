@@ -8,7 +8,7 @@ import com.google.common.eventbus.EventBus;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
@@ -90,7 +90,7 @@ public class ExplorerFactory {
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
 			Chaser chaser,
-			DatabaseConnection connection,
+			DatabaseManager connection,
 			CostEstimator costEstimator,
 			PlannerParameters parameters,
 			ReasoningParameters reasoningParameters) throws Exception {

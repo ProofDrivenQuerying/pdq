@@ -8,8 +8,10 @@ import org.apache.log4j.Logger;
 
 import com.google.common.base.Strings;
 
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+
 public class DatabaseUtilities {
-	protected static Logger log = Logger.getLogger(DatabaseInstance.class);
+	protected static Logger log = Logger.getLogger(LogicalDatabaseInstance.class);
 	
 	/**
 	 * Gets the connection.

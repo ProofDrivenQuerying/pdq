@@ -13,7 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.VirtualMultiInstanceDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
@@ -90,7 +90,7 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 	private void simpleDatabaseCreation(DatabaseParameters parameters) throws DatabaseException {
 		Relation R = Relation.create("R", new Attribute[] { a_s, b_s, c_s }, new AccessMethod[] { this.method0, this.method2 });
 
-		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(new MultiInstanceFactCache(), new ExternalDatabaseManager(parameters),1);
+		LogicalDatabaseInstance manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(parameters),1);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R }));
 		// ADD facts
 		Atom a1 = Atom.create(R, new Term[] { UntypedConstant.create("12"), UntypedConstant.create("13"), UntypedConstant.create("14") });
@@ -109,7 +109,7 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		Assert.assertEquals(facts.size(), getFacts.size());
 		
 		
-		VirtualMultiInstanceDatabaseManager manager2 = manager.clone(2);
+		LogicalDatabaseInstance manager2 = manager.clone(2);
 		// new instance
 		Atom a3 = Atom.create(R, new Term[] { TypedConstant.create(129), TypedConstant.create(139), TypedConstant.create(149) });
 		facts.add(a3);
@@ -206,7 +206,7 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 	private void virtualDatabaseCreationInt(DatabaseParameters parameters) throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		// create a simple manager
-		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(new MultiInstanceFactCache(), new ExternalDatabaseManager(parameters),1);
+		LogicalDatabaseInstance manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(parameters),1);
 		
 		int instanceID1 = manager.getDatabaseInstanceID();
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R }));
@@ -284,12 +284,12 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		}
 
 		// create a simple manager
-		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(new MultiInstanceFactCache(), new ExternalDatabaseManager(parameters),1);
+		LogicalDatabaseInstance manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(parameters),1);
 		
 		int instanceID1 = manager.getDatabaseInstanceID();
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R_s }));
 		Atom[] facts = new Atom[] {
-				Atom.create(this.R_s, new Term[] { TypedConstant.create("A1"), TypedConstant.create(dDate), TypedConstant.create(100), TypedConstant.create(13) }) };
+				Atom.create(this.R_s, new Term[] { TypedConstant.create("A1"), TypedConstant.create(dDate), TypedConstant.create(100)}) };
 		manager.addFacts(Arrays.asList(facts));
 		// Assert.assertEquals(/*1*/0,manager.getCachedFacts().size());
 		Assert.assertEquals(1, manager.getFactsFromPhysicalDatabase().size());
@@ -303,13 +303,13 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 
 		Assert.assertEquals(0, manager.getCachedFacts().size());
 		Atom[] facts2 = new Atom[] {
-				Atom.create(this.R, new Term[] { TypedConstant.create("B2"), TypedConstant.create("B20"), TypedConstant.create("B200"), TypedConstant.create(14) }) };
+				Atom.create(this.R, new Term[] { TypedConstant.create("B2"), TypedConstant.create("B20"), TypedConstant.create("B200") }) };
 		manager.addFacts(Arrays.asList(facts2));
 		Assert.assertEquals(1, manager.getCachedFacts().size());
 		Assert.assertEquals(1, manager.getFactsFromPhysicalDatabase().size());
 
 		// Normal query
-		Atom a1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z"), Variable.create("i") });
+		Atom a1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y, z }, a1);
 		List<Match> answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
@@ -321,7 +321,7 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		Collection<Atom> physicalData = manager.getFactsFromPhysicalDatabase();
 		Assert.assertEquals(facts.length, physicalData.size());
 		Atom[] expectedResult = new Atom[] {
-				Atom.create(this.R_s, new Term[] { TypedConstant.create("A1"), TypedConstant.create(dDate), TypedConstant.create(100), UntypedConstant.create("13") }) };
+				Atom.create(this.R_s, new Term[] { TypedConstant.create("A1"), TypedConstant.create(dDate), TypedConstant.create(100) }) };
 		if (parameters.getDatabaseDriver().contains("memory")) {
 			// the memory DB will give back the TypedConstants
 			Assert.assertEquals(facts[0], physicalData.iterator().next());
@@ -364,7 +364,7 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 	 * @throws DatabaseException
 	 */
 	private void largeTableQueryDifferenceEGD(DatabaseParameters parameters) throws DatabaseException {
-		VirtualMultiInstanceDatabaseManager manager = new VirtualMultiInstanceDatabaseManager(new MultiInstanceFactCache(), new ExternalDatabaseManager(parameters),1);
+		LogicalDatabaseInstance manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(parameters),1);
 		
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
 		List<Atom> facts = new ArrayList<>();

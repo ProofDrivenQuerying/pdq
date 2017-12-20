@@ -1,15 +1,11 @@
 package uk.ac.ox.cs.pdq.reasoning.chase;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.EGD;
-import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
@@ -66,33 +62,21 @@ public class ParallelEGDChaser extends Chaser {
 		Preconditions.checkArgument(instance instanceof ChaseInstance);
 		ParallelEGDChaseDependencyAssessor accessor = new DefaultParallelEGDChaseDependencyAssessor(dependencies);
 
-		Collection<TGD> tgds = Sets.newHashSet();
-		Collection<EGD> egds = Sets.newHashSet();
-		for(Dependency constraint:dependencies) {
-			if(constraint instanceof EGD) {
-				egds.add((EGD) constraint);
-			}
-			else if(constraint instanceof TGD) {
-				tgds.add((TGD) constraint);
-			}
-			else {
-				throw new java.lang.IllegalArgumentException("Unsupported constraint type");
-			}
-		}
-
 		int step = 0;
 		//True if at the end of the internal for loop at least one dependency has been fired
 		boolean appliedOddStep = false;
 		boolean appliedEvenStep = false;
+		boolean failedLast = false;
 		do {
 			++step;
 			//Find all active triggers
 			Dependency[] d = step % 2 == 0 ? accessor.getDependencies(instance, EGDROUND.TGD):accessor.getDependencies(instance, EGDROUND.EGD);
 			List<Match> activeTriggers = instance.getTriggers(d, TriggerProperty.ACTIVE);
 			boolean succeeds = instance.chaseStep(activeTriggers);
-			if(!succeeds) {
+			if(failedLast && ! succeeds ) {
 				break;
 			}
+			failedLast = !succeeds;
 			if(succeeds && !activeTriggers.isEmpty()) {
 				if(step % 2 == 0) {
 					appliedEvenStep = true;

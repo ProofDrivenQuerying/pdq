@@ -82,6 +82,13 @@ public interface DatabaseManager {
 	 * @throws DatabaseException
 	 */
 	public List<Match> answerConjunctiveQueries(Collection<ConjunctiveQuery> queries) throws DatabaseException;
+	
+	/** Same as above but only one query
+	 * @param query
+	 * @return
+	 * @throws DatabaseException
+	 */
+	public List<Match> answerConjunctiveQuery(ConjunctiveQuery query) throws DatabaseException;
 
 	/**
 	 * Represent a kind of nested select that will tell the difference between two

@@ -48,6 +48,9 @@ public class CreateTable extends Command {
 			statements.add(createUniqueConstraintsStatement(r));
 		}
 	}
+	public CreateTable(Relation relation) throws DatabaseException {
+		this(new Relation[] {relation});
+	}
 
 	private String createUniqueConstraintsStatement(Relation r) {
 		String stmnt = "ALTER TABLE "+DATABASENAME+"." + r.getName() + " ADD CONSTRAINT " + r.getName() + "_Constraint UNIQUE(";

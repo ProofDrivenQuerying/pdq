@@ -14,7 +14,7 @@ import com.google.common.collect.Lists;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.VirtualMultiInstanceDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -79,10 +79,10 @@ public class SqlRacer {
 	public SqlRacer() throws SQLException, DatabaseException {
 		try {
 			setup();
-			dcMySql = new VirtualMultiInstanceDatabaseManager(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.MySql),1);
+			dcMySql = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.MySql),1);
 			
-			dcPostgresSql = new VirtualMultiInstanceDatabaseManager(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.Postgres),1);
-			dcDerby = new VirtualMultiInstanceDatabaseManager(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.Derby),1);
+			dcPostgresSql = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.Postgres),1);
+			dcDerby = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.Derby),1);
 			dcMemory = new InternalDatabaseManager();			
 			dcMySql.initialiseDatabaseForSchema(this.schema);
 			dcPostgresSql.initialiseDatabaseForSchema(this.schema);

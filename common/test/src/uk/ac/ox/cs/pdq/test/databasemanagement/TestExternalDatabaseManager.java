@@ -102,9 +102,11 @@ public class TestExternalDatabaseManager extends PdqTest {
 		// Test duplicated storage - stored data should not change when we add the same
 		// set twice
 		try {
+			System.out.println("Testing exceptions:");
 			manager.addFacts(facts);
 			Assert.fail("Should have thrown error for insering duplicates");
 		} catch (Exception e) {}
+		System.out.println("Testing exceptions finished.");
 		getFacts = manager.getFactsFromPhysicalDatabase();
 		Assert.assertEquals(facts.size(), getFacts.size());
 
@@ -113,6 +115,7 @@ public class TestExternalDatabaseManager extends PdqTest {
 		getFacts = manager.getFactsFromPhysicalDatabase();
 		Assert.assertNotNull(getFacts);
 		Assert.assertEquals(0, getFacts.size());
+		manager.dropDatabase();
 		manager.shutdown();
 	}
 
@@ -206,6 +209,7 @@ public class TestExternalDatabaseManager extends PdqTest {
 		getFacts = manager.getFactsFromPhysicalDatabase();
 		Assert.assertNotNull(getFacts);
 		Assert.assertEquals(0, getFacts.size());
+		manager.dropDatabase();
 		manager.shutdown();
 	}
 
@@ -229,19 +233,19 @@ public class TestExternalDatabaseManager extends PdqTest {
 		ExternalDatabaseManager manager = new ExternalDatabaseManager(p);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R_s }));
 		Atom[] facts = new Atom[] {
-				Atom.create(this.R_s, new Term[] { TypedConstant.create("A1"), TypedConstant.create(dDate), TypedConstant.create(100), TypedConstant.create(13) }) };
+				Atom.create(this.R_s, new Term[] { TypedConstant.create("A1"), TypedConstant.create(dDate), TypedConstant.create(100) }) };
 		manager.addFacts(Arrays.asList(facts));
 		// Assert.assertEquals(/*1*/0,manager.getCachedFacts().size());
 		Assert.assertEquals(1, manager.getFactsFromPhysicalDatabase().size());
 
 		Atom[] facts2 = new Atom[] {
-				Atom.create(this.R, new Term[] { TypedConstant.create("B2"), TypedConstant.create("B20"), TypedConstant.create("B200"), TypedConstant.create(14) }) };
+				Atom.create(this.R, new Term[] { TypedConstant.create("B2"), TypedConstant.create("B20"), TypedConstant.create("B200") }) };
 		manager.addFacts(Arrays.asList(facts2));
 		Assert.assertEquals(2, manager.getCachedFacts().size());
 		Assert.assertEquals(2, manager.getFactsFromPhysicalDatabase().size());
 
 		// Normal query
-		Atom a1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z"), Variable.create("i") });
+		Atom a1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y, z }, a1);
 		List<Match> answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(2, answer.size());
@@ -250,7 +254,7 @@ public class TestExternalDatabaseManager extends PdqTest {
 		Collection<Atom> physicalData = manager.getFactsFromPhysicalDatabase();
 		Assert.assertEquals(2, physicalData.size());
 		Atom[] expectedResult = new Atom[] {
-				Atom.create(this.R_s, new Term[] { TypedConstant.create("A1"), TypedConstant.create(dDate), TypedConstant.create(100), UntypedConstant.create("13") }) };
+				Atom.create(this.R_s, new Term[] { TypedConstant.create("A1"), TypedConstant.create(dDate), TypedConstant.create(100) }) };
 		if (parameters.getDatabaseDriver().contains("memory")) {
 			// the memory DB will give back the TypedConstants
 			Assert.assertEquals(facts[0], physicalData.iterator().next());
@@ -268,15 +272,20 @@ public class TestExternalDatabaseManager extends PdqTest {
 
 		manager.dropDatabase();
 		try {
+			System.out.println("Testing exceptions :");
 			manager.getFactsFromPhysicalDatabase();
 			Assert.fail("Should have thrown exception when read from a dropped database.");
 		} catch (Exception e) {
 		}
+		System.out.println("Testing exceptions finished.");
 		try {
+			System.out.println("Testing exceptions :");
 			manager.getCachedFacts().size();
 			Assert.fail("Should have thrown exception when read from a dropped database.");
 		} catch (Exception e) {
 		}		
+		System.out.println("Testing exceptions finished.");
+		manager.dropDatabase();
 		manager.shutdown();
 	}
 

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,9 +15,13 @@ import org.junit.Test;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -51,7 +56,7 @@ public class TestRestrictedChaser extends PdqTest {
 	private RestrictedChaser chaser;
 
 	protected Schema schema;
-	private DatabaseConnection connection;
+	private DatabaseManager connection;
 
 	private static final int NUMBER_OF_DUMMY_DATA = 100;
 
@@ -59,8 +64,12 @@ public class TestRestrictedChaser extends PdqTest {
 	public void setup() throws Exception {
 		super.setup();
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2 }, new Dependency[] { this.tgd });
-		this.setConnection(new DatabaseConnection(DatabaseParameters.Derby, this.schema));
 		this.chaser = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
+	}
+	
+	private void setupConnection() {
+		if (connection == null)
+			this.setConnection(createConnection(DatabaseParameters.Derby, this.schema));
 	}
 
 	/**
@@ -77,6 +86,7 @@ public class TestRestrictedChaser extends PdqTest {
 	 */
 	@Test
 	public void test_reasonUntilTermination1() {
+		setupConnection();
 		Atom f20 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k1"), UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f21 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k2"), UntypedConstant.create("c"), UntypedConstant.create("c2") });
 		Atom f22 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k3"), UntypedConstant.create("c"), UntypedConstant.create("c3") });
@@ -158,11 +168,11 @@ public class TestRestrictedChaser extends PdqTest {
 	public void testA() {
 
 		Relation R = Relation.create("R",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1")});
 		Relation S = Relation.create("S",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1")});
 		Relation T = Relation.create("T",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1")});
 		Relation r[] = new Relation[] { R, S, T };
 		Dependency d[] = new Dependency[] {
 				TGD.create(new Atom[] { Atom.create(R, Variable.create("z"), Variable.create("x")) },
@@ -178,7 +188,7 @@ public class TestRestrictedChaser extends PdqTest {
 			constants.add(TypedConstant.create("a_" + i));
 		}
 		try {
-			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(DatabaseParameters.Derby, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Derby, s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -191,7 +201,7 @@ public class TestRestrictedChaser extends PdqTest {
 			System.out.println(fact);
 		}
 		this.chaser.reasonUntilTermination(this.state, d);
-		System.out.println("\n\nAfter resoning:");
+		System.out.println("\n\n After resoning:");
 
 		newfacts = Sets.newHashSet(this.state.getFacts());
 		iterator = newfacts.iterator();
@@ -222,7 +232,7 @@ public class TestRestrictedChaser extends PdqTest {
 					countOfKsInT++;
 			}
 		}
-		Assert.assertEquals(9, equalities);
+		Assert.assertEquals(9*2, equalities);
 		Assert.assertEquals(10, sCount);
 		Assert.assertEquals(10, tCount);
 		Assert.assertEquals(10, countOfKsInT);
@@ -247,15 +257,15 @@ public class TestRestrictedChaser extends PdqTest {
 	 */
 	@Test
 	public void testB() {
-		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute"), Attribute.create(Integer.class, "InstanceID") });
-		Relation D = Relation.create("D", new Attribute[] { Attribute.create(String.class, "attribute"), Attribute.create(Integer.class, "InstanceID") });
-		Relation Q = Relation.create("Q", new Attribute[] { Attribute.create(String.class, "attribute"), Attribute.create(Integer.class, "InstanceID") });
+		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute")});
+		Relation D = Relation.create("D", new Attribute[] { Attribute.create(String.class, "attribute")});
+		Relation Q = Relation.create("Q", new Attribute[] { Attribute.create(String.class, "attribute")});
 		Relation R = Relation.create("R",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1")});
 		Relation S = Relation.create("S",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1")});
 		Relation T = Relation.create("T",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1")});
 		Relation r[] = new Relation[] { C, D, Q, R, S, T };
 		Dependency d[] = new Dependency[] {
 				TGD.create(new Atom[] { Atom.create(C, Variable.create("x")), Atom.create(D, Variable.create("x")) }, new Atom[] { Atom.create(Q, Variable.create("x")) }),
@@ -277,7 +287,7 @@ public class TestRestrictedChaser extends PdqTest {
 		for (int i = 1; i <= 10; i++)
 			facts.add(Atom.create(R, new Term[] { TypedConstant.create("a_" + (i - 1)), TypedConstant.create("a_" + i) }));
 		try {
-			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(DatabaseParameters.Derby, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Derby, s));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -321,7 +331,7 @@ public class TestRestrictedChaser extends PdqTest {
 		testA1(DatabaseParameters.Derby);
 	}
 
-	@Test
+	//@Test
 	public void testA1MySql() throws SQLException {
 		testA1(DatabaseParameters.MySql);
 	}
@@ -353,15 +363,15 @@ public class TestRestrictedChaser extends PdqTest {
 	public void testA1(DatabaseParameters dbParam) {
 
 		Relation A = Relation.create("A",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1")});
 		Relation B = Relation.create("B",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1")});
 		Relation D = Relation.create("D",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1")});
 		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2")});
 		Relation E = Relation.create("E", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2")});
 		Relation r[] = new Relation[] { A, B, C, D, E };
 		Schema s = new Schema(r, new Dependency[0]);
 
@@ -397,7 +407,7 @@ public class TestRestrictedChaser extends PdqTest {
 			facts.add(Atom.create(D, new Term[] { TypedConstant.create("z" + i), TypedConstant.create("z" + i) }));
 
 		try {
-			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(dbParam, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(dbParam, s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -417,7 +427,7 @@ public class TestRestrictedChaser extends PdqTest {
 		testB1(DatabaseParameters.Derby);
 	}
 
-	@Test
+	//@Test
 	public void testB1MySql() throws SQLException {
 		testB1(DatabaseParameters.MySql);
 	}
@@ -448,15 +458,15 @@ public class TestRestrictedChaser extends PdqTest {
 	 */
 	public void testB1(DatabaseParameters dbParam) {
 		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3")});
 		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3")});
 		Relation D = Relation.create("D",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1")});
 		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2")});
 		Relation E = Relation.create("E", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2")});
 		Relation r[] = new Relation[] { A, B, C, D, E };
 		Schema s = new Schema(r, new Dependency[0]);
 		List<Atom> facts = new ArrayList<>();
@@ -486,21 +496,27 @@ public class TestRestrictedChaser extends PdqTest {
 			facts.add(Atom.create(E, new Term[] { TypedConstant.create("x" + i), TypedConstant.create("y" + i), TypedConstant.create("TC1") }));
 
 		try {
-			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(dbParam, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(dbParam, s));
+			ConjunctiveQuery query1; // Q(x,y,z) = A('TypedConstant2',y,z,w), B(x,y,z,w), C(y,z,'TypedConstant1')
+			// D(x,y), E(x,y,'TypedConstant1')
+			query1 = ConjunctiveQuery.create(new Variable[] { Variable.create("x"), Variable.create("y"), Variable.create("z") },
+					(Conjunction) Conjunction.of(Atom.create(A, TypedConstant.create("TC2"), Variable.create("y"), Variable.create("z"), Variable.create("w")),
+							Atom.create(B, Variable.create("x"), Variable.create("y"), Variable.create("z"), Variable.create("w")),
+							Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("TC1")), Atom.create(D, Variable.create("x"), Variable.create("y")),
+							Atom.create(E, Variable.create("x"), Variable.create("y"), TypedConstant.create("TC1"))));
+			
+			List<Match> matches = this.state.getMatchesNoSubstitution(query1);
+			Assert.assertEquals(5, matches.size());
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
+		} finally { 
+			try {
+				state.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
-		ConjunctiveQuery query1; // Q(x,y,z) = A('TypedConstant2',y,z,w), B(x,y,z,w), C(y,z,'TypedConstant1')
-									// D(x,y), E(x,y,'TypedConstant1')
-		query1 = ConjunctiveQuery.create(new Variable[] { Variable.create("x"), Variable.create("y"), Variable.create("z") },
-				(Conjunction) Conjunction.of(Atom.create(A, TypedConstant.create("TC2"), Variable.create("y"), Variable.create("z"), Variable.create("w")),
-						Atom.create(B, Variable.create("x"), Variable.create("y"), Variable.create("z"), Variable.create("w")),
-						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("TC1")), Atom.create(D, Variable.create("x"), Variable.create("y")),
-						Atom.create(E, Variable.create("x"), Variable.create("y"), TypedConstant.create("TC1"))));
-
-		List<Match> matches = this.state.getMatchesNoSubstitution(query1);
-		Assert.assertEquals(5, matches.size());
 	}
 
 	/**
@@ -523,15 +539,15 @@ public class TestRestrictedChaser extends PdqTest {
 	@Test
 	public void testC() {
 		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3")});
 		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3")});
 		Relation D = Relation.create("D",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1")});
 		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2")});
 		Relation E = Relation.create("E", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2")});
 		Relation r[] = new Relation[] { A, B, C, D, E };
 		Schema s = new Schema(r, new Dependency[0]);
 		List<Atom> facts = new ArrayList<>();
@@ -560,7 +576,7 @@ public class TestRestrictedChaser extends PdqTest {
 			facts.add(Atom.create(E, new Term[] { TypedConstant.create("TC2"), TypedConstant.create("y" + i), TypedConstant.create("y" + i) }));
 
 		try {
-			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(DatabaseParameters.Derby, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.MySql, s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -577,23 +593,42 @@ public class TestRestrictedChaser extends PdqTest {
 		Assert.assertEquals(5, matches.size());
 	}
 
+	private DatabaseManager createConnection(DatabaseParameters params, Schema s) {
+		try {
+			LogicalDatabaseInstance dm = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(params),1);
+			dm.initialiseDatabaseForSchema(s);
+			return dm;
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	/**
 	 * Shuting this test down.
 	 * 
 	 * @throws Exception
 	 */
+	@After
 	public void tearDown() throws Exception {
-		state.close();
+		if (state!=null) {
+			state.close();
+		} else {
+			if (connection!=null) {
+				connection.dropDatabase();
+				connection.shutdown();
+			}
+		}
 	}
 
-	public DatabaseConnection getConnection() {
+	public DatabaseManager getConnection() {
 		return connection;
 	}
 
 	/**
 	 * Used by {@link TestRestrictedChaserMultiRun}
 	 */
-	public void setConnection(DatabaseConnection connection) {
+	public void setConnection(DatabaseManager connection) {
 		this.connection = connection;
 	}
 
@@ -607,7 +642,7 @@ public class TestRestrictedChaser extends PdqTest {
 	/**
 	 * Used by {@link TestRestrictedChaserMultiRun}
 	 */
-	public void setup(DatabaseConnection c) throws SQLException {
+	public void setup(DatabaseManager c) throws SQLException {
 
 		this.setConnection(c);
 		this.chaser = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));

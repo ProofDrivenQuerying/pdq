@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
@@ -26,7 +26,7 @@ public class MultiThreadedContext implements Context{
 	private final Chaser[] reasoners;
 	
 	/**  Detect homomorphisms during chasing*. */
-	private DatabaseConnection[] connections;
+	private DatabaseManager[] connections;
 	
 	/**  Estimate the cost of a plan*. */
 	private final CostEstimator[] costEstimators;
@@ -57,14 +57,14 @@ public class MultiThreadedContext implements Context{
 	@SuppressWarnings("unchecked")
 	public MultiThreadedContext(int parallelThreads,
 			Chaser chaser,
-			DatabaseConnection connection,
+			DatabaseManager connection,
 			CostEstimator costEstimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
 			List<Validator> validators) throws Exception {
 		this.parallelThreads = parallelThreads;
 		this.reasoners = new Chaser[this.parallelThreads];
-		this.connections = new DatabaseConnection[this.parallelThreads];
+		this.connections = new DatabaseManager[this.parallelThreads];
 		this.costEstimators = new CostEstimator[this.parallelThreads];
 		this.successDominances = new SuccessDominance[this.parallelThreads];
 		this.validators = new List[this.parallelThreads];
@@ -72,7 +72,7 @@ public class MultiThreadedContext implements Context{
 				
 		for(int p = 0; p < this.parallelThreads; ++p) {
 			this.reasoners[p] = chaser.clone();
-			this.connections[p] = (DatabaseConnection) connection.clone();
+			this.connections[p] = connection;
 			this.costEstimators[p] = costEstimator.clone();
 			this.successDominances[p] = successDominance.clone();
 			this.validators[p] = deepCopy(validators);
@@ -114,7 +114,7 @@ public class MultiThreadedContext implements Context{
 		return this.reasoners;
 	}
 
-	public DatabaseConnection[] getConnections() {
+	public DatabaseManager[] getConnections() {
 		return this.connections;
 	}
 

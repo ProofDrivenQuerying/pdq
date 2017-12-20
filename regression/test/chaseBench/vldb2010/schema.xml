@@ -4,12 +4,12 @@
         <relation name="A">
             <attribute name="a" type="java.lang.String"/>
             <attribute name="b" type="java.lang.String"/>
-            <attribute name="InstanceID" type="java.lang.Integer"/>
+            
         </relation>
         <relation name="R">
             <attribute name="c" type="java.lang.String"/>
             <attribute name="d" type="java.lang.String"/>
-            <attribute name="InstanceID" type="java.lang.Integer"/>
+            
         </relation>
     </relations>
     <dependencies>

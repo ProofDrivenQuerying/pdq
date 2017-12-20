@@ -155,6 +155,7 @@ public class TestLargeTables extends PdqTest {
 			Assert.assertNotNull(getFacts);
 			Assert.assertEquals(0, getFacts.size());
 		}
+		manager.dropDatabase();
 		manager.shutdown();
 	}
 
@@ -230,6 +231,7 @@ public class TestLargeTables extends PdqTest {
 			Assert.assertNotNull(getFacts);
 			Assert.assertEquals(0, getFacts.size());
 		}
+		manager.dropDatabase();
 		manager.shutdown();
 	}
 

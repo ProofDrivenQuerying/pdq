@@ -16,7 +16,7 @@ import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
@@ -25,7 +25,6 @@ import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 /**
  * Creates new binary configurations.
@@ -47,7 +46,7 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 	protected final Chaser chaser;
 
 	/**  Detects homomorphisms during chasing. */
-	protected final DatabaseConnection connection;
+	protected final DatabaseManager connection;
 
 	/**  Estimates the cost of the plans. */
 	protected final CostEstimator costEstimator;
@@ -114,7 +113,7 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 			Collection<DAGChaseConfiguration> rightSideConfigurations,
 			Dependency[] dependencies,
 			Chaser chaser,
-			DatabaseConnection connection,
+			DatabaseManager connection,
 			CostEstimator costEstimator,
 			SuccessDominance successDominance,
 			DAGChaseConfiguration best,
@@ -223,15 +222,10 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 			representative = this.representatives.getRepresentative(this.equivalenceClasses, right, left);
 		}
 		
-		((DatabaseChaseInstance)left.getState()).setDatabaseConnection(this.connection);
-		
 		//If the representative is null or we do not use templates or we cannot find a template configuration that
 		//consists of the corresponding ApplyRules, then create a binary configuration from scratch by fully chasing its state
 		if(representative == null) {
 			configuration = new BinaryConfiguration(left, right);
-			if(configuration.getState() instanceof DatabaseChaseInstance) {
-				((DatabaseChaseInstance)configuration.getState()).setDatabaseConnection(this.connection);
-			}	
 			this.chaser.reasonUntilTermination(configuration.getState(), this.dependencies);
 			this.representatives.put(this.equivalenceClasses, left, right, configuration);
 		}

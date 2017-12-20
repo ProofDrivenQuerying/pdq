@@ -4,19 +4,19 @@
         <relation name="emp">
             <attribute name="e" type="java.lang.String"/>
             <attribute name="d" type="java.lang.String"/>
-            <attribute name="InstanceID" type="java.lang.Integer"/>
+            
         </relation>
         <relation name="deptemp">
             <attribute name="d" type="java.lang.String"/>
             <attribute name="n" type="java.lang.String"/>
             <attribute name="e" type="java.lang.String"/>
-            <attribute name="InstanceID" type="java.lang.Integer"/>
+            
         </relation>
         <relation name="dept">
             <attribute name="d" type="java.lang.String"/>
             <attribute name="m" type="java.lang.String"/>
             <attribute name="n" type="java.lang.String"/>
-            <attribute name="InstanceID" type="java.lang.Integer"/>
+            
         </relation>
     </relations>
     <dependencies>

@@ -21,7 +21,11 @@ import org.mockito.Mockito;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -88,11 +92,15 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
-		DatabaseConnection connection = null;
+		DatabaseManager connection = null;
 		try {
-			connection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
-		} catch (SQLException e) {
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Derby);
+			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			connection.initialiseDatabaseForSchema(accessibleSchema);
+			
+		} catch (Exception e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 
 		// Create the chaser
@@ -190,6 +198,16 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.dropDatabase();
+					connection.shutdown();
+				} catch (DatabaseException e) {
+					e.printStackTrace();
+					Assert.fail();
+				}
+			}
 		}
 	}
 
@@ -216,10 +234,13 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
-		DatabaseConnection connection = null;
+		DatabaseManager connection = null;
 		try {
-			connection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
-		} catch (SQLException e) {
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Derby);
+			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			connection.initialiseDatabaseForSchema(accessibleSchema);
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
@@ -281,6 +302,16 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.dropDatabase();
+					connection.shutdown();
+				} catch (DatabaseException e) {
+					e.printStackTrace();
+					Assert.fail();
+				}
+			}
 		}
 	}
 }

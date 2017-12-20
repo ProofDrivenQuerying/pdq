@@ -41,7 +41,11 @@ public class ConjunctiveQuery extends Formula {
 	private ConjunctiveQuery(Variable[] freeVariables, Conjunction child) {
 		//Check that the body is a conjunction of positive atoms
 		Assert.assertTrue(isConjunctionOfAtoms(child));
+		if (!Arrays.asList(child.getFreeVariables()).containsAll(Arrays.asList(freeVariables))) {
+			System.out.println();
+		}
 		Assert.assertTrue(Arrays.asList(child.getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
+		
 		this.child = child;
 		this.freeVariables = freeVariables.clone();
 		this.boundVariables = ArrayUtils.removeElements(child.getFreeVariables(), freeVariables);

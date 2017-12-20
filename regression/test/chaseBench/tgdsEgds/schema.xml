@@ -5,34 +5,34 @@
             <attribute name="a" type="java.lang.String"/>
             <attribute name="b" type="java.lang.String"/>
             <attribute name="c" type="java.lang.String"/>
-            <attribute name="InstanceID" type="java.lang.Integer"/>
+            
         </relation>
         <relation name="w1">
             <attribute name="a" type="java.lang.String"/>
             <attribute name="b" type="java.lang.String"/>
-            <attribute name="InstanceID" type="java.lang.Integer"/>
+            
         </relation>
         <relation name="w2">
             <attribute name="a" type="java.lang.String"/>
             <attribute name="b" type="java.lang.String"/>
-            <attribute name="InstanceID" type="java.lang.Integer"/>
+            
         </relation>
         <relation name="t1">
             <attribute name="a" type="java.lang.String"/>
             <attribute name="b" type="java.lang.String"/>
             <attribute name="c" type="java.lang.String"/>
-            <attribute name="InstanceID" type="java.lang.Integer"/>
+            
         </relation>
         <relation name="t2">
             <attribute name="a" type="java.lang.String"/>
             <attribute name="b" type="java.lang.String"/>
-            <attribute name="InstanceID" type="java.lang.Integer"/>
+            
         </relation>
         <relation name="t3">
             <attribute name="a" type="java.lang.String"/>
             <attribute name="b" type="java.lang.String"/>
             <attribute name="c" type="java.lang.String"/>
-            <attribute name="InstanceID" type="java.lang.Integer"/>
+            
         </relation>
     </relations>
     <dependencies>

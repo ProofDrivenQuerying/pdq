@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -20,9 +21,14 @@ import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -50,6 +56,7 @@ public class TestLinearKchase extends PdqTest {
 
 	@Mock
 	protected SimpleCatalog catalog;
+	private LogicalDatabaseInstance connection;
 
 	/**
 	 * the following three test case executes the same chasing but with different
@@ -131,11 +138,12 @@ public class TestLinearKchase extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
-		DatabaseConnection databaseConnection = null;
+		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
-		} catch (SQLException e) {
+			databaseConnection = createConnection(DatabaseParameters.Derby, accessibleSchema);
+		} catch (Exception e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 
 		// Create the chaser
@@ -201,6 +209,29 @@ public class TestLinearKchase extends PdqTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
+	}
+	@After
+	public void tearDown() {
+		if (connection!=null) {
+			try {
+				connection.dropDatabase();
+				connection.shutdown();
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				Assert.fail();
+			}
+		}
+	}
+	
+	private DatabaseManager createConnection(DatabaseParameters params, Schema s) {
+		try {
+			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(params),1);
+			connection.initialiseDatabaseForSchema(s);
+			return connection;
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

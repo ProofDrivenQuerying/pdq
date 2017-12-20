@@ -23,8 +23,8 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -359,7 +359,7 @@ public abstract class SQLStatementBuilder {
 	 *         variables. If the input is a query we project the attributes that map
 	 *         to its free variables.
 	 */
-	public SelectCondition createProjections(Atom[] atoms, DatabaseConnection databaseConnection) {
+	public SelectCondition createProjections(Atom[] atoms, DatabaseManager databaseConnection) {
 		LinkedHashMap<String, Variable> projected = new LinkedHashMap<>();
 		List<Variable> attributes = new ArrayList<>();
 		for (Atom fact : atoms) {
@@ -373,7 +373,7 @@ public abstract class SQLStatementBuilder {
 				// if (term instanceof Variable && !attributes.contains(((Variable)
 				// term).getSymbol())) {
 				if (term instanceof Variable && !attributes.contains(term)) {
-					projected.put(createProjectionStatementForArgument(index, databaseConnection.getRelationNamesToDatabaseTables().get(fact.getPredicate().getName()), alias), (Variable) term);
+					projected.put(createProjectionStatementForArgument(index, null /*fact.getPredicate().getName()*/, alias), (Variable) term);
 					attributes.add(((Variable) term));
 				}
 			}

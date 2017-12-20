@@ -82,7 +82,7 @@ public class TestSqlCommands extends PdqTest {
 	public void testCreateDatabase() {
 		CreateDatabase d = new CreateDatabase(getScenario1().getSchema());
 		List<List<String>> statements = new ArrayList<>();
-		Assert.assertEquals(0,d.toDerbyStatement(databaseNameKeyWord).size());
+		Assert.assertEquals(1,d.toDerbyStatement(databaseNameKeyWord).size());
 		statements.add(d.toMySqlStatement(databaseNameKeyWord));
 		statements.add( d.toPostgresStatement(databaseNameKeyWord));
 		for (List<String> st:statements) {
@@ -106,7 +106,7 @@ public class TestSqlCommands extends PdqTest {
 	@Test
 	public void testDelete() throws DatabaseException {
 		Delete d = new Delete(Atom.create(getScenario1().getSchema().getRelation(0), TypedConstant.create(123), TypedConstant.create(223),
-				TypedConstant.create(323), TypedConstant.create(100000)),getScenario1().getSchema());
+				TypedConstant.create(323)),getScenario1().getSchema());
 		List<List<String>> statements = new ArrayList<>();
 		statements.add(d.toDerbyStatement(databaseNameKeyWord));
 		statements.add(d.toMySqlStatement(databaseNameKeyWord));
@@ -117,7 +117,6 @@ public class TestSqlCommands extends PdqTest {
 			Assert.assertTrue(st.get(0).contains("123"));
 			Assert.assertTrue(st.get(0).contains("223"));
 			Assert.assertTrue(st.get(0).contains("323"));
-			Assert.assertTrue(st.get(0).contains("100000"));
 		}
 	}
 	@Test
@@ -137,7 +136,7 @@ public class TestSqlCommands extends PdqTest {
 		DropDatabase dd = new DropDatabase(getScenario1().getSchema());
 		
 		// derby does not drop the schema but it does drop the tables.
-		Assert.assertTrue(dd.toDerbyStatement(databaseNameKeyWord).size()==4);
+		Assert.assertEquals(5,dd.toDerbyStatement(databaseNameKeyWord).size());
 		Assert.assertTrue(dd.toDerbyStatement(databaseNameKeyWord).get(0).contains(databaseNameKeyWord));
 		
 		Assert.assertTrue(dd.toMySqlStatement(databaseNameKeyWord).size()>0);
@@ -150,7 +149,7 @@ public class TestSqlCommands extends PdqTest {
 	@Test
 	public void testInsert() throws DatabaseException {
 		Insert d = new Insert(Atom.create(getScenario1().getSchema().getRelation(0), TypedConstant.create(123), TypedConstant.create(223),
-				TypedConstant.create(323), TypedConstant.create(100000)),getScenario1().getSchema());
+				TypedConstant.create(323)),getScenario1().getSchema());
 		List<List<String>> statements = new ArrayList<>();
 		statements.add(d.toDerbyStatement(databaseNameKeyWord));
 		statements.add(d.toMySqlStatement(databaseNameKeyWord));
@@ -161,7 +160,6 @@ public class TestSqlCommands extends PdqTest {
 			Assert.assertTrue(st.get(0).contains("123"));
 			Assert.assertTrue(st.get(0).contains("223"));
 			Assert.assertTrue(st.get(0).contains("323"));
-			Assert.assertTrue(st.get(0).contains("100000"));
 		}
 	}
 }

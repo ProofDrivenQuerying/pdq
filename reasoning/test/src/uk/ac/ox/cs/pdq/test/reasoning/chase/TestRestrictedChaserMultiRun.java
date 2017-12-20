@@ -2,9 +2,13 @@ package uk.ac.ox.cs.pdq.test.reasoning.chase;
 
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
@@ -20,7 +24,6 @@ public class TestRestrictedChaserMultiRun extends PdqTest {
 
 	@Test
 	public void testSingleThreadDerby() throws Exception {
-		DatabaseChaseInstance.resetFacts();			
 		TestRestrictedChaser trc = new TestRestrictedChaser();
 		trc.setup();
 		trc.test_reasonUntilTermination1();
@@ -29,95 +32,81 @@ public class TestRestrictedChaserMultiRun extends PdqTest {
 
 	@Test
 	public void testMultiThreadDerby() throws Exception {
-		DatabaseChaseInstance.resetFacts();			
 		TestRestrictedChaser trc = new TestRestrictedChaser();
 		trc.createSchema();
-		trc.setup(new DatabaseConnection(DatabaseParameters.Derby, trc.schema, 10));
+		trc.setup(createConnection(DatabaseParameters.Derby, trc.schema));
 		trc.test_reasonUntilTermination1();
-		trc.tearDown();
-	}
-
-	@Test
-	public void testSingleThreadMySQL() throws Exception {
-		DatabaseChaseInstance.resetFacts();			
-		TestRestrictedChaser trc = new TestRestrictedChaser();
-		trc.createSchema();
-		trc.setup(new DatabaseConnection(DatabaseParameters.MySql, trc.schema, 1));
-		try {
-			trc.test_reasonUntilTermination1();
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
 		trc.tearDown();
 	}
 
 	@Test
 	public void testMultiThreadMySQL() throws Exception {
-		DatabaseChaseInstance.resetFacts();			
-		TestRestrictedChaser trc = new TestRestrictedChaser();
-		trc.createSchema();
-		trc.setup(new DatabaseConnection(DatabaseParameters.MySql, trc.schema, 10));
-		trc.test_reasonUntilTermination1();
-		trc.tearDown();
-	}
 
-	@Test
-	public void testSingleThreadPostgres() throws Exception {
-		DatabaseChaseInstance.resetFacts();			
 		TestRestrictedChaser trc = new TestRestrictedChaser();
 		trc.createSchema();
-		trc.setup(new DatabaseConnection(DatabaseParameters.Postgres, trc.schema, 1));
+		trc.setup(createConnection(DatabaseParameters.MySql, trc.schema));
 		trc.test_reasonUntilTermination1();
 		trc.tearDown();
 	}
 
 	@Test
 	public void testMultiThreadPostgres() throws Exception {
-		DatabaseChaseInstance.resetFacts();			
+
 		TestRestrictedChaser trc = new TestRestrictedChaser();
 		trc.createSchema();
-		trc.setup(new DatabaseConnection(DatabaseParameters.Postgres, trc.schema, 10));
+		trc.setup(createConnection(DatabaseParameters.Postgres, trc.schema));
 		trc.test_reasonUntilTermination1();
 		trc.tearDown();
 	}
-	
+
 	@Test
 	public void testLongRunningMultiThreadMySql() throws Exception {
-		DatabaseChaseInstance.resetFacts();			
+
 		for (int i = 0; i < REPEAT; i++) {
 			TestRestrictedChaser trc = new TestRestrictedChaser();
 			trc.createSchema();
-			trc.setup(new DatabaseConnection(DatabaseParameters.MySql, trc.schema, 10));
+			trc.setup(createConnection(DatabaseParameters.MySql, trc.schema));
 			trc.test_reasonUntilTermination1();
 			trc.tearDown();
-			DatabaseChaseInstance.resetFacts();			
+
 		}
 	}
-	
+
 	@Test
 	public void testLongRunningMultiThreadPostgres() throws Exception {
-		DatabaseChaseInstance.resetFacts();			
+
 		for (int i = 0; i < REPEAT; i++) {
 			TestRestrictedChaser trc = new TestRestrictedChaser();
 			trc.createSchema();
-			trc.setup(new DatabaseConnection(DatabaseParameters.Postgres, trc.schema, 10));
+			trc.setup(createConnection(DatabaseParameters.Postgres, trc.schema));
 			trc.test_reasonUntilTermination1();
 			trc.tearDown();
-			DatabaseChaseInstance.resetFacts();			
+
 		}
 	}
-	
+
 	@Test
 	public void testLongRunningMultiThreadDerby() throws Exception {
-		DatabaseChaseInstance.resetFacts();			
+
 		for (int i = 0; i < REPEAT; i++) {
 			TestRestrictedChaser trc = new TestRestrictedChaser();
 			trc.createSchema();
-			trc.setup(new DatabaseConnection(DatabaseParameters.Derby, trc.schema, 10));
+			trc.setup(createConnection(DatabaseParameters.Derby, trc.schema));
 			trc.test_reasonUntilTermination1();
 			trc.tearDown();
-			DatabaseChaseInstance.resetFacts();			
+
 		}
+	}
+
+	private DatabaseManager createConnection(DatabaseParameters params, Schema s) {
+		try {
+			LogicalDatabaseInstance dm = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(params), 1);
+			dm.initialiseDatabaseForSchema(s);
+			return dm;
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

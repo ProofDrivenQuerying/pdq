@@ -10,7 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
@@ -36,7 +36,7 @@ public class DAGExplorerUtilities {
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 
-			DatabaseConnection connection
+			DatabaseManager connection
 			) throws SQLException {
 		AccessibleDatabaseChaseInstance state = null;
 		state = new AccessibleDatabaseChaseInstance(query, accessibleSchema, connection, false);

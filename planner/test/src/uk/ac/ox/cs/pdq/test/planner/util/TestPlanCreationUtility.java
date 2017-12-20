@@ -318,9 +318,8 @@ public class TestPlanCreationUtility extends PdqTest {
 		Attribute f = Attribute.create(String.class, "f");
 		Attribute g = Attribute.create(String.class, "g");
 		Attribute h = Attribute.create(String.class, "h");
-		Attribute InstanceID = Attribute.create(String.class, "InstanceID");
 
-		Relation customer = Relation.create("customer", new Attribute[] { a, b, c, d, e, f, g, h, InstanceID }, new AccessMethod[] { method0 });
+		Relation customer = Relation.create("customer", new Attribute[] { a, b, c, d, e, f, g, h }, new AccessMethod[] { method0 });
 		Atom fact1 = Atom.create(customer, new UntypedConstant[] { UntypedConstant.create("c46"), UntypedConstant.create("c52"), UntypedConstant.create("c53"),
 				UntypedConstant.create("c40"), UntypedConstant.create("c54"), UntypedConstant.create("c55"), UntypedConstant.create("c56"), UntypedConstant.create("c57") });
 

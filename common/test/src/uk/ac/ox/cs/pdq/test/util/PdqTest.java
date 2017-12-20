@@ -56,7 +56,6 @@ public class PdqTest {
 	protected Attribute b = Attribute.create(Integer.class, "b");
 	protected Attribute c = Attribute.create(Integer.class, "c");
 	protected Attribute d = Attribute.create(Integer.class, "d");
-	protected Attribute instanceID = Attribute.create(Integer.class, "InstanceID");
 	protected Attribute i = Attribute.create(String.class, "i");
 
 	/* same as a,b,c,d but with String attribute type */
@@ -80,20 +79,20 @@ public class PdqTest {
 	protected Relation S = Relation.create("S", new Attribute[] { b, c }, new AccessMethod[] { this.method0, this.method1, this.method2 });
 	protected Relation T = Relation.create("T", new Attribute[] { b, c, d }, new AccessMethod[] { this.method0, this.method1, this.method2 });
 	/* same as R,S,T relations but with instanceID */
-	protected Relation Ri = Relation.create("R", new Attribute[] { a, b, c, instanceID }, new AccessMethod[] { this.method0, this.method2 });
-	protected Relation Si = Relation.create("S", new Attribute[] { b, c, instanceID }, new AccessMethod[] { this.method0, this.method1, this.method2 });
-	protected Relation Ti = Relation.create("T", new Attribute[] { b, c, d, instanceID }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+	protected Relation Ri = Relation.create("R", new Attribute[] { a, b, c }, new AccessMethod[] { this.method0, this.method2 });
+	protected Relation Si = Relation.create("S", new Attribute[] { b, c }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+	protected Relation Ti = Relation.create("T", new Attribute[] { b, c, d }, new AccessMethod[] { this.method0, this.method1, this.method2 });
 
 	/* same as the Ri,Si,Ri tables but with string attribute types. */
-	protected Relation R_s = Relation.create("R", new Attribute[] { a_s, b_s, c_s, instanceID }, new AccessMethod[] { this.method0, this.method2 });
-	protected Relation S_s = Relation.create("S", new Attribute[] { b_s, c_s, instanceID }, new AccessMethod[] { this.method0, this.method1, this.method2 });
-	protected Relation T_s = Relation.create("T", new Attribute[] { b_s, c_s, d_s, instanceID }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+	protected Relation R_s = Relation.create("R", new Attribute[] { a_s, b_s, c_s }, new AccessMethod[] { this.method0, this.method2 });
+	protected Relation S_s = Relation.create("S", new Attribute[] { b_s, c_s }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+	protected Relation T_s = Relation.create("T", new Attribute[] { b_s, c_s, d_s }, new AccessMethod[] { this.method0, this.method1, this.method2 });
 
-	protected Relation access = Relation.create("Accessible", new Attribute[] { i, instanceID });
+	protected Relation access = Relation.create("Accessible", new Attribute[] { i });
 
-	protected Relation rel1 = Relation.create("R1", new Attribute[] { at11, at12, at13, instanceID });
-	protected Relation rel2 = Relation.create("R2", new Attribute[] { at21, at22, instanceID }, new AccessMethod[] { this.method0, this.method2 });
-	protected Relation rel3 = Relation.create("R3", new Attribute[] { at31, at32, instanceID });
+	protected Relation rel1 = Relation.create("R1", new Attribute[] { at11, at12, at13 });
+	protected Relation rel2 = Relation.create("R2", new Attribute[] { at21, at22 }, new AccessMethod[] { this.method0, this.method2 });
+	protected Relation rel3 = Relation.create("R3", new Attribute[] { at31, at32 });
 
 	/* example atoms */
 	protected Atom a1 = Atom.create(this.rel1, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
@@ -161,10 +160,10 @@ public class PdqTest {
 	public TestScenario getScenario1() {
 		// Create the relations
 		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] { 1 }) });
-		relations[3] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] { 1 }) });
+		relations[3] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query
 		Atom[] atoms = new Atom[3];
 		atoms[0] = Atom.create(relations[0], new Term[] { x, Variable.create("y1"), Variable.create("z1") });
@@ -179,20 +178,20 @@ public class PdqTest {
 		ts.setQuery(query);
 		
 		Atom[] facts = new Atom[] {
-				Atom.create(relations[0], new Term[] { TypedConstant.create(12), TypedConstant.create(31), TypedConstant.create(100), TypedConstant.create(10000)}), 
-				Atom.create(relations[0], new Term[] { TypedConstant.create(13), TypedConstant.create(32), TypedConstant.create(101), TypedConstant.create(10000)}), 
-				Atom.create(relations[0], new Term[] { TypedConstant.create(14), TypedConstant.create(33), TypedConstant.create(102), TypedConstant.create(10000)}), 
-				Atom.create(relations[0], new Term[] { TypedConstant.create(15), TypedConstant.create(34), TypedConstant.create(103), TypedConstant.create(10000)}), 
+				Atom.create(relations[0], new Term[] { TypedConstant.create(12), TypedConstant.create(31), TypedConstant.create(100)}), 
+				Atom.create(relations[0], new Term[] { TypedConstant.create(13), TypedConstant.create(32), TypedConstant.create(101)}), 
+				Atom.create(relations[0], new Term[] { TypedConstant.create(14), TypedConstant.create(33), TypedConstant.create(102)}), 
+				Atom.create(relations[0], new Term[] { TypedConstant.create(15), TypedConstant.create(34), TypedConstant.create(103)}), 
 
-				Atom.create(relations[1], new Term[] { TypedConstant.create(12), TypedConstant.create(31), TypedConstant.create(200), TypedConstant.create(10000)}), 
-				Atom.create(relations[1], new Term[] { TypedConstant.create(13), TypedConstant.create(32), TypedConstant.create(201), TypedConstant.create(10000)}), 
-				Atom.create(relations[1], new Term[] { TypedConstant.create(14), TypedConstant.create(33), TypedConstant.create(202), TypedConstant.create(10000)}), 
-				Atom.create(relations[1], new Term[] { TypedConstant.create(15), TypedConstant.create(34), TypedConstant.create(203), TypedConstant.create(10000)}), 
+				Atom.create(relations[1], new Term[] { TypedConstant.create(12), TypedConstant.create(31), TypedConstant.create(200)}), 
+				Atom.create(relations[1], new Term[] { TypedConstant.create(13), TypedConstant.create(32), TypedConstant.create(201)}), 
+				Atom.create(relations[1], new Term[] { TypedConstant.create(14), TypedConstant.create(33), TypedConstant.create(202)}), 
+				Atom.create(relations[1], new Term[] { TypedConstant.create(15), TypedConstant.create(34), TypedConstant.create(203)}), 
 
-				Atom.create(relations[2], new Term[] { TypedConstant.create(12), TypedConstant.create(31), TypedConstant.create(300), TypedConstant.create(10000)}), 
-				Atom.create(relations[2], new Term[] { TypedConstant.create(13), TypedConstant.create(32), TypedConstant.create(301), TypedConstant.create(10000)}), 
-				Atom.create(relations[2], new Term[] { TypedConstant.create(14), TypedConstant.create(33), TypedConstant.create(302), TypedConstant.create(10000)}), 
-				Atom.create(relations[2], new Term[] { TypedConstant.create(15), TypedConstant.create(34), TypedConstant.create(303), TypedConstant.create(10000)}), 
+				Atom.create(relations[2], new Term[] { TypedConstant.create(12), TypedConstant.create(31), TypedConstant.create(300)}), 
+				Atom.create(relations[2], new Term[] { TypedConstant.create(13), TypedConstant.create(32), TypedConstant.create(301)}), 
+				Atom.create(relations[2], new Term[] { TypedConstant.create(14), TypedConstant.create(33), TypedConstant.create(302)}), 
+				Atom.create(relations[2], new Term[] { TypedConstant.create(15), TypedConstant.create(34), TypedConstant.create(303)}), 
 		};
 		ts.setExampleAtoms1(Arrays.asList(facts));
 		return ts;
@@ -216,10 +215,10 @@ public class PdqTest {
 	public TestScenario getScenario2() {
 		// Create the relations
 		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] { 1 }) });
-		relations[3] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] { 1 }) });
+		relations[3] = Relation.create("Accessible", new Attribute[] { this.a_s });
 
 		// Create query
 		Atom[] atoms = new Atom[3];
@@ -270,16 +269,16 @@ public class PdqTest {
 	public TestScenario getScenario3() {
 		// Create the relations
 		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.instanceID },
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s, this.c_s },
 				new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }), AccessMethod.create(new Integer[] { 2 }) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] { 1 }) });
-		relations[3] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] { 1 }) });
+		relations[3] = Relation.create("Accessible", new Attribute[] { this.a_s });
 
 		// Create query
 		Atom[] atoms = new Atom[3];
 		atoms[0] = Atom.create(relations[0], new Term[] { x, Variable.create("y1"), Variable.create("z1") });
-		atoms[1] = Atom.create(relations[1], new Term[] { x, y, TypedConstant.create(5) });
+		atoms[1] = Atom.create(relations[1], new Term[] { x, y, TypedConstant.create("five") });
 		atoms[2] = Atom.create(relations[2], new Term[] { Variable.create("x1"), y, z });
 		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y, z }, (Conjunction) Conjunction.of(atoms));
 
@@ -307,15 +306,15 @@ public class PdqTest {
 	public TestScenario getScenario4() {
 		// Create the relations
 		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
 				new AccessMethod[] { AccessMethod.create(new Integer[] {}), AccessMethod.create(new Integer[] { 0 }) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
 				new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }), AccessMethod.create(new Integer[] { 2, 3 }) });
 
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[3] = Relation.create("R3", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
 				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
-		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
+		relations[4] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query
 		// R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w')
 		Atom[] atoms = new Atom[4];
@@ -358,14 +357,14 @@ public class PdqTest {
 	public TestScenario getScenario5() {
 		// Create the relations
 		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
 				new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }), AccessMethod.create(new Integer[] { 2, 3 }) });
 
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[3] = Relation.create("R3", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
 				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
-		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
+		relations[4] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query
 		// R0('constant1',y,z,w) R1('constant2',_,z,w) R2(x,y,z',w') R3(_,_,z',w')
 		Atom[] atoms = new Atom[4];
@@ -399,14 +398,14 @@ public class PdqTest {
 	public TestScenario getScenario6() {
 		// Create the relations
 		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
 				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
 
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[3] = Relation.create("R3", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
 				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
-		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
+		relations[4] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query
 		// R0('constant1',y,z,w) R1('constant2',_,z,w) R2(x,y,z',w') R3(_,_,z',w')
 		Atom[] atoms = new Atom[4];
@@ -436,11 +435,11 @@ public class PdqTest {
 	public TestScenario getStandardScenario1() {
 		// Create the relations
 		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[3] = Relation.create("R3", new Attribute[] { this.a_s, this.b_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[4] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query
 		Atom[] atoms = new Atom[2];
 		atoms[0] = Atom.create(relations[0], new Term[] { x, y });

@@ -88,7 +88,7 @@ public class PlanCreationUtility {
 		for (Atom exposedFact: exposedFacts) {
 			Assert.assertTrue(exposedFact.getPredicate().getName().equals(relation.getName()));
 			if (access == null) {
-				Attribute[] attributes = new Attribute[relation.getArity()-1];
+				Attribute[] attributes = new Attribute[relation.getArity()];
 				System.arraycopy(relation.getAttributes(), 0, attributes, 0, attributes.length); 
 				planRelation = Relation.create(relation.getName(), attributes, relation.getAccessMethods());
 				//Compute the input constants

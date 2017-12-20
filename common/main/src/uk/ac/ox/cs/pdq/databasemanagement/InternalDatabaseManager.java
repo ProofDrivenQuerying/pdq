@@ -22,13 +22,13 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
  * Memory database manager. Does the same as the
- * {@link VirtualMultiInstanceDatabaseManager} but everything is stored only in
+ * {@link LogicalDatabaseInstance} but everything is stored only in
  * memory.
  * 
  * @author Gabor
  *
  */
-public class InternalDatabaseManager extends VirtualMultiInstanceDatabaseManager {
+public class InternalDatabaseManager extends LogicalDatabaseInstance {
 
 	private Map<String, Term[]> formulaCache = new HashMap<>(); // used for analysing queries.
 
@@ -144,7 +144,7 @@ public class InternalDatabaseManager extends VirtualMultiInstanceDatabaseManager
 		if (rightFacts == null || rightFacts.isEmpty()) {
 			// nothing to sort out, convert to Match objects and go.
 			Term[] resultTerms = formulaCache.get(leftFacts.get(0).getPredicate().getName());
-			return convertToMatch(leftQuery, leftFacts, leftQuery.getFreeVariables(), Arrays.asList(resultTerms));
+			return convertToMatch(leftQuery, leftFacts, Arrays.asList(resultTerms));
 		} else {
 			// convert the right results to match left result's signature
 			Term[] leftTerms = formulaCache.get(leftFacts.get(0).getPredicate().getName());
@@ -155,7 +155,7 @@ public class InternalDatabaseManager extends VirtualMultiInstanceDatabaseManager
 			leftFacts.removeAll(convertedRightFacts);
 
 			// convert the results to Matches and return.
-			return convertToMatch(leftQuery, leftFacts, leftQuery.getFreeVariables(), Arrays.asList(leftTerms));
+			return convertToMatch(leftQuery, leftFacts, Arrays.asList(leftTerms));
 		}
 	}
 
@@ -196,7 +196,7 @@ public class InternalDatabaseManager extends VirtualMultiInstanceDatabaseManager
 			return new ArrayList<>();
 		// convert to matches and return
 		Term[] resultTerms = formulaCache.get(facts.get(0).getPredicate().getName());
-		return convertToMatch(cq, facts, cq.getFreeVariables(), Arrays.asList(resultTerms));
+		return convertToMatch(cq, facts, Arrays.asList(resultTerms));
 	}
 
 	/**
@@ -339,7 +339,8 @@ public class InternalDatabaseManager extends VirtualMultiInstanceDatabaseManager
 		return true;
 	}
 
-	private List<Match> convertToMatch(ConjunctiveQuery cq, List<Atom> facts, Term[] outputVariables, List<Term> factVariables) {
+	private List<Match> convertToMatch(ConjunctiveQuery cq, List<Atom> facts, List<Term> factVariables) {
+		Term[] outputVariables = cq.getFreeVariables();
 		List<Match> results = new ArrayList<>();
 		for (Atom a : facts) {
 			Map<Variable, Constant> mapping = new HashMap<>();

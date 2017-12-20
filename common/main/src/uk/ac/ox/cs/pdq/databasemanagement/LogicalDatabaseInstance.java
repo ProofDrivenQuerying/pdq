@@ -9,6 +9,7 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateTable;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -26,21 +27,20 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
- * Maps multiple database instances into one actual database. This manager will
- * transparently extend every incoming fact with a factID and maintain a mapping
- * table where all factIDs will be mapped with an instanceID. Every time it is
- * needed to answer a query the manager will change the query to reflect the
- * current instance.
+ * Each instance of this LogicalDatabase class will create a logical database
+ * over an external database. This means the tables will be extended with an
+ * instanceId, and each fact will be extended with a factId, and a mapping table
+ * is added to record which fact exists in which logical database. <br>
+ * Queries are updated to handles these changes, so from a user's point of view
+ * there is no difference using this or the ExternalDatabaseManager, however
+ * since it will not store the same facts multiple times it saves space.
  * 
- * Uses the built in fact cache to make sure it won't insert duplicated facts.
- * 
- * From the user's point of view adding / deleting / querying facts is the same
- * as it is with the ExternalDatabaseManager.
+ * Uses the built in fact cache to make sure it won't insert duplicated facts, such duplicates will be ignored.
  * 
  * @author Gabor
  *
  */
-public class VirtualMultiInstanceDatabaseManager implements DatabaseManager {
+public class LogicalDatabaseInstance implements DatabaseManager {
 	private Schema extendedSchema;
 	private Schema originalSchema;
 	protected static final String FACT_ID_TABLE_NAME = "DBFactID";
@@ -52,37 +52,39 @@ public class VirtualMultiInstanceDatabaseManager implements DatabaseManager {
 	protected MultiInstanceFactCache multiCache;
 	private ExternalDatabaseManager edm;
 	protected int databaseInstanceID;
-	
+
 	/**
 	 * Creates database manager and connection if needed based on the parameters.
 	 * 
 	 * @param parameters
 	 * @throws DatabaseException
 	 */
-	public VirtualMultiInstanceDatabaseManager(MultiInstanceFactCache cache, ExternalDatabaseManager edm, int databaseInstanceID) throws DatabaseException {
+	public LogicalDatabaseInstance(MultiInstanceFactCache cache, ExternalDatabaseManager edm, int databaseInstanceID) throws DatabaseException {
 		this.edm = edm;
 		multiCache = cache;
 		this.databaseInstanceID = databaseInstanceID;
 	}
 
-	
-	/** Used by the Internal DatabaseManager.
+	/**
+	 * Used by the Internal DatabaseManager.
+	 * 
 	 * @param cache
 	 * @param databaseInstanceID
 	 * @throws DatabaseException
 	 */
-	protected VirtualMultiInstanceDatabaseManager(MultiInstanceFactCache cache, int databaseInstanceID) throws DatabaseException {
+	protected LogicalDatabaseInstance(MultiInstanceFactCache cache, int databaseInstanceID) throws DatabaseException {
 		super();
 		multiCache = cache;
 		this.databaseInstanceID = databaseInstanceID;
 	}
-	
-	public VirtualMultiInstanceDatabaseManager clone(int newDatabaseInstanceID) throws DatabaseException {
-		VirtualMultiInstanceDatabaseManager vmidm = new VirtualMultiInstanceDatabaseManager(multiCache, edm, newDatabaseInstanceID);
+
+	public LogicalDatabaseInstance clone(int newDatabaseInstanceID) throws DatabaseException {
+		LogicalDatabaseInstance vmidm = new LogicalDatabaseInstance(multiCache, edm, newDatabaseInstanceID);
 		vmidm.extendedSchema = this.extendedSchema;
 		vmidm.originalSchema = this.originalSchema;
 		return vmidm;
 	}
+
 	/**
 	 * Creates a canonical database for the schema.
 	 * 
@@ -133,7 +135,7 @@ public class VirtualMultiInstanceDatabaseManager implements DatabaseManager {
 		edm.deleteFacts(extendFactsWithFactID(multiCache.deleteFactsAndListUnusedFacts(facts, databaseInstanceID)));
 		// only deletes the mapping of this fact to this instance, does not delete the
 		// actual fact.
-		edm.deleteFacts(getFactsMapping(facts, this.databaseInstanceID)); 
+		edm.deleteFacts(getFactsMapping(facts, this.databaseInstanceID));
 	}
 
 	/**
@@ -171,6 +173,10 @@ public class VirtualMultiInstanceDatabaseManager implements DatabaseManager {
 	 * @see
 	 * uk.ac.ox.cs.pdq.data.OLD_DatabaseManager#answerQueries(java.util.Collection)
 	 */
+	public List<Match> answerConjunctiveQuery(ConjunctiveQuery query) throws DatabaseException {
+		return answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { query }));
+	}
+
 	public List<Match> answerConjunctiveQueries(Collection<ConjunctiveQuery> queries) throws DatabaseException {
 		Collection<ConjunctiveQuery> queriesWithInstanceIDs = new ArrayList<>();
 		Map<ConjunctiveQuery, ConjunctiveQuery> oldAndNewQueries = new HashMap<>();
@@ -227,6 +233,7 @@ public class VirtualMultiInstanceDatabaseManager implements DatabaseManager {
 	}
 
 	private static int factIdNameCounter = 0;
+
 	private static synchronized ConjunctiveQuery extendQuery(ConjunctiveQuery formula, int databaseInstanceID) {
 		factIdNameCounter = 0;
 		Conjunction newConjunction = addFactIdToConjunction(formula.getBody(), databaseInstanceID);
@@ -239,8 +246,9 @@ public class VirtualMultiInstanceDatabaseManager implements DatabaseManager {
 			terms.addAll(Arrays.asList(body.getTerms()));
 			Variable factId = Variable.create(FACT_ID_ATTRIBUTE_NAME + "_" + factIdNameCounter++);
 			terms.add(factId);
-			return Conjunction.create(Atom.create(((Atom) body).getPredicate(), terms.toArray(new Term[terms.size()])),
-					Atom.create(VirtualMultiInstanceDatabaseManager.factIdInstanceIdMappingTable, new Term[] { factId, TypedConstant.create(databaseInstanceID) }));
+			Predicate originalPredicate = ((Atom) body).getPredicate();
+			return Conjunction.create(Atom.create(Predicate.create(originalPredicate.getName(), originalPredicate.getArity() + 1), terms.toArray(new Term[terms.size()])),
+					Atom.create(LogicalDatabaseInstance.factIdInstanceIdMappingTable, new Term[] { factId, TypedConstant.create(databaseInstanceID) }));
 
 		} else {
 			Conjunction con = (Conjunction) body;
@@ -272,7 +280,7 @@ public class VirtualMultiInstanceDatabaseManager implements DatabaseManager {
 	private static Collection<Atom> extendFactsWithFactID(Collection<Atom> facts) {
 		List<Atom> extendedFacts = new ArrayList<>();
 		for (Atom fact : facts) {
-			Atom extendedAtom = Atom.create(fact.getPredicate(), extendTerms(fact.getTerms(), fact.hashCode()));
+			Atom extendedAtom = Atom.create(Predicate.create(fact.getPredicate().getName(), fact.getPredicate().getArity() + 1), extendTerms(fact.getTerms(), fact.hashCode()));
 			extendedFacts.add(extendedAtom);
 		}
 		return extendedFacts;
@@ -286,7 +294,6 @@ public class VirtualMultiInstanceDatabaseManager implements DatabaseManager {
 		}
 		return extendedFacts;
 	}
-
 
 	/**
 	 * Takes a collection of facts and extends them (returns facts with all the same
@@ -336,13 +343,21 @@ public class VirtualMultiInstanceDatabaseManager implements DatabaseManager {
 		Variable factID = Variable.create(FACT_ID_TABLE_NAME);
 		body.add(factID);
 		Conjunction conjunction = Conjunction.create(Atom.create(r, body.toArray(new Term[body.size()])),
-				Atom.create(VirtualMultiInstanceDatabaseManager.factIdInstanceIdMappingTable, new Term[] { factID, TypedConstant.create(databaseInstanceID) }));
+				Atom.create(LogicalDatabaseInstance.factIdInstanceIdMappingTable, new Term[] { factID, TypedConstant.create(databaseInstanceID) }));
 		return ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), conjunction);
 	}
 
+	/**
+	 * When we query a single table it is possible to convert the result matches
+	 * into Atoms as they were the facts stored in the table.
+	 * 
+	 * @param matches
+	 * @param r
+	 * @return
+	 */
 	private static ArrayList<Atom> getAtomsFromMatches(List<Match> matches, Relation r) {
 		ArrayList<Atom> ret = new ArrayList<>();
-		Predicate predicate = Predicate.create(r.getName(), r.getArity(), r.isEquality());
+		Predicate predicate = Predicate.create(r.getName(), r.getArity() - 1, r.isEquality());
 		for (Match m : matches) {
 			List<Term> terms = new ArrayList<>();
 			for (Term t : m.getFormula().getTerms()) {
@@ -366,41 +381,60 @@ public class VirtualMultiInstanceDatabaseManager implements DatabaseManager {
 	@Override
 	public void dropDatabase() throws DatabaseException {
 		multiCache.clearCache(databaseInstanceID);
-		if (edm!= null) edm.dropDatabase();
+		if (edm != null)
+			edm.dropDatabase();
 	}
-
 
 	@Override
 	public void shutdown() throws DatabaseException {
-		if (edm!= null) edm.shutdown();
+		if (edm != null)
+			edm.shutdown();
 	}
-
 
 	@Override
 	public void setSchema(Schema schema) {
 		this.originalSchema = schema;
 		this.extendedSchema = extendSchemaWithFactIDs(schema);
-		if (edm!= null) edm.setSchema(schema);
+		if (edm != null)
+			edm.setSchema(this.extendedSchema);
 	}
-
 
 	@Override
 	public Schema getSchema() {
 		return originalSchema;
 	}
 
-
 	@Override
 	public int getDatabaseInstanceID() {
 		return databaseInstanceID;
 	}
 
-
 	@Override
 	public String getDatabaseName() {
-		if (edm!= null) 
+		if (edm != null)
 			return edm.getDatabaseName();
 		return this.toString();
+	}
+
+	/**
+	 * Adds an extra relation to the existing schema, updates the extended schema
+	 * accordingly, and creates the new table in the database.
+	 * 
+	 * @param newRelation
+	 * @throws DatabaseException
+	 */
+	public void addRelation(Relation newRelation) throws DatabaseException {
+		Relation newRelations[] = new Relation[this.originalSchema.getRelations().length + 1];
+		int i = 0;
+		for (Relation r : this.originalSchema.getRelations())
+			newRelations[i++] = r;
+		newRelations[i] = newRelation;
+		List<Dependency> deps = new ArrayList<>();
+		deps.addAll(Arrays.asList(this.originalSchema.getKeyDependencies()));
+		deps.addAll(Arrays.asList(this.originalSchema.getDependencies()));
+		this.originalSchema = new Schema(newRelations, deps.toArray(new Dependency[deps.size()]));
+		this.setSchema(originalSchema);
+		edm.executeUpdateCommand(new CreateTable(this.extendedSchema.getRelation(newRelation.getName())));
 	}
 
 }

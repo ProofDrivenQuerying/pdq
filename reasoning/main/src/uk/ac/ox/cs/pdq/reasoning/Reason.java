@@ -13,8 +13,10 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.google.common.eventbus.EventBus;
 
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -22,6 +24,7 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
  * Bootstrapping class for starting the reasoner. 
@@ -165,7 +168,10 @@ public class Reason {
 								
 			Chaser reasoner = reasonerFactory.getInstance();
 //			//Creates a chase state that consists of the canonical database of the input query.
-			ChaseInstance state = new DatabaseChaseInstance(query,new DatabaseConnection(dbParams, schema));		
+			ExternalDatabaseManager edm = new ExternalDatabaseManager(dbParams);
+			LogicalDatabaseInstance manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm, GlobalCounterProvider.getNext("DatabaseInstanceID"));
+			manager.initialiseDatabaseForSchema(schema);
+			ChaseInstance state = new DatabaseChaseInstance(query,manager);		
 			reasoner.reasonUntilTermination(state, schema.getDependencies());
 			
 		} catch (Throwable e) {

@@ -116,7 +116,6 @@ public class BasicSelect extends Command {
 	public BasicSelect(Schema schema, ConjunctiveQuery cq) throws DatabaseException {
 		this.schema = schema;
 		formula = cq;
-		resultTerms = formula.getFreeVariables();
 		initSelect();
 		initFrom();
 		initConstantEqualityConditions();
@@ -133,8 +132,11 @@ public class BasicSelect extends Command {
 	 * @throws DatabaseException 
 	 */
 	private void initSelect() throws DatabaseException {
-		List<Variable> freeVariables = Arrays.asList(formula.getFreeVariables());
+		resultTerms = new Term[formula.getFreeVariables().length];
+
+		List<Variable> freeVariables = new ArrayList<>(Arrays.asList(formula.getFreeVariables()));
 		// SELECT free variables
+		int resultTermIndex = 0;
 		for (Atom a : formula.getAtoms()) {
 			// loop over all atoms of the query (flattened hierarchy)
 			if (Collections.disjoint(freeVariables, Arrays.asList(a.getTerms()))) {
@@ -147,8 +149,15 @@ public class BasicSelect extends Command {
 					String relName = a.getPredicate().getName();
 					Attribute attribute = schema.getRelation(relName).getAttribute(i);
 					select.add(getAlias(relName,a.getTerms()).aliasName + "." + attribute.getName());
+					freeVariables.remove(term);
+					resultTerms[resultTermIndex] = term;
+					resultTermIndex++;
 				}
 			}
+		}
+		
+		if (select.isEmpty()) {
+			select.add("*");
 		}
 	}
 	

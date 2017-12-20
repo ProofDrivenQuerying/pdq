@@ -20,9 +20,12 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -104,10 +107,12 @@ public class TestDAGGeneric extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
-		DatabaseConnection connection = null;
+		DatabaseManager connection = null;
 		try {
-			connection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
-		} catch (SQLException e) {
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.MySql);
+			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			connection.initialiseDatabaseForSchema(accessibleSchema);
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
@@ -212,10 +217,12 @@ public class TestDAGGeneric extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
-		DatabaseConnection databaseConnection = null;
+		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
-		} catch (SQLException e) {
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.MySql);
+			databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			databaseConnection.initialiseDatabaseForSchema(accessibleSchema);
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
@@ -306,13 +313,13 @@ public class TestDAGGeneric extends PdqTest {
 		Relation[] relations = new Relation[NUMBER_OF_RELATIONS + 1];
 		for (int i = 0; i < relations.length - 1; i++) {
 			if (i % 2 == 0)
-				relations[i] = Relation.create("R" + i, new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+				relations[i] = Relation.create("R" + i, new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
 						new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
 			else
-				relations[i] = Relation.create("R" + i, new Attribute[] { this.a, this.b, this.c, this.d, this.instanceID },
+				relations[i] = Relation.create("R" + i, new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
 						new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
 		}
-		relations[relations.length - 1] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
+		relations[relations.length - 1] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query
 		// R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w')
 		Atom[] atoms = new Atom[relations.length - 1];
@@ -351,12 +358,12 @@ public class TestDAGGeneric extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
-		DatabaseConnection connection = null;
+		DatabaseManager connection = null;
 		try {
-			DatabaseParameters postgresDbParam = DatabaseParameters.Postgres;
-
-			connection = new DatabaseConnection(postgresDbParam, accessibleSchema);
-		} catch (SQLException e) {
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.MySql);
+			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			connection.initialiseDatabaseForSchema(accessibleSchema);
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
@@ -440,11 +447,11 @@ public class TestDAGGeneric extends PdqTest {
 	public void test5() {
 		// Create the relations
 		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.instanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.instanceID });
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[3] = Relation.create("R3", new Attribute[] { this.a_s, this.b_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[4] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query
 		Atom[] atoms = new Atom[2];
 		Variable x = Variable.create("x");
@@ -479,10 +486,12 @@ public class TestDAGGeneric extends PdqTest {
 		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
 
 		// Create database connection
-		DatabaseConnection databaseConnection = null;
+		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
-		} catch (SQLException e) {
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.MySql);
+			databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			databaseConnection.initialiseDatabaseForSchema(accessibleSchema);
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}

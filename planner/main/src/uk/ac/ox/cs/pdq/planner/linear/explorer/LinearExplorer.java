@@ -9,7 +9,7 @@ import org.junit.Assert;
 import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -52,7 +52,7 @@ public abstract class LinearExplorer extends Explorer {
 	protected final Chaser chaser;
 
 	/**  Detects homomorphisms during chasing*. */
-	protected final DatabaseConnection connection;
+	protected final DatabaseManager connection;
 
 	/**  Estimates the cost of a plan *. */
 	protected final CostEstimator costEstimator;
@@ -95,7 +95,7 @@ public abstract class LinearExplorer extends Explorer {
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			DatabaseConnection connection,
+			DatabaseManager connection,
 			CostEstimator costEstimator,
 			NodeFactory nodeFactory,
 			int depth

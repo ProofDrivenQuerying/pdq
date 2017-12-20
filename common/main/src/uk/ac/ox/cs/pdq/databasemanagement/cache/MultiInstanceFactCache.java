@@ -2,9 +2,9 @@ package uk.ac.ox.cs.pdq.databasemanagement.cache;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
 
@@ -22,7 +22,7 @@ public class MultiInstanceFactCache {
 	private Map<Integer, FactCache> multiCache;
 
 	public MultiInstanceFactCache() {
-		multiCache = new HashMap<>();
+		multiCache = new ConcurrentHashMap<>();
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class MultiInstanceFactCache {
 	}
 
 	public void clearCache(int instanceId) {
-		multiCache.get(instanceId).clearCache();
+		if (multiCache.get(instanceId)!= null) multiCache.get(instanceId).clearCache();
 	}
 
 	/**

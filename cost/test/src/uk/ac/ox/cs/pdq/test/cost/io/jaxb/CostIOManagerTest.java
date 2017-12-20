@@ -34,7 +34,7 @@ public class CostIOManagerTest extends PdqTest {
 		try {
 			File cost = createCostFile();
 			Assert.assertTrue(cost.exists());
-			Assert.assertTrue(cost.length() > 430);
+			Assert.assertTrue(cost.length() > 350);
 			cost.delete();
 		} catch (Exception e) {
 			e.printStackTrace();

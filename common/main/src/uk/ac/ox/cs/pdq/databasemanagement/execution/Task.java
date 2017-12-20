@@ -122,7 +122,7 @@ public class Task {
 				isFinished = this.isFinished;
 				try {
 					if (!isFinished)
-						RESULTS_LOCK.wait();
+						RESULTS_LOCK.wait(100);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

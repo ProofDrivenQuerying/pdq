@@ -56,11 +56,15 @@ public class Command {
 	 * When set to true, it will execute each statement separately and ignore any error.
 	 */
 	protected boolean ignoreErrors = false;
+	
+	protected Exception creatorStack = null;
 	/**
 	 * Constructs an empty command.
 	 */
 	public Command() {
 		this.statements = new ArrayList<>();
+		creatorStack = new Exception(this.getClass().getSimpleName() + " creation stack.");
+		creatorStack.fillInStackTrace();
 	}
 
 	/**
@@ -72,6 +76,8 @@ public class Command {
 	public Command(String command) {
 		this.statements = new ArrayList<>();
 		this.statements.add(command);
+		creatorStack = new Exception(this.getClass().getSimpleName() + " creation stack.");
+		creatorStack.fillInStackTrace();
 	}
 
 	/**
@@ -177,11 +183,15 @@ public class Command {
 	 */
 	@Override
 	public String toString() {
-		return "" + statements;
+		return this.getClass().getSimpleName() + "(" + statements + ")";
 	}
 
 	public boolean isIgnoreErrors() {
 		return ignoreErrors;
+	}
+
+	public void printCallerStackTrace() {
+		creatorStack.printStackTrace();
 	}
 
 }
