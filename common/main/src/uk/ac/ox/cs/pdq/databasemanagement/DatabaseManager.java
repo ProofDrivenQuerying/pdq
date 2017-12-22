@@ -5,6 +5,7 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -150,4 +151,12 @@ public interface DatabaseManager {
 	 */
 	public String getDatabaseName();
 
+	public DatabaseManager clone(int instanceId) throws DatabaseException;
+	/**
+	 * Adds an extra relation to the existing schema, and creates the new table in the database.
+	 * 
+	 * @param newRelation
+	 * @throws DatabaseException
+	 */
+	public void addRelation(Relation newRelation) throws DatabaseException;
 }

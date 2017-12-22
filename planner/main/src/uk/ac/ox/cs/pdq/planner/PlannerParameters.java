@@ -210,6 +210,11 @@ public class PlannerParameters extends Parameters {
 			+ "plan search",
 			defaultValue = "true")
 	protected Boolean zombification;
+	
+	/** Internal or external database should be used . */
+	@Parameter(description = "If true, we will use an Internal database manager instead of the external one.",
+			defaultValue = "true")
+	private Boolean useInternalDatabase = false;
 
 	/**
 	 * @return Integer
@@ -714,6 +719,14 @@ public class PlannerParameters extends Parameters {
 	 */
 	public void setZombification(Boolean zombification) {
 		this.zombification = zombification;
+	}
+
+	public Boolean getUseInternalDatabase() {
+		return useInternalDatabase;
+	}
+
+	public void setUseInternalDatabase(Boolean useInternalDatabase) {
+		this.useInternalDatabase = useInternalDatabase;
 	}
 
 	/** Planning algorithm types. */

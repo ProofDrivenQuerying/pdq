@@ -21,6 +21,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Term;
 
 /**
@@ -325,4 +326,30 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	protected void executeUpdateCommand(Command command) throws DatabaseException {
 		executor.execute(command);
 	}
+
+	@Override
+	public DatabaseManager clone(int instanceId) throws DatabaseException {
+		throw new DatabaseException("Database manager cannot be cloned.");
+	}
+
+	/**
+	 * Adds an extra relation to the existing schema, updates the extended schema
+	 * accordingly, and creates the new table in the database.
+	 * 
+	 * @param newRelation
+	 * @throws DatabaseException
+	 */
+	public void addRelation(Relation newRelation) throws DatabaseException {
+		Relation newRelations[] = new Relation[this.schema.getRelations().length + 1];
+		int i = 0;
+		for (Relation r : this.schema.getRelations())
+			newRelations[i++] = r;
+		newRelations[i] = newRelation;
+		List<Dependency> deps = new ArrayList<>();
+		deps.addAll(Arrays.asList(this.schema.getKeyDependencies()));
+		deps.addAll(Arrays.asList(this.schema.getDependencies()));
+		this.schema = new Schema(newRelations, deps.toArray(new Dependency[deps.size()]));
+		executeUpdateCommand(new CreateTable(this.schema.getRelation(newRelation.getName())));
+	}
+	
 }

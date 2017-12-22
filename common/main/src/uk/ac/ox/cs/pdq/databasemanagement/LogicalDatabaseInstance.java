@@ -41,8 +41,8 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  *
  */
 public class LogicalDatabaseInstance implements DatabaseManager {
-	private Schema extendedSchema;
-	private Schema originalSchema;
+	protected Schema extendedSchema;
+	protected Schema originalSchema;
 	protected static final String FACT_ID_TABLE_NAME = "DBFactID";
 	protected static final String FACT_ID_ATTRIBUTE_NAME = "FactId";
 	protected static final Attribute FACT_ID_ATTRIBUTE = Attribute.create(Integer.class, FACT_ID_ATTRIBUTE_NAME);
@@ -78,8 +78,14 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		this.databaseInstanceID = databaseInstanceID;
 	}
 
+	/** Creates a new logical database (a new instance) over the same external database.
+	 * @param newDatabaseInstanceID
+	 * @return
+	 * @throws DatabaseException
+	 */
 	public LogicalDatabaseInstance clone(int newDatabaseInstanceID) throws DatabaseException {
-		LogicalDatabaseInstance vmidm = new LogicalDatabaseInstance(multiCache, edm, newDatabaseInstanceID);
+		LogicalDatabaseInstance vmidm;
+		vmidm = new LogicalDatabaseInstance(multiCache, edm, newDatabaseInstanceID);
 		vmidm.extendedSchema = this.extendedSchema;
 		vmidm.originalSchema = this.originalSchema;
 		return vmidm;

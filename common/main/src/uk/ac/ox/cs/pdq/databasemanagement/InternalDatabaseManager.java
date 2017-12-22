@@ -10,27 +10,26 @@ import java.util.Map;
 import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
- * Memory database manager. Does the same as the
- * {@link LogicalDatabaseInstance} but everything is stored only in
- * memory.
+ * Memory database manager. Does the same as the {@link LogicalDatabaseInstance}
+ * but everything is stored only in memory.
  * 
  * @author Gabor
  *
  */
 public class InternalDatabaseManager extends LogicalDatabaseInstance {
-
-	private Map<String, Term[]> formulaCache = new HashMap<>(); // used for analysing queries.
 
 	/**
 	 * Creates a database manager with the default databaseName
@@ -38,7 +37,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	 * @throws DatabaseException
 	 */
 	public InternalDatabaseManager() throws DatabaseException {
-		this(new MultiInstanceFactCache(),1);
+		this(new MultiInstanceFactCache(), 1);
 	}
 
 	/**
@@ -52,7 +51,19 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 
 	@Override
 	public void initialiseDatabaseForSchema(Schema schema) throws DatabaseException {
-		// empty function, we do not manage the schema, won't create any tables.
+		super.setSchema(schema);
+	}
+	
+	/** Creates a new logical database (a new instance) over the same external database.
+	 * @param newDatabaseInstanceID
+	 * @return
+	 * @throws DatabaseException
+	 */
+	public LogicalDatabaseInstance clone(int newDatabaseInstanceID) throws DatabaseException {
+		InternalDatabaseManager vmidm = new InternalDatabaseManager(this.multiCache, newDatabaseInstanceID);
+		vmidm.extendedSchema = this.extendedSchema;
+		vmidm.originalSchema = this.originalSchema;
+		return vmidm;
 	}
 
 	/**
@@ -133,13 +144,14 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	 * @throws DatabaseException
 	 */
 	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
+		Map<String, Term[]> formulaCache = new HashMap<>(); // used for analysing queries.
 		// execute query left
-		List<Atom> leftFacts = answerConjunctiveQueryRecursively(leftQuery.getBody(), leftQuery, this.databaseInstanceID);
+		List<Atom> leftFacts = answerConjunctiveQueryRecursively(leftQuery.getBody(), leftQuery, this.databaseInstanceID, formulaCache);
 		if (leftFacts == null || leftFacts.isEmpty())
 			return new ArrayList<>();
 
 		// execute right
-		List<Atom> rightFacts = answerConjunctiveQueryRecursively(rightQuery.getBody(), rightQuery, this.databaseInstanceID);
+		List<Atom> rightFacts = answerConjunctiveQueryRecursively(rightQuery.getBody(), rightQuery, this.databaseInstanceID, formulaCache);
 
 		if (rightFacts == null || rightFacts.isEmpty()) {
 			// nothing to sort out, convert to Match objects and go.
@@ -189,8 +201,9 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	 * Answers a basic CQ over the given instance.
 	 */
 	protected List<Match> answerConjunctiveQuery(ConjunctiveQuery cq, int instanceId) throws DatabaseException {
+		Map<String, Term[]> formulaCache = new HashMap<>(); // used for analysing queries.
 		// get facts
-		List<Atom> facts = answerConjunctiveQueryRecursively(cq.getBody(), cq, instanceId);
+		List<Atom> facts = answerConjunctiveQueryRecursively(cq.getBody(), cq, instanceId, formulaCache);
 		// return empty list if we have no data
 		if (facts == null || facts.isEmpty())
 			return new ArrayList<>();
@@ -229,7 +242,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	 * @param instanceId
 	 * @return
 	 */
-	private List<Atom> answerSingleAtomQuery(Atom formula, int instanceId) {
+	private List<Atom> answerSingleAtomQuery(Atom formula, int instanceId, Map<String, Term[]> formulaCache) {
 		// single atom query, we can have only attribute equalities
 		String predicateName = ((Atom) formula).getPredicate().getName();
 		List<Atom> facts = multiCache.getFactsOfRelation(predicateName, instanceId);
@@ -238,11 +251,11 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 		return facts;
 	}
 
-	private List<Atom> answerConjunctiveQueryRecursively(Formula formula, ConjunctiveQuery cq, int instanceId) throws DatabaseException {
+	private List<Atom> answerConjunctiveQueryRecursively(Formula formula, ConjunctiveQuery cq, int instanceId, Map<String, Term[]> formulaCache) throws DatabaseException {
 
 		if (formula instanceof Atom) {
 			// single atom case
-			List<Atom> facts = answerSingleAtomQuery((Atom) formula, instanceId);
+			List<Atom> facts = answerSingleAtomQuery((Atom) formula, instanceId, formulaCache);
 			return facts;
 		} else {
 			// atom + atom, or atom + conjunction case.
@@ -254,7 +267,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 				throw new DatabaseException("Invalid conjunction (" + formula + ") in query: " + cq + ", left formula should be an atom.");
 			// conjunction of two atoms
 			// these facts will be filtered by constant equality conditions
-			List<Atom> factsLeft = answerSingleAtomQuery((Atom) fLeft, instanceId);
+			List<Atom> factsLeft = answerSingleAtomQuery((Atom) fLeft, instanceId, formulaCache);
 			if (factsLeft.isEmpty()) {
 				return new ArrayList<>();
 			}
@@ -266,7 +279,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 			// prepare right side atoms
 			if (fRight instanceof Atom) {
 				// the conjunction was made by two atoms.
-				factsRight = answerSingleAtomQuery((Atom) fRight, instanceId);
+				factsRight = answerSingleAtomQuery((Atom) fRight, instanceId, formulaCache);
 				if (factsRight.isEmpty()) {
 					return new ArrayList<>();
 				}
@@ -277,7 +290,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 				// the conjunction was made by an atoms and a conjunction, recursion needed.
 				if (!(fRight instanceof Conjunction))
 					throw new DatabaseException("Invalid conjunction (" + formula + ") in query: " + cq + ", wrong children types.");
-				factsRight = answerConjunctiveQueryRecursively(fRight, cq, instanceId);
+				factsRight = answerConjunctiveQueryRecursively(fRight, cq, instanceId, formulaCache);
 				if (factsRight.isEmpty()) {
 					return new ArrayList<>();
 				}
@@ -302,7 +315,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 			// the actual cross join
 			for (Atom lf : factsLeft) {
 				for (Atom rf : factsRight) {
-					if (checkAttributeEqualities(lf, rf, (Conjunction) formula)) {
+					if (checkAttributeEqualities(lf, rf, (Conjunction) formula, formulaCache)) {
 						List<Term> terms = new ArrayList<>();
 						terms.addAll(Arrays.asList(lf.getTerms()));
 						terms.addAll(Arrays.asList(rf.getTerms()));
@@ -314,7 +327,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 		}
 	}
 
-	private boolean checkAttributeEqualities(Atom lf, Atom rf, Conjunction formula) {
+	private boolean checkAttributeEqualities(Atom lf, Atom rf, Conjunction formula, Map<String, Term[]> formulaCache) {
 		Formula fLeft = ((Conjunction) formula).getChild(0);
 		Formula fRight = ((Conjunction) formula).getChild(1);
 		Term[] formulaTermsRight = null;
@@ -362,6 +375,19 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 			results.add(Atom.create(Predicate.create(atomName, values.size()), values.toArray(new Term[values.size()])));
 		}
 		return results;
+	}
+	
+	public void addRelation(Relation newRelation) throws DatabaseException {
+		Relation newRelations[] = new Relation[this.originalSchema.getRelations().length + 1];
+		int i = 0;
+		for (Relation r : this.originalSchema.getRelations())
+			newRelations[i++] = r;
+		newRelations[i] = newRelation;
+		List<Dependency> deps = new ArrayList<>();
+		deps.addAll(Arrays.asList(this.originalSchema.getKeyDependencies()));
+		deps.addAll(Arrays.asList(this.originalSchema.getDependencies()));
+		this.originalSchema = new Schema(newRelations, deps.toArray(new Dependency[deps.size()]));
+		this.setSchema(originalSchema);
 	}
 
 }

@@ -22,6 +22,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.logging.CostStatKeys;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
@@ -29,11 +30,14 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ChaseConstantGenerator;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -145,6 +149,7 @@ public class ExplorationSetUp {
 		this.reasoningParams = reasoningParams;
 		this.databaseParams = databaseParams;
 		this.schema = convertTypesToString(schema);
+		//this.schema = schema;
 		this.statsLogger = statsLogger;
 		this.accessibleSchema = new AccessibleSchema(this.schema);
 	}
@@ -219,6 +224,7 @@ public class ExplorationSetUp {
 	 * @throws SQLException
 	 */
 	public Entry<RelationalTerm, Cost> search(ConjunctiveQuery query, boolean noDep) throws PlannerException, SQLException {
+		query = convertQueryConstantsToString(query);
 		boolean collectStats = this.statsLogger != null;
 		if (noDep) {
 			this.schema = new Schema(this.schema.getRelations());
@@ -229,8 +235,16 @@ public class ExplorationSetUp {
 		Explorer explorer = null;
 		DatabaseManager databaseConnection;
 		try {
-			databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(),
+			if (plannerParams.getUseInternalDatabase()) {
+				// internal
+				databaseConnection = new InternalDatabaseManager(new MultiInstanceFactCache(),
+						GlobalCounterProvider.getNext("DatabaseInstanceId"));
+			} else {
+				// external database.
+				databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(),
 					new ExternalDatabaseManager(this.databaseParams),GlobalCounterProvider.getNext("DatabaseInstanceId"));
+			}
+			
 			databaseConnection.initialiseDatabaseForSchema(this.accessibleSchema);
 		} catch (DatabaseException e1) {
 			throw new PlannerException("Faild to create database",e1);
@@ -294,6 +308,40 @@ public class ExplorationSetUp {
 				this.handleEarlyTermination(explorer);
 				e.printStackTrace();
 			}
+		}
+	}
+
+	/** Converts all constants of the query to strings
+	 * @param query
+	 * @return
+	 */
+	private ConjunctiveQuery convertQueryConstantsToString(ConjunctiveQuery query) {
+		
+		Formula newAtom = convertQueryAtomConstantToString(query.getBody());
+		if (newAtom instanceof Atom) {
+			return ConjunctiveQuery.create(query.getFreeVariables(), (Atom)newAtom);
+		} else {
+			return ConjunctiveQuery.create(query.getFreeVariables(), (Conjunction)newAtom);
+		}
+	}
+
+	/** converts all constants to strings.
+	 * @param body
+	 * @return
+	 */
+	private Formula convertQueryAtomConstantToString(Formula body) {
+		if (body instanceof Atom) { 
+			Term terms[] = body.getTerms();
+			for (int i = 0; i < terms.length; i++) {
+				if (terms[i] instanceof TypedConstant) {
+					terms[i] = TypedConstant.create("" + ((TypedConstant)terms[i]).value);
+				}
+			}
+			return Atom.create(((Atom) body).getPredicate(), terms);
+		} else {
+			Formula left = ((Conjunction)body).getChildren()[0];
+			Formula right = ((Conjunction)body).getChildren()[1];
+			return Conjunction.create(convertQueryAtomConstantToString(left),convertQueryAtomConstantToString(right));
 		}
 	}
 
