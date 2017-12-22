@@ -60,7 +60,6 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
  * <li>- Also creates and manages an eventBus.</li><br>
  * <li>- converts query into AccessibleQuery and maintains a map of its
  * variables to chase-constants.</li><br>
- * <li>- converts schema to add InstanceIDs</li><br>
  * 
  * @author Julien Leblay
  * @author Efthymia Tsamoura
@@ -145,24 +144,9 @@ public class ExplorationSetUp {
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
 		this.databaseParams = databaseParams;
-		final Attribute Fact = Attribute.create(Integer.class, "InstanceID");
-		this.schema = addAdditionalAttributeToSchema(schema, Fact);
+		this.schema = convertTypesToString(schema);
 		this.statsLogger = statsLogger;
 		this.accessibleSchema = new AccessibleSchema(this.schema);
-	}
-
-	// add an extra attribute
-	private Schema addAdditionalAttributeToSchema(Schema schema, Attribute atribute) {
-		Relation[] relations = schema.getRelations();
-		for (int index = 0; index < relations.length; ++index) {
-			if (relations[index].getAttribute("InstanceID") == null) {
-				relations[index] = Relation.appendAttribute(relations[index], atribute);
-			}
-		}
-		List<Dependency> deps = new ArrayList<>();
-		deps.addAll(Arrays.asList(schema.getDependencies()));
-		deps.addAll(Arrays.asList(schema.getKeyDependencies()));
-		return new Schema(relations, deps.toArray(new Dependency[deps.size()]));
 	}
 
 	/**
@@ -186,7 +170,6 @@ public class ExplorationSetUp {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Sets the cost estimator.
 	 *
 	 * @param estimator
@@ -197,8 +180,6 @@ public class ExplorationSetUp {
 	}
 
 	/**
-=======
->>>>>>> master
 	 * Search a best plan for the given schema and query.
 	 *
 	 * @param <P>
@@ -287,7 +268,7 @@ public class ExplorationSetUp {
 			}
 			explorer.setExceptionOnLimit(this.plannerParams.getExceptionOnLimit());
 			explorer.setMaxRounds(this.plannerParams.getMaxIterations().doubleValue());
-			explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
+		//explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
 			if (explorer.getBestPlan() != null && explorer.getBestCost() != null)
 				return new AbstractMap.SimpleEntry<RelationalTerm, Cost>(explorer.getBestPlan(), explorer.getBestCost());
@@ -314,6 +295,34 @@ public class ExplorationSetUp {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private Schema convertTypesToString(Schema schema) {
+		List<Dependency> dep = new ArrayList<>();
+		dep.addAll(Arrays.asList(schema.getDependencies()));
+		dep.addAll(Arrays.asList(schema.getKeyDependencies()));
+		Relation[] rels = schema.getRelations();
+		for (int i = 0; i < rels.length; i++) {
+			rels[i] = createDatabaseRelation(rels[i]);
+		}
+		return new Schema(rels,dep.toArray(new Dependency[dep.size()]));
+	}
+	/**
+	 * Creates the db relation. Currently codes in the position numbers into the
+	 * names, but this should change
+	 *
+	 * @param relation
+	 *            the relation
+	 * @return a new database relation with attributes x0,x1,...,x_{N-1}, Fact where
+	 *         x_i maps to the i-th relation's attribute
+	 */
+	private Relation createDatabaseRelation(Relation relation) {
+		Attribute[] attributes = new Attribute[relation.getArity()];
+		for (int index = 0; index < relation.getArity(); index++) {
+			Attribute attribute = relation.getAttribute(index);
+			attributes[index] = Attribute.create(String.class, attribute.getName());
+		}
+		return Relation.create(relation.getName(), attributes, relation.getAccessMethods(), relation.isEquality());
 	}
 
 	/**

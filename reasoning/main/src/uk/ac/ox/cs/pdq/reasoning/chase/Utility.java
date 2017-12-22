@@ -131,6 +131,7 @@ public class Utility {
 		throw new java.lang.RuntimeException("Unsupported formula type");
 	}
 
+	//TOCOMMENT delete these
 	/**
 	 * This will create a where condition that makes sure the left and right side of an equality is different (the EGD is active), and we only return it once. 
 	 * When c!=c' then it is also true that c'!=c, but the query result will only contain one of them.

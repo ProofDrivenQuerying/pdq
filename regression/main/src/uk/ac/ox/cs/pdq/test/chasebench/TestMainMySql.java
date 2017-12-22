@@ -46,7 +46,7 @@ public class TestMainMySql extends PdqTest{
 		for (Relation r : s.getRelations()) {
 			List<Attribute> attr = new ArrayList<>();
 			attr.addAll(Arrays.asList(r.getAttributes()));
-			attr.add(Attribute.create(Integer.class, "InstanceID"));
+			//attr.add(Attribute.create(Integer.class, "InstanceID"));
 			lr.add(Relation.create(r.getName(), attr.toArray(new Attribute[attr.size()])));
 		}
 		List<Dependency> dependencies = new ArrayList<>();

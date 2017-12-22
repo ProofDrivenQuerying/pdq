@@ -95,7 +95,7 @@ public class CreateTable extends Command {
 			else if (Float.class.isAssignableFrom((Class<?>) attribute.getType()))
 				result.append(" FLOAT");
 			else
-				throw new RuntimeException("Unsupported type");
+				throw new RuntimeException("Unsupported type: " + attribute.getType() + " in Relation " + relation);
 			
 			// add comma if there are more attributes to add.
 			if (attributeIndex < relation.getArity() - 1)

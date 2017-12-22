@@ -23,7 +23,6 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -37,6 +36,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
@@ -240,7 +240,8 @@ private static FileWriter summary = null;
 			dep.addAll(Arrays.asList(schema.getKeyDependencies()));
 			List<Relation> rel = new ArrayList<>(); 
 			rel.addAll(Arrays.asList(schema.getRelations()));
-			rel.add(Relation.create("Accessible", new Attribute[] {Attribute.create(String.class, "name"),Attribute.create(Integer.class, "InstanceID")}));
+//			rel.add(Relation.create("Accessible", new Attribute[] {Attribute.create(String.class, "name"),Attribute.create(Integer.class, "InstanceID")}));
+			rel.add(AccessibleSchema.accessibleRelation);
 			return new Schema(rel.toArray(new Relation[rel.size()]),dep.toArray(new Dependency[dep.size()]));
 		}
 
