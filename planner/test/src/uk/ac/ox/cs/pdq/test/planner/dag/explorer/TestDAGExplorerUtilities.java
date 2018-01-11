@@ -109,7 +109,6 @@ public class TestDAGExplorerUtilities extends PdqTest {
 				connection.dropDatabase();
 				connection.shutdown();
 			} catch (DatabaseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
