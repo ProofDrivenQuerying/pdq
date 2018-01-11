@@ -1,14 +1,16 @@
-package uk.ac.ox.cs.pdq.fol;
+package uk.ac.ox.cs.pdq.reasoning.chase;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
 
+import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
- * TOCOMMENT move this to reasoning, connected to ConjunctiveQuery cleanup as well.
  * 
  * Generates constants for existentially quantified variables. It is called when
  * a dependency is grounded

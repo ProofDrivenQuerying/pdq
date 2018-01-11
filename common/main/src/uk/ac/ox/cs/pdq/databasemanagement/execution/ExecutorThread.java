@@ -108,7 +108,7 @@ public class ExecutorThread extends Thread {
 		try {
 			connection.setAutoCommit(true);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			// ignored error.
 			e.printStackTrace();
 		}
 	}

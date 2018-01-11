@@ -62,8 +62,9 @@ public class AdaptedConstant extends AdaptedVariable {
 				dDate = sdfmt1.parse( value );
 				ret = TypedConstant.create(new java.sql.Date(dDate.getTime()));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+				// ignored, could be user's incorrect xml file.
 				e.printStackTrace();
+				ret = TypedConstant.create(value);
 			}
 		} else {
 			Constructor<?> constructor=null;

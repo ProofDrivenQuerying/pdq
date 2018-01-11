@@ -1,24 +1,9 @@
 package uk.ac.ox.cs.pdq.reasoning.chase;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.base.Preconditions;
-
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
-import uk.ac.ox.cs.pdq.db.sql.WhereCondition;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ChaseConstantGenerator;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -130,102 +115,30 @@ public class Utility {
 		}
 		throw new java.lang.RuntimeException("Unsupported formula type");
 	}
-
-	//TOCOMMENT delete these
 	/**
-	 * This will create a where condition that makes sure the left and right side of an equality is different (the EGD is active), and we only return it once. 
-	 * When c!=c' then it is also true that c'!=c, but the query result will only contain one of them.
-	 * This function should be used only in case the EGD is coming from functional dependencies (such that the left and right side's predicates are the same)
+	 * see #42
 	 * 
-	 * @param source the source
-	 * @param constraints the constraints
-	 * @param relationNamesToDatabaseTables 
-	 * @return 		predicates that correspond to fact constraints
-	 */
-	public static WhereCondition createConditionForEGDsCreatedFromFunctionalDependencies(Atom[] conjuncts, Map<String, Relation> relationNamesToDatabaseTables, SQLStatementBuilder builder) {
-		// get left and right side of the equality
-		String lalias = builder.aliases.get(conjuncts[0]);
-		String ralias = builder.aliases.get(conjuncts[1]);
-		lalias = lalias==null ? conjuncts[0].getPredicate().getName():lalias;
-		ralias = ralias==null ? conjuncts[1].getPredicate().getName():ralias;
-		StringBuilder eq = new StringBuilder();
-		// get InstanceID attribute name that we will use to make sure we only have c!=c' results since c' was created later, hence it has larger InstanceID.
-		String leftAttributeName = relationNamesToDatabaseTables.get(conjuncts[0].getPredicate().getName()).getAttribute(conjuncts[0].getPredicate().getArity()-1).getName();
-		String rightAttributeName = relationNamesToDatabaseTables.get(conjuncts[1].getPredicate().getName()).getAttribute(conjuncts[1].getPredicate().getArity()-1).getName();
-		eq.append(lalias).append(".").
-		append(leftAttributeName).append(">");
-		eq.append(ralias).append(".").
-		append(rightAttributeName);
-		List<String> res = new ArrayList<String>();
-		res.add(eq.toString());
-		return new WhereCondition(res);
-	}
-	/**
-	 * Creates the attribute equalities.
+	 * Generate canonical mapping.
 	 *
-	 * @param source the source
-	 * @return 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
+	 * @param body the body
+	 * @return 		a mapping of variables of the input conjunction to constants. 
+	 * 		A fresh constant is created for each variable of the conjunction. 
+	 * 		This method is invoked by the conjunctive query constructor when the constructor is called with empty input canonical mapping.
 	 */
-	public static WhereCondition createNestedAttributeEqualitiesForActiveTriggers(Atom[] extendedBodyAtoms, Atom[] extendedHeadAtoms, DatabaseManager dc) {
-		List<String> attributePredicates = new ArrayList<String>();
-		//The right atom should be an equality
-		//We add additional checks to be sure that we have to do with EGDs
-		for(Atom rightAtom:extendedHeadAtoms) {
-			
-			Relation rightRelation = dc.getSchema().getRelation(rightAtom.getPredicate().getName());
-			String rightAlias = ""; // dc.getSQLStatementBuilder().aliases.get(rightAtom);
-			Map<Integer,Pair<String,Attribute>> rightToLeft = new HashMap<Integer,Pair<String,Attribute>>();
-			for(Term term:rightAtom.getTerms()) {
-				List<Integer> rightPositions = uk.ac.ox.cs.pdq.util.Utility.search(rightAtom.getTerms(), term); //all the positions for the same term should be equated
-				Preconditions.checkArgument(rightPositions.size() == 1);
-				for(Atom leftAtom:extendedBodyAtoms) {
-					Relation leftRelation = dc.getSchema().getRelation(leftAtom.getPredicate().getName());
-					String leftAlias =  ""; // dc.getSQLStatementBuilder().aliases.get(leftAtom);
-					List<Integer> leftPositions = uk.ac.ox.cs.pdq.util.Utility.search(leftAtom.getTerms(), term); 
-					Preconditions.checkArgument(leftPositions.size() <= 1);
-					if(leftPositions.size() == 1) {
-						rightToLeft.put(rightPositions.get(0), Pair.of(leftAlias==null ? leftRelation.getName():leftAlias, leftRelation.getAttribute(leftPositions.get(0))));
+	public static Map<Variable, Constant> generateCanonicalMapping(ConjunctiveQuery query) {
+		Map<Variable, Constant> canonicalMapping = new LinkedHashMap<>();
+		for (Atom p: query.getAtoms()) {
+			for (Term t: p.getTerms()) {
+				if (t.isVariable()) {
+					Constant c = canonicalMapping.get(t);
+					if (c == null) {
+						c = UntypedConstant.create(ChaseConstantGenerator.getName());
+						canonicalMapping.put((Variable) t, c);
 					}
 				}
 			}
-			Preconditions.checkArgument(rightToLeft.size()==2);
-			Iterator<Entry<Integer, Pair<String, Attribute>>> entries;
-			Entry<Integer, Pair<String, Attribute>> entry;
-
-			entries = rightToLeft.entrySet().iterator();
-			entry = entries.next();
-
-			StringBuilder result = new StringBuilder();
-			result.append("(");
-			result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
-			result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(0).getName());
-
-			entry = entries.next();
-
-			result.append(" AND ");
-			result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
-			result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(1).getName());
-
-			entries = rightToLeft.entrySet().iterator();
-			entry = entries.next();
-
-			result.append(" OR ");
-			result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
-			result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(1).getName());
-
-			entry = entries.next();
-
-			result.append(" AND ");
-			result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
-			result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(0).getName());
-
-			result.append(")");
-
-			attributePredicates.add(result.toString());
-
 		}
-		return new WhereCondition(attributePredicates);
+		return canonicalMapping;
 	}
-
 
 }

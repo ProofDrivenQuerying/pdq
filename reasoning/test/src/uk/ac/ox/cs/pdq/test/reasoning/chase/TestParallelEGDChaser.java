@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.test.reasoning.chase;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +30,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -410,7 +412,7 @@ public class TestParallelEGDChaser extends PdqTest {
 						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("c_constant_3")),
 						Atom.create(D, Variable.create("z"), Variable.create("z"))));
 
-		List<Match> matches = this.state.getMatchesNoSubstitution(query1);
+		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 		Assert.assertEquals(5, matches.size());
 	}
 
@@ -501,7 +503,7 @@ public class TestParallelEGDChaser extends PdqTest {
 						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("TC1")), Atom.create(D, Variable.create("x"), Variable.create("y")),
 						Atom.create(E, Variable.create("x"), Variable.create("y"), TypedConstant.create("TC1"))));
 
-		List<Match> matches = this.state.getMatchesNoSubstitution(query1);
+		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 		Assert.assertEquals(5, matches.size());
 	}
 
@@ -562,7 +564,7 @@ public class TestParallelEGDChaser extends PdqTest {
 			facts.add(Atom.create(E, new Term[] { TypedConstant.create("TC2"), TypedConstant.create("y" + i), TypedConstant.create("y" + i) }));
 
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Derby, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Postgres, s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -575,7 +577,7 @@ public class TestParallelEGDChaser extends PdqTest {
 						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("TC1")), Atom.create(D, Variable.create("x"), Variable.create("y")),
 						Atom.create(E, TypedConstant.create("TC2"), Variable.create("y"), Variable.create("y"))));
 
-		List<Match> matches = this.state.getMatchesNoSubstitution(query1);
+		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 		Assert.assertEquals(5, matches.size());
 	}
 

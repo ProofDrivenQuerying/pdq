@@ -41,7 +41,6 @@ import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  *
@@ -55,7 +54,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  */
 public class DatabaseChaseInstance implements ChaseInstance {
 	protected static Logger log = Logger.getLogger(LogicalDatabaseInstance.class);
-	protected final DatabaseManager chaseDatabaseInstance; 
+	protected final DatabaseManager chaseDatabaseInstance;
 	private boolean _isFailed = false;
 
 	/**
@@ -65,20 +64,21 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	protected EqualConstantsClasses classes;
 
 	/**
-	 * Maps each constant to the atom and the position inside this atom where it
-	 * appears. We need this table when we are applying an EGD chase step.
+	 * Maps each constant to a list of atoms that have the same constant.
+	 * We need this table when we are applying an EGD chase step, to easily find all facts that has an obsolete
+	 * constant in order to update them with the new representative constant. 
+	 * Could be replaced with a query.
 	 **/
-	//TOCOMMENT discuss next time
+	// TOCOMMENT discuss next time
 	protected final Multimap<Constant, Atom> constantsToAtoms;
 
 	/**
-	 * The hashcode of this class.
-	 * used to create an "instanceID" unique per instance
+	 * The hashcode of this class. used to create an "instanceID" unique per
+	 * instance
 	 * 
 	 */
 	private Integer hash = null;
-	
-	
+
 	/**
 	 * Instantiates a new DatabaseChaseInstance in order to chase a (canonical
 	 * database of a query). It creates and executes SQL in order to insert the
@@ -103,9 +103,9 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		try {
 			chaseDatabaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
 		} catch (DatabaseException e) {
-			throw new RuntimeException("database failure",e);
+			throw new RuntimeException("database failure", e);
 		}
-		this.addFacts(Sets.newHashSet(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, Utility.generateCanonicalMapping(query)).getAtoms()));
+		this.addFacts(Sets.newHashSet(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, uk.ac.ox.cs.pdq.reasoning.chase.Utility.generateCanonicalMapping(query)).getAtoms()));
 		this.classes = new EqualConstantsClasses();
 		try {
 			this.constantsToAtoms = ReasonerUtility.createdConstantsMap(chaseDatabaseInstance.getCachedFacts());
@@ -113,8 +113,8 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			throw new RuntimeException(e);
 		}
 		this.initDatabase();
-		//this.indexConstraints();
-		//this.indexLastAttributeOfAllRelations();
+		// this.indexConstraints();
+		// this.indexLastAttributeOfAllRelations();
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		try {
 			chaseDatabaseInstance.deleteFacts(facts);
 		} catch (DatabaseException e) {
-			System.err.println("Could not delete facts ("+facts+") from this: " + this);
+			System.err.println("Could not delete facts (" + facts + ") from this: " + this);
 			e.printStackTrace();
 		}
 	}
@@ -137,9 +137,9 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 */
 	public DatabaseChaseInstance(Collection<Atom> facts, DatabaseManager connection) throws SQLException {
 		try {
-			chaseDatabaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId")); 
+			chaseDatabaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
 		} catch (DatabaseException e) {
-			throw new RuntimeException("database failure",e);
+			throw new RuntimeException("database failure", e);
 		}
 		Preconditions.checkNotNull(facts);
 		this.addFacts(facts);
@@ -149,29 +149,30 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		this.initDatabase();
-		
-		//this.indexConstraints();
-		//this.indexLastAttributeOfAllRelations();
+
+		// this.indexConstraints();
+		// this.indexLastAttributeOfAllRelations();
 	}
-	
-	
-	/** Cloning constructor.
+
+	/**
+	 * Cloning constructor.
+	 * 
 	 * @param connection
 	 * @throws SQLException
 	 */
 	private DatabaseChaseInstance(EqualConstantsClasses classes, Multimap<Constant, Atom> constants, DatabaseManager connection) {
-			try {
-				chaseDatabaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
-			} catch (DatabaseException e) {
-				throw new RuntimeException("database failure",e);
-			}
-			Preconditions.checkNotNull(classes);
-			Preconditions.checkNotNull(constants);
-			this.classes = classes;
-			this.constantsToAtoms = constants;
+		try {
+			chaseDatabaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
+		} catch (DatabaseException e) {
+			throw new RuntimeException("database failure", e);
 		}
+		Preconditions.checkNotNull(classes);
+		Preconditions.checkNotNull(constants);
+		this.classes = classes;
+		this.constantsToAtoms = constants;
+	}
 
 	/**
 	 * Instantiates a new DatabaseChaseInstance in order to chase a set of facts.
@@ -196,7 +197,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		try {
 			chaseDatabaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
 		} catch (DatabaseException e) {
-			throw new RuntimeException("database failure",e);
+			throw new RuntimeException("database failure", e);
 		}
 		Preconditions.checkNotNull(facts);
 		Preconditions.checkNotNull(classes);
@@ -209,18 +210,20 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		this.classes = classes;
 		this.constantsToAtoms = constants;
 	}
+
 	private void initDatabase() {
 		Relation equality = this.createDatabaseEqualityRelation();
 		try {
 			// ADD EQUALITY RELATION
 			chaseDatabaseInstance.addRelation(equality);
-			
+
 			// CREATE INDICES FOR DEPENDENCIES
-			//TOCOMMENT add constraint insertion into database manager
-//			for (Dependency constraint : canonicalDatabaseInstance.getSchema().getDependencies()) {
-//				
-//			}
-			
+			// TOCOMMENT add constraint insertion into database manager
+			// for (Dependency constraint :
+			// canonicalDatabaseInstance.getSchema().getDependencies()) {
+			//
+			// }
+
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -264,7 +267,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 * 
 	 * @param matches
 	 *            the input triggers (and dependencies) to be applied
-	 * @return false if and only if the update of equivalence classes fails. 
+	 * @return false if and only if the update of equivalence classes fails.
 	 */
 	public boolean TGDchaseStep(Collection<Match> matches) {
 		Preconditions.checkNotNull(matches);
@@ -494,10 +497,11 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		try {
 			LinkedHashSet<Atom> newFacts = new LinkedHashSet<Atom>();
 			newFacts.addAll(factsToAdd);
-			// make sure equality atoms are always added in pairs ( EQUALITY(a,b) should have a pair EQUALITY(b,a) )
+			// make sure equality atoms are always added in pairs ( EQUALITY(a,b) should
+			// have a pair EQUALITY(b,a) )
 			for (Atom factToAdd : factsToAdd) {
 				if ("Equality".equalsIgnoreCase(factToAdd.getPredicate().getName())) {
-					Atom pair = Atom.create(factToAdd.getPredicate(),new Term[] {factToAdd.getTerms()[1],factToAdd.getTerms()[0]});
+					Atom pair = Atom.create(factToAdd.getPredicate(), new Term[] { factToAdd.getTerms()[1], factToAdd.getTerms()[0] });
 					if (!newFacts.contains(pair)) {
 						newFacts.add(pair);
 					}
@@ -505,7 +509,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			}
 			chaseDatabaseInstance.addFacts(newFacts);
 		} catch (Throwable t) {
-			System.err.println("Could not add facts ("+factsToAdd+") to this: " + this);
+			System.err.println("Could not add facts (" + factsToAdd + ") to this: " + this);
 			t.printStackTrace();
 		}
 
@@ -520,7 +524,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	public DatabaseChaseInstance clone() {
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		constantsToAtoms.putAll(this.constantsToAtoms);
-		return new DatabaseChaseInstance(classes.clone(), constantsToAtoms,chaseDatabaseInstance);
+		return new DatabaseChaseInstance(classes.clone(), constantsToAtoms, chaseDatabaseInstance);
 	}
 
 	@Override
@@ -567,7 +571,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 */
 	public List<Match> getMatches(ConjunctiveQuery query, Map<Variable, Constant> substitutions) {
 		List<Atom> convertedAtoms = new ArrayList<>();
-		for (Atom a: query.getAtoms()) {
+		for (Atom a : query.getAtoms()) {
 			Term[] terms = a.getTerms();
 			for (int i = 0; i < terms.length; i++) {
 				if (substitutions.containsKey(terms[i])) {
@@ -577,35 +581,21 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			convertedAtoms.add(Atom.create(a.getPredicate(), terms));
 		}
 		List<Variable> convertedFreeVariables = new ArrayList<>();
-		for (Term v: query.getTerms()) {
-			if(v.isVariable()) {
+		for (Term v : query.getTerms()) {
+			if (v.isVariable()) {
 				if (!substitutions.containsKey(v)) {
-					convertedFreeVariables.add((Variable)v);
-				} 
+					convertedFreeVariables.add((Variable) v);
+				}
 			}
 		}
 		ConjunctiveQuery converted = null;
 		if (convertedAtoms.size() == 1)
-			converted = ConjunctiveQuery.create(convertedFreeVariables.toArray(new Variable[convertedFreeVariables.size()]), 
-				convertedAtoms.get(0));
-		else 
-			converted = ConjunctiveQuery.create(convertedFreeVariables.toArray(new Variable[convertedFreeVariables.size()]), 
-					(Conjunction)Conjunction.of(convertedAtoms.toArray(new Atom[convertedAtoms.size()])));
+			converted = ConjunctiveQuery.create(convertedFreeVariables.toArray(new Variable[convertedFreeVariables.size()]), convertedAtoms.get(0));
+		else
+			converted = ConjunctiveQuery.create(convertedFreeVariables.toArray(new Variable[convertedFreeVariables.size()]),
+					(Conjunction) Conjunction.of(convertedAtoms.toArray(new Atom[convertedAtoms.size()])));
 		try {
 			return chaseDatabaseInstance.answerConjunctiveQuery(converted);
-		} catch (DatabaseException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	//TOCOMMENT remove this function
-	/**
-	 * Same as above but it does not replaces the free variables in the query with
-	 * the canonical constants. This function is only used for unit testing.
-	 */
-	public List<Match> getMatchesNoSubstitution(ConjunctiveQuery query) {
-		try {
-			return chaseDatabaseInstance.answerConjunctiveQuery(query);
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -625,61 +615,69 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		for (Dependency source : dependencies) {
 			// gather free variables, and map of predicates to terms.
 			Set<Variable> freeVariables = new HashSet<>();
-			for (Atom a: source.getBodyAtoms()) {
-				for (Term t: a.getTerms()) {
+			for (Atom a : source.getBodyAtoms()) {
+				for (Term t : a.getTerms()) {
 					if (t.isVariable())
-						freeVariables.add((Variable)t);
+						freeVariables.add((Variable) t);
 				}
 			}
 			ConjunctiveQuery leftQuery = null;
 			if (source.getBodyAtoms().length == 1) {
-				leftQuery = ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]),source.getBodyAtoms()[0]);
+				leftQuery = ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), source.getBodyAtoms()[0]);
 			} else {
-				leftQuery = ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]),(Conjunction)Conjunction.of(source.getBodyAtoms()));
+				leftQuery = ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), (Conjunction) Conjunction.of(source.getBodyAtoms()));
 			}
-			
+
 			if (triggerProperty == TriggerProperty.ALL) {
 				try {
-					results.addAll(updateFormula(source,filterSelfEqualityResults(chaseDatabaseInstance.answerConjunctiveQuery(leftQuery),source)));
+					results.addAll(updateFormula(source, filterSelfEqualityResults(chaseDatabaseInstance.answerConjunctiveQuery(leftQuery), source)));
 				} catch (DatabaseException e) {
-					throw new RuntimeException("getTriggers error: " ,e);
+					throw new RuntimeException("getTriggers error: ", e);
 				}
-			}
-			else if (triggerProperty == TriggerProperty.ACTIVE) {
+			} else if (triggerProperty == TriggerProperty.ACTIVE) {
 				List<Atom> rightQueryAtoms = new ArrayList<>();
 				// right query will contain the same as the left, plus extra conditions
 				rightQueryAtoms.addAll(Arrays.asList(source.getBodyAtoms()));
-				ConjunctiveQuery rightQuery= null;
+				ConjunctiveQuery rightQuery = null;
 				rightQueryAtoms.addAll(Arrays.asList(source.getHeadAtoms()));
-				rightQuery = ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]),(Conjunction)Conjunction.of(rightQueryAtoms.toArray(new Atom[rightQueryAtoms.size()])));
+				rightQuery = ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]),
+						(Conjunction) Conjunction.of(rightQueryAtoms.toArray(new Atom[rightQueryAtoms.size()])));
 				try {
 					List<Match> queryResults = chaseDatabaseInstance.answerQueryDifferences(leftQuery, rightQuery);
 					// filter self pointing equalities
-					//TOCOMMENT change filterSelfEqualityResults to add inequality to an extended CQ, so we can discribe the <> condition.
-					results.addAll(updateFormula(source,filterSelfEqualityResults(queryResults,source)));
+					// TOCOMMENT change filterSelfEqualityResults to add inequality to an extended
+					// CQ, so we can discribe the <> condition.
+					results.addAll(updateFormula(source, filterSelfEqualityResults(queryResults, source)));
 				} catch (DatabaseException e) {
-					throw new RuntimeException("getTriggers error: " ,e);
-				}		
+					throw new RuntimeException("getTriggers error: ", e);
+				}
 			} else {
 				throw new RuntimeException("Invalid trigger property: " + triggerProperty);
 			}
 		}
 		return results;
 	}
-	/** Updates the formula from a CQ to a dependency
+
+	/**
+	 * Updates the formula from a CQ to a dependency
+	 * 
 	 * @param source
 	 * @param toUpdate
 	 * @return
 	 */
 	private Collection<? extends Match> updateFormula(Dependency source, List<Match> toUpdate) {
 		List<Match> results = new ArrayList<>();
-		for (Match m: toUpdate) {
+		for (Match m : toUpdate) {
 			results.add(Match.create(source, m.getMapping()));
 		}
 		return results;
 	}
 
-	/** In case we have a self join in the CQ we need to make sure every match connects two different facts, and remove the case when the left and right side of an equality is the same.
+	/**
+	 * In case we have a self join in the CQ we need to make sure every match
+	 * connects two different facts, and remove the case when the left and right
+	 * side of an equality is the same.
+	 * 
 	 * @param list
 	 * @param source
 	 * @return
@@ -689,9 +687,9 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			List<Match> results = new ArrayList<>();
 			Term leftVariable = source.getHead().getTerms()[0];
 			Term rightVariable = source.getHead().getTerms()[1];
-			for (Match m:list) {
+			for (Match m : list) {
 				if (m.getMapping().get(leftVariable) != m.getMapping().get(rightVariable)) {
-					results .add(m);
+					results.add(m);
 				}
 			}
 			return results;
@@ -712,7 +710,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	}
 
 	public void close() throws Exception {
-		if (chaseDatabaseInstance!=null) {
+		if (chaseDatabaseInstance != null) {
 			chaseDatabaseInstance.dropDatabase();
 			chaseDatabaseInstance.shutdown();
 		}

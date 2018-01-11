@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.test.reasoning.chase;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +31,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -418,7 +420,7 @@ public class TestRestrictedChaser extends PdqTest {
 						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("c_constant_3")),
 						Atom.create(D, Variable.create("z"), Variable.create("z"))));
 
-		List<Match> matches = this.state.getMatchesNoSubstitution(query1);
+		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 		Assert.assertEquals(5, matches.size());
 	}
 
@@ -505,7 +507,7 @@ public class TestRestrictedChaser extends PdqTest {
 							Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("TC1")), Atom.create(D, Variable.create("x"), Variable.create("y")),
 							Atom.create(E, Variable.create("x"), Variable.create("y"), TypedConstant.create("TC1"))));
 			
-			List<Match> matches = this.state.getMatchesNoSubstitution(query1);
+			List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 			Assert.assertEquals(5, matches.size());
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -589,8 +591,8 @@ public class TestRestrictedChaser extends PdqTest {
 						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("TC1")), Atom.create(D, Variable.create("x"), Variable.create("y")),
 						Atom.create(E, TypedConstant.create("TC2"), Variable.create("y"), Variable.create("y"))));
 
-		List<Match> matches = this.state.getMatchesNoSubstitution(query1);
-		Assert.assertEquals(5, matches.size());
+		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
+		Assert.assertEquals(5, matches.size()); 
 	}
 
 	private DatabaseManager createConnection(DatabaseParameters params, Schema s) {
@@ -605,7 +607,7 @@ public class TestRestrictedChaser extends PdqTest {
 	}
 
 	/**
-	 * Shuting this test down.
+	 * Shutting this test down.
 	 * 
 	 * @throws Exception
 	 */
