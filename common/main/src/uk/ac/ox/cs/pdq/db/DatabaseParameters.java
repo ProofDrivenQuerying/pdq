@@ -30,8 +30,7 @@ public class DatabaseParameters extends Parameters {
 	static final int DEFAULT_NUMBER_OF_THREADS = 10;
 	static final String NUMBER_OF_THREADS_PROPERTY = "number.of.threads";
 
-//	public static final DatabaseParameters MySql = getDefaultForMySql();
-	public static final DatabaseParameters MySql = getDefaultForPostgres();
+	public static final DatabaseParameters MySql = getDefaultForMySql();
 	public static final DatabaseParameters Postgres = getDefaultForPostgres();
 	public static final DatabaseParameters Derby = getDefaultForDerby();
 	public static final DatabaseParameters Empty = new DatabaseParameters();
