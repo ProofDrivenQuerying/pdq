@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -15,6 +17,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQueryWithInequality;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
@@ -53,8 +56,11 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	public void initialiseDatabaseForSchema(Schema schema) throws DatabaseException {
 		super.setSchema(schema);
 	}
-	
-	/** Creates a new logical database (a new instance) over the same external database.
+
+	/**
+	 * Creates a new logical database (a new instance) over the same external
+	 * database.
+	 * 
 	 * @param newDatabaseInstanceID
 	 * @return
 	 * @throws DatabaseException
@@ -256,7 +262,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 		if (formula instanceof Atom) {
 			// single atom case
 			List<Atom> facts = answerSingleAtomQuery((Atom) formula, instanceId, formulaCache);
-			return facts;
+			return filterInequalities(facts, cq, formulaCache);
 		} else {
 			// atom + atom, or atom + conjunction case.
 			if (((Conjunction) formula).getChildren().length != 2)
@@ -323,10 +329,55 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 					}
 				}
 			}
-			return results;
+			return filterInequalities(results, cq, formulaCache);
 		}
 	}
 
+	/**
+	 * In case the CQ is a ConjunctiveQueryWithInequality it will check and filter
+	 * out the disallowed facts. Otherwise returns the input facts.
+	 * 
+	 * @param facts
+	 * @param cq
+	 * @param formulaCache
+	 * @return
+	 */
+	private List<Atom> filterInequalities(List<Atom> facts, ConjunctiveQuery cq, Map<String, Term[]> formulaCache) {
+		if (!(cq instanceof ConjunctiveQueryWithInequality))
+			return facts;
+		ConjunctiveQueryWithInequality cqw = (ConjunctiveQueryWithInequality) cq;
+		if (cqw.getInequalities() == null || cqw.getInequalities().isEmpty())
+			return facts;
+		List<Atom> results = new ArrayList<>();
+		for (Atom f : facts) {
+			List<Term> terms = Arrays.asList(formulaCache.get(f.getPredicate().getName()));
+			boolean accepted = true;
+			for (Pair<Variable, Variable> inequality : cqw.getInequalities()) {
+				if (terms.contains(inequality.getKey()) && terms.contains(inequality.getValue())) {
+					// the condition needs to be checked since this result contains both sides
+					int leftIndex = terms.indexOf(inequality.getKey());
+					int rightIndex = terms.indexOf(inequality.getValue());
+					if (f.getTerm(leftIndex).equals(f.getTerm(rightIndex))) {
+						accepted = false;
+					}
+				}
+			}
+			if (accepted)
+				results.add(f);
+		}
+		return results;
+	}
+
+	/**
+	 * Finds the attribute equality conditions and returns a true or false value
+	 * indicating if this fact matches all conditions or not.
+	 * 
+	 * @param lf
+	 * @param rf
+	 * @param formula
+	 * @param formulaCache
+	 * @return
+	 */
 	private boolean checkAttributeEqualities(Atom lf, Atom rf, Conjunction formula, Map<String, Term[]> formulaCache) {
 		Formula fLeft = ((Conjunction) formula).getChild(0);
 		Formula fRight = ((Conjunction) formula).getChild(1);
@@ -376,7 +427,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 		}
 		return results;
 	}
-	
+
 	public void addRelation(Relation newRelation) throws DatabaseException {
 		Relation newRelations[] = new Relation[this.originalSchema.getRelations().length + 1];
 		int i = 0;
