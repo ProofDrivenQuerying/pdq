@@ -15,6 +15,7 @@ public class Cache {
 	protected static ClassManager<Clause> clause = null;
 	protected static ClassManager<Conjunction> conjunction = null;
 	protected static ClassManager<ConjunctiveQuery> conjunctiveQuery = null;
+	protected static ClassManager<ConjunctiveQueryWithInequality> conjunctiveQueryWithInequality = null;
 	protected static ClassManager<Dependency> dependency = null;
 	protected static ClassManager<Disjunction> disjunction = null;
 	protected static ClassManager<EGD> egd = null;
@@ -41,6 +42,7 @@ public class Cache {
 		clause.reset();
 		conjunction.reset();
 		conjunctiveQuery.reset();
+		conjunctiveQueryWithInequality.reset();
 		dependency.reset();
 		disjunction.reset();
 		egd.reset();
@@ -108,7 +110,26 @@ public class Cache {
 				return hashCode;
 			}
 		};
+		conjunctiveQueryWithInequality =new ClassManager<ConjunctiveQueryWithInequality>() {
+			protected boolean equal(ConjunctiveQueryWithInequality object1, ConjunctiveQueryWithInequality object2) {
+				if (!object1.child.equals(object2.child) || object1.freeVariables.length != object2.freeVariables.length)
+					return false;
+				
+				for (int index = object1.freeVariables.length - 1; index >= 0; --index)
+					if (!object1.freeVariables[index].equals(object2.freeVariables[index]))
+						return false;
+				
+				return true;
+			}
 
+			protected int getHashCode(ConjunctiveQueryWithInequality object) {
+				int hashCode = object.child.hashCode();
+				for (int index = object.freeVariables.length - 1; index >= 0; --index) {
+					hashCode = hashCode * 7 + object.freeVariables[index].hashCode();
+				}
+				return hashCode;
+			}
+		};
 		conjunctiveQuery = new ClassManager<ConjunctiveQuery>() {
 			protected boolean equal(ConjunctiveQuery object1, ConjunctiveQuery object2) {
 				if (!object1.child.equals(object2.child) || object1.freeVariables.length != object2.freeVariables.length)

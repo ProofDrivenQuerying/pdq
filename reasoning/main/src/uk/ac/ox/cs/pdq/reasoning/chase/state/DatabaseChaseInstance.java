@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import com.google.common.base.Preconditions;
@@ -29,6 +30,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQueryWithInequality;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
@@ -622,15 +624,21 @@ public class DatabaseChaseInstance implements ChaseInstance {
 				}
 			}
 			ConjunctiveQuery leftQuery = null;
+			List<Pair<Variable,Variable>> inequalities = new ArrayList<>();
+			if (source instanceof EGD) {
+				// filter self pointing equalities
+				inequalities.add(Pair.of((Variable)source.getHead().getTerms()[0],(Variable)source.getHead().getTerms()[1]));
+			}
 			if (source.getBodyAtoms().length == 1) {
-				leftQuery = ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), source.getBodyAtoms()[0]);
+				// a ConjunctiveQueryWithInequality with an empty list of inequalities is the same as a normal CQ
+				leftQuery = ConjunctiveQueryWithInequality.create(freeVariables.toArray(new Variable[freeVariables.size()]), source.getBodyAtoms()[0],inequalities);
 			} else {
-				leftQuery = ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), (Conjunction) Conjunction.of(source.getBodyAtoms()));
+				leftQuery = ConjunctiveQueryWithInequality.create(freeVariables.toArray(new Variable[freeVariables.size()]), (Conjunction) Conjunction.of(source.getBodyAtoms()),inequalities);
 			}
 
 			if (triggerProperty == TriggerProperty.ALL) {
 				try {
-					results.addAll(updateFormula(source, filterSelfEqualityResults(chaseDatabaseInstance.answerConjunctiveQuery(leftQuery), source)));
+					results.addAll(replaceFormulaInMatches(source, chaseDatabaseInstance.answerConjunctiveQuery(leftQuery)));
 				} catch (DatabaseException e) {
 					throw new RuntimeException("getTriggers error: ", e);
 				}
@@ -640,14 +648,11 @@ public class DatabaseChaseInstance implements ChaseInstance {
 				rightQueryAtoms.addAll(Arrays.asList(source.getBodyAtoms()));
 				ConjunctiveQuery rightQuery = null;
 				rightQueryAtoms.addAll(Arrays.asList(source.getHeadAtoms()));
-				rightQuery = ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]),
-						(Conjunction) Conjunction.of(rightQueryAtoms.toArray(new Atom[rightQueryAtoms.size()])));
+				rightQuery = ConjunctiveQueryWithInequality.create(freeVariables.toArray(new Variable[freeVariables.size()]),
+						(Conjunction) Conjunction.of(rightQueryAtoms.toArray(new Atom[rightQueryAtoms.size()])),inequalities);
 				try {
 					List<Match> queryResults = chaseDatabaseInstance.answerQueryDifferences(leftQuery, rightQuery);
-					// filter self pointing equalities
-					// TOCOMMENT change filterSelfEqualityResults to add inequality to an extended
-					// CQ, so we can discribe the <> condition.
-					results.addAll(updateFormula(source, filterSelfEqualityResults(queryResults, source)));
+					results.addAll(replaceFormulaInMatches(source, queryResults));
 				} catch (DatabaseException e) {
 					throw new RuntimeException("getTriggers error: ", e);
 				}
@@ -665,37 +670,12 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 * @param toUpdate
 	 * @return
 	 */
-	private Collection<? extends Match> updateFormula(Dependency source, List<Match> toUpdate) {
+	private Collection<? extends Match> replaceFormulaInMatches(Dependency source, List<Match> toUpdate) {
 		List<Match> results = new ArrayList<>();
 		for (Match m : toUpdate) {
 			results.add(Match.create(source, m.getMapping()));
 		}
 		return results;
-	}
-
-	/**
-	 * In case we have a self join in the CQ we need to make sure every match
-	 * connects two different facts, and remove the case when the left and right
-	 * side of an equality is the same.
-	 * 
-	 * @param list
-	 * @param source
-	 * @return
-	 */
-	private List<Match> filterSelfEqualityResults(List<Match> list, Dependency source) {
-		if (source instanceof EGD) {
-			List<Match> results = new ArrayList<>();
-			Term leftVariable = source.getHead().getTerms()[0];
-			Term rightVariable = source.getHead().getTerms()[1];
-			for (Match m : list) {
-				if (m.getMapping().get(leftVariable) != m.getMapping().get(rightVariable)) {
-					results.add(m);
-				}
-			}
-			return results;
-		} else {
-			return list;
-		}
 	}
 
 	@Override

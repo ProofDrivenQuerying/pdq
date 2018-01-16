@@ -19,6 +19,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQueryWithInequality;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
@@ -243,6 +244,9 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	private static synchronized ConjunctiveQuery extendQuery(ConjunctiveQuery formula, int databaseInstanceID) {
 		factIdNameCounter = 0;
 		Conjunction newConjunction = addFactIdToConjunction(formula.getBody(), databaseInstanceID);
+		if (formula instanceof ConjunctiveQueryWithInequality) {
+			return ConjunctiveQueryWithInequality.create(formula.getFreeVariables(), newConjunction, ((ConjunctiveQueryWithInequality)formula).getInequalities());
+		}
 		return ConjunctiveQuery.create(formula.getFreeVariables(), newConjunction);
 	}
 

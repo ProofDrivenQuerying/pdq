@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.google.common.base.Joiner;
 
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
@@ -18,6 +20,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQueryWithInequality;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -111,7 +114,7 @@ public class BasicSelect extends Command {
 	 * @param schema
 	 *            - needed for the attribute types.
 	 * @param cq
-	 * @throws DatabaseException 
+	 * @throws DatabaseException
 	 */
 	public BasicSelect(Schema schema, ConjunctiveQuery cq) throws DatabaseException {
 		this.schema = schema;
@@ -120,6 +123,7 @@ public class BasicSelect extends Command {
 		initFrom();
 		initConstantEqualityConditions();
 		initAttributeEqualityConditions();
+		initAttributeInEqualityConditions();
 		String sqlQueryString = "SELECT " + Joiner.on(",").join(select) + " FROM " + Joiner.on(",").join(fromTableName);
 		if (!whereConditions.isEmpty())
 			sqlQueryString += " WHERE " + Joiner.on(" AND ").join(whereConditions);
@@ -129,7 +133,8 @@ public class BasicSelect extends Command {
 	/**
 	 * Creates the part of the query that comes after the SELECT keyword, but before
 	 * the FROM keyword.
-	 * @throws DatabaseException 
+	 * 
+	 * @throws DatabaseException
 	 */
 	private void initSelect() throws DatabaseException {
 		resultTerms = new Term[formula.getFreeVariables().length];
@@ -148,19 +153,19 @@ public class BasicSelect extends Command {
 				if (freeVariables.contains(term)) {
 					String relName = a.getPredicate().getName();
 					Attribute attribute = schema.getRelation(relName).getAttribute(i);
-					select.add(getAlias(relName,a.getTerms()).aliasName + "." + attribute.getName());
+					select.add(getAlias(relName, a.getTerms()).aliasName + "." + attribute.getName());
 					freeVariables.remove(term);
 					resultTerms[resultTermIndex] = term;
 					resultTermIndex++;
 				}
 			}
 		}
-		
+
 		if (select.isEmpty()) {
 			select.add("*");
 		}
 	}
-	
+
 	/**
 	 * Creates the part of the query thet comes after the "FROM" part but before the
 	 * WHERE part.
@@ -202,7 +207,7 @@ public class BasicSelect extends Command {
 		TableAlias ta = new TableAlias();
 		ta.tableName = tableName;
 		ta.setVariables(terms);
-		for (TableAlias taExisting:aliases) {
+		for (TableAlias taExisting : aliases) {
 			if (ta.equals(taExisting)) {
 				return taExisting;
 			}
@@ -216,7 +221,8 @@ public class BasicSelect extends Command {
 	 * When a CQ contains a constant we have to create a corresponding where
 	 * condition. This function searches for these constants and generates the where
 	 * conditions.
-	 * @throws DatabaseException 
+	 * 
+	 * @throws DatabaseException
 	 */
 	private void initConstantEqualityConditions() throws DatabaseException {
 		for (Atom a : formula.getAtoms()) {
@@ -234,10 +240,51 @@ public class BasicSelect extends Command {
 	}
 
 	/**
+	 * In case this CQ contains inequality conditions it will match the unequal
+	 * variable pairs with all possible combination of table1.attribute1 <>
+	 * tavle2.attribute2 pairs and add them to the where conditions.
+	 */
+	private void initAttributeInEqualityConditions() {
+		if (!(formula instanceof ConjunctiveQueryWithInequality) ||
+				((ConjunctiveQueryWithInequality) formula).getInequalities() == null) {
+			// this CQ does not have inequalities.
+			return; 
+		}
+		for (Pair<Variable, Variable> pairs : ((ConjunctiveQueryWithInequality) formula).getInequalities()) {
+			for (int ai = 0; ai < formula.getAtoms().length - 1; ai++) {
+				// the current atom is "a", its index is "ai"
+				Atom a = formula.getAtoms()[ai];
+				for (int i = 0; i < a.getTerms().length; i++) {
+					if (a.getTerm(i).equals(pairs.getKey())) { // left side match
+						for (int bi = 1; bi < formula.getAtoms().length; bi++) {
+							Atom b = formula.getAtoms()[bi];
+							for (int j = 0; j < b.getTerms().length; j++) {
+								if (b.getTerm(j).equals(pairs.getValue())) { // right side match
+									String tableNameLeft = a.getPredicate().getName();
+									String tableNameRight = b.getPredicate().getName();
+									TableAlias aliasLeft = getAlias(tableNameLeft, a.getTerms());
+									TableAlias aliasRight = getAlias(tableNameRight, b.getTerms());
+									Attribute attributeLeft = schema.getRelation(tableNameLeft).getAttribute(i);
+									Attribute attributeRight = schema.getRelation(tableNameRight).getAttribute(j);
+									// Attribute equality condition
+									whereConditions.add(aliasLeft.toKey() + "." + attributeLeft.getName() + " <> " + aliasRight.toKey() + "." + attributeRight.getName());
+									storeReplacementKeyValuePairs(aliasLeft.toKey(), aliasLeft.aliasName);
+									storeReplacementKeyValuePairs(aliasRight.toKey(), aliasRight.aliasName);
+								}
+							} // end for j
+						} // end for bi
+					} // end if
+				} // end for i
+			} // end for ai
+		} // pairs
+	}
+
+	/**
 	 * When a CQ has more then one atom, some variables can appear multiple times.
 	 * These cases are the attribute equality conditions, and we have to find them
 	 * and create corresponding SQL WHERE conditions from them.
-	 * @throws DatabaseException 
+	 * 
+	 * @throws DatabaseException
 	 */
 	private void initAttributeEqualityConditions() throws DatabaseException {
 		// go over each atom of the CQ.
@@ -267,15 +314,15 @@ public class BasicSelect extends Command {
 							// respecting table aliases.
 							String tableNameLeft = a.getPredicate().getName();
 							String tableNameRight = b.getPredicate().getName();
-							TableAlias aliasLeft = getAlias(tableNameLeft,a.getTerms());
-							TableAlias aliasRight = getAlias(tableNameRight,b.getTerms());
+							TableAlias aliasLeft = getAlias(tableNameLeft, a.getTerms());
+							TableAlias aliasRight = getAlias(tableNameRight, b.getTerms());
 
 							Attribute attributeLeft = schema.getRelation(tableNameLeft).getAttribute(i);
 							Attribute attributeRight = schema.getRelation(tableNameRight).getAttribute(j);
 							// Attribute equality condition
 							whereConditions.add(aliasLeft.toKey() + "." + attributeLeft.getName() + " = " + aliasRight.toKey() + "." + attributeRight.getName());
 							storeReplacementKeyValuePairs(aliasLeft.toKey(), aliasLeft.aliasName);
-							storeReplacementKeyValuePairs(aliasRight.toKey(),aliasRight.aliasName);
+							storeReplacementKeyValuePairs(aliasRight.toKey(), aliasRight.aliasName);
 						}
 					}
 				}
@@ -300,30 +347,34 @@ public class BasicSelect extends Command {
 	}
 
 	public class TableAlias {
-		protected String aliasName="";
-		protected String tableName="";
-		protected Collection<Variable> variables= new ArrayList<>();
+		protected String aliasName = "";
+		protected String tableName = "";
+		protected Collection<Variable> variables = new ArrayList<>();
+
 		public void setVariables(Term[] terms) {
-			for (Term t:terms) {
+			for (Term t : terms) {
 				if (t.isVariable())
-					variables.add((Variable)t);
+					variables.add((Variable) t);
 			}
 		}
-		
+
 		@Override
 		public boolean equals(Object obj) {
 			if (obj instanceof TableAlias)
-				return tableName.equals(((TableAlias)obj).tableName) && variables.size() == ((TableAlias)obj).variables.size() &&
-						variables.containsAll(((TableAlias)obj).variables);
+				return tableName.equals(((TableAlias) obj).tableName) && variables.size() == ((TableAlias) obj).variables.size()
+						&& variables.containsAll(((TableAlias) obj).variables);
 			return false;
 		}
+
 		@Override
 		public String toString() {
-			return "Alias("+aliasName+") for table("+tableName+") over variables("+variables+")";
+			return "Alias(" + aliasName + ") for table(" + tableName + ") over variables(" + variables + ")";
 		}
+
 		public String toKey() {
-			String key = "{" + tableName+"_";
-			for (Variable v:variables) key+=v.getSymbol()+"_";
+			String key = "{" + tableName + "_";
+			for (Variable v : variables)
+				key += v.getSymbol() + "_";
 			return key + "}";
 		}
 	}
