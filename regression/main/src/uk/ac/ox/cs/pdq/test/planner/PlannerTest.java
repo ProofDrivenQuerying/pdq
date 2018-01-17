@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -157,82 +158,86 @@ private static FileWriter summary = null;
 		 * @return boolean
 		 * @throws ReflectiveOperationException the reflective operation exception
 		 */
-		private boolean compare(File directory) throws ReflectiveOperationException {       
-			if (summary == null) {
-				try {
-					summary = new FileWriter(new File("summary.txt"));
-				} catch (IOException e) {
-					
-					e.printStackTrace();
-				}
-			}
-			try {
-		        GlobalCounterProvider.resetCounters();
-		        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-		        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-		        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-		        
-				this.out.println("\nStarting case '" + directory.getAbsolutePath() + "'");
-				PlannerParameters plannerParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-				CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-				override(plannerParams, paramOverrides);
-				override(costParams, paramOverrides);
-				ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-				DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-				Schema schema = DbIOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
-				ConjunctiveQuery query = IOManager.importQuery(new File(directory.getAbsolutePath() + '/' + QUERY_FILE));
-				query = IOManager.convertQueryConstants(query, schema);
-				DbIOManager.exportSchemaToXml(schema, new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
-				Entry<RelationalTerm, Cost> expectedPlan = PlannerTestUtilities.obtainPlan(directory.getAbsolutePath() + '/' + PLAN_FILE, schema);
-				if (schema == null || query == null) {
-					throw new RegressionTestException(
-							"Schema and query must be provided for each regression test. "
-									+ "(schema:" + schema + ", query: " + query + ", plan: " + expectedPlan + ")");
-				}
-				if (costParams.getCatalog() == null) {
-					File catalog = new File(directory, "catalog.properties");
-					if (catalog.exists())
-						costParams.setCatalog(catalog.getAbsolutePath());
-				}
-				schema = addAccessibleToSchema(schema);
-				Entry<RelationalTerm, Cost> observedPlan = null;
-				try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-					ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, dbParams, schema);
-					planner.registerEventHandler(
-							new IntervalEventDrivenLogger(
-									pLog, plannerParams.getLogIntervals(),
-									plannerParams.getShortLogIntervals()));
-					observedPlan = planner.search(query);
-				} catch (LimitReachedException lre) {
-					log.warn(lre);
-				}
-				if (observedPlan!=null)
-					summary.write(directory.getAbsolutePath() + " Cost = "+observedPlan.getValue()+" plan: "+observedPlan.getKey()+ " \n");
-				else 
-					summary.write(directory.getAbsolutePath() + " No Plan \n");
-				summary.flush();
-				AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance = acceptance(plannerParams, costParams);
-				this.out.print("Using " + acceptance.getClass().getSimpleName() + ": ");
-				acceptance.check(expectedPlan, observedPlan).report(this.out);
-
-				if (observedPlan != null
-						&& (expectedPlan == null || expectedPlan.getValue().greaterThan(observedPlan.getValue())) ) {
-					this.out.print("\twriting plan: " + observedPlan + " " + observedPlan.getValue());
-					CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + PLAN_FILE),  observedPlan.getKey(), observedPlan.getValue());
-					
-				}
-			} catch (Throwable e) {
-				try {
-					summary.write(directory.getAbsolutePath() + " Crashed : "+e.getMessage()+" \n");
-					summary.flush();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				e.printStackTrace();
-				return handleException(e, directory);
-			}
-			return true;
+private boolean compare(File directory) throws ReflectiveOperationException {       
+	if (summary == null) {
+		try {
+			summary = new FileWriter(new File("summaryMaster.txt"));
+		} catch (IOException e) {
+			
+			e.printStackTrace();
 		}
+	}
+	try {
+        GlobalCounterProvider.resetCounters();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		this.out.println("\nStarting case '" + directory.getAbsolutePath() + "'");
+		PlannerParameters plannerParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
+		CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
+		override(plannerParams, paramOverrides);
+		override(costParams, paramOverrides);
+		ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
+		DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
+		Schema schema = DbIOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
+		ConjunctiveQuery query = IOManager.importQuery(new File(directory.getAbsolutePath() + '/' + QUERY_FILE));
+		query = IOManager.convertQueryConstants(query, schema);
+		DbIOManager.exportSchemaToXml(schema, new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
+		Entry<RelationalTerm, Cost> expectedPlan = PlannerTestUtilities.obtainPlan(directory.getAbsolutePath() + '/' + PLAN_FILE, schema);
+		if (schema == null || query == null) {
+			throw new RegressionTestException(
+					"Schema and query must be provided for each regression test. "
+							+ "(schema:" + schema + ", query: " + query + ", plan: " + expectedPlan + ")");
+		}
+		if (costParams.getCatalog() == null) {
+			File catalog = new File(directory, "catalog.properties");
+			if (catalog.exists())
+				costParams.setCatalog(catalog.getAbsolutePath());
+		}
+		long start = System.currentTimeMillis();
+		schema = addAccessibleToSchema(schema);
+		Entry<RelationalTerm, Cost> observedPlan = null;
+		try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
+			ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, dbParams, schema);
+			planner.registerEventHandler(
+					new IntervalEventDrivenLogger(
+							pLog, plannerParams.getLogIntervals(),
+							plannerParams.getShortLogIntervals()));
+			observedPlan = planner.search(query);
+		} catch (LimitReachedException lre) {
+			log.warn(lre);
+		}
+		double duration = (System.currentTimeMillis() - start) / 1000.0;
+		DecimalFormat myFormatter = new DecimalFormat("####.##");
+		String duration_s = " Duration: " + myFormatter.format(duration) + "sec.";				
+		
+		if (observedPlan!=null)
+			summary.write(directory.getAbsolutePath() + " Cost = "+observedPlan.getValue()+" plan: "+observedPlan.getKey()+ duration_s + " \n");
+		else 
+			summary.write(directory.getAbsolutePath() + " No Plan "+duration_s + "\n");
+		summary.flush();
+		AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance = acceptance(plannerParams, costParams);
+		this.out.print("Using " + acceptance.getClass().getSimpleName() + ": ");
+		acceptance.check(expectedPlan, observedPlan).report(this.out);
+
+		if (observedPlan != null
+				&& (expectedPlan == null || expectedPlan.getValue().greaterThan(observedPlan.getValue())) ) {
+			this.out.print("\twriting plan: " + observedPlan + " " + observedPlan.getValue());
+			CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + PLAN_FILE),  observedPlan.getKey(), observedPlan.getValue());
+			
+		}
+	} catch (Throwable e) {
+		try {
+			summary.write(directory.getAbsolutePath() + " Crashed : "+e.getMessage()+" \n");
+			summary.flush();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		e.printStackTrace();
+		return handleException(e, directory);
+	}
+	return true;
+}
 
 		private Schema addAccessibleToSchema(Schema schema) {
 			List<Dependency> dep = new ArrayList<>();

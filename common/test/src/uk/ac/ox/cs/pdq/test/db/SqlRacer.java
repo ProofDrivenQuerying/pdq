@@ -169,26 +169,41 @@ public class SqlRacer {
 		System.out.println(name + "started. Each loop will create and delete 1000 times " + repeat + " amount of facts.");
 		long counter = 0;
 		while (true) {
+			long durationAdd =0;
+			long durationQ =0;
+			long durationDel =0;
+			
 			for (int i = 0; i < repeat; i++) {
 				PdqTest.reInitalize(this);
 				Collection<Atom> facts = createTestFacts1000();
+				
+				long start =  System.currentTimeMillis();
 				instance.addFacts(facts);
+				durationAdd = System.currentTimeMillis() - start;
+				
+				start =  System.currentTimeMillis();
 				Statement sqlStatement = dc.getSynchronousConnections(0).createStatement();
 				ResultSet rs = sqlStatement.executeQuery("select * from "+dc.getDatabaseParameters().getDatabaseName()+".R1");
-				Assert.assertEquals(1000, checkTestFacts(rs, print));
+				Assert.assertEquals((i+1)*1000, checkTestFacts(rs, print));
+				durationQ = System.currentTimeMillis() - start;
 				rs.close();
 			}
+			long start =  System.currentTimeMillis();
 			Statement sqlStatement = dc.getSynchronousConnections(0).createStatement();
 			int deleted = sqlStatement.executeUpdate("delete from "+dc.getDatabaseParameters().getDatabaseName()+".R1");
-			if (deleted < repeat*1000) {
+			durationDel = System.currentTimeMillis() - start;
+			if (deleted != repeat*1000) {
 				System.err.println(deleted + " amount of tuples were created out of 1000.");
 			}
 			counter++;
 			if (counter % 10 == 0) {
 				long duration = System.currentTimeMillis() - startTime;
 				int loopPer100Second = (int)((((double)counter)/duration)*1000*1000);
-				System.out.println(name + "\t#" + counter + " \tthroughput: \t" + (loopPer100Second/1000.00) + " \tloops per second.");
+				System.out.println(name + "\t#" + counter + " \tthroughput: \t" + (loopPer100Second/1000.00) + " \tloops per second. (Add:"+durationAdd+"ms, Query:"+durationQ+"ms, del:"+durationDel+"ms, )");
 			}
+			
+				
+			
 		}
 	}
 
