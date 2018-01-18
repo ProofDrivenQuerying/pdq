@@ -59,6 +59,10 @@ public class DatabaseParameters extends Parameters {
 	/** The number of threads. */
 	@Parameter(description="The number of threads and connections to access the database")
 	private int numberOfThreads = DEFAULT_NUMBER_OF_THREADS;
+
+	/** The number of threads. */
+	@Parameter(description="True in case the internal database manager should be used")
+	private boolean useInternalDatabaseManager = true;
 	
 	/**
 	 * Constructor for DatabaseParameters using default configuration file path.
@@ -222,5 +226,12 @@ public class DatabaseParameters extends Parameters {
 	}
 	public void setNumberOfThreads(int numberOfThreads) {
 		this.numberOfThreads = numberOfThreads;
+	}
+
+	public boolean useInternalDatabaseManager() {
+		return useInternalDatabaseManager;
+	}
+	public void setUseInternalDatabaseManager(boolean useInternalDatabaseManager) {
+		this.useInternalDatabaseManager = useInternalDatabaseManager;
 	}
 }

@@ -152,12 +152,12 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
 		Map<String, Term[]> formulaCache = new HashMap<>(); // used for analysing queries.
 		// execute query left
-		List<Atom> leftFacts = answerConjunctiveQueryRecursively(leftQuery.getBody(), leftQuery, this.databaseInstanceID, formulaCache);
+		List<Atom> leftFacts = answerConjunctiveQueryRecursively(leftQuery.getBody(), leftQuery, this.databaseInstanceID, formulaCache,0);
 		if (leftFacts == null || leftFacts.isEmpty())
 			return new ArrayList<>();
 
 		// execute right
-		List<Atom> rightFacts = answerConjunctiveQueryRecursively(rightQuery.getBody(), rightQuery, this.databaseInstanceID, formulaCache);
+		List<Atom> rightFacts = answerConjunctiveQueryRecursively(rightQuery.getBody(), rightQuery, this.databaseInstanceID, formulaCache,0);
 
 		if (rightFacts == null || rightFacts.isEmpty()) {
 			// nothing to sort out, convert to Match objects and go.
@@ -209,7 +209,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	protected List<Match> answerConjunctiveQuery(ConjunctiveQuery cq, int instanceId) throws DatabaseException {
 		Map<String, Term[]> formulaCache = new HashMap<>(); // used for analysing queries.
 		// get facts
-		List<Atom> facts = answerConjunctiveQueryRecursively(cq.getBody(), cq, instanceId, formulaCache);
+		List<Atom> facts = answerConjunctiveQueryRecursively(cq.getBody(), cq, instanceId, formulaCache,0);
 		// return empty list if we have no data
 		if (facts == null || facts.isEmpty())
 			return new ArrayList<>();
@@ -256,13 +256,19 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 		formulaCache.put(predicateName, formula.getTerms());
 		return facts;
 	}
-
-	private List<Atom> answerConjunctiveQueryRecursively(Formula formula, ConjunctiveQuery cq, int instanceId, Map<String, Term[]> formulaCache) throws DatabaseException {
-
+	
+	private List<Atom> answerConjunctiveQueryRecursively(Formula formula, ConjunctiveQuery cq, int instanceId, Map<String, Term[]> formulaCache, int recursionDepth) throws DatabaseException {
+		String tab = "";
+		for (int i = 0; i < recursionDepth; i++) tab += "\t"; 
+		System.out.println(tab+"> start q:" + formula);
+		long start = System.currentTimeMillis();
 		if (formula instanceof Atom) {
 			// single atom case
 			List<Atom> facts = answerSingleAtomQuery((Atom) formula, instanceId, formulaCache);
-			return filterInequalities(facts, cq, formulaCache);
+			List<Atom> res = filterInequalities(facts, cq, formulaCache);
+			//System.out.println(tab+"< end " +(System.currentTimeMillis() - start) + "mSec q:"+ formula + " res count: " + res.size());
+			return res;
+			
 		} else {
 			// atom + atom, or atom + conjunction case.
 			if (((Conjunction) formula).getChildren().length != 2)
@@ -275,6 +281,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 			// these facts will be filtered by constant equality conditions
 			List<Atom> factsLeft = answerSingleAtomQuery((Atom) fLeft, instanceId, formulaCache);
 			if (factsLeft.isEmpty()) {
+				System.out.println(tab+"< end " +(System.currentTimeMillis() - start) + "mSec q:"+ formula + " res count: " + 0);
 				return new ArrayList<>();
 			}
 			List<Atom> factsRight = null;
@@ -287,6 +294,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 				// the conjunction was made by two atoms.
 				factsRight = answerSingleAtomQuery((Atom) fRight, instanceId, formulaCache);
 				if (factsRight.isEmpty()) {
+					System.out.println(tab+"< end " +(System.currentTimeMillis() - start) + "mSec q:"+ formula + " res count: " + 0);
 					return new ArrayList<>();
 				}
 				rightArity = ((Atom) fRight).getPredicate().getArity();
@@ -296,8 +304,9 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 				// the conjunction was made by an atoms and a conjunction, recursion needed.
 				if (!(fRight instanceof Conjunction))
 					throw new DatabaseException("Invalid conjunction (" + formula + ") in query: " + cq + ", wrong children types.");
-				factsRight = answerConjunctiveQueryRecursively(fRight, cq, instanceId, formulaCache);
+				factsRight = answerConjunctiveQueryRecursively(fRight, cq, instanceId, formulaCache,recursionDepth+1);
 				if (factsRight.isEmpty()) {
+					System.out.println(tab+"< end " +(System.currentTimeMillis() - start) + "mSec q:"+ formula + " res count: " + 0);
 					return new ArrayList<>();
 				}
 				rightArity = factsRight.get(0).getPredicate().getArity();
@@ -318,18 +327,23 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 			// we need to cache these terms
 			formulaCache.put(joint.getName(), formulaTerms.toArray(new Term[formulaTerms.size()]));
 
-			// the actual cross join
-			for (Atom lf : factsLeft) {
-				for (Atom rf : factsRight) {
-					if (checkAttributeEqualities(lf, rf, (Conjunction) formula, formulaCache)) {
-						List<Term> terms = new ArrayList<>();
-						terms.addAll(Arrays.asList(lf.getTerms()));
-						terms.addAll(Arrays.asList(rf.getTerms()));
-						results.add(Atom.create(joint, terms.toArray(new Term[terms.size()])));
+			if (factsLeft.size() > 0 && factsRight.size() >0) {
+				List<Pair<Integer, Integer>> equalities = getAttributeEqualities(factsLeft.get(0), factsRight.get(0), (Conjunction) formula, formulaCache);
+				// the actual cross join
+				for (Atom lf : factsLeft) {
+					for (Atom rf : factsRight) {
+						if (checkAttributeEqualities(lf, rf, equalities)) {
+							List<Term> terms = new ArrayList<>();
+							terms.addAll(Arrays.asList(lf.getTerms()));
+							terms.addAll(Arrays.asList(rf.getTerms()));
+							results.add(Atom.create(joint, terms.toArray(new Term[terms.size()])));
+						}
 					}
 				}
 			}
-			return filterInequalities(results, cq, formulaCache);
+			List<Atom> res = filterInequalities(results, cq, formulaCache);
+			if ((System.currentTimeMillis() - start) >1000) System.out.println(tab+"< end " +(System.currentTimeMillis() - start) + "mSec q:"+ formula + " res count: " + res.size());
+			return res;
 		}
 	}
 
@@ -367,18 +381,16 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 		}
 		return results;
 	}
-
-	/**
-	 * Finds the attribute equality conditions and returns a true or false value
-	 * indicating if this fact matches all conditions or not.
-	 * 
-	 * @param lf
-	 * @param rf
-	 * @param formula
-	 * @param formulaCache
-	 * @return
-	 */
-	private boolean checkAttributeEqualities(Atom lf, Atom rf, Conjunction formula, Map<String, Term[]> formulaCache) {
+	private boolean checkAttributeEqualities(Atom lf, Atom rf, List<Pair<Integer, Integer>> equalities) {
+		for (Pair<Integer, Integer> e:equalities) {
+			if (!lf.getTerm(e.getLeft()).equals(rf.getTerm(e.getRight())))
+				return false;
+		}
+		return true;
+	}
+	
+	private List<Pair<Integer, Integer>> getAttributeEqualities(Atom lf, Atom rf, Conjunction formula, Map<String, Term[]> formulaCache) {
+		List<Pair<Integer,Integer>> results = new ArrayList<>();
 		Formula fLeft = ((Conjunction) formula).getChild(0);
 		Formula fRight = ((Conjunction) formula).getChild(1);
 		Term[] formulaTermsRight = null;
@@ -394,13 +406,12 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 				Term r = formulaTermsRight[rightIndex];
 				if (l.equals(r)) {
 					// we found an attribute equality
-					if (!lf.getTerm(leftIndex).equals(rf.getTerm(rightIndex)))
-						return false;
+					results.add(Pair.of(leftIndex, rightIndex));
 				}
 
 			}
 		}
-		return true;
+		return results;
 	}
 
 	private List<Match> convertToMatch(ConjunctiveQuery cq, List<Atom> facts, List<Term> factVariables) {
@@ -421,7 +432,11 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 		for (Atom a : facts) {
 			List<Constant> values = new ArrayList<>();
 			for (int i = 0; i < outputVariables.length; i++) {
-				values.add((Constant) a.getTerms()[factVariables.indexOf(outputVariables[i])]);
+				try {
+					values.add((Constant) a.getTerms()[factVariables.indexOf(outputVariables[i])]);
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
 			}
 			results.add(Atom.create(Predicate.create(atomName, values.size()), values.toArray(new Term[values.size()])));
 		}

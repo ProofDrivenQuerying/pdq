@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -171,7 +172,6 @@ private static FileWriter summary = null;
 		        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 		        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 		        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-		        
 				this.out.println("\nStarting case '" + directory.getAbsolutePath() + "'");
 				PlannerParameters plannerParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 				CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
@@ -194,6 +194,7 @@ private static FileWriter summary = null;
 					if (catalog.exists())
 						costParams.setCatalog(catalog.getAbsolutePath());
 				}
+				long start = System.currentTimeMillis();
 				schema = addAccessibleToSchema(schema);
 				Entry<RelationalTerm, Cost> observedPlan = null;
 				try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
@@ -206,10 +207,14 @@ private static FileWriter summary = null;
 				} catch (LimitReachedException lre) {
 					log.warn(lre);
 				}
+				double duration = (System.currentTimeMillis() - start) / 1000.0;
+				DecimalFormat myFormatter = new DecimalFormat("####.##");
+				String duration_s = " Duration: " + myFormatter.format(duration) + "sec.";				
+				
 				if (observedPlan!=null)
-					summary.write(directory.getAbsolutePath() + " Cost = "+observedPlan.getValue()+" plan: "+observedPlan.getKey()+ " \n");
+					summary.write(directory.getAbsolutePath() + " Cost = "+observedPlan.getValue()+" plan: "+observedPlan.getKey()+ duration_s + " \n");
 				else 
-					summary.write(directory.getAbsolutePath() + " No Plan \n");
+					summary.write(directory.getAbsolutePath() + " No Plan "+duration_s + "\n");
 				summary.flush();
 				AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance = acceptance(plannerParams, costParams);
 				this.out.print("Using " + acceptance.getClass().getSimpleName() + ": ");
@@ -221,6 +226,7 @@ private static FileWriter summary = null;
 					CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + PLAN_FILE),  observedPlan.getKey(), observedPlan.getValue());
 					
 				}
+				this.out.println("\n " + duration_s);
 			} catch (Throwable e) {
 				try {
 					summary.write(directory.getAbsolutePath() + " Crashed : "+e.getMessage()+" \n");

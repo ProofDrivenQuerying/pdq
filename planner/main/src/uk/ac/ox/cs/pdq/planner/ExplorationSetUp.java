@@ -241,8 +241,12 @@ public class ExplorationSetUp {
 						GlobalCounterProvider.getNext("DatabaseInstanceId"));
 			} else {
 				// external database.
-				databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(),
-					new ExternalDatabaseManager(this.databaseParams),GlobalCounterProvider.getNext("DatabaseInstanceId"));
+				if (this.databaseParams.useInternalDatabaseManager()) {
+					databaseConnection = new InternalDatabaseManager(new MultiInstanceFactCache(),GlobalCounterProvider.getNext("DatabaseInstanceId"));
+				} else {
+					databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(),
+						new ExternalDatabaseManager(this.databaseParams),GlobalCounterProvider.getNext("DatabaseInstanceId"));
+				}
 			}
 			
 			databaseConnection.initialiseDatabaseForSchema(this.accessibleSchema);
