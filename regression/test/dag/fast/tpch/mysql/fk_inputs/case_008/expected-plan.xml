@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="ProjectionTerm">
-    <projections name="c0" type="java.lang.Integer"/>
+    <projections name="c0" type="java.lang.String"/>
     <RelationalTerm type="RenameTerm">
-        <renamings name="c0" type="java.lang.Integer"/>
-        <renamings name="5" type="java.lang.Integer"/>
-        <renamings name="c1" type="java.lang.Integer"/>
-        <renamings name="c2" type="java.math.BigDecimal"/>
+        <renamings name="c0" type="java.lang.String"/>
+        <renamings name="5" type="java.lang.String"/>
+        <renamings name="c1" type="java.lang.String"/>
+        <renamings name="c2" type="java.lang.String"/>
         <renamings name="c3" type="java.lang.String"/>
         <RelationalTerm type="AccessTerm">
             <accessMethod name="m5" inputs="1"/>
             <relation name="partsupp">
-                <attribute name="ps_partkey" type="java.lang.Integer"/>
-                <attribute name="ps_suppkey" type="java.lang.Integer"/>
-                <attribute name="ps_availqty" type="java.lang.Integer"/>
-                <attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+                <attribute name="ps_partkey" type="java.lang.String"/>
+                <attribute name="ps_suppkey" type="java.lang.String"/>
+                <attribute name="ps_availqty" type="java.lang.String"/>
+                <attribute name="ps_supplycost" type="java.lang.String"/>
                 <attribute name="ps_comment" type="java.lang.String"/>
                 <access-method name="m4" inputs="0"/>
                 <access-method name="m5" inputs="1"/>
@@ -21,5 +21,5 @@
             </relation>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="5856462.732485115" type="DoubleCost"/>
+    <cost value="1556.9733347172757" type="DoubleCost"/>
 </RelationalTermWithCost>
