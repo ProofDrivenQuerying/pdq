@@ -16,7 +16,7 @@ public abstract class Formula implements Serializable{
 	
 	public abstract Formula getChild(int childIndex);
 	
-	public abstract int getNumberOfChildlen();
+	public abstract int getNumberOfChildren();
 
 	public abstract Atom[] getAtoms();
 

@@ -183,7 +183,7 @@ public class Literal extends Formula{
 	}
 
 	@Override
-	public int getNumberOfChildlen() {
+	public int getNumberOfChildren() {
 		return 0;
 	}
 	

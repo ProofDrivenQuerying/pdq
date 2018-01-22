@@ -170,7 +170,7 @@ public class QuantifiedFormula extends Formula {
 	}
 
 	@Override
-	public int getNumberOfChildlen() {
+	public int getNumberOfChildren() {
 		return 1;
 	}
 }

@@ -155,7 +155,7 @@ public class ConjunctiveQuery extends Formula {
 	}
 
 	@Override
-	public int getNumberOfChildlen() {
+	public int getNumberOfChildren() {
 		return 1;
 	}
 

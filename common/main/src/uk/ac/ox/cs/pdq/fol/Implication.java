@@ -125,7 +125,7 @@ public final class Implication extends Formula {
 	}
 
 	@Override
-	public int getNumberOfChildlen() {
+	public int getNumberOfChildren() {
 		return this.children.length;
 	}
 }
