@@ -167,4 +167,17 @@ public class FactCache {
 		return results;
 	}
 
+	/** Table name + number of facts statistics.
+	 * @return
+	 */
+	public Map<String, Integer> getStatistics() {
+		Map<String, Integer> stats = new HashMap<>();
+		synchronized (LOCK) {
+			for (String tableName: cache.keySet()) { 
+				stats.put(tableName, cache.get(tableName).size());
+			}
+		}
+		return stats;
+	}
+
 }

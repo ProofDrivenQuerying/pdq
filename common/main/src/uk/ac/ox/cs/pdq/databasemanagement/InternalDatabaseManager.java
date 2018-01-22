@@ -150,15 +150,24 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	 * @throws DatabaseException
 	 */
 	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
+		Map<String, Integer> stats = multiCache.getStatistics(this.databaseInstanceID);
+		if (InternalDatabaseManagerQueryOptimiser.isQueryPointingToEmptyTable(leftQuery,stats)) {
+			return new ArrayList<>();
+		}
 		Map<String, Term[]> formulaCache = new HashMap<>(); // used for analysing queries.
+		leftQuery = InternalDatabaseManagerQueryOptimiser.optimise(leftQuery, stats);
+		rightQuery = InternalDatabaseManagerQueryOptimiser.optimise(rightQuery, stats);
+		
 		// execute query left
 		List<Atom> leftFacts = answerConjunctiveQueryRecursively(leftQuery.getBody(), leftQuery, this.databaseInstanceID, formulaCache, 0);
 		if (leftFacts == null || leftFacts.isEmpty())
 			return new ArrayList<>();
 
 		// execute right
-		List<Atom> rightFacts = answerConjunctiveQueryRecursively(rightQuery.getBody(), rightQuery, this.databaseInstanceID, formulaCache, 0);
-
+		List<Atom> rightFacts = new ArrayList<>(); 
+		if (!InternalDatabaseManagerQueryOptimiser.isQueryPointingToEmptyTable(rightQuery,stats)) {
+			rightFacts = answerConjunctiveQueryRecursively(rightQuery.getBody(), rightQuery, this.databaseInstanceID, formulaCache, 0);
+		}
 		if (rightFacts == null || rightFacts.isEmpty()) {
 			// nothing to sort out, convert to Match objects and go.
 			Term[] resultTerms = formulaCache.get(leftFacts.get(0).getPredicate().getName());
@@ -207,7 +216,12 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	 * Answers a basic CQ over the given instance.
 	 */
 	protected List<Match> answerConjunctiveQuery(ConjunctiveQuery cq, int instanceId) throws DatabaseException {
+		Map<String, Integer> stats = multiCache.getStatistics(instanceId);
+		if (InternalDatabaseManagerQueryOptimiser.isQueryPointingToEmptyTable(cq,stats)) {
+			return new ArrayList<>();
+		}
 		Map<String, Term[]> formulaCache = new HashMap<>(); // used for analysing queries.
+		cq = InternalDatabaseManagerQueryOptimiser.optimise(cq, stats);
 		// get facts
 		List<Atom> facts = answerConjunctiveQueryRecursively(cq.getBody(), cq, instanceId, formulaCache, 0);
 		// return empty list if we have no data
@@ -268,11 +282,11 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	 */
 	private List<Atom> answerConjunctiveQueryRecursively(Formula formula, ConjunctiveQuery cq, int instanceId, Map<String, Term[]> formulaCache, int recursionDepth)
 			throws DatabaseException {
-		String tab = "";
-		for (int i = 0; i < recursionDepth; i++)
-			tab += "\t";
-		System.out.println(tab + "> start q:" + formula);
-		long start = System.currentTimeMillis();
+//		String tab = "";
+//		for (int i = 0; i < recursionDepth; i++)
+//			tab += "\t";
+//		System.out.println(tab + "> start q:" + formula);
+//		long start = System.currentTimeMillis();
 		if (formula instanceof Atom) {
 			// single atom case
 			List<Atom> facts = answerSingleAtomQuery((Atom) formula, instanceId, formulaCache);
@@ -294,7 +308,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 			// these facts will be filtered by constant equality conditions
 			List<Atom> factsLeft = answerSingleAtomQuery((Atom) fLeft, instanceId, formulaCache);
 			if (factsLeft.isEmpty()) {
-				System.out.println(tab + "< end " + (System.currentTimeMillis() - start) + "mSec q:" + formula + " res count: " + 0);
+				//System.out.println(tab + "< end " + (System.currentTimeMillis() - start) + "mSec q:" + formula + " res count: " + 0);
 				return new ArrayList<>();
 			}
 			List<Atom> factsRight = null;
@@ -307,7 +321,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 				// the conjunction was made by two atoms.
 				factsRight = answerSingleAtomQuery((Atom) fRight, instanceId, formulaCache);
 				if (factsRight.isEmpty()) {
-					System.out.println(tab + "< end " + (System.currentTimeMillis() - start) + "mSec q:" + formula + " res count: " + 0);
+					//System.out.println(tab + "< end " + (System.currentTimeMillis() - start) + "mSec q:" + formula + " res count: " + 0);
 					return new ArrayList<>();
 				}
 				rightArity = ((Atom) fRight).getPredicate().getArity();
@@ -319,7 +333,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 					throw new DatabaseException("Invalid conjunction (" + formula + ") in query: " + cq + ", wrong children types.");
 				factsRight = answerConjunctiveQueryRecursively(fRight, cq, instanceId, formulaCache, recursionDepth + 1);
 				if (factsRight.isEmpty()) {
-					System.out.println(tab + "< end " + (System.currentTimeMillis() - start) + "mSec q:" + formula + " res count: " + 0);
+					//System.out.println(tab + "< end " + (System.currentTimeMillis() - start) + "mSec q:" + formula + " res count: " + 0);
 					return new ArrayList<>();
 				}
 				rightArity = factsRight.get(0).getPredicate().getArity();
@@ -355,8 +369,8 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 				}
 			}
 			List<Atom> res = filterInequalities(results, cq, formulaCache);
-			if ((System.currentTimeMillis() - start) > 1000)
-				System.out.println(tab + "< end " + (System.currentTimeMillis() - start) + "mSec q:" + formula + " res count: " + res.size());
+//			if ((System.currentTimeMillis() - start) > 1000)
+//				System.out.println(tab + "< end " + (System.currentTimeMillis() - start) + "mSec q:" + formula + " res count: " + res.size());
 			return res;
 		}
 	}

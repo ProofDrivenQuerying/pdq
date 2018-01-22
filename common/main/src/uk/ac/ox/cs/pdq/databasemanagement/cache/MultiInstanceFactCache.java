@@ -114,4 +114,12 @@ public class MultiInstanceFactCache {
 		return results;
 	}
 
+	/** Table name + number of facts for the given instance.
+	 * @param instanceId
+	 * @return
+	 */
+	public Map<String,Integer> getStatistics(int instanceId) {
+		return multiCache.get(instanceId).getStatistics();
+	}
+
 }
