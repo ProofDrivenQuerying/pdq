@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.test.chasebench;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -18,11 +17,9 @@ import org.junit.Test;
 import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -35,28 +32,14 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 /**
  * @author Gabor
- *
+ * Runs the chaseBanch test cases using the internal memory database.
  */
-public class TestMainMySql {
+public class TestMainInternal {
 
 	private LogicalDatabaseInstance dm;
-	private Schema addInstanceIdToSchema(Schema s) {
-		List<Relation> lr = new ArrayList<>();
-		for (Relation r : s.getRelations()) {
-			List<Attribute> attr = new ArrayList<>();
-			attr.addAll(Arrays.asList(r.getAttributes()));
-			lr.add(Relation.create(r.getName(), attr.toArray(new Attribute[attr.size()])));
-		}
-		List<Dependency> dependencies = new ArrayList<>();
-
-		dependencies.addAll(Arrays.asList(s.getDependencies()));
-		if (s.getKeyDependencies().length > 0)
-			dependencies.addAll(Arrays.asList(s.getKeyDependencies()));
-		return new Schema(lr.toArray(new Relation[lr.size()]), dependencies.toArray(new Dependency[dependencies.size()]));
-	}
 
 	@Test
-	public void testChaseBench_tgds() {
+	public void testChaseBench_tgds() { 
 		System.out.println("TestMain.testChaseBench_tgds()");
 		Schema schema = null;
 		try {
@@ -69,7 +52,7 @@ public class TestMainMySql {
 		Collection<Atom> facts = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgds\\data\\s.csv");
 
 		try {
-			DatabaseManager dc = createConnection(DatabaseParameters.MySql, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -123,10 +106,9 @@ public class TestMainMySql {
 		Collection<Atom> facts1 = CommonToPDQTranslator.importFacts(schema, "s1", "test\\chaseBench\\tgds5\\data\\s1.csv");
 		facts0.addAll(facts1);
 		try {
-			DatabaseManager dc = createConnection(DatabaseParameters.MySql, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
-
 			System.out.println("INITIAL STATE: " + res);
 
 			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
@@ -166,7 +148,7 @@ public class TestMainMySql {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgds\\data\\s.csv");
 		try {
-			DatabaseManager dc = createConnection(DatabaseParameters.MySql, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -211,7 +193,6 @@ public class TestMainMySql {
 			e.printStackTrace();
 			Assert.fail();
 		}
-
 	}
 
 	@Test
@@ -227,7 +208,7 @@ public class TestMainMySql {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgdsLarge\\data\\s.csv");
 		try {
-			DatabaseManager dc = createConnection(DatabaseParameters.MySql, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -241,6 +222,7 @@ public class TestMainMySql {
 
 			List<Atom> w2Atoms = getAtomsOfTable(res, "w2");
 			Assert.assertEquals(84, w2Atoms.size());
+			//Assert.assertEquals(165/*84*/, w2Atoms.size());
 			int notK = 0;
 			for (Atom a : w2Atoms) {
 				if (!a.getTerms()[0].toString().startsWith("k") && !a.getTerms()[1].toString().startsWith("k"))
@@ -288,7 +270,7 @@ public class TestMainMySql {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "A", "test\\chaseBench\\vldb2010\\data\\A.csv");
 		try {
-			DatabaseManager dc = createConnection(DatabaseParameters.MySql, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -330,7 +312,7 @@ public class TestMainMySql {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "deptemp", "test\\chaseBench\\weak\\data\\deptemp.csv");
 		try {
-			DatabaseManager dc = createConnection(DatabaseParameters.MySql, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -359,36 +341,11 @@ public class TestMainMySql {
 					sumK++;
 			}
 			Assert.assertEquals(1, sumK);
-
 			state.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
-	}
-
-	protected Schema convertShemaFiles(String schemaSrc, String schemaTarget, List<String> dependencies) {
-		Map<String, Relation> s = CommonToPDQTranslator.parseTables(schemaSrc);
-		Map<String, Relation> t = CommonToPDQTranslator.parseTables(schemaTarget);
-		s.putAll(t);
-		List<Dependency> dependenciesObjects = new ArrayList<>();
-		for (String d : dependencies) {
-			List<Dependency> deps = CommonToPDQTranslator.parseDependencies(s, d);
-			dependenciesObjects.addAll(deps);
-		}
-		Schema schema = addInstanceIdToSchema(
-				new Schema(s.values().toArray(new Relation[s.values().size()]), dependenciesObjects.toArray(new Dependency[dependenciesObjects.size()])));
-		return schema;
-	}
-	private DatabaseManager createConnection(DatabaseParameters params, Schema s, int i) {
-		try {
-			dm = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(params),1);
-			dm.initialiseDatabaseForSchema(s);
-			return dm;
-		} catch (DatabaseException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 	@After
 	public void tearDown() {
@@ -401,6 +358,31 @@ public class TestMainMySql {
 				Assert.fail();
 			}
 		}
+	}
+
+	private DatabaseManager createConnection(DatabaseParameters params, Schema s, int i) {
+		try {
+			
+			dm = new InternalDatabaseManager();
+			dm.initialiseDatabaseForSchema(s);
+			return dm;
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	protected Schema convertShemaFiles(String schemaSrc, String schemaTarget, List<String> dependencies) {
+		Map<String, Relation> s = CommonToPDQTranslator.parseTables(schemaSrc);
+		Map<String, Relation> t = CommonToPDQTranslator.parseTables(schemaTarget);
+		s.putAll(t);
+		List<Dependency> dependenciesObjects = new ArrayList<>();
+		for (String d : dependencies) {
+			List<Dependency> deps = CommonToPDQTranslator.parseDependencies(s, d);
+			dependenciesObjects.addAll(deps);
+		}
+		Schema schema = new Schema(s.values().toArray(new Relation[s.values().size()]), dependenciesObjects.toArray(new Dependency[dependenciesObjects.size()]));
+		return schema;
 	}
 
 }

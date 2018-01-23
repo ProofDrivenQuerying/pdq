@@ -121,8 +121,8 @@ public class TestMainPostgres {
 			Assert.assertTrue(!state.isFailed());
 			List<Atom> t1Atoms = getAtomsOfTable(res, "t1");
 			List<Atom> t2Atoms = getAtomsOfTable(res, "t2");
-			Assert.assertEquals(17 /*16*/, t1Atoms.size());
-			Assert.assertEquals(19 /*18*/, t2Atoms.size());
+			Assert.assertEquals(16, t1Atoms.size());
+			Assert.assertEquals(18, t2Atoms.size());
 			int notK = 0;
 			for (Atom a : t1Atoms) {
 				if (!a.getTerms()[0].toString().startsWith("k") && !a.getTerms()[1].toString().startsWith("k") && !a.getTerms()[2].toString().startsWith("k"))
@@ -222,7 +222,8 @@ public class TestMainPostgres {
 			Assert.assertTrue(!state.isFailed());
 
 			List<Atom> w2Atoms = getAtomsOfTable(res, "w2");
-			Assert.assertEquals(165/*84*/, w2Atoms.size());
+			Assert.assertEquals(84, w2Atoms.size());
+			//Assert.assertEquals(165/*84*/, w2Atoms.size());
 			int notK = 0;
 			for (Atom a : w2Atoms) {
 				if (!a.getTerms()[0].toString().startsWith("k") && !a.getTerms()[1].toString().startsWith("k"))
@@ -231,15 +232,15 @@ public class TestMainPostgres {
 			Assert.assertEquals(0, notK);
 
 			List<Atom> t1Atoms = getAtomsOfTable(res, "t1");
-			Assert.assertEquals(248/*166*/, t1Atoms.size());
+			Assert.assertEquals(166, t1Atoms.size());
 
 			List<Atom> t2Atoms = getAtomsOfTable(res, "t2");
-			Assert.assertEquals(83/*1*/, t2Atoms.size());
+			Assert.assertEquals(1, t2Atoms.size());
 
 			List<Atom> w1Atoms = getAtomsOfTable(res, "w1");
-			Assert.assertEquals(245/*164*/, w1Atoms.size());
+			Assert.assertEquals(164, w1Atoms.size());
 
-			Assert.assertEquals(83/*1*/, getAtomsOfTable(res, "t3").size());
+			Assert.assertEquals(1, getAtomsOfTable(res, "t3").size());
 			int isK = 0;
 			for (Atom a : getAtomsOfTable(res, "t3")) {
 				if (a.getTerms()[0].toString().startsWith("k") || a.getTerms()[1].toString().startsWith("k") || a.getTerms()[2].toString().startsWith("k"))
@@ -249,7 +250,7 @@ public class TestMainPostgres {
 				}
 
 			}
-			Assert.assertEquals(83/*1*/, isK);
+			Assert.assertEquals(1, isK);
 			state.close();
 		} catch (Exception e) {
 			e.printStackTrace();

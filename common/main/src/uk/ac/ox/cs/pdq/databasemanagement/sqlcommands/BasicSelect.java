@@ -301,11 +301,16 @@ public class BasicSelect extends Command {
 				}
 				// loop over the atoms of the query, make sure we only check for new possible
 				// matches.
-				for (int bi = ai + 1; bi < formula.getAtoms().length; bi++) {
+				for (int bi = ai; bi < formula.getAtoms().length; bi++) {
 					// the current atom is "b" its index is "bi"
 					Atom b = formula.getAtoms()[bi];
+					int start = 0;
+					if (a.equals(b)) {
+						// in case we compare an atom with itself we need to look for same terms only from the current one.
+						start = i+1;
+					}
 					// go over the terms of this atom as well.
-					for (int j = 0; j < b.getTerms().length; j++) {
+					for (int j = start; j < b.getTerms().length; j++) {
 						// in case the current variable is the same in both a and b atoms, we have a
 						// match.
 						if (a.getTerm(i).equals(b.getTerm(j))) {
