@@ -8,15 +8,15 @@
                 </predicates>
             </predicate>
             <RelationalTerm type="RenameTerm">
-                <renamings name="c54" type="java.lang.Integer"/>
-                <renamings name="c56" type="java.lang.Integer"/>
+                <renamings name="c17" type="java.lang.String"/>
+                <renamings name="c19" type="java.lang.String"/>
                 <renamings name="Country" type="java.lang.String"/>
-                <renamings name="c55" type="java.lang.String"/>
+                <renamings name="c18" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
                     <accessMethod name="yh_geo_country"/>
                     <relation name="YahooCountries">
-                        <attribute name="woeid" type="java.lang.Integer"/>
-                        <attribute name="placeType" type="java.lang.Integer"/>
+                        <attribute name="woeid" type="java.lang.String"/>
+                        <attribute name="placeType" type="java.lang.String"/>
                         <attribute name="placeTypeName" type="java.lang.String"/>
                         <attribute name="name" type="java.lang.String"/>
                         <access-method name="yh_geo_country"/>
@@ -25,16 +25,16 @@
             </RelationalTerm>
         </RelationalTerm>
         <RelationalTerm type="RenameTerm">
-            <renamings name="c54" type="java.lang.Integer"/>
-            <renamings name="c37" type="java.lang.Integer"/>
-            <renamings name="c71" type="java.lang.String"/>
-            <renamings name="c72" type="java.lang.String"/>
-            <renamings name="c73" type="java.lang.String"/>
+            <renamings name="c17" type="java.lang.String"/>
+            <renamings name="c0" type="java.lang.String"/>
+            <renamings name="c34" type="java.lang.String"/>
+            <renamings name="c35" type="java.lang.String"/>
+            <renamings name="c36" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
                 <accessMethod name="yh_geo_belongs" inputs="0"/>
                 <relation name="YahooBelongsTo">
-                    <attribute name="source" type="java.lang.Integer"/>
-                    <attribute name="target" type="java.lang.Integer"/>
+                    <attribute name="source" type="java.lang.String"/>
+                    <attribute name="target" type="java.lang.String"/>
                     <attribute name="placeTypeName" type="java.lang.String"/>
                     <attribute name="name" type="java.lang.String"/>
                     <attribute name="uri" type="java.lang.String"/>
@@ -44,30 +44,30 @@
         </RelationalTerm>
     </RelationalTerm>
     <RelationalTerm type="RenameTerm">
-        <renamings name="c37" type="java.lang.Integer"/>
+        <renamings name="c0" type="java.lang.String"/>
         <renamings name="Asia" type="java.lang.String"/>
-        <renamings name="c38" type="java.lang.Integer"/>
-        <renamings name="c39" type="java.lang.String"/>
-        <renamings name="c40" type="java.lang.String"/>
-        <renamings name="c41" type="java.lang.String"/>
-        <renamings name="c42" type="java.lang.String"/>
-        <renamings name="c43" type="java.lang.String"/>
-        <renamings name="c44" type="java.lang.String"/>
-        <renamings name="c45" type="java.lang.String"/>
-        <renamings name="c46" type="java.lang.String"/>
-        <renamings name="c47" type="java.lang.Double"/>
-        <renamings name="c48" type="java.lang.Double"/>
-        <renamings name="c49" type="java.lang.Double"/>
-        <renamings name="c50" type="java.lang.Double"/>
-        <renamings name="c51" type="java.lang.Double"/>
-        <renamings name="c52" type="java.lang.Double"/>
-        <renamings name="c53" type="java.lang.String"/>
+        <renamings name="c1" type="java.lang.String"/>
+        <renamings name="c2" type="java.lang.String"/>
+        <renamings name="c3" type="java.lang.String"/>
+        <renamings name="c4" type="java.lang.String"/>
+        <renamings name="c5" type="java.lang.String"/>
+        <renamings name="c6" type="java.lang.String"/>
+        <renamings name="c7" type="java.lang.String"/>
+        <renamings name="c8" type="java.lang.String"/>
+        <renamings name="c9" type="java.lang.String"/>
+        <renamings name="c10" type="java.lang.String"/>
+        <renamings name="c11" type="java.lang.String"/>
+        <renamings name="c12" type="java.lang.String"/>
+        <renamings name="c13" type="java.lang.String"/>
+        <renamings name="c14" type="java.lang.String"/>
+        <renamings name="c15" type="java.lang.String"/>
+        <renamings name="c16" type="java.lang.String"/>
         <RelationalTerm type="AccessTerm">
             <accessMethod name="yh_geo_name" inputs="1"/>
             <relation name="YahooPlaces">
-                <attribute name="woeid" type="java.lang.Integer"/>
+                <attribute name="woeid" type="java.lang.String"/>
                 <attribute name="name" type="java.lang.String"/>
-                <attribute name="type" type="java.lang.Integer"/>
+                <attribute name="type" type="java.lang.String"/>
                 <attribute name="placeTypeName" type="java.lang.String"/>
                 <attribute name="country" type="java.lang.String"/>
                 <attribute name="admin1" type="java.lang.String"/>
@@ -76,12 +76,12 @@
                 <attribute name="locality1" type="java.lang.String"/>
                 <attribute name="locality2" type="java.lang.String"/>
                 <attribute name="postal" type="java.lang.String"/>
-                <attribute name="centroid_lat" type="java.lang.Double"/>
-                <attribute name="centroid_lng" type="java.lang.Double"/>
-                <attribute name="bboxNorth" type="java.lang.Double"/>
-                <attribute name="bboxSouth" type="java.lang.Double"/>
-                <attribute name="bboxEast" type="java.lang.Double"/>
-                <attribute name="bboxWest" type="java.lang.Double"/>
+                <attribute name="centroid_lat" type="java.lang.String"/>
+                <attribute name="centroid_lng" type="java.lang.String"/>
+                <attribute name="bboxNorth" type="java.lang.String"/>
+                <attribute name="bboxSouth" type="java.lang.String"/>
+                <attribute name="bboxEast" type="java.lang.String"/>
+                <attribute name="bboxWest" type="java.lang.String"/>
                 <attribute name="timezone" type="java.lang.String"/>
                 <access-method name="yh_geo_name" inputs="1"/>
                 <access-method name="yh_geo_woeid" inputs="0"/>
@@ -89,5 +89,5 @@
             </relation>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="2.0833852539581704E16" type="DoubleCost"/>
+    <cost value="6.244500173709283E15" type="DoubleCost"/>
 </RelationalTermWithCost>

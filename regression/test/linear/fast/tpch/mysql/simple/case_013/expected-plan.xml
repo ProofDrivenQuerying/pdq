@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="RenameTerm">
-    <renamings name="c6" type="java.lang.Integer"/>
-    <renamings name="c7" type="java.lang.String"/>
-    <renamings name="c8" type="java.lang.Integer"/>
-    <renamings name="c10" type="java.lang.String"/>
+    <renamings name="c0" type="java.lang.String"/>
+    <renamings name="c1" type="java.lang.String"/>
+    <renamings name="c2" type="java.lang.String"/>
+    <renamings name="c4" type="java.lang.String"/>
     <RelationalTerm type="AccessTerm">
         <accessMethod name="m1"/>
         <relation name="region_nation">
-            <attribute name="nation_key" type="java.lang.Integer"/>
+            <attribute name="nation_key" type="java.lang.String"/>
             <attribute name="nation_name" type="java.lang.String"/>
-            <attribute name="region_key" type="java.lang.Integer"/>
+            <attribute name="region_key" type="java.lang.String"/>
             <attribute name="region_name" type="java.lang.String"/>
             <access-method name="m1"/>
         </relation>
     </RelationalTerm>
-    <cost value="1.0" type="DoubleCost"/>
+    <cost value="5.0" type="DoubleCost"/>
 </RelationalTermWithCost>

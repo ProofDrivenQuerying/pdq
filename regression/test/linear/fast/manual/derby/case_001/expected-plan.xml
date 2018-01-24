@@ -3,23 +3,23 @@
     <RelationalTerm type="DependentJoinTerm">
         <RelationalTerm type="JoinTerm">
             <RelationalTerm type="RenameTerm">
-                <renamings name="c4" type="java.lang.Integer"/>
+                <renamings name="c1" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
                     <accessMethod name="m3"/>
                     <relation name="r2">
-                        <attribute name="r2.1" type="java.lang.Integer"/>
+                        <attribute name="r2.1" type="java.lang.String"/>
                         <access-method name="m3"/>
                     </relation>
                 </RelationalTerm>
             </RelationalTerm>
             <RelationalTerm type="RenameTerm">
-                <renamings name="c3" type="java.lang.Integer"/>
-                <renamings name="c4" type="java.lang.Integer"/>
+                <renamings name="c0" type="java.lang.String"/>
+                <renamings name="c1" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
                     <accessMethod name="m1"/>
                     <relation name="r1">
-                        <attribute name="r1.1" type="java.lang.Integer"/>
-                        <attribute name="r1.2" type="java.lang.Integer"/>
+                        <attribute name="r1.1" type="java.lang.String"/>
+                        <attribute name="r1.2" type="java.lang.String"/>
                         <access-method name="m1"/>
                         <access-method name="m2" inputs="0,1"/>
                     </relation>
@@ -27,33 +27,33 @@
             </RelationalTerm>
         </RelationalTerm>
         <RelationalTerm type="RenameTerm">
-            <renamings name="c5" type="java.lang.Integer"/>
-            <renamings name="c3" type="java.lang.Integer"/>
-            <renamings name="c4" type="java.lang.Integer"/>
+            <renamings name="c2" type="java.lang.String"/>
+            <renamings name="c0" type="java.lang.String"/>
+            <renamings name="c1" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
                 <accessMethod name="m4" inputs="1,2"/>
                 <relation name="r3">
-                    <attribute name="r3.1" type="java.lang.Integer"/>
-                    <attribute name="r3.2" type="java.lang.Integer"/>
-                    <attribute name="r3.3" type="java.lang.Integer"/>
+                    <attribute name="r3.1" type="java.lang.String"/>
+                    <attribute name="r3.2" type="java.lang.String"/>
+                    <attribute name="r3.3" type="java.lang.String"/>
                     <access-method name="m4" inputs="1,2"/>
                 </relation>
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
     <RelationalTerm type="RenameTerm">
-        <renamings name="c4" type="java.lang.Integer"/>
-        <renamings name="c3" type="java.lang.Integer"/>
-        <renamings name="c5" type="java.lang.Integer"/>
+        <renamings name="c1" type="java.lang.String"/>
+        <renamings name="c0" type="java.lang.String"/>
+        <renamings name="c2" type="java.lang.String"/>
         <RelationalTerm type="AccessTerm">
             <accessMethod name="m4" inputs="1,2"/>
             <relation name="r3">
-                <attribute name="r3.1" type="java.lang.Integer"/>
-                <attribute name="r3.2" type="java.lang.Integer"/>
-                <attribute name="r3.3" type="java.lang.Integer"/>
+                <attribute name="r3.1" type="java.lang.String"/>
+                <attribute name="r3.2" type="java.lang.String"/>
+                <attribute name="r3.3" type="java.lang.String"/>
                 <access-method name="m4" inputs="1,2"/>
             </relation>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="3.0" type="DoubleCost"/>
+    <cost value="15.0" type="DoubleCost"/>
 </RelationalTermWithCost>
