@@ -286,6 +286,7 @@ public class ExplorationSetUp {
 			}
 			explorer.setExceptionOnLimit(this.plannerParams.getExceptionOnLimit());
 			explorer.setMaxRounds(this.plannerParams.getMaxIterations().doubleValue());
+			explorer.setMaxElapsedTime(120l*1000l);
 		//explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
 			if (explorer.getBestPlan() != null && explorer.getBestCost() != null)

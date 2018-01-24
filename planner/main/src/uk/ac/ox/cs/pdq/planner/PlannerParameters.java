@@ -192,7 +192,7 @@ public class PlannerParameters extends Parameters {
 	@Parameter(description = "Number of threads to use in the first phase of "
 			+ "a parallel DAG planning algorithm",
 			defaultValue = "50")
-	protected Integer firstPhaseThreads = 1;
+	protected Integer firstPhaseThreads = 10;
 
 	/** The second phase threads. */
 	@Parameter(description = "Number of threads to use in the second phase of "
