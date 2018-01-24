@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="ProjectionTerm">
-    <projections name="c27" type="java.lang.String"/>
-    <projections name="c28" type="java.lang.String"/>
-    <projections name="c29" type="java.lang.String"/>
-    <projections name="c30" type="java.lang.String"/>
-    <projections name="c31" type="java.lang.String"/>
-    <projections name="c32" type="java.lang.String"/>
-    <projections name="c33" type="java.lang.String"/>
-    <projections name="c30" type="java.lang.String"/>
-    <projections name="c48" type="java.lang.String"/>
-    <projections name="c49" type="java.lang.String"/>
-    <projections name="c47" type="java.lang.String"/>
-    <projections name="c50" type="java.lang.String"/>
-    <projections name="c51" type="java.lang.String"/>
-    <projections name="c52" type="java.lang.String"/>
-    <projections name="c53" type="java.lang.String"/>
+    <projections name="c0" type="java.lang.String"/>
+    <projections name="c1" type="java.lang.String"/>
+    <projections name="c2" type="java.lang.String"/>
+    <projections name="c3" type="java.lang.String"/>
+    <projections name="c4" type="java.lang.String"/>
+    <projections name="c5" type="java.lang.String"/>
+    <projections name="c6" type="java.lang.String"/>
+    <projections name="c3" type="java.lang.String"/>
+    <projections name="c21" type="java.lang.String"/>
+    <projections name="c22" type="java.lang.String"/>
+    <projections name="c20" type="java.lang.String"/>
+    <projections name="c23" type="java.lang.String"/>
+    <projections name="c24" type="java.lang.String"/>
+    <projections name="c25" type="java.lang.String"/>
+    <projections name="c26" type="java.lang.String"/>
     <RelationalTerm type="JoinTerm">
         <RelationalTerm type="RenameTerm">
-            <renamings name="c30" type="java.lang.String"/>
-            <renamings name="c48" type="java.lang.String"/>
-            <renamings name="c49" type="java.lang.String"/>
-            <renamings name="c47" type="java.lang.String"/>
-            <renamings name="c50" type="java.lang.String"/>
-            <renamings name="c51" type="java.lang.String"/>
-            <renamings name="c52" type="java.lang.String"/>
-            <renamings name="c53" type="java.lang.String"/>
+            <renamings name="c3" type="java.lang.String"/>
+            <renamings name="c21" type="java.lang.String"/>
+            <renamings name="c22" type="java.lang.String"/>
+            <renamings name="c20" type="java.lang.String"/>
+            <renamings name="c23" type="java.lang.String"/>
+            <renamings name="c24" type="java.lang.String"/>
+            <renamings name="c25" type="java.lang.String"/>
+            <renamings name="c26" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
-                <accessMethod name="chembl_target_free"/>
-                <relation name="TargetFree">
+                <accessMethod name="chembl_target_limited"/>
+                <relation name="TargetLimited">
                     <attribute name="organism" type="java.lang.String"/>
                     <attribute name="pref_name" type="java.lang.String"/>
                     <attribute name="species_group_flag" type="java.lang.String"/>
@@ -36,7 +36,8 @@
                     <attribute name="target_component_id" type="java.lang.String"/>
                     <attribute name="target_component_type" type="java.lang.String"/>
                     <attribute name="target_type" type="java.lang.String"/>
-                    <access-method name="chembl_target_free"/>
+                    <access-method name="chembl_target_limited"/>
+                    <access-method name="chembl_target_limited_1"/>
                 </relation>
             </RelationalTerm>
         </RelationalTerm>
@@ -47,28 +48,28 @@
                 </predicates>
             </predicate>
             <RelationalTerm type="RenameTerm">
-                <renamings name="c27" type="java.lang.String"/>
-                <renamings name="c28" type="java.lang.String"/>
-                <renamings name="c29" type="java.lang.String"/>
-                <renamings name="c30" type="java.lang.String"/>
-                <renamings name="c31" type="java.lang.String"/>
-                <renamings name="c32" type="java.lang.String"/>
-                <renamings name="c33" type="java.lang.String"/>
-                <renamings name="c34" type="java.lang.String"/>
+                <renamings name="c0" type="java.lang.String"/>
+                <renamings name="c1" type="java.lang.String"/>
+                <renamings name="c2" type="java.lang.String"/>
+                <renamings name="c3" type="java.lang.String"/>
+                <renamings name="c4" type="java.lang.String"/>
+                <renamings name="c5" type="java.lang.String"/>
+                <renamings name="c6" type="java.lang.String"/>
+                <renamings name="c7" type="java.lang.String"/>
                 <renamings name="Liver" type="java.lang.String"/>
-                <renamings name="c35" type="java.lang.String"/>
-                <renamings name="c36" type="java.lang.String"/>
-                <renamings name="c37" type="java.lang.String"/>
-                <renamings name="c38" type="java.lang.String"/>
-                <renamings name="c39" type="java.lang.String"/>
-                <renamings name="c40" type="java.lang.String"/>
-                <renamings name="c41" type="java.lang.String"/>
-                <renamings name="c42" type="java.lang.String"/>
-                <renamings name="c43" type="java.lang.String"/>
-                <renamings name="c44" type="java.lang.String"/>
-                <renamings name="c45" type="java.lang.String"/>
-                <renamings name="c46" type="java.lang.String"/>
-                <renamings name="c47" type="java.lang.String"/>
+                <renamings name="c8" type="java.lang.String"/>
+                <renamings name="c9" type="java.lang.String"/>
+                <renamings name="c10" type="java.lang.String"/>
+                <renamings name="c11" type="java.lang.String"/>
+                <renamings name="c12" type="java.lang.String"/>
+                <renamings name="c13" type="java.lang.String"/>
+                <renamings name="c14" type="java.lang.String"/>
+                <renamings name="c15" type="java.lang.String"/>
+                <renamings name="c16" type="java.lang.String"/>
+                <renamings name="c17" type="java.lang.String"/>
+                <renamings name="c18" type="java.lang.String"/>
+                <renamings name="c19" type="java.lang.String"/>
+                <renamings name="c20" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
                     <accessMethod name="chembl_assay_limited_2"/>
                     <relation name="AssayLimited">
@@ -103,5 +104,5 @@
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="2000.0" type="DoubleCost"/>
+    <cost value="1159716.0" type="DoubleCost"/>
 </RelationalTermWithCost>

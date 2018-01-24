@@ -24,14 +24,14 @@
                         </RelationalTerm>
                     </RelationalTerm>
                     <RelationalTerm type="RenameTerm">
-                        <renamings name="c16" type="java.lang.String"/>
-                        <renamings name="c23" type="java.lang.String"/>
-                        <renamings name="c24" type="java.lang.String"/>
+                        <renamings name="c1" type="java.lang.String"/>
+                        <renamings name="c8" type="java.lang.String"/>
+                        <renamings name="c9" type="java.lang.String"/>
                         <renamings name="c10" type="java.lang.String"/>
-                        <renamings name="c25" type="java.lang.String"/>
-                        <renamings name="c26" type="java.lang.String"/>
-                        <renamings name="c27" type="java.lang.String"/>
-                        <renamings name="c28" type="java.lang.String"/>
+                        <renamings name="c11" type="java.lang.String"/>
+                        <renamings name="c12" type="java.lang.String"/>
+                        <renamings name="c13" type="java.lang.String"/>
+                        <renamings name="c14" type="java.lang.String"/>
                         <RelationalTerm type="AccessTerm">
                             <accessMethod name="m1" inputs="3"/>
                             <relation name="customer">
@@ -55,15 +55,15 @@
                         </predicates>
                     </predicate>
                     <RelationalTerm type="RenameTerm">
-                        <renamings name="c15" type="java.lang.String"/>
-                        <renamings name="c16" type="java.lang.String"/>
-                        <renamings name="c17" type="java.lang.String"/>
-                        <renamings name="c18" type="java.lang.String"/>
-                        <renamings name="c19" type="java.lang.String"/>
+                        <renamings name="c0" type="java.lang.String"/>
+                        <renamings name="c1" type="java.lang.String"/>
+                        <renamings name="c2" type="java.lang.String"/>
+                        <renamings name="c3" type="java.lang.String"/>
+                        <renamings name="c4" type="java.lang.String"/>
                         <renamings name="1-URGENT" type="java.lang.String"/>
-                        <renamings name="c20" type="java.lang.String"/>
-                        <renamings name="c21" type="java.lang.String"/>
-                        <renamings name="c22" type="java.lang.String"/>
+                        <renamings name="c5" type="java.lang.String"/>
+                        <renamings name="c6" type="java.lang.String"/>
+                        <renamings name="c7" type="java.lang.String"/>
                         <RelationalTerm type="AccessTerm">
                             <accessMethod name="m9" inputs="1"/>
                             <relation name="orders">
@@ -83,14 +83,14 @@
                 </RelationalTerm>
             </RelationalTerm>
             <RelationalTerm type="RenameTerm">
-                <renamings name="c1" type="java.lang.String"/>
-                <renamings name="c8" type="java.lang.String"/>
-                <renamings name="c9" type="java.lang.String"/>
+                <renamings name="c16" type="java.lang.String"/>
+                <renamings name="c23" type="java.lang.String"/>
+                <renamings name="c24" type="java.lang.String"/>
                 <renamings name="c10" type="java.lang.String"/>
-                <renamings name="c11" type="java.lang.String"/>
-                <renamings name="c12" type="java.lang.String"/>
-                <renamings name="c13" type="java.lang.String"/>
-                <renamings name="c14" type="java.lang.String"/>
+                <renamings name="c25" type="java.lang.String"/>
+                <renamings name="c26" type="java.lang.String"/>
+                <renamings name="c27" type="java.lang.String"/>
+                <renamings name="c28" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
                     <accessMethod name="m1" inputs="3"/>
                     <relation name="customer">
@@ -114,15 +114,15 @@
                 </predicates>
             </predicate>
             <RelationalTerm type="RenameTerm">
-                <renamings name="c0" type="java.lang.String"/>
-                <renamings name="c1" type="java.lang.String"/>
-                <renamings name="c2" type="java.lang.String"/>
-                <renamings name="c3" type="java.lang.String"/>
-                <renamings name="c4" type="java.lang.String"/>
+                <renamings name="c15" type="java.lang.String"/>
+                <renamings name="c16" type="java.lang.String"/>
+                <renamings name="c17" type="java.lang.String"/>
+                <renamings name="c18" type="java.lang.String"/>
+                <renamings name="c19" type="java.lang.String"/>
                 <renamings name="1-URGENT" type="java.lang.String"/>
-                <renamings name="c5" type="java.lang.String"/>
-                <renamings name="c6" type="java.lang.String"/>
-                <renamings name="c7" type="java.lang.String"/>
+                <renamings name="c20" type="java.lang.String"/>
+                <renamings name="c21" type="java.lang.String"/>
+                <renamings name="c22" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
                     <accessMethod name="m9" inputs="1"/>
                     <relation name="orders">

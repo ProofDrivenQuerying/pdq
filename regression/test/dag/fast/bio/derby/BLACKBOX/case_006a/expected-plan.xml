@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="ProjectionTerm">
-    <projections name="c15" type="java.lang.Integer"/>
-    <projections name="c16" type="java.lang.String"/>
-    <projections name="c17" type="java.lang.String"/>
-    <projections name="c18" type="java.lang.String"/>
-    <projections name="c19" type="java.lang.Boolean"/>
-    <projections name="c20" type="java.lang.String"/>
-    <projections name="c21" type="java.lang.String"/>
-    <projections name="c22" type="java.lang.String"/>
-    <projections name="c23" type="java.lang.Boolean"/>
+    <projections name="c0" type="java.lang.String"/>
+    <projections name="c1" type="java.lang.String"/>
+    <projections name="c2" type="java.lang.String"/>
+    <projections name="c3" type="java.lang.String"/>
+    <projections name="c4" type="java.lang.String"/>
+    <projections name="c5" type="java.lang.String"/>
+    <projections name="c6" type="java.lang.String"/>
+    <projections name="c7" type="java.lang.String"/>
+    <projections name="c8" type="java.lang.String"/>
     <RelationalTerm type="JoinTerm">
         <RelationalTerm type="SelectionTerm">
             <predicate type="ConjunctiveCondition">
                 <predicates position="4" type="ConstantEqualityCondition">
-                    <constant type="java.lang.Boolean" value="false"/>
+                    <constant value="false"/>
                 </predicates>
             </predicate>
             <RelationalTerm type="RenameTerm">
-                <renamings name="c15" type="java.lang.Integer"/>
-                <renamings name="c16" type="java.lang.String"/>
-                <renamings name="c17" type="java.lang.String"/>
-                <renamings name="c18" type="java.lang.String"/>
-                <renamings name="false" type="java.lang.Boolean"/>
-                <renamings name="c19" type="java.lang.Boolean"/>
-                <renamings name="c20" type="java.lang.String"/>
-                <renamings name="c21" type="java.lang.String"/>
-                <renamings name="c22" type="java.lang.String"/>
-                <renamings name="c23" type="java.lang.Boolean"/>
+                <renamings name="c0" type="java.lang.String"/>
+                <renamings name="c1" type="java.lang.String"/>
+                <renamings name="c2" type="java.lang.String"/>
+                <renamings name="c3" type="java.lang.String"/>
+                <renamings name="false" type="java.lang.String"/>
+                <renamings name="c4" type="java.lang.String"/>
+                <renamings name="c5" type="java.lang.String"/>
+                <renamings name="c6" type="java.lang.String"/>
+                <renamings name="c7" type="java.lang.String"/>
+                <renamings name="c8" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
-                    <accessMethod name="reactome_pathway_1"/>
-                    <relation name="PathwayBySpecies">
-                        <attribute name="pathwayId" type="java.lang.Integer"/>
+                    <accessMethod name="reactome_pathway_2"/>
+                    <relation name="PathwayById">
+                        <attribute name="pathwayId" type="java.lang.String"/>
                         <attribute name="pathwayName" type="java.lang.String"/>
                         <attribute name="stableIdentifier" type="java.lang.String"/>
                         <attribute name="goBiologicalProcess" type="java.lang.String"/>
-                        <attribute name="isInDisease" type="java.lang.Boolean"/>
-                        <attribute name="isInferred" type="java.lang.Boolean"/>
+                        <attribute name="isInDisease" type="java.lang.String"/>
+                        <attribute name="isInferred" type="java.lang.String"/>
                         <attribute name="organismId" type="java.lang.String"/>
                         <attribute name="organism" type="java.lang.String"/>
                         <attribute name="doi" type="java.lang.String"/>
-                        <attribute name="hasDiagram" type="java.lang.Boolean"/>
-                        <access-method name="reactome_pathway_1"/>
+                        <attribute name="hasDiagram" type="java.lang.String"/>
+                        <access-method name="reactome_pathway_2"/>
                     </relation>
                 </RelationalTerm>
             </RelationalTerm>
@@ -52,16 +52,16 @@
                 </predicates>
             </predicate>
             <RelationalTerm type="RenameTerm">
-                <renamings name="c21" type="java.lang.String"/>
-                <renamings name="c24" type="java.lang.String"/>
-                <renamings name="c25" type="java.lang.String"/>
-                <renamings name="c26" type="java.lang.String"/>
-                <renamings name="c27" type="java.lang.String"/>
-                <renamings name="c28" type="java.lang.String"/>
-                <renamings name="c29" type="java.lang.String"/>
+                <renamings name="c6" type="java.lang.String"/>
+                <renamings name="c9" type="java.lang.String"/>
+                <renamings name="c10" type="java.lang.String"/>
+                <renamings name="c11" type="java.lang.String"/>
+                <renamings name="c12" type="java.lang.String"/>
+                <renamings name="c13" type="java.lang.String"/>
+                <renamings name="c14" type="java.lang.String"/>
                 <renamings name="SINGLE PROTEIN" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
-                    <accessMethod name="chembl_target_limited"/>
+                    <accessMethod name="chembl_target_limited_1"/>
                     <relation name="TargetLimited">
                         <attribute name="organism" type="java.lang.String"/>
                         <attribute name="pref_name" type="java.lang.String"/>
@@ -78,5 +78,5 @@
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="1.1163547701476998E13" type="DoubleCost"/>
+    <cost value="56474.04223185709" type="DoubleCost"/>
 </RelationalTermWithCost>

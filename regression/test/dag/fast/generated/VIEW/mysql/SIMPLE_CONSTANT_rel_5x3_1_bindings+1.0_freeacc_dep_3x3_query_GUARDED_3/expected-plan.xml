@@ -1,31 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plan type="dag" cost="5.0" control-flow="TOP_DOWN">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c72230" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c72230" type="java.lang.String"/>
-</project>
-<child>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c72231" type="java.lang.String"/>
-<attribute name="c72230" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="x0" type="java.lang.String"/>
-<attribute name="x2" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="V39" access-method="mt_39">
-<outputs>
-<attribute name="x0" type="java.lang.String"/>
-<attribute name="x2" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</plan>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="ProjectionTerm">
+    <projections name="c0" type="java.lang.String"/>
+    <RelationalTerm type="RenameTerm">
+        <renamings name="c1" type="java.lang.String"/>
+        <renamings name="c0" type="java.lang.String"/>
+        <RelationalTerm type="AccessTerm">
+            <accessMethod name="mt_39"/>
+            <relation name="V39">
+                <attribute name="x0" type="java.lang.String"/>
+                <attribute name="x2" type="java.lang.String"/>
+                <access-method name="mt_39"/>
+            </relation>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="5.0" type="DoubleCost"/>
+</RelationalTermWithCost>

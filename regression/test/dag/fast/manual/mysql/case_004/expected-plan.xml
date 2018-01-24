@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="ProjectionTerm">
-    <projections name="c6" type="java.lang.String"/>
-    <projections name="c7" type="java.lang.String"/>
+    <projections name="c1" type="java.lang.String"/>
+    <projections name="c2" type="java.lang.String"/>
     <RelationalTerm type="RenameTerm">
-        <renamings name="c6" type="java.lang.String"/>
-        <renamings name="c7" type="java.lang.String"/>
+        <renamings name="c1" type="java.lang.String"/>
+        <renamings name="c2" type="java.lang.String"/>
         <RelationalTerm type="AccessTerm">
             <accessMethod name="m1"/>
             <relation name="V3">

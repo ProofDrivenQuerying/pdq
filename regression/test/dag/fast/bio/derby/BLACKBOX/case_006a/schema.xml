@@ -3999,5 +3999,22 @@
                 </atom>
             </head>
         </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="ProteinFree">
+                    <variable name="id"/>
+                    <variable name="entry_name"/>
+                    <variable name="organism"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="Protein">
+                    <variable name="_691"/>
+                    <variable name="id"/>
+                    <variable name="entry_name"/>
+                    <variable name="organism"/>
+                </atom>
+            </head>
+        </dependency>
     </dependencies>
 </schema>
