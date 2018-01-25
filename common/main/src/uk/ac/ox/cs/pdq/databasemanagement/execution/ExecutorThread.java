@@ -253,7 +253,7 @@ public class ExecutorThread extends Thread {
 				if (this.driverType == DriverType.MySql) {
 					for (String s : statements) {
 						try {
-							System.out.println("Executing: " + s);
+							//System.out.println("Executing: " + s);
 							sqlStmt.executeUpdate(s);
 						} catch(Throwable t) {
 							throw new SQLException("Executing update: " + s + " failed.",t);

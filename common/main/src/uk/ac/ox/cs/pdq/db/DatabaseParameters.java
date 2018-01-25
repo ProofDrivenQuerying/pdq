@@ -62,7 +62,7 @@ public class DatabaseParameters extends Parameters {
 
 	/** The number of threads. */
 	@Parameter(description="True in case the internal database manager should be used")
-	private boolean useInternalDatabaseManager = true;
+	private boolean useInternalDatabaseManager = false;
 	
 	/**
 	 * Constructor for DatabaseParameters using default configuration file path.
