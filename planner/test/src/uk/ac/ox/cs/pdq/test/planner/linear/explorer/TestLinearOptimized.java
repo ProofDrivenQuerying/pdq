@@ -109,7 +109,7 @@ public class TestLinearOptimized extends PdqTest {
 		//Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = createConnection(DatabaseParameters.MySql, accessibleSchema);
+			databaseConnection = createConnection(DatabaseParameters.Postgres, accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -239,7 +239,7 @@ public class TestLinearOptimized extends PdqTest {
 		//Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = createConnection(DatabaseParameters.MySql, accessibleSchema);
+			databaseConnection = createConnection(DatabaseParameters.Postgres, accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();

@@ -109,7 +109,7 @@ public class TestDAGGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager connection = null;
 		try {
-			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.MySql);
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
 			connection.initialiseDatabaseForSchema(accessibleSchema);
 		} catch (Exception e) {
@@ -219,7 +219,7 @@ public class TestDAGGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.MySql);
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 			databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
 			databaseConnection.initialiseDatabaseForSchema(accessibleSchema);
 		} catch (Exception e) {
@@ -360,7 +360,7 @@ public class TestDAGGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager connection = null;
 		try {
-			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.MySql);
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
 			connection.initialiseDatabaseForSchema(accessibleSchema);
 		} catch (Exception e) {
@@ -488,7 +488,7 @@ public class TestDAGGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.MySql);
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 			databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
 			databaseConnection.initialiseDatabaseForSchema(accessibleSchema);
 		} catch (Exception e) {

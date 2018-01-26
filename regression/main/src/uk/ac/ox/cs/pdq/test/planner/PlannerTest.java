@@ -234,7 +234,7 @@ private static FileWriter summary = null;
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-				e.printStackTrace();
+//				e.printStackTrace();
 				return handleException(e, directory);
 			}
 			return true;
@@ -269,6 +269,10 @@ private static FileWriter summary = null;
 				this.out.println("SKIP: ('" + directory + "' not a valid case directory)");
 				return true;
 			}
+			if (e.getCause() != null && e.getCause() instanceof UnsupportedOperationException && e.getCause().getMessage()!=null && e.getCause().getMessage().contains("BLACKBOX_DB cost estimator is not currently supported.")) {
+				this.out.println("Error: BLACKBOX_DB cost estimator is not currently supported.");
+				return false;
+			} else
 			if (e instanceof PlannerException) {
 				e.printStackTrace();
 				log.warn(e);

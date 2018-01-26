@@ -296,6 +296,14 @@ public class ExplorationSetUp {
 		} catch (PlannerException e) {
 			this.handleEarlyTermination(explorer);
 			throw e;
+		} catch (UnsupportedOperationException  e) {
+			if (e.getMessage()!=null && e.getMessage().contains("BLACKBOX_DB cost estimator is not currently supported.")) {
+				// ignored exception case.
+			} else {
+				this.handleEarlyTermination(explorer);
+				log.error(e.getMessage(), e);
+			}
+			throw new PlannerException(e);
 		} catch (Exception e) {
 			this.handleEarlyTermination(explorer);
 			log.error(e.getMessage(), e);
