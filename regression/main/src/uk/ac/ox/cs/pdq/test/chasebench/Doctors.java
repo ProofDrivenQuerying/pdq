@@ -34,10 +34,26 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-
+/**
+ * The test case called "Doctors" from the chasebench project.
+ * <pre>
+ * Current test result (on a laptop):
+ *   - case 10k :  1 second, all queries has 1 match except the last two  that has no results.
+ *   - case 100k:  6.45 s,   all queries has 1 match except the last two  that has no results.
+ *   - case 500k:  38.96s,   all queries has 1 match except the last two  that has no results.
+ *   - case 1m  :  138.4s,   all queries has 2 match except the last two  that has no results.
+ * Old PDQ results were (on a test hardware): 
+ *   - case 10k :  timeout, all queries has 1 match except the last two  that has no results.
+ *   - case 100k:  timeout
+ *   - case 500k:  timeout
+ *   - case 1m  :  timeout
+ * </pre>
+ * @author Gabor
+ *
+ */
 public class Doctors {
 	String TEST_DATA[] = {"10k","100k","500k","1m"}; // test data folders;
-	String testDataFolder = TEST_DATA[0];
+	String testDataFolder = TEST_DATA[3];
 	private Schema s = createSchema();
 	@Test
 	public void testDoctorsInternalDb() throws DatabaseException, SQLException, IOException {
