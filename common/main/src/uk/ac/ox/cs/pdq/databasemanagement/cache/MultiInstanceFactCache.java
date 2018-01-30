@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.databasemanagement.cache;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -119,6 +120,9 @@ public class MultiInstanceFactCache {
 	 * @return
 	 */
 	public Map<String,Integer> getStatistics(int instanceId) {
+		if (!multiCache.containsKey(instanceId)) {
+			return new HashMap<>();
+		}
 		return multiCache.get(instanceId).getStatistics();
 	}
 
