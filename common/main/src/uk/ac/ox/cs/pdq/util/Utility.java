@@ -25,6 +25,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Formula;
@@ -431,6 +432,28 @@ public class Utility {
 			log.error(e);
 		}
 		throw new ClassCastException(o + " could not be cast to " + type);
+	}
+	public static Schema convertToStringAttributeOnly(Schema s) {
+		Relation relations[] = new Relation[s.getRelations().length];
+		for (int i = 0; i < relations.length; i++) {
+			relations[i] = convertToStringAttributeOnly(s.getRelation(i));
+		}
+		List<Dependency> dependencies = new ArrayList<>();
+		dependencies.addAll(Arrays.asList(s.getDependencies()));
+		dependencies.addAll(Arrays.asList(s.getKeyDependencies()));
+		return new Schema(relations,dependencies.toArray(new Dependency[dependencies.size()]));
+	}
+
+	public static Relation convertToStringAttributeOnly(Relation r) {
+		Attribute[] attributes = new Attribute[r.getAttributes().length];
+		for (int i = 0; i < attributes.length; i++) {
+			if (r.getAttribute(i).getType().equals(String.class)) {
+				attributes[i] = r.getAttribute(i);
+			} else {
+				attributes[i] = Attribute.create(String.class, r.getAttribute(i).getName());
+			}
+		}
+		return Relation.create(r.getName(), attributes,r.getAccessMethods(),r.getForeignKeys(),r.isEquality());
 	}
 
 	/**

@@ -34,11 +34,17 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.util.Utility;
 /**
  * The test case called "Doctors" from the chasebench project.
  * <pre>
- * Current test result (on a laptop):
- *   - case 10k :  1 second, all queries has 1 match except the last two  that has no results.
+ * Current test result (on a laptop, in memory):
+ *   - case 10k :  1.1 second, (reasonUntilTermination took 0.8 seconds) all queries has 1 match except the last two  that has no results.
+ *   - case 100k:  6.45 s,   all queries has 1 match except the last two  that has no results.
+ *   - case 500k:  38.96s,   all queries has 1 match except the last two  that has no results.
+ *   - case 1m  :  138.4s,   all queries has 2 match except the last two  that has no results.
+ * Current test result (on a laptop, mysql):
+ *   - case 10k :  4 second, (reasonUntilTermination took 1.245 seconds) all queries has 1 match except the last two  that has no results.
  *   - case 100k:  6.45 s,   all queries has 1 match except the last two  that has no results.
  *   - case 500k:  38.96s,   all queries has 1 match except the last two  that has no results.
  *   - case 1m  :  138.4s,   all queries has 2 match except the last two  that has no results.
@@ -53,17 +59,18 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
  */
 public class Doctors {
 	String TEST_DATA[] = {"10k","100k","500k","1m"}; // test data folders;
-	String testDataFolder = TEST_DATA[3];
+	String testDataFolder = TEST_DATA[0];
 	private Schema s = createSchema();
-	@Test
+	//@Test
 	public void testDoctorsInternalDb() throws DatabaseException, SQLException, IOException {
 		DatabaseManager dbm = getInternalDatabaseManager();
 		dbm.initialiseDatabaseForSchema(s);
 		reasonTest(dbm);
 	}
-	//@Test
+	@Test
 	public void testDoctorsExternalDb() throws DatabaseException, SQLException, IOException {
 		DatabaseManager dbm = getExternalDatabaseManager();
+		s = Utility.convertToStringAttributeOnly(s);
 		dbm.initialiseDatabaseForSchema(s);
 		reasonTest(dbm);
 	}
@@ -114,7 +121,7 @@ public class Doctors {
 		return dbm;
 	}
 	private DatabaseManager getExternalDatabaseManager() throws DatabaseException {
-		ExternalDatabaseManager dbm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
+		ExternalDatabaseManager dbm = new ExternalDatabaseManager(DatabaseParameters.MySql);
 		return new LogicalDatabaseInstance(new MultiInstanceFactCache(), dbm, 0);
 	}
 
