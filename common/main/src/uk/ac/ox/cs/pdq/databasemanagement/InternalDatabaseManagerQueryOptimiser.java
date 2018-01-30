@@ -38,6 +38,7 @@ public class InternalDatabaseManagerQueryOptimiser {
 		return newCQ;
 	}
 
+	//TOCOMMENT Optimiser should make sure the query starts with this, so it shouldn't be needed. 
 	public static boolean isQueryPointingToEmptyTable(ConjunctiveQuery cq, Map<String, Integer> tableSizeStats) {
 		for (Atom a: cq.getAtoms()) {
 			int size = 0; 
