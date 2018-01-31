@@ -115,8 +115,6 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			throw new RuntimeException(e);
 		}
 		this.initDatabase();
-		// this.indexConstraints();
-		// this.indexLastAttributeOfAllRelations();
 	}
 
 	@Override
@@ -153,9 +151,6 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		}
 
 		this.initDatabase();
-
-		// this.indexConstraints();
-		// this.indexLastAttributeOfAllRelations();
 	}
 
 	/**
@@ -213,21 +208,13 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		this.constantsToAtoms = constants;
 	}
 
-	private void initDatabase() {
+	private void initDatabase() throws SQLException {
 		Relation equality = this.createDatabaseEqualityRelation();
 		try {
 			// ADD EQUALITY RELATION
 			chaseDatabaseInstance.addRelation(equality);
-
-			// CREATE INDICES FOR DEPENDENCIES
-			// TOCOMMENT add constraint insertion into database manager
-			// for (Dependency constraint :
-			// canonicalDatabaseInstance.getSchema().getDependencies()) {
-			//
-			// }
-
 		} catch (DatabaseException e) {
-			throw new RuntimeException(e);
+			throw new SQLException(e);
 		}
 	}
 

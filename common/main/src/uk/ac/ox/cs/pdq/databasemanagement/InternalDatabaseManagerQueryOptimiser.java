@@ -38,18 +38,6 @@ public class InternalDatabaseManagerQueryOptimiser {
 		return newCQ;
 	}
 
-	//TOCOMMENT Optimiser should make sure the query starts with this, so it shouldn't be needed. 
-	public static boolean isQueryPointingToEmptyTable(ConjunctiveQuery cq, Map<String, Integer> tableSizeStats) {
-		for (Atom a: cq.getAtoms()) {
-			int size = 0; 
-			if (tableSizeStats.containsKey(a.getPredicate().getName()))
-				size = tableSizeStats.get(a.getPredicate().getName());
-			if (size==0)
-				return true;
-		}
-		return false;
-	}
-	
 	private static Conjunction smallestFirst(ConjunctiveQuery cq, Map<String, Integer> tableSizeStats) {
 		List<Atom> orderedAtoms = new LinkedList<>();
 		int min = 0;
