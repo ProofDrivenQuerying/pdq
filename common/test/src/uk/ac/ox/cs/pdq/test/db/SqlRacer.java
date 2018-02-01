@@ -96,8 +96,6 @@ public class SqlRacer {
 
 	@Before
 	public void setup() throws SQLException {
-		Attribute factId = Attribute.create(Integer.class, "InstanceID");
-
 		Attribute at11 = Attribute.create(String.class, "at11");
 		Attribute at12 = Attribute.create(String.class, "at12");
 		Attribute at13 = Attribute.create(String.class, "at13");
@@ -105,11 +103,11 @@ public class SqlRacer {
 
 		Attribute at21 = Attribute.create(String.class, "at21");
 		Attribute at22 = Attribute.create(String.class, "at22");
-		this.rel2 = Relation.create("R2", new Attribute[] { at21, at22, factId });
+		this.rel2 = Relation.create("R2", new Attribute[] { at21, at22 });
 
 		Attribute at31 = Attribute.create(String.class, "at31");
 		Attribute at32 = Attribute.create(String.class, "at32");
-		this.rel3 = Relation.create("R3", new Attribute[] { at31, at32, factId });
+		this.rel3 = Relation.create("R3", new Attribute[] { at31, at32 });
 
 		R1 = Atom.create(this.rel1, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		Atom R2 = Atom.create(this.rel2, new Term[] { Variable.create("y"), Variable.create("z") });

@@ -228,10 +228,11 @@ public class DatabaseParameters extends Parameters {
 		this.numberOfThreads = numberOfThreads;
 	}
 
-	public boolean useInternalDatabaseManager() {
+	public boolean getUseInternalDatabaseManager() {
 		return useInternalDatabaseManager;
 	}
 	public void setUseInternalDatabaseManager(boolean useInternalDatabaseManager) {
 		this.useInternalDatabaseManager = useInternalDatabaseManager;
 	}
+	
 }
