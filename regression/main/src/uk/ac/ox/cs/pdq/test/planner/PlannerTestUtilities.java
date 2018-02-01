@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 
 public class PlannerTestUtilities {
 
@@ -47,6 +46,7 @@ public class PlannerTestUtilities {
 			if (s.equals(o)) {
 				return Levels.IDENTICAL;
 			}
+			//PlanPrinter.openPngPlan(o);
 			return Levels.EQUIVALENT;
 		}
 		return Levels.DIFFERENT;
@@ -62,15 +62,21 @@ public class PlannerTestUtilities {
 		StringBuilder result = new StringBuilder();
 		result.append("\n\tCosts: ").append(sCost).append(" <-> ").append(oCost);
 		result.append("\n\tLeaves:\n\t\t");
-		result.append(AlgebraUtilities.getAccesses(s)).append("\n\t\t");
-		result.append(AlgebraUtilities.getAccesses(o)).append("\n\t");
+		String accessesS = "" + AlgebraUtilities.getAccesses(s);
+		String accessesO = "" + AlgebraUtilities.getAccesses(o);
+		if (accessesS.equals(accessesO)) {
+			result.append("Same accesses, but plan differs.");
+		} else {
+			result.append(AlgebraUtilities.getAccesses(s)).append("\n\t\t");
+			result.append(AlgebraUtilities.getAccesses(o)).append("\n\t");
+		}
 		return result.toString();
 	}
 	
 	public static Entry<RelationalTerm,Cost> obtainPlan(String fileName, Schema schema) {
 		try(FileInputStream pis = new FileInputStream(fileName) ){
 			File file = new File(fileName);
-			RelationalTerm plan = IOManager.readRelationalTerm(file, schema);
+			RelationalTerm plan = CostIOManager.readRelationalTermFromRelationaltermWithCost(file, schema);
 			Cost cost = CostIOManager.readRelationalTermCost(file, schema);
 			return new AbstractMap.SimpleEntry<RelationalTerm,Cost>(plan, cost);
 		} catch (IOException | JAXBException e) {

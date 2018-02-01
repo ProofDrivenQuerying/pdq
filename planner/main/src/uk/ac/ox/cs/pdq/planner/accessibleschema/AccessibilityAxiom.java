@@ -52,7 +52,7 @@ public class AccessibilityAxiom extends TGD {
 	private static Atom[] createLeft(Relation relation, AccessMethod method) {
 		List<Formula> leftAtoms = new ArrayList<>();
 		Integer[] inputPositions = method.getInputs();
-		Atom atom = createAtomsWithoutExtraAttribute(relation);
+		Atom atom = createAtom(relation);
 		Term[] terms = atom.getTerms();
 		for (int inputPosition: inputPositions) 
 			leftAtoms.add(Atom.create(AccessibleSchema.accessibleRelation, terms[inputPosition]));
@@ -60,10 +60,10 @@ public class AccessibilityAxiom extends TGD {
 		return leftAtoms.toArray(new Atom[leftAtoms.size()]);
 	}
 
-	private static Atom createAtomsWithoutExtraAttribute(Relation relation) {
-		Term[] terms = new Term[relation.getArity()-1];
+	private static Atom createAtom(Relation relation) {
+		Term[] terms = new Term[relation.getArity()];
 		Attribute[] attributes = relation.getAttributes();
-		for (int index = 0; index < relation.getArity()-1; ++index) 
+		for (int index = 0; index < relation.getArity(); ++index) 
 			terms[index] = Variable.create(attributes[index].getName());
 		return Atom.create(relation, terms);
 	}
@@ -77,7 +77,7 @@ public class AccessibilityAxiom extends TGD {
 	private static Atom[] createRight(Relation relation, AccessMethod method) {
 		List<Formula> rightAtoms = new ArrayList<>();
 		Integer[] inputPositions = method.getInputs();
-		Atom f = createAtomsWithoutExtraAttribute(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality()));
+		Atom f = createAtom(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality()));
 		Term[] terms = f.getTerms();
 		for (int i = 0; i < terms.length; ++i) {
 			if (!Arrays.asList(inputPositions).contains(i)) 

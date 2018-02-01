@@ -24,7 +24,6 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -38,6 +37,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
@@ -158,6 +158,7 @@ private static FileWriter summary = null;
 		 * @return boolean
 		 * @throws ReflectiveOperationException the reflective operation exception
 		 */
+<<<<<<< HEAD
 private boolean compare(File directory) throws ReflectiveOperationException {       
 	if (summary == null) {
 		try {
@@ -165,6 +166,88 @@ private boolean compare(File directory) throws ReflectiveOperationException {
 		} catch (IOException e) {
 			
 			e.printStackTrace();
+=======
+		private boolean compare(File directory) throws ReflectiveOperationException {       
+			if (summary == null) {
+				try {
+					summary = new FileWriter(new File("summary.txt"));
+				} catch (IOException e) {
+					
+					e.printStackTrace();
+				}
+			}
+			try {
+		        GlobalCounterProvider.resetCounters();
+		        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+				this.out.println("\nStarting case '" + directory.getAbsolutePath() + "'");
+				PlannerParameters plannerParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
+				CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
+				override(plannerParams, paramOverrides);
+				override(costParams, paramOverrides);
+				ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
+				DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
+				Schema schema = DbIOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
+				ConjunctiveQuery query = IOManager.importQuery(new File(directory.getAbsolutePath() + '/' + QUERY_FILE));
+				query = IOManager.convertQueryConstants(query, schema);
+				DbIOManager.exportSchemaToXml(schema, new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
+				Entry<RelationalTerm, Cost> expectedPlan = PlannerTestUtilities.obtainPlan(directory.getAbsolutePath() + '/' + PLAN_FILE, schema);
+				if (schema == null || query == null) {
+					throw new RegressionTestException(
+							"Schema and query must be provided for each regression test. "
+									+ "(schema:" + schema + ", query: " + query + ", plan: " + expectedPlan + ")");
+				}
+				if (costParams.getCatalog() == null) {
+					File catalog = new File(directory, "catalog.properties");
+					if (catalog.exists())
+						costParams.setCatalog(catalog.getAbsolutePath());
+				}
+				long start = System.currentTimeMillis();
+				schema = addAccessibleToSchema(schema);
+				Entry<RelationalTerm, Cost> observedPlan = null;
+				try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
+					ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, dbParams, schema);
+					planner.registerEventHandler(
+							new IntervalEventDrivenLogger(
+									pLog, plannerParams.getLogIntervals(),
+									plannerParams.getShortLogIntervals()));
+					observedPlan = planner.search(query);
+				} catch (LimitReachedException lre) {
+					log.warn(lre);
+				}
+				double duration = (System.currentTimeMillis() - start) / 1000.0;
+				DecimalFormat myFormatter = new DecimalFormat("####.##");
+				String duration_s = " Duration: " + myFormatter.format(duration) + "sec.";				
+				
+				if (observedPlan!=null)
+					summary.write(directory.getAbsolutePath() + " Cost = "+observedPlan.getValue()+" plan: "+observedPlan.getKey()+ duration_s + " \n");
+				else 
+					summary.write(directory.getAbsolutePath() + " No Plan "+duration_s + "\n");
+				summary.flush();
+				AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance = acceptance(plannerParams, costParams);
+				this.out.print("Using " + acceptance.getClass().getSimpleName() + ": ");
+				acceptance.check(expectedPlan, observedPlan).report(this.out);
+
+				if (observedPlan != null
+						&& (expectedPlan == null || expectedPlan.getValue().greaterThan(observedPlan.getValue())) ) {
+					this.out.print("\twriting plan: " + observedPlan + " " + observedPlan.getValue());
+					CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + PLAN_FILE),  observedPlan.getKey(), observedPlan.getValue());
+					
+				}
+				this.out.println("\n " + duration_s);
+			} catch (Throwable e) {
+				try {
+					summary.write(directory.getAbsolutePath() + " Crashed : "+e.getMessage()+" \n");
+					summary.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+//				e.printStackTrace();
+				return handleException(e, directory);
+			}
+			return true;
+>>>>>>> refs/remotes/origin/newDatabaseManager
 		}
 	}
 	try {
@@ -245,7 +328,8 @@ private boolean compare(File directory) throws ReflectiveOperationException {
 			dep.addAll(Arrays.asList(schema.getKeyDependencies()));
 			List<Relation> rel = new ArrayList<>(); 
 			rel.addAll(Arrays.asList(schema.getRelations()));
-			rel.add(Relation.create("Accessible", new Attribute[] {Attribute.create(String.class, "name"),Attribute.create(Integer.class, "InstanceID")}));
+//			rel.add(Relation.create("Accessible", new Attribute[] {Attribute.create(String.class, "name"),Attribute.create(Integer.class, "InstanceID")}));
+			rel.add(AccessibleSchema.accessibleRelation);
 			return new Schema(rel.toArray(new Relation[rel.size()]),dep.toArray(new Dependency[dep.size()]));
 		}
 
@@ -267,6 +351,10 @@ private boolean compare(File directory) throws ReflectiveOperationException {
 				this.out.println("SKIP: ('" + directory + "' not a valid case directory)");
 				return true;
 			}
+			if (e.getCause() != null && e.getCause() instanceof UnsupportedOperationException && e.getCause().getMessage()!=null && e.getCause().getMessage().contains("BLACKBOX_DB cost estimator is not currently supported.")) {
+				this.out.println("Error: BLACKBOX_DB cost estimator is not currently supported.");
+				return false;
+			} else
 			if (e instanceof PlannerException) {
 				e.printStackTrace();
 				log.warn(e);

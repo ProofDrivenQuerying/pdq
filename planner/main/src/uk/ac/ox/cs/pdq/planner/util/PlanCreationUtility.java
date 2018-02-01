@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.junit.Assert;
-
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
@@ -76,19 +74,19 @@ public class PlanCreationUtility {
 	 * @return the left deep plan
 	 */
 	public static RelationalTerm createSingleAccessPlan(Relation relation, AccessMethod accessMethod, Collection<Atom> exposedFacts) {
-		Assert.assertNotNull(relation);
-		Assert.assertNotNull(accessMethod);
-		Assert.assertTrue(exposedFacts != null && exposedFacts.size() > 0);
-		Assert.assertTrue(Arrays.asList(relation.getAccessMethods()).contains(accessMethod));
+		Preconditions.checkNotNull(relation);
+		Preconditions.checkNotNull(accessMethod);
+		Preconditions.checkArgument(exposedFacts != null && exposedFacts.size() > 0);
+		Preconditions.checkArgument(Arrays.asList(relation.getAccessMethods()).contains(accessMethod));
 		RelationalTerm op1 = null;
 		AccessTerm access = null;
 		//planRelation is a copy of the relation without the extra attribute in the schema, needed for chasing
 		Relation planRelation = null;
 		//Iterate over each exposed fact
 		for (Atom exposedFact: exposedFacts) {
-			Assert.assertTrue(exposedFact.getPredicate().getName().equals(relation.getName()));
+			Preconditions.checkArgument(exposedFact.getPredicate().getName().equals(relation.getName()));
 			if (access == null) {
-				Attribute[] attributes = new Attribute[relation.getArity()-1];
+				Attribute[] attributes = new Attribute[relation.getArity()];
 				System.arraycopy(relation.getAttributes(), 0, attributes, 0, attributes.length); 
 				planRelation = Relation.create(relation.getName(), attributes, relation.getAccessMethods());
 				//Compute the input constants
@@ -149,7 +147,7 @@ public class PlanCreationUtility {
 	}
 	
 	private static Attribute[] computeRenamedAttributes(Attribute[] attributes, Term[] terms) {
-		Assert.assertTrue(attributes.length == terms.length);
+		Preconditions.checkArgument(attributes.length == terms.length);
 		Attribute[] renamings = new Attribute[terms.length];
 		for(int index = 0; index < terms.length; ++index)
 			renamings[index] = Attribute.create(attributes[index].getType(), terms[index].toString());
@@ -231,7 +229,7 @@ public class PlanCreationUtility {
 		for (int index = 0; index < freeVariables.length; ++index)  {
 			Constant constant = ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().get(query).get(freeVariables[index]);
 			Attribute attribute = Attribute.create(variableTypes[index], ((UntypedConstant)constant).getSymbol());
-			Assert.assertTrue(Arrays.asList(plan.getOutputAttributes()).contains(attribute));
+			Preconditions.checkArgument(Arrays.asList(plan.getOutputAttributes()).contains(attribute));
 			projections.add(attribute);
 		}
 		return ProjectionTerm.create(projections.toArray(new Attribute[projections.size()]), plan);

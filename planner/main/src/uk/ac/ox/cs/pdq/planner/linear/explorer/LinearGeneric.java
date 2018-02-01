@@ -17,7 +17,7 @@ import com.google.common.eventbus.EventBus;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -63,7 +63,7 @@ public class LinearGeneric extends LinearExplorer {
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			DatabaseConnection connection,
+			DatabaseManager connection,
 			CostEstimator costEstimator,
 			NodeFactory nodeFactory,
 			int depth) throws PlannerException, SQLException {

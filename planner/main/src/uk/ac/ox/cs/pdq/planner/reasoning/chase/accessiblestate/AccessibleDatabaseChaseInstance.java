@@ -20,7 +20,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -83,7 +83,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	 * @param chaseState the chaseState
 	 * @throws SQLException 
 	 */
-	public AccessibleDatabaseChaseInstance(ConjunctiveQuery query, Schema schema, DatabaseConnection connection, boolean maintainProvenance) throws SQLException {
+	public AccessibleDatabaseChaseInstance(ConjunctiveQuery query, Schema schema, DatabaseManager connection, boolean maintainProvenance) throws SQLException {
 		this(
 				createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema), 
 				maintainProvenance == true ? new MapFiringGraph() : null,
@@ -95,13 +95,13 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 				AccessibleStateUtility.getAllTermsAppearingInAccessibleFacts(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
 				connection);
 		// the previous constructor added tuples to the local this.facts map without adding them to the database. We need to delete them add them again to make sure they are written to the database.
-		LinkedHashSet<Atom> factsTmp = new LinkedHashSet<Atom>();
-		factsTmp.addAll(this.facts);
-		this.facts.clear();
-		this.addFacts(factsTmp);
+//		LinkedHashSet<Atom> factsTmp = new LinkedHashSet<Atom>();
+//		factsTmp.addAll(this.facts);
+//		this.facts.clear();
+//		this.addFacts(factsTmp);
 	}
 	
-	public AccessibleDatabaseChaseInstance(Collection<Atom> facts, DatabaseConnection connection, boolean maintainProvenance) throws SQLException {
+	public AccessibleDatabaseChaseInstance(Collection<Atom> facts, DatabaseManager connection, boolean maintainProvenance) throws SQLException {
 		this(	facts, 
 				maintainProvenance == true ? new MapFiringGraph() : null,
 				new EqualConstantsClasses(),
@@ -111,7 +111,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 				AccessibleStateUtility.createAtomsMap(facts),
 				AccessibleStateUtility.getAllTermsAppearingInAccessibleFacts(facts),
 				connection);
-		this.addFacts(this.facts);
+		this.addFacts(facts);
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 			Collection<Atom> derivedInferredAccessibleAtoms,
 			Multimap<Predicate, Atom> atomsMap,
 			Multimap<Term,Atom> accessibleTerms, 
-			DatabaseConnection connection
+			DatabaseManager connection
 			) throws SQLException {
 		super(facts, constantClasses, constants, connection);
 		
@@ -289,7 +289,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	 */
 	@Override
 	public Map<AccessibilityAxiom, List<Match>> getUnexposedFacts(AccessibleSchema accessibleSchema) {
-		return this.getUnexposedFacts(accessibleSchema, this.atomsMap, this.accessibleTerms, this.facts);
+		return this.getUnexposedFacts(accessibleSchema, this.atomsMap, this.accessibleTerms, this.getFacts());
 	}
 
 	/* (non-Javadoc)
@@ -405,14 +405,14 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 		constantsToAtoms.putAll(this.constantsToAtoms);
 		try {
 			return new AccessibleDatabaseChaseInstance(
-					Sets.newHashSet(this.facts), 
+					Sets.newHashSet(this.getFacts()), 
 					this.graph == null ? null : this.graph.clone(),
 					this.classes.clone(),
 					constantsToAtoms,
 					new LinkedHashSet<>(this.inferredAccessibleAtoms),
 					new LinkedHashSet<>(this.derivedInferredAccessibleAtoms), 
 					LinkedHashMultimap.create(this.atomsMap), 
-					LinkedHashMultimap.create(this.accessibleTerms),canonicalDatabaseInstance.getDatabaseConnection());
+					LinkedHashMultimap.create(this.accessibleTerms),chaseDatabaseInstance);
 		} catch (SQLException e) {
 			throw new RuntimeException("Cloning of AccessibleDatabaseListState failed due to an SQL exception "+e);
 		}
@@ -424,7 +424,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	@Override
 	public AccessibleChaseInstance merge(AccessibleChaseInstance s) {
 		Preconditions.checkState(s instanceof AccessibleDatabaseChaseInstance);
-		Collection<Atom> facts =  new LinkedHashSet<>(this.facts);
+		Collection<Atom> facts =  new LinkedHashSet<>(this.getFacts());
 		facts.addAll(s.getFacts());
 		
 		Collection<Atom> inferred = CollectionUtils.union(this.inferredAccessibleAtoms, ((AccessibleDatabaseChaseInstance)s).inferredAccessibleAtoms);
@@ -453,7 +453,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 					derivedInferred, 
 					map, 
 					accessibleTerms,
-					canonicalDatabaseInstance.getDatabaseConnection());
+					chaseDatabaseInstance);
 			ret.addFacts(facts);
 			return ret;
 		} catch (SQLException e) {

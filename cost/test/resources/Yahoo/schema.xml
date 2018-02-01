@@ -109,7 +109,7 @@
         </relation>
         <relation isEquality="false" name="Accessible">
             <attribute name="name" type="java.lang.String"/>
-            <attribute name="InstanceID" type="java.lang.Integer"/>
+            
         </relation>
     </relations>
     <dependencies>

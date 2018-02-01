@@ -1,74 +1,74 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="ProjectionTerm">
-    <projections name="c42" type="java.lang.String"/>
-    <projections name="c43" type="java.lang.String"/>
-    <projections name="c44" type="java.lang.String"/>
-    <projections name="c33" type="java.lang.Integer"/>
-    <projections name="c34" type="java.lang.String"/>
-    <projections name="c35" type="java.lang.String"/>
-    <projections name="c36" type="java.lang.String"/>
-    <projections name="c37" type="java.lang.Boolean"/>
-    <projections name="c38" type="java.lang.String"/>
-    <projections name="c39" type="java.lang.String"/>
-    <projections name="c40" type="java.lang.String"/>
-    <projections name="c41" type="java.lang.Boolean"/>
+    <projections name="c9" type="java.lang.String"/>
+    <projections name="c10" type="java.lang.String"/>
+    <projections name="c11" type="java.lang.String"/>
+    <projections name="c0" type="java.lang.String"/>
+    <projections name="c1" type="java.lang.String"/>
+    <projections name="c2" type="java.lang.String"/>
+    <projections name="c3" type="java.lang.String"/>
+    <projections name="c4" type="java.lang.String"/>
+    <projections name="c5" type="java.lang.String"/>
+    <projections name="c6" type="java.lang.String"/>
+    <projections name="c7" type="java.lang.String"/>
+    <projections name="c8" type="java.lang.String"/>
     <RelationalTerm type="JoinTerm">
         <RelationalTerm type="SelectionTerm">
             <predicate type="ConjunctiveCondition">
                 <predicates position="4" type="ConstantEqualityCondition">
-                    <constant type="java.lang.Boolean" value="true"/>
+                    <constant value="true"/>
                 </predicates>
             </predicate>
             <RelationalTerm type="RenameTerm">
-                <renamings name="c33" type="java.lang.Integer"/>
-                <renamings name="c34" type="java.lang.String"/>
-                <renamings name="c35" type="java.lang.String"/>
-                <renamings name="c36" type="java.lang.String"/>
-                <renamings name="true" type="java.lang.Boolean"/>
-                <renamings name="c37" type="java.lang.Boolean"/>
-                <renamings name="c38" type="java.lang.String"/>
-                <renamings name="c39" type="java.lang.String"/>
-                <renamings name="c40" type="java.lang.String"/>
-                <renamings name="c41" type="java.lang.Boolean"/>
+                <renamings name="c0" type="java.lang.String"/>
+                <renamings name="c1" type="java.lang.String"/>
+                <renamings name="c2" type="java.lang.String"/>
+                <renamings name="c3" type="java.lang.String"/>
+                <renamings name="true" type="java.lang.String"/>
+                <renamings name="c4" type="java.lang.String"/>
+                <renamings name="c5" type="java.lang.String"/>
+                <renamings name="c6" type="java.lang.String"/>
+                <renamings name="c7" type="java.lang.String"/>
+                <renamings name="c8" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
                     <accessMethod name="reactome_pathway_2"/>
                     <relation name="PathwayById">
-                        <attribute name="pathwayId" type="java.lang.Integer"/>
+                        <attribute name="pathwayId" type="java.lang.String"/>
                         <attribute name="pathwayName" type="java.lang.String"/>
                         <attribute name="stableIdentifier" type="java.lang.String"/>
                         <attribute name="goBiologicalProcess" type="java.lang.String"/>
-                        <attribute name="isInDisease" type="java.lang.Boolean"/>
-                        <attribute name="isInferred" type="java.lang.Boolean"/>
+                        <attribute name="isInDisease" type="java.lang.String"/>
+                        <attribute name="isInferred" type="java.lang.String"/>
                         <attribute name="organismId" type="java.lang.String"/>
                         <attribute name="organism" type="java.lang.String"/>
                         <attribute name="doi" type="java.lang.String"/>
-                        <attribute name="hasDiagram" type="java.lang.Boolean"/>
+                        <attribute name="hasDiagram" type="java.lang.String"/>
                         <access-method name="reactome_pathway_2"/>
                     </relation>
                 </RelationalTerm>
             </RelationalTerm>
         </RelationalTerm>
         <RelationalTerm type="RenameTerm">
-            <renamings name="c42" type="java.lang.String"/>
-            <renamings name="c43" type="java.lang.String"/>
-            <renamings name="c44" type="java.lang.String"/>
-            <renamings name="k66" type="java.lang.String"/>
-            <renamings name="k67" type="java.lang.String"/>
-            <renamings name="k68" type="java.lang.String"/>
-            <renamings name="k69" type="java.lang.String"/>
-            <renamings name="k70" type="java.lang.String"/>
-            <renamings name="k71" type="java.lang.String"/>
-            <renamings name="k72" type="java.lang.String"/>
-            <renamings name="k73" type="java.lang.String"/>
-            <renamings name="k74" type="java.lang.String"/>
-            <renamings name="k75" type="java.lang.String"/>
-            <renamings name="k76" type="java.lang.String"/>
-            <renamings name="c63" type="java.lang.String"/>
-            <renamings name="c64" type="java.lang.String"/>
-            <renamings name="c39" type="java.lang.String"/>
-            <renamings name="c65" type="java.lang.String"/>
+            <renamings name="c9" type="java.lang.String"/>
+            <renamings name="c10" type="java.lang.String"/>
+            <renamings name="c11" type="java.lang.String"/>
+            <renamings name="k33" type="java.lang.String"/>
+            <renamings name="k34" type="java.lang.String"/>
+            <renamings name="k35" type="java.lang.String"/>
+            <renamings name="k36" type="java.lang.String"/>
+            <renamings name="k37" type="java.lang.String"/>
+            <renamings name="k38" type="java.lang.String"/>
+            <renamings name="k39" type="java.lang.String"/>
+            <renamings name="k40" type="java.lang.String"/>
+            <renamings name="k41" type="java.lang.String"/>
+            <renamings name="k42" type="java.lang.String"/>
+            <renamings name="k43" type="java.lang.String"/>
+            <renamings name="c30" type="java.lang.String"/>
+            <renamings name="c31" type="java.lang.String"/>
+            <renamings name="c6" type="java.lang.String"/>
+            <renamings name="c32" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
-                <accessMethod name="pubmed_pubshort_15"/>
+                <accessMethod name="pubmed_pubshort_2"/>
                 <relation name="PublicationShort">
                     <attribute name="id" type="java.lang.String"/>
                     <attribute name="source" type="java.lang.String"/>
@@ -107,5 +107,5 @@
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="2.497805825944127E13" type="DoubleCost"/>
+    <cost value="3.0829910882086916E9" type="DoubleCost"/>
 </RelationalTermWithCost>

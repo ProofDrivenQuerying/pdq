@@ -133,7 +133,7 @@ public final class Disjunction extends Formula {
 	}
 
 	@Override
-	public int getNumberOfChildlen() {
+	public int getNumberOfChildren() {
 		return this.children.length;
 	}
 }

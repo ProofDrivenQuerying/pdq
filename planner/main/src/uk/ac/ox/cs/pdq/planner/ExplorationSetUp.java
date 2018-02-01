@@ -20,17 +20,23 @@ import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.logging.CostStatKeys;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ChaseConstantGenerator;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -44,8 +50,10 @@ import uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
+import uk.ac.ox.cs.pdq.reasoning.chase.ChaseConstantGenerator;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.EventHandler;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
  * Main entry point for chasing, where all properties are gathered and used to
@@ -56,7 +64,6 @@ import uk.ac.ox.cs.pdq.util.EventHandler;
  * <li>- Also creates and manages an eventBus.</li><br>
  * <li>- converts query into AccessibleQuery and maintains a map of its
  * variables to chase-constants.</li><br>
- * <li>- converts schema to add InstanceIDs</li><br>
  * 
  * @author Julien Leblay
  * @author Efthymia Tsamoura
@@ -141,24 +148,10 @@ public class ExplorationSetUp {
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
 		this.databaseParams = databaseParams;
-		final Attribute Fact = Attribute.create(Integer.class, "InstanceID");
-		this.schema = addAdditionalAttributeToSchema(schema, Fact);
+		this.schema = convertTypesToString(schema);
+		//this.schema = schema;
 		this.statsLogger = statsLogger;
 		this.accessibleSchema = new AccessibleSchema(this.schema);
-	}
-
-	// add an extra attribute
-	private Schema addAdditionalAttributeToSchema(Schema schema, Attribute atribute) {
-		Relation[] relations = schema.getRelations();
-		for (int index = 0; index < relations.length; ++index) {
-			if (relations[index].getAttribute("InstanceID") == null) {
-				relations[index] = Relation.appendAttribute(relations[index], atribute);
-			}
-		}
-		List<Dependency> deps = new ArrayList<>();
-		deps.addAll(Arrays.asList(schema.getDependencies()));
-		deps.addAll(Arrays.asList(schema.getKeyDependencies()));
-		return new Schema(relations, deps.toArray(new Dependency[deps.size()]));
 	}
 
 	/**
@@ -182,7 +175,6 @@ public class ExplorationSetUp {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Sets the cost estimator.
 	 *
 	 * @param estimator
@@ -193,8 +185,6 @@ public class ExplorationSetUp {
 	}
 
 	/**
-=======
->>>>>>> master
 	 * Search a best plan for the given schema and query.
 	 *
 	 * @param <P>
@@ -234,6 +224,7 @@ public class ExplorationSetUp {
 	 * @throws SQLException
 	 */
 	public Entry<RelationalTerm, Cost> search(ConjunctiveQuery query, boolean noDep) throws PlannerException, SQLException {
+		query = convertQueryConstantsToString(query);
 		boolean collectStats = this.statsLogger != null;
 		if (noDep) {
 			this.schema = new Schema(this.schema.getRelations());
@@ -242,7 +233,26 @@ public class ExplorationSetUp {
 		ConjunctiveQuery accessibleQuery = generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(query);
 
 		Explorer explorer = null;
-		DatabaseConnection databaseConnection = new DatabaseConnection(this.databaseParams, this.accessibleSchema);
+		DatabaseManager databaseConnection;
+		try {
+			if (plannerParams.getUseInternalDatabase()) {
+				// internal
+				databaseConnection = new InternalDatabaseManager(new MultiInstanceFactCache(),
+						GlobalCounterProvider.getNext("DatabaseInstanceId"));
+			} else {
+				// external database.
+				if (this.databaseParams.useInternalDatabaseManager()) {
+					databaseConnection = new InternalDatabaseManager(new MultiInstanceFactCache(),GlobalCounterProvider.getNext("DatabaseInstanceId"));
+				} else {
+					databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(),
+						new ExternalDatabaseManager(this.databaseParams),GlobalCounterProvider.getNext("DatabaseInstanceId"));
+				}
+			}
+			
+			databaseConnection.initialiseDatabaseForSchema(this.accessibleSchema);
+		} catch (DatabaseException e1) {
+			throw new PlannerException("Faild to create database",e1);
+		}
 
 		try {
 			// Top-level initialisations
@@ -276,7 +286,8 @@ public class ExplorationSetUp {
 			}
 			explorer.setExceptionOnLimit(this.plannerParams.getExceptionOnLimit());
 			explorer.setMaxRounds(this.plannerParams.getMaxIterations().doubleValue());
-			explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
+			explorer.setMaxElapsedTime(120l*1000l);
+		//explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
 			if (explorer.getBestPlan() != null && explorer.getBestCost() != null)
 				return new AbstractMap.SimpleEntry<RelationalTerm, Cost>(explorer.getBestPlan(), explorer.getBestCost());
@@ -285,6 +296,14 @@ public class ExplorationSetUp {
 		} catch (PlannerException e) {
 			this.handleEarlyTermination(explorer);
 			throw e;
+		} catch (UnsupportedOperationException  e) {
+			if (e.getMessage()!=null && e.getMessage().contains("BLACKBOX_DB cost estimator is not currently supported.")) {
+				// ignored exception case.
+			} else {
+				this.handleEarlyTermination(explorer);
+				log.error(e.getMessage(), e);
+			}
+			throw new PlannerException(e);
 		} catch (Exception e) {
 			this.handleEarlyTermination(explorer);
 			log.error(e.getMessage(), e);
@@ -294,12 +313,77 @@ public class ExplorationSetUp {
 			throw e;
 		} finally {
 			try {
-				new DatabaseInstance(databaseConnection).close();
+				if (databaseConnection!=null) {
+					databaseConnection.dropDatabase();
+					databaseConnection.shutdown();
+				}
 			} catch (Exception e) {
 				this.handleEarlyTermination(explorer);
 				e.printStackTrace();
 			}
 		}
+	}
+
+	/** Converts all constants of the query to strings
+	 * @param query
+	 * @return
+	 */
+	private ConjunctiveQuery convertQueryConstantsToString(ConjunctiveQuery query) {
+		
+		Formula newAtom = convertQueryAtomConstantToString(query.getBody());
+		if (newAtom instanceof Atom) {
+			return ConjunctiveQuery.create(query.getFreeVariables(), (Atom)newAtom);
+		} else {
+			return ConjunctiveQuery.create(query.getFreeVariables(), (Conjunction)newAtom);
+		}
+	}
+
+	/** converts all constants to strings.
+	 * @param body
+	 * @return
+	 */
+	private Formula convertQueryAtomConstantToString(Formula body) {
+		if (body instanceof Atom) { 
+			Term terms[] = body.getTerms();
+			for (int i = 0; i < terms.length; i++) {
+				if (terms[i] instanceof TypedConstant) {
+					terms[i] = TypedConstant.create("" + ((TypedConstant)terms[i]).value);
+				}
+			}
+			return Atom.create(((Atom) body).getPredicate(), terms);
+		} else {
+			Formula left = ((Conjunction)body).getChildren()[0];
+			Formula right = ((Conjunction)body).getChildren()[1];
+			return Conjunction.create(convertQueryAtomConstantToString(left),convertQueryAtomConstantToString(right));
+		}
+	}
+
+	private Schema convertTypesToString(Schema schema) {
+		List<Dependency> dep = new ArrayList<>();
+		dep.addAll(Arrays.asList(schema.getDependencies()));
+		dep.addAll(Arrays.asList(schema.getKeyDependencies()));
+		Relation[] rels = schema.getRelations();
+		for (int i = 0; i < rels.length; i++) {
+			rels[i] = createDatabaseRelation(rels[i]);
+		}
+		return new Schema(rels,dep.toArray(new Dependency[dep.size()]));
+	}
+	/**
+	 * Creates the db relation. Currently codes in the position numbers into the
+	 * names, but this should change
+	 *
+	 * @param relation
+	 *            the relation
+	 * @return a new database relation with attributes x0,x1,...,x_{N-1}, Fact where
+	 *         x_i maps to the i-th relation's attribute
+	 */
+	private Relation createDatabaseRelation(Relation relation) {
+		Attribute[] attributes = new Attribute[relation.getArity()];
+		for (int index = 0; index < relation.getArity(); index++) {
+			Attribute attribute = relation.getAttribute(index);
+			attributes[index] = Attribute.create(String.class, attribute.getName());
+		}
+		return Relation.create(relation.getName(), attributes, relation.getAccessMethods(), relation.isEquality());
 	}
 
 	/**

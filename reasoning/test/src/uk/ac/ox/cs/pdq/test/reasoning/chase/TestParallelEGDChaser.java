@@ -3,10 +3,12 @@ package uk.ac.ox.cs.pdq.test.reasoning.chase;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,9 +16,12 @@ import org.junit.Test;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -25,6 +30,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -50,16 +56,14 @@ public class TestParallelEGDChaser extends PdqTest {
 	private ParallelEGDChaser chaser;
 
 	protected Schema schema;
-	private DatabaseConnection connection;
+	private DatabaseManager connection;
 
 	private static final int NUMBER_OF_DUMMY_DATA = 100;
 
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		DatabaseChaseInstance.resetFacts();
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2 }, new Dependency[] { this.tgd });
-		this.setConnection(new DatabaseConnection(DatabaseParameters.Derby, this.schema));
 		this.chaser = new ParallelEGDChaser(new StatisticsCollector(true, new EventBus()));
 	}
 
@@ -84,7 +88,7 @@ public class TestParallelEGDChaser extends PdqTest {
 		Atom f24 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k5"), UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 
 		try {
-			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20, f21, f22, f23, f24), this.getConnection());
+			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20, f21, f22, f23, f24), createConnection(DatabaseParameters.Derby, this.schema));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -158,11 +162,11 @@ public class TestParallelEGDChaser extends PdqTest {
 	public void testA() {
 
 		Relation R = Relation.create("R",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1") });
 		Relation S = Relation.create("S",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1") });
 		Relation T = Relation.create("T",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1") });
 		Relation r[] = new Relation[] { R, S, T };
 		Dependency d[] = new Dependency[] {
 				TGD.create(new Atom[] { Atom.create(R, Variable.create("z"), Variable.create("x")) },
@@ -178,7 +182,7 @@ public class TestParallelEGDChaser extends PdqTest {
 			constants.add(TypedConstant.create("a_" + i));
 		}
 		try {
-			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(DatabaseParameters.Derby, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Derby, s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -222,7 +226,7 @@ public class TestParallelEGDChaser extends PdqTest {
 					countOfKsInT++;
 			}
 		}
-		Assert.assertEquals(9, equalities);
+		Assert.assertEquals(9*2, equalities);
 		Assert.assertEquals(10, sCount);
 		Assert.assertEquals(10, tCount);
 		Assert.assertEquals(10, countOfKsInT);
@@ -247,15 +251,15 @@ public class TestParallelEGDChaser extends PdqTest {
 	 */
 	@Test
 	public void testB() {
-		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute"), Attribute.create(Integer.class, "InstanceID") });
-		Relation D = Relation.create("D", new Attribute[] { Attribute.create(String.class, "attribute"), Attribute.create(Integer.class, "InstanceID") });
-		Relation Q = Relation.create("Q", new Attribute[] { Attribute.create(String.class, "attribute"), Attribute.create(Integer.class, "InstanceID") });
+		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute") });
+		Relation D = Relation.create("D", new Attribute[] { Attribute.create(String.class, "attribute") });
+		Relation Q = Relation.create("Q", new Attribute[] { Attribute.create(String.class, "attribute") });
 		Relation R = Relation.create("R",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1") });
 		Relation S = Relation.create("S",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1") });
 		Relation T = Relation.create("T",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1") });
 		Relation r[] = new Relation[] { C, D, Q, R, S, T };
 		Dependency d[] = new Dependency[] {
 				TGD.create(new Atom[] { Atom.create(C, Variable.create("x")), Atom.create(D, Variable.create("x")) }, new Atom[] { Atom.create(Q, Variable.create("x")) }),
@@ -277,7 +281,7 @@ public class TestParallelEGDChaser extends PdqTest {
 		for (int i = 1; i <= 10; i++)
 			facts.add(Atom.create(R, new Term[] { TypedConstant.create("a_" + (i - 1)), TypedConstant.create("a_" + i) }));
 		try {
-			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(DatabaseParameters.Derby, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Derby, s));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -353,15 +357,15 @@ public class TestParallelEGDChaser extends PdqTest {
 	public void testA1(DatabaseParameters dbParam) {
 
 		Relation A = Relation.create("A",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1") });
 		Relation B = Relation.create("B",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1") });
 		Relation D = Relation.create("D",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1") });
 		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2") });
 		Relation E = Relation.create("E", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2") });
 		Relation r[] = new Relation[] { A, B, C, D, E };
 		Schema s = new Schema(r, new Dependency[0]);
 
@@ -397,7 +401,7 @@ public class TestParallelEGDChaser extends PdqTest {
 			facts.add(Atom.create(D, new Term[] { TypedConstant.create("z" + i), TypedConstant.create("z" + i) }));
 
 		try {
-			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(dbParam, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(dbParam, s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -408,7 +412,7 @@ public class TestParallelEGDChaser extends PdqTest {
 						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("c_constant_3")),
 						Atom.create(D, Variable.create("z"), Variable.create("z"))));
 
-		List<Match> matches = this.state.getMatchesNoSubstitution(query1);
+		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 		Assert.assertEquals(5, matches.size());
 	}
 
@@ -448,15 +452,15 @@ public class TestParallelEGDChaser extends PdqTest {
 	 */
 	public void testB1(DatabaseParameters dbParam) {
 		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3") });
 		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3") });
 		Relation D = Relation.create("D",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1") });
 		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2") });
 		Relation E = Relation.create("E", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2") });
 		Relation r[] = new Relation[] { A, B, C, D, E };
 		Schema s = new Schema(r, new Dependency[0]);
 		List<Atom> facts = new ArrayList<>();
@@ -486,7 +490,7 @@ public class TestParallelEGDChaser extends PdqTest {
 			facts.add(Atom.create(E, new Term[] { TypedConstant.create("x" + i), TypedConstant.create("y" + i), TypedConstant.create("TC1") }));
 
 		try {
-			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(dbParam, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(dbParam, s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -499,7 +503,7 @@ public class TestParallelEGDChaser extends PdqTest {
 						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("TC1")), Atom.create(D, Variable.create("x"), Variable.create("y")),
 						Atom.create(E, Variable.create("x"), Variable.create("y"), TypedConstant.create("TC1"))));
 
-		List<Match> matches = this.state.getMatchesNoSubstitution(query1);
+		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 		Assert.assertEquals(5, matches.size());
 	}
 
@@ -523,15 +527,15 @@ public class TestParallelEGDChaser extends PdqTest {
 	@Test
 	public void testC() {
 		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3") });
 		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3") });
 		Relation D = Relation.create("D",
-				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(Integer.class, "InstanceID") });
+				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1") });
 		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2") });
 		Relation E = Relation.create("E", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
-				Attribute.create(String.class, "attribute2"), Attribute.create(Integer.class, "InstanceID") });
+				Attribute.create(String.class, "attribute2") });
 		Relation r[] = new Relation[] { A, B, C, D, E };
 		Schema s = new Schema(r, new Dependency[0]);
 		List<Atom> facts = new ArrayList<>();
@@ -560,7 +564,7 @@ public class TestParallelEGDChaser extends PdqTest {
 			facts.add(Atom.create(E, new Term[] { TypedConstant.create("TC2"), TypedConstant.create("y" + i), TypedConstant.create("y" + i) }));
 
 		try {
-			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(DatabaseParameters.Derby, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Postgres, s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -573,8 +577,27 @@ public class TestParallelEGDChaser extends PdqTest {
 						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("TC1")), Atom.create(D, Variable.create("x"), Variable.create("y")),
 						Atom.create(E, TypedConstant.create("TC2"), Variable.create("y"), Variable.create("y"))));
 
-		List<Match> matches = this.state.getMatchesNoSubstitution(query1);
+		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 		Assert.assertEquals(5, matches.size());
+	}
+
+	private DatabaseManager createConnection(DatabaseParameters params, Schema s) {
+		try {
+			if (connection!=null) {
+				connection.dropDatabase();
+				connection.shutdown();
+				connection = null;
+			}
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(params);
+			LogicalDatabaseInstance conn = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			conn.initialiseDatabaseForSchema(s);
+			this.connection = conn;
+			return conn;
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+		return null;
 	}
 
 	/**
@@ -582,18 +605,29 @@ public class TestParallelEGDChaser extends PdqTest {
 	 * 
 	 * @throws Exception
 	 */
+	@After
 	public void tearDown() throws Exception {
-		state.close();
+		if (connection!=null) {
+			connection.dropDatabase();
+			connection.shutdown();
+			connection = null;
+		}
+		if (state!=null) {
+			state.close();
+			state = null;
+		}
 	}
 
-	public DatabaseConnection getConnection() {
+	public DatabaseManager getConnection() {
+		if (connection == null)
+			connection = createConnection(DatabaseParameters.Derby, this.schema);
 		return connection;
 	}
 
 	/**
 	 * Used by {@link TestRestrictedChaserMultiRun}
 	 */
-	public void setConnection(DatabaseConnection connection) {
+	public void setConnection(DatabaseManager connection) {
 		this.connection = connection;
 	}
 
@@ -607,7 +641,7 @@ public class TestParallelEGDChaser extends PdqTest {
 	/**
 	 * Used by {@link TestRestrictedChaserMultiRun}
 	 */
-	public void setup(DatabaseConnection c) throws SQLException {
+	public void setup(DatabaseManager c) throws SQLException {
 
 		this.setConnection(c);
 		this.chaser = new ParallelEGDChaser(new StatisticsCollector(true, new EventBus()));

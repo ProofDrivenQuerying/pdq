@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="ProjectionTerm">
-    <projections name="c6" type="java.lang.String"/>
-    <projections name="c8" type="java.lang.String"/>
+    <projections name="c1" type="java.lang.String"/>
+    <projections name="c3" type="java.lang.String"/>
     <RelationalTerm type="JoinTerm">
         <RelationalTerm type="SelectionTerm">
             <predicate type="ConjunctiveCondition">
                 <predicates other="2" position="0" type="AttributeEqualityCondition"/>
             </predicate>
             <RelationalTerm type="RenameTerm">
-                <renamings name="c5" type="java.lang.Integer"/>
-                <renamings name="c6" type="java.lang.String"/>
-                <renamings name="c5" type="java.lang.Integer"/>
-                <renamings name="c7" type="java.lang.String"/>
+                <renamings name="c0" type="java.lang.String"/>
+                <renamings name="c1" type="java.lang.String"/>
+                <renamings name="c0" type="java.lang.String"/>
+                <renamings name="c2" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
                     <accessMethod name="m10"/>
                     <relation name="nation">
-                        <attribute name="n_nationkey" type="java.lang.Integer"/>
+                        <attribute name="n_nationkey" type="java.lang.String"/>
                         <attribute name="n_name" type="java.lang.String"/>
-                        <attribute name="n_regionkey" type="java.lang.Integer"/>
+                        <attribute name="n_regionkey" type="java.lang.String"/>
                         <attribute name="n_comment" type="java.lang.String"/>
                         <access-method name="m10"/>
                     </relation>
@@ -25,13 +25,13 @@
             </RelationalTerm>
         </RelationalTerm>
         <RelationalTerm type="RenameTerm">
-            <renamings name="c5" type="java.lang.Integer"/>
-            <renamings name="c8" type="java.lang.String"/>
-            <renamings name="c9" type="java.lang.String"/>
+            <renamings name="c0" type="java.lang.String"/>
+            <renamings name="c3" type="java.lang.String"/>
+            <renamings name="c4" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
                 <accessMethod name="m12"/>
                 <relation name="region">
-                    <attribute name="r_regionkey" type="java.lang.Integer"/>
+                    <attribute name="r_regionkey" type="java.lang.String"/>
                     <attribute name="r_name" type="java.lang.String"/>
                     <attribute name="r_comment" type="java.lang.String"/>
                     <access-method name="m12"/>

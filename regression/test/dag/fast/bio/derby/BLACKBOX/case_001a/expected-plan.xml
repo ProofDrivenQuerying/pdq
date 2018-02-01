@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="ProjectionTerm">
-    <projections name="c30" type="java.lang.String"/>
-    <projections name="c31" type="java.lang.String"/>
-    <projections name="c32" type="java.lang.String"/>
-    <projections name="c54" type="java.lang.String"/>
-    <projections name="c55" type="java.lang.String"/>
-    <projections name="c56" type="java.lang.String"/>
-    <projections name="c57" type="java.lang.String"/>
-    <projections name="c58" type="java.lang.String"/>
-    <projections name="c59" type="java.lang.String"/>
+    <projections name="c0" type="java.lang.String"/>
+    <projections name="c1" type="java.lang.String"/>
+    <projections name="c2" type="java.lang.String"/>
+    <projections name="c24" type="java.lang.String"/>
+    <projections name="c25" type="java.lang.String"/>
+    <projections name="c26" type="java.lang.String"/>
+    <projections name="c27" type="java.lang.String"/>
+    <projections name="c28" type="java.lang.String"/>
+    <projections name="c29" type="java.lang.String"/>
     <RelationalTerm type="JoinTerm">
         <RelationalTerm type="SelectionTerm">
             <predicate type="ConjunctiveCondition">
@@ -20,14 +20,14 @@
                 </predicates>
             </predicate>
             <RelationalTerm type="RenameTerm">
-                <renamings name="c54" type="java.lang.String"/>
-                <renamings name="c55" type="java.lang.String"/>
+                <renamings name="c24" type="java.lang.String"/>
+                <renamings name="c25" type="java.lang.String"/>
                 <renamings name="PROTEIN" type="java.lang.String"/>
-                <renamings name="c56" type="java.lang.String"/>
+                <renamings name="c26" type="java.lang.String"/>
                 <renamings name="Bos taurus" type="java.lang.String"/>
-                <renamings name="c57" type="java.lang.String"/>
-                <renamings name="c58" type="java.lang.String"/>
-                <renamings name="c59" type="java.lang.String"/>
+                <renamings name="c27" type="java.lang.String"/>
+                <renamings name="c28" type="java.lang.String"/>
+                <renamings name="c29" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
                     <accessMethod name="chembl_target_component_limited_1"/>
                     <relation name="TargetComponentLimited">
@@ -47,26 +47,26 @@
             </RelationalTerm>
         </RelationalTerm>
         <RelationalTerm type="RenameTerm">
-            <renamings name="c30" type="java.lang.String"/>
-            <renamings name="c31" type="java.lang.String"/>
-            <renamings name="c32" type="java.lang.String"/>
-            <renamings name="k60" type="java.lang.String"/>
-            <renamings name="k61" type="java.lang.String"/>
-            <renamings name="k62" type="java.lang.String"/>
-            <renamings name="k63" type="java.lang.String"/>
-            <renamings name="k64" type="java.lang.String"/>
-            <renamings name="k65" type="java.lang.String"/>
-            <renamings name="k66" type="java.lang.String"/>
-            <renamings name="k67" type="java.lang.String"/>
-            <renamings name="k68" type="java.lang.String"/>
-            <renamings name="k69" type="java.lang.String"/>
-            <renamings name="k70" type="java.lang.String"/>
-            <renamings name="c51" type="java.lang.String"/>
-            <renamings name="c52" type="java.lang.String"/>
-            <renamings name="c53" type="java.lang.String"/>
-            <renamings name="c54" type="java.lang.String"/>
+            <renamings name="c0" type="java.lang.String"/>
+            <renamings name="c1" type="java.lang.String"/>
+            <renamings name="c2" type="java.lang.String"/>
+            <renamings name="k30" type="java.lang.String"/>
+            <renamings name="k31" type="java.lang.String"/>
+            <renamings name="k32" type="java.lang.String"/>
+            <renamings name="k33" type="java.lang.String"/>
+            <renamings name="k34" type="java.lang.String"/>
+            <renamings name="k35" type="java.lang.String"/>
+            <renamings name="k36" type="java.lang.String"/>
+            <renamings name="k37" type="java.lang.String"/>
+            <renamings name="k38" type="java.lang.String"/>
+            <renamings name="k39" type="java.lang.String"/>
+            <renamings name="k40" type="java.lang.String"/>
+            <renamings name="c21" type="java.lang.String"/>
+            <renamings name="c22" type="java.lang.String"/>
+            <renamings name="c23" type="java.lang.String"/>
+            <renamings name="c24" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
-                <accessMethod name="pubmed_pubshort_13"/>
+                <accessMethod name="pubmed_pubshort_7"/>
                 <relation name="PublicationShort">
                     <attribute name="id" type="java.lang.String"/>
                     <attribute name="source" type="java.lang.String"/>
@@ -105,5 +105,5 @@
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="2.497903444518033E12" type="DoubleCost"/>
+    <cost value="3.0735280411129147E10" type="DoubleCost"/>
 </RelationalTermWithCost>

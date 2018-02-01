@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.IterativeExecutorTypes;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
@@ -38,7 +38,7 @@ public class IterativeExecutorFactory {
 			IterativeExecutorTypes executorType,
 			int parallelThreads,
 			Chaser chaser,
-			DatabaseConnection connection,
+			DatabaseManager connection,
 			CostEstimator costEstimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,

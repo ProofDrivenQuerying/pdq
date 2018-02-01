@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.test.reasoning.chase.state;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
@@ -14,8 +15,12 @@ import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.Sets;
 
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -39,14 +44,15 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  */
 public class TestChaseSteps extends PdqTest {
 	private DatabaseChaseInstance state;
-	private DatabaseConnection connection;
+	private DatabaseManager connection;
 	protected Schema schema;
 
 	@Before
 	public void setup() throws Exception {
 		super.setup();
 		setupMocks();
-		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.schema);
+		this.connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.MySql),1);
+		connection.initialiseDatabaseForSchema(schema);
 	}
 
 	public void setupMocks() throws SQLException {
@@ -54,7 +60,15 @@ public class TestChaseSteps extends PdqTest {
 		this.schema = new Schema(new Relation[] { this.rel2 }, new Dependency[] { this.egd });
 	}
 
-	public void setConnection(DatabaseConnection dc) {
+	public void setConnection(DatabaseManager dc) {
+		if (connection != null) {
+			try {
+				connection.dropDatabase();
+				connection.shutdown();
+			} catch (DatabaseException e) {
+			}
+		}
+			
 		this.connection = dc;
 	}
 
@@ -124,7 +138,14 @@ public class TestChaseSteps extends PdqTest {
 		Atom n5 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { UntypedConstant.create("c3"), UntypedConstant.create("c4") });
 		Atom n6 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { UntypedConstant.create("c2"), UntypedConstant.create("c3") });
 		Atom n7 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c3") });
-		Assert.assertEquals(Sets.newHashSet(n0, n1, n2, n3, n4, n5, n6, n7), this.state.getFacts());
+		HashSet<Atom> correctAnswer = Sets.newHashSet(n0, n1, n2, n3, n4, n5, n6, n7);
+		HashSet<Atom> correctAnswerReversed = new HashSet<>();
+		for (Atom a: correctAnswer) {
+			if (a.getPredicate().getName().equals(QNames.EQUALITY.toString()))
+				correctAnswerReversed.add(Atom.create(a.getPredicate(), new Term[] {a.getTerm(1),a.getTerm(0)}));
+		}
+		correctAnswer.addAll(correctAnswerReversed);
+		Assert.assertEquals(correctAnswer, Sets.newHashSet(this.state.getFacts()));
 
 		Map<Variable, Constant> map6 = new HashMap<>();
 		map6.put(Variable.create("y"), UntypedConstant.create("c"));
@@ -141,7 +162,6 @@ public class TestChaseSteps extends PdqTest {
 	public void tearDown() throws Exception {
 		try {
 			state.close();
-			connection.close();
 		} catch (Exception e) {
 			// ignored
 		}

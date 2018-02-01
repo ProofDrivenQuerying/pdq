@@ -38,10 +38,14 @@ public class ConjunctiveQuery extends Formula {
 	 * Builds a query given a set of free variables and its conjunction.
 	 * The query is grounded using the input mapping of variables to constants.
 	 */
-	private ConjunctiveQuery(Variable[] freeVariables, Conjunction child) {
+	protected ConjunctiveQuery(Variable[] freeVariables, Conjunction child) {
 		//Check that the body is a conjunction of positive atoms
 		Assert.assertTrue(isConjunctionOfAtoms(child));
+		if (!Arrays.asList(child.getFreeVariables()).containsAll(Arrays.asList(freeVariables))) {
+			System.out.println();
+		}
 		Assert.assertTrue(Arrays.asList(child.getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
+		
 		this.child = child;
 		this.freeVariables = freeVariables.clone();
 		this.boundVariables = ArrayUtils.removeElements(child.getFreeVariables(), freeVariables);
@@ -52,7 +56,7 @@ public class ConjunctiveQuery extends Formula {
 	 * Builds a query given a set of free variables and an atom.
 	 * The query is grounded using the input mapping of variables to constants.
 	 */
-	private ConjunctiveQuery(Variable[] freeVariables, Atom child) {
+	protected ConjunctiveQuery(Variable[] freeVariables, Atom child) {
 		//Check that the body is a conjunction of positive atoms
 		Assert.assertTrue(isConjunctionOfAtoms(child));
 		Assert.assertTrue(Arrays.asList(child.getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
@@ -151,7 +155,7 @@ public class ConjunctiveQuery extends Formula {
 	}
 
 	@Override
-	public int getNumberOfChildlen() {
+	public int getNumberOfChildren() {
 		return 1;
 	}
 
@@ -162,5 +166,5 @@ public class ConjunctiveQuery extends Formula {
 	public int getNumberOfAtoms() {
 		return this.atoms.length;
 	}
-	
+
 }

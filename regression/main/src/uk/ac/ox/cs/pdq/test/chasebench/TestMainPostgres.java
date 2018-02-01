@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.test.chasebench;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -11,13 +10,17 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -27,32 +30,17 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * @author Gabor
  *
  */
-public class TestMainPostgres extends PdqTest {
+public class TestMainPostgres {
 
-	private Schema addInstanceIdToSchema(Schema s) {
-		List<Relation> lr = new ArrayList<>();
-		for (Relation r : s.getRelations()) {
-			List<Attribute> attr = new ArrayList<>();
-			attr.addAll(Arrays.asList(r.getAttributes()));
-			attr.add(Attribute.create(Integer.class, "InstanceID"));
-			lr.add(Relation.create(r.getName(), attr.toArray(new Attribute[attr.size()])));
-		}
-		List<Dependency> dependencies = new ArrayList<>();
-
-		dependencies.addAll(Arrays.asList(s.getDependencies()));
-		if (s.getKeyDependencies().length > 0)
-			dependencies.addAll(Arrays.asList(s.getKeyDependencies()));
-		return new Schema(lr.toArray(new Relation[lr.size()]), dependencies.toArray(new Dependency[dependencies.size()]));
-	}
+	private LogicalDatabaseInstance dm;
 
 	@Test
-	public void testChaseBench_tgds() {
+	public void testChaseBench_tgds() { 
 		System.out.println("TestMain.testChaseBench_tgds()");
 		Schema schema = null;
 		try {
@@ -65,7 +53,7 @@ public class TestMainPostgres extends PdqTest {
 		Collection<Atom> facts = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgds\\data\\s.csv");
 
 		try {
-			DatabaseConnection dc = new DatabaseConnection(DatabaseParameters.Postgres, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -119,7 +107,7 @@ public class TestMainPostgres extends PdqTest {
 		Collection<Atom> facts1 = CommonToPDQTranslator.importFacts(schema, "s1", "test\\chaseBench\\tgds5\\data\\s1.csv");
 		facts0.addAll(facts1);
 		try {
-			DatabaseConnection dc = new DatabaseConnection(DatabaseParameters.Postgres, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -161,7 +149,7 @@ public class TestMainPostgres extends PdqTest {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgds\\data\\s.csv");
 		try {
-			DatabaseConnection dc = new DatabaseConnection(DatabaseParameters.Postgres, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -221,7 +209,7 @@ public class TestMainPostgres extends PdqTest {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgdsLarge\\data\\s.csv");
 		try {
-			DatabaseConnection dc = new DatabaseConnection(DatabaseParameters.Postgres, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -235,6 +223,7 @@ public class TestMainPostgres extends PdqTest {
 
 			List<Atom> w2Atoms = getAtomsOfTable(res, "w2");
 			Assert.assertEquals(84, w2Atoms.size());
+			//Assert.assertEquals(165/*84*/, w2Atoms.size());
 			int notK = 0;
 			for (Atom a : w2Atoms) {
 				if (!a.getTerms()[0].toString().startsWith("k") && !a.getTerms()[1].toString().startsWith("k"))
@@ -282,7 +271,7 @@ public class TestMainPostgres extends PdqTest {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "A", "test\\chaseBench\\vldb2010\\data\\A.csv");
 		try {
-			DatabaseConnection dc = new DatabaseConnection(DatabaseParameters.Postgres, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -324,7 +313,7 @@ public class TestMainPostgres extends PdqTest {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "deptemp", "test\\chaseBench\\weak\\data\\deptemp.csv");
 		try {
-			DatabaseConnection dc = new DatabaseConnection(DatabaseParameters.Postgres, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -359,6 +348,29 @@ public class TestMainPostgres extends PdqTest {
 			Assert.fail();
 		}
 	}
+	@After
+	public void tearDown() {
+		if (dm!=null) {
+			try {
+				dm.dropDatabase();
+				dm.shutdown();
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				Assert.fail();
+			}
+		}
+	}
+
+	private DatabaseManager createConnection(DatabaseParameters params, Schema s, int i) {
+		try {
+			dm = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(params),1);
+			dm.initialiseDatabaseForSchema(s);
+			return dm;
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	protected Schema convertShemaFiles(String schemaSrc, String schemaTarget, List<String> dependencies) {
 		Map<String, Relation> s = CommonToPDQTranslator.parseTables(schemaSrc);
@@ -369,8 +381,7 @@ public class TestMainPostgres extends PdqTest {
 			List<Dependency> deps = CommonToPDQTranslator.parseDependencies(s, d);
 			dependenciesObjects.addAll(deps);
 		}
-		Schema schema = addInstanceIdToSchema(
-				new Schema(s.values().toArray(new Relation[s.values().size()]), dependenciesObjects.toArray(new Dependency[dependenciesObjects.size()])));
+		Schema schema = new Schema(s.values().toArray(new Relation[s.values().size()]), dependenciesObjects.toArray(new Dependency[dependenciesObjects.size()]));
 		return schema;
 	}
 

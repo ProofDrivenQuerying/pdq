@@ -15,8 +15,12 @@ import org.junit.Test;
 
 import com.google.common.collect.Sets;
 
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -52,32 +56,32 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 public class TestEGDChaseStep extends PdqTest {
 
 	@Test
-	public void testA_MySql() throws SQLException {
+	public void testA_MySql() throws SQLException, DatabaseException{
 		testA("mysql");
 	}
 
 	@Test
-	public void testA_derby() throws SQLException {
+	public void testA_derby() throws SQLException, DatabaseException{
 		testA("derby");
 	}
 
 	@Test
-	public void testA_postgres() throws SQLException {
+	public void testA_postgres() throws SQLException, DatabaseException{
 		testA("postgres");
 	}
 
 	@Test
-	public void testB_MySql() throws SQLException {
+	public void testB_MySql() throws SQLException, DatabaseException{
 		testB("mysql");
 	}
 
 	@Test
-	public void testB_derby() throws SQLException {
+	public void testB_derby() throws SQLException, DatabaseException{
 		testB("derby");
 	}
 
 	@Test
-	public void testB_postgres() throws SQLException {
+	public void testB_postgres() throws SQLException, DatabaseException{
 		testB("postgres");
 	}
 
@@ -92,10 +96,11 @@ public class TestEGDChaseStep extends PdqTest {
 	 * Should have one in the database as a result.
 	 * @param sqlType
 	 * @throws SQLException 
+	 * @throws SQLException, DatabaseException
 	 */
-	public void testA(String sqlType) throws SQLException {
-		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID")});
-		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID")});
+	public void testA(String sqlType) throws SQLException, DatabaseException {
+		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
+		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
 		Relation r[] = new Relation[] { A,B };
 		Schema s = new Schema(r,new Dependency[0]);
 		List<Atom> facts = new ArrayList<>();
@@ -126,18 +131,28 @@ public class TestEGDChaseStep extends PdqTest {
 			}
 		}
 		Assert.assertEquals(1, facts2.size());
+		try {
+			state.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
 	}
 
-	private DatabaseConnection getDatabaseConnection(String sqlType, Schema s) throws SQLException {
+	private DatabaseManager getDatabaseConnection(String sqlType, Schema s) throws SQLException, DatabaseException{
+		ExternalDatabaseManager edm = null;
 		if ("derby".equals(sqlType))
-			return new DatabaseConnection(DatabaseParameters.Derby, s);
-		if ("mysql".equals(sqlType)) {
-			return new DatabaseConnection(DatabaseParameters.MySql, s);
+			edm = new ExternalDatabaseManager(DatabaseParameters.Derby);
+		else if ("mysql".equals(sqlType)) {
+			edm = new ExternalDatabaseManager(DatabaseParameters.MySql);
 		}
-		if ("postgres".equals(sqlType)) {
-			return new DatabaseConnection(DatabaseParameters.Postgres, s);
-		}
-		throw new IllegalArgumentException("SqlType " + sqlType + " is not valid.");
+		else if ("postgres".equals(sqlType)) {
+			edm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
+		} else
+			throw new IllegalArgumentException("SqlType " + sqlType + " is not valid.");
+		LogicalDatabaseInstance connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm, 0);
+		connection.initialiseDatabaseForSchema(s);
+		return connection;
 	}
 
 	/**
@@ -151,10 +166,11 @@ public class TestEGDChaseStep extends PdqTest {
 	 * 
 	 * @param sqlType
 	 * @throws SQLException 
+	 * @throws SQLException, DatabaseException
 	 */
-	public void testB(String sqlType) throws SQLException {
-		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID")});
-		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID")});
+	public void testB(String sqlType) throws SQLException, DatabaseException {
+		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
+		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
 		Relation r[] = new Relation[] { A,B };
 		Schema s = new Schema(r,new Dependency[0]);
 		List<Atom> facts = new ArrayList<>();
@@ -186,5 +202,11 @@ public class TestEGDChaseStep extends PdqTest {
 			}
 		}
 		Assert.assertEquals(501, facts2.size());
+		try {
+			state.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
 	}
 }

@@ -1,37 +1,49 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <schema>
-    <sources>
-        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/dag/fast/bio/chembl-services.xml" name="chembl"/>
-        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/dag/fast/bio/pubmed-services.xml" name="pubmed"/>
-        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/dag/fast/bio/uniprot-services.xml" name="uniprot"/>
-        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/dag/fast/bio/reactome-services.xml" name="reactome"/>
-    </sources>
     <relations>
-        <view name="BindingSite" source="chembl">
-            <attribute name="domain_description" type="java.lang.String"/>
-            <attribute name="domain_id" type="java.lang.String"/>
-            <attribute name="domain_name" type="java.lang.String"/>
-            <attribute name="domain_type" type="java.lang.String"/>
-            <attribute name="source_domain_id" type="java.lang.String"/>
-            <attribute name="site_residues" type="java.lang.String"/>
-            <attribute name="sitecomp_id" type="java.lang.String"/>
-            <attribute name="site_id" type="java.lang.String"/>
-            <attribute name="site_name" type="java.lang.String"/>
-        </view>
-        <relation name="TargetComponentLimited" source="chembl">
-            <attribute name="accession" type="java.lang.String"/>
-            <attribute name="component_id" type="java.lang.String"/>
-            <attribute name="component_type" type="java.lang.String"/>
-            <attribute name="description" type="java.lang.String"/>
+        <relation name="PublicationFull">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="source" type="java.lang.String"/>
+            <attribute name="pmid" type="java.lang.String"/>
+            <attribute name="pmcid" type="java.lang.String"/>
+            <attribute name="DOI" type="java.lang.String"/>
+            <attribute name="title" type="java.lang.String"/>
+            <attribute name="authorString" type="java.lang.String"/>
+            <attribute name="journalTitle" type="java.lang.String"/>
+            <attribute name="issue" type="java.lang.String"/>
+            <attribute name="journalVolume" type="java.lang.String"/>
+            <attribute name="pubYear" type="java.lang.String"/>
+            <attribute name="journalIssn" type="java.lang.String"/>
+            <attribute name="pubType" type="java.lang.String"/>
+            <attribute name="inEPMC" type="java.lang.String"/>
+            <attribute name="inPMC" type="java.lang.String"/>
+            <attribute name="citedByCount" type="java.lang.Integer"/>
+            <attribute name="hasReferences" type="java.lang.String"/>
+            <attribute name="hasTextMinedTerms" type="java.lang.String"/>
+            <attribute name="hasDbCrossReferences" type="java.lang.String"/>
+            <attribute name="hasLabsLinks" type="java.lang.String"/>
+            <attribute name="hasTMAccessionNumbers" type="java.lang.String"/>
+            <attribute name="authors" type="java.lang.String"/>
+            <attribute name="gene" type="java.lang.String"/>
             <attribute name="organism" type="java.lang.String"/>
-            <attribute name="protein_classification_id" type="java.lang.String"/>
-            <attribute name="sequence" type="java.lang.String"/>
-            <attribute name="tax_id" type="java.lang.String"/>
-            <access-method name="chembl_target_component_limited"/>
-            <access-method name="chembl_target_component_limited_1"/>
-            <access-method name="chembl_target_component_limited_2"/>
+            <attribute name="uniprotPubs" type="java.lang.String"/>
+            <access-method name="pubmed_pub_1"/>
+            <access-method name="pubmed_pub_2"/>
+            <access-method name="pubmed_pub_3"/>
+            <access-method name="pubmed_pub_4"/>
+            <access-method name="pubmed_pub_5"/>
+            <access-method name="pubmed_pub_6"/>
+            <access-method name="pubmed_pub_7"/>
+            <access-method name="pubmed_pub_8"/>
+            <access-method name="pubmed_pub_9"/>
+            <access-method name="pubmed_pub_10"/>
+            <access-method name="pubmed_pub_11"/>
+            <access-method name="pubmed_pub_12"/>
+            <access-method name="pubmed_pub_13"/>
+            <access-method name="pubmed_pub_14"/>
+            <access-method name="pubmed_pub_15"/>
         </relation>
-        <relation name="PathwayBySpecies" source="chembl">
+        <relation name="PathwayBySpecies">
             <attribute name="pathwayId" type="java.lang.Integer"/>
             <attribute name="pathwayName" type="java.lang.String"/>
             <attribute name="stableIdentifier" type="java.lang.String"/>
@@ -44,19 +56,311 @@
             <attribute name="hasDiagram" type="java.lang.Boolean"/>
             <access-method name="reactome_pathway_1"/>
         </relation>
-        <relation name="TargetLimited" source="chembl">
-            <attribute name="organism" type="java.lang.String"/>
-            <attribute name="pref_name" type="java.lang.String"/>
-            <attribute name="species_group_flag" type="java.lang.String"/>
+        <relation name="ActivityLimited">
+            <attribute name="activity_comment" type="java.lang.String"/>
+            <attribute name="activity_id" type="java.lang.String"/>
+            <attribute name="assay_chembl_id" type="java.lang.String"/>
+            <attribute name="assay_description" type="java.lang.String"/>
+            <attribute name="assay_type" type="java.lang.String"/>
+            <attribute name="bao_endpoint" type="java.lang.String"/>
+            <attribute name="bao_format" type="java.lang.String"/>
+            <attribute name="canonical_smiles" type="java.lang.String"/>
+            <attribute name="data_validity_comment" type="java.lang.String"/>
+            <attribute name="document_chembl_id" type="java.lang.String"/>
+            <attribute name="document_journal" type="java.lang.String"/>
+            <attribute name="document_year" type="java.lang.String"/>
+            <attribute name="molecule_chembl_id" type="java.lang.String"/>
+            <attribute name="pchembl_value" type="java.lang.Double"/>
+            <attribute name="potential_duplicate" type="java.lang.String"/>
+            <attribute name="published_relation" type="java.lang.String"/>
+            <attribute name="published_type" type="java.lang.String"/>
+            <attribute name="published_units" type="java.lang.String"/>
+            <attribute name="published_value" type="java.lang.String"/>
+            <attribute name="qudt_units" type="java.lang.String"/>
+            <attribute name="record_id" type="java.lang.String"/>
+            <attribute name="standard_flag" type="java.lang.Boolean"/>
+            <attribute name="standard_relation" type="java.lang.String"/>
+            <attribute name="standard_type" type="java.lang.String"/>
+            <attribute name="standard_units" type="java.lang.String"/>
+            <attribute name="standard_value" type="java.lang.Double"/>
             <attribute name="target_chembl_id" type="java.lang.String"/>
-            <attribute name="target_component_accession" type="java.lang.String"/>
-            <attribute name="target_component_id" type="java.lang.String"/>
-            <attribute name="target_component_type" type="java.lang.String"/>
-            <attribute name="target_type" type="java.lang.String"/>
-            <access-method name="chembl_target_limited"/>
-            <access-method name="chembl_target_limited_1"/>
+            <attribute name="target_organism" type="java.lang.String"/>
+            <attribute name="target_pref_name" type="java.lang.String"/>
+            <attribute name="uo_units" type="java.lang.String"/>
+            <access-method name="chembl_activity_limited"/>
+            <access-method name="chembl_activity_limited_1"/>
+            <access-method name="chembl_activity_limited_2"/>
+            <access-method name="chembl_activity_limited_3"/>
+            <access-method name="chembl_activity_limited_4"/>
         </relation>
-        <view name="Publication" source="chembl">
+        <relation name="CellLineLimited">
+            <attribute name="cell_chembl_id" type="java.lang.String"/>
+            <attribute name="cell_description" type="java.lang.String"/>
+            <attribute name="cell_id" type="java.lang.String"/>
+            <attribute name="cell_name" type="java.lang.String"/>
+            <attribute name="cell_source_organism" type="java.lang.String"/>
+            <attribute name="cell_source_tax_id" type="java.lang.String"/>
+            <attribute name="cell_source_tissue" type="java.lang.String"/>
+            <attribute name="cellosaurus_id" type="java.lang.String"/>
+            <attribute name="clo_id" type="java.lang.String"/>
+            <attribute name="efo_id" type="java.lang.String"/>
+            <access-method name="chembl_cellline_limited"/>
+        </relation>
+        <relation name="PublicationShort">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="source" type="java.lang.String"/>
+            <attribute name="pmid" type="java.lang.String"/>
+            <attribute name="pmcid" type="java.lang.String"/>
+            <attribute name="DOI" type="java.lang.String"/>
+            <attribute name="title" type="java.lang.String"/>
+            <attribute name="authorString" type="java.lang.String"/>
+            <attribute name="journalTitle" type="java.lang.String"/>
+            <attribute name="issue" type="java.lang.String"/>
+            <attribute name="journalVolume" type="java.lang.String"/>
+            <attribute name="pubYear" type="java.lang.String"/>
+            <attribute name="pubType" type="java.lang.String"/>
+            <attribute name="inEPMC" type="java.lang.String"/>
+            <attribute name="inPMC" type="java.lang.String"/>
+            <attribute name="authors" type="java.lang.String"/>
+            <attribute name="gene" type="java.lang.String"/>
+            <attribute name="organism" type="java.lang.String"/>
+            <attribute name="uniprotPubs" type="java.lang.String"/>
+            <access-method name="pubmed_pubshort_1"/>
+            <access-method name="pubmed_pubshort_2"/>
+            <access-method name="pubmed_pubshort_3"/>
+            <access-method name="pubmed_pubshort_4"/>
+            <access-method name="pubmed_pubshort_5"/>
+            <access-method name="pubmed_pubshort_6"/>
+            <access-method name="pubmed_pubshort_7"/>
+            <access-method name="pubmed_pubshort_8"/>
+            <access-method name="pubmed_pubshort_9"/>
+            <access-method name="pubmed_pubshort_10"/>
+            <access-method name="pubmed_pubshort_11"/>
+            <access-method name="pubmed_pubshort_12"/>
+            <access-method name="pubmed_pubshort_13"/>
+            <access-method name="pubmed_pubshort_14"/>
+            <access-method name="pubmed_pubshort_15"/>
+        </relation>
+        <view name="Pathway">
+            <attribute name="pathwayId" type="java.lang.Integer"/>
+            <attribute name="pathwayName" type="java.lang.String"/>
+            <attribute name="stableIdentifier" type="java.lang.String"/>
+            <attribute name="goBiologicalProcess" type="java.lang.String"/>
+            <attribute name="isInDisease" type="java.lang.Boolean"/>
+            <attribute name="isInferred" type="java.lang.Boolean"/>
+            <attribute name="organismId" type="java.lang.String"/>
+            <attribute name="organism" type="java.lang.String"/>
+            <attribute name="doi" type="java.lang.String"/>
+            <attribute name="hasDiagram" type="java.lang.Boolean"/>
+        </view>
+        <view name="BioComponent">
+            <attribute name="component_id" type="java.lang.String"/>
+            <attribute name="component_type" type="java.lang.String"/>
+            <attribute name="description" type="java.lang.String"/>
+            <attribute name="organism" type="java.lang.String"/>
+            <attribute name="sequence" type="java.lang.String"/>
+            <attribute name="tax_id" type="java.lang.String"/>
+        </view>
+        <relation name="MechanismFree">
+            <attribute name="action_type" type="java.lang.String"/>
+            <attribute name="binding_site_comment" type="java.lang.String"/>
+            <attribute name="direct_interaction" type="java.lang.Boolean"/>
+            <attribute name="disease_efficacy" type="java.lang.Boolean"/>
+            <attribute name="mec_id" type="java.lang.String"/>
+            <attribute name="mechanism_comment" type="java.lang.String"/>
+            <attribute name="mechanism_of_action" type="java.lang.String"/>
+            <attribute name="molecular_mechanism" type="java.lang.Boolean"/>
+            <attribute name="molecule_chembl_id" type="java.lang.String"/>
+            <attribute name="record_id" type="java.lang.String"/>
+            <attribute name="selectivity_comment" type="java.lang.String"/>
+            <attribute name="site_id" type="java.lang.String"/>
+            <attribute name="target_chembl_id" type="java.lang.String"/>
+            <access-method name="chembl_mechanism_free"/>
+        </relation>
+        <view name="Activity">
+            <attribute name="activity_comment" type="java.lang.String"/>
+            <attribute name="activity_id" type="java.lang.String"/>
+            <attribute name="assay_chembl_id" type="java.lang.String"/>
+            <attribute name="assay_description" type="java.lang.String"/>
+            <attribute name="assay_type" type="java.lang.String"/>
+            <attribute name="bao_endpoint" type="java.lang.String"/>
+            <attribute name="bao_format" type="java.lang.String"/>
+            <attribute name="canonical_smiles" type="java.lang.String"/>
+            <attribute name="data_validity_comment" type="java.lang.String"/>
+            <attribute name="document_chembl_id" type="java.lang.String"/>
+            <attribute name="document_journal" type="java.lang.String"/>
+            <attribute name="document_year" type="java.lang.String"/>
+            <attribute name="molecule_chembl_id" type="java.lang.String"/>
+            <attribute name="pchembl_value" type="java.lang.Double"/>
+            <attribute name="potential_duplicate" type="java.lang.String"/>
+            <attribute name="published_relation" type="java.lang.String"/>
+            <attribute name="published_type" type="java.lang.String"/>
+            <attribute name="published_units" type="java.lang.String"/>
+            <attribute name="published_value" type="java.lang.String"/>
+            <attribute name="qudt_units" type="java.lang.String"/>
+            <attribute name="record_id" type="java.lang.String"/>
+            <attribute name="standard_flag" type="java.lang.Boolean"/>
+            <attribute name="standard_relation" type="java.lang.String"/>
+            <attribute name="standard_type" type="java.lang.String"/>
+            <attribute name="standard_units" type="java.lang.String"/>
+            <attribute name="standard_value" type="java.lang.Double"/>
+            <attribute name="target_chembl_id" type="java.lang.String"/>
+            <attribute name="target_organism" type="java.lang.String"/>
+            <attribute name="target_pref_name" type="java.lang.String"/>
+            <attribute name="uo_units" type="java.lang.String"/>
+        </view>
+        <relation name="BioComponentLimited">
+            <attribute name="component_id" type="java.lang.String"/>
+            <attribute name="component_type" type="java.lang.String"/>
+            <attribute name="description" type="java.lang.String"/>
+            <attribute name="organism" type="java.lang.String"/>
+            <attribute name="sequence" type="java.lang.String"/>
+            <attribute name="tax_id" type="java.lang.String"/>
+            <access-method name="chembl_biocomponent_limited"/>
+        </relation>
+        <view name="Document">
+            <attribute name="authors" type="java.lang.String"/>
+            <attribute name="doc_type" type="java.lang.String"/>
+            <attribute name="document_chembl_id" type="java.lang.String"/>
+            <attribute name="doi" type="java.lang.String"/>
+            <attribute name="first_page" type="java.lang.String"/>
+            <attribute name="issue" type="java.lang.String"/>
+            <attribute name="journal" type="java.lang.String"/>
+            <attribute name="last_page" type="java.lang.String"/>
+            <attribute name="pubmed_id" type="java.lang.String"/>
+            <attribute name="title" type="java.lang.String"/>
+            <attribute name="volume" type="java.lang.String"/>
+            <attribute name="year" type="java.lang.String"/>
+        </view>
+        <relation name="MoleculeFormLimited">
+            <attribute name="in_id" type="java.lang.String"/>
+            <attribute name="molecule_chembl_id" type="java.lang.String"/>
+            <attribute name="parent" type="java.lang.Boolean"/>
+            <access-method name="chembl_molecule_form_limited"/>
+        </relation>
+        <relation name="DocumentLimited">
+            <attribute name="authors" type="java.lang.String"/>
+            <attribute name="doc_type" type="java.lang.String"/>
+            <attribute name="document_chembl_id" type="java.lang.String"/>
+            <attribute name="doi" type="java.lang.String"/>
+            <attribute name="first_page" type="java.lang.String"/>
+            <attribute name="issue" type="java.lang.String"/>
+            <attribute name="journal" type="java.lang.String"/>
+            <attribute name="last_page" type="java.lang.String"/>
+            <attribute name="pubmed_id" type="java.lang.String"/>
+            <attribute name="title" type="java.lang.String"/>
+            <attribute name="volume" type="java.lang.String"/>
+            <attribute name="year" type="java.lang.String"/>
+            <access-method name="chembl_document_limited"/>
+            <access-method name="chembl_document_limited_1"/>
+        </relation>
+        <view name="Assay">
+            <attribute name="assay_category" type="java.lang.String"/>
+            <attribute name="assay_cell_type" type="java.lang.String"/>
+            <attribute name="assay_chembl_id" type="java.lang.String"/>
+            <attribute name="assay_organism" type="java.lang.String"/>
+            <attribute name="assay_strain" type="java.lang.String"/>
+            <attribute name="assay_subcellular_fraction" type="java.lang.String"/>
+            <attribute name="assay_tax_id" type="java.lang.String"/>
+            <attribute name="assay_test_type" type="java.lang.String"/>
+            <attribute name="assay_tissue" type="java.lang.String"/>
+            <attribute name="assay_type" type="java.lang.String"/>
+            <attribute name="assay_type_description" type="java.lang.String"/>
+            <attribute name="bao_format" type="java.lang.String"/>
+            <attribute name="cell_chembl_id" type="java.lang.String"/>
+            <attribute name="confidence_description" type="java.lang.String"/>
+            <attribute name="confidence_score" type="java.lang.String"/>
+            <attribute name="description" type="java.lang.String"/>
+            <attribute name="document_chembl_id" type="java.lang.String"/>
+            <attribute name="relationship_description" type="java.lang.String"/>
+            <attribute name="relationship_type" type="java.lang.String"/>
+            <attribute name="src_assay_id" type="java.lang.String"/>
+            <attribute name="src_id" type="java.lang.String"/>
+            <attribute name="target_chembl_id" type="java.lang.String"/>
+        </view>
+        <relation name="BindingSiteLimited">
+            <attribute name="domain_description" type="java.lang.String"/>
+            <attribute name="domain_id" type="java.lang.String"/>
+            <attribute name="domain_name" type="java.lang.String"/>
+            <attribute name="domain_type" type="java.lang.String"/>
+            <attribute name="source_domain_id" type="java.lang.String"/>
+            <attribute name="site_residues" type="java.lang.String"/>
+            <attribute name="sitecomp_id" type="java.lang.String"/>
+            <attribute name="site_id" type="java.lang.String"/>
+            <attribute name="site_name" type="java.lang.String"/>
+            <access-method name="chembl_bindingsite_limited"/>
+        </relation>
+        <view name="TargetComponent">
+            <attribute name="accession" type="java.lang.String"/>
+            <attribute name="component_id" type="java.lang.String"/>
+            <attribute name="component_type" type="java.lang.String"/>
+            <attribute name="description" type="java.lang.String"/>
+            <attribute name="organism" type="java.lang.String"/>
+            <attribute name="protein_classification_id" type="java.lang.String"/>
+            <attribute name="sequence" type="java.lang.String"/>
+            <attribute name="tax_id" type="java.lang.String"/>
+        </view>
+        <relation name="BioComponentFree">
+            <attribute name="component_id" type="java.lang.String"/>
+            <attribute name="component_type" type="java.lang.String"/>
+            <attribute name="description" type="java.lang.String"/>
+            <attribute name="organism" type="java.lang.String"/>
+            <attribute name="sequence" type="java.lang.String"/>
+            <attribute name="tax_id" type="java.lang.String"/>
+            <access-method name="chembl_biocomponent_free"/>
+        </relation>
+        <relation name="SourceLimited">
+            <attribute name="src_description" type="java.lang.String"/>
+            <attribute name="src_id" type="java.lang.String"/>
+            <attribute name="src_short_name" type="java.lang.String"/>
+            <access-method name="chembl_source_limited"/>
+        </relation>
+        <relation name="MoleculeFormFree">
+            <attribute name="molecule_chembl_id" type="java.lang.String"/>
+            <attribute name="parent" type="java.lang.Boolean"/>
+            <access-method name="chembl_molecule_form_free"/>
+        </relation>
+        <relation name="AssayFree">
+            <attribute name="assay_category" type="java.lang.String"/>
+            <attribute name="assay_cell_type" type="java.lang.String"/>
+            <attribute name="assay_chembl_id" type="java.lang.String"/>
+            <attribute name="assay_organism" type="java.lang.String"/>
+            <attribute name="assay_strain" type="java.lang.String"/>
+            <attribute name="assay_subcellular_fraction" type="java.lang.String"/>
+            <attribute name="assay_tax_id" type="java.lang.String"/>
+            <attribute name="assay_test_type" type="java.lang.String"/>
+            <attribute name="assay_tissue" type="java.lang.String"/>
+            <attribute name="assay_type" type="java.lang.String"/>
+            <attribute name="assay_type_description" type="java.lang.String"/>
+            <attribute name="bao_format" type="java.lang.String"/>
+            <attribute name="cell_chembl_id" type="java.lang.String"/>
+            <attribute name="confidence_description" type="java.lang.String"/>
+            <attribute name="confidence_score" type="java.lang.String"/>
+            <attribute name="description" type="java.lang.String"/>
+            <attribute name="document_chembl_id" type="java.lang.String"/>
+            <attribute name="relationship_description" type="java.lang.String"/>
+            <attribute name="relationship_type" type="java.lang.String"/>
+            <attribute name="src_assay_id" type="java.lang.String"/>
+            <attribute name="src_id" type="java.lang.String"/>
+            <attribute name="target_chembl_id" type="java.lang.String"/>
+            <access-method name="chembl_assay_free"/>
+        </relation>
+        <view name="Organism">
+            <attribute name="organismId" type="java.lang.Integer"/>
+            <attribute name="organism" type="java.lang.String"/>
+        </view>
+        <view name="BindingSite">
+            <attribute name="domain_description" type="java.lang.String"/>
+            <attribute name="domain_id" type="java.lang.String"/>
+            <attribute name="domain_name" type="java.lang.String"/>
+            <attribute name="domain_type" type="java.lang.String"/>
+            <attribute name="source_domain_id" type="java.lang.String"/>
+            <attribute name="site_residues" type="java.lang.String"/>
+            <attribute name="sitecomp_id" type="java.lang.String"/>
+            <attribute name="site_id" type="java.lang.String"/>
+            <attribute name="site_name" type="java.lang.String"/>
+        </view>
+        <view name="Publication">
             <attribute name="id" type="java.lang.String"/>
             <attribute name="source" type="java.lang.String"/>
             <attribute name="pmid" type="java.lang.String"/>
@@ -83,120 +387,25 @@
             <attribute name="organism" type="java.lang.String"/>
             <attribute name="uniprotPubs" type="java.lang.String"/>
         </view>
-        <view name="ATC" source="chembl">
-            <attribute name="level1" type="java.lang.String"/>
-            <attribute name="level1_description" type="java.lang.String"/>
-            <attribute name="level2" type="java.lang.String"/>
-            <attribute name="level2_description" type="java.lang.String"/>
-            <attribute name="level3" type="java.lang.String"/>
-            <attribute name="level3_description" type="java.lang.String"/>
-            <attribute name="level4" type="java.lang.String"/>
-            <attribute name="level4_description" type="java.lang.String"/>
-            <attribute name="level5" type="java.lang.String"/>
-            <attribute name="who_id" type="java.lang.String"/>
-            <attribute name="who_name" type="java.lang.String"/>
-        </view>
-        <view name="CellLine" source="chembl">
-            <attribute name="cell_chembl_id" type="java.lang.String"/>
-            <attribute name="cell_description" type="java.lang.String"/>
-            <attribute name="cell_id" type="java.lang.String"/>
-            <attribute name="cell_name" type="java.lang.String"/>
-            <attribute name="cell_source_organism" type="java.lang.String"/>
-            <attribute name="cell_source_tax_id" type="java.lang.String"/>
-            <attribute name="cell_source_tissue" type="java.lang.String"/>
-            <attribute name="cellosaurus_id" type="java.lang.String"/>
-            <attribute name="clo_id" type="java.lang.String"/>
-            <attribute name="efo_id" type="java.lang.String"/>
-        </view>
-        <relation name="MechanismFree" source="chembl">
-            <attribute name="action_type" type="java.lang.String"/>
-            <attribute name="binding_site_comment" type="java.lang.String"/>
-            <attribute name="direct_interaction" type="java.lang.Boolean"/>
-            <attribute name="disease_efficacy" type="java.lang.Boolean"/>
-            <attribute name="mec_id" type="java.lang.String"/>
-            <attribute name="mechanism_comment" type="java.lang.String"/>
-            <attribute name="mechanism_of_action" type="java.lang.String"/>
-            <attribute name="molecular_mechanism" type="java.lang.Boolean"/>
-            <attribute name="molecule_chembl_id" type="java.lang.String"/>
-            <attribute name="record_id" type="java.lang.String"/>
-            <attribute name="selectivity_comment" type="java.lang.String"/>
-            <attribute name="site_id" type="java.lang.String"/>
-            <attribute name="target_chembl_id" type="java.lang.String"/>
-            <access-method name="chembl_mechanism_free"/>
-        </relation>
-        <relation name="BioComponentFree" source="chembl">
-            <attribute name="component_id" type="java.lang.String"/>
-            <attribute name="component_type" type="java.lang.String"/>
-            <attribute name="description" type="java.lang.String"/>
-            <attribute name="organism" type="java.lang.String"/>
-            <attribute name="sequence" type="java.lang.String"/>
-            <attribute name="tax_id" type="java.lang.String"/>
-            <access-method name="chembl_biocomponent_free"/>
-        </relation>
-        <relation name="DocumentFree" source="chembl">
-            <attribute name="authors" type="java.lang.String"/>
-            <attribute name="doc_type" type="java.lang.String"/>
-            <attribute name="document_chembl_id" type="java.lang.String"/>
-            <attribute name="doi" type="java.lang.String"/>
-            <attribute name="first_page" type="java.lang.String"/>
-            <attribute name="issue" type="java.lang.String"/>
-            <attribute name="journal" type="java.lang.String"/>
-            <attribute name="last_page" type="java.lang.String"/>
-            <attribute name="pubmed_id" type="java.lang.String"/>
-            <attribute name="title" type="java.lang.String"/>
-            <attribute name="volume" type="java.lang.String"/>
-            <attribute name="year" type="java.lang.String"/>
-            <access-method name="chembl_document_free"/>
-        </relation>
-        <relation name="AssayLimited" source="chembl">
-            <attribute name="assay_category" type="java.lang.String"/>
-            <attribute name="assay_cell_type" type="java.lang.String"/>
-            <attribute name="assay_chembl_id" type="java.lang.String"/>
-            <attribute name="assay_organism" type="java.lang.String"/>
-            <attribute name="assay_strain" type="java.lang.String"/>
-            <attribute name="assay_subcellular_fraction" type="java.lang.String"/>
-            <attribute name="assay_tax_id" type="java.lang.String"/>
-            <attribute name="assay_test_type" type="java.lang.String"/>
-            <attribute name="assay_tissue" type="java.lang.String"/>
-            <attribute name="assay_type" type="java.lang.String"/>
-            <attribute name="assay_type_description" type="java.lang.String"/>
-            <attribute name="bao_format" type="java.lang.String"/>
-            <attribute name="cell_chembl_id" type="java.lang.String"/>
-            <attribute name="confidence_description" type="java.lang.String"/>
-            <attribute name="confidence_score" type="java.lang.String"/>
-            <attribute name="description" type="java.lang.String"/>
-            <attribute name="document_chembl_id" type="java.lang.String"/>
-            <attribute name="relationship_description" type="java.lang.String"/>
-            <attribute name="relationship_type" type="java.lang.String"/>
-            <attribute name="src_assay_id" type="java.lang.String"/>
-            <attribute name="src_id" type="java.lang.String"/>
-            <attribute name="target_chembl_id" type="java.lang.String"/>
-            <access-method name="chembl_assay_limited"/>
-            <access-method name="chembl_assay_limited_1"/>
-            <access-method name="chembl_assay_limited_2"/>
-            <access-method name="chembl_assay_limited_3"/>
-        </relation>
-        <relation name="ProteinFree" source="chembl">
+        <view name="Protein">
+            <attribute name="input_id" type="java.lang.String"/>
             <attribute name="id" type="java.lang.String"/>
             <attribute name="entry_name" type="java.lang.String"/>
             <attribute name="organism" type="java.lang.String"/>
-            <access-method name="uniprot_active"/>
+        </view>
+        <relation name="ProteinClassLimited">
+            <attribute name="l1" type="java.lang.String"/>
+            <attribute name="l2" type="java.lang.String"/>
+            <attribute name="l3" type="java.lang.String"/>
+            <attribute name="l4" type="java.lang.String"/>
+            <attribute name="l5" type="java.lang.String"/>
+            <attribute name="l6" type="java.lang.String"/>
+            <attribute name="l7" type="java.lang.String"/>
+            <attribute name="l8" type="java.lang.String"/>
+            <attribute name="protein_class_id" type="java.lang.String"/>
+            <access-method name="chembl_protein_class_limited"/>
         </relation>
-        <relation name="ATCFree" source="chembl">
-            <attribute name="level1" type="java.lang.String"/>
-            <attribute name="level1_description" type="java.lang.String"/>
-            <attribute name="level2" type="java.lang.String"/>
-            <attribute name="level2_description" type="java.lang.String"/>
-            <attribute name="level3" type="java.lang.String"/>
-            <attribute name="level3_description" type="java.lang.String"/>
-            <attribute name="level4" type="java.lang.String"/>
-            <attribute name="level4_description" type="java.lang.String"/>
-            <attribute name="level5" type="java.lang.String"/>
-            <attribute name="who_id" type="java.lang.String"/>
-            <attribute name="who_name" type="java.lang.String"/>
-            <access-method name="chembl_atc_free"/>
-        </relation>
-        <relation name="MoleculeFree" source="chembl">
+        <view name="Molecule">
             <attribute name="atc_classifications" type="java.lang.String"/>
             <attribute name="availability_type" type="java.lang.String"/>
             <attribute name="biocomponents" type="java.lang.String"/>
@@ -252,21 +461,149 @@
             <attribute name="usan_stem_definition" type="java.lang.String"/>
             <attribute name="usan_substem" type="java.lang.String"/>
             <attribute name="usan_year" type="java.lang.String"/>
-            <access-method name="chembl_molecule_free"/>
+        </view>
+        <relation name="DocumentFree">
+            <attribute name="authors" type="java.lang.String"/>
+            <attribute name="doc_type" type="java.lang.String"/>
+            <attribute name="document_chembl_id" type="java.lang.String"/>
+            <attribute name="doi" type="java.lang.String"/>
+            <attribute name="first_page" type="java.lang.String"/>
+            <attribute name="issue" type="java.lang.String"/>
+            <attribute name="journal" type="java.lang.String"/>
+            <attribute name="last_page" type="java.lang.String"/>
+            <attribute name="pubmed_id" type="java.lang.String"/>
+            <attribute name="title" type="java.lang.String"/>
+            <attribute name="volume" type="java.lang.String"/>
+            <attribute name="year" type="java.lang.String"/>
+            <access-method name="chembl_document_free"/>
         </relation>
-        <relation name="BindingSiteLimited" source="chembl">
-            <attribute name="domain_description" type="java.lang.String"/>
-            <attribute name="domain_id" type="java.lang.String"/>
-            <attribute name="domain_name" type="java.lang.String"/>
-            <attribute name="domain_type" type="java.lang.String"/>
-            <attribute name="source_domain_id" type="java.lang.String"/>
-            <attribute name="site_residues" type="java.lang.String"/>
-            <attribute name="sitecomp_id" type="java.lang.String"/>
+        <view name="CellLine">
+            <attribute name="cell_chembl_id" type="java.lang.String"/>
+            <attribute name="cell_description" type="java.lang.String"/>
+            <attribute name="cell_id" type="java.lang.String"/>
+            <attribute name="cell_name" type="java.lang.String"/>
+            <attribute name="cell_source_organism" type="java.lang.String"/>
+            <attribute name="cell_source_tax_id" type="java.lang.String"/>
+            <attribute name="cell_source_tissue" type="java.lang.String"/>
+            <attribute name="cellosaurus_id" type="java.lang.String"/>
+            <attribute name="clo_id" type="java.lang.String"/>
+            <attribute name="efo_id" type="java.lang.String"/>
+        </view>
+        <relation name="TargetComponentFree">
+            <attribute name="accession" type="java.lang.String"/>
+            <attribute name="component_id" type="java.lang.String"/>
+            <attribute name="component_type" type="java.lang.String"/>
+            <attribute name="description" type="java.lang.String"/>
+            <attribute name="organism" type="java.lang.String"/>
+            <attribute name="protein_classification_id" type="java.lang.String"/>
+            <attribute name="sequence" type="java.lang.String"/>
+            <attribute name="tax_id" type="java.lang.String"/>
+            <access-method name="chembl_target_component_free"/>
+        </relation>
+        <relation name="SourceFree">
+            <attribute name="src_description" type="java.lang.String"/>
+            <attribute name="src_id" type="java.lang.String"/>
+            <attribute name="src_short_name" type="java.lang.String"/>
+            <access-method name="chembl_source_free"/>
+        </relation>
+        <relation name="OrganismFree">
+            <attribute name="organismId" type="java.lang.String"/>
+            <attribute name="organism" type="java.lang.String"/>
+            <access-method name="reactome_species_1"/>
+        </relation>
+        <view name="Mechanism">
+            <attribute name="action_type" type="java.lang.String"/>
+            <attribute name="binding_site_comment" type="java.lang.String"/>
+            <attribute name="direct_interaction" type="java.lang.Boolean"/>
+            <attribute name="disease_efficacy" type="java.lang.Boolean"/>
+            <attribute name="mec_id" type="java.lang.String"/>
+            <attribute name="mechanism_comment" type="java.lang.String"/>
+            <attribute name="mechanism_of_action" type="java.lang.String"/>
+            <attribute name="molecular_mechanism" type="java.lang.Boolean"/>
+            <attribute name="molecule_chembl_id" type="java.lang.String"/>
+            <attribute name="record_id" type="java.lang.String"/>
+            <attribute name="selectivity_comment" type="java.lang.String"/>
             <attribute name="site_id" type="java.lang.String"/>
-            <attribute name="site_name" type="java.lang.String"/>
-            <access-method name="chembl_bindingsite_limited"/>
+            <attribute name="target_chembl_id" type="java.lang.String"/>
+        </view>
+        <view name="Source">
+            <attribute name="src_description" type="java.lang.String"/>
+            <attribute name="src_id" type="java.lang.String"/>
+            <attribute name="src_short_name" type="java.lang.String"/>
+        </view>
+        <view name="Target">
+            <attribute name="organism" type="java.lang.String"/>
+            <attribute name="pref_name" type="java.lang.String"/>
+            <attribute name="species_group_flag" type="java.lang.String"/>
+            <attribute name="target_chembl_id" type="java.lang.String"/>
+            <attribute name="target_component_accession" type="java.lang.String"/>
+            <attribute name="target_component_id" type="java.lang.String"/>
+            <attribute name="target_component_type" type="java.lang.String"/>
+            <attribute name="target_type" type="java.lang.String"/>
+        </view>
+        <relation name="TargetComponentLimited">
+            <attribute name="accession" type="java.lang.String"/>
+            <attribute name="component_id" type="java.lang.String"/>
+            <attribute name="component_type" type="java.lang.String"/>
+            <attribute name="description" type="java.lang.String"/>
+            <attribute name="organism" type="java.lang.String"/>
+            <attribute name="protein_classification_id" type="java.lang.String"/>
+            <attribute name="sequence" type="java.lang.String"/>
+            <attribute name="tax_id" type="java.lang.String"/>
+            <access-method name="chembl_target_component_limited"/>
+            <access-method name="chembl_target_component_limited_1"/>
+            <access-method name="chembl_target_component_limited_2"/>
         </relation>
-        <view name="Pathway" source="chembl">
+        <relation name="OrganismById">
+            <attribute name="organismId" type="java.lang.String"/>
+            <attribute name="organism" type="java.lang.String"/>
+            <access-method name="reactome_organism_1"/>
+        </relation>
+        <relation name="TargetLimited">
+            <attribute name="organism" type="java.lang.String"/>
+            <attribute name="pref_name" type="java.lang.String"/>
+            <attribute name="species_group_flag" type="java.lang.String"/>
+            <attribute name="target_chembl_id" type="java.lang.String"/>
+            <attribute name="target_component_accession" type="java.lang.String"/>
+            <attribute name="target_component_id" type="java.lang.String"/>
+            <attribute name="target_component_type" type="java.lang.String"/>
+            <attribute name="target_type" type="java.lang.String"/>
+            <access-method name="chembl_target_limited"/>
+            <access-method name="chembl_target_limited_1"/>
+        </relation>
+        <relation name="MechanismLimited">
+            <attribute name="action_type" type="java.lang.String"/>
+            <attribute name="binding_site_comment" type="java.lang.String"/>
+            <attribute name="direct_interaction" type="java.lang.Boolean"/>
+            <attribute name="disease_efficacy" type="java.lang.Boolean"/>
+            <attribute name="mec_id" type="java.lang.String"/>
+            <attribute name="mechanism_comment" type="java.lang.String"/>
+            <attribute name="mechanism_of_action" type="java.lang.String"/>
+            <attribute name="molecular_mechanism" type="java.lang.Boolean"/>
+            <attribute name="molecule_chembl_id" type="java.lang.String"/>
+            <attribute name="record_id" type="java.lang.Integer"/>
+            <attribute name="selectivity_comment" type="java.lang.String"/>
+            <attribute name="site_id" type="java.lang.String"/>
+            <attribute name="target_chembl_id" type="java.lang.String"/>
+            <access-method name="chembl_mechanism_limited"/>
+        </relation>
+        <relation name="Citation">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="source" type="java.lang.String"/>
+            <attribute name="citationType" type="java.lang.String"/>
+            <attribute name="title" type="java.lang.String"/>
+            <attribute name="authorString" type="java.lang.String"/>
+            <attribute name="journalAbbreviation" type="java.lang.String"/>
+            <attribute name="pubYear" type="java.lang.String"/>
+            <attribute name="volume" type="java.lang.String"/>
+            <attribute name="issue" type="java.lang.String"/>
+            <attribute name="pageInfo" type="java.lang.String"/>
+            <attribute name="citedByCount" type="java.lang.String"/>
+            <attribute name="src" type="java.lang.String"/>
+            <attribute name="ext_id" type="java.lang.String"/>
+            <access-method name="pubmed_citation_1"/>
+        </relation>
+        <relation name="PathwayById">
             <attribute name="pathwayId" type="java.lang.Integer"/>
             <attribute name="pathwayName" type="java.lang.String"/>
             <attribute name="stableIdentifier" type="java.lang.String"/>
@@ -277,20 +614,56 @@
             <attribute name="organism" type="java.lang.String"/>
             <attribute name="doi" type="java.lang.String"/>
             <attribute name="hasDiagram" type="java.lang.Boolean"/>
-        </view>
-        <relation name="ProteinClassFree" source="chembl">
-            <attribute name="l1" type="java.lang.String"/>
-            <attribute name="l2" type="java.lang.String"/>
-            <attribute name="l3" type="java.lang.String"/>
-            <attribute name="l4" type="java.lang.String"/>
-            <attribute name="l5" type="java.lang.String"/>
-            <attribute name="l6" type="java.lang.String"/>
-            <attribute name="l7" type="java.lang.String"/>
-            <attribute name="l8" type="java.lang.String"/>
-            <attribute name="protein_class_id" type="java.lang.String"/>
-            <access-method name="chembl_protein_class_free"/>
+            <access-method name="reactome_pathway_2"/>
         </relation>
-        <relation name="MoleculeLimited" source="chembl">
+        <relation name="ActivityFree">
+            <attribute name="activity_comment" type="java.lang.String"/>
+            <attribute name="activity_id" type="java.lang.String"/>
+            <attribute name="assay_chembl_id" type="java.lang.String"/>
+            <attribute name="assay_description" type="java.lang.String"/>
+            <attribute name="assay_type" type="java.lang.String"/>
+            <attribute name="bao_endpoint" type="java.lang.String"/>
+            <attribute name="bao_format" type="java.lang.String"/>
+            <attribute name="canonical_smiles" type="java.lang.String"/>
+            <attribute name="data_validity_comment" type="java.lang.String"/>
+            <attribute name="document_chembl_id" type="java.lang.String"/>
+            <attribute name="document_journal" type="java.lang.String"/>
+            <attribute name="document_year" type="java.lang.String"/>
+            <attribute name="molecule_chembl_id" type="java.lang.String"/>
+            <attribute name="pchembl_value" type="java.lang.Double"/>
+            <attribute name="potential_duplicate" type="java.lang.String"/>
+            <attribute name="published_relation" type="java.lang.String"/>
+            <attribute name="published_type" type="java.lang.String"/>
+            <attribute name="published_units" type="java.lang.String"/>
+            <attribute name="published_value" type="java.lang.String"/>
+            <attribute name="qudt_units" type="java.lang.String"/>
+            <attribute name="record_id" type="java.lang.String"/>
+            <attribute name="standard_flag" type="java.lang.Boolean"/>
+            <attribute name="standard_relation" type="java.lang.String"/>
+            <attribute name="standard_type" type="java.lang.String"/>
+            <attribute name="standard_units" type="java.lang.String"/>
+            <attribute name="standard_value" type="java.lang.Double"/>
+            <attribute name="target_chembl_id" type="java.lang.String"/>
+            <attribute name="target_organism" type="java.lang.String"/>
+            <attribute name="target_pref_name" type="java.lang.String"/>
+            <attribute name="uo_units" type="java.lang.String"/>
+            <access-method name="chembl_activity_free"/>
+        </relation>
+        <relation name="ATCFree">
+            <attribute name="level1" type="java.lang.String"/>
+            <attribute name="level1_description" type="java.lang.String"/>
+            <attribute name="level2" type="java.lang.String"/>
+            <attribute name="level2_description" type="java.lang.String"/>
+            <attribute name="level3" type="java.lang.String"/>
+            <attribute name="level3_description" type="java.lang.String"/>
+            <attribute name="level4" type="java.lang.String"/>
+            <attribute name="level4_description" type="java.lang.String"/>
+            <attribute name="level5" type="java.lang.String"/>
+            <attribute name="who_id" type="java.lang.String"/>
+            <attribute name="who_name" type="java.lang.String"/>
+            <access-method name="chembl_atc_free"/>
+        </relation>
+        <relation name="MoleculeLimited">
             <attribute name="atc_classifications" type="java.lang.String"/>
             <attribute name="availability_type" type="java.lang.String"/>
             <attribute name="biocomponents" type="java.lang.String"/>
@@ -348,286 +721,18 @@
             <attribute name="usan_year" type="java.lang.String"/>
             <access-method name="chembl_molecule_limited"/>
         </relation>
-        <relation name="ActivityFree" source="chembl">
-            <attribute name="activity_comment" type="java.lang.String"/>
-            <attribute name="activity_id" type="java.lang.String"/>
-            <attribute name="assay_chembl_id" type="java.lang.String"/>
-            <attribute name="assay_description" type="java.lang.String"/>
-            <attribute name="assay_type" type="java.lang.String"/>
-            <attribute name="bao_endpoint" type="java.lang.String"/>
-            <attribute name="bao_format" type="java.lang.String"/>
-            <attribute name="canonical_smiles" type="java.lang.String"/>
-            <attribute name="data_validity_comment" type="java.lang.String"/>
-            <attribute name="document_chembl_id" type="java.lang.String"/>
-            <attribute name="document_journal" type="java.lang.String"/>
-            <attribute name="document_year" type="java.lang.String"/>
-            <attribute name="molecule_chembl_id" type="java.lang.String"/>
-            <attribute name="pchembl_value" type="java.lang.Double"/>
-            <attribute name="potential_duplicate" type="java.lang.String"/>
-            <attribute name="published_relation" type="java.lang.String"/>
-            <attribute name="published_type" type="java.lang.String"/>
-            <attribute name="published_units" type="java.lang.String"/>
-            <attribute name="published_value" type="java.lang.String"/>
-            <attribute name="qudt_units" type="java.lang.String"/>
-            <attribute name="record_id" type="java.lang.String"/>
-            <attribute name="standard_flag" type="java.lang.Boolean"/>
-            <attribute name="standard_relation" type="java.lang.String"/>
-            <attribute name="standard_type" type="java.lang.String"/>
-            <attribute name="standard_units" type="java.lang.String"/>
-            <attribute name="standard_value" type="java.lang.Double"/>
-            <attribute name="target_chembl_id" type="java.lang.String"/>
-            <attribute name="target_organism" type="java.lang.String"/>
-            <attribute name="target_pref_name" type="java.lang.String"/>
-            <attribute name="uo_units" type="java.lang.String"/>
-            <access-method name="chembl_activity_free"/>
-        </relation>
-        <relation name="BindingSiteFree" source="chembl">
-            <attribute name="domain_description" type="java.lang.String"/>
-            <attribute name="domain_id" type="java.lang.String"/>
-            <attribute name="domain_name" type="java.lang.String"/>
-            <attribute name="domain_type" type="java.lang.String"/>
-            <attribute name="source_domain_id" type="java.lang.String"/>
-            <attribute name="site_residues" type="java.lang.String"/>
-            <attribute name="sitecomp_id" type="java.lang.String"/>
-            <attribute name="site_id" type="java.lang.String"/>
-            <attribute name="site_name" type="java.lang.String"/>
-            <access-method name="chembl_bindingsite_free"/>
-        </relation>
-        <relation name="PublicationFull" source="chembl">
-            <attribute name="id" type="java.lang.String"/>
-            <attribute name="source" type="java.lang.String"/>
-            <attribute name="pmid" type="java.lang.String"/>
-            <attribute name="pmcid" type="java.lang.String"/>
-            <attribute name="DOI" type="java.lang.String"/>
-            <attribute name="title" type="java.lang.String"/>
-            <attribute name="authorString" type="java.lang.String"/>
-            <attribute name="journalTitle" type="java.lang.String"/>
-            <attribute name="issue" type="java.lang.String"/>
-            <attribute name="journalVolume" type="java.lang.String"/>
-            <attribute name="pubYear" type="java.lang.String"/>
-            <attribute name="journalIssn" type="java.lang.String"/>
-            <attribute name="pubType" type="java.lang.String"/>
-            <attribute name="inEPMC" type="java.lang.String"/>
-            <attribute name="inPMC" type="java.lang.String"/>
-            <attribute name="citedByCount" type="java.lang.Integer"/>
-            <attribute name="hasReferences" type="java.lang.String"/>
-            <attribute name="hasTextMinedTerms" type="java.lang.String"/>
-            <attribute name="hasDbCrossReferences" type="java.lang.String"/>
-            <attribute name="hasLabsLinks" type="java.lang.String"/>
-            <attribute name="hasTMAccessionNumbers" type="java.lang.String"/>
-            <attribute name="authors" type="java.lang.String"/>
-            <attribute name="gene" type="java.lang.String"/>
-            <attribute name="organism" type="java.lang.String"/>
-            <attribute name="uniprotPubs" type="java.lang.String"/>
-            <access-method name="pubmed_pub_1"/>
-            <access-method name="pubmed_pub_2"/>
-            <access-method name="pubmed_pub_3"/>
-            <access-method name="pubmed_pub_4"/>
-            <access-method name="pubmed_pub_5"/>
-            <access-method name="pubmed_pub_6"/>
-            <access-method name="pubmed_pub_7"/>
-            <access-method name="pubmed_pub_8"/>
-            <access-method name="pubmed_pub_9"/>
-            <access-method name="pubmed_pub_10"/>
-            <access-method name="pubmed_pub_11"/>
-            <access-method name="pubmed_pub_12"/>
-            <access-method name="pubmed_pub_13"/>
-            <access-method name="pubmed_pub_14"/>
-            <access-method name="pubmed_pub_15"/>
-        </relation>
-        <view name="Mechanism" source="chembl">
-            <attribute name="action_type" type="java.lang.String"/>
-            <attribute name="binding_site_comment" type="java.lang.String"/>
-            <attribute name="direct_interaction" type="java.lang.Boolean"/>
-            <attribute name="disease_efficacy" type="java.lang.Boolean"/>
-            <attribute name="mec_id" type="java.lang.String"/>
-            <attribute name="mechanism_comment" type="java.lang.String"/>
-            <attribute name="mechanism_of_action" type="java.lang.String"/>
-            <attribute name="molecular_mechanism" type="java.lang.Boolean"/>
-            <attribute name="molecule_chembl_id" type="java.lang.String"/>
-            <attribute name="record_id" type="java.lang.String"/>
-            <attribute name="selectivity_comment" type="java.lang.String"/>
-            <attribute name="site_id" type="java.lang.String"/>
-            <attribute name="target_chembl_id" type="java.lang.String"/>
-        </view>
-        <view name="Source" source="chembl">
-            <attribute name="src_description" type="java.lang.String"/>
-            <attribute name="src_id" type="java.lang.String"/>
-            <attribute name="src_short_name" type="java.lang.String"/>
-        </view>
-        <view name="Assay" source="chembl">
-            <attribute name="assay_category" type="java.lang.String"/>
-            <attribute name="assay_cell_type" type="java.lang.String"/>
-            <attribute name="assay_chembl_id" type="java.lang.String"/>
-            <attribute name="assay_organism" type="java.lang.String"/>
-            <attribute name="assay_strain" type="java.lang.String"/>
-            <attribute name="assay_subcellular_fraction" type="java.lang.String"/>
-            <attribute name="assay_tax_id" type="java.lang.String"/>
-            <attribute name="assay_test_type" type="java.lang.String"/>
-            <attribute name="assay_tissue" type="java.lang.String"/>
-            <attribute name="assay_type" type="java.lang.String"/>
-            <attribute name="assay_type_description" type="java.lang.String"/>
-            <attribute name="bao_format" type="java.lang.String"/>
+        <relation name="CellLineFree">
             <attribute name="cell_chembl_id" type="java.lang.String"/>
-            <attribute name="confidence_description" type="java.lang.String"/>
-            <attribute name="confidence_score" type="java.lang.String"/>
-            <attribute name="description" type="java.lang.String"/>
-            <attribute name="document_chembl_id" type="java.lang.String"/>
-            <attribute name="relationship_description" type="java.lang.String"/>
-            <attribute name="relationship_type" type="java.lang.String"/>
-            <attribute name="src_assay_id" type="java.lang.String"/>
-            <attribute name="src_id" type="java.lang.String"/>
-            <attribute name="target_chembl_id" type="java.lang.String"/>
-        </view>
-        <relation name="MoleculeFormFree" source="chembl">
-            <attribute name="molecule_chembl_id" type="java.lang.String"/>
-            <attribute name="parent" type="java.lang.Boolean"/>
-            <access-method name="chembl_molecule_form_free"/>
-        </relation>
-        <view name="Target" source="chembl">
-            <attribute name="organism" type="java.lang.String"/>
-            <attribute name="pref_name" type="java.lang.String"/>
-            <attribute name="species_group_flag" type="java.lang.String"/>
-            <attribute name="target_chembl_id" type="java.lang.String"/>
-            <attribute name="target_component_accession" type="java.lang.String"/>
-            <attribute name="target_component_id" type="java.lang.String"/>
-            <attribute name="target_component_type" type="java.lang.String"/>
-            <attribute name="target_type" type="java.lang.String"/>
-        </view>
-        <relation name="MoleculeFormLimited" source="chembl">
-            <attribute name="in_id" type="java.lang.String"/>
-            <attribute name="molecule_chembl_id" type="java.lang.String"/>
-            <attribute name="parent" type="java.lang.Boolean"/>
-            <access-method name="chembl_molecule_form_limited"/>
-        </relation>
-        <relation name="PublicationShort">
-            <attribute name="id" type="java.lang.String"/>
-            <attribute name="source" type="java.lang.String"/>
-            <attribute name="pmid" type="java.lang.String"/>
-            <attribute name="pmcid" type="java.lang.String"/>
-            <attribute name="DOI" type="java.lang.String"/>
-            <attribute name="title" type="java.lang.String"/>
-            <attribute name="authorString" type="java.lang.String"/>
-            <attribute name="journalTitle" type="java.lang.String"/>
-            <attribute name="issue" type="java.lang.String"/>
-            <attribute name="journalVolume" type="java.lang.String"/>
-            <attribute name="pubYear" type="java.lang.String"/>
-            <attribute name="pubType" type="java.lang.String"/>
-            <attribute name="inEPMC" type="java.lang.String"/>
-            <attribute name="inPMC" type="java.lang.String"/>
-            <attribute name="authors" type="java.lang.String"/>
-            <attribute name="gene" type="java.lang.String"/>
-            <attribute name="organism" type="java.lang.String"/>
-            <attribute name="uniprotPubs" type="java.lang.String"/>
-            <access-method name="pubmed_pubshort_1"/>
-            <access-method name="pubmed_pubshort_2"/>
-            <access-method name="pubmed_pubshort_3"/>
-            <access-method name="pubmed_pubshort_4"/>
-            <access-method name="pubmed_pubshort_5"/>
-            <access-method name="pubmed_pubshort_6"/>
-            <access-method name="pubmed_pubshort_7"/>
-            <access-method name="pubmed_pubshort_8"/>
-            <access-method name="pubmed_pubshort_9"/>
-            <access-method name="pubmed_pubshort_10"/>
-            <access-method name="pubmed_pubshort_11"/>
-            <access-method name="pubmed_pubshort_12"/>
-            <access-method name="pubmed_pubshort_13"/>
-            <access-method name="pubmed_pubshort_14"/>
-            <access-method name="pubmed_pubshort_15"/>
-        </relation>
-        <view name="TargetComponent">
-            <attribute name="accession" type="java.lang.String"/>
-            <attribute name="component_id" type="java.lang.String"/>
-            <attribute name="component_type" type="java.lang.String"/>
-            <attribute name="description" type="java.lang.String"/>
-            <attribute name="organism" type="java.lang.String"/>
-            <attribute name="protein_classification_id" type="java.lang.String"/>
-            <attribute name="sequence" type="java.lang.String"/>
-            <attribute name="tax_id" type="java.lang.String"/>
-        </view>
-        <relation name="BioComponentLimited">
-            <attribute name="component_id" type="java.lang.String"/>
-            <attribute name="component_type" type="java.lang.String"/>
-            <attribute name="description" type="java.lang.String"/>
-            <attribute name="organism" type="java.lang.String"/>
-            <attribute name="sequence" type="java.lang.String"/>
-            <attribute name="tax_id" type="java.lang.String"/>
-            <access-method name="chembl_biocomponent_limited"/>
-        </relation>
-        <relation name="AssayFree">
-            <attribute name="assay_category" type="java.lang.String"/>
-            <attribute name="assay_cell_type" type="java.lang.String"/>
-            <attribute name="assay_chembl_id" type="java.lang.String"/>
-            <attribute name="assay_organism" type="java.lang.String"/>
-            <attribute name="assay_strain" type="java.lang.String"/>
-            <attribute name="assay_subcellular_fraction" type="java.lang.String"/>
-            <attribute name="assay_tax_id" type="java.lang.String"/>
-            <attribute name="assay_test_type" type="java.lang.String"/>
-            <attribute name="assay_tissue" type="java.lang.String"/>
-            <attribute name="assay_type" type="java.lang.String"/>
-            <attribute name="assay_type_description" type="java.lang.String"/>
-            <attribute name="bao_format" type="java.lang.String"/>
-            <attribute name="cell_chembl_id" type="java.lang.String"/>
-            <attribute name="confidence_description" type="java.lang.String"/>
-            <attribute name="confidence_score" type="java.lang.String"/>
-            <attribute name="description" type="java.lang.String"/>
-            <attribute name="document_chembl_id" type="java.lang.String"/>
-            <attribute name="relationship_description" type="java.lang.String"/>
-            <attribute name="relationship_type" type="java.lang.String"/>
-            <attribute name="src_assay_id" type="java.lang.String"/>
-            <attribute name="src_id" type="java.lang.String"/>
-            <attribute name="target_chembl_id" type="java.lang.String"/>
-            <access-method name="chembl_assay_free"/>
-        </relation>
-        <relation name="DocumentLimited">
-            <attribute name="authors" type="java.lang.String"/>
-            <attribute name="doc_type" type="java.lang.String"/>
-            <attribute name="document_chembl_id" type="java.lang.String"/>
-            <attribute name="doi" type="java.lang.String"/>
-            <attribute name="first_page" type="java.lang.String"/>
-            <attribute name="issue" type="java.lang.String"/>
-            <attribute name="journal" type="java.lang.String"/>
-            <attribute name="last_page" type="java.lang.String"/>
-            <attribute name="pubmed_id" type="java.lang.String"/>
-            <attribute name="title" type="java.lang.String"/>
-            <attribute name="volume" type="java.lang.String"/>
-            <attribute name="year" type="java.lang.String"/>
-            <access-method name="chembl_document_limited"/>
-            <access-method name="chembl_document_limited_1"/>
-        </relation>
-        <relation name="SourceLimited">
-            <attribute name="src_description" type="java.lang.String"/>
-            <attribute name="src_id" type="java.lang.String"/>
-            <attribute name="src_short_name" type="java.lang.String"/>
-            <access-method name="chembl_source_limited"/>
-        </relation>
-        <relation name="PathwayById">
-            <attribute name="pathwayId" type="java.lang.Integer"/>
-            <attribute name="pathwayName" type="java.lang.String"/>
-            <attribute name="stableIdentifier" type="java.lang.String"/>
-            <attribute name="goBiologicalProcess" type="java.lang.String"/>
-            <attribute name="isInDisease" type="java.lang.Boolean"/>
-            <attribute name="isInferred" type="java.lang.Boolean"/>
-            <attribute name="organismId" type="java.lang.String"/>
-            <attribute name="organism" type="java.lang.String"/>
-            <attribute name="doi" type="java.lang.String"/>
-            <attribute name="hasDiagram" type="java.lang.Boolean"/>
-            <access-method name="reactome_pathway_2"/>
-        </relation>
-        <view name="Organism">
-            <attribute name="organismId" type="java.lang.Integer"/>
-            <attribute name="organism" type="java.lang.String"/>
-        </view>
-        <relation name="TargetFree">
-            <attribute name="organism" type="java.lang.String"/>
-            <attribute name="pref_name" type="java.lang.String"/>
-            <attribute name="species_group_flag" type="java.lang.String"/>
-            <attribute name="target_chembl_id" type="java.lang.String"/>
-            <attribute name="target_component_accession" type="java.lang.String"/>
-            <attribute name="target_component_id" type="java.lang.String"/>
-            <attribute name="target_component_type" type="java.lang.String"/>
-            <attribute name="target_type" type="java.lang.String"/>
-            <access-method name="chembl_target_free"/>
+            <attribute name="cell_description" type="java.lang.String"/>
+            <attribute name="cell_id" type="java.lang.String"/>
+            <attribute name="cell_name" type="java.lang.String"/>
+            <attribute name="cell_source_organism" type="java.lang.String"/>
+            <attribute name="cell_source_tax_id" type="java.lang.String"/>
+            <attribute name="cell_source_tissue" type="java.lang.String"/>
+            <attribute name="cellosaurus_id" type="java.lang.String"/>
+            <attribute name="clo_id" type="java.lang.String"/>
+            <attribute name="efo_id" type="java.lang.String"/>
+            <access-method name="chembl_cellline_free"/>
         </relation>
         <relation name="ProteinLimited">
             <attribute name="input_id" type="java.lang.String"/>
@@ -652,26 +757,47 @@
             <attribute name="ext_id" type="java.lang.String"/>
             <access-method name="pubmed_reference_1"/>
         </relation>
-        <view name="Protein">
-            <attribute name="input_id" type="java.lang.String"/>
-            <attribute name="id" type="java.lang.String"/>
-            <attribute name="entry_name" type="java.lang.String"/>
-            <attribute name="organism" type="java.lang.String"/>
-        </view>
-        <relation name="CellLineLimited" source="pubmed">
+        <relation name="AssayLimited">
+            <attribute name="assay_category" type="java.lang.String"/>
+            <attribute name="assay_cell_type" type="java.lang.String"/>
+            <attribute name="assay_chembl_id" type="java.lang.String"/>
+            <attribute name="assay_organism" type="java.lang.String"/>
+            <attribute name="assay_strain" type="java.lang.String"/>
+            <attribute name="assay_subcellular_fraction" type="java.lang.String"/>
+            <attribute name="assay_tax_id" type="java.lang.String"/>
+            <attribute name="assay_test_type" type="java.lang.String"/>
+            <attribute name="assay_tissue" type="java.lang.String"/>
+            <attribute name="assay_type" type="java.lang.String"/>
+            <attribute name="assay_type_description" type="java.lang.String"/>
+            <attribute name="bao_format" type="java.lang.String"/>
             <attribute name="cell_chembl_id" type="java.lang.String"/>
-            <attribute name="cell_description" type="java.lang.String"/>
-            <attribute name="cell_id" type="java.lang.String"/>
-            <attribute name="cell_name" type="java.lang.String"/>
-            <attribute name="cell_source_organism" type="java.lang.String"/>
-            <attribute name="cell_source_tax_id" type="java.lang.String"/>
-            <attribute name="cell_source_tissue" type="java.lang.String"/>
-            <attribute name="cellosaurus_id" type="java.lang.String"/>
-            <attribute name="clo_id" type="java.lang.String"/>
-            <attribute name="efo_id" type="java.lang.String"/>
-            <access-method name="chembl_cellline_limited"/>
+            <attribute name="confidence_description" type="java.lang.String"/>
+            <attribute name="confidence_score" type="java.lang.String"/>
+            <attribute name="description" type="java.lang.String"/>
+            <attribute name="document_chembl_id" type="java.lang.String"/>
+            <attribute name="relationship_description" type="java.lang.String"/>
+            <attribute name="relationship_type" type="java.lang.String"/>
+            <attribute name="src_assay_id" type="java.lang.String"/>
+            <attribute name="src_id" type="java.lang.String"/>
+            <attribute name="target_chembl_id" type="java.lang.String"/>
+            <access-method name="chembl_assay_limited"/>
+            <access-method name="chembl_assay_limited_1"/>
+            <access-method name="chembl_assay_limited_2"/>
+            <access-method name="chembl_assay_limited_3"/>
         </relation>
-        <view name="Molecule" source="pubmed">
+        <relation name="BindingSiteFree">
+            <attribute name="domain_description" type="java.lang.String"/>
+            <attribute name="domain_id" type="java.lang.String"/>
+            <attribute name="domain_name" type="java.lang.String"/>
+            <attribute name="domain_type" type="java.lang.String"/>
+            <attribute name="source_domain_id" type="java.lang.String"/>
+            <attribute name="site_residues" type="java.lang.String"/>
+            <attribute name="sitecomp_id" type="java.lang.String"/>
+            <attribute name="site_id" type="java.lang.String"/>
+            <attribute name="site_name" type="java.lang.String"/>
+            <access-method name="chembl_bindingsite_free"/>
+        </relation>
+        <relation name="MoleculeFree">
             <attribute name="atc_classifications" type="java.lang.String"/>
             <attribute name="availability_type" type="java.lang.String"/>
             <attribute name="biocomponents" type="java.lang.String"/>
@@ -727,58 +853,39 @@
             <attribute name="usan_stem_definition" type="java.lang.String"/>
             <attribute name="usan_substem" type="java.lang.String"/>
             <attribute name="usan_year" type="java.lang.String"/>
+            <access-method name="chembl_molecule_free"/>
+        </relation>
+        <view name="ATC">
+            <attribute name="level1" type="java.lang.String"/>
+            <attribute name="level1_description" type="java.lang.String"/>
+            <attribute name="level2" type="java.lang.String"/>
+            <attribute name="level2_description" type="java.lang.String"/>
+            <attribute name="level3" type="java.lang.String"/>
+            <attribute name="level3_description" type="java.lang.String"/>
+            <attribute name="level4" type="java.lang.String"/>
+            <attribute name="level4_description" type="java.lang.String"/>
+            <attribute name="level5" type="java.lang.String"/>
+            <attribute name="who_id" type="java.lang.String"/>
+            <attribute name="who_name" type="java.lang.String"/>
         </view>
-        <relation name="OrganismById" source="pubmed">
-            <attribute name="organismId" type="java.lang.String"/>
+        <relation name="TargetFree">
             <attribute name="organism" type="java.lang.String"/>
-            <access-method name="reactome_organism_1"/>
-        </relation>
-        <relation name="CellLineFree" source="pubmed">
-            <attribute name="cell_chembl_id" type="java.lang.String"/>
-            <attribute name="cell_description" type="java.lang.String"/>
-            <attribute name="cell_id" type="java.lang.String"/>
-            <attribute name="cell_name" type="java.lang.String"/>
-            <attribute name="cell_source_organism" type="java.lang.String"/>
-            <attribute name="cell_source_tax_id" type="java.lang.String"/>
-            <attribute name="cell_source_tissue" type="java.lang.String"/>
-            <attribute name="cellosaurus_id" type="java.lang.String"/>
-            <attribute name="clo_id" type="java.lang.String"/>
-            <attribute name="efo_id" type="java.lang.String"/>
-            <access-method name="chembl_cellline_free"/>
-        </relation>
-        <relation name="TargetComponentFree">
-            <attribute name="accession" type="java.lang.String"/>
-            <attribute name="component_id" type="java.lang.String"/>
-            <attribute name="component_type" type="java.lang.String"/>
-            <attribute name="description" type="java.lang.String"/>
-            <attribute name="organism" type="java.lang.String"/>
-            <attribute name="protein_classification_id" type="java.lang.String"/>
-            <attribute name="sequence" type="java.lang.String"/>
-            <attribute name="tax_id" type="java.lang.String"/>
-            <access-method name="chembl_target_component_free"/>
-        </relation>
-        <relation name="MechanismLimited" source="uniprot">
-            <attribute name="action_type" type="java.lang.String"/>
-            <attribute name="binding_site_comment" type="java.lang.String"/>
-            <attribute name="direct_interaction" type="java.lang.Boolean"/>
-            <attribute name="disease_efficacy" type="java.lang.Boolean"/>
-            <attribute name="mec_id" type="java.lang.String"/>
-            <attribute name="mechanism_comment" type="java.lang.String"/>
-            <attribute name="mechanism_of_action" type="java.lang.String"/>
-            <attribute name="molecular_mechanism" type="java.lang.Boolean"/>
-            <attribute name="molecule_chembl_id" type="java.lang.String"/>
-            <attribute name="record_id" type="java.lang.Integer"/>
-            <attribute name="selectivity_comment" type="java.lang.String"/>
-            <attribute name="site_id" type="java.lang.String"/>
+            <attribute name="pref_name" type="java.lang.String"/>
+            <attribute name="species_group_flag" type="java.lang.String"/>
             <attribute name="target_chembl_id" type="java.lang.String"/>
-            <access-method name="chembl_mechanism_limited"/>
+            <attribute name="target_component_accession" type="java.lang.String"/>
+            <attribute name="target_component_id" type="java.lang.String"/>
+            <attribute name="target_component_type" type="java.lang.String"/>
+            <attribute name="target_type" type="java.lang.String"/>
+            <access-method name="chembl_target_free"/>
         </relation>
-        <relation name="OrganismFree" source="uniprot">
-            <attribute name="organismId" type="java.lang.String"/>
+        <relation name="ProteinFree">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="entry_name" type="java.lang.String"/>
             <attribute name="organism" type="java.lang.String"/>
-            <access-method name="reactome_species_1"/>
+            <access-method name="uniprot_active"/>
         </relation>
-        <relation name="ProteinClassLimited">
+        <relation name="ProteinClassFree">
             <attribute name="l1" type="java.lang.String"/>
             <attribute name="l2" type="java.lang.String"/>
             <attribute name="l3" type="java.lang.String"/>
@@ -788,120 +895,7 @@
             <attribute name="l7" type="java.lang.String"/>
             <attribute name="l8" type="java.lang.String"/>
             <attribute name="protein_class_id" type="java.lang.String"/>
-            <access-method name="chembl_protein_class_limited"/>
-        </relation>
-        <relation name="ActivityLimited" source="reactome">
-            <attribute name="activity_comment" type="java.lang.String"/>
-            <attribute name="activity_id" type="java.lang.String"/>
-            <attribute name="assay_chembl_id" type="java.lang.String"/>
-            <attribute name="assay_description" type="java.lang.String"/>
-            <attribute name="assay_type" type="java.lang.String"/>
-            <attribute name="bao_endpoint" type="java.lang.String"/>
-            <attribute name="bao_format" type="java.lang.String"/>
-            <attribute name="canonical_smiles" type="java.lang.String"/>
-            <attribute name="data_validity_comment" type="java.lang.String"/>
-            <attribute name="document_chembl_id" type="java.lang.String"/>
-            <attribute name="document_journal" type="java.lang.String"/>
-            <attribute name="document_year" type="java.lang.String"/>
-            <attribute name="molecule_chembl_id" type="java.lang.String"/>
-            <attribute name="pchembl_value" type="java.lang.Double"/>
-            <attribute name="potential_duplicate" type="java.lang.String"/>
-            <attribute name="published_relation" type="java.lang.String"/>
-            <attribute name="published_type" type="java.lang.String"/>
-            <attribute name="published_units" type="java.lang.String"/>
-            <attribute name="published_value" type="java.lang.String"/>
-            <attribute name="qudt_units" type="java.lang.String"/>
-            <attribute name="record_id" type="java.lang.String"/>
-            <attribute name="standard_flag" type="java.lang.Boolean"/>
-            <attribute name="standard_relation" type="java.lang.String"/>
-            <attribute name="standard_type" type="java.lang.String"/>
-            <attribute name="standard_units" type="java.lang.String"/>
-            <attribute name="standard_value" type="java.lang.Double"/>
-            <attribute name="target_chembl_id" type="java.lang.String"/>
-            <attribute name="target_organism" type="java.lang.String"/>
-            <attribute name="target_pref_name" type="java.lang.String"/>
-            <attribute name="uo_units" type="java.lang.String"/>
-            <access-method name="chembl_activity_limited"/>
-            <access-method name="chembl_activity_limited_1"/>
-            <access-method name="chembl_activity_limited_2"/>
-            <access-method name="chembl_activity_limited_3"/>
-            <access-method name="chembl_activity_limited_4"/>
-        </relation>
-        <view name="BioComponent" source="reactome">
-            <attribute name="component_id" type="java.lang.String"/>
-            <attribute name="component_type" type="java.lang.String"/>
-            <attribute name="description" type="java.lang.String"/>
-            <attribute name="organism" type="java.lang.String"/>
-            <attribute name="sequence" type="java.lang.String"/>
-            <attribute name="tax_id" type="java.lang.String"/>
-        </view>
-        <view name="Activity" source="reactome">
-            <attribute name="activity_comment" type="java.lang.String"/>
-            <attribute name="activity_id" type="java.lang.String"/>
-            <attribute name="assay_chembl_id" type="java.lang.String"/>
-            <attribute name="assay_description" type="java.lang.String"/>
-            <attribute name="assay_type" type="java.lang.String"/>
-            <attribute name="bao_endpoint" type="java.lang.String"/>
-            <attribute name="bao_format" type="java.lang.String"/>
-            <attribute name="canonical_smiles" type="java.lang.String"/>
-            <attribute name="data_validity_comment" type="java.lang.String"/>
-            <attribute name="document_chembl_id" type="java.lang.String"/>
-            <attribute name="document_journal" type="java.lang.String"/>
-            <attribute name="document_year" type="java.lang.String"/>
-            <attribute name="molecule_chembl_id" type="java.lang.String"/>
-            <attribute name="pchembl_value" type="java.lang.Double"/>
-            <attribute name="potential_duplicate" type="java.lang.String"/>
-            <attribute name="published_relation" type="java.lang.String"/>
-            <attribute name="published_type" type="java.lang.String"/>
-            <attribute name="published_units" type="java.lang.String"/>
-            <attribute name="published_value" type="java.lang.String"/>
-            <attribute name="qudt_units" type="java.lang.String"/>
-            <attribute name="record_id" type="java.lang.String"/>
-            <attribute name="standard_flag" type="java.lang.Boolean"/>
-            <attribute name="standard_relation" type="java.lang.String"/>
-            <attribute name="standard_type" type="java.lang.String"/>
-            <attribute name="standard_units" type="java.lang.String"/>
-            <attribute name="standard_value" type="java.lang.Double"/>
-            <attribute name="target_chembl_id" type="java.lang.String"/>
-            <attribute name="target_organism" type="java.lang.String"/>
-            <attribute name="target_pref_name" type="java.lang.String"/>
-            <attribute name="uo_units" type="java.lang.String"/>
-        </view>
-        <relation name="SourceFree" source="reactome">
-            <attribute name="src_description" type="java.lang.String"/>
-            <attribute name="src_id" type="java.lang.String"/>
-            <attribute name="src_short_name" type="java.lang.String"/>
-            <access-method name="chembl_source_free"/>
-        </relation>
-        <view name="Document">
-            <attribute name="authors" type="java.lang.String"/>
-            <attribute name="doc_type" type="java.lang.String"/>
-            <attribute name="document_chembl_id" type="java.lang.String"/>
-            <attribute name="doi" type="java.lang.String"/>
-            <attribute name="first_page" type="java.lang.String"/>
-            <attribute name="issue" type="java.lang.String"/>
-            <attribute name="journal" type="java.lang.String"/>
-            <attribute name="last_page" type="java.lang.String"/>
-            <attribute name="pubmed_id" type="java.lang.String"/>
-            <attribute name="title" type="java.lang.String"/>
-            <attribute name="volume" type="java.lang.String"/>
-            <attribute name="year" type="java.lang.String"/>
-        </view>
-        <relation name="Citation">
-            <attribute name="id" type="java.lang.String"/>
-            <attribute name="source" type="java.lang.String"/>
-            <attribute name="citationType" type="java.lang.String"/>
-            <attribute name="title" type="java.lang.String"/>
-            <attribute name="authorString" type="java.lang.String"/>
-            <attribute name="journalAbbreviation" type="java.lang.String"/>
-            <attribute name="pubYear" type="java.lang.String"/>
-            <attribute name="volume" type="java.lang.String"/>
-            <attribute name="issue" type="java.lang.String"/>
-            <attribute name="pageInfo" type="java.lang.String"/>
-            <attribute name="citedByCount" type="java.lang.String"/>
-            <attribute name="src" type="java.lang.String"/>
-            <attribute name="ext_id" type="java.lang.String"/>
-            <access-method name="pubmed_citation_1"/>
+            <access-method name="chembl_protein_class_free"/>
         </relation>
     </relations>
     <dependencies>

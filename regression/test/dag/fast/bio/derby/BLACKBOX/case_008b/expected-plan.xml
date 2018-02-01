@@ -1,348 +1,166 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plan type="dag" cost="5.1285949575E7" control-flow="TOP_DOWN">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c3435" type="java.lang.String"/>
-<attribute name="c3436" type="java.lang.String"/>
-<attribute name="c3437" type="java.lang.String"/>
-<attribute name="c3438" type="java.lang.String"/>
-<attribute name="c3439" type="java.lang.String"/>
-<attribute name="c3440" type="java.lang.String"/>
-<attribute name="c3441" type="java.lang.String"/>
-<attribute name="c3442" type="java.lang.String"/>
-<attribute name="c3443" type="java.lang.String"/>
-<attribute name="c3444" type="java.lang.String"/>
-<attribute name="c3445" type="java.lang.String"/>
-<attribute name="c3466" type="java.lang.String"/>
-<attribute name="c3467" type="java.lang.String"/>
-<attribute name="c3468" type="java.lang.String"/>
-<attribute name="c3456" type="java.lang.String"/>
-<attribute name="c3469" type="java.lang.String"/>
-<attribute name="c3470" type="java.lang.String"/>
-<attribute name="c3471" type="java.lang.String"/>
-<attribute name="c3457" type="java.lang.String"/>
-<attribute name="c3451" type="java.lang.String"/>
-<attribute name="c3458" type="java.lang.String"/>
-<attribute name="c3459" type="java.lang.String"/>
-<attribute name="c3460" type="java.lang.String"/>
-<attribute name="c3461" type="java.lang.String"/>
-<attribute name="c3462" type="java.lang.String"/>
-<attribute name="c3463" type="java.lang.String"/>
-<attribute name="c3464" type="java.lang.String"/>
-<attribute name="c3465" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c3435" type="java.lang.String"/>
-<attribute name="c3436" type="java.lang.String"/>
-<attribute name="c3437" type="java.lang.String"/>
-<attribute name="c3438" type="java.lang.String"/>
-<attribute name="c3439" type="java.lang.String"/>
-<attribute name="c3440" type="java.lang.String"/>
-<attribute name="c3441" type="java.lang.String"/>
-<attribute name="c3442" type="java.lang.String"/>
-<attribute name="c3443" type="java.lang.String"/>
-<attribute name="c3444" type="java.lang.String"/>
-<attribute name="c3445" type="java.lang.String"/>
-<attribute name="c3466" type="java.lang.String"/>
-<attribute name="c3467" type="java.lang.String"/>
-<attribute name="c3468" type="java.lang.String"/>
-<attribute name="c3456" type="java.lang.String"/>
-<attribute name="c3469" type="java.lang.String"/>
-<attribute name="c3470" type="java.lang.String"/>
-<attribute name="c3471" type="java.lang.String"/>
-<attribute name="c3457" type="java.lang.String"/>
-<attribute name="c3451" type="java.lang.String"/>
-<attribute name="c3458" type="java.lang.String"/>
-<attribute name="c3459" type="java.lang.String"/>
-<attribute name="c3460" type="java.lang.String"/>
-<attribute name="c3461" type="java.lang.String"/>
-<attribute name="c3462" type="java.lang.String"/>
-<attribute name="c3463" type="java.lang.String"/>
-<attribute name="c3464" type="java.lang.String"/>
-<attribute name="c3465" type="java.lang.String"/>
-</project>
-<child>
-<operator type="JOIN" variant="SYMMETRIC_HASH">
-<outputs>
-<attribute name="c3457" type="java.lang.String"/>
-<attribute name="c3451" type="java.lang.String"/>
-<attribute name="c3458" type="java.lang.String"/>
-<attribute name="c3459" type="java.lang.String"/>
-<attribute name="c3460" type="java.lang.String"/>
-<attribute name="c3461" type="java.lang.String"/>
-<attribute name="c3462" type="java.lang.String"/>
-<attribute name="c3463" type="java.lang.String"/>
-<attribute name="c3464" type="java.lang.String"/>
-<attribute name="c3465" type="java.lang.String"/>
-<attribute name="c3435" type="java.lang.String"/>
-<attribute name="c3436" type="java.lang.String"/>
-<attribute name="c3437" type="java.lang.String"/>
-<attribute name="c3438" type="java.lang.String"/>
-<attribute name="c3439" type="java.lang.String"/>
-<attribute name="c3440" type="java.lang.String"/>
-<attribute name="c3441" type="java.lang.String"/>
-<attribute name="c3442" type="java.lang.String"/>
-<attribute name="c3443" type="java.lang.String"/>
-<attribute name="c3444" type="java.lang.String"/>
-<attribute name="c3445" type="java.lang.String"/>
-<attribute name="c3446" type="java.lang.String"/>
-<attribute name="c3447" type="java.lang.String"/>
-<attribute name="c3448" type="java.lang.String"/>
-<attribute name="c3449" type="java.lang.String"/>
-<attribute name="c3450" type="java.lang.String"/>
-<attribute name="c3451" type="java.lang.String"/>
-<attribute name="c3452" type="java.lang.String"/>
-<attribute name="c3453" type="java.lang.String"/>
-<attribute name="c3454" type="java.lang.String"/>
-<attribute name="c3455" type="java.lang.String"/>
-<attribute name="c3456" type="java.lang.String"/>
-<attribute name="c3466" type="java.lang.String"/>
-<attribute name="c3467" type="java.lang.String"/>
-<attribute name="c3468" type="java.lang.String"/>
-<attribute name="c3456" type="java.lang.String"/>
-<attribute name="c3469" type="java.lang.String"/>
-<attribute name="c3470" type="java.lang.String"/>
-<attribute name="c3471" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="31" right="35"/>
-</conjunction>
-<children>
-<operator type="DEPENDENT_JOIN" param="1">
-<outputs>
-<attribute name="c3457" type="java.lang.String"/>
-<attribute name="c3451" type="java.lang.String"/>
-<attribute name="c3458" type="java.lang.String"/>
-<attribute name="c3459" type="java.lang.String"/>
-<attribute name="c3460" type="java.lang.String"/>
-<attribute name="c3461" type="java.lang.String"/>
-<attribute name="c3462" type="java.lang.String"/>
-<attribute name="c3463" type="java.lang.String"/>
-<attribute name="c3464" type="java.lang.String"/>
-<attribute name="c3465" type="java.lang.String"/>
-<attribute name="c3435" type="java.lang.String"/>
-<attribute name="c3436" type="java.lang.String"/>
-<attribute name="c3437" type="java.lang.String"/>
-<attribute name="c3438" type="java.lang.String"/>
-<attribute name="c3439" type="java.lang.String"/>
-<attribute name="c3440" type="java.lang.String"/>
-<attribute name="c3441" type="java.lang.String"/>
-<attribute name="c3442" type="java.lang.String"/>
-<attribute name="c3443" type="java.lang.String"/>
-<attribute name="c3444" type="java.lang.String"/>
-<attribute name="c3445" type="java.lang.String"/>
-<attribute name="c3446" type="java.lang.String"/>
-<attribute name="c3447" type="java.lang.String"/>
-<attribute name="c3448" type="java.lang.String"/>
-<attribute name="c3449" type="java.lang.String"/>
-<attribute name="c3450" type="java.lang.String"/>
-<attribute name="c3451" type="java.lang.String"/>
-<attribute name="c3452" type="java.lang.String"/>
-<attribute name="c3453" type="java.lang.String"/>
-<attribute name="c3454" type="java.lang.String"/>
-<attribute name="c3455" type="java.lang.String"/>
-<attribute name="c3456" type="java.lang.String"/>
-</outputs>
-<children>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c3457" type="java.lang.String"/>
-<attribute name="c3451" type="java.lang.String"/>
-<attribute name="c3458" type="java.lang.String"/>
-<attribute name="c3459" type="java.lang.String"/>
-<attribute name="c3460" type="java.lang.String"/>
-<attribute name="c3461" type="java.lang.String"/>
-<attribute name="c3462" type="java.lang.String"/>
-<attribute name="c3463" type="java.lang.String"/>
-<attribute name="c3464" type="java.lang.String"/>
-<attribute name="c3465" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="authors" type="java.lang.String"/>
-<attribute name="document_chembl_id" type="java.lang.String"/>
-<attribute name="doi" type="java.lang.String"/>
-<attribute name="first_page" type="java.lang.String"/>
-<attribute name="issue" type="java.lang.String"/>
-<attribute name="journal" type="java.lang.String"/>
-<attribute name="last_page" type="java.lang.String"/>
-<attribute name="pubmed_id" type="java.lang.String"/>
-<attribute name="title" type="java.lang.String"/>
-<attribute name="volume" type="java.lang.String"/>
-</project>
-<child>
-<operator type="SELECT">
-<outputs>
-<attribute name="authors" type="java.lang.String"/>
-<attribute name="doc_type" type="java.lang.String"/>
-<attribute name="document_chembl_id" type="java.lang.String"/>
-<attribute name="doi" type="java.lang.String"/>
-<attribute name="first_page" type="java.lang.String"/>
-<attribute name="issue" type="java.lang.String"/>
-<attribute name="journal" type="java.lang.String"/>
-<attribute name="last_page" type="java.lang.String"/>
-<attribute name="pubmed_id" type="java.lang.String"/>
-<attribute name="title" type="java.lang.String"/>
-<attribute name="volume" type="java.lang.String"/>
-<attribute name="year" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="1" value="PUBLICATION"/>
-<predicate type="equality" left="11" value="2015"/>
-</conjunction>
-<child>
-<operator type="ACCESS" relation="DocumentFree" access-method="chembl_document_free">
-<outputs>
-<attribute name="authors" type="java.lang.String"/>
-<attribute name="doc_type" type="java.lang.String"/>
-<attribute name="document_chembl_id" type="java.lang.String"/>
-<attribute name="doi" type="java.lang.String"/>
-<attribute name="first_page" type="java.lang.String"/>
-<attribute name="issue" type="java.lang.String"/>
-<attribute name="journal" type="java.lang.String"/>
-<attribute name="last_page" type="java.lang.String"/>
-<attribute name="pubmed_id" type="java.lang.String"/>
-<attribute name="title" type="java.lang.String"/>
-<attribute name="volume" type="java.lang.String"/>
-<attribute name="year" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c3435" type="java.lang.String"/>
-<attribute name="c3436" type="java.lang.String"/>
-<attribute name="c3437" type="java.lang.String"/>
-<attribute name="c3438" type="java.lang.String"/>
-<attribute name="c3439" type="java.lang.String"/>
-<attribute name="c3440" type="java.lang.String"/>
-<attribute name="c3441" type="java.lang.String"/>
-<attribute name="c3442" type="java.lang.String"/>
-<attribute name="c3443" type="java.lang.String"/>
-<attribute name="c3444" type="java.lang.String"/>
-<attribute name="c3445" type="java.lang.String"/>
-<attribute name="c3446" type="java.lang.String"/>
-<attribute name="c3447" type="java.lang.String"/>
-<attribute name="c3448" type="java.lang.String"/>
-<attribute name="c3449" type="java.lang.String"/>
-<attribute name="c3450" type="java.lang.String"/>
-<attribute name="c3451" type="java.lang.String"/>
-<attribute name="c3452" type="java.lang.String"/>
-<attribute name="c3453" type="java.lang.String"/>
-<attribute name="c3454" type="java.lang.String"/>
-<attribute name="c3455" type="java.lang.String"/>
-<attribute name="c3456" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="assay_category" type="java.lang.String"/>
-<attribute name="assay_cell_type" type="java.lang.String"/>
-<attribute name="assay_chembl_id" type="java.lang.String"/>
-<attribute name="assay_organism" type="java.lang.String"/>
-<attribute name="assay_strain" type="java.lang.String"/>
-<attribute name="assay_subcellular_fraction" type="java.lang.String"/>
-<attribute name="assay_tax_id" type="java.lang.String"/>
-<attribute name="assay_test_type" type="java.lang.String"/>
-<attribute name="assay_tissue" type="java.lang.String"/>
-<attribute name="assay_type" type="java.lang.String"/>
-<attribute name="assay_type_description" type="java.lang.String"/>
-<attribute name="bao_format" type="java.lang.String"/>
-<attribute name="cell_chembl_id" type="java.lang.String"/>
-<attribute name="confidence_description" type="java.lang.String"/>
-<attribute name="confidence_score" type="java.lang.String"/>
-<attribute name="description" type="java.lang.String"/>
-<attribute name="document_chembl_id" type="java.lang.String"/>
-<attribute name="relationship_description" type="java.lang.String"/>
-<attribute name="relationship_type" type="java.lang.String"/>
-<attribute name="src_assay_id" type="java.lang.String"/>
-<attribute name="src_id" type="java.lang.String"/>
-<attribute name="target_chembl_id" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="AssayLimited" access-method="chembl_assay_limited_2">
-<outputs>
-<attribute name="assay_category" type="java.lang.String"/>
-<attribute name="assay_cell_type" type="java.lang.String"/>
-<attribute name="assay_chembl_id" type="java.lang.String"/>
-<attribute name="assay_organism" type="java.lang.String"/>
-<attribute name="assay_strain" type="java.lang.String"/>
-<attribute name="assay_subcellular_fraction" type="java.lang.String"/>
-<attribute name="assay_tax_id" type="java.lang.String"/>
-<attribute name="assay_test_type" type="java.lang.String"/>
-<attribute name="assay_tissue" type="java.lang.String"/>
-<attribute name="assay_type" type="java.lang.String"/>
-<attribute name="assay_type_description" type="java.lang.String"/>
-<attribute name="bao_format" type="java.lang.String"/>
-<attribute name="cell_chembl_id" type="java.lang.String"/>
-<attribute name="confidence_description" type="java.lang.String"/>
-<attribute name="confidence_score" type="java.lang.String"/>
-<attribute name="description" type="java.lang.String"/>
-<attribute name="document_chembl_id" type="java.lang.String"/>
-<attribute name="relationship_description" type="java.lang.String"/>
-<attribute name="relationship_type" type="java.lang.String"/>
-<attribute name="src_assay_id" type="java.lang.String"/>
-<attribute name="src_id" type="java.lang.String"/>
-<attribute name="target_chembl_id" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c3466" type="java.lang.String"/>
-<attribute name="c3467" type="java.lang.String"/>
-<attribute name="c3468" type="java.lang.String"/>
-<attribute name="c3456" type="java.lang.String"/>
-<attribute name="c3469" type="java.lang.String"/>
-<attribute name="c3470" type="java.lang.String"/>
-<attribute name="c3471" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="organism" type="java.lang.String"/>
-<attribute name="pref_name" type="java.lang.String"/>
-<attribute name="species_group_flag" type="java.lang.String"/>
-<attribute name="target_chembl_id" type="java.lang.String"/>
-<attribute name="target_component_accession" type="java.lang.String"/>
-<attribute name="target_component_id" type="java.lang.String"/>
-<attribute name="target_component_type" type="java.lang.String"/>
-</project>
-<child>
-<operator type="SELECT">
-<outputs>
-<attribute name="organism" type="java.lang.String"/>
-<attribute name="pref_name" type="java.lang.String"/>
-<attribute name="species_group_flag" type="java.lang.String"/>
-<attribute name="target_chembl_id" type="java.lang.String"/>
-<attribute name="target_component_accession" type="java.lang.String"/>
-<attribute name="target_component_id" type="java.lang.String"/>
-<attribute name="target_component_type" type="java.lang.String"/>
-<attribute name="target_type" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="7" value="SINGLE PROTEIN"/>
-</conjunction>
-<child>
-<operator type="ACCESS" relation="TargetFree" access-method="chembl_target_free">
-<outputs>
-<attribute name="organism" type="java.lang.String"/>
-<attribute name="pref_name" type="java.lang.String"/>
-<attribute name="species_group_flag" type="java.lang.String"/>
-<attribute name="target_chembl_id" type="java.lang.String"/>
-<attribute name="target_component_accession" type="java.lang.String"/>
-<attribute name="target_component_id" type="java.lang.String"/>
-<attribute name="target_component_type" type="java.lang.String"/>
-<attribute name="target_type" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-</child>
-</operator>
-</plan>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="ProjectionTerm">
+    <projections name="c0" type="java.lang.String"/>
+    <projections name="c1" type="java.lang.String"/>
+    <projections name="c2" type="java.lang.String"/>
+    <projections name="c3" type="java.lang.String"/>
+    <projections name="c4" type="java.lang.String"/>
+    <projections name="c5" type="java.lang.String"/>
+    <projections name="c6" type="java.lang.String"/>
+    <projections name="c7" type="java.lang.String"/>
+    <projections name="c8" type="java.lang.String"/>
+    <projections name="c9" type="java.lang.String"/>
+    <projections name="c10" type="java.lang.String"/>
+    <projections name="c31" type="java.lang.String"/>
+    <projections name="c32" type="java.lang.String"/>
+    <projections name="c33" type="java.lang.String"/>
+    <projections name="c21" type="java.lang.String"/>
+    <projections name="c34" type="java.lang.String"/>
+    <projections name="c35" type="java.lang.String"/>
+    <projections name="c36" type="java.lang.String"/>
+    <projections name="c22" type="java.lang.String"/>
+    <projections name="c16" type="java.lang.String"/>
+    <projections name="c23" type="java.lang.String"/>
+    <projections name="c24" type="java.lang.String"/>
+    <projections name="c25" type="java.lang.String"/>
+    <projections name="c26" type="java.lang.String"/>
+    <projections name="c27" type="java.lang.String"/>
+    <projections name="c28" type="java.lang.String"/>
+    <projections name="c29" type="java.lang.String"/>
+    <projections name="c30" type="java.lang.String"/>
+    <RelationalTerm type="JoinTerm">
+        <RelationalTerm type="JoinTerm">
+            <RelationalTerm type="SelectionTerm">
+                <predicate type="ConjunctiveCondition">
+                    <predicates position="1" type="ConstantEqualityCondition">
+                        <constant value="PUBLICATION"/>
+                    </predicates>
+                    <predicates position="11" type="ConstantEqualityCondition">
+                        <constant value="2015"/>
+                    </predicates>
+                </predicate>
+                <RelationalTerm type="RenameTerm">
+                    <renamings name="c22" type="java.lang.String"/>
+                    <renamings name="PUBLICATION" type="java.lang.String"/>
+                    <renamings name="c16" type="java.lang.String"/>
+                    <renamings name="c23" type="java.lang.String"/>
+                    <renamings name="c24" type="java.lang.String"/>
+                    <renamings name="c25" type="java.lang.String"/>
+                    <renamings name="c26" type="java.lang.String"/>
+                    <renamings name="c27" type="java.lang.String"/>
+                    <renamings name="c28" type="java.lang.String"/>
+                    <renamings name="c29" type="java.lang.String"/>
+                    <renamings name="c30" type="java.lang.String"/>
+                    <renamings name="2015" type="java.lang.String"/>
+                    <RelationalTerm type="AccessTerm">
+                        <accessMethod name="chembl_document_limited"/>
+                        <relation name="DocumentLimited">
+                            <attribute name="authors" type="java.lang.String"/>
+                            <attribute name="doc_type" type="java.lang.String"/>
+                            <attribute name="document_chembl_id" type="java.lang.String"/>
+                            <attribute name="doi" type="java.lang.String"/>
+                            <attribute name="first_page" type="java.lang.String"/>
+                            <attribute name="issue" type="java.lang.String"/>
+                            <attribute name="journal" type="java.lang.String"/>
+                            <attribute name="last_page" type="java.lang.String"/>
+                            <attribute name="pubmed_id" type="java.lang.String"/>
+                            <attribute name="title" type="java.lang.String"/>
+                            <attribute name="volume" type="java.lang.String"/>
+                            <attribute name="year" type="java.lang.String"/>
+                            <access-method name="chembl_document_limited"/>
+                            <access-method name="chembl_document_limited_1"/>
+                        </relation>
+                    </RelationalTerm>
+                </RelationalTerm>
+            </RelationalTerm>
+            <RelationalTerm type="SelectionTerm">
+                <predicate type="ConjunctiveCondition">
+                    <predicates position="7" type="ConstantEqualityCondition">
+                        <constant value="SINGLE PROTEIN"/>
+                    </predicates>
+                </predicate>
+                <RelationalTerm type="RenameTerm">
+                    <renamings name="c31" type="java.lang.String"/>
+                    <renamings name="c32" type="java.lang.String"/>
+                    <renamings name="c33" type="java.lang.String"/>
+                    <renamings name="c21" type="java.lang.String"/>
+                    <renamings name="c34" type="java.lang.String"/>
+                    <renamings name="c35" type="java.lang.String"/>
+                    <renamings name="c36" type="java.lang.String"/>
+                    <renamings name="SINGLE PROTEIN" type="java.lang.String"/>
+                    <RelationalTerm type="AccessTerm">
+                        <accessMethod name="chembl_target_limited"/>
+                        <relation name="TargetLimited">
+                            <attribute name="organism" type="java.lang.String"/>
+                            <attribute name="pref_name" type="java.lang.String"/>
+                            <attribute name="species_group_flag" type="java.lang.String"/>
+                            <attribute name="target_chembl_id" type="java.lang.String"/>
+                            <attribute name="target_component_accession" type="java.lang.String"/>
+                            <attribute name="target_component_id" type="java.lang.String"/>
+                            <attribute name="target_component_type" type="java.lang.String"/>
+                            <attribute name="target_type" type="java.lang.String"/>
+                            <access-method name="chembl_target_limited"/>
+                            <access-method name="chembl_target_limited_1"/>
+                        </relation>
+                    </RelationalTerm>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="RenameTerm">
+            <renamings name="c0" type="java.lang.String"/>
+            <renamings name="c1" type="java.lang.String"/>
+            <renamings name="c2" type="java.lang.String"/>
+            <renamings name="c3" type="java.lang.String"/>
+            <renamings name="c4" type="java.lang.String"/>
+            <renamings name="c5" type="java.lang.String"/>
+            <renamings name="c6" type="java.lang.String"/>
+            <renamings name="c7" type="java.lang.String"/>
+            <renamings name="c8" type="java.lang.String"/>
+            <renamings name="c9" type="java.lang.String"/>
+            <renamings name="c10" type="java.lang.String"/>
+            <renamings name="c11" type="java.lang.String"/>
+            <renamings name="c12" type="java.lang.String"/>
+            <renamings name="c13" type="java.lang.String"/>
+            <renamings name="c14" type="java.lang.String"/>
+            <renamings name="c15" type="java.lang.String"/>
+            <renamings name="c16" type="java.lang.String"/>
+            <renamings name="c17" type="java.lang.String"/>
+            <renamings name="c18" type="java.lang.String"/>
+            <renamings name="c19" type="java.lang.String"/>
+            <renamings name="c20" type="java.lang.String"/>
+            <renamings name="c21" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="chembl_assay_limited"/>
+                <relation name="AssayLimited">
+                    <attribute name="assay_category" type="java.lang.String"/>
+                    <attribute name="assay_cell_type" type="java.lang.String"/>
+                    <attribute name="assay_chembl_id" type="java.lang.String"/>
+                    <attribute name="assay_organism" type="java.lang.String"/>
+                    <attribute name="assay_strain" type="java.lang.String"/>
+                    <attribute name="assay_subcellular_fraction" type="java.lang.String"/>
+                    <attribute name="assay_tax_id" type="java.lang.String"/>
+                    <attribute name="assay_test_type" type="java.lang.String"/>
+                    <attribute name="assay_tissue" type="java.lang.String"/>
+                    <attribute name="assay_type" type="java.lang.String"/>
+                    <attribute name="assay_type_description" type="java.lang.String"/>
+                    <attribute name="bao_format" type="java.lang.String"/>
+                    <attribute name="cell_chembl_id" type="java.lang.String"/>
+                    <attribute name="confidence_description" type="java.lang.String"/>
+                    <attribute name="confidence_score" type="java.lang.String"/>
+                    <attribute name="description" type="java.lang.String"/>
+                    <attribute name="document_chembl_id" type="java.lang.String"/>
+                    <attribute name="relationship_description" type="java.lang.String"/>
+                    <attribute name="relationship_type" type="java.lang.String"/>
+                    <attribute name="src_assay_id" type="java.lang.String"/>
+                    <attribute name="src_id" type="java.lang.String"/>
+                    <attribute name="target_chembl_id" type="java.lang.String"/>
+                    <access-method name="chembl_assay_limited"/>
+                    <access-method name="chembl_assay_limited_1"/>
+                    <access-method name="chembl_assay_limited_2"/>
+                    <access-method name="chembl_assay_limited_3"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="5.595710877540003E8" type="DoubleCost"/>
+</RelationalTermWithCost>

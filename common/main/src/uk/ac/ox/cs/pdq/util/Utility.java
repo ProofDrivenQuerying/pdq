@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +23,9 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ChaseConstantGenerator;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Formula;
@@ -36,7 +34,6 @@ import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
@@ -314,32 +311,6 @@ public class Utility {
 	}
 
 	/**
-	 * see #42
-	 * 
-	 * Generate canonical mapping.
-	 *
-	 * @param body the body
-	 * @return 		a mapping of variables of the input conjunction to constants. 
-	 * 		A fresh constant is created for each variable of the conjunction. 
-	 * 		This method is invoked by the conjunctive query constructor when the constructor is called with empty input canonical mapping.
-	 */
-	public static Map<Variable, Constant> generateCanonicalMapping(ConjunctiveQuery query) {
-		Map<Variable, Constant> canonicalMapping = new LinkedHashMap<>();
-		for (Atom p: query.getAtoms()) {
-			for (Term t: p.getTerms()) {
-				if (t.isVariable()) {
-					Constant c = canonicalMapping.get(t);
-					if (c == null) {
-						c = UntypedConstant.create(ChaseConstantGenerator.getName());
-						canonicalMapping.put((Variable) t, c);
-					}
-				}
-			}
-		}
-		return canonicalMapping;
-	}
-
-	/**
 	 * Clusters the input atoms based on their signature
 	 * @param atoms
 	 * @return
@@ -461,6 +432,28 @@ public class Utility {
 			log.error(e);
 		}
 		throw new ClassCastException(o + " could not be cast to " + type);
+	}
+	public static Schema convertToStringAttributeOnly(Schema s) {
+		Relation relations[] = new Relation[s.getRelations().length];
+		for (int i = 0; i < relations.length; i++) {
+			relations[i] = convertToStringAttributeOnly(s.getRelation(i));
+		}
+		List<Dependency> dependencies = new ArrayList<>();
+		dependencies.addAll(Arrays.asList(s.getDependencies()));
+		dependencies.addAll(Arrays.asList(s.getKeyDependencies()));
+		return new Schema(relations,dependencies.toArray(new Dependency[dependencies.size()]));
+	}
+
+	public static Relation convertToStringAttributeOnly(Relation r) {
+		Attribute[] attributes = new Attribute[r.getAttributes().length];
+		for (int i = 0; i < attributes.length; i++) {
+			if (r.getAttribute(i).getType().equals(String.class)) {
+				attributes[i] = r.getAttribute(i);
+			} else {
+				attributes[i] = Attribute.create(String.class, r.getAttribute(i).getName());
+			}
+		}
+		return Relation.create(r.getName(), attributes,r.getAccessMethods(),r.getForeignKeys(),r.isEquality());
 	}
 
 	/**

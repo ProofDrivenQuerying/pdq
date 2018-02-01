@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="ProjectionTerm">
-    <projections name="c20" type="java.lang.String"/>
-    <projections name="c22" type="java.lang.Integer"/>
-    <projections name="c25" type="java.lang.String"/>
+    <projections name="c7" type="java.lang.String"/>
+    <projections name="c9" type="java.lang.String"/>
+    <projections name="c12" type="java.lang.String"/>
     <RelationalTerm type="JoinTerm">
         <RelationalTerm type="RenameTerm">
-            <renamings name="c13" type="java.lang.Integer"/>
-            <renamings name="c14" type="java.lang.Integer"/>
-            <renamings name="c15" type="java.lang.Integer"/>
-            <renamings name="c16" type="java.math.BigDecimal"/>
-            <renamings name="c17" type="java.lang.String"/>
+            <renamings name="c0" type="java.lang.String"/>
+            <renamings name="c1" type="java.lang.String"/>
+            <renamings name="c2" type="java.lang.String"/>
+            <renamings name="c3" type="java.lang.String"/>
+            <renamings name="c4" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
                 <accessMethod name="m8"/>
                 <relation name="partsupp">
-                    <attribute name="ps_partkey" type="java.lang.Integer"/>
-                    <attribute name="ps_suppkey" type="java.lang.Integer"/>
-                    <attribute name="ps_availqty" type="java.lang.Integer"/>
-                    <attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+                    <attribute name="ps_partkey" type="java.lang.String"/>
+                    <attribute name="ps_suppkey" type="java.lang.String"/>
+                    <attribute name="ps_availqty" type="java.lang.String"/>
+                    <attribute name="ps_supplycost" type="java.lang.String"/>
                     <attribute name="ps_comment" type="java.lang.String"/>
                     <access-method name="m8"/>
                     <access-method name="m9" inputs="0,2"/>
@@ -24,26 +24,26 @@
             </RelationalTerm>
         </RelationalTerm>
         <RelationalTerm type="RenameTerm">
-            <renamings name="c13" type="java.lang.Integer"/>
-            <renamings name="c18" type="java.lang.String"/>
-            <renamings name="c19" type="java.lang.String"/>
-            <renamings name="c20" type="java.lang.String"/>
-            <renamings name="c21" type="java.lang.String"/>
-            <renamings name="c22" type="java.lang.Integer"/>
-            <renamings name="c23" type="java.lang.String"/>
-            <renamings name="c24" type="java.math.BigDecimal"/>
-            <renamings name="c25" type="java.lang.String"/>
+            <renamings name="c0" type="java.lang.String"/>
+            <renamings name="c5" type="java.lang.String"/>
+            <renamings name="c6" type="java.lang.String"/>
+            <renamings name="c7" type="java.lang.String"/>
+            <renamings name="c8" type="java.lang.String"/>
+            <renamings name="c9" type="java.lang.String"/>
+            <renamings name="c10" type="java.lang.String"/>
+            <renamings name="c11" type="java.lang.String"/>
+            <renamings name="c12" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
                 <accessMethod name="m4"/>
                 <relation name="part">
-                    <attribute name="p_partkey" type="java.lang.Integer"/>
+                    <attribute name="p_partkey" type="java.lang.String"/>
                     <attribute name="p_name" type="java.lang.String"/>
                     <attribute name="p_mfgr" type="java.lang.String"/>
                     <attribute name="p_brand" type="java.lang.String"/>
                     <attribute name="p_type" type="java.lang.String"/>
-                    <attribute name="p_size" type="java.lang.Integer"/>
+                    <attribute name="p_size" type="java.lang.String"/>
                     <attribute name="p_container" type="java.lang.String"/>
-                    <attribute name="p_retailprice" type="java.math.BigDecimal"/>
+                    <attribute name="p_retailprice" type="java.lang.String"/>
                     <attribute name="p_comment" type="java.lang.String"/>
                     <access-method name="m4"/>
                     <access-method name="m5" inputs="0,1"/>
@@ -51,5 +51,5 @@
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="2.0" type="DoubleCost"/>
+    <cost value="25.0" type="DoubleCost"/>
 </RelationalTermWithCost>

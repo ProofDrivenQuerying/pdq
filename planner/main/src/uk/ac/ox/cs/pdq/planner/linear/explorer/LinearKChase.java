@@ -25,7 +25,7 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -84,7 +84,7 @@ public class LinearKChase extends LinearExplorer {
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			DatabaseConnection connection,
+			DatabaseManager connection,
 			CostEstimator costEstimator,
 			CostPropagator costPropagator,
 			NodeFactory nodeFactory,
