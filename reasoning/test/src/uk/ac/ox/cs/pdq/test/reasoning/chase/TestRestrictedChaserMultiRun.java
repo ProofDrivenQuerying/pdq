@@ -39,7 +39,7 @@ public class TestRestrictedChaserMultiRun extends PdqTest {
 		trc.tearDown();
 	}
 
-	@Test
+	//@Test
 	public void testMultiThreadMySQL() throws Exception {
 
 		TestRestrictedChaser trc = new TestRestrictedChaser();
@@ -59,7 +59,7 @@ public class TestRestrictedChaserMultiRun extends PdqTest {
 		trc.tearDown();
 	}
 
-	@Test
+	//@Test
 	public void testLongRunningMultiThreadMySql() throws Exception {
 
 		for (int i = 0; i < REPEAT; i++) {

@@ -115,8 +115,19 @@ public class Schema {
 	 *
 	 * @return the schema dependencies
 	 */
-	public Dependency[] getDependencies() {
+	public Dependency[] getNonEgdDependencies() {
 		return this.nonEgdDependencies.clone();
+	}
+	
+	/** get non edge and key dependencies in one array. 
+	 * @return
+	 */
+	public Dependency[] getAllDependencies() {
+		Dependency all[] = new Dependency[nonEgdDependencies.length + egdDependencies.length];
+		int i = 0;
+		for (Dependency d:nonEgdDependencies) all[i++] = d;
+		for (Dependency d:egdDependencies) all[i++] = d;
+		return all;
 	}
 
 	/**

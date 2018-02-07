@@ -73,7 +73,7 @@ public class AccessibleSchema extends Schema {
 	 * @param schema Schema
 	 */
 	public AccessibleSchema(Schema schema) {
-		this(schema.getRelations(), schema.getDependencies());
+		this(schema.getRelations(), schema.getNonEgdDependencies());
 	}
 
 	/**

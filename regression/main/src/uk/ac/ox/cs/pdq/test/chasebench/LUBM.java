@@ -59,7 +59,7 @@ public class LUBM {
 		printStats(res);
 		RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
 		long start = System.currentTimeMillis();
-		chaser.reasonUntilTermination(state, s.getDependencies());
+		chaser.reasonUntilTermination(state, s.getAllDependencies());
 		long duration = System.currentTimeMillis() - start;
 		System.out.println("reasonUntilTermination took " + (duration/1000.0) + " seconds.");
 		res = state.getFacts();

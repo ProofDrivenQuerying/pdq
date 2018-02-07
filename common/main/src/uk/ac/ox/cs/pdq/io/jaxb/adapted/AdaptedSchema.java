@@ -35,7 +35,7 @@ public class AdaptedSchema {
 	public AdaptedSchema(Schema s) {
 		relations = s.getRelations();
 		List<Dependency> dependencies = new ArrayList<>();
-		dependencies.addAll(Arrays.asList(s.getDependencies()));
+		dependencies.addAll(Arrays.asList(s.getNonEgdDependencies()));
 		dependencies.addAll(Arrays.asList(s.getKeyDependencies()));
 		setDependencies(dependencies.toArray(new Dependency[dependencies.size()]));
 		currentSchema = this;

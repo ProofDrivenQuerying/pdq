@@ -347,7 +347,7 @@ public class ExternalDatabaseManager implements DatabaseManager {
 		newRelations[i] = newRelation;
 		List<Dependency> deps = new ArrayList<>();
 		deps.addAll(Arrays.asList(this.schema.getKeyDependencies()));
-		deps.addAll(Arrays.asList(this.schema.getDependencies()));
+		deps.addAll(Arrays.asList(this.schema.getNonEgdDependencies()));
 		this.schema = new Schema(newRelations, deps.toArray(new Dependency[deps.size()]));
 		executeUpdateCommand(new CreateTable(this.schema.getRelation(newRelation.getName())));
 	}

@@ -49,7 +49,7 @@ public class TestMainMySql {
 		}
 		List<Dependency> dependencies = new ArrayList<>();
 
-		dependencies.addAll(Arrays.asList(s.getDependencies()));
+		dependencies.addAll(Arrays.asList(s.getAllDependencies()));
 		if (s.getKeyDependencies().length > 0)
 			dependencies.addAll(Arrays.asList(s.getKeyDependencies()));
 		return new Schema(lr.toArray(new Relation[lr.size()]), dependencies.toArray(new Dependency[dependencies.size()]));
@@ -75,7 +75,7 @@ public class TestMainMySql {
 			System.out.println("INITIAL STATE: " + res);
 
 			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
-			chaser.reasonUntilTermination(state, schema.getDependencies());
+			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
 			System.out.println("WITH FINAL STATE: " + res);
@@ -130,7 +130,7 @@ public class TestMainMySql {
 			System.out.println("INITIAL STATE: " + res);
 
 			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
-			chaser.reasonUntilTermination(state, schema.getDependencies());
+			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
 			System.out.println("WITH FINAL STATE: " + res);
@@ -172,7 +172,7 @@ public class TestMainMySql {
 			System.out.println("INITIAL STATE: " + res);
 
 			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
-			chaser.reasonUntilTermination(state, schema.getDependencies());
+			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
 			System.out.println("WITH FINAL STATE: " + res);
@@ -233,11 +233,10 @@ public class TestMainMySql {
 			System.out.println("INITIAL STATE: " + res);
 
 			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
-			chaser.reasonUntilTermination(state, schema.getDependencies());
+			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
 			System.out.println("WITH FINAL STATE: " + res);
-			Assert.assertTrue(!state.isFailed());
 
 			List<Atom> w2Atoms = getAtomsOfTable(res, "w2");
 			Assert.assertEquals(84, w2Atoms.size());
@@ -294,13 +293,13 @@ public class TestMainMySql {
 			System.out.println("INITIAL STATE: " + res);
 
 			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
-			chaser.reasonUntilTermination(state, schema.getDependencies());
+			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
 			System.out.println("WITH FINAL STATE: " + res);
 			Assert.assertTrue(!state.isFailed());
 			List<Atom> rAtoms = getAtomsOfTable(res, "R");
-			Assert.assertEquals(6, rAtoms.size());
+			Assert.assertEquals(5, rAtoms.size());
 			HashSet<String> unique = new HashSet<>();
 			for (Atom a : rAtoms) {
 				if (a.getTerms()[0].toString().startsWith("k"))
@@ -336,7 +335,7 @@ public class TestMainMySql {
 			System.out.println("INITIAL STATE: " + res);
 
 			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
-			chaser.reasonUntilTermination(state, schema.getDependencies());
+			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
 			System.out.println("WITH FINAL STATE: " + res);

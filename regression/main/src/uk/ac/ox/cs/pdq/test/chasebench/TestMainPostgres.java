@@ -59,7 +59,7 @@ public class TestMainPostgres {
 			System.out.println("INITIAL STATE: " + res);
 
 			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
-			chaser.reasonUntilTermination(state, schema.getDependencies());
+			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
 			System.out.println("WITH FINAL STATE: " + res);
@@ -113,7 +113,7 @@ public class TestMainPostgres {
 			System.out.println("INITIAL STATE: " + res);
 
 			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
-			chaser.reasonUntilTermination(state, schema.getDependencies());
+			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
 			System.out.println("WITH FINAL STATE: " + res);
@@ -155,7 +155,7 @@ public class TestMainPostgres {
 			System.out.println("INITIAL STATE: " + res);
 
 			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
-			chaser.reasonUntilTermination(state, schema.getDependencies());
+			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
 			System.out.println("WITH FINAL STATE: " + res);
@@ -215,15 +215,13 @@ public class TestMainPostgres {
 			System.out.println("INITIAL STATE: " + res);
 
 			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
-			chaser.reasonUntilTermination(state, schema.getDependencies());
+			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
 			System.out.println("WITH FINAL STATE: " + res);
-			Assert.assertTrue(!state.isFailed());
 
 			List<Atom> w2Atoms = getAtomsOfTable(res, "w2");
 			Assert.assertEquals(84, w2Atoms.size());
-			//Assert.assertEquals(165/*84*/, w2Atoms.size());
 			int notK = 0;
 			for (Atom a : w2Atoms) {
 				if (!a.getTerms()[0].toString().startsWith("k") && !a.getTerms()[1].toString().startsWith("k"))
@@ -277,13 +275,13 @@ public class TestMainPostgres {
 			System.out.println("INITIAL STATE: " + res);
 
 			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
-			chaser.reasonUntilTermination(state, schema.getDependencies());
+			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
 			System.out.println("WITH FINAL STATE: " + res);
 			Assert.assertTrue(!state.isFailed());
 			List<Atom> rAtoms = getAtomsOfTable(res, "R");
-			Assert.assertEquals(6, rAtoms.size());
+			Assert.assertEquals(5, rAtoms.size());
 			HashSet<String> unique = new HashSet<>();
 			for (Atom a : rAtoms) {
 				if (a.getTerms()[0].toString().startsWith("k"))
@@ -319,7 +317,7 @@ public class TestMainPostgres {
 			System.out.println("INITIAL STATE: " + res);
 
 			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
-			chaser.reasonUntilTermination(state, schema.getDependencies());
+			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
 			System.out.println("WITH FINAL STATE: " + res);

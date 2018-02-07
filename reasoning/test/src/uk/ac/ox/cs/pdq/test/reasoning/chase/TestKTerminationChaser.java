@@ -247,7 +247,7 @@ public class TestKTerminationChaser extends PdqTest {
 		testA1(DatabaseParameters.Derby);
 	}
 
-	@Test
+	//@Test
 	public void testA1MySql() throws SQLException {
 		testA1(DatabaseParameters.MySql);
 	}
@@ -343,7 +343,7 @@ public class TestKTerminationChaser extends PdqTest {
 		testB1(DatabaseParameters.Derby);
 	}
 
-	@Test
+	//@Test
 	public void testB1MySql() throws SQLException {
 		testB1(DatabaseParameters.MySql);
 	}

@@ -207,7 +207,7 @@ public class RestrictedChaserTest {
 				DatabaseManager dbcon = createConnection(DatabaseParameters.Derby,schema);
 				DatabaseChaseInstance state = new DatabaseChaseInstance(query, dbcon);				
 				
-				reasoner.reasonUntilTermination(state, schema.getDependencies());
+				reasoner.reasonUntilTermination(state, schema.getAllDependencies());
 				Collection<Atom> expected = loadFacts(PATH + f, schema);
 				Assert.assertEquals(expected.size(), state.getFacts().size());
 			} catch (FileNotFoundException e) {

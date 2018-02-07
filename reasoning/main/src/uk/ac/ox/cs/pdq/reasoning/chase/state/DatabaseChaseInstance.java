@@ -485,8 +485,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			// make sure equality atoms are always added in pairs ( EQUALITY(a,b) should
 			// have a pair EQUALITY(b,a) )
 			for (Atom factToAdd : factsToAdd) {
-				//TOCOMMENT factToAdd.getPredicate().isEquality()
-				if ("Equality".equalsIgnoreCase(factToAdd.getPredicate().getName())) {
+				if (factToAdd.getPredicate().isEquality()) {
 					Atom pair = Atom.create(factToAdd.getPredicate(), new Term[] { factToAdd.getTerms()[1], factToAdd.getTerms()[0] });
 					if (!newFacts.contains(pair)) {
 						newFacts.add(pair);

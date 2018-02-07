@@ -242,7 +242,7 @@ private static FileWriter summary = null;
 
 		private Schema addAccessibleToSchema(Schema schema) {
 			List<Dependency> dep = new ArrayList<>();
-			dep.addAll(Arrays.asList(schema.getDependencies()));
+			dep.addAll(Arrays.asList(schema.getAllDependencies()));
 			dep.addAll(Arrays.asList(schema.getKeyDependencies()));
 			List<Relation> rel = new ArrayList<>(); 
 			rel.addAll(Arrays.asList(schema.getRelations()));

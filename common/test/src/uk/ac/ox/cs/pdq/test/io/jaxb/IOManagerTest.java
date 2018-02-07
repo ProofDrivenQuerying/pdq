@@ -73,8 +73,8 @@ public class IOManagerTest {
 			Assert.assertTrue(s.getRelations().length > 0);
 			Assert.assertNotNull(s.getRelations()[0]);
 			Assert.assertNotNull(s.getRelations()[0].getName());
-			Assert.assertNotNull(s.getDependencies());
-			Assert.assertTrue(s.getDependencies().length > 0);
+			Assert.assertNotNull(s.getNonEgdDependencies());
+			Assert.assertTrue(s.getNonEgdDependencies().length > 0);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());

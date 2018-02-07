@@ -360,7 +360,7 @@ public class ExplorationSetUp {
 
 	private Schema convertTypesToString(Schema schema) {
 		List<Dependency> dep = new ArrayList<>();
-		dep.addAll(Arrays.asList(schema.getDependencies()));
+		dep.addAll(Arrays.asList(schema.getNonEgdDependencies()));
 		dep.addAll(Arrays.asList(schema.getKeyDependencies()));
 		Relation[] rels = schema.getRelations();
 		for (int i = 0; i < rels.length; i++) {

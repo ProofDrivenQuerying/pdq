@@ -60,7 +60,7 @@ public class AdaptedDbSchema {
 
 	public AdaptedDbSchema(Schema s) {
 		relations = s.getRelations();
-		setDependencies(s.getDependencies());
+		setDependencies(s.getNonEgdDependencies());
 	}
 
 	public Schema toSchema(Properties properties) throws  ClassNotFoundException, InstantiationException, IllegalAccessException {
@@ -110,8 +110,8 @@ public class AdaptedDbSchema {
 				SchemaDiscoverer sd = (SchemaDiscoverer) Class.forName(discoverer).newInstance();
 				sd.setProperties(propertiesClone);
 				Schema discoveredPartialSchema = sd.discover();
-				if (discoveredPartialSchema.getDependencies() != null && discoveredPartialSchema.getDependencies().length!=0) {
-					discoveredDependencies.addAll(Arrays.asList(discoveredPartialSchema.getDependencies()));
+				if (discoveredPartialSchema.getNonEgdDependencies() != null && discoveredPartialSchema.getNonEgdDependencies().length!=0) {
+					discoveredDependencies.addAll(Arrays.asList(discoveredPartialSchema.getNonEgdDependencies()));
 				}
 				
 				Cache.reStartCaches();

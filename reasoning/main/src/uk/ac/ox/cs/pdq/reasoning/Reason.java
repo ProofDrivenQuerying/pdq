@@ -171,8 +171,9 @@ public class Reason {
 			ExternalDatabaseManager edm = new ExternalDatabaseManager(dbParams);
 			LogicalDatabaseInstance manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm, GlobalCounterProvider.getNext("DatabaseInstanceID"));
 			manager.initialiseDatabaseForSchema(schema);
-			ChaseInstance state = new DatabaseChaseInstance(query,manager);		
-			reasoner.reasonUntilTermination(state, schema.getDependencies());
+			ChaseInstance state = new DatabaseChaseInstance(query,manager);
+			//TOCOMMENT do we need egs here, or we want only tgds?
+			reasoner.reasonUntilTermination(state, schema.getAllDependencies());
 			
 		} catch (Throwable e) {
 			log.error("Planning aborted: " + e.getMessage(), e);

@@ -25,7 +25,6 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Formula;
@@ -438,10 +437,7 @@ public class Utility {
 		for (int i = 0; i < relations.length; i++) {
 			relations[i] = convertToStringAttributeOnly(s.getRelation(i));
 		}
-		List<Dependency> dependencies = new ArrayList<>();
-		dependencies.addAll(Arrays.asList(s.getDependencies()));
-		dependencies.addAll(Arrays.asList(s.getKeyDependencies()));
-		return new Schema(relations,dependencies.toArray(new Dependency[dependencies.size()]));
+		return new Schema(relations,s.getAllDependencies());
 	}
 
 	public static Relation convertToStringAttributeOnly(Relation r) {

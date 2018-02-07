@@ -21,7 +21,6 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQueryWithInequality;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -281,10 +280,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 			index++;
 		}
 		newRelations[newRelations.length - 1] = factIdInstanceIdMappingTable;
-		List<Dependency> deps = new ArrayList<>();
-		deps.addAll(Arrays.asList(schema.getKeyDependencies()));
-		deps.addAll(Arrays.asList(schema.getDependencies()));
-		return new Schema(newRelations, deps.toArray(new Dependency[deps.size()]));
+		return new Schema(newRelations, schema.getAllDependencies());
 	}
 
 	private static Collection<Atom> extendFactsWithFactID(Collection<Atom> facts) {
@@ -439,10 +435,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		for (Relation r : this.originalSchema.getRelations())
 			newRelations[i++] = r;
 		newRelations[i] = newRelation;
-		List<Dependency> deps = new ArrayList<>();
-		deps.addAll(Arrays.asList(this.originalSchema.getKeyDependencies()));
-		deps.addAll(Arrays.asList(this.originalSchema.getDependencies()));
-		this.originalSchema = new Schema(newRelations, deps.toArray(new Dependency[deps.size()]));
+		this.originalSchema = new Schema(newRelations, this.originalSchema.getAllDependencies());
 		this.setSchema(originalSchema);
 		edm.executeUpdateCommand(new CreateTable(this.extendedSchema.getRelation(newRelation.getName())));
 	}
