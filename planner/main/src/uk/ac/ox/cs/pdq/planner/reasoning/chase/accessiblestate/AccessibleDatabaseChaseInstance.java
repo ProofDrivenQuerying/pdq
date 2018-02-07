@@ -412,7 +412,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 					new LinkedHashSet<>(this.inferredAccessibleAtoms),
 					new LinkedHashSet<>(this.derivedInferredAccessibleAtoms), 
 					LinkedHashMultimap.create(this.atomsMap), 
-					LinkedHashMultimap.create(this.accessibleTerms),chaseDatabaseInstance);
+					LinkedHashMultimap.create(this.accessibleTerms),databaseInstance);
 		} catch (SQLException e) {
 			throw new RuntimeException("Cloning of AccessibleDatabaseListState failed due to an SQL exception "+e);
 		}
@@ -453,7 +453,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 					derivedInferred, 
 					map, 
 					accessibleTerms,
-					chaseDatabaseInstance);
+					databaseInstance);
 			ret.addFacts(facts);
 			return ret;
 		} catch (SQLException e) {

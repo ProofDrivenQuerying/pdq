@@ -56,7 +56,7 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
  */
 public class DatabaseChaseInstance implements ChaseInstance {
 	protected static Logger log = Logger.getLogger(LogicalDatabaseInstance.class);
-	protected final DatabaseManager chaseDatabaseInstance;
+	protected final DatabaseManager databaseInstance;
 	private boolean _isFailed = false;
 
 	/**
@@ -103,14 +103,14 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 */
 	public DatabaseChaseInstance(ConjunctiveQuery query, DatabaseManager connection) throws SQLException {
 		try {
-			chaseDatabaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
+			databaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
 		} catch (DatabaseException e) {
 			throw new RuntimeException("database failure", e);
 		}
 		this.addFacts(Sets.newHashSet(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, uk.ac.ox.cs.pdq.reasoning.chase.Utility.generateCanonicalMapping(query)).getAtoms()));
 		this.classes = new EqualConstantsClasses();
 		try {
-			this.constantsToAtoms = ReasonerUtility.createdConstantsMap(chaseDatabaseInstance.getCachedFacts());
+			this.constantsToAtoms = ReasonerUtility.createdConstantsMap(databaseInstance.getCachedFacts());
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -120,7 +120,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	@Override
 	public void deleteFacts(Collection<Atom> facts) {
 		try {
-			chaseDatabaseInstance.deleteFacts(facts);
+			databaseInstance.deleteFacts(facts);
 		} catch (DatabaseException e) {
 			System.err.println("Could not delete facts (" + facts + ") from this: " + this);
 			e.printStackTrace();
@@ -137,7 +137,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 */
 	public DatabaseChaseInstance(Collection<Atom> facts, DatabaseManager connection) throws SQLException {
 		try {
-			chaseDatabaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
+			databaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
 		} catch (DatabaseException e) {
 			throw new RuntimeException("database failure", e);
 		}
@@ -145,7 +145,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		this.addFacts(facts);
 		this.classes = new EqualConstantsClasses();
 		try {
-			this.constantsToAtoms = ReasonerUtility.createdConstantsMap(chaseDatabaseInstance.getCachedFacts());
+			this.constantsToAtoms = ReasonerUtility.createdConstantsMap(databaseInstance.getCachedFacts());
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -161,7 +161,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 */
 	private DatabaseChaseInstance(EqualConstantsClasses classes, Multimap<Constant, Atom> constants, DatabaseManager connection) {
 		try {
-			chaseDatabaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
+			databaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
 		} catch (DatabaseException e) {
 			throw new RuntimeException("database failure", e);
 		}
@@ -192,7 +192,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 */
 	protected DatabaseChaseInstance(Collection<Atom> facts, EqualConstantsClasses classes, Multimap<Constant, Atom> constants, DatabaseManager connection) {
 		try {
-			chaseDatabaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
+			databaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
 		} catch (DatabaseException e) {
 			throw new RuntimeException("database failure", e);
 		}
@@ -200,7 +200,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		Preconditions.checkNotNull(classes);
 		Preconditions.checkNotNull(constants);
 		try {
-			chaseDatabaseInstance.addFacts(facts);
+			databaseInstance.addFacts(facts);
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -212,7 +212,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		Relation equality = this.createDatabaseEqualityRelation();
 		try {
 			// ADD EQUALITY RELATION
-			chaseDatabaseInstance.addRelation(equality);
+			databaseInstance.addRelation(equality);
 		} catch (DatabaseException e) {
 			throw new SQLException(e);
 		}
@@ -474,10 +474,6 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		return this._isFailed;
 	}
 
-	// public Multimap<Constant, Atom> getConstantsToAtoms() {
-	// return this.constantsToAtoms;
-	// }
-
 	/*
 	 * (non-Javadoc) add the input set of facts to the database
 	 */
@@ -489,6 +485,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			// make sure equality atoms are always added in pairs ( EQUALITY(a,b) should
 			// have a pair EQUALITY(b,a) )
 			for (Atom factToAdd : factsToAdd) {
+				//TOCOMMENT factToAdd.getPredicate().isEquality()
 				if ("Equality".equalsIgnoreCase(factToAdd.getPredicate().getName())) {
 					Atom pair = Atom.create(factToAdd.getPredicate(), new Term[] { factToAdd.getTerms()[1], factToAdd.getTerms()[0] });
 					if (!newFacts.contains(pair)) {
@@ -496,7 +493,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 					}
 				}
 			}
-			chaseDatabaseInstance.addFacts(newFacts);
+			databaseInstance.addFacts(newFacts);
 		} catch (Throwable t) {
 			System.err.println("Could not add facts (" + factsToAdd + ") to this: " + this);
 			t.printStackTrace();
@@ -513,13 +510,13 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	public DatabaseChaseInstance clone() {
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		constantsToAtoms.putAll(this.constantsToAtoms);
-		return new DatabaseChaseInstance(classes.clone(), constantsToAtoms, chaseDatabaseInstance);
+		return new DatabaseChaseInstance(classes.clone(), constantsToAtoms, databaseInstance);
 	}
 
 	@Override
 	public Collection<Atom> getFacts() {
 		try {
-			return this.chaseDatabaseInstance.getCachedFacts();
+			return this.databaseInstance.getCachedFacts();
 		} catch (DatabaseException e) {
 			throw new RuntimeException("get cached facts failed." + e);
 		}
@@ -544,7 +541,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		constantsToAtoms.putAll(this.constantsToAtoms);
 		constantsToAtoms.putAll(((DatabaseChaseInstance) s).constantsToAtoms);
 
-		return new DatabaseChaseInstance(classes, constantsToAtoms, chaseDatabaseInstance);
+		return new DatabaseChaseInstance(classes, constantsToAtoms, databaseInstance);
 	}
 
 	/**
@@ -584,7 +581,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			converted = ConjunctiveQuery.create(convertedFreeVariables.toArray(new Variable[convertedFreeVariables.size()]),
 					(Conjunction) Conjunction.of(convertedAtoms.toArray(new Atom[convertedAtoms.size()])));
 		try {
-			return chaseDatabaseInstance.answerConjunctiveQuery(converted);
+			return databaseInstance.answerConjunctiveQuery(converted);
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -625,7 +622,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 
 			if (triggerProperty == TriggerProperty.ALL) {
 				try {
-					results.addAll(replaceFormulaInMatches(source, chaseDatabaseInstance.answerConjunctiveQuery(leftQuery)));
+					results.addAll(replaceFormulaInMatches(source, databaseInstance.answerConjunctiveQuery(leftQuery)));
 				} catch (DatabaseException e) {
 					throw new RuntimeException("getTriggers error: ", e);
 				}
@@ -638,7 +635,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 				rightQuery = ConjunctiveQueryWithInequality.create(freeVariables.toArray(new Variable[freeVariables.size()]),
 						(Conjunction) Conjunction.of(rightQueryAtoms.toArray(new Atom[rightQueryAtoms.size()])),inequalities);
 				try {
-					List<Match> queryResults = chaseDatabaseInstance.answerQueryDifferences(leftQuery, rightQuery);
+					List<Match> queryResults = databaseInstance.answerQueryDifferences(leftQuery, rightQuery);
 					results.addAll(replaceFormulaInMatches(source, queryResults));
 				} catch (DatabaseException e) {
 					throw new RuntimeException("getTriggers error: ", e);
@@ -668,7 +665,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	@Override
 	public int hashCode() {
 		if (this.hash == null)
-			this.hash = Objects.hash(chaseDatabaseInstance);
+			this.hash = Objects.hash(databaseInstance);
 		return this.hash;
 	}
 
@@ -677,9 +674,9 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	}
 
 	public void close() throws Exception {
-		if (chaseDatabaseInstance != null) {
-			chaseDatabaseInstance.dropDatabase();
-			chaseDatabaseInstance.shutdown();
+		if (databaseInstance != null) {
+			databaseInstance.dropDatabase();
+			databaseInstance.shutdown();
 		}
 	}
 
