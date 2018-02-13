@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,6 +22,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQueryWithInequality;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
@@ -335,6 +337,74 @@ public class TestInternalDatabaseManager extends PdqTest {
 		res = manager.answerConjunctiveQuery(cq);
 		
 		Assert.assertEquals(2, res.size());
+		
+	}
+	
+	@Test
+	public void testQuerySelfEquality() throws DatabaseException {
+		InternalDatabaseManager manager = new InternalDatabaseManager();
+		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R }));
+		List<Atom> facts = new ArrayList<>();
+
+		// add some disjoint test data
+		for (int i = 0; i < 10; i++) {
+			Atom a1 = Atom.create(this.R, new Term[] { TypedConstant.create(10000 + i), TypedConstant.create(20000 + i), TypedConstant.create(30000 + i) });
+			facts.add(a1);
+		}
+		Atom a1 = Atom.create(this.R, new Term[] { TypedConstant.create(13), TypedConstant.create(13), TypedConstant.create(13) });
+		Atom a2 = Atom.create(this.R, new Term[] { TypedConstant.create(13), TypedConstant.create(13), TypedConstant.create(14) });
+		Atom a3 = Atom.create(this.R, new Term[] { TypedConstant.create(13), TypedConstant.create(15), TypedConstant.create(13) });
+		facts.add(a1);
+		facts.add(a2);
+		facts.add(a3);
+		manager.addFacts(facts);
+		Atom aR = Atom.create(this.R, new Term[] { x, y, x });
+		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y }, aR);
+		List<Match> res = manager.answerConjunctiveQuery(cq);
+		Assert.assertEquals(2, res.size());
+		
+		aR = Atom.create(this.R, new Term[] { x, x, y });
+		cq = ConjunctiveQuery.create(new Variable[] { x, y }, aR);
+		res = manager.answerConjunctiveQuery(cq);
+		
+		Assert.assertEquals(2, res.size());
+		
+	}
+	@Test
+	public void testQueryInEquality() throws DatabaseException {
+		InternalDatabaseManager manager = new InternalDatabaseManager();
+		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R }));
+		List<Atom> facts = new ArrayList<>();
+
+		// add some disjoint test data
+		for (int i = 0; i < 10; i++) {
+			Atom a1 = Atom.create(this.R, new Term[] { TypedConstant.create(10000 + i), TypedConstant.create(20000 + i), TypedConstant.create(30000 + i) });
+			facts.add(a1);
+		}
+		Atom s1 = Atom.create(this.S, new Term[] { TypedConstant.create(10000), TypedConstant.create(20000)});
+		facts.add(s1);
+		Atom a1 = Atom.create(this.R, new Term[] { TypedConstant.create(13), TypedConstant.create(13), TypedConstant.create(13) });
+		Atom a2 = Atom.create(this.R, new Term[] { TypedConstant.create(13), TypedConstant.create(13), TypedConstant.create(14) });
+		Atom a3 = Atom.create(this.R, new Term[] { TypedConstant.create(13), TypedConstant.create(15), TypedConstant.create(13) });
+		Atom a4 = Atom.create(this.R, new Term[] { TypedConstant.create(2), TypedConstant.create(2), TypedConstant.create(2) });
+		facts.add(a1);
+		facts.add(a2);
+		facts.add(a3);
+		facts.add(a4);
+		manager.addFacts(facts);
+		Atom s = Atom.create(this.S, new Term[] { Variable.create("s1"),Variable.create("s2")});
+		Atom aR = Atom.create(this.R, new Term[] { x, x, y});
+		List<Pair<Variable,Variable>> inequalities = new ArrayList<>();
+		inequalities.add(Pair.of(x, y));
+		ConjunctiveQuery cq = ConjunctiveQueryWithInequality.create(new Variable[] { x, y }, (Conjunction)Conjunction.of(aR,s), inequalities );
+		List<Match> res = manager.answerConjunctiveQuery(cq);
+		Assert.assertEquals(1, res.size());
+		
+		aR = Atom.create(this.R, new Term[] { x, x, y });
+		cq = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction)Conjunction.of(aR,s));
+		res = manager.answerConjunctiveQuery(cq);
+		
+		Assert.assertEquals(3, res.size());
 		
 	}
 
