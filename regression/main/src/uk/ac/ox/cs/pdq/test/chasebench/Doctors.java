@@ -61,13 +61,13 @@ public class Doctors {
 	String TEST_DATA[] = {"10k","100k","500k","1m"}; // test data folders;
 	String testDataFolder = TEST_DATA[0];
 	private Schema s = createSchema();
-	//@Test
+	@Test
 	public void testDoctorsInternalDb() throws DatabaseException, SQLException, IOException {
 		DatabaseManager dbm = getInternalDatabaseManager();
 		dbm.initialiseDatabaseForSchema(s);
 		reasonTest(dbm);
 	}
-	@Test
+	//@Test
 	public void testDoctorsExternalDb() throws DatabaseException, SQLException, IOException {
 		DatabaseManager dbm = getExternalDatabaseManager();
 		s = Utility.convertToStringAttributeOnly(s);
@@ -249,8 +249,8 @@ public class Doctors {
 	    		);
 	    dependencies.add(EGD.create(
 		    	//body,
-				new Atom[] {Atom.create(doctor, new Variable[] {npi,doctor1,spec1,hospital1,conf1}),
-				Atom.create(doctor, new Variable[] {npi,doctor2,spec2,hospital2,conf2})},
+				new Atom[] {Atom.create(doctor, new Variable[] {npi1,doctor1,spec1,hospital1,conf1}),
+				Atom.create(doctor, new Variable[] {npi2,doctor1,spec2,hospital2,conf2})},
 	    		//head
 				new Atom[] { Atom.create(eq, npi1, npi2) })
 	    		);
