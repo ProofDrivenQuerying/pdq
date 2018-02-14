@@ -35,7 +35,8 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  * there is no difference using this or the ExternalDatabaseManager, however
  * since it will not store the same facts multiple times it saves space.
  * 
- * Uses the built in fact cache to make sure it won't insert duplicated facts, such duplicates will be ignored.
+ * Uses the built in fact cache to make sure it won't insert duplicated facts,
+ * such duplicates will be ignored.
  * 
  * @author Gabor
  *
@@ -54,7 +55,14 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	protected int databaseInstanceID;
 
 	/**
-	 * Creates database manager and connection if needed based on the parameters.
+	 * This constructor creates a logical instance over an existing remote database
+	 * manager with the given instanceID. Creating multiple logical databases over
+	 * the same external instance will allow to avoid double storing facts, a
+	 * mapping table will map the facts to specific instances. The use case scenario
+	 * is: - Create an external database, - Create one logical instance using this
+	 * constructor, - initialise the the database with a schema using the
+	 * initialiseDatabaseForSchema function - create further instances using the
+	 * clone function.
 	 * 
 	 * @param parameters
 	 * @throws DatabaseException
@@ -66,7 +74,9 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	}
 
 	/**
-	 * Used by the Internal DatabaseManager.
+	 * Used by the Internal DatabaseManager. This constructor is not to be used
+	 * externally, it allows the Internal database to use this class in a cache only
+	 * mode without external database.
 	 * 
 	 * @param cache
 	 * @param databaseInstanceID
@@ -78,7 +88,10 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		this.databaseInstanceID = databaseInstanceID;
 	}
 
-	/** Creates a new logical database (a new instance) over the same external database.
+	/**
+	 * Creates a new logical database (a new instance) over the same external
+	 * database.
+	 * 
 	 * @param newDatabaseInstanceID
 	 * @return
 	 * @throws DatabaseException
@@ -92,7 +105,10 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	}
 
 	/**
-	 * Creates a canonical database for the schema.
+	 * Creates a canonical database for the schema. This function should be called
+	 * only once, when the first logical database instance is created. Further
+	 * instances do not need to call it (it would drop all existing tables from the
+	 * external database making all other logical instance lose all data)
 	 * 
 	 * @param schema
 	 * @throws DatabaseException
@@ -244,7 +260,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		factIdNameCounter = 0;
 		Conjunction newConjunction = addFactIdToConjunction(formula.getBody(), databaseInstanceID);
 		if (formula instanceof ConjunctiveQueryWithInequality) {
-			return ConjunctiveQueryWithInequality.create(formula.getFreeVariables(), newConjunction, ((ConjunctiveQueryWithInequality)formula).getInequalities());
+			return ConjunctiveQueryWithInequality.create(formula.getFreeVariables(), newConjunction, ((ConjunctiveQueryWithInequality) formula).getInequalities());
 		}
 		return ConjunctiveQuery.create(formula.getFreeVariables(), newConjunction);
 	}
