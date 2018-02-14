@@ -50,6 +50,12 @@ public class CreateTable extends Command {
 			}
 		}
 	}
+	
+	/** Same as above but only creates one relation.
+	 * @param relation
+	 * @param factsAreUniqueConstraint
+	 * @throws DatabaseException
+	 */
 	public CreateTable(Relation relation,boolean factsAreUniqueConstraint) throws DatabaseException {
 		this(new Relation[] {relation},factsAreUniqueConstraint);
 	}
