@@ -44,10 +44,6 @@ public class TestQueryDifferences extends PdqTest {
 	 * second one. In both cases there should be one record that matches these query
 	 * differences.
 	 * 
-	 * In this test case we are using Derby as database provider the next test cases
-	 * are using mySQL, postres etc, but the test case is the same, the database
-	 * driver is the only difference.
-	 * 
 	 * @throws DatabaseException
 	 */
 	@Test

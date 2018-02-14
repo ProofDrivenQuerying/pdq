@@ -34,7 +34,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * delete facts virtualDatabaseCreationXYZ test: - same as above but checking
  * the cache functions as well.
  * 
- * XYZ in test names refer to - Derby - MySql - Postgres - Memory
+ * XYZ in test names refer to - MySql - Postgres - Memory
  * 
  * @author Gabor
  *

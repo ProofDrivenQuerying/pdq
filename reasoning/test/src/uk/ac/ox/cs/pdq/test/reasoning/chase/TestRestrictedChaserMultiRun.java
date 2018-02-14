@@ -23,7 +23,7 @@ public class TestRestrictedChaserMultiRun extends PdqTest {
 	private static final int REPEAT = 50;
 
 	@Test
-	public void testSingleThreadDerby() throws Exception {
+	public void testSingleThreadPostgres() throws Exception {
 		TestRestrictedChaser trc = new TestRestrictedChaser();
 		trc.setup();
 		trc.test_reasonUntilTermination1();

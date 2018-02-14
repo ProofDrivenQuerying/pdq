@@ -13,7 +13,7 @@ public class PlanConverter {
 	public static void main(String[] args) {
 		File srcRoot  = new File("c:\\Users\\Gabor\\git\\pdq\\regression\\test");
 		File saved = new File("c:\\work\\savedPlans");
-		//File src = new File("c:\\Users\\Gabor\\git\\pdq\\regression\\test\\linear\\fast\\demo\\derby\\case_002");
+		//File src = new File("c:\\Users\\Gabor\\git\\pdq\\regression\\test\\linear\\fast\\demo\\mysql\\case_002");
 				
 		try {
 			loopOverDirectories(srcRoot,saved);

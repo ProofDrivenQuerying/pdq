@@ -53,7 +53,6 @@ public class TestLargeTables extends PdqTest {
 	 * Second query: exists[x,y,z](R(x,y,z) & (S(x,y) & T(z,res1,res2)))
 	 * </pre>
 	 * For each query the example data provides one match.
-	 * This test case uses Derby. the following ones are the same, but they are using MySQL, Postgres etc.
 	 * @throws DatabaseException
 	 */
 	@Test
@@ -141,13 +140,10 @@ public class TestLargeTables extends PdqTest {
 		}
 
 		// DELETE
-		if (!parameters.getDatabaseDriver().contains("derby")) {
-			// this part is way too slow with derby.
-			manager.deleteFacts(facts);
-			getFacts = manager.getFactsFromPhysicalDatabase();
-			Assert.assertNotNull(getFacts);
-			Assert.assertEquals(0, getFacts.size());
-		}
+		manager.deleteFacts(facts);
+		getFacts = manager.getFactsFromPhysicalDatabase();
+		Assert.assertNotNull(getFacts);
+		Assert.assertEquals(0, getFacts.size());
 		manager.dropDatabase();
 		manager.shutdown();
 	}
@@ -217,13 +213,10 @@ public class TestLargeTables extends PdqTest {
 		Assert.assertEquals(TypedConstant.create(17), answer.get(0).getMapping().get(Variable.create("res2")));
 
 		// DELETE
-		if (!parameters.getDatabaseDriver().contains("derby")) {
-			// this part is way too slow with derby.
-			manager.deleteFacts(facts);
-			getFacts = manager.getFactsFromPhysicalDatabase();
-			Assert.assertNotNull(getFacts);
-			Assert.assertEquals(0, getFacts.size());
-		}
+		manager.deleteFacts(facts);
+		getFacts = manager.getFactsFromPhysicalDatabase();
+		Assert.assertNotNull(getFacts);
+		Assert.assertEquals(0, getFacts.size());
 		manager.dropDatabase();
 		manager.shutdown();
 	}

@@ -26,7 +26,7 @@ public class SchemaConverter {
 	public static void main(String[] args) {
 		File to = new File("C:\\Work\\converted");
 		
-		File src = new File("c:\\Users\\Gabor\\git\\pdq\\regression\\test\\linear\\fast\\demo\\derby\\case_001\\schema.xml");
+		File src = new File("c:\\Users\\Gabor\\git\\pdq\\regression\\test\\linear\\fast\\demo\\mysql\\case_001\\schema.xml");
 		try {
 			convert(src,to);
 		} catch (FileNotFoundException | JAXBException e) {

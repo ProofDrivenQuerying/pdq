@@ -27,12 +27,12 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 /**
  * This test is a regression test converted to be a unit test. The same test can
  * be started in the regression project by executing
- * <code>planner -i test\linear\fast\demo\derby\case_002</code>
+ * <code>planner -i test\linear\fast\demo\mysql\case_002</code>
  * In here we only use the inputs to be able to create a plan and evaluate the cost. No chasing/reasoning.
  * @author Gabor
  *
  */
-public class RegressionTestLinearFastDemoDerbyCase002 extends PdqTest {
+public class RegressionTestLinearFastDemoCase002 extends PdqTest {
 	protected Attribute[] attributes3Old = new Attribute[3];
 	protected Attribute[] attributes6Old = new Attribute[6];
 	protected Attribute[] attributes21Old = new Attribute[21];

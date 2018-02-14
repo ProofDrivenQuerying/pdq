@@ -224,7 +224,6 @@ public class TestInternalDatabaseManager extends PdqTest {
 		Assert.assertEquals(TypedConstant.create(17), answer.get(0).getMapping().get(Variable.create("res2")));
 
 		// DELETE
-		// this part is way too slow with derby.
 		manager.deleteFacts(facts);
 		getFacts = manager.getFactsFromPhysicalDatabase();
 		Assert.assertNotNull(getFacts);
@@ -301,7 +300,6 @@ public class TestInternalDatabaseManager extends PdqTest {
 		Assert.assertEquals(TypedConstant.create(17), answer.get(0).getMapping().get(Variable.create("res2")));
 
 		// DELETE
-		// this part is way too slow with derby.
 		manager.deleteFacts(facts);
 		getFacts = manager.getFactsFromPhysicalDatabase();
 		Assert.assertNotNull(getFacts);

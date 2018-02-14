@@ -321,11 +321,6 @@ public class TestParallelEGDChaser extends PdqTest {
 	}
 
 	@Test
-	public void testA1Derby() throws SQLException {
-		testA1(DatabaseParameters.Postgres);
-	}
-
-	@Test
 	public void testA1MySql() throws SQLException {
 		testA1(DatabaseParameters.MySql);
 	}
@@ -414,11 +409,6 @@ public class TestParallelEGDChaser extends PdqTest {
 
 		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 		Assert.assertEquals(5, matches.size());
-	}
-
-	@Test
-	public void testB1Derby() throws SQLException {
-		testB1(DatabaseParameters.Postgres);
 	}
 
 	@Test
