@@ -18,23 +18,12 @@ import uk.ac.ox.cs.pdq.fol.Term;
 
 /**
  * For large amount of data it could be more effective to use the bulk insert
- * function of the Database provider. It is not implemented in Derby, so this
- * class will map itself to a list a single insert commands when used with
- * Derby.
+ * function of the Database provider. 
  * 
  * @author Gabor
  *
  */
 public class BulkInsert extends Command {
-	/**
-	 * Facts to be inserted.
-	 */
-	private Collection<Atom> facts;
-	/**
-	 * Schema is needed to map attribute types. (the Atoms only know the predicates
-	 * and predicates do not have proper attributes with types.
-	 */
-	private Schema schema;
 
 	/**
 	 * Constructs a single SQL statement that inserts a list of records (facts) into
@@ -48,8 +37,6 @@ public class BulkInsert extends Command {
 	 * @throws DatabaseException
 	 */
 	public BulkInsert(Collection<Atom> facts, Schema schema) throws DatabaseException {
-		this.facts = facts;
-		this.schema = schema;
 		// Group facts by relation.
 		Map<Predicate, List<Atom>> groupedFacts = new HashMap<>();
 		for (Atom a : facts) {
@@ -99,25 +86,6 @@ public class BulkInsert extends Command {
 			insertInto += Joiner.on(",\n").join(values) + ";";
 			this.statements.add(insertInto);
 		}
-	}
-
-	/*
-	 * Derby does not support bulk inserts, so we need to create independent
-	 * inserts.
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command#toDerbyStatement(java.
-	 * lang.String, uk.ac.ox.cs.pdq.db.Schema)
-	 */
-	@Override
-	public List<String> toDerbyStatement(String databaseName) throws DatabaseException {
-		List<String> result = new ArrayList<>();
-		for (Atom fact : facts) {
-			result.addAll(new Insert(fact, schema).toDerbyStatement(databaseName));
-		}
-		return result;
 	}
 
 }

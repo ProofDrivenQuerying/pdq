@@ -153,7 +153,7 @@ public class Bootstrap {
 				
 		DatabaseParameters dbParams = this.getConfigFile() != null ?
 						new DatabaseParameters(this.getConfigFile()) :
-						DatabaseParameters.Derby ;
+						DatabaseParameters.Postgres ;
 				
 		for (String k : this.dynamicParams.keySet()) {
 			planParams.set(k, this.dynamicParams.get(k));

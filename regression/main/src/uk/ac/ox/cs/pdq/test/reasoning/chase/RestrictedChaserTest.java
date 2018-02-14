@@ -204,7 +204,7 @@ public class RestrictedChaserTest {
 				}
 				RestrictedChaser reasoner = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
 
-				DatabaseManager dbcon = createConnection(DatabaseParameters.Derby,schema);
+				DatabaseManager dbcon = createConnection(DatabaseParameters.Postgres,schema);
 				DatabaseChaseInstance state = new DatabaseChaseInstance(query, dbcon);				
 				
 				reasoner.reasonUntilTermination(state, schema.getAllDependencies());

@@ -338,7 +338,7 @@ public class TestLinearOptimized extends PdqTest {
 		//Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = createConnection(DatabaseParameters.Derby, accessibleSchema);
+			databaseConnection = createConnection(DatabaseParameters.Postgres, accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();

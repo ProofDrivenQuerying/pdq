@@ -71,7 +71,7 @@ public class TestRestrictedChaser extends PdqTest {
 	
 	private void setupConnection() {
 		if (connection == null)
-			this.setConnection(createConnection(DatabaseParameters.Derby, this.schema));
+			this.setConnection(createConnection(DatabaseParameters.Postgres, this.schema));
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class TestRestrictedChaser extends PdqTest {
 			constants.add(TypedConstant.create("a_" + i));
 		}
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Derby, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Postgres, s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -289,7 +289,7 @@ public class TestRestrictedChaser extends PdqTest {
 		for (int i = 1; i <= 10; i++)
 			facts.add(Atom.create(R, new Term[] { TypedConstant.create("a_" + (i - 1)), TypedConstant.create("a_" + i) }));
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Derby, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Postgres, s));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -326,11 +326,6 @@ public class TestRestrictedChaser extends PdqTest {
 		Assert.assertEquals(11, dFacts);
 		Assert.assertEquals(1, dFactHasK);
 		Assert.assertEquals(1, qFacts);
-	}
-
-	@Test
-	public void testA1Derby() throws SQLException {
-		testA1(DatabaseParameters.Derby);
 	}
 
 	//@Test
@@ -422,11 +417,6 @@ public class TestRestrictedChaser extends PdqTest {
 
 		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 		Assert.assertEquals(5, matches.size());
-	}
-
-	@Test
-	public void testB1Derby() throws SQLException {
-		testB1(DatabaseParameters.Derby);
 	}
 
 	//@Test

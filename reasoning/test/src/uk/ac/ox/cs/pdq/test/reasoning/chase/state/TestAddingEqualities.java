@@ -49,7 +49,7 @@ public class TestAddingEqualities extends PdqTest {
 		try {
 			
 			
-			LogicalDatabaseInstance connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.Derby), 0);
+			LogicalDatabaseInstance connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.Postgres), 0);
 			connection.initialiseDatabaseForSchema(testSchema1);
 			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20, f21, f22, f23, f24), connection ); 
 					

@@ -65,7 +65,6 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		super.setup();
 		this.InferredAccessibleR = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R2", new Attribute[] { at21, at22 }, new AccessMethod[] {});
 		Schema schema = new Schema(new Relation[] { this.rel2, this.S_s });
-		//this.connection = createConnection(DatabaseParameters.Derby, schema);
 		this.accessibleSchema = new AccessibleSchema(schema);
 	}
 
@@ -84,7 +83,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test1_groupFactsByAccessMethods() throws SQLException {
-		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Postgres, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -121,7 +120,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test2_groupFactsByAccessMethods() throws SQLException {
-		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Postgres, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -166,7 +165,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test3_groupFactsByAccessMethods() throws SQLException {
-		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Postgres, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -202,7 +201,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test4_groupFactsByAccessMethods() throws SQLException {
-		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Postgres, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -287,7 +286,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test1b_getUnexposedFacts() throws SQLException {
-		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Postgres, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f0b = Atom.create(this.InferredAccessibleR, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
@@ -325,7 +324,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test2_getUnexposedFacts() throws SQLException {
-		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Postgres, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -365,7 +364,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test2b_getUnexposedFacts() throws SQLException {
-		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Postgres, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f0b = Atom.create(this.InferredAccessibleR, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
@@ -408,7 +407,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test3_getUnexposedFacts() throws SQLException {
-		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Postgres, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -447,7 +446,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test4_getUnexposedFacts() throws SQLException {
-		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Postgres, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -488,7 +487,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	 */
 	@Test
 	public void test4b_getUnexposedFacts() throws SQLException {
-		this.connection = createConnection(DatabaseParameters.Derby, this.accessibleSchema);
+		this.connection = createConnection(DatabaseParameters.Postgres, this.accessibleSchema);
 		Atom f0 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });

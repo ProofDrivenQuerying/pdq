@@ -43,18 +43,6 @@ public class TestExternalDatabaseManager extends PdqTest {
 
 	/**
 	 * tests the database manager creating a database for a single relation that
-	 * contains string attributes. No queries, just add and get facts. Uses Derby
-	 * database provider
-	 * 
-	 * @throws DatabaseException
-	 */
-	@Test
-	public void simpleDatabaseCreationDerby() throws DatabaseException {
-		simpleDatabaseCreation(DatabaseParameters.Derby);
-	}
-
-	/**
-	 * tests the database manager creating a database for a single relation that
 	 * contains string attributes. No queries, just add and get facts. Uses MySQL
 	 * database provider
 	 * 
@@ -119,19 +107,6 @@ public class TestExternalDatabaseManager extends PdqTest {
 		manager.shutdown();
 	}
 
-	/**
-	 * Tests the basic functions of the VirtualDatabaseManager, using first a single
-	 * table with Int attributes, then repeats the same test with String attributes.
-	 * 
-	 * This case test the Derby driver.
-	 */
-	@Test
-	public void externalDatabaseCreationDerby() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException {
-		externalDatabaseCreationInt(DatabaseParameters.Derby);
-		externalDatabaseCreationString(DatabaseParameters.Derby);
-	}
-	
 	/**
 	 * Tests the basic functions of the VirtualDatabaseManager, using first a single
 	 * table with Int attributes, then repeats the same test with String attributes.

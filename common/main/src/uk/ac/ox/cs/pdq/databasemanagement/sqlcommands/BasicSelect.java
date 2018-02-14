@@ -191,9 +191,7 @@ public class BasicSelect extends Command {
 	protected void storeReplacementKeyValuePairs(String key, String value) {
 		aliasKeyToTable.put(key, value);
 		replaceTagsMySql.put(key, value);
-		replaceTagsDerby.put(key, value);
 		replaceTagsPostgres.put(key, value);
-
 	}
 
 	/**

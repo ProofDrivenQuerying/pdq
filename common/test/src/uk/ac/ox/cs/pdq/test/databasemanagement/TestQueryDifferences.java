@@ -51,12 +51,6 @@ public class TestQueryDifferences extends PdqTest {
 	 * @throws DatabaseException
 	 */
 	@Test
-	public void largeTableQueryDifferenceDerby() throws DatabaseException {
-		largeTableQueryDifferenceTGD(DatabaseParameters.Derby);
-		largeTableQueryDifferenceEGD(DatabaseParameters.Derby);
-	}
-
-	@Test
 	public void largeTableQueryDifferenceMySql() throws DatabaseException {
 		largeTableQueryDifferenceTGD(DatabaseParameters.MySql);
 		largeTableQueryDifferenceEGD(DatabaseParameters.MySql);

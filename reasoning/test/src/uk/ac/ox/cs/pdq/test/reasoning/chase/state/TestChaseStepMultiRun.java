@@ -21,15 +21,6 @@ public class TestChaseStepMultiRun extends PdqTest {
 	private static final int REPEAT = 35;
 
 	@Test
-	public void testMultiThreadDerby() throws Exception {
-		TestChaseSteps tcs = new TestChaseSteps();
-		tcs.setupMocks();
-		tcs.setConnection(createConnection(DatabaseParameters.Derby, tcs.schema));
-		tcs.test_chaseStep();
-		tcs.tearDown();
-	}
-
-	@Test
 	public void testMultiThreadPostgres() throws Exception {
 		TestChaseSteps tcs = new TestChaseSteps();
 		tcs.setupMocks();
@@ -69,22 +60,6 @@ public class TestChaseStepMultiRun extends PdqTest {
 			TestChaseSteps tcs = new TestChaseSteps();
 			tcs.setupMocks();
 			tcs.setConnection(createConnection(DatabaseParameters.Postgres, tcs.schema));
-			tcs.test_chaseStepInit();
-			for (int j = 0; j < REPEAT; j++) {
-				tcs.test_chaseStepAddFacts();
-				tcs.test_chaseStepMain(j);
-				tcs.test_chaseStepDeleteFacts();
-			}
-			tcs.tearDown();
-		}
-	}
-
-	@Test
-	public void testLongRunningMultiThreadDerby() throws Exception {
-		for (int i = 0; i < REPEAT; i++) {
-			TestChaseSteps tcs = new TestChaseSteps();
-			tcs.setupMocks();
-			tcs.setConnection(createConnection(DatabaseParameters.Derby, tcs.schema));
 			tcs.test_chaseStepInit();
 			for (int j = 0; j < REPEAT; j++) {
 				tcs.test_chaseStepAddFacts();

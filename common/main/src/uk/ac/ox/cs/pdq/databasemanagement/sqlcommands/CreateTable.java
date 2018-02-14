@@ -36,7 +36,6 @@ public class CreateTable extends Command {
 		}
 		// add SQL dialect specific tags
 		replaceTagsMySql.put(STRING_TYPE_NAME, "VARCHAR("+ maxlen+")"); // mysql doesn't like long unique texts.
-		replaceTagsDerby.put(STRING_TYPE_NAME, "VARCHAR(500)");
 		replaceTagsPostgres.put(STRING_TYPE_NAME, "VARCHAR(500)");
 
 		// add the CREATE TABLE statements for each table

@@ -30,15 +30,6 @@ public class TestRestrictedChaserMultiRun extends PdqTest {
 		trc.tearDown();
 	}
 
-	@Test
-	public void testMultiThreadDerby() throws Exception {
-		TestRestrictedChaser trc = new TestRestrictedChaser();
-		trc.createSchema();
-		trc.setup(createConnection(DatabaseParameters.Derby, trc.schema));
-		trc.test_reasonUntilTermination1();
-		trc.tearDown();
-	}
-
 	//@Test
 	public void testMultiThreadMySQL() throws Exception {
 
@@ -79,19 +70,6 @@ public class TestRestrictedChaserMultiRun extends PdqTest {
 			TestRestrictedChaser trc = new TestRestrictedChaser();
 			trc.createSchema();
 			trc.setup(createConnection(DatabaseParameters.Postgres, trc.schema));
-			trc.test_reasonUntilTermination1();
-			trc.tearDown();
-
-		}
-	}
-
-	@Test
-	public void testLongRunningMultiThreadDerby() throws Exception {
-
-		for (int i = 0; i < REPEAT; i++) {
-			TestRestrictedChaser trc = new TestRestrictedChaser();
-			trc.createSchema();
-			trc.setup(createConnection(DatabaseParameters.Derby, trc.schema));
 			trc.test_reasonUntilTermination1();
 			trc.tearDown();
 

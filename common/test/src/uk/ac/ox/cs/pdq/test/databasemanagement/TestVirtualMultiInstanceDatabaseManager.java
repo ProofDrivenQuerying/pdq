@@ -37,24 +37,12 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * delete facts virtualDatabaseCreationXYZ test: - same as above but checking
  * the cache functions as well.
  * 
- * XYZ in test names refer to - Derby - MySql - Postgres - Memory
+ * XYZ in test names refer to - MySql - Postgres - Memory
  * 
  * @author Gabor
  *
  */
 public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
-
-	/**
-	 * tests the database manager creating a database for a single relation that
-	 * contains string attributes. No queries, just add and get facts. Uses Derby
-	 * database provider
-	 * 
-	 * @throws DatabaseException
-	 */
-	@Test
-	public void simpleDatabaseCreationDerby() throws DatabaseException {
-		simpleDatabaseCreation(DatabaseParameters.Derby);
-	}
 
 	/**
 	 * tests the database manager creating a database for a single relation that
@@ -150,20 +138,6 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		manager.shutdown();
 	}
 
-	/**
-	 * Tests the basic functions of the VirtualDatabaseManager, using first a single
-	 * table with Int attributes, then repeats the same test with String attributes.
-	 * 
-	 * This case test the Derby driver.
-	 */
-	@Test
-	public void virtualDatabaseCreationDerby() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException {
-		virtualDatabaseCreationInt(DatabaseParameters.Derby);
-		virtualDatabaseCreationString(DatabaseParameters.Derby);
-		largeTableQueryDifferenceEGD(DatabaseParameters.Derby);
-	}
-	
 	/**
 	 * Tests the basic functions of the VirtualDatabaseManager, using first a single
 	 * table with Int attributes, then repeats the same test with String attributes.

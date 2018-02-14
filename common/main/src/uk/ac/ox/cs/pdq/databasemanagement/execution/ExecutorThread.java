@@ -58,7 +58,7 @@ public class ExecutorThread extends Thread {
 	 *
 	 */
 	public enum DriverType {
-		Derby, MySql, Postgres
+		MySql, Postgres
 	};
 
 	/**
@@ -116,9 +116,7 @@ public class ExecutorThread extends Thread {
 	private static DriverType getDriverType(String driver) throws DatabaseException {
 		
 		DriverType driverType = null;
-		if (driver.contains("derby")) {
-			driverType = DriverType.Derby;
-		} else if (driver.toLowerCase().contains("mysql")) {
+		if (driver.toLowerCase().contains("mysql")) {
 			driverType = DriverType.MySql;
 		} else if (driver.toLowerCase().contains("postgres")) {
 			driverType = DriverType.Postgres;
@@ -196,9 +194,6 @@ public class ExecutorThread extends Thread {
 
 		// convert the command into the corresponding SQL dialect.
 		switch (driverType) {
-		case Derby:
-			statements = command.toDerbyStatement(databaseName);
-			break;
 		case MySql:
 			statements = command.toMySqlStatement(databaseName);
 			break;

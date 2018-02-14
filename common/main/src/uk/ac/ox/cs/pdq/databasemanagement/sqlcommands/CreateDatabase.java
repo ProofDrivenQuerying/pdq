@@ -14,8 +14,7 @@ public class CreateDatabase extends DropDatabase {
 
 	/**
 	 * Creates a schema. In case of Postgres and MySql it will drop the same schema
-	 * if it exists. Derby is a memory database, so it can't have tables left in it
-	 * from previous execution.
+	 * if it exists. 
 	 */
 	public CreateDatabase(Schema schema) {
 		super(schema);
@@ -40,13 +39,4 @@ public class CreateDatabase extends DropDatabase {
 		statements.add("USE " + databaseName);
 		return statements;
 	}
-
-	@Override
-	public List<String> toDerbyStatement(String databaseName) {
-		// derby does not have conditional drop database command.
-		statements.add("CREATE SCHEMA " + databaseName);
-		ignoreErrors = true;
-		return statements;
-	}
-
 }

@@ -125,7 +125,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = createConnection(DatabaseParameters.Derby, accessibleSchema);
+			databaseConnection = createConnection(DatabaseParameters.Postgres, accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -243,7 +243,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = createConnection(DatabaseParameters.Derby, accessibleSchema);
+			databaseConnection = createConnection(DatabaseParameters.Postgres, accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -318,7 +318,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = createConnection(DatabaseParameters.Derby, accessibleSchema);
+			databaseConnection = createConnection(DatabaseParameters.Postgres, accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -367,19 +367,6 @@ public class TestLinearGeneric extends PdqTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
-	}
-
-	/**
-	 * This test utilises a dynamic table and query generation function, and checks
-	 * if we get the expected number of output plans for the given number of input
-	 * tables.
-	 * 
-	 * For three input tables we should get 244 plans.
-	 */
-	//@Test //works but too slow (around 4 minutes) to execute.
-	public void test1ExplorationThreeRelationsDerby() {
-		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3, DatabaseParameters.Derby);
-		Assert.assertEquals(244, exploredPlans.size());
 	}
 
 	/**

@@ -36,7 +36,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
  * This test when executed as a java application can detect memory leaks in the
- * SQL database connections. It starts 3 threads one for derby, one for MySql
+ * SQL database connections. It starts 2 threads one for MySql
  * and one Postgres. Each threads adds and deletes facts keeping the database
  * size on minimum, but doing lots of operations in an infinite loop.
  * Each thread reports how many loops it have been doing. and what's the average speed.
@@ -44,7 +44,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  * @author Gabor
  * 
  * 07/09/2017 algebra-changes branch: 
- *   - Derby    : average 0.65 loops per second with 1000 facts inserted and deleted 1 times in each loop.
+ *   - D.erby    : average 0.65 loops per second with 1000 facts inserted and deleted 1 times in each loop.
  *   - MySql    : average 29.0 loops per second with 1000 facts inserted and deleted 1 times in each loop.
  *   - Postgres : average 18.0 loops per second with 1000 facts inserted and deleted 1 times in each loop.
  */
@@ -64,7 +64,6 @@ public class SqlRacer {
 	private Schema schema;
 	private final DatabaseManager dcMySql;
 	private final DatabaseManager dcPostgresSql;
-	private final DatabaseManager dcDerby;
 	private final DatabaseManager dcMemory;
 	private Atom R1;
 	public static void main(String[] args) {
@@ -82,11 +81,9 @@ public class SqlRacer {
 			dcMySql = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.MySql),1);
 			
 			dcPostgresSql = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.Postgres),1);
-			dcDerby = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.Derby),1);
 			dcMemory = new InternalDatabaseManager();			
 			dcMySql.initialiseDatabaseForSchema(this.schema);
 			dcPostgresSql.initialiseDatabaseForSchema(this.schema);
-			dcDerby.initialiseDatabaseForSchema(this.schema);
 			dcMemory.initialiseDatabaseForSchema(this.schema);
 			setupThreads();
 		} catch (SQLException e) {
@@ -143,16 +140,6 @@ public class SqlRacer {
 
 		};
 
-		Thread derbyThread = new Thread() {
-			public void run() {
-				try {
-					race(dcDerby, "Derby     ");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-
-		};
 		Thread memoryThread = new Thread() {
 			public void run() {
 				try {
@@ -165,7 +152,6 @@ public class SqlRacer {
 		};
 		mySqlThread.start();
 		postgresThread.start();
-		derbyThread.start();
 		memoryThread.start();
 	}
 

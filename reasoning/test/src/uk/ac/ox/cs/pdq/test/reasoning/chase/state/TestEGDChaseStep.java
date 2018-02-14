@@ -61,11 +61,6 @@ public class TestEGDChaseStep extends PdqTest {
 	}
 
 	@Test
-	public void testA_derby() throws SQLException, DatabaseException{
-		testA("derby");
-	}
-
-	@Test
 	public void testA_postgres() throws SQLException, DatabaseException{
 		testA("postgres");
 	}
@@ -73,11 +68,6 @@ public class TestEGDChaseStep extends PdqTest {
 	@Test
 	public void testB_MySql() throws SQLException, DatabaseException{
 		testB("mysql");
-	}
-
-	@Test
-	public void testB_derby() throws SQLException, DatabaseException{
-		testB("derby");
 	}
 
 	@Test
@@ -141,9 +131,7 @@ public class TestEGDChaseStep extends PdqTest {
 
 	private DatabaseManager getDatabaseConnection(String sqlType, Schema s) throws SQLException, DatabaseException{
 		ExternalDatabaseManager edm = null;
-		if ("derby".equals(sqlType))
-			edm = new ExternalDatabaseManager(DatabaseParameters.Derby);
-		else if ("mysql".equals(sqlType)) {
+		if ("mysql".equals(sqlType)) {
 			edm = new ExternalDatabaseManager(DatabaseParameters.MySql);
 		}
 		else if ("postgres".equals(sqlType)) {

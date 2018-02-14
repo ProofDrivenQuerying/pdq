@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 /**
  * Main class of this package. It is the superclass of all database commands. It
  * provides functionality to convert an SQL statement to certain SQL dialect
- * such as Derby or MySql. Stores the actual statements as well.
+ * such as Postgres or MySql. Stores the actual statements as well.
  * 
  * @author Gabor
  *
@@ -43,10 +43,6 @@ public class Command {
 	 * This one in case the actual database provider speaks MySQL dialect.
 	 */
 	protected Map<String, String> replaceTagsMySql = new HashMap<>();
-	/**
-	 * Same as above but for Derby dialect.
-	 */
-	protected Map<String, String> replaceTagsDerby = new HashMap<>();
 	/**
 	 * Same as above but for Postgres dialect.
 	 */
@@ -111,24 +107,7 @@ public class Command {
 		}
 		return newStatements;
 	}
-
-	/**
-	 * Converts this Command object to an SQL statement string, Derby dialect.
-	 * 
-	 * @param databaseName
-	 *            the database name is a common keyword used to precisely identify
-	 *            tables.
-	 * @return list of sql statements representing this Command object
-	 * @throws DatabaseException in case the data cannot be converted. For example an insert statement contains variables instead of constants.
-	 */
-	public List<String> toDerbyStatement(String databaseName) throws DatabaseException {
-		List<String> newStatements = replaceTags(statements, DATABASENAME, databaseName);
-		for (String key : replaceTagsDerby.keySet()) {
-			newStatements = replaceTags(newStatements, key, replaceTagsDerby.get(key));
-		}
-		return newStatements;
-	}
-
+	
 	/**
 	 * Replaces a single tag with a newValue in every statement.
 	 * 

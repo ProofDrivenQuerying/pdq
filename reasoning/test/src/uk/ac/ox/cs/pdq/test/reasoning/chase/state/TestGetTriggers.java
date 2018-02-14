@@ -43,20 +43,15 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  */
 public class TestGetTriggers extends PdqTest {
 	private static final int NUMBER_OF_DUMMY_DATA = 100;
-	protected DatabaseChaseInstance[] chaseState = new DatabaseChaseInstance[3];
-	private final int DERBY = 0;
-	private final int MYSQL = 1;
-	private final int POSTGRES = 2;
+	protected DatabaseChaseInstance[] chaseState = new DatabaseChaseInstance[2];
+	private final int MYSQL = 0;
+	private final int POSTGRES = 1;
 
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		ExternalDatabaseManager edm = new ExternalDatabaseManager(DatabaseParameters.Derby);
+		ExternalDatabaseManager edm = new ExternalDatabaseManager(DatabaseParameters.MySql);
 		LogicalDatabaseInstance connection =  new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm ,0);
-		connection.initialiseDatabaseForSchema(this.testSchema1);
-		this.chaseState[DERBY] = new DatabaseChaseInstance(new ArrayList<Atom>(), connection);
-		edm = new ExternalDatabaseManager(DatabaseParameters.MySql);
-		connection =  new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm ,0);
 		connection.initialiseDatabaseForSchema(this.testSchema1);
 		this.chaseState[MYSQL] = new DatabaseChaseInstance(new ArrayList<Atom>(), connection);
 		edm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
@@ -187,16 +182,13 @@ public class TestGetTriggers extends PdqTest {
 		Atom f25 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("p"), TypedConstant.create(new String("Michael")) });
 		Atom eq1 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c2"), UntypedConstant.create("c1"));
 		Atom eq2 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c3"));
-		for (DatabaseChaseInstance state : chaseState) {
-			state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
-			List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE);
-			Assert.assertEquals(6, matches.size());
-//			try {
-//				this.setup();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-		}
+		chaseState[0].addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
+		List<Match> matches1 = chaseState[0].getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE);
+		chaseState[1].addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
+		List<Match> matches2 = chaseState[1].getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE);
+
+		Assert.assertEquals(7, matches1.size());
+		Assert.assertEquals(7, matches2.size());
 	}
 
 	@Test
@@ -244,27 +236,6 @@ public class TestGetTriggers extends PdqTest {
 		state.addFacts(Lists.newArrayList(f20, f21, f22, f26, f27));
 		List<Match> matches = state.getTriggers(new Dependency[] { this.tgd2 }, TriggerProperty.ACTIVE);
 		Assert.assertEquals(1, matches.size());
-	}
-
-	@Test
-	public void testScanario2Derby() throws SQLException, DatabaseException {
-		try {
-			this.tearDown();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		LogicalDatabaseInstance connection =  null;
-		try {
-			ExternalDatabaseManager edm = new ExternalDatabaseManager(DatabaseParameters.Derby);
-			connection =  new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm ,0);
-			connection.initialiseDatabaseForSchema(createSchemaScanario2());
-			testScanario2(connection);
-		} finally {
-			if (connection != null) {
-				connection.dropDatabase();
-				connection.shutdown();
-			}
-		}
 	}
 
 	@Test

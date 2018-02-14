@@ -32,8 +32,8 @@ public class DatabaseParameters extends Parameters {
 
 	public static final DatabaseParameters MySql = getDefaultForMySql();
 	public static final DatabaseParameters Postgres = getDefaultForPostgres();
-	public static final DatabaseParameters Derby = getDefaultForDerby();
 	public static final DatabaseParameters Empty = new DatabaseParameters();
+	public static final DatabaseParameters Internal = getDefaultForInternal();
 	
 	/** The database driver. */
 	@Parameter(description="Canonical name of the driver class for the internal"
@@ -86,7 +86,10 @@ public class DatabaseParameters extends Parameters {
 		return dbParam; 
 	}
 	
-	private static DatabaseParameters getDefaultForDerby() {
+	/** 
+	 * This is not supported since 2018 feb 14.
+	 */
+	public static DatabaseParameters getDefaultForDerby() {
 		DatabaseParameters dbParam = new DatabaseParameters();
 		dbParam.setConnectionUrl("jdbc:derby:memory:{1};create=true");
 		dbParam.setDatabaseDriver("org.apache.derby.jdbc.EmbeddedDriver");
@@ -106,6 +109,13 @@ public class DatabaseParameters extends Parameters {
 		dbParam.setDatabaseUser("postgres");
 		dbParam.setDatabasePassword("root");
 		dbParam.setNumberOfThreads(DEFAULT_NUMBER_OF_THREADS);
+		return dbParam; 
+	}
+	
+	private static DatabaseParameters getDefaultForInternal() {
+		DatabaseParameters dbParam = new DatabaseParameters();
+		dbParam.setNumberOfThreads(DEFAULT_NUMBER_OF_THREADS);
+		dbParam.setUseInternalDatabaseManager(true);
 		return dbParam; 
 	}
 

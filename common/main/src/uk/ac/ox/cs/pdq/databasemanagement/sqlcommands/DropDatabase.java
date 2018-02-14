@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.databasemanagement.sqlcommands;
 
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 
 /**
@@ -37,16 +36,4 @@ public class DropDatabase extends Command {
 		statements.add("DROP SCHEMA IF EXISTS " + databaseName);
 		return statements;
 	}
-
-	@Override
-	public List<String> toDerbyStatement(String databaseName) {
-		statements.clear();
-		for (Relation table: schema.getRelations())  
-			statements.add("DROP TABLE " + databaseName + "." + table.getName()); 
-		statements.add("DROP SCHEMA " + databaseName + " RESTRICT");
-		// dropping tables could throw errors if they were not made yet.
-		ignoreErrors=true;
-		return statements;
-	}
-
 }

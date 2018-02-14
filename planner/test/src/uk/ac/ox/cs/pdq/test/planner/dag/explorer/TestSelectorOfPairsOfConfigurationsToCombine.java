@@ -94,7 +94,7 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 		// Create database connection
 		DatabaseManager connection = null;
 		try {
-			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Derby);
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
 			connection.initialiseDatabaseForSchema(accessibleSchema);
 			
@@ -236,7 +236,7 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 		// Create database connection
 		DatabaseManager connection = null;
 		try {
-			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Derby);
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
 			connection.initialiseDatabaseForSchema(accessibleSchema);
 			

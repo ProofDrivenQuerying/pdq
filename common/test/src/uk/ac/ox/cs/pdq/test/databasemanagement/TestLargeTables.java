@@ -57,13 +57,6 @@ public class TestLargeTables extends PdqTest {
 	 * @throws DatabaseException
 	 */
 	@Test
-	public void largeTableTestDerby() throws DatabaseException {
-		largeTableTest(DatabaseParameters.Derby);
-		largeTableTestWithConstantsInQuery(DatabaseParameters.Derby);
-
-	}
-
-	@Test
 	public void largeTableTestMySql() throws DatabaseException {
 		largeTableTest(DatabaseParameters.MySql);
 		largeTableTestWithConstantsInQuery(DatabaseParameters.MySql);

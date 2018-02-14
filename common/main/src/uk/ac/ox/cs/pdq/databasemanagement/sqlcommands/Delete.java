@@ -30,7 +30,6 @@ public class Delete extends Command {
 	public Delete(Atom factToDelete, Schema schema) throws DatabaseException {
 		super();
 		// add dialect specific mappings.
-		replaceTagsDerby.put(SEMICOLON, ""); // derby doesn't like the semicolon at the end of the line.
 		replaceTagsMySql.put(SEMICOLON, ";");
 		replaceTagsPostgres.put(SEMICOLON, ";");
 

@@ -88,7 +88,7 @@ public class TestParallelEGDChaser extends PdqTest {
 		Atom f24 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k5"), UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 
 		try {
-			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20, f21, f22, f23, f24), createConnection(DatabaseParameters.Derby, this.schema));
+			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20, f21, f22, f23, f24), createConnection(DatabaseParameters.Postgres, this.schema));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -182,7 +182,7 @@ public class TestParallelEGDChaser extends PdqTest {
 			constants.add(TypedConstant.create("a_" + i));
 		}
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Derby, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Postgres, s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -281,7 +281,7 @@ public class TestParallelEGDChaser extends PdqTest {
 		for (int i = 1; i <= 10; i++)
 			facts.add(Atom.create(R, new Term[] { TypedConstant.create("a_" + (i - 1)), TypedConstant.create("a_" + i) }));
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Derby, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Postgres, s));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -322,7 +322,7 @@ public class TestParallelEGDChaser extends PdqTest {
 
 	@Test
 	public void testA1Derby() throws SQLException {
-		testA1(DatabaseParameters.Derby);
+		testA1(DatabaseParameters.Postgres);
 	}
 
 	@Test
@@ -418,7 +418,7 @@ public class TestParallelEGDChaser extends PdqTest {
 
 	@Test
 	public void testB1Derby() throws SQLException {
-		testB1(DatabaseParameters.Derby);
+		testB1(DatabaseParameters.Postgres);
 	}
 
 	@Test
@@ -620,7 +620,7 @@ public class TestParallelEGDChaser extends PdqTest {
 
 	public DatabaseManager getConnection() {
 		if (connection == null)
-			connection = createConnection(DatabaseParameters.Derby, this.schema);
+			connection = createConnection(DatabaseParameters.Postgres, this.schema);
 		return connection;
 	}
 
