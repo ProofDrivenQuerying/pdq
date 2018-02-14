@@ -3,35 +3,35 @@
     <RelationalTerm type="SelectionTerm">
         <predicate type="ConjunctiveCondition">
             <predicates position="0" type="ConstantEqualityCondition">
-                <constant type="java.lang.Integer" value="1"/>
+                <constant value="1"/>
             </predicates>
         </predicate>
         <RelationalTerm type="RenameTerm">
-            <renamings name="1" type="java.lang.Integer"/>
-            <renamings name="c2" type="java.lang.Integer"/>
-            <renamings name="c3" type="java.lang.Integer"/>
+            <renamings name="1" type="java.lang.String"/>
+            <renamings name="c0" type="java.lang.String"/>
+            <renamings name="c1" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
                 <accessMethod name="m1"/>
                 <relation name="R">
-                    <attribute name="a" type="java.lang.Integer"/>
-                    <attribute name="b" type="java.lang.Integer"/>
-                    <attribute name="c" type="java.lang.Integer"/>
+                    <attribute name="a" type="java.lang.String"/>
+                    <attribute name="b" type="java.lang.String"/>
+                    <attribute name="c" type="java.lang.String"/>
                     <access-method name="m1"/>
                 </relation>
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
     <RelationalTerm type="RenameTerm">
-        <renamings name="c2" type="java.lang.Integer"/>
-        <renamings name="c3" type="java.lang.Integer"/>
+        <renamings name="c0" type="java.lang.String"/>
+        <renamings name="c1" type="java.lang.String"/>
         <RelationalTerm type="AccessTerm">
             <accessMethod name="m2"/>
             <relation name="S">
-                <attribute name="b" type="java.lang.Integer"/>
-                <attribute name="c" type="java.lang.Integer"/>
+                <attribute name="b" type="java.lang.String"/>
+                <attribute name="c" type="java.lang.String"/>
                 <access-method name="m2"/>
             </relation>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="2.8651446581245283E12" type="DoubleCost"/>
+    <cost value="11901.89142777261" type="DoubleCost"/>
 </RelationalTermWithCost>
