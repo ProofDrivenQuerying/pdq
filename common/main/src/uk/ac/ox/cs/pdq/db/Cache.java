@@ -120,13 +120,16 @@ public class Cache {
 		relation  = new ClassManager<Relation>() {
 	        protected boolean equal(Relation object1, Relation object2) {
 	            if (!object1.getName().equals(object2.getName()) || object1.attributes.length != object2.attributes.length || 
-	            		object1.accessMethods.length != object2.accessMethods.length)
+	            		object1.accessMethods.length != object2.accessMethods.length || object1.indexedAttributes.length != object2.indexedAttributes.length)
 	                return false;
 	            for (int index = object1.attributes.length - 1; index >= 0; --index)
 	                if (!object1.attributes[index].equals(object2.attributes[index]))
 	                    return false;
 	            for (int index = object1.accessMethods.length - 1; index >= 0; --index)
 	                if (!object1.accessMethods[index].equals(object2.accessMethods[index]))
+	                    return false;
+	            for (int index = 0; index < object1.getIndexedAttributes().length;  index++)
+	                if (!object1.indexedAttributes[index].equals(object2.indexedAttributes[index]))
 	                    return false;
 	            return true;
 	        }

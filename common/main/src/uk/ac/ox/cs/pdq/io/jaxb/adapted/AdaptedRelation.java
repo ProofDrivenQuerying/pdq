@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
  * @author Gabor
  *
  */
-@XmlType(propOrder = { "attributes", "accessMethods", "key", "equality"})
+@XmlType(propOrder = { "attributes", "accessMethods", "key", "equality","indexedAttributes"})
 public class AdaptedRelation implements Serializable {
 	private static final long serialVersionUID = -9222721018270749836L;
 	protected Attribute[] attributes;
@@ -29,6 +29,7 @@ public class AdaptedRelation implements Serializable {
 	protected Properties properties;
 	private String name;
 	private Boolean isEquality = null;
+	private String[] indexedAttributes;
 
 	/**
 	 * Source is needed for the case when the relation is definied in the database.
@@ -37,6 +38,8 @@ public class AdaptedRelation implements Serializable {
 	private String size;
 
 	public AdaptedRelation() {
+		accessMethods = new AccessMethod[0];
+		foreignKeys = new ForeignKey[0];
 	}
 
 	public AdaptedRelation(Relation r) {
@@ -47,6 +50,7 @@ public class AdaptedRelation implements Serializable {
 		this.properties = r.getProperties();
 		this.setName(r.getName());
 		this.setEquality(r.isEquality());
+		this.setIndexedAttributes(r.getIndexedAttributes());
 	}
 
 	@XmlAttribute
@@ -113,6 +117,12 @@ public class AdaptedRelation implements Serializable {
 		if (isEquality() == null && "EQUALITY".equals(name)) {
 			setEquality(true);
 		}
+		if (indexedAttributes!= null) {
+			Boolean equality = isEquality();
+			if (equality==null)
+				equality = false;
+			return Relation.create(getName(), attr, getAccessMethods(), getForeignKeys(), equality, indexedAttributes);
+		}
 		if (isEquality() != null) {
 			return Relation.create(getName(), attr, getAccessMethods(), getForeignKeys(), isEquality());
 		}
@@ -169,6 +179,15 @@ public class AdaptedRelation implements Serializable {
 
 	public void setSize(String size) {
 		this.size = size;
+	}
+
+	@XmlElement(name="IndexedAttribute")
+	public String[] getIndexedAttributes() {
+		return indexedAttributes;
+	}
+
+	public void setIndexedAttributes(String[] indexedAttributes) {
+		this.indexedAttributes = indexedAttributes;
 	}
 
 }

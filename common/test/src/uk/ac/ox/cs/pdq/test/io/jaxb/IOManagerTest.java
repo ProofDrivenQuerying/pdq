@@ -11,18 +11,21 @@ import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * @author Gabor
  *
  */
-public class IOManagerTest {
+public class IOManagerTest extends PdqTest {
 	@Before
 	public void setup() {
 		Utility.assertsEnabled();
@@ -88,9 +91,10 @@ public class IOManagerTest {
 			Attribute attr2 = Attribute.create(Integer.class, "r1.2");
 			AccessMethod am1 = AccessMethod.create("m1", new Integer[] {});
 			AccessMethod am2 = AccessMethod.create("m2", new Integer[] { 0, 1 });
-			Relation r = Relation.create("r1", new Attribute[] { attr1, attr2 }, new AccessMethod[] { am1, am2 });
+			Relation r = Relation.create("r1", new Attribute[] { attr1, attr2 }, new AccessMethod[] { am1, am2 }, new ForeignKey[] {}, false, new String[] {attr1.getName(),attr2.getName()});
 			Relation r2 = new View("myView", new Attribute[] { attr1, attr2 }, new AccessMethod[] { am1, am2 });
-			Schema s = new Schema(new Relation[] { r, r2 });
+			
+			Schema s = new Schema(new Relation[] { r, r2 },new Dependency[] { this.tgd, this.tgd2, this.egd });
 			File out = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schemaOut.xml");
 			IOManager.exportSchemaToXml(s, out);
 			Assert.assertTrue(out.exists());
