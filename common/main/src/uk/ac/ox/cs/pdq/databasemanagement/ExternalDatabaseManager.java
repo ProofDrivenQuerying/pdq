@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BulkInsert;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateDatabase;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateIndex;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateTable;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Delete;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DifferenceQuery;
@@ -136,6 +137,7 @@ public class ExternalDatabaseManager implements DatabaseManager {
 		this.schema = schema;
 		executor.execute(new CreateDatabase(schema));
 		executor.execute(new CreateTable(schema.getRelations(), parameters.isFactsAreUnique()));
+		executor.execute(new CreateIndex(schema.getRelations()));
 		databaseExists = true;
 	}
 

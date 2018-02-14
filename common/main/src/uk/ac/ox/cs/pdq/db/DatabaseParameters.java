@@ -242,6 +242,9 @@ public class DatabaseParameters extends Parameters {
 	public boolean isFactsAreUnique() {
 		return factsAreUnique;
 	}
+	public boolean getFactsAreUnique() {
+		return factsAreUnique;
+	}
 	public void setFactsAreUnique(boolean factsAreUnique) {
 		this.factsAreUnique = factsAreUnique;
 	}
