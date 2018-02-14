@@ -453,7 +453,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		newRelations[i] = newRelation;
 		this.originalSchema = new Schema(newRelations, this.originalSchema.getAllDependencies());
 		this.setSchema(originalSchema);
-		edm.executeUpdateCommand(new CreateTable(this.extendedSchema.getRelation(newRelation.getName())));
+		edm.executeUpdateCommand(new CreateTable(this.extendedSchema.getRelation(newRelation.getName()), edm.parameters.isFactsAreUnique()));
 	}
 
 }

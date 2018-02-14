@@ -93,7 +93,7 @@ public class TestSqlCommands extends PdqTest {
 	@Test
 	public void testCreateTable() throws DatabaseException {
 
-		CreateTable cr = new CreateTable(new Relation[] {R,S,T});
+		CreateTable cr = new CreateTable(new Relation[] {R,S,T},false);
 		
 		// have to have 3 table + 3 constraints
 		Assert.assertEquals(6,cr.toDerbyStatement(databaseNameKeyWord ).size());

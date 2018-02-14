@@ -62,7 +62,11 @@ public class DatabaseParameters extends Parameters {
 
 	/** The number of threads. */
 	@Parameter(description="True in case the internal database manager should be used")
-	private boolean useInternalDatabaseManager = true;
+	private boolean useInternalDatabaseManager = false;
+
+
+	@Parameter(description="The database should have a constraint for making every fact unique. Default is false.")
+	private boolean factsAreUnique = false;
 	
 	/**
 	 * Constructor for DatabaseParameters using default configuration file path.
@@ -233,6 +237,13 @@ public class DatabaseParameters extends Parameters {
 	}
 	public void setUseInternalDatabaseManager(boolean useInternalDatabaseManager) {
 		this.useInternalDatabaseManager = useInternalDatabaseManager;
+	}
+
+	public boolean isFactsAreUnique() {
+		return factsAreUnique;
+	}
+	public void setFactsAreUnique(boolean factsAreUnique) {
+		this.factsAreUnique = factsAreUnique;
 	}
 	
 }

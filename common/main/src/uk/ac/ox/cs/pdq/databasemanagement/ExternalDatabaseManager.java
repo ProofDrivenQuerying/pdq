@@ -135,7 +135,7 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	public void initialiseDatabaseForSchema(Schema schema) throws DatabaseException {
 		this.schema = schema;
 		executor.execute(new CreateDatabase(schema));
-		executor.execute(new CreateTable(schema.getRelations()));
+		executor.execute(new CreateTable(schema.getRelations(), parameters.isFactsAreUnique()));
 		databaseExists = true;
 	}
 
@@ -349,7 +349,8 @@ public class ExternalDatabaseManager implements DatabaseManager {
 		deps.addAll(Arrays.asList(this.schema.getKeyDependencies()));
 		deps.addAll(Arrays.asList(this.schema.getNonEgdDependencies()));
 		this.schema = new Schema(newRelations, deps.toArray(new Dependency[deps.size()]));
-		executeUpdateCommand(new CreateTable(this.schema.getRelation(newRelation.getName())));
+		executeUpdateCommand(new CreateTable(this.schema.getRelation(newRelation.getName()), parameters.isFactsAreUnique()));
 	}
+
 	
 }

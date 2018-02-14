@@ -22,11 +22,11 @@ public class CreateTable extends Command {
 	 * we can create multiple tables.
 	 * 
 	 * @param relations
+	 * @param factsAreUniqueConstraint 
 	 * @throws DatabaseException in case it contains not allowed table or attribute names.
 	 */
-	public CreateTable(Relation[] relations) throws DatabaseException {
+	public CreateTable(Relation[] relations, boolean factsAreUniqueConstraint) throws DatabaseException {
 		super();
-		
 		int maxlen = 500;
 		for (Relation r:relations) {
 			int newMax = (int) Math.round(1000.0 / r.getAttributes().length);
@@ -43,13 +43,15 @@ public class CreateTable extends Command {
 		for (Relation r : relations) {
 			statements.add(createTableStatement(r));
 		}
-		// add the UNIQUE constraint to the TABLE.
-		for (Relation r : relations) {
-			statements.add(createUniqueConstraintsStatement(r));
+		if (factsAreUniqueConstraint) {
+			// add the UNIQUE constraint to the TABLE.
+			for (Relation r : relations) {
+				statements.add(createUniqueConstraintsStatement(r));
+			}
 		}
 	}
-	public CreateTable(Relation relation) throws DatabaseException {
-		this(new Relation[] {relation});
+	public CreateTable(Relation relation,boolean factsAreUniqueConstraint) throws DatabaseException {
+		this(new Relation[] {relation},factsAreUniqueConstraint);
 	}
 
 	private String createUniqueConstraintsStatement(Relation r) {
