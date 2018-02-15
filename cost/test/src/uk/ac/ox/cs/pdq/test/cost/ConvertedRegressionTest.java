@@ -38,7 +38,7 @@ public class ConvertedRegressionTest extends PdqTest {
 
 	/**
 	 * This test is the same as the regression test:
-	 * test\dag\fast\tpch\derby\fk_inputs\case_002. <br>
+	 * test\dag\fast\tpch\mysql\fk_inputs\case_002. <br>
 	 * The textbook cost calculation should result 322831.63820324163 (manually
 	 * checked)
 	 * 
@@ -103,7 +103,7 @@ public class ConvertedRegressionTest extends PdqTest {
 
 	/**
 	 * This test is the same as the regression test:
-	 * test\dag\fast\tpch\derby\fk_inputs\case_003 <br>
+	 * test\dag\fast\tpch\mysql\fk_inputs\case_003 <br>
 	 * 
 	 * Expected result: 7998.7450843781535 (manually checked)
 	 * 
