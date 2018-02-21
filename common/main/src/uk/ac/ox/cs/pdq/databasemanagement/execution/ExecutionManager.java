@@ -83,7 +83,7 @@ public class ExecutionManager {
 		if (poolSize <= 1) {
 			// forced synchronous mode
 			for (Command command : commands) {
-				List<Match> values = startTask(command).getReturnValues();
+				List<Match> values = startTask(command,false).getReturnValues();
 				returnValues.addAll(values);
 			}
 			return returnValues;
@@ -94,7 +94,7 @@ public class ExecutionManager {
 		for (Command command : commands) {
 			// start each task on a different thread
 			executing++;
-			results.add(startTask(command));
+			results.add(startTask(command,false));
 			if (poolSize <= executing) {
 				for (Task result : results)
 					returnValues.addAll(result.getReturnValues());
@@ -109,6 +109,10 @@ public class ExecutionManager {
 		}
 		return returnValues;
 	}
+	
+	public List<String> executeGeneric(Command command) throws DatabaseException {
+		return startTask(command, true).getGenericReturnValues();
+	}
 
 	/**
 	 * Executes a single command and waits for the results.
@@ -117,7 +121,7 @@ public class ExecutionManager {
 	 * @throws DatabaseException
 	 */
 	public void execute(Command command) throws DatabaseException {
-		Task ret = startTask(command);
+		Task ret = startTask(command,false);
 		// must read return values even if there is no results to receive exceptions and
 		// to reset the thread state to accept more tasks.
 		ret.getReturnValues();
@@ -134,8 +138,8 @@ public class ExecutionManager {
 	 * @param command
 	 * @return
 	 */
-	protected Task startTask(Command command) {
-		Task task = new Task(command);
+	protected Task startTask(Command command, boolean isGeneric) {
+		Task task = new Task(command, isGeneric);
 		synchronized (TASKS_LOCK) {
 			// adding new task to the queue
 			tasks.add(task);
@@ -164,4 +168,5 @@ public class ExecutionManager {
 	protected ConcurrentLinkedQueue<Task> getTasks() {
 		return tasks;
 	}
+
 }

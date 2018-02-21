@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateTable;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Delete;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DifferenceQuery;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.ExplainSelect;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -352,6 +353,12 @@ public class ExternalDatabaseManager implements DatabaseManager {
 		deps.addAll(Arrays.asList(this.schema.getNonEgdDependencies()));
 		this.schema = new Schema(newRelations, deps.toArray(new Dependency[deps.size()]));
 		executeUpdateCommand(new CreateTable(this.schema.getRelation(newRelation.getName()), parameters.isFactsAreUnique()));
+	}
+
+	@Override
+	public List<String> executeQueryExplain(ConjunctiveQuery cq) throws DatabaseException {
+		// execute the SQL command
+		return executor.executeGeneric(new ExplainSelect(this.schema, cq));
 	}
 
 	

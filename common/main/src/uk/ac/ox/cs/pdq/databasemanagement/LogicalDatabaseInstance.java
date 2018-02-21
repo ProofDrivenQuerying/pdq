@@ -453,7 +453,15 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		newRelations[i] = newRelation;
 		this.originalSchema = new Schema(newRelations, this.originalSchema.getAllDependencies());
 		this.setSchema(originalSchema);
-		edm.executeUpdateCommand(new CreateTable(this.extendedSchema.getRelation(newRelation.getName()), edm.parameters.isFactsAreUnique()));
+		if (edm != null)
+			edm.executeUpdateCommand(new CreateTable(this.extendedSchema.getRelation(newRelation.getName()), edm.parameters.isFactsAreUnique()));
+	}
+
+	@Override
+	public List<String> executeQueryExplain(ConjunctiveQuery cq) throws DatabaseException {
+		if (edm != null)
+			return edm.executeQueryExplain(extendQuery(cq, this.databaseInstanceID));
+		return null;
 	}
 
 }

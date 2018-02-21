@@ -152,7 +152,11 @@ public class ExecutorThread extends Thread {
 			// execute task
 			
 			try {
-				task.setResults(execute(task.getCommand()),null);
+				if (task.isGeneric()) {
+					task.setGenericResults(executeGeneric(task.getCommand()),null);
+				} else {
+					task.setResults(execute(task.getCommand()),null);
+				}
 			} catch (Throwable t) {
 				task.setResults(null,t);
 				System.err.println("Execution error while executing: " + task.getCommand());
@@ -213,6 +217,44 @@ public class ExecutorThread extends Thread {
 				// queries one by one.
 				try {
 					results.addAll(executeQuery(statement, (BasicSelect) command));
+				} catch (Throwable t) {
+					if (ignoreErrors)
+						t.printStackTrace();
+					else
+						throw t;
+				}
+			}
+			return results;
+		} else {
+			// batch update.
+			executeUpdate(statements, ignoreErrors);
+			return new ArrayList<>();
+		}
+	}
+	private List<String> executeGeneric(Command command) throws DatabaseException, SQLException {
+		List<String> statements = null;
+
+		// convert the command into the corresponding SQL dialect.
+		switch (driverType) {
+		case MySql:
+			statements = command.toMySqlStatement(databaseName);
+			break;
+		case Postgres:
+			statements = command.toPostgresStatement(databaseName);
+			break;
+		}
+		boolean ignoreErrors = command.isIgnoreErrors();
+		// Selects have to be executed by the JDBC interface's executeQuery function,
+		// while inserts and other SQL commands have to be executed by calling the
+		// executeUpdate function. Everything that extends BasicSelect will be executed
+		// as a query, one by one. Updates can be batch executed.
+		
+		if (command instanceof BasicSelect) {
+			List<String> results = new ArrayList<>();
+			for (String statement : statements) {
+				// queries one by one.
+				try {
+					results.addAll(executeGenericQuery(statement, (BasicSelect) command));
 				} catch (Throwable t) {
 					if (ignoreErrors)
 						t.printStackTrace();
@@ -305,6 +347,7 @@ public class ExecutorThread extends Thread {
 	 * @throws DatabaseException
 	 * @throws SQLException
 	 */
+	
 	private List<Match> executeQuery(String statements, BasicSelect command) throws DatabaseException, SQLException {
 		List<Match> results = new ArrayList<>();
 		ResultSet resultSet = null;
@@ -345,7 +388,35 @@ public class ExecutorThread extends Thread {
 		}
 		return results;
 	}
-
+	
+	private List<String> executeGenericQuery(String statements, BasicSelect command) throws DatabaseException, SQLException {
+		List<String> results = new ArrayList<>();
+		ResultSet resultSet = null;
+		Statement sqlStmt = null;
+		try {
+			sqlStmt = connection.createStatement();
+			// execute the query
+			resultSet = sqlStmt.executeQuery(statements);
+		} catch (Throwable t) {
+			throw new DatabaseException("Error while executing query: " + statements, t);
+		}
+		try {
+			// parse results
+			while (resultSet.next()) {
+				for (int index = 1; index <= resultSet.getMetaData().getColumnCount(); index++) {
+					String line = resultSet.getString(index);
+					results.add(line);
+				}
+			}
+		} finally {
+			if (resultSet != null)
+				resultSet.close();
+			if (sqlStmt != null)
+				sqlStmt.close();
+		}
+		return results;
+	}
+	
 	/**
 	 * Will immediately terminate this thread if it is in a waiting state, but will
 	 * finish current execution before shutting down.

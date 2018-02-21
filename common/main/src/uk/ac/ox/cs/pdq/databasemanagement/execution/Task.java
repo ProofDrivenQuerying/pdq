@@ -33,6 +33,10 @@ public class Task {
 	 */
 	private List<Match> queryResults;
 	/**
+	 * Same as above but for generic commands, such as ExplainQuery.
+	 */
+	private List<String> genericResults;
+	/**
 	 * When the database provider returns an exception instead of data.
 	 */
 	private Throwable resultException;
@@ -40,14 +44,19 @@ public class Task {
 	private boolean isQuery = false;
 
 	protected Object RESULTS_LOCK = new Object();
+	/**
+	 * Specifies if we want List<Match> type results or the generic List<String> type results.
+	 */
+	private boolean isGeneric=false;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param command
 	 */
-	public Task(Command command) {
+	public Task(Command command,boolean isGeneric) {
 		this.command = command;
+		this.isGeneric = isGeneric;
 		isQuery = command instanceof BasicSelect;
 	}
 
@@ -98,6 +107,16 @@ public class Task {
 		}
 	}
 
+	protected void setGenericResults(List<String> results, Throwable exceptionThrown) {
+		synchronized (RESULTS_LOCK) {
+			this.genericResults = results;
+			this.resultException = exceptionThrown;
+			this.isFinished = true;
+			// wake up the one waiting for the results.
+			RESULTS_LOCK.notify();
+		}
+	}
+
 	public boolean isQuery() {
 		return isQuery;
 	}
@@ -115,20 +134,7 @@ public class Task {
 	 * @throws Throwable
 	 */
 	public List<Match> getReturnValues() throws DatabaseException {
-		boolean isFinished = false;
-		// wait for results to be ready.
-		while (!isFinished) {
-			synchronized (RESULTS_LOCK) {
-				isFinished = this.isFinished;
-				try {
-					if (!isFinished)
-						RESULTS_LOCK.wait(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-
-		}
+		waitUntilFinished();
 		// give results and reset status.
 		synchronized (RESULTS_LOCK) {
 			try {
@@ -143,6 +149,45 @@ public class Task {
 				RESULTS_LOCK.notify(); // wake up the thread and continue executing tasks.
 			}
 		}
+	}
+
+	private void waitUntilFinished() {
+		boolean isFinished = false;
+		// wait for results to be ready.
+		while (!isFinished) {
+			synchronized (RESULTS_LOCK) {
+				isFinished = this.isFinished;
+				try {
+					if (!isFinished)
+						RESULTS_LOCK.wait(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+	}
+
+	public List<String> getGenericReturnValues() throws DatabaseException {
+		waitUntilFinished();
+		// give results and reset status.
+		synchronized (RESULTS_LOCK) {
+			try {
+				if (resultException != null) {
+					throw new DatabaseException("Error while executing command: " + command, resultException);
+				}
+				List<String> ret = this.genericResults;
+				return ret;
+			} finally {
+				this.queryResults = null;
+				this.isFinished = false;
+				RESULTS_LOCK.notify(); // wake up the thread and continue executing tasks.
+			}
+		}
+	}
+
+	public boolean isGeneric() {
+		return isGeneric;
 	}
 
 }

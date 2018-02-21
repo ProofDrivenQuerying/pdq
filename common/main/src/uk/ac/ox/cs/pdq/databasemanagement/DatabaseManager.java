@@ -159,4 +159,10 @@ public interface DatabaseManager {
 	 * @throws DatabaseException
 	 */
 	public void addRelation(Relation newRelation) throws DatabaseException;
+
+	/** In case the database manager can explain a query, this function will return the cost of this query.
+	 * @param cq
+	 * @return
+	 */
+	public List<String> executeQueryExplain(ConjunctiveQuery cq) throws DatabaseException;
 }
