@@ -3,7 +3,8 @@ package uk.ac.ox.cs.pdq.algebra;
 import org.junit.Assert;
 
 /**
- * 
+ *
+ * TOCOMMENT: IS THIS A NATURAL JOIN? IF SO EXPLAIN 
  * @author Efthymia Tsamoura
  *
  */

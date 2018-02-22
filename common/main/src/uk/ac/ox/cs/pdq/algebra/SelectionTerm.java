@@ -24,6 +24,7 @@ public class SelectionTerm extends RelationalTerm {
 		Assert.assertNotNull(selectionCondition);
 		Assert.assertNotNull(child);
 		if (!AlgebraUtilities.assertSelectionCondition(selectionCondition, child.getOutputAttributes())) {
+// TOCOMMENT AND TO FIX: THIS PRINTLN STUFF SHOULD GO
 			System.out.println(AlgebraUtilities.assertSelectionCondition(selectionCondition, child.getOutputAttributes()));
 		}
 		Assert.assertTrue(AlgebraUtilities.assertSelectionCondition(selectionCondition, child.getOutputAttributes()));

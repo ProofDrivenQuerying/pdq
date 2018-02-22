@@ -24,6 +24,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 public class AlgebraUtilities {
 
+//TOCOMMENT: WHAT IS THIS CHECKING?
 	public static boolean assertSelectionCondition(Condition selectionCondition, Attribute[] outputAttributes) {
 		if (selectionCondition instanceof ConjunctiveCondition) {
 			for (SimpleCondition conjunct : ((ConjunctiveCondition) selectionCondition).getSimpleConditions()) {
@@ -77,6 +78,8 @@ public class AlgebraUtilities {
 		return result.toArray(new Attribute[result.size()]);
 	}
 
+//TOCOMMENT: WHAT DOES THE NEXT FUNCITON DO?
+
 	protected static ConjunctiveCondition computeJoinConditions(RelationalTerm[] children) {
 		Multimap<Attribute, Integer> joinVariables = LinkedHashMultimap.create();
 		int totalCol = 0;
@@ -125,6 +128,8 @@ public class AlgebraUtilities {
 		return inputs.toArray(new Attribute[inputs.size()]);
 	}
 
+//TOCOMMENT: ALL OF THESE NEED COMMENTS!
+
 	public static Attribute[] computeInputAttributes(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
 		Assert.assertNotNull(relation);
 		if (!(accessMethod != null && accessMethod.getInputs().length > 0) && (inputConstants == null || inputConstants.isEmpty())) {
@@ -172,7 +177,6 @@ public class AlgebraUtilities {
 	}
 
 	/**
-	 * Gets the accesses.
 	 *
 	 * @param operator
 	 *            the operator
