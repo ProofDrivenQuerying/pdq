@@ -75,14 +75,19 @@ public class RelationalTermDescriptor {
 		}
 
 		// map output attributes
-		if (this.term instanceof RenameTerm) {
+		if (this.term instanceof RenameTerm || this.term instanceof AccessTerm) {
 			int index = 0;
+			RelationalTermDescriptor toAdd = this;
+			if (this.term instanceof RenameTerm)
+				toAdd = children.get(0);
 			for (Attribute output : this.term.getOutputAttributes()) {
 				if (root.attributeMap.containsKey(output)) {
-					root.attributeMap.get(output).add(Pair.of(children.get(0), index++));
+					Pair<RelationalTermDescriptor, Integer> pair = Pair.of(toAdd, index++);
+					if (!root.attributeMap.get(output).contains(pair))
+						root.attributeMap.get(output).add(pair);
 				} else {
 					List<Pair<RelationalTermDescriptor, Integer>> l = new ArrayList<>();
-					l.add(Pair.of(children.get(0), index++));
+					l.add(Pair.of(toAdd, index++));
 					root.attributeMap.put(output, l);
 				}
 			}

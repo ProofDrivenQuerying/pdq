@@ -75,6 +75,29 @@ public class TestPostgresSqlCostEstimator extends PdqTest {
 		System.out.println("Cost = " + res);
 		Assert.assertEquals(21.26, res.getCost(),0.01);
 	}
+	@Test
+	public void getCostOfPlanTest1b() throws DatabaseException {
+		DatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
+		Schema s = getScenario1().getSchema();
+		dm.initialiseDatabaseForSchema(s);
+		PostgresQueryExplainCostEstimator estimator = new PostgresQueryExplainCostEstimator(dm);
+		
+		RelationalTerm a1 = AccessTerm.create(s.getRelation("R0"), s.getRelation("R0").getAccessMethod("mt_0"));
+		
+		Map<Integer, TypedConstant> map2=new HashMap<>();
+		map2.put(0, TypedConstant.create("a"));
+		RelationalTerm a2 = AccessTerm.create(s.getRelation("R1"), s.getRelation("R1").getAccessMethod("mt_1"),map2);
+		
+		RelationalTerm plan=JoinTerm.create(a1, a2 );
+		RelationalTerm plan2=ProjectionTerm.create(new Attribute[] {s.getRelation("R1").getAttributes()[0]}, plan);
+		System.out.println(plan2);
+		ConjunctiveQuery cq = PlanToQueryConverter.convertToConjunctiveQuery(plan2);
+		System.out.println(cq);
+
+		DoubleCost res = (DoubleCost)estimator.cost(plan2);
+		System.out.println("Cost = " + res);
+		Assert.assertEquals(21.26, res.getCost(),0.01);
+	}
 	
 	private Schema convertTypesToString(Schema schema) {
 		List<Dependency> dep = new ArrayList<>();
@@ -124,7 +147,7 @@ public class TestPostgresSqlCostEstimator extends PdqTest {
 		System.out.println("=============================");
 		
 		System.out.println("Cost = " + res);
-		Assert.assertEquals(42.63, res.getCost(),0.01);
+		Assert.assertEquals(42.63, res.getCost(),0.02);
 	}
 
 	@Test
@@ -135,7 +158,7 @@ public class TestPostgresSqlCostEstimator extends PdqTest {
 		ConjunctiveQuery cq = getScenario1().getQuery();
 		DoubleCost res = estimator.cost(cq);
 		System.out.println("Cost = " + res);
-		Assert.assertEquals(34.13, res.getCost(),0.01);
+		Assert.assertEquals(34.13, res.getCost(),0.02);
 	}
 
 	
