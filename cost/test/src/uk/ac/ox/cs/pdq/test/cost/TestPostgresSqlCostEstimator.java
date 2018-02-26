@@ -19,7 +19,6 @@ import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.cost.converters.PlanToQueryConverter;
 import uk.ac.ox.cs.pdq.cost.estimators.PostgresQueryExplainCostEstimator;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
@@ -36,11 +35,12 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 public class TestPostgresSqlCostEstimator extends PdqTest {
-	
+
 	/**
-	 * This test creates a plan like:
-	 * Join {[(#0=#3)]Rename{[c1,c2,c3]Access{R2.mt_0[]}},Rename{[c1,c4,c5]Access{R2.mt_1[#0=a]}}}
+	 * This test creates a plan like: Join
+	 * {[(#0=#3)]Rename{[c1,c2,c3]Access{R2.mt_0[]}},Rename{[c1,c4,c5]Access{R2.mt_1[#0=a]}}}
 	 * And evaluates its cost.
+	 * 
 	 * @throws DatabaseException
 	 */
 	@Test
@@ -49,56 +49,46 @@ public class TestPostgresSqlCostEstimator extends PdqTest {
 		Schema s = getScenario1().getSchema();
 		dm.initialiseDatabaseForSchema(s);
 		PostgresQueryExplainCostEstimator estimator = new PostgresQueryExplainCostEstimator(dm);
-		
-		
-		
-		
-		Attribute[] ra1 = new Attribute[] {Attribute.create(String.class, "c1"),Attribute.create(String.class, "c2"),Attribute.create(String.class, "c3")};
+
+		Attribute[] ra1 = new Attribute[] { Attribute.create(String.class, "c1"), Attribute.create(String.class, "c2"),
+				Attribute.create(String.class, "c3") };
 		RelationalTerm a1 = AccessTerm.create(s.getRelation("R2"), s.getRelation("R0").getAccessMethod("mt_0"));
 		RelationalTerm r1 = RenameTerm.create(ra1, a1);
-		
-		
-		
-		Attribute[] ra2 = new Attribute[] {Attribute.create(String.class, "c1"),Attribute.create(String.class, "c4"),Attribute.create(String.class, "c3")};
-		Map<Integer, TypedConstant> map2=new HashMap<>();
-		map2.put(0, TypedConstant.create("a"));
-		RelationalTerm a2 = AccessTerm.create(s.getRelation("R2"), s.getRelation("R1").getAccessMethod("mt_1"),map2);
-		RelationalTerm c2 = RenameTerm.create(ra2, a2);
-		
-		RelationalTerm plan=JoinTerm.create(r1, c2 );
-		RelationalTerm plan2=ProjectionTerm.create(new Attribute[] {Attribute.create(String.class, "c1")}, plan);
-		System.out.println(plan2);
-		ConjunctiveQuery cq = PlanToQueryConverter.convertToConjunctiveQuery(plan2);
-		System.out.println(cq);
 
-		DoubleCost res = (DoubleCost)estimator.cost(plan2);
-		System.out.println("Cost = " + res);
-		Assert.assertEquals(21.26, res.getCost(),0.01);
+		Attribute[] ra2 = new Attribute[] { Attribute.create(String.class, "c1"), Attribute.create(String.class, "c4"),
+				Attribute.create(String.class, "c3") };
+		Map<Integer, TypedConstant> map2 = new HashMap<>();
+		map2.put(0, TypedConstant.create("a"));
+		RelationalTerm a2 = AccessTerm.create(s.getRelation("R2"), s.getRelation("R1").getAccessMethod("mt_1"), map2);
+		RelationalTerm c2 = RenameTerm.create(ra2, a2);
+
+		RelationalTerm plan = JoinTerm.create(r1, c2);
+		RelationalTerm plan2 = ProjectionTerm.create(new Attribute[] { Attribute.create(String.class, "c1") }, plan);
+
+		DoubleCost res = (DoubleCost) estimator.cost(plan2);
+		Assert.assertEquals(21.26, res.getCost(), 0.01);
 	}
+
 	@Test
 	public void getCostOfPlanTest1b() throws DatabaseException {
 		DatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 		Schema s = getScenario1().getSchema();
 		dm.initialiseDatabaseForSchema(s);
 		PostgresQueryExplainCostEstimator estimator = new PostgresQueryExplainCostEstimator(dm);
-		
-		RelationalTerm a1 = AccessTerm.create(s.getRelation("R0"), s.getRelation("R0").getAccessMethod("mt_0"));
-		
-		Map<Integer, TypedConstant> map2=new HashMap<>();
-		map2.put(0, TypedConstant.create("a"));
-		RelationalTerm a2 = AccessTerm.create(s.getRelation("R1"), s.getRelation("R1").getAccessMethod("mt_1"),map2);
-		
-		RelationalTerm plan=JoinTerm.create(a1, a2 );
-		RelationalTerm plan2=ProjectionTerm.create(new Attribute[] {s.getRelation("R1").getAttributes()[0]}, plan);
-		System.out.println(plan2);
-		ConjunctiveQuery cq = PlanToQueryConverter.convertToConjunctiveQuery(plan2);
-		System.out.println(cq);
 
-		DoubleCost res = (DoubleCost)estimator.cost(plan2);
-		System.out.println("Cost = " + res);
-		Assert.assertEquals(21.26, res.getCost(),0.01);
+		RelationalTerm a1 = AccessTerm.create(s.getRelation("R0"), s.getRelation("R0").getAccessMethod("mt_0"));
+
+		Map<Integer, TypedConstant> map2 = new HashMap<>();
+		map2.put(0, TypedConstant.create("a"));
+		RelationalTerm a2 = AccessTerm.create(s.getRelation("R1"), s.getRelation("R1").getAccessMethod("mt_1"), map2);
+
+		RelationalTerm plan = JoinTerm.create(a1, a2);
+		RelationalTerm plan2 = ProjectionTerm.create(new Attribute[] { s.getRelation("R1").getAttributes()[0] }, plan);
+
+		DoubleCost res = (DoubleCost) estimator.cost(plan2);
+		Assert.assertEquals(21.26, res.getCost(), 0.01);
 	}
-	
+
 	private Schema convertTypesToString(Schema schema) {
 		List<Dependency> dep = new ArrayList<>();
 		dep.addAll(Arrays.asList(schema.getNonEgdDependencies()));
@@ -107,8 +97,9 @@ public class TestPostgresSqlCostEstimator extends PdqTest {
 		for (int i = 0; i < rels.length; i++) {
 			rels[i] = createDatabaseRelation(rels[i]);
 		}
-		return new Schema(rels,dep.toArray(new Dependency[dep.size()]));
+		return new Schema(rels, dep.toArray(new Dependency[dep.size()]));
 	}
+
 	/**
 	 * Creates the db relation. Currently codes in the position numbers into the
 	 * names, but this should change
@@ -126,28 +117,22 @@ public class TestPostgresSqlCostEstimator extends PdqTest {
 		}
 		return Relation.create(relation.getName(), attributes, relation.getAccessMethods(), relation.isEquality());
 	}
-	
-	
+
 	@Test
 	public void getCostOfPlanTest2() throws DatabaseException, JAXBException, FileNotFoundException {
-		File planFile = new File ("..//regression//test//dag//fast//benchmark//mysql//case_001//expected-plan.xml");
-		Schema s = IOManager.importSchema(new File ("..//regression//test//dag//fast//benchmark//mysql//case_001//schema.xml"));
+		File planFile = new File("..//regression//test//dag//fast//benchmark//mysql//case_001//expected-plan.xml");
+		Schema s = IOManager
+				.importSchema(new File("..//regression//test//dag//fast//benchmark//mysql//case_001//schema.xml"));
 		Schema sc = convertTypesToString(s);
 		DatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 		dm.initialiseDatabaseForSchema(sc);
 		PostgresQueryExplainCostEstimator estimator = new PostgresQueryExplainCostEstimator(dm);
-		
+
 		RelationalTerm plan = CostIOManager.readRelationalTermFromRelationaltermWithCost(planFile, s);
-		System.out.println("=============================");
-		System.out.println(plan);
-		
-		DoubleCost res = (DoubleCost)estimator.cost(plan);
-		ConjunctiveQuery cq = PlanToQueryConverter.convertToConjunctiveQuery(plan);
-		System.out.println(cq);
-		System.out.println("=============================");
-		
-		System.out.println("Cost = " + res);
-		Assert.assertEquals(42.63, res.getCost(),0.02);
+
+		DoubleCost res = (DoubleCost) estimator.cost(plan);
+
+		Assert.assertEquals(42.63, res.getCost(), 0.02);
 	}
 
 	@Test
@@ -157,9 +142,7 @@ public class TestPostgresSqlCostEstimator extends PdqTest {
 		PostgresQueryExplainCostEstimator estimator = new PostgresQueryExplainCostEstimator(dm);
 		ConjunctiveQuery cq = getScenario1().getQuery();
 		DoubleCost res = estimator.cost(cq);
-		System.out.println("Cost = " + res);
-		Assert.assertEquals(34.13, res.getCost(),0.02);
+		Assert.assertEquals(34.13, res.getCost(), 0.02);
 	}
 
-	
 }

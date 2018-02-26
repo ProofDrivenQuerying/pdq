@@ -5,11 +5,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.algebra.RelationalTermToLogicConverter;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.cost.converters.PlanToQueryConverter;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 
 public class PostgresQueryExplainCostEstimator implements CostEstimator {
@@ -23,7 +25,12 @@ public class PostgresQueryExplainCostEstimator implements CostEstimator {
 	
 	@Override
 	public Cost cost(RelationalTerm plan) {
-		ConjunctiveQuery cq = PlanToQueryConverter.convertToConjunctiveQuery(plan);
+		RelationalTermToLogicConverter converter = new RelationalTermToLogicConverter(plan);
+		ConjunctiveQuery cq = null;
+		if (converter.getFormula() instanceof Atom)
+			cq = ConjunctiveQuery.create(converter.getFreeVariables(), (Atom)converter.getFormula());
+		else 
+			cq = ConjunctiveQuery.create(converter.getFreeVariables(), (Conjunction)converter.getFormula());
 		return cost(cq);
 	}
 
