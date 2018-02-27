@@ -15,6 +15,7 @@ public class RenameTerm extends RelationalTerm {
 	protected final RelationalTerm child;
 
 	protected final Attribute[] renamings;
+/** TOCOMENT: how does an array of attributes correspond to a renaming? */
 
 	/**  Cached string representation. */
 	private String toString = null;
