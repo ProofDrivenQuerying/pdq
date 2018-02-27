@@ -14,10 +14,15 @@ public class RenameTerm extends RelationalTerm {
 
 	protected final RelationalTerm child;
 
+	/**
+	 * This attribute array is the output attributes of this rename term. Mapping
+	 * between the child's output attribute array is done by index, so the number of
+	 * outputs have to be the same and the order also have to be the same. The rename term
+	 * can only change the names of these attributes.
+	 */
 	protected final Attribute[] renamings;
-/** TOCOMENT: how does an array of attributes correspond to a renaming? */
 
-	/**  Cached string representation. */
+	/** Cached string representation. */
 	private String toString = null;
 
 	private RenameTerm(Attribute[] renamings, RelationalTerm child) {
@@ -29,19 +34,21 @@ public class RenameTerm extends RelationalTerm {
 		this.child = child;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		if(this.toString == null) {
+		if (this.toString == null) {
 			StringBuilder result = new StringBuilder();
 			result.append("Rename");
 			result.append('{');
 			result.append('[');
-			for(int index = 0; index < this.renamings.length; ++index) {
+			for (int index = 0; index < this.renamings.length; ++index) {
 				result.append(this.renamings[index]);
-				if(index < this.renamings.length - 1)
+				if (index < this.renamings.length - 1)
 					result.append(",");
 			}
 			result.append(']');
@@ -62,17 +69,17 @@ public class RenameTerm extends RelationalTerm {
 	public Attribute[] getRenamings() {
 		return this.renamings.clone();
 	}
-	
-    public static RenameTerm create(Attribute[] renamings, RelationalTerm child) {
-        return Cache.renameTerm.retrieve(new RenameTerm(renamings, child));
-    }
-    
+
+	public static RenameTerm create(Attribute[] renamings, RelationalTerm child) {
+		return Cache.renameTerm.retrieve(new RenameTerm(renamings, child));
+	}
+
 	@Override
 	public RelationalTerm getChild(int childIndex) {
 		Assert.assertTrue(childIndex == 0);
 		return this.child;
 	}
-	
+
 	@Override
 	public Integer getNumberOfChildren() {
 		return 1;
