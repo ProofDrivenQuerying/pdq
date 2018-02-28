@@ -1,8 +1,12 @@
 package uk.ac.ox.cs.pdq.algebra;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.fol.Term;
 
 /**
  * 
@@ -83,5 +87,35 @@ public class RenameTerm extends RelationalTerm {
 	@Override
 	public Integer getNumberOfChildren() {
 		return 1;
+	}
+	/**
+	 * 4) Inductive case for a renaming term rename(c to d, T_0) (I do not
+	 * understand the syntax for renamings in algebra -- left a comment about this;
+	 * I assume a syntax as above)
+	 * 
+	 * let (phi_0, M_0)=T_0.toLogic
+	 * 
+	 * return phi_0, M'_0 where M'_0 is the same as M_0 except its domain has d
+	 * instead of c, where M'_0(d)=M_0(c)
+	 */
+	@Override
+	public RelationalTermAsLogic toLogic() {
+		if (this instanceof RenameTerm) {
+			RelationalTerm T0 = getChildren()[0];
+			RelationalTermAsLogic t0Logic = T0.toLogic();
+			Map<Attribute, Term> mapNew = new HashMap<>();
+			mapNew.putAll(t0Logic.getMapping());
+			Attribute[] renamings = ((RenameTerm)this).getRenamings(); // new Attribute names. Not necessarily different from the old one.
+			for (int index = 0; index < renamings.length; index ++) {
+				if (!renamings[index].equals(T0.getOutputAttributes()[index])) {
+					// we found renaming from T0.getOutputAttributes()[index] to renamings[index]
+					Term value = mapNew.get(T0.getOutputAttributes()[index]);
+					mapNew.remove(T0.getOutputAttributes()[index]);
+					mapNew.put(renamings[index],value);
+				}
+			}
+			return new RelationalTermAsLogic(t0Logic.getPhi(),mapNew);
+		}
+		return super.toLogic();
 	}
 }

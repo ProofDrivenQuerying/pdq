@@ -13,11 +13,14 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.junit.Assert;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -129,34 +132,6 @@ public abstract class RelationalTerm implements Serializable {
 	 */
 	public RelationalTermAsLogic toLogic() {
 		/*
-		 * 1) RelationalTerm T is an access term for relation R with attributes a1 ...
-		 * an. Let p1 ... pk be the positions that include constants c1.. ck in them.
-		 * 
-		 * tologic() produces:
-		 * 
-		 * phi=R(tau1...tau_n) where tau_i=c_i for each p_i and tau_i= a variable x_i
-		 * for other position
-		 * 
-		 * mapping M takes ai to tau_i (we need to access the schema of R to figure out
-		 * the positions of each attribute). </pre>
-		 */
-		if (this instanceof AccessTerm) {
-			AccessTerm at = (AccessTerm) this;
-			Relation R = at.getRelation();
-			Term[] tau = new Term[R.getArity()];
-			Map<Attribute, Term> mapping = new HashMap<>();
-			for (int index = 0; index < R.getArity(); index++) {
-				if (at.getInputConstants().containsKey(index)) {
-					tau[index] = at.getInputConstants().get(index);
-				} else {
-					tau[index] = Variable.create("x_" + index + "_"+GlobalCounterProvider.getNext("VariableName")); 
-				}
-				mapping.put(at.getOutputAttribute(index), tau[index]);
-			}
-			Formula phi = Atom.create(R, tau);
-			return new RelationalTermAsLogic(phi, mapping);
-		}
-		/*
 		 * 2) Selection with attribute equality condition. T= selection term
 		 * sigma_{posi=posj} T_0 where both posi and posj are positions. We assume we
 		 * have a way of getting attributes a for posi and atrribute b for posj
@@ -168,23 +143,41 @@ public abstract class RelationalTerm implements Serializable {
 		 * M_0(a)
 		 */
 		if (hasAttribueEqualityCondition()) {
-			
-			RelationalTermAsLogic Tlogic = getChildren()[0].toLogic();
+			// this case deals with different joins and selectionTerm case.
+			RelationalTermAsLogic T1logic = getChildren()[0].toLogic();
+			RelationalTermAsLogic TNewlogic = T1logic; 
+			RelationalTermAsLogic T2logic = null;
 			if (this.getChildren().length > 1) {
-				RelationalTermAsLogic T2logic = getChildren()[1].toLogic();
-				Tlogic = merge(Tlogic,T2logic);
+				T2logic = getChildren()[1].toLogic();
+				TNewlogic = merge(T1logic,T2logic);
 			}
-			Formula phiNew = Tlogic.getPhi();
-			Map<Attribute, Term> mapNew = Tlogic.getMapping();
+			Formula phiNew = TNewlogic.getPhi();
+			Map<Attribute, Term> mapNew = TNewlogic.getMapping();
 			List<SimpleCondition> conditions = this.getConditions();
+			// Apply conditions
 			for (SimpleCondition s:conditions) {
 				if (s instanceof AttributeEqualityCondition) {
 					int position = ((AttributeEqualityCondition)s).getPosition();
 					int other = ((AttributeEqualityCondition)s).getOther();
 					Attribute a = this.getOutputAttribute(position);
 					Attribute b = this.getOutputAttribute(other);
-					phiNew = this.replaceTerm(phiNew, mapNew.get(b), mapNew.get(a));
-					mapNew.put(b, mapNew.get(a));
+					Preconditions.checkState(a.equals(b));
+					if (T1logic.getMapping().get(b) instanceof Constant) {
+						phiNew = this.replaceTerm(phiNew, T2logic.getMapping().get(a), T1logic.getMapping().get(b));
+						mapNew.put(b, T1logic.getMapping().get(b));
+					} else {
+						phiNew = this.replaceTerm(phiNew, T1logic.getMapping().get(b), T2logic.getMapping().get(a));
+						mapNew.put(b, T2logic.getMapping().get(a));
+					}
+				} else if (s instanceof ConstantEqualityCondition) {
+					TypedConstant constant = ((ConstantEqualityCondition)s).getConstant();
+					int position = ((ConstantEqualityCondition)s).getPosition();
+					Attribute a = this.getOutputAttribute(position);
+					if (T1logic.getMapping().get(a)!=null)
+						phiNew = replaceTerm(phiNew,T1logic.getMapping().get(a),constant);
+					if (T2logic.getMapping().get(a)!=null)
+						phiNew = replaceTerm(phiNew,T2logic.getMapping().get(a),constant);
+					mapNew.put(a, constant);
 				}
 			}
 			return new RelationalTermAsLogic(phiNew, mapNew);
@@ -222,85 +215,6 @@ public abstract class RelationalTerm implements Serializable {
 			return new RelationalTermAsLogic(phiNew,mapNew);
 		}
 
-		/*
-		 * 4) Inductive case for a renaming term rename(c to d, T_0) (I do not
-		 * understand the syntax for renamings in algebra -- left a comment about this;
-		 * I assume a syntax as above)
-		 * 
-		 * let (phi_0, M_0)=T_0.toLogic
-		 * 
-		 * return phi_0, M'_0 where M'_0 is the same as M_0 except its domain has d
-		 * instead of c, where M'_0(d)=M_0(c)
-		 */
-		if (this instanceof RenameTerm) {
-			RelationalTerm T0 = getChildren()[0];
-			RelationalTermAsLogic t0Logic = T0.toLogic();
-			Map<Attribute, Term> mapNew = new HashMap<>();
-			mapNew.putAll(t0Logic.getMapping());
-			Attribute[] renamings = ((RenameTerm)this).getRenamings(); // new Attribute names. Not necessarily different from the old one.
-			for (int index = 0; index < renamings.length; index ++) {
-				if (!renamings[index].equals(T0.getOutputAttributes()[index])) {
-					// we found renaming from T0.getOutputAttributes()[index] to renamings[index]
-					Term value = mapNew.get(T0.getOutputAttributes()[index]);
-					mapNew.remove(T0.getOutputAttributes()[index]);
-					mapNew.put(renamings[index],value);
-				}
-			}
-			return new RelationalTermAsLogic(t0Logic.getPhi(),mapNew);
-		}
-
-		/*
-		 * 5) Inductive case for a cartesian product term T_1 times T_2 where the
-		 * attributes of T_1 and T_2 are disjoint.
-		 * 
-		 * let (phi_1, M_1)=T_1.toLogic let (phi_2, M_2)=T_2.toLogic
-		 * 
-		 * revise phi_1 and M_1 to avoid any variable overlap with phi_2.
-		 * 
-		 * return phi_3, M_3 where
-		 * 
-		 * phi_3= phi_1 \wedge phi_2
-		 * 
-		 * M_3 has domain that is the union of the domains of M_1 and M_2, and M_3(a)=
-		 * M_1(a) on the domain of M_1 while M_3(a)= M_2(a) on the domain of M_2
-		 */
-		if (this instanceof CartesianProductTerm) {
-			RelationalTerm T1 = getChildren()[0];
-			RelationalTerm T2 = getChildren()[1];
-			RelationalTermAsLogic t1Logic = T1.toLogic();
-			RelationalTermAsLogic t2Logic = T2.toLogic();
-			return merge(t1Logic,t2Logic);
-		}
-
-		/*
-		 * 6) Inductive case for natural join of T1 and T2 with common attributes
-		 * d1...dk.
-		 * 
-		 * let (phi_1, M_1)=T_1.toLogic let (phi_2, M_2)=T_2.toLogic
-		 * 
-		 * revise phi_1 so that variables are disjoint form phi_2 variables, and revise
-		 * M_1 accordingly.
-		 * 
-		 * let x1... xk be M_1(d1)... M_1(dk) let y1....yk be M_2(d1) ... M_2(dk)
-		 * 
-		 * let sigma be the substitution taking xi to yi
-		 * 
-		 * let phi'_1 be applying sigma to phi_1
-		 * 
-		 * We return phi'_1 \wedge phi_2 as the formula
-		 * 
-		 * The mapping M_3 has domain that is the union of the domains of M_1 and M_2,
-		 * and M_3(a)= sigma(M_1(a)) on the domain of M_1 while M_3(a)= rho( M_2(a)) on
-		 * the domain of M_2
-		 */
-		/*
-		 * 7) dependent join is the same as join for toLogic()
-		 */
-		if (this instanceof JoinTerm || this instanceof DependentJoinTerm) {
-			// this is already covered in the attribute equality case.
-		}
-		// TOCOMMENT projection is not described.
-		
 		//default is to simply join the child toLogic results:
 		if (this.getChildren().length == 1)
 			return this.getChildren()[0].toLogic();
@@ -395,7 +309,7 @@ public abstract class RelationalTerm implements Serializable {
 	 * @param right
 	 * @return
 	 */
-	private RelationalTermAsLogic merge(RelationalTermAsLogic left, RelationalTermAsLogic right) {
+	protected RelationalTermAsLogic merge(RelationalTermAsLogic left, RelationalTermAsLogic right) {
 		if (left == null && right == null)
 			return null;
 		if (left == null)

@@ -1,12 +1,15 @@
 package uk.ac.ox.cs.pdq.fol;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Assert;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTermAsLogic;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.QueryAdapter;
 
 /**
@@ -165,6 +168,23 @@ public class ConjunctiveQuery extends Formula {
 	
 	public int getNumberOfAtoms() {
 		return this.atoms.length;
+	}
+
+	public static ConjunctiveQuery create(RelationalTermAsLogic logicFormula) {
+		Formula phi = logicFormula.getPhi();
+		List<Variable> freeVariables = new ArrayList<>();
+		for (Term t: logicFormula.getMapping().values()) {
+			if (t.isVariable())
+				freeVariables.add((Variable)t);
+		}
+		
+		if (phi instanceof Atom) {
+			return create(freeVariables.toArray(new Variable[freeVariables.size()]),(Atom)phi);
+		}
+		if (phi instanceof Conjunction) {
+			return create(freeVariables.toArray(new Variable[freeVariables.size()]),(Conjunction)phi);
+		}
+		return null;
 	}
 
 }

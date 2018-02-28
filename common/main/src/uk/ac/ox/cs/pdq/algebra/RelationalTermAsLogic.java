@@ -48,5 +48,8 @@ public class RelationalTermAsLogic {
 	public void setMapping(Map<Attribute, Term> mapping) {
 		this.mapping = mapping;
 	}
-	
+
+	public String toString() {
+		return "Formula: " + phi + "\nMapping: " + mapping;
+	}
 }

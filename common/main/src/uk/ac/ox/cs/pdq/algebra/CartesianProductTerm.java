@@ -61,4 +61,31 @@ public class CartesianProductTerm extends RelationalTerm {
 	public Integer getNumberOfChildren() {
 		return this.children.length;
 	}
+	
+	/**
+	 * 5) Inductive case for a cartesian product term T_1 times T_2 where the
+	 * attributes of T_1 and T_2 are disjoint.
+	 * 
+	 * let (phi_1, M_1)=T_1.toLogic let (phi_2, M_2)=T_2.toLogic
+	 * 
+	 * revise phi_1 and M_1 to avoid any variable overlap with phi_2.
+	 * 
+	 * return phi_3, M_3 where
+	 * 
+	 * phi_3= phi_1 \wedge phi_2
+	 * 
+	 * M_3 has domain that is the union of the domains of M_1 and M_2, and M_3(a)=
+	 * M_1(a) on the domain of M_1 while M_3(a)= M_2(a) on the domain of M_2
+	 */
+	@Override
+	public RelationalTermAsLogic toLogic() {
+		if (this instanceof CartesianProductTerm) {
+			RelationalTerm T1 = getChildren()[0];
+			RelationalTerm T2 = getChildren()[1];
+			RelationalTermAsLogic t1Logic = T1.toLogic();
+			RelationalTermAsLogic t2Logic = T2.toLogic();
+			return merge(t1Logic,t2Logic);
+		}
+		return super.toLogic();
+	}
 }
