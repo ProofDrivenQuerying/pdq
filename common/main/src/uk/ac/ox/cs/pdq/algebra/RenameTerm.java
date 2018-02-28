@@ -15,9 +15,12 @@ public class RenameTerm extends RelationalTerm {
 	protected final RelationalTerm child;
 
 	/**
-	 * This attribute array is the output attributes of this rename term. Mapping
+         * A rename does a bulk renaming describing the new name of each 
+         * attribute of a relation. */
+	 /** It is described by an attribute array giving the output attributes of this rename term Mapping
 	 * between the child's output attribute array is done by index, so the number of
-	 * outputs have to be the same and the order also have to be the same. The rename term
+	 * outputs have to be the same and the order also have to be the same. 
+	 /** The rename term
 	 * can only change the names of these attributes.
 	 */
 	protected final Attribute[] renamings;
