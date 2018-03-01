@@ -100,22 +100,19 @@ public class RenameTerm extends RelationalTerm {
 	 */
 	@Override
 	public RelationalTermAsLogic toLogic() {
-		if (this instanceof RenameTerm) {
-			RelationalTerm T0 = getChildren()[0];
-			RelationalTermAsLogic t0Logic = T0.toLogic();
-			Map<Attribute, Term> mapNew = new HashMap<>();
-			mapNew.putAll(t0Logic.getMapping());
-			Attribute[] renamings = ((RenameTerm)this).getRenamings(); // new Attribute names. Not necessarily different from the old one.
-			for (int index = 0; index < renamings.length; index ++) {
-				if (!renamings[index].equals(T0.getOutputAttributes()[index])) {
-					// we found renaming from T0.getOutputAttributes()[index] to renamings[index]
-					Term value = mapNew.get(T0.getOutputAttributes()[index]);
-					mapNew.remove(T0.getOutputAttributes()[index]);
-					mapNew.put(renamings[index],value);
-				}
+		RelationalTerm T0 = getChildren()[0];
+		RelationalTermAsLogic t0Logic = T0.toLogic();
+		Map<Attribute, Term> mapNew = new HashMap<>();
+		mapNew.putAll(t0Logic.getMapping());
+		Attribute[] renamings = ((RenameTerm)this).getRenamings(); // new Attribute names. Not necessarily different from the old one.
+		for (int index = 0; index < renamings.length; index ++) {
+			if (!renamings[index].equals(T0.getOutputAttributes()[index])) {
+				// we found renaming from T0.getOutputAttributes()[index] to renamings[index]
+				Term value = mapNew.get(T0.getOutputAttributes()[index]);
+				mapNew.remove(T0.getOutputAttributes()[index]);
+				mapNew.put(renamings[index],value);
 			}
-			return new RelationalTermAsLogic(t0Logic.getPhi(),mapNew);
 		}
-		return super.toLogic();
+		return new RelationalTermAsLogic(t0Logic.getPhi(),mapNew);
 	}
 }

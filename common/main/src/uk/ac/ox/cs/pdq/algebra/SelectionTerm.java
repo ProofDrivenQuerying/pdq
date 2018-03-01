@@ -1,6 +1,14 @@
 package uk.ac.ox.cs.pdq.algebra;
 
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Assert;
+
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Term;
 
 /**
  * 
@@ -89,9 +97,29 @@ public class SelectionTerm extends RelationalTerm {
 	 */
 	@Override
 	public RelationalTermAsLogic toLogic() {
-		// we let the default deal with this, since Join and DependentJoin is the same,
-		// and selectionTerm is also very similar.
-		return super.toLogic();
+		RelationalTermAsLogic T1logic = getChildren()[0].toLogic();
+		if (!this.getConditions().isEmpty()) {
+			// this case deals with different joins and selectionTerm case.
+			RelationalTermAsLogic TNewlogic = T1logic; 
+			Formula phiNew = TNewlogic.getPhi();
+			Map<Attribute, Term> mapNew = TNewlogic.getMapping();
+			List<SimpleCondition> conditions = this.getConditions();
+			// Apply conditions
+			for (SimpleCondition s:conditions) {
+				if (s instanceof ConstantEqualityCondition) {
+					TypedConstant constant = ((ConstantEqualityCondition)s).getConstant();
+					int position = ((ConstantEqualityCondition)s).getPosition();
+					Attribute a = this.getOutputAttribute(position);
+					if (T1logic.getMapping().get(a)!=null)
+						phiNew = AlgebraUtilities.replaceTerm(phiNew,T1logic.getMapping().get(a),constant);
+					mapNew.put(a, constant);
+				}
+			}
+			return new RelationalTermAsLogic(phiNew, mapNew);
+		} else {
+			return T1logic;
+		}
+		
 	}
 
 }

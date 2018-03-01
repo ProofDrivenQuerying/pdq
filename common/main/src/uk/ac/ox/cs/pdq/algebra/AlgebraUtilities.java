@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.algebra;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -21,10 +22,15 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Term;
 
 public class AlgebraUtilities {
 
-//TOCOMMENT: WHAT IS THIS CHECKING?
+	// TOCOMMENT: WHAT IS THIS CHECKING?
 	public static boolean assertSelectionCondition(Condition selectionCondition, Attribute[] outputAttributes) {
 		if (selectionCondition instanceof ConjunctiveCondition) {
 			for (SimpleCondition conjunct : ((ConjunctiveCondition) selectionCondition).getSimpleConditions()) {
@@ -39,7 +45,8 @@ public class AlgebraUtilities {
 	public static boolean assertSelectionCondition(SimpleCondition selectionCondition, Attribute[] outputAttributes) {
 		if (selectionCondition instanceof ConstantEqualityCondition) {
 			int position = ((ConstantEqualityCondition) selectionCondition).getPosition();
-			if (position > outputAttributes.length || !((ConstantEqualityCondition) selectionCondition).getConstant().getType().equals(outputAttributes[position].getType()))
+			if (position > outputAttributes.length || !((ConstantEqualityCondition) selectionCondition).getConstant()
+					.getType().equals(outputAttributes[position].getType()))
 				return false;
 			else
 				return true;
@@ -54,7 +61,8 @@ public class AlgebraUtilities {
 			throw new RuntimeException("Unknown operator type");
 	}
 
-	protected static Map<Integer, Integer> computePositionsInRightChildThatAreBoundFromLeftChild(RelationalTerm left, RelationalTerm right) {
+	protected static Map<Integer, Integer> computePositionsInRightChildThatAreBoundFromLeftChild(RelationalTerm left,
+			RelationalTerm right) {
 		Map<Integer, Integer> result = new LinkedHashMap<>();
 		for (int index = 0; index < right.getNumberOfInputAttributes(); ++index) {
 			Attribute attribute = right.getInputAttribute(index);
@@ -78,7 +86,7 @@ public class AlgebraUtilities {
 		return result.toArray(new Attribute[result.size()]);
 	}
 
-//TOCOMMENT: WHAT DOES THE NEXT FUNCITON DO?
+	// TOCOMMENT: WHAT DOES THE NEXT FUNCITON DO?
 
 	protected static ConjunctiveCondition computeJoinConditions(RelationalTerm[] children) {
 		Multimap<Attribute, Integer> joinVariables = LinkedHashMultimap.create();
@@ -128,11 +136,13 @@ public class AlgebraUtilities {
 		return inputs.toArray(new Attribute[inputs.size()]);
 	}
 
-//TOCOMMENT: ALL OF THESE NEED COMMENTS!
+	// TOCOMMENT: ALL OF THESE NEED COMMENTS!
 
-	public static Attribute[] computeInputAttributes(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
+	public static Attribute[] computeInputAttributes(Relation relation, AccessMethod accessMethod,
+			Map<Integer, TypedConstant> inputConstants) {
 		Assert.assertNotNull(relation);
-		if (!(accessMethod != null && accessMethod.getInputs().length > 0) && (inputConstants == null || inputConstants.isEmpty())) {
+		if (!(accessMethod != null && accessMethod.getInputs().length > 0)
+				&& (inputConstants == null || inputConstants.isEmpty())) {
 			return new Attribute[0];
 		}
 		Assert.assertTrue(accessMethod != null && accessMethod.getInputs().length > 0);
@@ -155,7 +165,8 @@ public class AlgebraUtilities {
 		Assert.assertNotNull(child2);
 		Attribute[] input = new Attribute[child1.getNumberOfInputAttributes() + child2.getNumberOfInputAttributes()];
 		System.arraycopy(child1.getInputAttributes(), 0, input, 0, child1.getNumberOfInputAttributes());
-		System.arraycopy(child2.getInputAttributes(), 0, input, child1.getNumberOfInputAttributes(), child2.getNumberOfInputAttributes());
+		System.arraycopy(child2.getInputAttributes(), 0, input, child1.getNumberOfInputAttributes(),
+				child2.getNumberOfInputAttributes());
 		return input;
 	}
 
@@ -164,7 +175,8 @@ public class AlgebraUtilities {
 		Assert.assertNotNull(child2);
 		Attribute[] input = new Attribute[child1.getNumberOfOutputAttributes() + child2.getNumberOfOutputAttributes()];
 		System.arraycopy(child1.getOutputAttributes(), 0, input, 0, child1.getNumberOfOutputAttributes());
-		System.arraycopy(child2.getOutputAttributes(), 0, input, child1.getNumberOfOutputAttributes(), child2.getNumberOfOutputAttributes());
+		System.arraycopy(child2.getOutputAttributes(), 0, input, child1.getNumberOfOutputAttributes(),
+				child2.getNumberOfOutputAttributes());
 		return input;
 	}
 
@@ -198,6 +210,102 @@ public class AlgebraUtilities {
 			newInputAttributes[index] = renamings[indexInputAttribute];
 		}
 		return newInputAttributes;
+	}
+
+	/**
+	 * Merges two RelationalTermAsLogic object into one that contains the
+	 * conjunction formula of the two source formulas.
+	 * 
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	public static RelationalTermAsLogic merge(RelationalTermAsLogic left, RelationalTermAsLogic right) {
+		if (left == null && right == null)
+			return null;
+		if (left == null)
+			return right;
+		Formula phi_1 = left.getPhi();
+		Formula phi_2 = right.getPhi();
+		Formula phi = Conjunction.of(phi_1, phi_2);
+
+		Map<Attribute, Term> map_1 = left.getMapping();
+		Map<Attribute, Term> map_2 = right.getMapping();
+		Map<Attribute, Term> map = new HashMap<>();
+		map.putAll(map_1);
+		map.putAll(map_2);
+
+		return new RelationalTermAsLogic(phi, map);
+	}
+
+	/**
+	 * Replaces a term (Variable or constant) with a new term in a formula.
+	 * 
+	 * @param phiNew
+	 * @param term
+	 * @param constant
+	 * @return
+	 */
+	public static Formula replaceTerm(Formula phi, Term old, Term newTerm) {
+		if (phi instanceof Atom) {
+			Term[] terms = phi.getTerms();
+			for (int i = 0; i < terms.length; i++) {
+				if (terms[i].equals(old)) {
+					terms[i] = newTerm;
+				}
+			}
+			return Atom.create(((Atom) phi).getPredicate(), terms);
+		} else {
+			Atom[] atoms = ((Conjunction) phi).getAtoms();
+			Atom[] newAtoms = new Atom[atoms.length];
+			for (int i = 0; i < atoms.length; i++) {
+				newAtoms[i] = (Atom) replaceTerm(atoms[i], old, newTerm);
+			}
+			return Conjunction.of(newAtoms);
+		}
+	}
+
+	/** Converts the input joinTerm (or DependentJoinTerm) to logic by applying conditions.
+	 * @param t1logic toLogic result from the left side
+	 * @param t2logic toLogic result from the right side of the join
+	 * @param joinTerm join or dependent join term
+	 * @return
+	 */
+	public static RelationalTermAsLogic applyConditions(RelationalTermAsLogic t1logic, RelationalTermAsLogic t2logic, RelationalTerm joinTerm) {
+		List<SimpleCondition> conditions = joinTerm.getConditions();
+		RelationalTermAsLogic TNewlogic = AlgebraUtilities.merge(t1logic,t2logic);
+		Formula phiNew = TNewlogic.getPhi();
+		Map<Attribute, Term> mapNew = TNewlogic.getMapping();
+		
+		// Apply conditions
+		for (SimpleCondition s : conditions) {
+			if (s instanceof AttributeEqualityCondition) {
+				int position = ((AttributeEqualityCondition) s).getPosition();
+				int other = ((AttributeEqualityCondition) s).getOther();
+				Attribute a = joinTerm.getOutputAttribute(position);
+				Attribute b = joinTerm.getOutputAttribute(other);
+				Preconditions.checkState(a.equals(b));
+				if (t1logic.getMapping().get(b) instanceof Constant) {
+					phiNew = AlgebraUtilities.replaceTerm(phiNew, t2logic.getMapping().get(a),
+							t1logic.getMapping().get(b));
+					mapNew.put(b, t1logic.getMapping().get(b));
+				} else {
+					phiNew = AlgebraUtilities.replaceTerm(phiNew, t1logic.getMapping().get(b),
+							t2logic.getMapping().get(a));
+					mapNew.put(b, t2logic.getMapping().get(a));
+				}
+			} else if (s instanceof ConstantEqualityCondition) {
+				TypedConstant constant = ((ConstantEqualityCondition) s).getConstant();
+				int position = ((ConstantEqualityCondition) s).getPosition();
+				Attribute a = joinTerm.getOutputAttribute(position);
+				if (t1logic.getMapping().get(a) != null)
+					phiNew = AlgebraUtilities.replaceTerm(phiNew, t1logic.getMapping().get(a), constant);
+				if (t2logic.getMapping().get(a) != null)
+					phiNew = AlgebraUtilities.replaceTerm(phiNew, t2logic.getMapping().get(a), constant);
+				mapNew.put(a, constant);
+			}
+		}
+		return new RelationalTermAsLogic(phiNew, mapNew);
 	}
 
 }

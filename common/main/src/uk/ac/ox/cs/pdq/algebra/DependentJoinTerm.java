@@ -104,7 +104,15 @@ public class DependentJoinTerm extends RelationalTerm {
 	 */
 	@Override
 	public RelationalTermAsLogic toLogic() {
-		// we let the default deal with this, since Join and DependentJoin is the same, and selectionTerm is also very similar.
-		return super.toLogic();
+		RelationalTermAsLogic T1logic = getChildren()[0].toLogic();
+		RelationalTermAsLogic T2logic = getChildren()[1].toLogic();
+		if (getConditions().isEmpty()) {
+			RelationalTermAsLogic TNewlogic = AlgebraUtilities.merge(T1logic,T2logic);
+			// no conditions, simple join.
+			return TNewlogic;
+		} else {
+			// this case deals with different joins conditions.
+			return AlgebraUtilities.applyConditions(T1logic,T2logic,this);
+		}
 	}
 }

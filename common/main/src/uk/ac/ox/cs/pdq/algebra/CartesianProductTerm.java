@@ -79,13 +79,10 @@ public class CartesianProductTerm extends RelationalTerm {
 	 */
 	@Override
 	public RelationalTermAsLogic toLogic() {
-		if (this instanceof CartesianProductTerm) {
-			RelationalTerm T1 = getChildren()[0];
-			RelationalTerm T2 = getChildren()[1];
-			RelationalTermAsLogic t1Logic = T1.toLogic();
-			RelationalTermAsLogic t2Logic = T2.toLogic();
-			return merge(t1Logic,t2Logic);
-		}
-		return super.toLogic();
+		RelationalTerm T1 = getChildren()[0];
+		RelationalTerm T2 = getChildren()[1];
+		RelationalTermAsLogic t1Logic = T1.toLogic();
+		RelationalTermAsLogic t2Logic = T2.toLogic();
+		return AlgebraUtilities.merge(t1Logic,t2Logic);
 	}
 }

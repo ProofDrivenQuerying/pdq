@@ -102,27 +102,24 @@ public class ProjectionTerm extends RelationalTerm {
 	 */
 	@Override
 	public RelationalTermAsLogic toLogic() {
-		if (this instanceof ProjectionTerm) {
-			ProjectionTerm pt = (ProjectionTerm) this;
-			Attribute[] pi = pt.getProjections();
-			RelationalTerm T1 = getChildren()[0];
-			RelationalTermAsLogic t1Logic = T1.toLogic();
-			Map<Attribute, Term> mapNew = new HashMap<>();
-			for (Attribute p : pi) {
-				mapNew.put(p, t1Logic.getMapping().get(p));
-			}
-			Formula phi = t1Logic.getPhi();
-			List<Term> freeVariables = new ArrayList<>();
-			for (Attribute allAttribute : t1Logic.getMapping().keySet()) {
-				if (!mapNew.containsKey(allAttribute)) {
-					if (t1Logic.getMapping().get(allAttribute).isVariable())
-						freeVariables.add(t1Logic.getMapping().get(allAttribute));
-				}
-			}
-			Formula phiNew = addFreeVariables(phi, freeVariables);
-			return new RelationalTermAsLogic(phiNew, mapNew);
+		ProjectionTerm pt = (ProjectionTerm) this;
+		Attribute[] pi = pt.getProjections();
+		RelationalTerm T1 = getChildren()[0];
+		RelationalTermAsLogic t1Logic = T1.toLogic();
+		Map<Attribute, Term> mapNew = new HashMap<>();
+		for (Attribute p : pi) {
+			mapNew.put(p, t1Logic.getMapping().get(p));
 		}
-		return super.toLogic();
+		Formula phi = t1Logic.getPhi();
+		List<Term> freeVariables = new ArrayList<>();
+		for (Attribute allAttribute : t1Logic.getMapping().keySet()) {
+			if (!mapNew.containsKey(allAttribute)) {
+				if (t1Logic.getMapping().get(allAttribute).isVariable())
+					freeVariables.add(t1Logic.getMapping().get(allAttribute));
+			}
+		}
+		Formula phiNew = addFreeVariables(phi, freeVariables);
+		return new RelationalTermAsLogic(phiNew, mapNew);
 	}
 	
 	private Formula addFreeVariables(Formula phi, List<Term> freeVariables) {

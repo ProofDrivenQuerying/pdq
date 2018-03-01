@@ -158,22 +158,19 @@ public class AccessTerm extends RelationalTerm {
 	 */
 	@Override
 	public RelationalTermAsLogic toLogic() {
-		if (this instanceof AccessTerm) {
-			AccessTerm at = (AccessTerm) this;
-			Relation R = at.getRelation();
-			Term[] tau = new Term[R.getArity()];
-			Map<Attribute, Term> mapping = new HashMap<>();
-			for (int index = 0; index < R.getArity(); index++) {
-				if (at.getInputConstants().containsKey(index)) {
-					tau[index] = at.getInputConstants().get(index);
-				} else {
-					tau[index] = Variable.create("x_" + index + "_"+GlobalCounterProvider.getNext("VariableName")); 
-				}
-				mapping.put(at.getOutputAttribute(index), tau[index]);
+		AccessTerm at = (AccessTerm) this;
+		Relation R = at.getRelation();
+		Term[] tau = new Term[R.getArity()];
+		Map<Attribute, Term> mapping = new HashMap<>();
+		for (int index = 0; index < R.getArity(); index++) {
+			if (at.getInputConstants().containsKey(index)) {
+				tau[index] = at.getInputConstants().get(index);
+			} else {
+				tau[index] = Variable.create("x_" + index + "_"+GlobalCounterProvider.getNext("VariableName")); 
 			}
-			Formula phi = Atom.create(R, tau);
-			return new RelationalTermAsLogic(phi, mapping);
+			mapping.put(at.getOutputAttribute(index), tau[index]);
 		}
-		return super.toLogic();
+		Formula phi = Atom.create(R, tau);
+		return new RelationalTermAsLogic(phi, mapping);
 	}
 }
