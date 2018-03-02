@@ -57,10 +57,10 @@ public class RelationalTermAsLogicTest extends PdqTest {
 		RelationalTerm plan2 = ProjectionTerm.create(new Attribute[] { c1}, plan);
 		
 		RelationalTermAsLogic asLogic = plan2.toLogic();
-		Assert.assertNotNull(asLogic.getPhi());
+		Assert.assertNotNull(asLogic.getFormula());
 		Assert.assertNotNull(asLogic.getMapping());
 		Assert.assertTrue(asLogic.getMapping().keySet().contains(c1));
-		Assert.assertTrue(Arrays.asList(asLogic.getPhi().getTerms()).contains(TypedConstant.create("a")));
+		Assert.assertTrue(Arrays.asList(asLogic.getFormula().getTerms()).contains(TypedConstant.create("a")));
 		
 	}
 

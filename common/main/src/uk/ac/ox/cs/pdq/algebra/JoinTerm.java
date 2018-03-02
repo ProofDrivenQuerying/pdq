@@ -94,7 +94,7 @@ public class JoinTerm extends RelationalTerm {
 	public RelationalTermAsLogic toLogic() {
 		RelationalTermAsLogic T1logic = getChildren()[0].toLogic();
 		RelationalTermAsLogic T2logic = getChildren()[1].toLogic();
-		if (getConditions().isEmpty()) {
+		if (getConditions().isEmpty()) { 
 			RelationalTermAsLogic TNewlogic = AlgebraUtilities.merge(T1logic,T2logic);
 			// no conditions, simple join.
 			return TNewlogic;

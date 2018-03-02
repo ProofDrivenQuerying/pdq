@@ -225,8 +225,8 @@ public class AlgebraUtilities {
 			return null;
 		if (left == null)
 			return right;
-		Formula phi_1 = left.getPhi();
-		Formula phi_2 = right.getPhi();
+		Formula phi_1 = left.getFormula();
+		Formula phi_2 = right.getFormula();
 		Formula phi = Conjunction.of(phi_1, phi_2);
 
 		Map<Attribute, Term> map_1 = left.getMapping();
@@ -274,7 +274,7 @@ public class AlgebraUtilities {
 	public static RelationalTermAsLogic applyConditions(RelationalTermAsLogic t1logic, RelationalTermAsLogic t2logic, RelationalTerm joinTerm) {
 		List<SimpleCondition> conditions = joinTerm.getConditions();
 		RelationalTermAsLogic TNewlogic = AlgebraUtilities.merge(t1logic,t2logic);
-		Formula phiNew = TNewlogic.getPhi();
+		Formula phiNew = TNewlogic.getFormula();
 		Map<Attribute, Term> mapNew = TNewlogic.getMapping();
 		
 		// Apply conditions

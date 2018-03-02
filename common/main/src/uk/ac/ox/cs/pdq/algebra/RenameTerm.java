@@ -113,6 +113,6 @@ public class RenameTerm extends RelationalTerm {
 				mapNew.put(renamings[index],value);
 			}
 		}
-		return new RelationalTermAsLogic(t0Logic.getPhi(),mapNew);
+		return new RelationalTermAsLogic(t0Logic.getFormula(),mapNew);
 	}
 }

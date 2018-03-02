@@ -101,7 +101,7 @@ public class SelectionTerm extends RelationalTerm {
 		if (!this.getConditions().isEmpty()) {
 			// this case deals with different joins and selectionTerm case.
 			RelationalTermAsLogic TNewlogic = T1logic; 
-			Formula phiNew = TNewlogic.getPhi();
+			Formula phiNew = TNewlogic.getFormula();
 			Map<Attribute, Term> mapNew = TNewlogic.getMapping();
 			List<SimpleCondition> conditions = this.getConditions();
 			// Apply conditions

@@ -169,20 +169,30 @@ public class ConjunctiveQuery extends Formula {
 	public int getNumberOfAtoms() {
 		return this.atoms.length;
 	}
-
+	/** Creates a ConjunctiveQuery from a logicFormula
+	 * @param logicFormula
+	 * @return
+	 */
 	public static ConjunctiveQuery create(RelationalTermAsLogic logicFormula) {
-		Formula phi = logicFormula.getPhi();
-		List<Variable> freeVariables = new ArrayList<>();
-		for (Term t: logicFormula.getMapping().values()) {
-			if (t.isVariable())
-				freeVariables.add((Variable)t);
-		}
+		Formula phi = logicFormula.getFormula();
+		List<Variable> freeVariables = null;
 		
-		if (phi instanceof Atom) {
-			return create(freeVariables.toArray(new Variable[freeVariables.size()]),(Atom)phi);
+		Formula flatFormula = null;
+		if (phi instanceof QuantifiedFormula) {
+			flatFormula = Conjunction.of(phi.getChild(0));
+			freeVariables = Arrays.asList(phi.getFreeVariables()); 
+		} else  {
+			freeVariables = new ArrayList<>();
+			for (Term t: logicFormula.getMapping().values()) {
+				if (t.isVariable())
+					freeVariables.add((Variable)t);
+			}
+			flatFormula = phi;
 		}
-		if (phi instanceof Conjunction) {
-			return create(freeVariables.toArray(new Variable[freeVariables.size()]),(Conjunction)phi);
+		if (flatFormula instanceof Atom) {
+			return create(freeVariables.toArray(new Variable[freeVariables.size()]),(Atom)flatFormula);
+		} else if (flatFormula instanceof Conjunction) {
+			return create(freeVariables.toArray(new Variable[freeVariables.size()]),(Conjunction)flatFormula);
 		}
 		return null;
 	}

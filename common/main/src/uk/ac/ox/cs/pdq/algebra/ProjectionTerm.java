@@ -10,7 +10,10 @@ import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
+import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
  * 
@@ -110,20 +113,22 @@ public class ProjectionTerm extends RelationalTerm {
 		for (Attribute p : pi) {
 			mapNew.put(p, t1Logic.getMapping().get(p));
 		}
-		Formula phi = t1Logic.getPhi();
-		List<Term> freeVariables = new ArrayList<>();
+		Formula phi = t1Logic.getFormula();
+		List<Term> existentialQuantifiers = new ArrayList<>();
 		for (Attribute allAttribute : t1Logic.getMapping().keySet()) {
 			if (!mapNew.containsKey(allAttribute)) {
 				if (t1Logic.getMapping().get(allAttribute).isVariable())
-					freeVariables.add(t1Logic.getMapping().get(allAttribute));
+					existentialQuantifiers.add(t1Logic.getMapping().get(allAttribute));
 			}
 		}
-		Formula phiNew = addFreeVariables(phi, freeVariables);
+		Formula phiNew = addExistentialQuantifiers(phi, existentialQuantifiers);
+		
 		return new RelationalTermAsLogic(phiNew, mapNew);
 	}
 	
-	private Formula addFreeVariables(Formula phi, List<Term> freeVariables) {
-		return phi;
+	private Formula addExistentialQuantifiers(Formula phi, List<Term> freeVariables) {
+		QuantifiedFormula qf = QuantifiedFormula.of(LogicalSymbols.EXISTENTIAL, freeVariables.toArray(new Variable[freeVariables.size()]), phi); 
+		return qf;
 	}
 	
 }

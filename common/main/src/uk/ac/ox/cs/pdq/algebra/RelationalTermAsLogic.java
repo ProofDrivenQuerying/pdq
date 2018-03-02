@@ -18,7 +18,7 @@ public class RelationalTermAsLogic {
 	/**
 	 * Formula representing a RelationalTerm object
 	 */
-	private Formula phi;
+	private Formula formula;
 	/**
 	 * Maps the output Attributes to variables or constants.
 	 */
@@ -29,16 +29,12 @@ public class RelationalTermAsLogic {
 	 * @param mapping
 	 */
 	public RelationalTermAsLogic(Formula phi, Map<Attribute,Term> mapping) {
-		this.phi = phi;
+		this.formula = phi;
 		this.mapping = mapping;
 	}
 
-	public Formula getPhi() {
-		return phi;
-	}
-
-	public void setPhi(Formula phi) {
-		this.phi = phi;
+	public Formula getFormula() {
+		return formula;
 	}
 
 	public Map<Attribute, Term> getMapping() {
@@ -50,6 +46,6 @@ public class RelationalTermAsLogic {
 	}
 
 	public String toString() {
-		return "Formula: " + phi + "\nMapping: " + mapping;
+		return "Formula: " + formula + "\nMapping: " + mapping;
 	}
 }
