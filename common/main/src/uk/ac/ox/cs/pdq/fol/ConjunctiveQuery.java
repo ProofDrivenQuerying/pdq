@@ -38,15 +38,23 @@ public class ConjunctiveQuery extends Formula {
 	private final Atom[] atoms;
 
 	/**
+	 * Builds a query given a set of free variables and two or more Atoms.
+	 * The query is grounded using the input mapping of variables to constants.
+	 * 
+	 * @param freeVariables
+	 * @param children
+	 */
+	protected ConjunctiveQuery(Variable[] freeVariables, Atom[] children) {
+		this(freeVariables,(Conjunction)Conjunction.of(children));
+	}
+
+	/**
 	 * Builds a query given a set of free variables and its conjunction.
 	 * The query is grounded using the input mapping of variables to constants.
 	 */
 	protected ConjunctiveQuery(Variable[] freeVariables, Conjunction child) {
 		//Check that the body is a conjunction of positive atoms
 		Assert.assertTrue(isConjunctionOfAtoms(child));
-		if (!Arrays.asList(child.getFreeVariables()).containsAll(Arrays.asList(freeVariables))) {
-			System.out.println();
-		}
 		Assert.assertTrue(Arrays.asList(child.getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
 		
 		this.child = child;
@@ -55,8 +63,9 @@ public class ConjunctiveQuery extends Formula {
 		this.atoms = child.getAtoms();
 	}
 	
+	
 	/**
-	 * Builds a query given a set of free variables and an atom.
+	 * Builds a query given a set of free variables and one Atom.
 	 * The query is grounded using the input mapping of variables to constants.
 	 */
 	protected ConjunctiveQuery(Variable[] freeVariables, Atom child) {
@@ -144,6 +153,10 @@ public class ConjunctiveQuery extends Formula {
         return Cache.conjunctiveQuery.retrieve(new ConjunctiveQuery(freeVariables, child));
     }
     
+    public static ConjunctiveQuery create(Variable[] freeVariables, Atom[] children) {
+        return Cache.conjunctiveQuery.retrieve(new ConjunctiveQuery(freeVariables, children));
+    }
+    
 	@Override
 	public Formula getChild(int childIndex) {
 		Assert.assertTrue(childIndex == 0);
@@ -189,12 +202,11 @@ public class ConjunctiveQuery extends Formula {
 			}
 			flatFormula = phi;
 		}
-		if (flatFormula instanceof Atom) {
+		if (flatFormula.getAtoms().length == 1) {
 			return create(freeVariables.toArray(new Variable[freeVariables.size()]),(Atom)flatFormula);
-		} else if (flatFormula instanceof Conjunction) {
-			return create(freeVariables.toArray(new Variable[freeVariables.size()]),(Conjunction)flatFormula);
+		} else {
+			return create(freeVariables.toArray(new Variable[freeVariables.size()]),flatFormula.getAtoms());
 		}
-		return null;
 	}
 
 }
