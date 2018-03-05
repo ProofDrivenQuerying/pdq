@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.cost.estimators.PostgresQueryExplainCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.QueryExplainCostEstimator;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
@@ -34,7 +34,12 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
-public class TestPostgresSqlCostEstimator extends PdqTest {
+/**
+ * Tests the QueryExplainCostEstimator class by creating ad hoc plans and queries.  
+ * @author gabor
+ *
+ */
+public class TestQueryExplainCostEstimator extends PdqTest {
 
 	/**
 	 * This test creates a plan like: Join
@@ -48,7 +53,7 @@ public class TestPostgresSqlCostEstimator extends PdqTest {
 		DatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 		Schema s = getScenario1().getSchema();
 		dm.initialiseDatabaseForSchema(s);
-		PostgresQueryExplainCostEstimator estimator = new PostgresQueryExplainCostEstimator(dm);
+		QueryExplainCostEstimator estimator = new QueryExplainCostEstimator(dm);
 
 		Attribute[] ra1 = new Attribute[] { Attribute.create(String.class, "c1"), Attribute.create(String.class, "c2"),
 				Attribute.create(String.class, "c3") };
@@ -74,7 +79,7 @@ public class TestPostgresSqlCostEstimator extends PdqTest {
 		DatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 		Schema s = getScenario1().getSchema();
 		dm.initialiseDatabaseForSchema(s);
-		PostgresQueryExplainCostEstimator estimator = new PostgresQueryExplainCostEstimator(dm);
+		QueryExplainCostEstimator estimator = new QueryExplainCostEstimator(dm);
 
 		RelationalTerm a1 = AccessTerm.create(s.getRelation("R0"), s.getRelation("R0").getAccessMethod("mt_0"));
 
@@ -126,7 +131,7 @@ public class TestPostgresSqlCostEstimator extends PdqTest {
 		Schema sc = convertTypesToString(s);
 		DatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 		dm.initialiseDatabaseForSchema(sc);
-		PostgresQueryExplainCostEstimator estimator = new PostgresQueryExplainCostEstimator(dm);
+		QueryExplainCostEstimator estimator = new QueryExplainCostEstimator(dm);
 
 		RelationalTerm plan = CostIOManager.readRelationalTermFromRelationaltermWithCost(planFile, s);
 
@@ -139,7 +144,7 @@ public class TestPostgresSqlCostEstimator extends PdqTest {
 	public void getCostOfCqTest() throws DatabaseException {
 		DatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 		dm.initialiseDatabaseForSchema(getScenario1().getSchema());
-		PostgresQueryExplainCostEstimator estimator = new PostgresQueryExplainCostEstimator(dm);
+		QueryExplainCostEstimator estimator = new QueryExplainCostEstimator(dm);
 		ConjunctiveQuery cq = getScenario1().getQuery();
 		DoubleCost res = estimator.costQuery(cq);
 		Assert.assertEquals(34.13, res.getCost(), 0.02);
