@@ -33,7 +33,6 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
@@ -453,7 +452,7 @@ public class TestMultiThreadedExecutor extends PdqTest {
 			atoms[4 * z + 3] = Atom.create(relations[4 * z + 3],
 					new Term[] { Variable.create("x" + z + "d"), Variable.create("y" + z + "d"), Variable.create("z" + z + "c"), Variable.create("w" + z + "c") });
 		}
-		ConjunctiveQuery query = ConjunctiveQuery.create(head.toArray(new Variable[head.size()]), (Conjunction) Conjunction.of(atoms));
+		ConjunctiveQuery query = ConjunctiveQuery.create(head.toArray(new Variable[head.size()]), atoms);
 
 		// Create schema
 		Schema schema = new Schema(relations);

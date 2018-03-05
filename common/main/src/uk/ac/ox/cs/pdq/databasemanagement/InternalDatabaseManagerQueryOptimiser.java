@@ -34,10 +34,10 @@ public class InternalDatabaseManagerQueryOptimiser {
 
 		ConjunctiveQuery newCQ = null;
 		if ((cq instanceof ConjunctiveQueryWithInequality)) {
-			newCQ = ConjunctiveQueryWithInequality.create(cq.getFreeVariables(), newConjunction,
+			newCQ = ConjunctiveQueryWithInequality.create(cq.getFreeVariables(), newConjunction.getAtoms(),
 					((ConjunctiveQueryWithInequality) cq).getInequalities());
 		} else {
-			newCQ = ConjunctiveQuery.create(cq.getFreeVariables(), newConjunction);
+			newCQ = ConjunctiveQuery.create(cq.getFreeVariables(), newConjunction.getAtoms());
 		}
 		return newCQ;
 	}

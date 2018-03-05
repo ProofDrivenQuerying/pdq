@@ -11,6 +11,11 @@ import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 
+/**
+ * //TOCOMMENT make it not related to postgres, have patter postgres based, and push it down as constructor param.
+ * @author gabor
+ *
+ */
 public class PostgresQueryExplainCostEstimator implements CostEstimator {
 	private static final String COST_REGEXP_PATTERN =
 			"\\(cost=\\d+\\.\\d+\\.\\.(?<cost>\\d+\\.\\d+)\\s.*\\)";
@@ -22,7 +27,7 @@ public class PostgresQueryExplainCostEstimator implements CostEstimator {
 	
 	@Override
 	public Cost cost(RelationalTerm plan) {
-		return cost(ConjunctiveQuery.create(plan.toLogic()));
+		return costQuery(ConjunctiveQuery.createFromLogicFormula(plan.toLogic()));
 	}
 
 	@Override
@@ -30,7 +35,7 @@ public class PostgresQueryExplainCostEstimator implements CostEstimator {
 		return this;
 	}
 
-	public DoubleCost cost(ConjunctiveQuery cq) {
+	public DoubleCost costQuery(ConjunctiveQuery cq) {
 		List<String> explainedQuery;
 		try {
 			explainedQuery = dm.executeQueryExplain(cq);

@@ -537,7 +537,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		RestrictedChaser chaser = new RestrictedChaser(null);
 		
 		try {
-			connection = createConnection(DatabaseParameters.MySql, accessibleSchema);
+			connection = createConnection(DatabaseParameters.Postgres, accessibleSchema);
 			AccessibleChaseInstance state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
 					new AccessibleDatabaseChaseInstance(ts.getQuery(), accessibleSchema, connection, true);
 			chaser.reasonUntilTermination(state, accessibleSchema.getOriginalDependencies());

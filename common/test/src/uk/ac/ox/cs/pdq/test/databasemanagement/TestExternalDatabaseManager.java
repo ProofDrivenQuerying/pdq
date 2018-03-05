@@ -41,17 +41,6 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  */
 public class TestExternalDatabaseManager extends PdqTest {
 
-	/**
-	 * tests the database manager creating a database for a single relation that
-	 * contains string attributes. No queries, just add and get facts. Uses MySQL
-	 * database provider
-	 * 
-	 * @throws DatabaseException
-	 */
-//	@Test
-	public void simpleDatabaseCreationMySql() throws DatabaseException {
-		simpleDatabaseCreation(DatabaseParameters.MySql);
-	}
 
 	/**
 	 * tests the database manager creating a database for a single relation that
@@ -111,19 +100,6 @@ public class TestExternalDatabaseManager extends PdqTest {
 	 * Tests the basic functions of the VirtualDatabaseManager, using first a single
 	 * table with Int attributes, then repeats the same test with String attributes.
 	 * 
-	 * This case test the MySQL driver.
-	 */
-	//@Test
-	public void externalDatabaseCreationMySql() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException {
-		externalDatabaseCreationInt(DatabaseParameters.MySql);
-		externalDatabaseCreationString(DatabaseParameters.MySql);
-	}
-
-	/**
-	 * Tests the basic functions of the VirtualDatabaseManager, using first a single
-	 * table with Int attributes, then repeats the same test with String attributes.
-	 * 
 	 * This case test the Postgres driver.
 	 */
 	@Test
@@ -162,7 +138,7 @@ public class TestExternalDatabaseManager extends PdqTest {
 
 		// Normal query
 		Atom a1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
-		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y, z }, a1);
+		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y, z }, new Atom[] {a1});
 		List<Match> answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(2, answer.size());
 
@@ -221,7 +197,7 @@ public class TestExternalDatabaseManager extends PdqTest {
 
 		// Normal query
 		Atom a1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
-		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y, z }, a1);
+		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y, z }, new Atom[] {a1});
 		List<Match> answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(2, answer.size());
 

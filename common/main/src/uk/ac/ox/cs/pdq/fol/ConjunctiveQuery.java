@@ -45,49 +45,26 @@ public class ConjunctiveQuery extends Formula {
 	 * @param children
 	 */
 	protected ConjunctiveQuery(Variable[] freeVariables, Atom[] children) {
-		this(freeVariables,(Conjunction)Conjunction.of(children));
+		Assert.assertNotNull(children);
+		Assert.assertTrue(children.length > 0);
+		if (children.length == 1) {
+			//Check that the body is a conjunction of positive atoms
+			Assert.assertTrue(Arrays.asList(children[0].getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
+			this.child = children[0];
+			this.freeVariables = freeVariables.clone();
+			this.boundVariables = ArrayUtils.removeElements(child.getFreeVariables(), freeVariables);
+			this.atoms = child.getAtoms();
+		} else {
+			
+			Conjunction conjunction = (Conjunction)Conjunction.of(children);
+			Assert.assertTrue(Arrays.asList(conjunction.getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
+			this.child = conjunction;
+			this.freeVariables = freeVariables.clone();
+			this.boundVariables = ArrayUtils.removeElements(child.getFreeVariables(), freeVariables);
+			this.atoms = child.getAtoms();
+		}
 	}
 
-	/**
-	 * Builds a query given a set of free variables and its conjunction.
-	 * The query is grounded using the input mapping of variables to constants.
-	 */
-	protected ConjunctiveQuery(Variable[] freeVariables, Conjunction child) {
-		//Check that the body is a conjunction of positive atoms
-		Assert.assertTrue(isConjunctionOfAtoms(child));
-		Assert.assertTrue(Arrays.asList(child.getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
-		
-		this.child = child;
-		this.freeVariables = freeVariables.clone();
-		this.boundVariables = ArrayUtils.removeElements(child.getFreeVariables(), freeVariables);
-		this.atoms = child.getAtoms();
-	}
-	
-	
-	/**
-	 * Builds a query given a set of free variables and one Atom.
-	 * The query is grounded using the input mapping of variables to constants.
-	 */
-	protected ConjunctiveQuery(Variable[] freeVariables, Atom child) {
-		//Check that the body is a conjunction of positive atoms
-		Assert.assertTrue(isConjunctionOfAtoms(child));
-		Assert.assertTrue(Arrays.asList(child.getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
-		this.child = child;
-		this.freeVariables = freeVariables.clone();
-		this.boundVariables = ArrayUtils.removeElements(child.getFreeVariables(), freeVariables);
-		this.atoms = child.getAtoms();
-	}
-	
-	private static boolean isConjunctionOfAtoms(Formula formula) {
-		if(formula instanceof Conjunction) {
-			return isConjunctionOfAtoms(formula.getChildren()[0]) && isConjunctionOfAtoms(formula.getChildren()[1]);
-		}
-		if(formula instanceof Atom) {
-			return true;
-		}
-		return false;
-	}
-	
 	/**
 	 * Checks if the query is a boolean query or not. 
 	 *
@@ -145,14 +122,6 @@ public class ConjunctiveQuery extends Formula {
 		return this.boundVariables.clone();
 	}
 
-    public static ConjunctiveQuery create(Variable[] freeVariables, Conjunction child) {
-        return Cache.conjunctiveQuery.retrieve(new ConjunctiveQuery(freeVariables, child));
-    }
-    
-    public static ConjunctiveQuery create(Variable[] freeVariables, Atom child) {
-        return Cache.conjunctiveQuery.retrieve(new ConjunctiveQuery(freeVariables, child));
-    }
-    
     public static ConjunctiveQuery create(Variable[] freeVariables, Atom[] children) {
         return Cache.conjunctiveQuery.retrieve(new ConjunctiveQuery(freeVariables, children));
     }
@@ -186,27 +155,23 @@ public class ConjunctiveQuery extends Formula {
 	 * @param logicFormula
 	 * @return
 	 */
-	public static ConjunctiveQuery create(RelationalTermAsLogic logicFormula) {
-		Formula phi = logicFormula.getFormula();
+	public static ConjunctiveQuery createFromLogicFormula(RelationalTermAsLogic logicFormula) {
+		Formula formula = logicFormula.getFormula();
 		List<Variable> freeVariables = null;
 		
 		Formula flatFormula = null;
-		if (phi instanceof QuantifiedFormula) {
-			flatFormula = Conjunction.of(phi.getChild(0));
-			freeVariables = Arrays.asList(phi.getFreeVariables()); 
+		if (formula instanceof QuantifiedFormula) {
+			flatFormula = Conjunction.of(formula.getChild(0));
+			freeVariables = Arrays.asList(formula.getFreeVariables()); 
 		} else  {
 			freeVariables = new ArrayList<>();
 			for (Term t: logicFormula.getMapping().values()) {
 				if (t.isVariable())
 					freeVariables.add((Variable)t);
 			}
-			flatFormula = phi;
+			flatFormula = formula;
 		}
-		if (flatFormula.getAtoms().length == 1) {
-			return create(freeVariables.toArray(new Variable[freeVariables.size()]),(Atom)flatFormula);
-		} else {
-			return create(freeVariables.toArray(new Variable[freeVariables.size()]),flatFormula.getAtoms());
-		}
+		return create(freeVariables.toArray(new Variable[freeVariables.size()]),flatFormula.getAtoms());
 	}
 
 }

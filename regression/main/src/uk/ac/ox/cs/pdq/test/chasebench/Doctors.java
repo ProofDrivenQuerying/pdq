@@ -121,7 +121,7 @@ public class Doctors {
 		return dbm;
 	}
 	private DatabaseManager getExternalDatabaseManager() throws DatabaseException {
-		ExternalDatabaseManager dbm = new ExternalDatabaseManager(DatabaseParameters.MySql);
+		ExternalDatabaseManager dbm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 		return new LogicalDatabaseInstance(new MultiInstanceFactCache(), dbm, 0);
 	}
 

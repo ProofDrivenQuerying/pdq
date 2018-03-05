@@ -51,7 +51,7 @@ public class TestChaseSteps extends PdqTest {
 	public void setup() throws Exception {
 		super.setup();
 		setupMocks();
-		this.connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.MySql),1);
+		this.connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.Postgres),1);
 		connection.initialiseDatabaseForSchema(schema);
 	}
 

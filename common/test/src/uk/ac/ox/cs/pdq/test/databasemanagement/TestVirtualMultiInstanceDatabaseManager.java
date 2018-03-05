@@ -24,7 +24,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
@@ -44,17 +43,6 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  */
 public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 
-	/**
-	 * tests the database manager creating a database for a single relation that
-	 * contains string attributes. No queries, just add and get facts. Uses MySQL
-	 * database provider
-	 * 
-	 * @throws DatabaseException
-	 */
-	@Test
-	public void simpleDatabaseCreationMySql() throws DatabaseException {
-		simpleDatabaseCreation(DatabaseParameters.MySql);
-	}
 
 	/**
 	 * tests the database manager creating a database for a single relation that
@@ -142,20 +130,6 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 	 * Tests the basic functions of the VirtualDatabaseManager, using first a single
 	 * table with Int attributes, then repeats the same test with String attributes.
 	 * 
-	 * This case test the MySQL driver.
-	 */
-	@Test
-	public void virtualDatabaseCreationMySql() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException {
-		virtualDatabaseCreationInt(DatabaseParameters.MySql);
-		virtualDatabaseCreationString(DatabaseParameters.MySql);
-		largeTableQueryDifferenceEGD(DatabaseParameters.MySql);
-	}
-
-	/**
-	 * Tests the basic functions of the VirtualDatabaseManager, using first a single
-	 * table with Int attributes, then repeats the same test with String attributes.
-	 * 
 	 * This case test the Postgres driver.
 	 */
 	@Test
@@ -203,7 +177,7 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 
 		// Normal query
 		Atom a1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
-		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y, z }, a1);
+		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y, z }, new Atom[] {a1});
 		List<Match> answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 
@@ -284,7 +258,7 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 
 		// Normal query
 		Atom a1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
-		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y, z }, a1);
+		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { x, y, z }, new Atom[] {a1});
 		List<Match> answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 
@@ -373,9 +347,9 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 		Atom q1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		Atom q2 = Atom.create(this.S, new Term[] { Variable.create("x"), Variable.create("y") });
 		Atom q3 = Atom.create(this.T, new Term[] { Variable.create("res1"), Variable.create("res2"), Variable.create("z") });
-		ConjunctiveQuery left = ConjunctiveQuery.create(new Variable[] { z }, Conjunction.create(q1, q2));
+		ConjunctiveQuery left = ConjunctiveQuery.create(new Variable[] { z }, new Atom[] {q1, q2});
 
-		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("res1") }, (Conjunction) Conjunction.of(q1, q2, q3));
+		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("res1") }, new Atom[] {q1, q2, q3});
 		// check left and right queries
 		List<Match> leftFacts = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { left }));
 		Assert.assertEquals(2, leftFacts.size());

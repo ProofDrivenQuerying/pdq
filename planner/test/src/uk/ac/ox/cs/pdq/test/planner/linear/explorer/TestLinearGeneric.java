@@ -40,7 +40,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
@@ -368,20 +367,7 @@ public class TestLinearGeneric extends PdqTest {
 			Assert.fail();
 		}
 	}
-
-	/**
-	 * This test utilises a dynamic table and query generation function, and checks
-	 * if we get the expected number of output plans for the given number of input
-	 * tables.
-	 * 
-	 * For three input tables we should get 244 plans.
-	 */
-	@Test
-	public void test1ExplorationThreeRelationsMySql() {
-		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3, DatabaseParameters.MySql);
-		Assert.assertEquals(244, exploredPlans.size());
-	}
-
+	
 	/**
 	 * This test utilises a dynamic table and query generation function, and checks
 	 * if we get the expected number of output plans for the given number of input
@@ -415,7 +401,7 @@ public class TestLinearGeneric extends PdqTest {
 		Atom[] atoms = new Atom[numberOfRelations];
 		for (int index = 0; index < numberOfRelations; ++index)
 			atoms[index] = Atom.create(relations[index], new Term[] { x, y, z, Variable.create("v" + random.nextInt()) });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y, z }, (Conjunction) Conjunction.of(atoms));
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y, z }, atoms);
 
 		// Create all views and update the relations with the newly create views
 		Set<Atom> setOfAtoms = new LinkedHashSet<>();

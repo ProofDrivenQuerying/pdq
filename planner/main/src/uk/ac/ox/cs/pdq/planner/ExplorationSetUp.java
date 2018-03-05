@@ -332,9 +332,9 @@ public class ExplorationSetUp {
 		
 		Formula newAtom = convertQueryAtomConstantToString(query.getBody());
 		if (newAtom instanceof Atom) {
-			return ConjunctiveQuery.create(query.getFreeVariables(), (Atom)newAtom);
+			return ConjunctiveQuery.create(query.getFreeVariables(), new Atom[] {(Atom)newAtom});
 		} else {
-			return ConjunctiveQuery.create(query.getFreeVariables(), (Conjunction)newAtom);
+			return ConjunctiveQuery.create(query.getFreeVariables(), ((Conjunction)newAtom).getAtoms());
 		}
 	}
 

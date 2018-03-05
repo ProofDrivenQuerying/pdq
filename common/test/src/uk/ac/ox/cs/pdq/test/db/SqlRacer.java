@@ -62,7 +62,7 @@ public class SqlRacer {
 	private EGD egd;
 
 	private Schema schema;
-	private final DatabaseManager dcMySql;
+	//private final DatabaseManager dcMySql;
 	private final DatabaseManager dcPostgresSql;
 	private final DatabaseManager dcMemory;
 	private Atom R1;
@@ -78,11 +78,11 @@ public class SqlRacer {
 	public SqlRacer() throws SQLException, DatabaseException {
 		try {
 			setup();
-			dcMySql = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.MySql),1);
+//			dcMySql = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.MySql),1);
 			
 			dcPostgresSql = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.Postgres),1);
 			dcMemory = new InternalDatabaseManager();			
-			dcMySql.initialiseDatabaseForSchema(this.schema);
+	//		dcMySql.initialiseDatabaseForSchema(this.schema);
 			dcPostgresSql.initialiseDatabaseForSchema(this.schema);
 			dcMemory.initialiseDatabaseForSchema(this.schema);
 			setupThreads();
@@ -119,16 +119,16 @@ public class SqlRacer {
 	}
 
 	public void setupThreads() throws SQLException {
-		Thread mySqlThread = new Thread() {
-			public void run() {
-				try {
-					race(dcMySql, "MySql     ");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-
-		};
+//		Thread mySqlThread = new Thread() {
+//			public void run() {
+//				try {
+//					race(dcMySql, "MySql     ");
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//
+//		};
 		Thread postgresThread = new Thread() {
 			public void run() {
 				try {
@@ -150,7 +150,7 @@ public class SqlRacer {
 			}
 
 		};
-		mySqlThread.start();
+		//mySqlThread.start();
 		postgresThread.start();
 		memoryThread.start();
 	}
@@ -161,7 +161,7 @@ public class SqlRacer {
 		long counter = 0;
 		while (true) {
 			List<Match> rs = null;
-			ConjunctiveQuery cq = ConjunctiveQuery.create(R1.getVariables(), R1);
+			ConjunctiveQuery cq = ConjunctiveQuery.create(R1.getVariables(), new Atom[] {R1});
 			Collection<Atom> facts = createTestFacts1000();
 			long durationAdd =0;
 			long durationQ =0;

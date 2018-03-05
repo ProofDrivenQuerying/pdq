@@ -291,6 +291,8 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 			// conjunction of two atoms
 			// these facts will be filtered by constant equality conditions
 			List<Atom> factsLeft = answerSingleAtomQuery((Atom) fLeft, instanceId, formulaCache);
+			factsLeft = filterEqualities(factsLeft, (Atom) fLeft);
+			
 			if (factsLeft.isEmpty()) {
 				return new ArrayList<>();
 			}
@@ -303,6 +305,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 			if (fRight instanceof Atom) {
 				// the conjunction was made by two atoms.
 				factsRight = answerSingleAtomQuery((Atom) fRight, instanceId, formulaCache);
+				factsRight = filterEqualities(factsRight, (Atom) fRight);
 				if (factsRight.isEmpty()) {
 					return new ArrayList<>();
 				}

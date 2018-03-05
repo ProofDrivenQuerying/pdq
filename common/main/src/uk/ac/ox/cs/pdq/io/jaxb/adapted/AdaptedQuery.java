@@ -10,9 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -55,15 +53,7 @@ public class AdaptedQuery {
 				}
 				newAtoms.add(Atom.create(a.getPredicate(),terms.toArray(new Term[terms.size()])));
 			}
-			Formula something = Conjunction.of( newAtoms.toArray(new Atom[newAtoms.size()]));
-			ConjunctiveQuery ret = null;
-			if (something instanceof Atom) {
-				ret = ConjunctiveQuery.create(freeVariables, (Atom) something);
-			}
-			if (something instanceof Conjunction) {
-				ret = ConjunctiveQuery.create(freeVariables, (Conjunction) something);
-			}
-			return ret;
+			return ConjunctiveQuery.create(freeVariables, newAtoms.toArray(new Atom[newAtoms.size()]));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

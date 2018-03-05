@@ -169,7 +169,7 @@ public class Runtime {
 			LinearGuarded dependency = v.getViewToRelationDependency();
 			ConjunctiveQuery cq = ConjunctiveQuery.create(
 					dependency.getFreeVariables(),
-					(Conjunction) Conjunction.of(dependency.getHead()));
+					((Conjunction) Conjunction.of(dependency.getHead())).getAtoms());
 			Collection<Tuple> data = new LinkedList<>();
 			try {
 				InMemoryQueryEvaluator eval = new InMemoryQueryEvaluator(cq);

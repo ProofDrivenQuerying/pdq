@@ -141,7 +141,7 @@ public class TestPostgresSqlCostEstimator extends PdqTest {
 		dm.initialiseDatabaseForSchema(getScenario1().getSchema());
 		PostgresQueryExplainCostEstimator estimator = new PostgresQueryExplainCostEstimator(dm);
 		ConjunctiveQuery cq = getScenario1().getQuery();
-		DoubleCost res = estimator.cost(cq);
+		DoubleCost res = estimator.costQuery(cq);
 		Assert.assertEquals(34.13, res.getCost(), 0.02);
 	}
 

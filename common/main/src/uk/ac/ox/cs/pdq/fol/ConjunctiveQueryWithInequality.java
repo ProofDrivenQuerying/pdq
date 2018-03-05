@@ -25,20 +25,11 @@ public class ConjunctiveQueryWithInequality extends ConjunctiveQuery {
 	private List<Pair<Variable, Variable>> inequalities = new ArrayList<>();
 
 	/**
-	 * Builds a query given a set of free variables and its conjunction. The query
-	 * is grounded using the input mapping of variables to constants.
-	 */
-	private ConjunctiveQueryWithInequality(Variable[] freeVariables, Conjunction child, List<Pair<Variable, Variable>> inequalities) {
-		super(freeVariables, child);
-		this.inequalities = inequalities;
-	}
-
-	/**
 	 * Builds a query given a set of free variables and an atom. The query is
 	 * grounded using the input mapping of variables to constants.
 	 */
-	private ConjunctiveQueryWithInequality(Variable[] freeVariables, Atom child, List<Pair<Variable, Variable>> inequalities) {
-		super(freeVariables, child);
+	private ConjunctiveQueryWithInequality(Variable[] freeVariables, Atom[] children, List<Pair<Variable, Variable>> inequalities) {
+		super(freeVariables, children);
 		this.inequalities = inequalities;
 	}
 
@@ -51,12 +42,8 @@ public class ConjunctiveQueryWithInequality extends ConjunctiveQuery {
 		return this.inequalities;
 	}
 	
-	public static ConjunctiveQueryWithInequality create(Variable[] freeVariables, Conjunction child, List<Pair<Variable, Variable>> inequalities) {
-		return Cache.conjunctiveQueryWithInequality.retrieve(new ConjunctiveQueryWithInequality(freeVariables, child, inequalities));
-	}
-
-	public static ConjunctiveQueryWithInequality create(Variable[] freeVariables, Atom child, List<Pair<Variable, Variable>> inequalities) {
-		return Cache.conjunctiveQueryWithInequality.retrieve(new ConjunctiveQueryWithInequality(freeVariables, child, inequalities));
+	public static ConjunctiveQueryWithInequality create(Variable[] freeVariables, Atom[] children, List<Pair<Variable, Variable>> inequalities) {
+		return Cache.conjunctiveQueryWithInequality.retrieve(new ConjunctiveQueryWithInequality(freeVariables, children, inequalities));
 	}
 
 }

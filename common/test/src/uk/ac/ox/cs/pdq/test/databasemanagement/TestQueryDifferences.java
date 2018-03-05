@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
@@ -46,12 +45,6 @@ public class TestQueryDifferences extends PdqTest {
 	 * 
 	 * @throws DatabaseException
 	 */
-	@Test
-	public void largeTableQueryDifferenceMySql() throws DatabaseException {
-		largeTableQueryDifferenceTGD(DatabaseParameters.MySql);
-		largeTableQueryDifferenceEGD(DatabaseParameters.MySql);
-	}
-
 	@Test
 	public void largeTableQueryDifferencePostgres() throws DatabaseException {
 		largeTableQueryDifferenceTGD(DatabaseParameters.Postgres);
@@ -111,9 +104,9 @@ public class TestQueryDifferences extends PdqTest {
 		Atom q1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		Atom q2 = Atom.create(this.S, new Term[] { Variable.create("x"), Variable.create("y") });
 		Atom q3 = Atom.create(this.T, new Term[] { Variable.create("z"), Variable.create("res1"), Variable.create("res2") });
-		ConjunctiveQuery left = ConjunctiveQuery.create(new Variable[] { z }, Conjunction.create(q1, q2));
+		ConjunctiveQuery left = ConjunctiveQuery.create(new Variable[] { z }, new Atom[] {q1, q2});
 
-		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"), Variable.create("res2") }, (Conjunction) Conjunction.of(q1, q2, q3));
+		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"), Variable.create("res2") }, new Atom[] {q1, q2, q3});
 		// check left and right queries
 
 		List<Match> leftFacts = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { left }));
@@ -183,9 +176,9 @@ public class TestQueryDifferences extends PdqTest {
 		Atom q1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		Atom q2 = Atom.create(this.S, new Term[] { Variable.create("x"), Variable.create("y") });
 		Atom q3 = Atom.create(this.T, new Term[] { Variable.create("res1"), Variable.create("res2"), Variable.create("z") });
-		ConjunctiveQuery left = ConjunctiveQuery.create(new Variable[] { z }, Conjunction.create(q1, q2));
+		ConjunctiveQuery left = ConjunctiveQuery.create(new Variable[] { z }, new Atom[] {q1, q2});
 
-		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("res1") }, (Conjunction) Conjunction.of(q1, q2, q3));
+		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("res1") }, new Atom[] {q1, q2, q3});
 		// check left and right queries
 		List<Match> leftFacts = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { left }));
 		Assert.assertEquals(2, leftFacts.size());

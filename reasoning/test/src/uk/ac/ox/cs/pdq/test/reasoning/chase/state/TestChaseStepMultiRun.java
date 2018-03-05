@@ -30,31 +30,6 @@ public class TestChaseStepMultiRun extends PdqTest {
 	}
 
 	@Test
-	public void testMultiThreadMySql() throws Exception {
-		TestChaseSteps tcs = new TestChaseSteps();
-		tcs.setupMocks();
-		tcs.setConnection(createConnection(DatabaseParameters.MySql, tcs.schema));
-		tcs.test_chaseStep();
-		tcs.tearDown();
-	}
-
-	@Test
-	public void testLongRunningMultiThreadMySql() throws Exception {
-		for (int i = 0; i < REPEAT; i++) {
-			TestChaseSteps tcs = new TestChaseSteps();
-			tcs.setupMocks();
-			tcs.setConnection(createConnection(DatabaseParameters.MySql, tcs.schema));
-			tcs.test_chaseStepInit();
-			for (int j = 0; j < REPEAT; j++) {
-				tcs.test_chaseStepAddFacts();
-				tcs.test_chaseStepMain(j);
-				tcs.test_chaseStepDeleteFacts();
-			}
-			tcs.tearDown();
-		}
-	}
-
-	@Test
 	public void testLongRunningMultiThreadPostgres() throws Exception {
 		for (int i = 0; i < REPEAT; i++) {
 			TestChaseSteps tcs = new TestChaseSteps();

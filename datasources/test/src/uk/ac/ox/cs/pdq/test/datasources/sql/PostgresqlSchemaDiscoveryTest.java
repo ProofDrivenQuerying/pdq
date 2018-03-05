@@ -21,6 +21,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * The Class PostgresqlSchemaDiscoveryTest.
+ * This test requires "tpch_0001" database in postgres, username: "root", password: "root"
  */
 public class PostgresqlSchemaDiscoveryTest {
 
