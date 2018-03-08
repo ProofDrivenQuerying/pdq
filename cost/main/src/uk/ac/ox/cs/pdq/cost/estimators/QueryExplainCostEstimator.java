@@ -1,9 +1,11 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
@@ -17,7 +19,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
  * @author gabor
  *
  */
-public class QueryExplainCostEstimator implements CostEstimator {
+public class QueryExplainCostEstimator implements CostEstimator,OrderIndependentCostEstimator {
 	public static final String COST_REGEXP_PATTERN_FOR_POSTGRES = "\\(cost=\\d+\\.\\d+\\.\\.(?<cost>\\d+\\.\\d+)\\s.*\\)";
 	private DatabaseManager dm;
 	private String pattern = null;
@@ -52,11 +54,6 @@ public class QueryExplainCostEstimator implements CostEstimator {
 		return costQuery(ConjunctiveQuery.createFromLogicFormula(plan.toLogic()));
 	}
 
-	@Override
-	public CostEstimator clone() {
-		return this;
-	}
-
 	/** Calculates the execution cost of a query. 
 	 * @param cq
 	 * @return
@@ -79,5 +76,15 @@ public class QueryExplainCostEstimator implements CostEstimator {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public Cost cost(Collection<AccessTerm> accesses) {
+		return null;
+	}
+
+	@Override
+	public OrderIndependentCostEstimator clone() {
+		return this;
 	}
 }

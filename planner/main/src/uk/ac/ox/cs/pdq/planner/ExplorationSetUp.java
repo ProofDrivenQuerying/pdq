@@ -26,6 +26,7 @@ import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
+import uk.ac.ox.cs.pdq.databasemanagement.monitor.DatabaseMonitor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -317,6 +318,8 @@ public class ExplorationSetUp {
 					databaseConnection.dropDatabase();
 					databaseConnection.shutdown();
 				}
+				// cost estimators can have database managers started, and many others could do the same, kill them all.
+				DatabaseMonitor.forceStopAll();
 			} catch (Exception e) {
 				this.handleEarlyTermination(explorer);
 				e.printStackTrace();
