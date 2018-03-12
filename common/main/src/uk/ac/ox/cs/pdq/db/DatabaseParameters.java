@@ -106,11 +106,15 @@ public class DatabaseParameters extends Parameters {
 		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 		dbParam.setDatabaseDriver("org.postgresql.Driver");
 		dbParam.setDatabaseName("pdq");
-		dbParam.setDatabaseName("PDQ");
-		dbParam.setDatabaseUser("pdq");
+		dbParam.setDatabaseUser("postgres");
 		dbParam.setDatabasePassword("root");
-		dbParam.setDatabaseUser("gabor");
-		dbParam.setDatabasePassword("");
+				
+//		dbParam.setDatabaseName("pdq");
+//		dbParam.setDatabaseName("PDQ");
+//		dbParam.setDatabaseUser("pdq");
+//		dbParam.setDatabasePassword("root");
+//		dbParam.setDatabaseUser("gabor");
+//		dbParam.setDatabasePassword("");
 		dbParam.setNumberOfThreads(DEFAULT_NUMBER_OF_THREADS);
 		return dbParam; 
 	}

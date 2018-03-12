@@ -49,12 +49,17 @@ public class DatabaseMonitor {
 	 * @throws DatabaseException
 	 */
 	public static void forceStopAll() throws DatabaseException {
+		List<DatabaseStats> copy = new ArrayList<>();
 		synchronized (LOCK) {
-			for (DatabaseStats s:stats) {
-				System.out.println("DatabaseMonitor shuts down: " + s.toString());
-				s.dbm.shutdown();
-				System.out.println("shutdown of: " + s.toString() + " worked.");
-			}
+			copy.addAll(stats);
+		}
+		for (DatabaseStats s:copy) {
+			System.out.println("DatabaseMonitor forcefully shuts down: " + s.toString());
+			s.dbm.dropDatabase();
+			s.dbm.shutdown();
+			System.out.println("shutdown of: \"" + s.toString() + "\" worked.");
+		}
+		synchronized (LOCK) {
 			stats.clear();
 		}
 	}
