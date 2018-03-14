@@ -18,6 +18,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleCounter;
 import uk.ac.ox.cs.pdq.datasources.utility.TuplePrinter;
@@ -148,6 +149,7 @@ public class Bootstrap {
 		try {
 			jc.parse(args);
 		} catch (ParameterException e) {
+			e.printStackTrace();
 			System.err.println(e.getMessage());
 			jc.usage();
 			return;
@@ -194,15 +196,20 @@ public class Bootstrap {
 			}
 			counter.report();
 		} catch (Throwable e) {
+			e.printStackTrace();
 			log.error("Evaluation aborted: " + e.getMessage(),e);
 			System.exit(-1);
 		}
 	}
 	
 	public static RelationalTerm obtainPlan(String fileName, Schema schema) {
+		File file = new File(fileName);
 		try(FileInputStream pis = new FileInputStream(fileName) ){
-			File file = new File(fileName);
-			return IOManager.readRelationalTerm(file, schema);
+			try {
+				return IOManager.readRelationalTerm(file, schema);
+			}catch(JAXBException e) {
+				return CostIOManager.readRelationalTermFromRelationaltermWithCost(file, schema);
+			}
 		} catch (IOException | JAXBException e) {
 			return null;
 		}

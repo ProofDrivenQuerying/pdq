@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.runtime.exec;
 
+import java.io.IOException;
+
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
@@ -10,8 +12,10 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
+import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Access;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.DependentJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.NestedLoopJoin;
@@ -50,6 +54,9 @@ public class PlanTranslator {
 		if (logOp instanceof AccessTerm) {
 			Relation r = ((AccessTerm) logOp).getRelation(); 
 			AccessMethod b = ((AccessTerm) logOp).getAccessMethod();
+			if (r instanceof Relation) {
+				r = new InMemoryTableWrapper(r);
+			}
 			if (b.getNumberOfInputs() == 0) {
 				return new Scan((RelationAccessWrapper) r);
 			}
@@ -65,6 +72,12 @@ public class PlanTranslator {
 			return new Selection(((SelectionTerm) logOp).getSelectionCondition(), translate(logOp.getChild(0)));		
 		} 
 		else if (logOp instanceof DependentJoinTerm) {
+			try {
+				PlanPrinter.openPngPlan(logOp);
+			} catch (IOException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return new DependentJoin(translate(logOp.getChild(0)), translate(logOp.getChild(1)));
 		} 
 		else if (logOp instanceof JoinTerm) {

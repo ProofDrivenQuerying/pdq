@@ -171,7 +171,8 @@ public class PipelinedPlanExecutor implements PlanExecutor {
 	 */
 	@Override
 	public void setCache(boolean doCache) {
-		throw new NotImplementedException("PipelinedPlanExecutor.setCache");
+		if (doCache)
+			throw new NotImplementedException("PipelinedPlanExecutor.setCache");
 	}
 
 	/**

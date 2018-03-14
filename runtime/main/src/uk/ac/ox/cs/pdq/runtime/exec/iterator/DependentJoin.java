@@ -81,8 +81,14 @@ public class DependentJoin extends TupleIterator {
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		this.joinId = GlobalCounterProvider.getNext("DependentJoinID");
-		for(int inputAttributeIndex = 0; inputAttributeIndex < child2.getNumberOfInputAttributes(); ++inputAttributeIndex) 
+		for(int inputAttributeIndex = 0; inputAttributeIndex < child2.getNumberOfInputAttributes(); ++inputAttributeIndex) { 
+			if (! Arrays.asList(child1.getOutputAttributes()).contains(child2.getInputAttributes()[inputAttributeIndex])) {
+				System.out.println("Left :"+Arrays.asList(child1.getOutputAttributes()));
+				System.out.println("Right:"+child2.getInputAttributes()[inputAttributeIndex]);
+				System.out.println();
+			}
 			Assert.assertTrue(Arrays.asList(child1.getOutputAttributes()).contains(child2.getInputAttributes()[inputAttributeIndex]));
+		}
 		this.children[0] = child1;
 		this.children[1] = child2;
 		this.positionsInLeftChildThatAreInputToRightChild = RuntimeUtilities.computePositionsInRightChildThatAreBoundFromLeftChild(child1, child2);

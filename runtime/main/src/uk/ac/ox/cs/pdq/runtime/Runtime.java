@@ -121,10 +121,12 @@ public class Runtime {
 				w = (InMemoryViewWrapper) r;
 				views.add((InMemoryViewWrapper) r);
 			} else {
-				throw new IllegalStateException("Conversion from " + 
-						r.getClass().getSimpleName() + " to " + 
-						InMemoryRelation.class.getSimpleName() + 
-						" is not yet supported.");
+				w = new InMemoryTableWrapper(r);
+				
+//				throw new IllegalStateException("Conversion from " + 
+//						r.getClass().getSimpleName() + " to " + 
+//						InMemoryRelation.class.getSimpleName() + 
+//						" is not yet supported.");
 			}
 			w.clear();
 			relations.put(w.getName(), w);
@@ -211,7 +213,7 @@ public class Runtime {
 	public Result evaluatePlan(RelationalTerm p, ConjunctiveQuery query, ExecutionModes mode) throws EvaluationException {
 		PlanExecutor executor = SetupPlanExecutor.newExecutor(this.params, p, query);
 		executor.setTuplesLimit(this.params.getTuplesLimit());
-		executor.setCache(this.params.getDoCache());
+		//executor.setCache(this.params.getDoCache());
 		executor.setEventBus(this.eventBus);
 		return executor.execute(mode);
 	}

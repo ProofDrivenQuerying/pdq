@@ -1,12 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <schema>
-	<relations>
-		<relation name="r1">
-			<attribute name="r1.1" type="java.lang.Integer" />
-			<attribute name="r1.2" type="java.lang.String" />
-		</relation>
-		<relation name="r2">
-			<attribute name="r2.1" type="java.lang.String" />
-		</relation>
-	</relations>
+    <relations>
+        <relation name="r1">
+            <attribute name="r1.1" type="java.lang.Integer"/>
+            <attribute name="r1.2" type="java.lang.String"/>
+        </relation>
+        <relation name="r2">
+            <attribute name="r2.1" type="java.lang.String"/>
+        </relation>
+    </relations>
+    <dependencies/>
 </schema>
