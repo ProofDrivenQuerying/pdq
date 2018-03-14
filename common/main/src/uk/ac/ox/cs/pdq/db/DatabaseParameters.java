@@ -32,6 +32,7 @@ public class DatabaseParameters extends Parameters {
 
 	public static final DatabaseParameters MySql = getDefaultForMySql();
 	public static final DatabaseParameters Postgres = getDefaultForPostgres();
+	public static final DatabaseParameters PostgresLinux = getDefaultForLinuxPostgres();
 	public static final DatabaseParameters Empty = new DatabaseParameters();
 	public static final DatabaseParameters Internal = getDefaultForInternal();
 	
@@ -62,7 +63,7 @@ public class DatabaseParameters extends Parameters {
 
 	/** The number of threads. */
 	@Parameter(description="True in case the internal database manager should be used")
-	private boolean useInternalDatabaseManager = false;
+	private boolean useInternalDatabaseManager = true;
 
 
 	@Parameter(description="The database should have a constraint for making every fact unique. Default is false.")
@@ -108,17 +109,23 @@ public class DatabaseParameters extends Parameters {
 		dbParam.setDatabaseName("pdq");
 		dbParam.setDatabaseUser("postgres");
 		dbParam.setDatabasePassword("root");
-				
-//		dbParam.setDatabaseName("pdq");
-//		dbParam.setDatabaseName("PDQ");
-//		dbParam.setDatabaseUser("pdq");
-//		dbParam.setDatabasePassword("root");
-//		dbParam.setDatabaseUser("gabor");
-//		dbParam.setDatabasePassword("");
 		dbParam.setNumberOfThreads(DEFAULT_NUMBER_OF_THREADS);
 		return dbParam; 
 	}
 	
+	private static DatabaseParameters getDefaultForLinuxPostgres() {
+		DatabaseParameters dbParam = new DatabaseParameters();
+		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
+		dbParam.setDatabaseDriver("org.postgresql.Driver");
+		dbParam.setDatabaseName("pdq");
+		dbParam.setDatabaseName("PDQ");
+		dbParam.setDatabaseUser("pdq");
+		dbParam.setDatabasePassword("root");
+		dbParam.setDatabaseUser("gabor");
+		dbParam.setDatabasePassword("");
+		dbParam.setNumberOfThreads(DEFAULT_NUMBER_OF_THREADS);
+		return dbParam; 
+	}	
 	private static DatabaseParameters getDefaultForInternal() {
 		DatabaseParameters dbParam = new DatabaseParameters();
 		dbParam.setNumberOfThreads(DEFAULT_NUMBER_OF_THREADS);
