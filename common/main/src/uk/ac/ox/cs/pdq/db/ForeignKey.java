@@ -4,14 +4,19 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.apache.commons.collections4.set.ListOrderedSet;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import uk.ac.ox.cs.pdq.io.jaxb.adapters.ForeignKeyAdapter;
 
 /**
  * Represents a database foreign key.
  *
  */
+@XmlJavaTypeAdapter(ForeignKeyAdapter.class)
 public class ForeignKey implements Cloneable {
 
 	/** The name of the foreign key, may be <code>null</code>. */
