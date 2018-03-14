@@ -6,7 +6,6 @@ import javax.xml.bind.annotation.XmlType;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
-import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 
@@ -22,7 +21,7 @@ public class AdaptedView extends AdaptedRelation {
 	protected Attribute[] attributes;
 	protected AccessMethod[] accessMethods;
 	protected ForeignKey[] foreignKeys;
-	protected PrimaryKey primaryKey;
+	protected String[] primaryKey;
 
 	public AdaptedView() {
 	}
@@ -31,7 +30,10 @@ public class AdaptedView extends AdaptedRelation {
 		this.attributes = r.getAttributes().clone();
 		this.accessMethods = r.getAccessMethods().clone();
 		this.foreignKeys = r.getForeignKeys().clone();
-		this.primaryKey = r.getKey();
+		this.primaryKey = new String[r.getForeignKeys().length];
+		for (int i = 0; i < r.getKey().getNumberOfAttributes(); i++) {
+			this.primaryKey[i] = r.getKey().getAttributes()[i].getName();
+		}
 		this.setName(r.getName());
 	}
 
@@ -80,6 +82,7 @@ public class AdaptedView extends AdaptedRelation {
 		this.accessMethods = accessMethods;
 	}
 
+	@XmlElement(name = "foreign-key")
 	public ForeignKey[] getForeignKeys() {
 		return foreignKeys;
 	}
@@ -88,11 +91,12 @@ public class AdaptedView extends AdaptedRelation {
 		this.foreignKeys = foreignKeys;
 	}
 
-	public PrimaryKey getPrimaryKey() {
+	@XmlElement(name = "primaryKey")
+	public String[] getPrimaryKey() {
 		return primaryKey;
 	}
 
-	public void setPrimaryKey(PrimaryKey primaryKey) {
+	public void setPrimaryKey(String[] primaryKey) {
 		this.primaryKey = primaryKey;
 	}
 

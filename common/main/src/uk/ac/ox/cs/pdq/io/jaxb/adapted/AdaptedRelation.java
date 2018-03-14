@@ -1,6 +1,8 @@
 package uk.ac.ox.cs.pdq.io.jaxb.adapted;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -19,13 +21,13 @@ import uk.ac.ox.cs.pdq.db.Relation;
  * @author Gabor
  *
  */
-@XmlType(propOrder = { "attributes", "accessMethods", "key", "equality","indexedAttributes"})
+@XmlType(propOrder = { "attributes", "accessMethods", "primaryKey", "foreignKeys", "equality","indexedAttributes"})
 public class AdaptedRelation implements Serializable {
 	private static final long serialVersionUID = -9222721018270749836L;
 	protected Attribute[] attributes;
 	protected AccessMethod[] accessMethods;
 	protected ForeignKey[] foreignKeys;
-	protected PrimaryKey primaryKey;
+	protected String[] primaryKey; // one or more attribute names that form the primary key.
 	protected Properties properties;
 	private String name;
 	private Boolean isEquality = null;
@@ -45,8 +47,11 @@ public class AdaptedRelation implements Serializable {
 	public AdaptedRelation(Relation r) {
 		this.attributes = r.getAttributes();
 		this.accessMethods = r.getAccessMethods();
+		this.primaryKey = new String[r.getForeignKeys().length];
+		for (int i = 0; i < r.getKey().getNumberOfAttributes(); i++) {
+			this.primaryKey[i] = r.getKey().getAttributes()[i].getName();
+		}
 		this.foreignKeys = r.getForeignKeys();
-		this.primaryKey = r.getKey();
 		this.properties = r.getProperties();
 		this.setName(r.getName());
 		this.setEquality(r.isEquality());
@@ -92,15 +97,20 @@ public class AdaptedRelation implements Serializable {
 		}
 	}
 
+	@XmlElement(name = "foreign-key")
 	public ForeignKey[] getForeignKeys() {
 		return this.foreignKeys;
 	}
+	public void setForeignKeys(ForeignKey[]keys) {
+		this.foreignKeys = keys;
+	}
 
-	public PrimaryKey getKey() {
+	@XmlElement(name = "primaryKey")
+	public String[] getPrimaryKey() {
 		return this.primaryKey;
 	}
 
-	public void setKey(PrimaryKey key) {
+	public void setPrimaryKey(String[] key) {
 		this.primaryKey = key;
 	}
 
@@ -110,6 +120,7 @@ public class AdaptedRelation implements Serializable {
 	}
 
 	public Relation toRelation() {
+		Relation r = null;
 		Attribute[] attr = getAttributes();
  		if (attr == null && source != null) {
 			attr = getAttributesFromSrc();
@@ -121,22 +132,35 @@ public class AdaptedRelation implements Serializable {
 			Boolean equality = isEquality();
 			if (equality==null)
 				equality = false;
-			return Relation.create(getName(), attr, getAccessMethods(), getForeignKeys(), equality, indexedAttributes);
-		}
+			r = Relation.create(getName(), attr, getAccessMethods(), getForeignKeys(), equality, indexedAttributes);
+		} else
 		if (isEquality() != null) {
-			return Relation.create(getName(), attr, getAccessMethods(), getForeignKeys(), isEquality());
-		}
+			r = Relation.create(getName(), attr, getAccessMethods(), getForeignKeys(), isEquality());
+		} else
 		if (getForeignKeys() != null) {
-			return Relation.create(getName(), attr, getAccessMethods(), getForeignKeys());
-		}
+			r = Relation.create(getName(), attr, getAccessMethods(), getForeignKeys());
+		} else
 		if (getAccessMethods() != null) {
-			return Relation.create(getName(), attr, getAccessMethods());
-		}
+			r = Relation.create(getName(), attr, getAccessMethods());
+		} else 
 		if (attr != null) {
-			return Relation.create(getName(), attr);
+			r =Relation.create(getName(), attr);
 		} else {
 			return null;
 		}
+		if (getPrimaryKey()!=null && getPrimaryKey().length!=0) {
+			Map<String,Attribute> allAttributesMap = new HashMap<>();
+			for (Attribute a: getAttributes()) {
+				allAttributesMap.put(a.getName(), a);
+			}
+			
+			Attribute keyAttributes[] = new Attribute[getPrimaryKey().length];
+			for (int i = 0; i < keyAttributes.length; i++) {
+				keyAttributes[i] = allAttributesMap.get(getPrimaryKey()[i]); 
+			}
+			r.setKey(PrimaryKey.create(keyAttributes));
+		}
+		return r;
 	}
 
 	private Attribute[] getAttributesFromSrc() {

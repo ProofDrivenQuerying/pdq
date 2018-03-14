@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
@@ -45,6 +46,19 @@ public class AdaptedSchema {
 		return currentSchema;
 	}
 	public Schema toSchema() {
+		for (int i = 0; i < relations.length; i++) {
+			Relation r = relations[i];
+			if (r.getForeignKeys() != null && r.getForeignKeys().length > 0) {
+				ForeignKey[] keys = new ForeignKey[r.getForeignKeys().length];
+				for (int j = 0; j < keys.length; j++) {
+					if (keys[i] instanceof AdaptedForeignKey) {
+						keys[i] = ((AdaptedForeignKey)keys[i]).convertToForeignKey(r, relations);
+					}
+				}
+				relations[i] = Relation.create(r.getName(), r.getAttributes(), r.getAccessMethods(), keys, r.isEquality(), r.getIndexedAttributes());
+			}
+		}
+		
 		if (getDependencies()!=null && getDependencies().length>0)
 			return new Schema(relations,getDependencies());
 		Schema s = new Schema(relations);

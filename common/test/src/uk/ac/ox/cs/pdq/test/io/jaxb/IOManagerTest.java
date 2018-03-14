@@ -36,7 +36,7 @@ public class IOManagerTest extends PdqTest {
 		try {													 
 			ConjunctiveQuery q = null;
 			for (int i=1; i<30; i++)
-				q = IOManager.importQuery(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\query.xml"));
+				q = IOManager.importQuery(new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "query.xml"));
 			Assert.assertNotNull(q);
 			Assert.assertNotNull(q.getAtoms());
 			Assert.assertTrue(q.getAtoms().length > 0);
@@ -53,10 +53,10 @@ public class IOManagerTest extends PdqTest {
 	@Test
 	public void testWritingQuery() {
 		try {
-			File in = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\query.xml");
-			File ref = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\queryRef.xml");
+			File in = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "query.xml");
+			File ref = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "queryRef.xml");
 			ConjunctiveQuery q = IOManager.importQuery(in);
-			File out = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\queryOut.xml");
+			File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "queryOut.xml");
 			IOManager.exportQueryToXml(q, out);
 			Assert.assertTrue(out.exists());
 			Assert.assertEquals(ref.length(), out.length());
@@ -70,7 +70,7 @@ public class IOManagerTest extends PdqTest {
 	@Test
 	public void testReadingSchema() {
 		try {
-			Schema s = IOManager.importSchema(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml"));
+			Schema s = IOManager.importSchema(new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "schema.xml"));
 			Assert.assertNotNull(s);
 			Assert.assertNotNull(s.getRelations());
 			Assert.assertTrue(s.getRelations().length > 0);
@@ -95,12 +95,12 @@ public class IOManagerTest extends PdqTest {
 			Relation r2 = new View("myView", new Attribute[] { attr1, attr2 }, new AccessMethod[] { am1, am2 });
 			
 			Schema s = new Schema(new Relation[] { r, r2 },new Dependency[] { this.tgd, this.tgd2, this.egd });
-			File out = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schemaOut.xml");
+			File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "schemaOut.xml");
 			IOManager.exportSchemaToXml(s, out);
 			Assert.assertTrue(out.exists());
 
 			Schema s2 = IOManager.importSchema(out);
-			File out2 = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schemaOut2.xml");
+			File out2 = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "schemaOut2.xml");
 
 			IOManager.exportSchemaToXml(s2, out2);
 
@@ -116,9 +116,9 @@ public class IOManagerTest extends PdqTest {
 	@Test
 	public void testReadingAccessTerm() {
 		try {
-			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
-			File in = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\AccessTerm.xml");
-			File out = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\AccessTermOut.xml");
+			File schemaFile = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "schema.xml");
+			File in = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "AccessTerm.xml");
+			File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "AccessTermOut.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			RelationalTerm rt = IOManager.readRelationalTerm(in, schema);
 			IOManager.writeRelationalTerm(rt, out);
@@ -134,11 +134,11 @@ public class IOManagerTest extends PdqTest {
 	@Test
 	public void testWritingAccessTerm() {
 		try {
-			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			File schemaFile = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 
-			File ref = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\AccessTerm.xml");
-			File out = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\AccessTermOut.xml");
+			File ref = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "AccessTerm.xml");
+			File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "AccessTermOut.xml");
 			RelationalTerm child1 = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[0]);
 			IOManager.writeRelationalTerm(child1, out);
 			Assert.assertTrue(out.exists());
@@ -153,11 +153,11 @@ public class IOManagerTest extends PdqTest {
 	@Test
 	public void testWritingProjectionTerm() {
 		try {
-			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			File schemaFile = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 
-			File ref = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\ProjectionTerm.xml");
-			File out = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\ProjectionTermOut.xml");
+			File ref = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "ProjectionTerm.xml");
+			File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "ProjectionTermOut.xml");
 			RelationalTerm child1 = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
 			Attribute[] attributes = new Attribute[] { schema.getRelations()[0].getAttributes()[0], schema.getRelations()[0].getAttributes()[1] };
 			RelationalTerm child2 = ProjectionTerm.create(attributes, child1);
