@@ -1,8 +1,5 @@
 package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.junit.Assert;
@@ -14,38 +11,29 @@ import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.Attribute;
 
 /**
- * Projection operator.
+ * Rename operator.
  * 
- * @author Julien Leblay
+ * @author Gabor
  */
-public class Projection extends TupleIterator {
+public class Rename extends TupleIterator {
 
 	protected final TupleIterator child;
 	
-	protected final Attribute[] projections;
+	protected final Attribute[] renamedAttributes;
 
-	/** Maps each variable is the head to a position in the children. */
-	protected final Map<Attribute, Integer> positionsOfProjectedAttributes;
-	
 	protected final TupleType childTupleType;
 	
 	protected final TupleType projectionsTupleType;
 	
-	public Projection(Attribute[] projections, TupleIterator child) {
-		super(child.getInputAttributes(), projections);
-		Assert.assertNotNull(projections);
+	public Rename(Attribute[] renamedAttributes, TupleIterator child) {
+		super(child.getInputAttributes(), renamedAttributes);
+		Assert.assertNotNull(renamedAttributes);
 		Assert.assertNotNull(child);
-		this.positionsOfProjectedAttributes = new LinkedHashMap<>();
-		for(int outputAttributeIndex = 0; outputAttributeIndex < projections.length; ++outputAttributeIndex) { 
-			int position = Arrays.asList(child.getOutputAttributes()).indexOf(projections[outputAttributeIndex]);
-			if (position == -1)
-				throw new IllegalArgumentException("Inconsistent attributes");
-			this.positionsOfProjectedAttributes.put(projections[outputAttributeIndex], position);
-		}
-		this.projections = projections.clone();
+		Assert.assertEquals((int)child.getNumberOfOutputAttributes(), renamedAttributes.length);
+		this.renamedAttributes = renamedAttributes.clone();
 		this.child = child;
 		this.childTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
-		this.projectionsTupleType = TupleType.DefaultFactory.createFromTyped(this.projections);
+		this.projectionsTupleType = TupleType.DefaultFactory.createFromTyped(this.renamedAttributes);
 	}
 	
 	@Override
@@ -61,9 +49,9 @@ public class Projection extends TupleIterator {
 	
 	@Override
 	public String[] getColumnsDisplay() {
-		String[] result = new String[this.projections.length];
-		for(int index = 0; index < this.projections.length; ++index)
-			result[index] = this.projections[index].getType().toString();
+		String[] result = new String[this.renamedAttributes.length];
+		for(int index = 0; index < this.renamedAttributes.length; ++index)
+			result[index] = this.renamedAttributes[index].getType().toString();
 		return result;
 	}
 
@@ -128,10 +116,7 @@ public class Projection extends TupleIterator {
 		if (next == null) {
 			throw new NoSuchElementException("End of projection operator reached.");
 		}
-		Object[] result = new Object[this.projections.length];
-		for(int attributeIndex = 0; attributeIndex < this.projections.length; ++attributeIndex) 
-			result[attributeIndex] = next.getValue(this.positionsOfProjectedAttributes.get(this.projections[attributeIndex]));
-		return this.projectionsTupleType.createTuple(result);
+		return next; // no change needed, just the input output signature changes in rename. 
 	}
 
 	@Override
