@@ -159,12 +159,19 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 							throw t;
 						}
 
-					} else if (columnType == String.class || rs.getMetaData().getColumnType(index + 1) == Types.VARCHAR) {
+					} else if (columnType == String.class 
+							|| rs.getMetaData().getColumnType(index + 1) == Types.VARCHAR
+							|| rs.getMetaData().getColumnType(index + 1) == Types.CHAR) {
 						ndata[index] = rs.getString(index + 1).trim();
 
 					} else {
-						Method m = ResultSet.class.getMethod("get" + Utility.simpleName(columnType), int.class);
-						ndata[index] = m.invoke(rs, index + 1);
+						try {
+							Method m = ResultSet.class.getMethod("get" + Utility.simpleName(columnType), int.class);
+							ndata[index] = m.invoke(rs, index + 1);
+						}catch(Throwable t) {
+							throw t;
+						}
+							
 					}
 				}
 				result.appendRow(result.getType().createTuple(ndata));

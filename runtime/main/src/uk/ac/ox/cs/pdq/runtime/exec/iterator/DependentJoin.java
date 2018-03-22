@@ -307,13 +307,16 @@ public class DependentJoin extends TupleIterator {
 	 */
 	protected Tuple projectInputValuesForRightChild(Tuple currentInput, Tuple leftInput) {
 		Object[] result = new Object[this.children[1].getNumberOfInputAttributes()];
+		int inputIndex = 0;
 		for (int attributeIndex = 0; attributeIndex < this.children[1].getNumberOfInputAttributes(); ++attributeIndex) {
 			Integer positionInLeftChild = this.positionsInLeftChildThatAreInputToRightChild.get(attributeIndex);
-			if (positionInLeftChild != null)
+			if (positionInLeftChild != null) {
 				result[attributeIndex] = leftInput.getValue(positionInLeftChild);
-			else
+			} else {
 				result[attributeIndex] = currentInput
-						.getValue(this.children[0].getNumberOfInputAttributes() + attributeIndex);
+						.getValue(this.children[0].getNumberOfInputAttributes() + inputIndex);
+				inputIndex++;
+			}
 		}
 		return this.child2TupleType.createTuple(result);
 	}
