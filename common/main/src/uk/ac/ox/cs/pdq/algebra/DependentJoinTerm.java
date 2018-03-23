@@ -31,7 +31,10 @@ public class DependentJoinTerm extends RelationalTerm {
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		// The first child most have at least one output that can be used as an input for the second.
-		Assert.assertTrue(CollectionUtils.containsAny(Arrays.asList(child1.getOutputAttributes()),Arrays.asList(child2.getInputAttributes())));
+		if (!CollectionUtils.containsAny(Arrays.asList(child1.getOutputAttributes()),Arrays.asList(child2.getInputAttributes()))) {
+			System.out.println("Error " + Arrays.asList(child1.getOutputAttributes()) + " does not contain any of " + Arrays.asList(child2.getInputAttributes()));
+			Assert.assertTrue(CollectionUtils.containsAny(Arrays.asList(child1.getOutputAttributes()),Arrays.asList(child2.getInputAttributes())));
+		}
 		this.children[0] = child1;
 		this.children[1] = child2;
 		this.positionsInRightChildThatAreBoundFromLeftChild = AlgebraUtilities.computePositionsInRightChildThatAreBoundFromLeftChild(child1, child2);

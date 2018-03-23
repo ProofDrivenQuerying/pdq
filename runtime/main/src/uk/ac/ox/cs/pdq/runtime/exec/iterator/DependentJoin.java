@@ -97,7 +97,11 @@ public class DependentJoin extends TupleIterator {
 				foundMatch = true;
 			}
 		}
-		Assert.assertTrue(foundMatch);
+		if (!foundMatch) {
+			System.out.println("Error, left childs outputs: " + Arrays.asList(child1.getOutputAttributes()) + " does not contain any of right child inputs: " +
+						Arrays.asList(child2.getInputAttributes()));
+			Assert.assertTrue(foundMatch);
+		}
 		this.children[0] = child1;
 		this.children[1] = child2;
 		this.positionsInLeftChildThatAreInputToRightChild = RuntimeUtilities

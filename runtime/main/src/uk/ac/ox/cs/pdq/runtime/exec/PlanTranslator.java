@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.runtime.exec;
 
-import java.io.IOException;
-
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
@@ -15,7 +13,6 @@ import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Access;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.DependentJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.NestedLoopJoin;
@@ -72,12 +69,11 @@ public class PlanTranslator {
 			return new Selection(((SelectionTerm) logOp).getSelectionCondition(), translate(logOp.getChild(0)));		
 		} 
 		else if (logOp instanceof DependentJoinTerm) {
-			try {
-				PlanPrinter.openPngPlan(logOp);
-			} catch (IOException | InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				PlanPrinter.openPngPlan(logOp);
+//			} catch (IOException | InterruptedException e) {
+//				e.printStackTrace();
+//			}
 			return new DependentJoin(translate(logOp.getChild(0)), translate(logOp.getChild(1)));
 		} 
 		else if (logOp instanceof JoinTerm) {
