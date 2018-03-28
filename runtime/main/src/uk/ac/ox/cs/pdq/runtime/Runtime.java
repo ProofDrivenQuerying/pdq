@@ -21,10 +21,12 @@ import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
+import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes;
 import uk.ac.ox.cs.pdq.runtime.exec.SetupPlanExecutor;
@@ -121,7 +123,15 @@ public class Runtime {
 				w = (InMemoryViewWrapper) r;
 				views.add((InMemoryViewWrapper) r);
 			} else {
-				w = new InMemoryTableWrapper(r);
+				if (r instanceof View) {
+					w = new InMemoryViewWrapper(r.getName(),r.getAttributes());
+					//TOCOMMENT this needs to be implemented
+					((InMemoryViewWrapper) w).setViewToRelationDependency(((View)r).getViewToRelationDependency());
+					views.add((InMemoryViewWrapper) w);
+					
+				} else {
+					w = new InMemoryTableWrapper(r);
+				}
 				
 //				throw new IllegalStateException("Conversion from " + 
 //						r.getClass().getSimpleName() + " to " + 
@@ -167,11 +177,17 @@ public class Runtime {
 			Map<String, InMemoryRelation> relations,
 			Map<String, Collection<Tuple>> dataDist) {
 		for (InMemoryViewWrapper v: views) {
-			
+			 
 			LinearGuarded dependency = v.getViewToRelationDependency();
+			Atom atoms[]  = null;
+			if (dependency.getHead() instanceof QuantifiedFormula) {
+				atoms = ((QuantifiedFormula)dependency.getHead()).getAtoms();
+			} else {
+				atoms = ((Conjunction) Conjunction.of(dependency.getHead())).getAtoms();
+			}
 			ConjunctiveQuery cq = ConjunctiveQuery.create(
-					dependency.getFreeVariables(),
-					((Conjunction) Conjunction.of(dependency.getHead())).getAtoms());
+					dependency.getFreeVariables(),atoms);
+			
 			Collection<Tuple> data = new LinkedList<>();
 			try {
 				InMemoryQueryEvaluator eval = new InMemoryQueryEvaluator(cq);

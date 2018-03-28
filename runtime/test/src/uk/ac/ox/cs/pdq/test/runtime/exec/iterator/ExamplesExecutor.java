@@ -12,9 +12,9 @@ public class ExamplesExecutor {
 		
 		String root = "examples/";
 		
-		String current = root + "example_01/";
+		String current = root + "example_03/";
 		String myArgs[] = new String[]{
-				"-d", current + "data.txt",
+				"-d", current + "data3Correct.txt",
 				"-p", current + "expected-plan.xml",
 				"-q", current + "query.xml",
 				"-s", current + "schema.xml",
