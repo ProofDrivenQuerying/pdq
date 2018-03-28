@@ -1,5 +1,8 @@
 package uk.ac.ox.cs.pdq.runtime.exec;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
@@ -12,6 +15,7 @@ import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Access;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.DependentJoin;
@@ -60,7 +64,15 @@ public class PlanTranslator {
 			return new Access((RelationAccessWrapper) r, b, ((AccessTerm) logOp).getInputConstants());
 		} 
 		else if (logOp instanceof ProjectionTerm) {
-			return new Projection(logOp.getInputAttributes(), translate(logOp.getChild(0)));
+			TupleIterator translatedChild = translate(logOp.getChild(0));
+			Attribute[] translatedOutputAttributes = new Attribute[logOp.getOutputAttributes().length];
+			List<Attribute> childsOutputs = Arrays.asList(logOp.getChild(0).getOutputAttributes());
+			for (int i = 0; i < translatedOutputAttributes.length; i++) {
+				Attribute currentAttribute = logOp.getOutputAttributes()[i];
+				translatedOutputAttributes[i] = translatedChild.getOutputAttributes()[childsOutputs.indexOf(currentAttribute)]; 
+			}
+			
+			return new Projection(translatedOutputAttributes, translate(logOp.getChild(0)));
 		} 
 		else if (logOp instanceof RenameTerm) {
 			return translate(logOp.getChild(0));
