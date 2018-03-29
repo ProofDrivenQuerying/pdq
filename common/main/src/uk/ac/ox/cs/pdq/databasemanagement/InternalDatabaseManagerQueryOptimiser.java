@@ -1,13 +1,15 @@
 package uk.ac.ox.cs.pdq.databasemanagement;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQueryWithInequality;
+import uk.ac.ox.cs.pdq.fol.Term;
 
 /**
  * Optimises a query by rearranging its atoms to join the smallest tabels first.
@@ -28,18 +30,55 @@ public class InternalDatabaseManagerQueryOptimiser {
 			// nothing to optimise
 			return cq;
 		}
-		Conjunction newConjunction = null;
+		List<Atom> orderedAtoms = new LinkedList<>();
 
-		newConjunction = smallestFirst(cq, tableSizeStats);
-
-		ConjunctiveQuery newCQ = null;
-		if ((cq instanceof ConjunctiveQueryWithInequality)) {
-			newCQ = ConjunctiveQueryWithInequality.create(cq.getFreeVariables(), newConjunction.getAtoms(),
-					((ConjunctiveQueryWithInequality) cq).getInequalities());
+		if (cq.getAtoms().length < 4) {
+			orderedAtoms = smallestFirst(Arrays.asList(cq.getAtoms()), tableSizeStats);
 		} else {
-			newCQ = ConjunctiveQuery.create(cq.getFreeVariables(), newConjunction.getAtoms());
+			orderedAtoms = smallestFirst(Arrays.asList(cq.getAtoms()), tableSizeStats);
+			orderedAtoms = mostConnectedfirstAtoms(orderedAtoms);
 		}
-		return newCQ;
+
+		return createConjunctiveQuery(orderedAtoms, cq);
+	}
+
+	/** Measures the number of connections with other atoms, and orders the list to make sure we won't create large cross joins without conditions. 
+	 * @param atoms
+	 * @return
+	 */
+	private static List<Atom> mostConnectedfirstAtoms(List<Atom> atoms) {
+		Map<Atom,Integer> connections = new HashMap<>();
+		for (Atom a:atoms) {
+			int connection = 0;
+			for (Term t: a.getTerms()) {
+				if (t.isVariable()) {
+					for (Atom b:atoms) {
+						if (!a.equals(b)) {
+							for (Term tb: b.getTerms()) {
+								if (t.equals(tb)) {
+									connection++;
+								}
+							}
+						}
+					}
+				}
+			}
+			connections.put(a, connection);
+		}
+		
+		boolean changed = true;
+		while(changed) {
+			changed = false;
+			for (int i = 1; i < atoms.size(); i++) {
+				if (connections.get(atoms.get(i-1)) < connections.get(atoms.get(i))) {
+					Atom tmp = atoms.get(i-1);
+					atoms.set(i-1, atoms.get(i));
+					atoms.set(i, tmp);
+					changed = true;
+				}
+			}
+		}
+		return atoms;
 	}
 
 	/**
@@ -50,28 +89,46 @@ public class InternalDatabaseManagerQueryOptimiser {
 	 * @param tableSizeStats
 	 * @return
 	 */
-	private static Conjunction smallestFirst(ConjunctiveQuery cq, Map<String, Integer> tableSizeStats) {
+	private static List<Atom> smallestFirst(List<Atom> atoms, Map<String, Integer> tableSizeStats) {
 		List<Atom> orderedAtoms = new LinkedList<>();
 		int min = 0;
-		while (orderedAtoms.size() < cq.getAtoms().length) {
+		while (orderedAtoms.size() < atoms.size()) {
 			int nextMin = Integer.MAX_VALUE;
-			for (Atom a : cq.getAtoms()) {
+			for (Atom a : atoms) {
 				int size = 0;
-				if (tableSizeStats.containsKey(a.getPredicate().getName()))
-					size = tableSizeStats.get(a.getPredicate().getName());
+				if (tableSizeStats.containsKey(a.getPredicate().getName())) {
+					if (a.getPredicate().getName().equals("EQUALITY")) {
+						size = Integer.MAX_VALUE;
+					} else {
+						size = tableSizeStats.get(a.getPredicate().getName());
+					}
+				}
 				if (size == min) {
 					orderedAtoms.add(a);
 				}
 				if (size < nextMin && size > min) {
 					nextMin = size;
-				}
-			}
+				}			}
 			min = nextMin;
 		}
-		Conjunction ret = Conjunction.create(orderedAtoms.get(0), orderedAtoms.get(1));
-		for (int i = 2; i < orderedAtoms.size(); i++) {
-			ret = Conjunction.create(orderedAtoms.get(i), ret);
-		}
-		return ret;
+		return orderedAtoms;
 	}
+	
+	/** Converts list of atoms to conjunctive query. uses the original query to copy inequalities. 
+	 * @param atoms
+	 * @param cq
+	 * @return
+	 */
+	private static ConjunctiveQuery createConjunctiveQuery(List<Atom> atoms, ConjunctiveQuery cq) {
+		ConjunctiveQuery newCQ = null;
+		Atom atomsArray [] = atoms.toArray(new Atom[atoms.size()]);
+		if ((cq instanceof ConjunctiveQueryWithInequality)) {
+			newCQ = ConjunctiveQueryWithInequality.create(cq.getFreeVariables(), atomsArray,
+					((ConjunctiveQueryWithInequality) cq).getInequalities());
+		} else {
+			newCQ = ConjunctiveQuery.create(cq.getFreeVariables(), atomsArray);
+		}
+		return newCQ;
+	}
+	
 }

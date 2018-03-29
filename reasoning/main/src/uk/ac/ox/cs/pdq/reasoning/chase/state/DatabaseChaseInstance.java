@@ -604,7 +604,8 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			List<Pair<Variable,Variable>> inequalities = new ArrayList<>();
 			if (source instanceof EGD) {
 				// filter self pointing equalities
-				inequalities.add(Pair.of((Variable)source.getHead().getTerms()[0],(Variable)source.getHead().getTerms()[1]));
+				for (int i = 0; i < source.getHead().getTerms().length/2; i++)
+					inequalities.add(Pair.of((Variable)source.getHead().getTerms()[2*i],(Variable)source.getHead().getTerms()[2*i+1]));
 			}
 			leftQuery = ConjunctiveQueryWithInequality.create(freeVariables.toArray(new Variable[freeVariables.size()]), source.getBodyAtoms(),inequalities);
 			if (triggerProperty == TriggerProperty.ALL) {

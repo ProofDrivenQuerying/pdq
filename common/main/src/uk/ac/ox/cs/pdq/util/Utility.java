@@ -257,7 +257,7 @@ public class Utility {
 			}
 			i++;
 		}
-		Predicate equality = Predicate.create("equality", 2, true);
+		Predicate equality = Predicate.create("EQUALITY", 2, true);
 		//Create the constant equality predicates
 		int index = 0;
 		Atom[] equalities = new Atom[tobeEqual.entrySet().size()];
@@ -265,7 +265,7 @@ public class Utility {
 			equalities[index++] = Atom.create(equality, pair.getKey(), pair.getValue());
 		Atom body[] = new Atom[]{Atom.create(Predicate.create(predicate.getName(), leftTerms.length), leftTerms), 
 						Atom.create(Predicate.create(predicate.getName(), copiedTerms.length), copiedTerms)};
-		return EGD.create(body, equalities,true);
+		return EGD.create(body, equalities, true);
 	}
 
 	/**
