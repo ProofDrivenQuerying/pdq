@@ -36,7 +36,6 @@ public class ItemsLimit extends PagingLimit {
 	}
 
 	/**
-	 * Copy.
 	 *
 	 * @return UsagePolicy
 	 * @see uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy#copy()

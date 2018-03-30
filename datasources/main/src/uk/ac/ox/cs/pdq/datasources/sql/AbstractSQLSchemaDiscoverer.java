@@ -28,24 +28,20 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 
 /**
- * This class factorises functionalities common to all SQLSchemaDiscorer.
+ * This class factorises functionalities common to all SQLSchemaDiscovers.
  *  
  * @author Julien Leblay
  *
  */
 public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 
-	/**  The logger. */
 	public static Logger log = Logger.getLogger(AbstractSQLSchemaDiscoverer.class);
 
-	/** The properties. */
 	protected Properties properties = null;
 
-	/** The discovered. */
 	protected Schema discovered = null;
 	
 	/**
-	 * Sets the properties.
 	 *
 	 * @param p Properties
 	 * @see uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer#setProperties(Properties)
@@ -56,7 +52,6 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 
 	/**
-	 * Gets the properties.
 	 *
 	 * @return Properties
 	 * @see uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer#getProperties()
@@ -67,7 +62,6 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 
 	/**
-	 * Discover.
 	 *
 	 * @return the schema discovered from the given properties
 	 * @throws BuilderException the builder exception
@@ -100,7 +94,6 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 	
 	/**
-	 * Gets the relations discovery statement.
 	 *
 	 * @param databaseName the database name
 	 * @return a database-specific SQL statement to extract relation names of
@@ -109,7 +102,6 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	protected abstract String getRelationsDiscoveryStatement(String databaseName);
 	
 	/**
-	 * Discover relations.
 	 *
 	 * @return a collection of relations stored in the underlying database
 	 * @throws SQLException the SQL exception
@@ -143,7 +135,6 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 	
 	/**
-	 * Gets the relation discovery statement.
 	 *
 	 * @param relationName the relation name
 	 * @return a database-specific SQL statement to extract the description of
@@ -175,7 +166,6 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 			String viewName, Map<String, Relation> relationMap);
 	
 	/**
-	 * Discover relation.
 	 *
 	 * @param relationName the relation name
 	 * @return the relation which has the given relationName in the underlying database
@@ -200,7 +190,6 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 	
 	/**
-	 * Gets the relation size discovery statement.
 	 *
 	 * @param relationName the relation name
 	 * @return a database-specific SQL statement to extract relation names of
@@ -234,7 +223,6 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 	
 	/**
-	 * Gets the foreign key discovery statement.
 	 *
 	 * @param relationName the relation name
 	 * @return a database-specific SQL statement to extract the foreign keys of
@@ -294,7 +282,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 	
 	/**
-	 * Gets the views discovery statement.
+	 * TOCOMMENT:??? Gets the views discovery statement.
 	 *
 	 * @param databaseName the database name
 	 * @return a database-specific SQL statement to extract the views of
@@ -339,7 +327,6 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 	
 	/**
-	 * Discover view.
 	 *
 	 * @param viewName the view name
 	 * @param relationMap Map<String,Relation>

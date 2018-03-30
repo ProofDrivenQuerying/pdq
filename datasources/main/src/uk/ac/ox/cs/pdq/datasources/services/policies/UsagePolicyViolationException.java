@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.datasources.AccessException;
  */
 public class UsagePolicyViolationException extends AccessException {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -8611823447617411625L;
 
 	/**

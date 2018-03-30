@@ -25,9 +25,7 @@ public class InputMethod {
 	 *  Allowed types.
 	 */
 	public static enum Types {
-		/** The url param. */
 		URL_PARAM, 
-		/** The path element. */
 		PATH_ELEMENT}
 
 	/** Separator for parameters. */
@@ -40,7 +38,7 @@ public class InputMethod {
 	private final Types type;
 
 	/** 
-	 * he a template  to build value from parameters. Parameter are placed
+	 *  a template  to build value from parameters. Parameter are placed
 	 * in the template in the form of {str}, where str can be any string.
 	 */
 	private final String template;
@@ -48,7 +46,7 @@ public class InputMethod {
 	/**  If batch input is allowed, input should be separated with this string. */
 	private final String batchDelimiter;
 
-	/** If batch input is allowed, this defined how many input are allowed in a single batch. */
+	/** If batch input is allowed, this defines how many input are allowed in a single batch. */
 	private final int batchSize;
 
 	/** If a default value is define, it is used when no value is provided at run time. */
@@ -75,7 +73,7 @@ public class InputMethod {
 	}
 
 	/**
-	 * Empty constructor, uses all possible default value.
+	 * Empty constructor, uses all possible default values.
 	 *
 	 * @param name the name
 	 */
@@ -84,7 +82,6 @@ public class InputMethod {
 	}
 
 	/**
-	 * Compound key.
 	 *
 	 * @param key the key
 	 * @return a string made of the input method's name parameter with key
@@ -94,7 +91,6 @@ public class InputMethod {
 	}
 
 	/**
-	 * Format.
 	 *
 	 * @param params the params
 	 * @return a string copies from the template, where the proper fields
@@ -116,7 +112,6 @@ public class InputMethod {
 	}
 
 	/**
-	 * Apply template.
 	 *
 	 * @param params the params
 	 * @return a string copies from the template, where the proper fields
@@ -141,7 +136,6 @@ public class InputMethod {
 	}
 
 	/**
-	 * Gets the name.
 	 *
 	 * @return the name of this input method
 	 */
@@ -160,7 +154,6 @@ public class InputMethod {
 	}
 
 	/**
-	 * Gets the type.
 	 *
 	 * @return the input method type.
 	 */
@@ -178,7 +171,6 @@ public class InputMethod {
 	}
 
 	/**
-	 * Gets the batch delimiter.
 	 *
 	 * @return the batch delimiter
 	 */
@@ -187,7 +179,6 @@ public class InputMethod {
 	}
 
 	/**
-	 * Gets the batch size.
 	 *
 	 * @return the batch size.
 	 */

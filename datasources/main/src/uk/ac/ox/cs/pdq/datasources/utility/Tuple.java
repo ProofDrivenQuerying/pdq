@@ -13,25 +13,21 @@ import java.io.Serializable;
  */
 public interface Tuple extends Serializable{
 
-	/** The Constant EmptyTuple. */
 	public static final Tuple EmptyTuple = new TupleImpl(TupleType.EmptyTupleType);
 
 	/**
- * Gets the type.
  *
  * @return the tuple's type
  */
 	public TupleType getType();
 
 	/**
-	 * Size.
 	 *
 	 * @return the size of the tuple
 	 */
 	public int size();
 
 	/**
-	 * Gets the value.
 	 *
 	 * @param <T> the generic type
 	 * @param i Position in a tuple
@@ -40,14 +36,12 @@ public interface Tuple extends Serializable{
 	public <T> T getValue(int i);
 
 	/**
-	 * Gets the values.
 	 *
 	 * @return the values of the tuple as an object array
 	 */
 	public Object[] getValues();
 
 	/**
-	 * Append tuple.
 	 *
 	 * @param t Input tuple
 	 * @return A tuple that is the concatenation of t to the current one

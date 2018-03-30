@@ -8,7 +8,6 @@ package uk.ac.ox.cs.pdq.datasources.builder;
  */
 public class BuilderException extends RuntimeException {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
 	/**

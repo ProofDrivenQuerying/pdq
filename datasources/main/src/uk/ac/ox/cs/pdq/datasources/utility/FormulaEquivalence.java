@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Approximate formula equivalence checking utility.
+ * TOCOMMENT: WHY IS THIS HERE IN THIS PACKAGED?
  * 
  * @author Julien Leblay
  */
@@ -64,7 +65,6 @@ public class FormulaEquivalence {
 	}
 
 	/**
-	 * Approximate unary equivalence.
 	 *
 	 * @param left UnaryFormula<?>
 	 * @param right UnaryFormula<?>
@@ -75,7 +75,6 @@ public class FormulaEquivalence {
 	}
 
 	/**
-	 * Approximate binary equivalence.
 	 *
 	 * @param left BinaryFormula<?,?>
 	 * @param right BinaryFormula<?,?>
@@ -123,7 +122,6 @@ public class FormulaEquivalence {
 	}
 	
 	/**
-	 * Variable signature.
 	 *
 	 * @param atoms List<PredicateFormula>
 	 * @return List<Integer>
@@ -145,7 +143,6 @@ public class FormulaEquivalence {
 	}
 
 	/**
-	 * Approximate atom equivalence.
 	 *
 	 * @param left PredicateFormula
 	 * @param right PredicateFormula

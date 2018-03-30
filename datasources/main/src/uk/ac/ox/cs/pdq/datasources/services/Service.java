@@ -14,20 +14,15 @@ import uk.ac.ox.cs.pdq.db.Attribute;
  */
 public interface Service {
 
-	/** The Constant URL. */
 	public static final String URL = "url";
 	
-	/** The Constant MULTIPLE_RESULT_PATH. */
 	public static final String MULTIPLE_RESULT_PATH = "multiple-result-path";
 	
-	/** The Constant SINGLE_RESULT_PATH. */
 	public static final String SINGLE_RESULT_PATH = "single-result-path";
 	
-	/** The Constant RESULTS_DELIMITER. */
 	public static final String RESULTS_DELIMITER = "results-delimiter";
 
 	/**
-	 * Gets the name.
 	 *
 	 * @return the service's name
 	 */

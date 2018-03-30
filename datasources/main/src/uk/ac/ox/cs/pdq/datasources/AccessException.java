@@ -20,7 +20,6 @@ public class AccessException extends RuntimeException {
 	}
 
 	/**
-	 * Instantiates a new access exception.
 	 *
 	 * @param msg exception's message
 	 */
@@ -29,7 +28,6 @@ public class AccessException extends RuntimeException {
 	}
 
 	/**
-	 * Instantiates a new access exception.
 	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.

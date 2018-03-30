@@ -21,14 +21,12 @@ import com.google.common.collect.Interners;
 public interface TupleType extends Serializable{
 
 	/**
-	 * Size.
 	 *
 	 * @return int
 	 */
 	int size();
 
 	/**
-	 * Gets the type.
 	 *
 	 * @param i int
 	 * @return Class<?>
@@ -36,7 +34,6 @@ public interface TupleType extends Serializable{
 	Type getType(int i);
 
 	/**
-	 * Gets the types.
 	 *
 	 * @return Class<?>[]
 	 */
@@ -77,7 +74,6 @@ public interface TupleType extends Serializable{
 	TupleType append(TupleType right);
 
 	/**
-	 * Checks if is assignable from.
 	 *
 	 * @param other the other
 	 * @return true of each of this TypleType's individual type is assignable
@@ -86,7 +82,6 @@ public interface TupleType extends Serializable{
 	boolean isAssignableFrom(TupleType other);
 
 	/**
-	 * Checks if is instance.
 	 *
 	 * @param other the other
 	 * @return true of each of this given tuple's items can be assigned from
@@ -95,7 +90,6 @@ public interface TupleType extends Serializable{
 	boolean isInstance(Tuple other);
 
 	/**
-	 * Checks if is instance.
 	 *
 	 * @param values Object[]
 	 * @return true of each of this given values can be assigned from
@@ -103,7 +97,6 @@ public interface TupleType extends Serializable{
 	 */
 	boolean isInstance(Object... values);
 
-	/** The empty tuple. */
 	static final TupleType EmptyTupleType = DefaultFactory.create();
 
 	/**
@@ -113,11 +106,10 @@ public interface TupleType extends Serializable{
 	 */
 	public class DefaultFactory {
 		
-		/** The interner. */
+		/** TOCOMMENT: ??? Maybe not be the word that was intended? The interner. */
 		private static Interner<TupleType> interner = Interners.newStrongInterner();
 
 		/**
-		 * Creates the.
 		 *
 		 * @param types Class<?>[]
 		 * @return TupleType
@@ -127,7 +119,6 @@ public interface TupleType extends Serializable{
 		}
 
 		/**
-		 * Creates a new Default object.
 		 *
 		 * @param typed List<? extends Typed>
 		 * @return TupleType
@@ -137,7 +128,6 @@ public interface TupleType extends Serializable{
 		}
 		
 		/**
-		 * Creates a new Default object.
 		 *
 		 * @param attributes List<? extends Typed>
 		 * @return TupleType

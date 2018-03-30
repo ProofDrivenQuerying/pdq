@@ -19,7 +19,6 @@ public interface TranslatingIterator<I, O> {
 	O next(I input);
 
 	/**
-	 * Checks for next.
 	 *
 	 * @param input I
 	 * @return true if there is a next output for the given input.

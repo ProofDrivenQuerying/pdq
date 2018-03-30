@@ -16,7 +16,6 @@ package uk.ac.ox.cs.pdq.datasources.builder;
 public interface Builder<T> {
 
 	/**
-	 * Builds the.
 	 *
 	 * @return a newly instantiated object.
 	 */

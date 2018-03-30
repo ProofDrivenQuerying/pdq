@@ -7,7 +7,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 /**
  * A static attribute is an attribute whose value does not change at
  * runtime, and is not consider an actual attribute of relation.
- * However, it share some of its behaviour with RESTAttributes, in
+ * However, it shares some of its behaviour with RESTAttributes, in
  * particular in the way input method are used. 
  *
  * @author Julien Leblay
@@ -38,7 +38,6 @@ public class RESTStaticInput<T> extends RESTAttribute implements StaticInput<T> 
 	}
 	
 	/**
-	 * Constructor for RESTStaticInput.
 	 * @param attribute Attribute
 	 * @param inputMethod InputMethod
 	 * @param defaultValue T
@@ -48,7 +47,6 @@ public class RESTStaticInput<T> extends RESTAttribute implements StaticInput<T> 
 	}
 	
 	/**
-	 * Constructor for RESTStaticInput.
 	 * @param attribute Attribute
 	 * @param inputMethod InputMethod
 	 * @param inputParams Collection<String>
@@ -60,7 +58,6 @@ public class RESTStaticInput<T> extends RESTAttribute implements StaticInput<T> 
 	}
 
 	/**
-	 * Gets the default value.
 	 *
 	 * @return T
 	 * @see uk.ac.ox.cs.pdq.datasources.services.rest.StaticInput#getDefaultValue()

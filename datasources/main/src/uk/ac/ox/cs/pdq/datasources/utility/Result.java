@@ -8,21 +8,18 @@ package uk.ac.ox.cs.pdq.datasources.utility;
 public interface Result extends Cloneable, Differentiable<Result> {
 
 	/**
-	 * Checks if is empty.
 	 *
 	 * @return true, if this result is empty.
 	 */
 	boolean isEmpty();
 
 	/**
-	 * Size.
 	 *
 	 * @return the size of the result.
 	 */
 	int size();
 
 	/**
-	 * Diff.
 	 *
 	 * @param o Result
 	 * @return a String representation of the difference between this object and
@@ -32,7 +29,6 @@ public interface Result extends Cloneable, Differentiable<Result> {
 	String diff(Result o);
 
 	/**
-	 * How different.
 	 *
 	 * @param o Result
 	 * @return true, if this object is a equivalent to o.

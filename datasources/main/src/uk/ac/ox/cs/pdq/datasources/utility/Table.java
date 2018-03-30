@@ -38,7 +38,9 @@ public class Table implements Result, Iterable<Tuple> {
 	 */
 	private Interner<Tuple> interner = Interners.newWeakInterner();
 
-	/** If true, tuple added to the table are first interned. */
+
+	/** TOCOMMENT:??? If true, tuple added to the table are first interned. */
+  
 	private final boolean internTuples;
 
 	/**
@@ -64,7 +66,6 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
-	 * Gets the type.
 	 *
 	 * @return the tuple type of the table
 	 */
@@ -116,7 +117,6 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
-	 * Gets the column.
 	 *
 	 * @param <T> the generic type
 	 * @param c Column
@@ -133,7 +133,6 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
-	 * Contains.
 	 *
 	 * @param t Input tuple
 	 * @return returns true if the input tuple is contained in the current table
@@ -199,7 +198,6 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
-	 * Columns.
 	 *
 	 * @return the number of columns
 	 */
@@ -208,7 +206,6 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
-	 * Iterator.
 	 *
 	 * @return a resetable tuple iterator over the table's tuples.
 	 * @see java.lang.Iterable#iterator()
@@ -249,7 +246,6 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
-	 * Gets the header.
 	 *
 	 * @return the table header
 	 */
@@ -267,7 +263,6 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
-	 * Checks for header.
 	 *
 	 * @return true, if the table has a non-empty header
 	 */
@@ -277,7 +272,6 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
-	 * Gets the data.
 	 *
 	 * @return the data contained in the table as a list of tuples.
 	 */

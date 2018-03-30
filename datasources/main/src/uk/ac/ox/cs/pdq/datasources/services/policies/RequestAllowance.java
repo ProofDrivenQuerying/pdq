@@ -43,7 +43,6 @@ public class RequestAllowance extends PeriodicalAllowance {
 	}
 
 	/**
-	 * Gets the amount.
 	 *
 	 * @param event RESTResponseEvent
 	 * @return int

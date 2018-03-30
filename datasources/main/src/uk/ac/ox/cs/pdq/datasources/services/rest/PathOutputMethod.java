@@ -23,16 +23,15 @@ public class PathOutputMethod implements OutputMethod {
 	/**  Path separator. */
 	public static final String PATH_SEPARATOR = "(?<!\\\\)/";
 
-	/**  Path element regexp named group. */
+	/**  Path element regexp named group. TOCOMMENT:?*/
 	public static final String PATHELEMENT_GROUP = "path";
 
-	/**  Index regexp named group. */
+	/**  Index regexp named group. TOCOMMENT:? */
 	public static final String INDEX_GROUP = "index";
 
-	/**  indexed path element regexp. */
+	/**  indexed path element regexp. TOCOMMENT:?*/
 	public static final Pattern INDEXED_PARAM = Pattern.compile("(?<" + PATHELEMENT_GROUP + ">[ /\\w]+)(\\[(?<" + INDEX_GROUP + ">[=\\w]+)\\])?");
 
-	/** The Constant VALUE. */
 	public static final Pattern VALUE = Pattern.compile("\\(([^)]+)\\)");
 
 	/**  The path as a list of string. */
@@ -63,7 +62,6 @@ public class PathOutputMethod implements OutputMethod {
 	}
 
 	/**
-	 * Indexed path.
 	 *
 	 * @param p the p
 	 * @return a pair whose left element the input method referred to in p, and
@@ -84,7 +82,6 @@ public class PathOutputMethod implements OutputMethod {
 	}
 
 	/**
-	 * Extract.
 	 *
 	 * @param wrapper the wrapper
 	 * @param subPath the sub path
@@ -130,7 +127,6 @@ public class PathOutputMethod implements OutputMethod {
 	}
 
 	/**
-	 * Extract.
 	 *
 	 * @param wrapper the wrapper
 	 * @param key String
@@ -142,7 +138,6 @@ public class PathOutputMethod implements OutputMethod {
 	}
 
 	/**
-	 * Extract.
 	 *
 	 * @param wrapper the wrapper
 	 * @param index String
@@ -172,7 +167,6 @@ public class PathOutputMethod implements OutputMethod {
 	}
 
 	/**
-	 * To string.
 	 *
 	 * @return String
 	 */

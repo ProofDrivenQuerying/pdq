@@ -25,7 +25,6 @@ class TupleTypeImpl implements TupleType {
 	private final Type[] types;
 
 	/**
-	 * Default constructor.
 	 *
 	 * @param types the types
 	 */
@@ -34,6 +33,7 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
+ *  TOCOMMENT: NOT ENGLISH
 	 * Constructs a tuple table from a list of typed (e.g. attributes or
 	 * constants) rather than an array of classes.
 	 *
@@ -44,7 +44,6 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
-	 * To class array.
 	 *
 	 * @param items the items
 	 * @return an array of Class corresponding to the given list of typed objects.
@@ -60,7 +59,6 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
-	 * Size.
 	 *
 	 * @return the number of sub-typed in the tuple type.
 	 * @see uk.ac.ox.cs.pdq.datasources.utility.TupleType#size()
@@ -71,7 +69,6 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
-	 * Gets the type.
 	 *
 	 * @param i int
 	 * @return the type of the ith element in the tuple type.
@@ -83,7 +80,6 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
-	 * Gets the types.
 	 *
 	 * @return the underlying array of types.
 	 * @see uk.ac.ox.cs.pdq.datasources.utility.TupleType#getTypes()
@@ -138,7 +134,6 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
-	 * Append tuples.
 	 *
 	 * @param left Tuple
 	 * @param right Tuple
@@ -155,7 +150,6 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
-	 * Append.
 	 *
 	 * @param right TupleType
 	 * @return a fresh tuple type, made by appending the given left and right sub-types.
@@ -196,7 +190,6 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
-	 * Checks if is instance.
 	 *
 	 * @param other Tuple
 	 * @return boolean
@@ -208,7 +201,6 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
-	 * Checks if is instance.
 	 *
 	 * @param values Object[]
 	 * @return boolean
@@ -266,7 +258,6 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
-	 * To string.
 	 *
 	 * @return String
 	 */

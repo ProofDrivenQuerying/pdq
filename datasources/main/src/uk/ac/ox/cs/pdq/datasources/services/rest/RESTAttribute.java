@@ -33,7 +33,6 @@ public class RESTAttribute extends Attribute {
 	}
 	
 	/**
-	 * Constructor for RESTAttribute.
 	 * @param attribute Attribute
 	 * @param inputMethod InputMethod
 	 * @param inputParams Collection<String>
@@ -43,7 +42,6 @@ public class RESTAttribute extends Attribute {
 	}
 	
 	/**
-	 * Constructor for RESTAttribute.
 	 * @param attribute Attribute
 	 * @param outputMethod OutputMethod
 	 */
@@ -52,7 +50,6 @@ public class RESTAttribute extends Attribute {
 	}
 	
 	/**
-	 * Constructor for RESTAttribute.
 	 * @param attribute Attribute
 	 * @param outputMethod OutputMethod
 	 * @param inputMethod InputMethod
@@ -62,7 +59,6 @@ public class RESTAttribute extends Attribute {
 	}
 
 	/**
-	 * Constructor for RESTAttribute.
 	 * @param attribute Attribute
 	 * @param outputMethod OutputMethod
 	 * @param inputMethod InputMethod
@@ -76,7 +72,6 @@ public class RESTAttribute extends Attribute {
 	}
 	
 	/**
-	 * Gets the input method.
 	 *
 	 * @return InputMethod
 	 */
@@ -85,7 +80,6 @@ public class RESTAttribute extends Attribute {
 	}
 
 	/**
-	 * Gets the output method.
 	 *
 	 * @return OutputMethod
 	 */
@@ -94,7 +88,6 @@ public class RESTAttribute extends Attribute {
 	}
 
 	/**
-	 * Gets the input params.
 	 *
 	 * @return Collection<String>
 	 */
@@ -103,7 +96,6 @@ public class RESTAttribute extends Attribute {
 	}
 
 	/**
-	 * Allows batch.
 	 *
 	 * @return if the attribute's input method allows batch input, i.e. has
 	 * a batch delimiter defined, and an output method.

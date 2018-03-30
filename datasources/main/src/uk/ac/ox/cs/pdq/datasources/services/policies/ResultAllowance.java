@@ -32,7 +32,6 @@ public class ResultAllowance extends PeriodicalAllowance {
 	}
 
 	/**
-	 * Copy.
 	 *
 	 * @return UsagePolicy
 	 * @see uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy#copy()
@@ -43,7 +42,6 @@ public class ResultAllowance extends PeriodicalAllowance {
 	}
 
 	/**
-	 * Gets the amount.
 	 *
 	 * @param event RESTResponseEvent
 	 * @return int

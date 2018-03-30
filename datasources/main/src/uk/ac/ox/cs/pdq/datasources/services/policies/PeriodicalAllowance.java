@@ -24,7 +24,6 @@ public abstract class PeriodicalAllowance
 					AccessPostProcessor<RESTResponseEvent> {
 
 	/**
-	 * Gets the total.
 	 *
 	 * @return int
 	 */
@@ -32,7 +31,6 @@ public abstract class PeriodicalAllowance
 		return this.total;
 	}
 
-	/** Logger. */
 	private static Logger log = Logger.getLogger(PeriodicalAllowance.class);
 
 	/**  Properties key for the limit attribute. */
@@ -130,7 +128,6 @@ public abstract class PeriodicalAllowance
 	}
 	
 	/**
-	 * Gets the amount.
 	 *
 	 * @param event the event
 	 * @return the amount associated with the given response event.
@@ -142,7 +139,6 @@ public abstract class PeriodicalAllowance
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.service.AccessPostProcessor#processAccessResponse(uk.ac.ox.cs.pdq.runtime.wrappers.service.ResponseEvent)
 	 */
 	/**
-	 * Process access response.
 	 *
 	 * @param event RESTResponseEvent
 	 * @throws UsagePolicyViolationException the usage policy violation exception
@@ -185,8 +181,7 @@ public abstract class PeriodicalAllowance
 	}
 
 	/**
-	 * Checks if is wait.
-	 *
+	 *TOCOMMENT:???
 	 * @return boolean
 	 */
 	public boolean isWait() {
@@ -194,7 +189,6 @@ public abstract class PeriodicalAllowance
 	}
 
 	/**
-	 * Gets the limit.
 	 *
 	 * @return int
 	 */

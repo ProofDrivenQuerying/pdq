@@ -54,7 +54,6 @@ public class RESTAccess implements uk.ac.ox.cs.pdq.datasources.builder.Builder<W
 	}
 	
 	/**
-	 * Builds the.
 	 *
 	 * @return a WebTarget forms by append the input params respecting
 	 * input parameters and methods.
@@ -95,7 +94,6 @@ public class RESTAccess implements uk.ac.ox.cs.pdq.datasources.builder.Builder<W
 	}
 
 	/**
-	 * Checks if is complete.
 	 *
 	 * @return boolean
 	 */
@@ -104,7 +102,6 @@ public class RESTAccess implements uk.ac.ox.cs.pdq.datasources.builder.Builder<W
 	}
 
 	/**
-	 * Checks if is complete.
 	 *
 	 * @param b boolean
 	 */

@@ -20,28 +20,23 @@ import uk.ac.ox.cs.pdq.datasources.utility.Table;
 public class RESTResponseEvent implements ResponseEvent {
 
 	/**
-	 * The Enum RESTResponseStatus.
 	 */
-	public static enum RESTResponseStatus{/** The success. */
-		SUCCESS,/** The failure. */
+	public static enum RESTResponseStatus{
+		SUCCESS,
 		FAILURE};
 
-		/** Logger. */
 		private static Logger log = Logger.getLogger(RESTResponseEvent.class);
 
-		/**  The rest relation. */
 		private final RESTRelation relation;
 
 		/**  The request event this response event is associated with. */
 		private final RESTRequestEvent requestEvent;
 
-		/**  The requestEvent output table of the requestEvent. */
 		private final Table output;
 
-		/**  The response. */
 		private final Response response;
 
-		/**  A message set of there was any violation associated with this event. */
+		/**  A message set if there was any violation associated with this event. */
 		private String violationMessage = null;
 
 		/**
@@ -76,7 +71,6 @@ public class RESTResponseEvent implements ResponseEvent {
 		}
 
 		/**
-		 * Gets the access.
 		 *
 		 * @return RESTAccess
 		 */
@@ -85,7 +79,6 @@ public class RESTResponseEvent implements ResponseEvent {
 		}
 
 		/**
-		 * Gets the request event.
 		 *
 		 * @return RESTRequestEvent
 		 */
@@ -94,7 +87,6 @@ public class RESTResponseEvent implements ResponseEvent {
 		}
 
 		/**
-		 * Gets the output.
 		 *
 		 * @return Table
 		 */
@@ -103,7 +95,6 @@ public class RESTResponseEvent implements ResponseEvent {
 		}
 
 		/**
-		 * Sets the usage violation message.
 		 *
 		 * @param msg String
 		 * @see uk.ac.ox.cs.pdq.datasources.services.AccessEvent#setUsageViolationMessage(String)
@@ -114,7 +105,6 @@ public class RESTResponseEvent implements ResponseEvent {
 		}
 
 		/**
-		 * Gets the usage violation message.
 		 *
 		 * @return String
 		 * @see uk.ac.ox.cs.pdq.datasources.services.AccessEvent#getUsageViolationMessage()
@@ -125,7 +115,6 @@ public class RESTResponseEvent implements ResponseEvent {
 		}
 
 		/**
-		 * Checks for usage violation message.
 		 *
 		 * @return boolean
 		 * @see uk.ac.ox.cs.pdq.datasources.services.AccessEvent#hasUsageViolationMessage()
@@ -136,7 +125,6 @@ public class RESTResponseEvent implements ResponseEvent {
 		}
 
 		/**
-		 * Checks for more request events.
 		 *
 		 * @return boolean
 		 * @see uk.ac.ox.cs.pdq.datasources.services.ResponseEvent#hasMoreRequestEvents()
@@ -147,7 +135,6 @@ public class RESTResponseEvent implements ResponseEvent {
 		}
 
 		/**
-		 * Gets the response.
 		 *
 		 * @return Response
 		 */
@@ -156,7 +143,6 @@ public class RESTResponseEvent implements ResponseEvent {
 		}
 
 		/**
-		 * Next request event.
 		 *
 		 * @return RESTRequestEvent
 		 * @see uk.ac.ox.cs.pdq.datasources.services.ResponseEvent#nextRequestEvent()

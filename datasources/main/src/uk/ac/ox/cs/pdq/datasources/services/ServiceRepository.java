@@ -161,7 +161,6 @@ public class ServiceRepository {
 	}
 	
 	/**
-	 * Gets the input method.
 	 *
 	 * @param name the name
 	 * @return the input method by the given name
@@ -176,7 +175,6 @@ public class ServiceRepository {
 	}
 
 	/**
-	 * Gets the services.
 	 *
 	 * @return a Collection of all the service in the repository.
 	 */

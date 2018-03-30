@@ -59,13 +59,12 @@ import uk.ac.ox.cs.pdq.util.Utility;
  */
 public final class RESTRelation extends Relation implements Service, Pipelineable, RelationAccessWrapper {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5829653747851001121L;
 
-	/** Logger. */
 	private static Logger log = Logger.getLogger(RESTRelation.class);
 
 	/**
+ * TOCOMMENT:??????
 	 * All list of attributes the including the relations actual attributes,
 	 * plus additional, possibly interleaved static attributes.
 	 */
@@ -86,7 +85,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	/**  All tuples that have been accessed so far. */
 	private CacheAccess cache = null;
 
-	/** The serial. */
 	private Integer serial = 0;
 
 	/**
@@ -132,7 +130,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
-	 * Iterator.
 	 *
 	 * @param inputAttributes List<? extends Attribute>
 	 * @param inputs ResetableIterator<Tuple>
@@ -156,7 +153,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
-	 * Access.
 	 *
 	 * @param inputHeader the input header
 	 * @param inputTuples the input tuples
@@ -178,7 +174,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
-	 * Access.
 	 *
 	 * @return Table
 	 * @see uk.ac.ox.cs.pdq.datasources.services.Service#access(Table)
@@ -195,7 +190,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
-	 * Gets the media type.
 	 *
 	 * @return the relation's media type
 	 */
@@ -204,7 +198,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
-	 * Gets the input method.
 	 *
 	 * @param inputs the inputs
 	 * @return the set of input methods appearing in the given REST attributes
@@ -264,7 +257,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 //	}
 
 	/**
-	 * Gets the input params.
 	 *
 	 * @param inputs the inputs
 	 * @param tuple the tuple
@@ -438,6 +430,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
+ * TOCOMMENT:???? NOT ENGLISH
 	 * Processes an access request and response events in a row.
 	 *
 	 * @param requestEvent the request event
@@ -460,6 +453,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
+ * TOCOMMENT: ??? NOT ENGLISH
 	 * Parse the response of a service call, so as to fit it is a dynamic table
 	 * according to the output methods defined externally.
 	 *
@@ -500,6 +494,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
+ * TOCOMMENT: ??? NOT ENGLISH
 	 * Parse the response of a service call, assuming it is Json-formatted,
 	 * so as to fit it is a dynamic table according to the output methods 
 	 * defined externally.
@@ -540,6 +535,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
+ * TOCOMMENT: NOT ENGLISH
 	 * Parse the response of a service call, assuming it is XML-formatted,
 	 * so as to fit it is a dynamic table according to the output methods 
 	 * defined externally.
@@ -587,7 +583,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
-	 * Gets the result delimiter.
 	 *
 	 * @return a list of string representation path where the collection of
 	 * results can be found in a reponse.
@@ -601,6 +596,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
+ * TOCOMMENT: AGAIN, NOT PARSEABLE ENGLISH
 	 * Converts a collection of a loosely-typed maps to a collection of tuples.
 	 *
 	 * @param delimiters List<String>
@@ -681,7 +677,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
-	 * Register.
 	 *
 	 * @param p UsagePolicy
 	 * @see uk.ac.ox.cs.pdq.datasources.services.Service#register(UsagePolicy)
@@ -692,7 +687,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
-	 * Unregister.
 	 *
 	 * @param p UsagePolicy
 	 * @see uk.ac.ox.cs.pdq.datasources.services.Service#unregister(UsagePolicy)
@@ -723,7 +717,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		private int cursor = 0;
 
 		/**
-		 * The next tuple to returns. This variable can only be null before the
+		 * The next tuple to return. This variable can only be null before the
 		 * operator is instantiation or when there is not more tuple to output.
 		 */
 		private Tuple nextTuple;
@@ -748,7 +742,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		}
 
 		/**
-		 * Constructor with input tuple iterator.
 		 *
 		 * @param inputAttributes List<RESTAttribute>
 		 * @param inputTuples ResetableIterator<Tuple>
@@ -810,7 +803,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 //		}
 
 		/**
-		 * Checks for next.
 		 *
 		 * @return boolean
 		 * @see java.util.Iterator#hasNext()
@@ -823,7 +815,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		}
 
 		/**
-		 * Next.
 		 *
 		 * @return Tuple
 		 * @see java.util.Iterator#next()
@@ -916,7 +907,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		}
 
 		/**
-		 * Proceed.
 		 *
 		 * @return Tuple
 		 */

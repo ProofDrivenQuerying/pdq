@@ -28,7 +28,6 @@ public interface SchemaDiscoverer {
 	void setProperties(Properties p);
 
 	/**
-	 * Discover.
 	 *
 	 * @return a Schema generated as per the discovery process.
 	 * @throws BuilderException the builder exception

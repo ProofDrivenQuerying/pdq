@@ -39,10 +39,8 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -3167783211904676965L;
 
-	/** Logger. */
 	private static Logger log = Logger.getLogger(SQLRelationWrapper.class);
 
-	/** Connection. */
 	private Connection connection = null;
 
 	/**
@@ -170,7 +168,6 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 	}
 	
 	/**
-	 * Method access.
 	 *
 	 * @return Table
 	 * @see uk.ac.ox.cs.pdq.datasources.memory.RelationAccessWrapper#access(Table)
@@ -181,7 +178,6 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 	}
 	
 	/**
-	 * Method access.
 	 *
 	 * @param inputAttributes the input attributes
 	 * @param inputs the inputs
@@ -215,7 +211,6 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 	}
 
 	/**
-	 * Gets the connection.
 	 *
 	 * @return a connection database connection for the given properties.
 	 * @throws SQLException the SQL exception

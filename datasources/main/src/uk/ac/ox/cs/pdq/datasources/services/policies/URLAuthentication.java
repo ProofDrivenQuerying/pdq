@@ -24,7 +24,6 @@ import com.google.common.base.Preconditions;
  */
 public class URLAuthentication  implements UsagePolicy, AccessPreProcessor<RESTRequestEvent> {
 
-	/** The Constant INPUT_METHOD. */
 	protected static final String INPUT_METHOD = "input-method";
 
 	/** The request attribute where the credential is defined. */
@@ -68,7 +67,6 @@ public class URLAuthentication  implements UsagePolicy, AccessPreProcessor<RESTR
 	}
 
 	/**
-	 * Process access request.
 	 *
 	 * @param event RESTRequestEvent
 	 * @throws UsagePolicyViolationException the usage policy violation exception

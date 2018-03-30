@@ -11,27 +11,22 @@ import uk.ac.ox.cs.pdq.datasources.services.RequestEvent;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 
 /**
- * The event occurred directly before a RESTAccess request. Holds the access 
+ * The event occurring directly before a RESTAccess request. Holds the access 
  * itself, and the input table to be used.
  * 
  * @author Julien Leblay
  *
  */
 public class RESTRequestEvent implements RequestEvent {
-
-	/** Logger. */
 	private static Logger log = Logger.getLogger(RESTRequestEvent.class);
 
-	/**  The relation. */
 	private final RESTRelation relation ;
 
-	/**  The access. */
 	private final RESTAccess access;
 
 	/**  The input to the access. */
 	private final Table input;
 
-	/** The violation message. */
 	private String violationMessage = null;
 
 	/**
@@ -49,7 +44,6 @@ public class RESTRequestEvent implements RequestEvent {
 	}
 
 	/**
-	 * Gets the access.
 	 *
 	 * @return RESTAccess
 	 */
@@ -58,7 +52,6 @@ public class RESTRequestEvent implements RequestEvent {
 	}
 
 	/**
-	 * Gets the input.
 	 *
 	 * @return Table
 	 */
@@ -67,7 +60,6 @@ public class RESTRequestEvent implements RequestEvent {
 	}
 
 	/**
-	 * Sets the usage violation message.
 	 *
 	 * @param msg String
 	 * @see uk.ac.ox.cs.pdq.datasources.services.AccessEvent#setUsageViolationMessage(String)
@@ -78,7 +70,6 @@ public class RESTRequestEvent implements RequestEvent {
 	}
 
 	/**
-	 * Gets the usage violation message.
 	 *
 	 * @return String
 	 * @see uk.ac.ox.cs.pdq.datasources.services.AccessEvent#getUsageViolationMessage()
@@ -89,7 +80,6 @@ public class RESTRequestEvent implements RequestEvent {
 	}
 
 	/**
-	 * Checks for usage violation message.
 	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.datasources.services.AccessEvent#hasUsageViolationMessage()
@@ -100,7 +90,6 @@ public class RESTRequestEvent implements RequestEvent {
 	}
 
 	/**
-	 * Process request.
 	 *
 	 * @return RESTResponseEvent
 	 * @throws AccessException the access exception

@@ -30,19 +30,14 @@ import com.google.common.base.Preconditions;
 public class PagingLimit implements UsagePolicy, 
 		AccessPreProcessor<RESTRequestEvent>, AccessPostProcessor<RESTResponseEvent>  {
 
-	/** The Constant PAGE_SIZE. */
 	protected static final String PAGE_SIZE = "limit";
 	
-	/** The Constant START_INDEX. */
 	protected static final String START_INDEX = "start-index";
 	
-	/** The Constant PAGE_SIZE_ATTRIBUTE. */
 	protected static final String PAGE_SIZE_ATTRIBUTE = "page-size";
 	
-	/** The Constant PAGE_INDEX_ATTRIBUTE. */
 	protected static final String PAGE_INDEX_ATTRIBUTE = "page-index";
 	
-	/** The Constant TOTAL_ITEMS_ATTRIBUTE. */
 	protected static final String TOTAL_ITEMS_ATTRIBUTE = "total-items";
 
 	/**  Size of a single page. */
@@ -115,7 +110,6 @@ public class PagingLimit implements UsagePolicy,
 	}
 
 	/**
-	 * Gets the input method.
 	 *
 	 * @param repo the repo
 	 * @param name the name
@@ -130,7 +124,6 @@ public class PagingLimit implements UsagePolicy,
 	}
 	
 	/**
-	 * Copy.
 	 *
 	 * @return the usage policy
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.service.UsagePolicy#copy()
@@ -143,7 +136,6 @@ public class PagingLimit implements UsagePolicy,
 	}
 
 	/**
-	 * Process access request.
 	 *
 	 * @param event RESTRequestEvent
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.service.AccessPreProcessor#processAccessRequest(uk.ac.ox.cs.pdq.runtime.wrappers.service.RequestEvent)
@@ -158,7 +150,6 @@ public class PagingLimit implements UsagePolicy,
 	}
 
 	/**
-	 * Process access response.
 	 *
 	 * @param event RESTResponseEvent
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.service.AccessPostProcessor#processAccessResponse(uk.ac.ox.cs.pdq.runtime.wrappers.service.ResponseEvent)
@@ -177,7 +168,6 @@ public class PagingLimit implements UsagePolicy,
 	}
 	
 	/**
-	 * Increment.
 	 */
 	protected void increment() {
 		this.pageIndex ++;

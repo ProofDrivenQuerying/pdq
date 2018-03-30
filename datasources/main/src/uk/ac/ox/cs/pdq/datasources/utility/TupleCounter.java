@@ -16,13 +16,11 @@ import com.google.common.eventbus.Subscribe;
  */
 public class TupleCounter implements EventHandler {
 
-	/** TupleCounterTest logger. */
 	private static Logger log = Logger.getLogger(TupleCounter.class);
 
 	/** PrintStream where to print tuples. */
 	private final PrintStream out;
 
-	/** The count. */
 	private long count = 0;
 	
 	/**
@@ -42,7 +40,7 @@ public class TupleCounter implements EventHandler {
 	}
 
 	/**
-	 * Counts the given tuple.
+	 * TOCOMMENT:???? Counts the given tuple.
 	 *
 	 * @param tuple the tuple
 	 */
@@ -52,14 +50,12 @@ public class TupleCounter implements EventHandler {
 	}
 	
 	/**
-	 * Reset.
 	 */
 	public void reset() {
 		this.count = 0;
 	}
 	
 	/**
-	 * Report.
 	 */
 	public void report() {
 		String message = "Tuple count: " + this.count;

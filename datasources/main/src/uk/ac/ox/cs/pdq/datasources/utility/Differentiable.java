@@ -13,14 +13,10 @@ package uk.ac.ox.cs.pdq.datasources.utility;
 public interface Differentiable<T> {
 
 	/**
-	 * The Enum Levels.
 	 */
 	static enum Levels {
-		/** The identical. */
 		IDENTICAL, 
-		/** The equivalent. */
 		EQUIVALENT, 
-		/** The different. */
 		DIFFERENT}
 
 	/**

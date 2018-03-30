@@ -37,10 +37,8 @@ import uk.ac.ox.cs.pdq.util.Utility;
  */
 public class SQLViewWrapper extends View implements RelationAccessWrapper {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -3167783211904676965L;
 
-	/** Logger. */
 	private static Logger log = Logger.getLogger(SQLViewWrapper.class);
 
 	/**
@@ -164,7 +162,6 @@ public class SQLViewWrapper extends View implements RelationAccessWrapper {
 	}
 	
 	/**
-	 * Method access.
 	 *
 	 * @return Table
 	 * @see uk.ac.ox.cs.pdq.datasources.memory.RelationAccessWrapper#access(Table)
@@ -175,7 +172,6 @@ public class SQLViewWrapper extends View implements RelationAccessWrapper {
 	}
 	
 	/**
-	 * Method access.
 	 *
 	 * @param inputAttributes the input attributes
 	 * @param inputs the inputs

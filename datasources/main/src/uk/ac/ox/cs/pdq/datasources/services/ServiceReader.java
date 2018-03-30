@@ -47,25 +47,19 @@ import uk.ac.ox.cs.pdq.io.ReaderException;
  */
 public class ServiceReader extends AbstractXMLReader<ServiceRepository> implements SchemaDiscoverer {
 
-	/** Logger. */
 	private static Logger log = Logger.getLogger(ServiceReader.class);
 
-	/** The properties. */
 	protected Properties properties = new Properties();
 	
-	/** The discovered. */
 	protected Schema discovered = null;
 
 	/**  The service repository being built. */
 	protected ServiceRepository services = null;
 	
-	/** Service builder. */
 	protected ServiceBuilder builder = null;
 	
-	/** The in usage policies. */
 	protected boolean inUsagePolicies = false;
 	
-	/** The in input methods. */
 	protected boolean inInputMethods = false;
 
 	/**
@@ -74,7 +68,6 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 	public ServiceReader() {}
 	
 	/**
-	 * Read.
 	 *
 	 * @param in InputStream
 	 * @return ServiceRepository
@@ -299,7 +292,6 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 	}
 
 	/**
-	 * Sets the properties.
 	 *
 	 * @param p Properties
 	 * @see uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer#setProperties(Properties)
@@ -310,7 +302,6 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 	}
 
 	/**
-	 * Gets the properties.
 	 *
 	 * @return Properties
 	 * @see uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer#getProperties()
