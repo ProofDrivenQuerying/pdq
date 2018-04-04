@@ -109,6 +109,11 @@ data sources such as RDBMSs and webservices.
 			<artifactId>pdq-datasources</artifactId>
 			<version>1.0.0-Beta</version>
 		</dependency>
+		<dependency>
+			<groupId>uk.ac.ox.cs.pdq</groupId>
+			<artifactId>pdq-cost</artifactId>
+			<version>1.0.0-Beta</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

@@ -28,7 +28,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
@@ -321,11 +320,6 @@ public class TestParallelEGDChaser extends PdqTest {
 	}
 
 	@Test
-	public void testA1MySql() throws SQLException {
-		testA1(DatabaseParameters.MySql);
-	}
-
-	@Test
 	public void testA1Postgres() throws SQLException {
 		testA1(DatabaseParameters.Postgres);
 	}
@@ -403,17 +397,12 @@ public class TestParallelEGDChaser extends PdqTest {
 
 		ConjunctiveQuery query1; // Q(x,y) = A(x,x), B(x,y), C(y,z,'TypedConstant1') D(z,z)
 		query1 = ConjunctiveQuery.create(new Variable[] { Variable.create("x"), Variable.create("y") },
-				(Conjunction) Conjunction.of(Atom.create(A, Variable.create("x"), Variable.create("x")), Atom.create(B, Variable.create("x"), Variable.create("y")),
+				new Atom[] {Atom.create(A, Variable.create("x"), Variable.create("x")), Atom.create(B, Variable.create("x"), Variable.create("y")),
 						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("c_constant_3")),
-						Atom.create(D, Variable.create("z"), Variable.create("z"))));
+						Atom.create(D, Variable.create("z"), Variable.create("z"))});
 
 		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 		Assert.assertEquals(5, matches.size());
-	}
-
-	@Test
-	public void testB1MySql() throws SQLException {
-		testB1(DatabaseParameters.MySql);
 	}
 
 	@Test
@@ -488,10 +477,10 @@ public class TestParallelEGDChaser extends PdqTest {
 		ConjunctiveQuery query1; // Q(x,y,z) = A('TypedConstant2',y,z,w), B(x,y,z,w), C(y,z,'TypedConstant1')
 									// D(x,y), E(x,y,'TypedConstant1')
 		query1 = ConjunctiveQuery.create(new Variable[] { Variable.create("x"), Variable.create("y"), Variable.create("z") },
-				(Conjunction) Conjunction.of(Atom.create(A, TypedConstant.create("TC2"), Variable.create("y"), Variable.create("z"), Variable.create("w")),
+				new Atom[] {Atom.create(A, TypedConstant.create("TC2"), Variable.create("y"), Variable.create("z"), Variable.create("w")),
 						Atom.create(B, Variable.create("x"), Variable.create("y"), Variable.create("z"), Variable.create("w")),
 						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("TC1")), Atom.create(D, Variable.create("x"), Variable.create("y")),
-						Atom.create(E, Variable.create("x"), Variable.create("y"), TypedConstant.create("TC1"))));
+						Atom.create(E, Variable.create("x"), Variable.create("y"), TypedConstant.create("TC1"))});
 
 		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 		Assert.assertEquals(5, matches.size());
@@ -562,10 +551,10 @@ public class TestParallelEGDChaser extends PdqTest {
 		ConjunctiveQuery query1; // Q = A('TypedConstant2',y,z,w), B(x,y,z,w), C(y,z,'TypedConstant1') D(x,y),
 									// E('TypedConstant2',y,y)
 		query1 = ConjunctiveQuery.create(new Variable[] {},
-				(Conjunction) Conjunction.of(Atom.create(A, TypedConstant.create("TC2"), Variable.create("y"), Variable.create("z"), Variable.create("w")),
+				new Atom[] {Atom.create(A, TypedConstant.create("TC2"), Variable.create("y"), Variable.create("z"), Variable.create("w")),
 						Atom.create(B, Variable.create("x"), Variable.create("y"), Variable.create("z"), Variable.create("w")),
 						Atom.create(C, Variable.create("y"), Variable.create("z"), TypedConstant.create("TC1")), Atom.create(D, Variable.create("x"), Variable.create("y")),
-						Atom.create(E, TypedConstant.create("TC2"), Variable.create("y"), Variable.create("y"))));
+						Atom.create(E, TypedConstant.create("TC2"), Variable.create("y"), Variable.create("y"))});
 
 		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 		Assert.assertEquals(5, matches.size());

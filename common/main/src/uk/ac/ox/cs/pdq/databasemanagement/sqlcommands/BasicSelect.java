@@ -104,7 +104,7 @@ public class BasicSelect extends Command {
 		}
 		resultTerms = variables.toArray(new Term[variables.size()]);
 		Atom a = Atom.create(Predicate.create(r.getName(), r.getArity()), resultTerms);
-		formula = ConjunctiveQuery.create(variables.toArray(new Variable[variables.size()]), a);
+		formula = ConjunctiveQuery.create(variables.toArray(new Variable[variables.size()]), new Atom[] {a});
 		statements.add("select * from " + DATABASENAME + "." + r.getName());
 	}
 

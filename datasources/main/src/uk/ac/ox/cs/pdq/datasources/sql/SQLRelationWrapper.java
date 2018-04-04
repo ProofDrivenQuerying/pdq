@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Properties;
@@ -88,6 +89,8 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 		Preconditions.checkArgument(sourceAttributes != null);
 		Preconditions.checkArgument(inputTuples != null);
 		StringBuilder result = new StringBuilder();
+		if (sourceAttributes.length == 0)
+			return "";
 		if (inputTuples.hasNext()) {
 			String sep = " WHERE (";
 			for (Attribute a: sourceAttributes) {
@@ -147,20 +150,32 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 				Object[] ndata = new Object[result.columns()];
 				for (int index = 0; index < ndata.length; ++index) {
 					Type columnType = result.getType().getType(index);
-					if (columnType == Integer.class) {
-						ndata[index] = new Integer(rs.getInt(index + 1));
+					if (columnType == Integer.class ) {
+						try {  
+							ndata[index] = new Integer(rs.getInt(index + 1));
+						}catch(Throwable t) {
+							throw t;
+						}
 
-					} else if (columnType == String.class) {
+					} else if (columnType == String.class 
+							|| rs.getMetaData().getColumnType(index + 1) == Types.VARCHAR
+							|| rs.getMetaData().getColumnType(index + 1) == Types.CHAR) {
 						ndata[index] = rs.getString(index + 1).trim();
 
 					} else {
-						Method m = ResultSet.class.getMethod("get" + Utility.simpleName(columnType), int.class);
-						ndata[index] = m.invoke(rs, index + 1);
+						try {
+							Method m = ResultSet.class.getMethod("get" + Utility.simpleName(columnType), int.class);
+							ndata[index] = m.invoke(rs, index + 1);
+						}catch(Throwable t) {
+							throw t;
+						}
+							
 					}
 				}
 				result.appendRow(result.getType().createTuple(ndata));
 			}
 		} catch (SQLException | ReflectiveOperationException e) {
+			e.printStackTrace();
 			log.warn(queryString, e);
 			throw new AccessException(this.getName() + "\n" + queryString, e);
 		}

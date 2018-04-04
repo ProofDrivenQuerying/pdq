@@ -85,6 +85,11 @@ public class ExecutorThread extends Thread {
 		super("Executor" + getDriverType(databaseParameters.getDatabaseDriver()) + "_"+GlobalCounterProvider.getNext("ExecutorThread"));
 		this.manager = manager;
 		String driver = databaseParameters.getDatabaseDriver();
+		if (driver!=null && driver.toLowerCase().contains("mysql")) {
+			// MySql is not supported any more, switching to default postgres instead.
+			databaseParameters = DatabaseParameters.Postgres;
+			driver = databaseParameters.getDatabaseDriver();
+		}
 		String url = databaseParameters.getConnectionUrl();
 		String database = databaseParameters.getDatabaseName();
 		String username = databaseParameters.getDatabaseUser();

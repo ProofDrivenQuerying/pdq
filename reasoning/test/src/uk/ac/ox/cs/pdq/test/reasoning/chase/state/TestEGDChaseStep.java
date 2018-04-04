@@ -56,18 +56,8 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 public class TestEGDChaseStep extends PdqTest {
 
 	@Test
-	public void testA_MySql() throws SQLException, DatabaseException{
-		testA("mysql");
-	}
-
-	@Test
 	public void testA_postgres() throws SQLException, DatabaseException{
 		testA("postgres");
-	}
-
-	@Test
-	public void testB_MySql() throws SQLException, DatabaseException{
-		testB("mysql");
 	}
 
 	@Test
@@ -131,10 +121,7 @@ public class TestEGDChaseStep extends PdqTest {
 
 	private DatabaseManager getDatabaseConnection(String sqlType, Schema s) throws SQLException, DatabaseException{
 		ExternalDatabaseManager edm = null;
-		if ("mysql".equals(sqlType)) {
-			edm = new ExternalDatabaseManager(DatabaseParameters.MySql);
-		}
-		else if ("postgres".equals(sqlType)) {
+		if ("postgres".equals(sqlType)) {
 			edm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 		} else
 			throw new IllegalArgumentException("SqlType " + sqlType + " is not valid.");

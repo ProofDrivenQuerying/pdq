@@ -18,7 +18,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
@@ -127,7 +126,6 @@ public class PdqTest {
 		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-		//DatabaseChaseInstance.resetFacts(); // can't be added here since DatabaseChaseInstance is not part of common, but it often needs to be reseted too. 				
 	}
 
 	/**
@@ -169,7 +167,7 @@ public class PdqTest {
 		atoms[0] = Atom.create(relations[0], new Term[] { x, Variable.create("y1"), Variable.create("z1") });
 		atoms[1] = Atom.create(relations[1], new Term[] { x, y, Variable.create("z2") });
 		atoms[2] = Atom.create(relations[2], new Term[] { Variable.create("x1"), y, z });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y, z }, (Conjunction) Conjunction.of(atoms));
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y, z }, atoms);
 
 		// Create schema
 		Schema schema = new Schema(relations);
@@ -225,7 +223,7 @@ public class PdqTest {
 		atoms[0] = Atom.create(relations[0], new Term[] { x, Variable.create("y1"), Variable.create("z1") });
 		atoms[1] = Atom.create(relations[1], new Term[] { x, y, Variable.create("z2") });
 		atoms[2] = Atom.create(relations[2], new Term[] { Variable.create("x1"), y, z });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y, z }, (Conjunction) Conjunction.of(atoms));
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y, z }, atoms);
 
 		// Create schema
 		Schema schema = new Schema(relations);
@@ -280,7 +278,7 @@ public class PdqTest {
 		atoms[0] = Atom.create(relations[0], new Term[] { x, Variable.create("y1"), Variable.create("z1") });
 		atoms[1] = Atom.create(relations[1], new Term[] { x, y, TypedConstant.create("five") });
 		atoms[2] = Atom.create(relations[2], new Term[] { Variable.create("x1"), y, z });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y, z }, (Conjunction) Conjunction.of(atoms));
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y, z }, atoms);
 
 		// Create schema
 		Schema schema = new Schema(relations);
@@ -322,7 +320,7 @@ public class PdqTest {
 		atoms[1] = Atom.create(relations[1], new Term[] { Variable.create("x2"), Variable.create("y2"), z, w });
 		atoms[2] = Atom.create(relations[2], new Term[] { x, y, Variable.create("z3"), Variable.create("w3") });
 		atoms[3] = Atom.create(relations[3], new Term[] { Variable.create("x4"), Variable.create("y4"), Variable.create("z3"), Variable.create("w3") });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, atoms);
 
 		// Create schema
 		Schema schema = new Schema(relations);
@@ -372,7 +370,7 @@ public class PdqTest {
 		atoms[1] = Atom.create(relations[1], new Term[] { Variable.create("x13"), Variable.create("y12"), z, w });
 		atoms[2] = Atom.create(relations[2], new Term[] { x, y, Variable.create("z3"), Variable.create("w3") });
 		atoms[3] = Atom.create(relations[3], new Term[] { Variable.create("x14"), Variable.create("y14"), Variable.create("z3"), Variable.create("w3") });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, atoms);
 
 		// Create schema
 		Schema schema = new Schema(relations);
@@ -413,7 +411,7 @@ public class PdqTest {
 		atoms[1] = Atom.create(relations[1], new Term[] { Variable.create("x13"), Variable.create("y12"), z, w });
 		atoms[2] = Atom.create(relations[2], new Term[] { x, y, Variable.create("z3"), Variable.create("w3") });
 		atoms[3] = Atom.create(relations[3], new Term[] { Variable.create("x14"), Variable.create("y14"), Variable.create("z3"), Variable.create("w3") });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, atoms);
 
 		// Create schema
 		Schema schema = new Schema(relations);
@@ -444,7 +442,7 @@ public class PdqTest {
 		Atom[] atoms = new Atom[2];
 		atoms[0] = Atom.create(relations[0], new Term[] { x, y });
 		atoms[1] = Atom.create(relations[1], new Term[] { y, z });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, z }, (Conjunction) Conjunction.of(atoms));
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, z }, atoms);
 		Dependency dependency1 = TGD.create(new Atom[] { Atom.create(relations[0], new Term[] { x, y }) }, new Atom[] { Atom.create(relations[2], new Term[] { x, y }) });
 		Dependency dependency2 = TGD.create(new Atom[] { Atom.create(relations[1], new Term[] { y, z }) }, new Atom[] { Atom.create(relations[3], new Term[] { y, z }) });
 		// R2(x,y), R3(y,z) -> R0(x,w) R1(w,z)

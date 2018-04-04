@@ -55,7 +55,7 @@ public class RuntimeUtilities {
 	 */
 	public static Tuple createTuple(Attribute[] attributes, Term[] values) {
 		Preconditions.checkArgument(attributes.length == values.length);
-		Object[] output = new TypedConstant[values.length];
+		Object[] output = new Object[values.length];
 		for (int i = 0, l = values.length; i < l; i++) 
 			output[i] = Utility.cast(attributes[i].getType(), values[i].toString());
 		TupleType tupleType = TupleType.DefaultFactory.createFromTyped(attributes);

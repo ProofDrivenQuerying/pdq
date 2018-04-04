@@ -10,26 +10,24 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+
 import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
-import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * @author Efi & Gabor
@@ -290,7 +288,7 @@ public class CommonToPDQTranslator {
 				if (line.contains(".")) {
 					if (headAtom != null) { 
 						List<Variable> v = Utility.getVariables(bodyAtoms);
-						return ConjunctiveQuery.create(v.toArray(new Variable[v.size()]), (Conjunction) Conjunction.of(bodyAtoms.toArray(new Formula[bodyAtoms.size()])));
+						return ConjunctiveQuery.create(v.toArray(new Variable[v.size()]), bodyAtoms.toArray(new Atom[bodyAtoms.size()]));
 					}
 				}
 			}

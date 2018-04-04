@@ -1,14 +1,21 @@
 package uk.ac.ox.cs.pdq.algebra;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 
 /**
@@ -135,5 +142,35 @@ public class AccessTerm extends RelationalTerm {
 	@Override
 	public Integer getNumberOfChildren() {
 		return 0;
+	}
+	
+	/**
+	 * 1) RelationalTerm T is an access term for relation R with attributes a1 ...
+	 * an. Let p1 ... pk be the positions that include constants c1.. ck in them.
+	 * 
+	 * tologic() produces:
+	 * 
+	 * phi=R(tau1...tau_n) where tau_i=c_i for each p_i and tau_i= a variable x_i
+	 * for other position
+	 * 
+	 * mapping M takes ai to tau_i (we need to access the schema of R to figure out
+	 * the positions of each attribute). </pre>
+	 */
+	@Override
+	public RelationalTermAsLogic toLogic() {
+		AccessTerm at = (AccessTerm) this;
+		Relation R = at.getRelation();
+		Term[] tau = new Term[R.getArity()];
+		Map<Attribute, Term> mapping = new HashMap<>();
+		for (int index = 0; index < R.getArity(); index++) {
+			if (at.getInputConstants().containsKey(index)) {
+				tau[index] = at.getInputConstants().get(index);
+			} else {
+				tau[index] = Variable.create("x_" + index + "_"+GlobalCounterProvider.getNext("VariableName")); 
+			}
+			mapping.put(at.getOutputAttribute(index), tau[index]);
+		}
+		Formula phi = Atom.create(R, tau);
+		return new RelationalTermAsLogic(phi, mapping);
 	}
 }

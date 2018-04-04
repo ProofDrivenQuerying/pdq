@@ -39,7 +39,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
@@ -140,7 +139,7 @@ public class TestPostpruningRemoveFollowups {
 		// R3(x,y) R4(y,z) R0(x,y) R1(y,z)
 		// Postpruning should return the same plan
 
-		DatabaseParameters dbParams = DatabaseParameters.MySql;
+		DatabaseParameters dbParams = DatabaseParameters.Postgres;
 		int numberOfRelations = 2;
 
 		// Create the relations
@@ -167,7 +166,7 @@ public class TestPostpruningRemoveFollowups {
 			freeVariables.add(v);
 
 		}
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] {x,y,z}, (Conjunction) Conjunction.of(atoms));
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] {x,y,z}, atoms);
 
 		// Create all views and update the relations with the newly create views
 		Set<Atom> setOfAtoms = new LinkedHashSet<>();
@@ -282,8 +281,8 @@ public class TestPostpruningRemoveFollowups {
 				blockedNodes.add(bestNode);
 			}
 
-			Assert.assertEquals(3, successful);
-			Assert.assertEquals(7, failed);
+			Assert.assertEquals(2, successful);
+			Assert.assertEquals(8, failed);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();

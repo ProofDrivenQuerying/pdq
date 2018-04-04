@@ -229,6 +229,7 @@ private static FileWriter summary = null;
 				this.out.println("\n " + duration_s);
 			} catch (Throwable e) {
 				try {
+					e.printStackTrace();
 					summary.write(directory.getAbsolutePath() + " Crashed : "+e.getMessage()+" \n");
 					summary.flush();
 				} catch (IOException e1) {

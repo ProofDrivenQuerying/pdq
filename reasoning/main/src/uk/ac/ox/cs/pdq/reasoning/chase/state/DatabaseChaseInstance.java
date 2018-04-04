@@ -28,7 +28,6 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQueryWithInequality;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -573,12 +572,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 				}
 			}
 		}
-		ConjunctiveQuery converted = null;
-		if (convertedAtoms.size() == 1)
-			converted = ConjunctiveQuery.create(convertedFreeVariables.toArray(new Variable[convertedFreeVariables.size()]), convertedAtoms.get(0));
-		else
-			converted = ConjunctiveQuery.create(convertedFreeVariables.toArray(new Variable[convertedFreeVariables.size()]),
-					(Conjunction) Conjunction.of(convertedAtoms.toArray(new Atom[convertedAtoms.size()])));
+		ConjunctiveQuery converted = ConjunctiveQuery.create(convertedFreeVariables.toArray(new Variable[convertedFreeVariables.size()]), convertedAtoms.toArray(new Atom[convertedAtoms.size()]));
 		try {
 			return databaseInstance.answerConjunctiveQuery(converted);
 		} catch (DatabaseException e) {
@@ -610,15 +604,10 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			List<Pair<Variable,Variable>> inequalities = new ArrayList<>();
 			if (source instanceof EGD) {
 				// filter self pointing equalities
-				inequalities.add(Pair.of((Variable)source.getHead().getTerms()[0],(Variable)source.getHead().getTerms()[1]));
+				for (int i = 0; i < source.getHead().getTerms().length/2; i++)
+					inequalities.add(Pair.of((Variable)source.getHead().getTerms()[2*i],(Variable)source.getHead().getTerms()[2*i+1]));
 			}
-			if (source.getBodyAtoms().length == 1) {
-				// a ConjunctiveQueryWithInequality with an empty list of inequalities is the same as a normal CQ
-				leftQuery = ConjunctiveQueryWithInequality.create(freeVariables.toArray(new Variable[freeVariables.size()]), source.getBodyAtoms()[0],inequalities);
-			} else {
-				leftQuery = ConjunctiveQueryWithInequality.create(freeVariables.toArray(new Variable[freeVariables.size()]), (Conjunction) Conjunction.of(source.getBodyAtoms()),inequalities);
-			}
-
+			leftQuery = ConjunctiveQueryWithInequality.create(freeVariables.toArray(new Variable[freeVariables.size()]), source.getBodyAtoms(),inequalities);
 			if (triggerProperty == TriggerProperty.ALL) {
 				try {
 					results.addAll(replaceFormulaInMatches(source, databaseInstance.answerConjunctiveQuery(leftQuery)));
@@ -632,7 +621,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 				ConjunctiveQuery rightQuery = null;
 				rightQueryAtoms.addAll(Arrays.asList(source.getHeadAtoms()));
 				rightQuery = ConjunctiveQueryWithInequality.create(freeVariables.toArray(new Variable[freeVariables.size()]),
-						(Conjunction) Conjunction.of(rightQueryAtoms.toArray(new Atom[rightQueryAtoms.size()])),inequalities);
+						rightQueryAtoms.toArray(new Atom[rightQueryAtoms.size()]),inequalities);
 				try {
 					List<Match> queryResults = databaseInstance.answerQueryDifferences(leftQuery, rightQuery);
 					results.addAll(replaceFormulaInMatches(source, queryResults));

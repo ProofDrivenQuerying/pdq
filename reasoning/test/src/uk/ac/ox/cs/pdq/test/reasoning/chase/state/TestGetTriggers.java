@@ -43,19 +43,14 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  */
 public class TestGetTriggers extends PdqTest {
 	private static final int NUMBER_OF_DUMMY_DATA = 100;
-	protected DatabaseChaseInstance[] chaseState = new DatabaseChaseInstance[2];
-	private final int MYSQL = 0;
-	private final int POSTGRES = 1;
+	protected DatabaseChaseInstance[] chaseState = new DatabaseChaseInstance[1];
+	private final int POSTGRES = 0;
 
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		ExternalDatabaseManager edm = new ExternalDatabaseManager(DatabaseParameters.MySql);
+		ExternalDatabaseManager edm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 		LogicalDatabaseInstance connection =  new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm ,0);
-		connection.initialiseDatabaseForSchema(this.testSchema1);
-		this.chaseState[MYSQL] = new DatabaseChaseInstance(new ArrayList<Atom>(), connection);
-		edm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
-		connection =  new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm ,0);
 		connection.initialiseDatabaseForSchema(this.testSchema1);
 		this.chaseState[POSTGRES] = new DatabaseChaseInstance(new ArrayList<Atom>(), connection);
 	}
@@ -236,16 +231,6 @@ public class TestGetTriggers extends PdqTest {
 		state.addFacts(Lists.newArrayList(f20, f21, f22, f26, f27));
 		List<Match> matches = state.getTriggers(new Dependency[] { this.tgd2 }, TriggerProperty.ACTIVE);
 		Assert.assertEquals(1, matches.size());
-	}
-
-	@Test
-	public void testScanario2MySql() throws SQLException, DatabaseException {
-		ExternalDatabaseManager edm = new ExternalDatabaseManager(DatabaseParameters.MySql);
-		LogicalDatabaseInstance connection =  new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm ,0);
-		connection.initialiseDatabaseForSchema(createSchemaScanario2());
-		testScanario2(connection);
-		connection.dropDatabase();
-		connection.shutdown();
 	}
 
 	@Test

@@ -7,6 +7,7 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.databasemanagement.execution.ExecutionManager;
+import uk.ac.ox.cs.pdq.databasemanagement.monitor.DatabaseMonitor;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BulkInsert;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
@@ -109,6 +110,7 @@ public class ExternalDatabaseManager implements DatabaseManager {
 
 		// Execution manager.
 		executor = new ExecutionManager(this.parameters);
+		DatabaseMonitor.register(this);
 	}
 
 	/**
@@ -267,6 +269,7 @@ public class ExternalDatabaseManager implements DatabaseManager {
 			new Exception("Warning, database manager is shutting down, but the database is not dropped yet.").printStackTrace();
 		}
 		executor.shutdown();
+		DatabaseMonitor.unRegister(this);
 	}
 
 	/**

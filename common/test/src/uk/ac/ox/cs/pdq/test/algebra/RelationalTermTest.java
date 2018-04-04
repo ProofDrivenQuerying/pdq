@@ -54,7 +54,7 @@ public class RelationalTermTest extends PdqTest {
 	@Test
 	public void testProjectionTerm() {
 		try {
-			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			File schemaFile = new File("test/src/uk/ac/ox/cs/pdq/test/io/jaxb/schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
 			Attribute[] attributes = new Attribute[] { schema.getRelations()[0].getAttributes()[0], schema.getRelations()[0].getAttributes()[1] };
@@ -76,7 +76,7 @@ public class RelationalTermTest extends PdqTest {
 	@Test
 	public void testCartesianProductTerm() {
 		try {
-			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			File schemaFile = new File("test/src/uk/ac/ox/cs/pdq/test/io/jaxb/schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			AccessTerm access1 = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
 			AccessTerm access2 = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
@@ -93,7 +93,7 @@ public class RelationalTermTest extends PdqTest {
 	@Test
 	public void testDependentJoinTerm() {
 		try {
-			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			File schemaFile = new File("test/src/uk/ac/ox/cs/pdq/test/io/jaxb/schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
 			DependentJoinTerm dependentJ = DependentJoinTerm.create(access, access);
@@ -114,7 +114,7 @@ public class RelationalTermTest extends PdqTest {
 	@Test
 	public void testJoinTerm() {
 		try {
-			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			File schemaFile = new File("test/src/uk/ac/ox/cs/pdq/test/io/jaxb/schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
 			JoinTerm join = JoinTerm.create(access, access);
@@ -136,7 +136,7 @@ public class RelationalTermTest extends PdqTest {
 	@Test
 	public void testRenameTerm() {
 		try {
-			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			File schemaFile = new File("test/src/uk/ac/ox/cs/pdq/test/io/jaxb/schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
 			Attribute[] attributes = new Attribute[] { schema.getRelations()[0].getAttributes()[0], schema.getRelations()[0].getAttributes()[1] };
@@ -158,7 +158,7 @@ public class RelationalTermTest extends PdqTest {
 	@Test
 	public void testSelectionTerm() {
 		try {
-			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			File schemaFile = new File("test/src/uk/ac/ox/cs/pdq/test/io/jaxb/schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
 			Condition predicate = AttributeEqualityCondition.create(0, 1);
@@ -181,7 +181,7 @@ public class RelationalTermTest extends PdqTest {
 	@Test
 	public void testLargeRelationalTerm() {
 		try {
-			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			File schemaFile = new File("test/src/uk/ac/ox/cs/pdq/test/io/jaxb/schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
 			Condition predicate = AttributeEqualityCondition.create(0, 1);

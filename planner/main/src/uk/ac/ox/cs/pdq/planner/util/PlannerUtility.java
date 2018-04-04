@@ -10,7 +10,6 @@ import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -96,10 +95,7 @@ public class PlannerUtility {
 				predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + queryAtom.getPredicate().getName(), queryAtom.getPredicate().getArity());
 			atoms[atomIndex] = Atom.create(predicate, queryAtom.getTerms());
 		}
-		if(atoms.length == 1) 
-			return ConjunctiveQuery.create(query.getFreeVariables(), atoms[0]);
-		else 
-			return ConjunctiveQuery.create(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms));
+		return ConjunctiveQuery.create(query.getFreeVariables(), atoms);
 	}
 	
 }

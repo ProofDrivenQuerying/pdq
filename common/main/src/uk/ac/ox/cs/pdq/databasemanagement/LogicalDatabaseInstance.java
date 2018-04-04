@@ -260,9 +260,9 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		factIdNameCounter = 0;
 		Conjunction newConjunction = addFactIdToConjunction(formula.getBody(), databaseInstanceID);
 		if (formula instanceof ConjunctiveQueryWithInequality) {
-			return ConjunctiveQueryWithInequality.create(formula.getFreeVariables(), newConjunction, ((ConjunctiveQueryWithInequality) formula).getInequalities());
+			return ConjunctiveQueryWithInequality.create(formula.getFreeVariables(), newConjunction.getAtoms(), ((ConjunctiveQueryWithInequality) formula).getInequalities());
 		}
-		return ConjunctiveQuery.create(formula.getFreeVariables(), newConjunction);
+		return ConjunctiveQuery.create(formula.getFreeVariables(), newConjunction.getAtoms());
 	}
 
 	private static Conjunction addFactIdToConjunction(Formula body, int databaseInstanceID) {
@@ -366,7 +366,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		body.add(factID);
 		Conjunction conjunction = Conjunction.create(Atom.create(r, body.toArray(new Term[body.size()])),
 				Atom.create(LogicalDatabaseInstance.factIdInstanceIdMappingTable, new Term[] { factID, TypedConstant.create(databaseInstanceID) }));
-		return ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), conjunction);
+		return ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), conjunction.getAtoms());
 	}
 
 	/**

@@ -35,25 +35,5 @@ public class TestIndices extends PdqTest {
 		}
 		
 	}
-	@Test
-	public void testAddIndexMySql() {
-		Attribute attr1 = Attribute.create(Integer.class, "r1_1");
-		Attribute attr2 = Attribute.create(Integer.class, "r1_2");
-		AccessMethod am1 = AccessMethod.create("m1", new Integer[] {});
-		AccessMethod am2 = AccessMethod.create("m2", new Integer[] { 0, 1 });
-		Relation r = Relation.create("r1", new Attribute[] { attr1, attr2 }, new AccessMethod[] { am1, am2 }, new ForeignKey[] {}, false,
-				new String[] { attr1.getName(), attr2.getName() });
-		Schema mySchema = new Schema(new Relation[] {r});
-		ExternalDatabaseManager edm;
-		try {
-			edm = new ExternalDatabaseManager(DatabaseParameters.MySql);
-			edm.initialiseDatabaseForSchema(mySchema);
-			edm.dropDatabase();
-		} catch (DatabaseException e) {
-			e.printStackTrace();
-			Assert.fail();
-		}
-		
-	}
 
 }

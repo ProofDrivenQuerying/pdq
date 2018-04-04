@@ -36,7 +36,7 @@ public class IOManagerTest extends PdqTest {
 		try {													 
 			ConjunctiveQuery q = null;
 			for (int i=1; i<30; i++)
-				q = IOManager.importQuery(new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "query.xml"));
+			q = IOManager.importQuery(new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "query.xml"));
 			Assert.assertNotNull(q);
 			Assert.assertNotNull(q.getAtoms());
 			Assert.assertTrue(q.getAtoms().length > 0);
@@ -155,7 +155,6 @@ public class IOManagerTest extends PdqTest {
 		try {
 			File schemaFile = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
-
 			File ref = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "ProjectionTerm.xml");
 			File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "ProjectionTermOut.xml");
 			RelationalTerm child1 = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);

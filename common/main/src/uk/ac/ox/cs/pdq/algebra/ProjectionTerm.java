@@ -1,10 +1,19 @@
 package uk.ac.ox.cs.pdq.algebra;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
+import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
  * 
@@ -19,27 +28,28 @@ public class ProjectionTerm extends RelationalTerm {
 	protected final Attribute[] projections;
 
 	protected String toString = null;
-	
+
 	private ProjectionTerm(Attribute[] projections, RelationalTerm child) {
 		super(child.getInputAttributes(), projections);
 		Assert.assertNotNull(projections);
 		Assert.assertNotNull(child);
-		for(int outputAttributeIndex = 0; outputAttributeIndex < projections.length; ++outputAttributeIndex) 
-			Assert.assertTrue(Arrays.asList(child.getOutputAttributes()).indexOf(projections[outputAttributeIndex]) >= 0);
+		for (int outputAttributeIndex = 0; outputAttributeIndex < projections.length; ++outputAttributeIndex)
+			Assert.assertTrue(
+					Arrays.asList(child.getOutputAttributes()).indexOf(projections[outputAttributeIndex]) >= 0);
 		this.projections = projections.clone();
 		this.child = child;
 	}
 
 	@Override
 	public String toString() {
-		if(this.toString == null) {
+		if (this.toString == null) {
 			StringBuilder result = new StringBuilder();
 			result.append("Project");
 			result.append('{');
 			result.append('[');
-			for(int index = 0; index < this.projections.length; ++index) {
+			for (int index = 0; index < this.projections.length; ++index) {
 				result.append(this.projections[index]);
-				if(index < this.projections.length - 1)
+				if (index < this.projections.length - 1)
 					result.append(",");
 			}
 			result.append(']');
@@ -60,19 +70,65 @@ public class ProjectionTerm extends RelationalTerm {
 	public Attribute[] getProjections() {
 		return this.projections.clone();
 	}
-	
-    public static ProjectionTerm create(Attribute[] projections, RelationalTerm child) {
-        return Cache.projectionTerm.retrieve(new ProjectionTerm(projections, child));
-    }
-    
+
+	public static ProjectionTerm create(Attribute[] projections, RelationalTerm child) {
+		return Cache.projectionTerm.retrieve(new ProjectionTerm(projections, child));
+	}
+
 	@Override
 	public RelationalTerm getChild(int childIndex) {
 		Assert.assertTrue(childIndex == 0);
 		return this.child;
 	}
-	
+
 	@Override
 	public Integer getNumberOfChildren() {
 		return 1;
 	}
+
+	/**
+	 * 8) projection term pi_A T_1
+	 * 
+	 * where A=a1...an
+	 * 
+	 * Let (phi_1, M_1)=T_1.toLogic
+	 * 
+	 * Let x_1=M_1(a1) .... xn= Mn(an) //variables corresponding to attributes that
+	 * should remain
+	 * 
+	 * Let x_{m1} ... x_{mk} be all free variables of phi except x1.... xn
+	 * //variables that should be projected out
+	 * 
+	 * Let M'_1=M_1 restricted to a1... an
+	 * 
+	 * Return (exists xj1.... xjk phi_1, M'_1)
+	 */
+	@Override
+	public RelationalTermAsLogic toLogic() {
+		ProjectionTerm pt = (ProjectionTerm) this;
+		Attribute[] pi = pt.getProjections();
+		RelationalTerm T1 = getChildren()[0];
+		RelationalTermAsLogic t1Logic = T1.toLogic();
+		Map<Attribute, Term> mapNew = new HashMap<>();
+		for (Attribute p : pi) {
+			mapNew.put(p, t1Logic.getMapping().get(p));
+		}
+		Formula phi = t1Logic.getFormula();
+		List<Term> existentialQuantifiers = new ArrayList<>();
+		for (Attribute allAttribute : t1Logic.getMapping().keySet()) {
+			if (!mapNew.containsKey(allAttribute)) {
+				if (t1Logic.getMapping().get(allAttribute).isVariable())
+					existentialQuantifiers.add(t1Logic.getMapping().get(allAttribute));
+			}
+		}
+		Formula phiNew = addExistentialQuantifiers(phi, existentialQuantifiers);
+		
+		return new RelationalTermAsLogic(phiNew, mapNew);
+	}
+	
+	private Formula addExistentialQuantifiers(Formula phi, List<Term> freeVariables) {
+		QuantifiedFormula qf = QuantifiedFormula.of(LogicalSymbols.EXISTENTIAL, freeVariables.toArray(new Variable[freeVariables.size()]), phi); 
+		return qf;
+	}
+	
 }

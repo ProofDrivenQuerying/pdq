@@ -7,16 +7,21 @@ import org.junit.Assert;
 
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.FixedCostPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.LengthBasedCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.FixedCostPerAccessCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.TotalNumberOfOutputTuplesPerAccessCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.QueryExplainCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.TotalNumberOfOutputTuplesPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 
@@ -87,7 +92,22 @@ public class CostEstimatorFactory {
 			result = new TextBookCostEstimator(new StatisticsCollector(collectStats, eventBus), card);
 			break;
 		case BLACKBOX_DB:
-			throw new UnsupportedOperationException("BLACKBOX_DB cost estimator is not currently supported.");
+			try {
+				DatabaseParameters dbParams = DatabaseParameters.Empty;
+				dbParams.setConnectionUrl(costParams.getBlackBoxConnectionUrl());
+				dbParams.setDatabaseDriver(costParams.getBlackBoxDatabaseDriver());
+				dbParams.setDatabaseName(costParams.getBlackBoxDatabaseName());
+				dbParams.setDatabaseUser(costParams.getBlackBoxDatabaseUser());
+				dbParams.setDatabasePassword(costParams.getBlackBoxDatabasePassword());
+				dbParams.setUseInternalDatabaseManager(false);
+				DatabaseManager dbm = new ExternalDatabaseManager(dbParams);
+				dbm.initialiseDatabaseForSchema(schema);
+				result = new QueryExplainCostEstimator(dbm);
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				throw new UnsupportedOperationException("BLACKBOX_DB cost estimator is not currently supported.",e);
+			}
+			break;
 		case NUMBER_OF_OUTPUT_TUPLES_PER_ACCESS:
 			Assert.assertNotNull(costParams.getCatalog());
 			result = new TotalNumberOfOutputTuplesPerAccessCostEstimator(new StatisticsCollector(collectStats, eventBus), catalog);

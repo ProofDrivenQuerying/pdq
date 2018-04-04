@@ -22,9 +22,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedQuery;
@@ -238,14 +236,7 @@ public class IOManager {
 			}
 			newAtoms.add(Atom.create(schema.getRelation(a.getPredicate().getName()), newTerms.toArray(new Term[newTerms.size()])));
 		}
-		Formula something = Conjunction.of( newAtoms.toArray(new Atom[newAtoms.size()]));
-		if (something instanceof Atom) {
-			return ConjunctiveQuery.create(query.getFreeVariables(), (Atom) something);
-		} else if (something instanceof Conjunction) {
-			return ConjunctiveQuery.create(query.getFreeVariables(), (Conjunction) something);
-		} else {
-			return null;
-		}
+		return ConjunctiveQuery.create(query.getFreeVariables(), newAtoms.toArray(new Atom[newAtoms.size()]));
 	}
 
 	private static Term convertTo(TypedConstant term, Type type) throws Exception {

@@ -151,7 +151,7 @@ public class SelectionTest {
 	Attribute[] attributes_C = new Attribute[] {
 			Attribute.create(Integer.class, "C_CUSTKEY"),
 			Attribute.create(String.class, "C_NAME"),
-			Attribute.create(Integer.class, "C_ADDRESS"),
+			Attribute.create(String.class, "C_ADDRESS"),
 			Attribute.create(Integer.class, "C_NATIONKEY"),
 			Attribute.create(String.class, "C_PHONE"),
 			Attribute.create(Float.class, "C_ACCTBAL"),

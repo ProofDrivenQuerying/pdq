@@ -20,7 +20,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
@@ -55,12 +54,6 @@ public class TestLargeTables extends PdqTest {
 	 * For each query the example data provides one match.
 	 * @throws DatabaseException
 	 */
-	@Test
-	public void largeTableTestMySql() throws DatabaseException {
-		largeTableTest(DatabaseParameters.MySql);
-		largeTableTestWithConstantsInQuery(DatabaseParameters.MySql);
-	}
-
 	@Test
 	public void largeTableTestPostgres() throws DatabaseException {
 		largeTableTest(DatabaseParameters.Postgres);
@@ -112,7 +105,7 @@ public class TestLargeTables extends PdqTest {
 		// SIMPLE QUERY
 		Atom q1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		Atom q2 = Atom.create(this.S, new Term[] { Variable.create("x"), Variable.create("y") });
-		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { z }, Conjunction.create(q1, q2));
+		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { z }, new Atom[] {q1, q2});
 		List<Match> answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("z")));
@@ -126,7 +119,7 @@ public class TestLargeTables extends PdqTest {
 		Atom aR = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		Atom aS = Atom.create(this.S, new Term[] { Variable.create("x"), Variable.create("y") });
 		Atom aT = Atom.create(this.T, new Term[] { Variable.create("z"), Variable.create("res1"), Variable.create("res2") });
-		cq = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"), Variable.create("res2") }, (Conjunction) Conjunction.of(aR, aS, aT));
+		cq = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"), Variable.create("res2") }, new Atom[] {aR, aS, aT});
 		answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("res1")));
@@ -194,7 +187,7 @@ public class TestLargeTables extends PdqTest {
 
 		// SIMPLE QUERY
 		Atom q1 = Atom.create(this.R, new Term[] { TypedConstant.create(10000 + 51), Variable.create("y"), Variable.create("z") });
-		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { y, z }, q1);
+		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] { y, z }, new Atom[] { q1 });
 		List<Match> answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("z")));
@@ -204,7 +197,7 @@ public class TestLargeTables extends PdqTest {
 		Atom aR = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		Atom aS = Atom.create(this.S, new Term[] { TypedConstant.create(13), Variable.create("y") });
 		Atom aT = Atom.create(this.T, new Term[] { Variable.create("z"), Variable.create("res1"), Variable.create("res2") });
-		cq = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"), Variable.create("res2") }, (Conjunction) Conjunction.of(aR, aS, aT));
+		cq = ConjunctiveQuery.create(new Variable[] { Variable.create("res1"), Variable.create("res2") }, new Atom[] {aR, aS, aT});
 		answer = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { cq }));
 		Assert.assertEquals(1, answer.size());
 		Assert.assertTrue(answer.get(0).getMapping().containsKey(Variable.create("res1")));
