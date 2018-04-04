@@ -58,6 +58,10 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	public InMemoryQueryEvaluator(ConjunctiveQuery q) {
 		this.query = q;
 	}
+	public InMemoryQueryEvaluator(Schema s, ConjunctiveQuery q) {
+		this.query = q;
+		this.schema = s;
+	}
 	
 	/**
 	 * {@inheritDoc}
@@ -136,17 +140,19 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 * @throws EvaluationException the evaluation exception
 	 */
 	private TupleIterator makeScans(Atom atom) throws EvaluationException {
-//		if (!(atom.getPredicate() instanceof InMemoryTableWrapper)) {
-//			throw new EvaluationException(
-//					atom.getPredicate().getClass().getSimpleName() +
-//					" relations not supported in In-Mem query evaluator.");
+		//TOCOMMENT this needs to be implemented.
+		
+	//	if (!(atom.getPredicate() instanceof InMemoryTableWrapper)) {
+			throw new EvaluationException(
+					atom.getPredicate().getClass().getSimpleName() +
+					" relations not supported in In-Mem query evaluator.");
 //		}
 //		InMemoryTableWrapper r = (InMemoryTableWrapper) atom.getPredicate();
 //		SimpleCondition[] conditions = this.computeSelectionConditions(r.getAttributes(), atom.getTerms()); 
 //		if (conditions.length == 0) 
 //			return new MemoryScan(r.getAttributes(), r.getData());
 //		return new Selection(ConjunctiveCondition.create(conditions), new MemoryScan(r.getAttributes(), r.getData()));
-		return null;
+//		return null;
 	}
 //
 //	/**

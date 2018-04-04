@@ -14,7 +14,7 @@ public class ExamplesExecutor {
 		
 		String current = root + "example_03/";
 		String myArgs[] = new String[]{
-				"-d", current + "data3Correct.txt",
+				"-d", current + "data.txt",
 				"-p", current + "expected-plan.xml",
 				"-q", current + "query.xml",
 				"-s", current + "schema.xml",
