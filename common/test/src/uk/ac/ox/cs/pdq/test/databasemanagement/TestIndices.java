@@ -13,6 +13,10 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
+/**
+ * TOCOMMENT: WHAT IS THIS??? WHO WROTE IT??
+ *
+ */
 public class TestIndices extends PdqTest {
 
 	@Test

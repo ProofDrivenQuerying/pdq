@@ -29,7 +29,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
- * tests the creation and basic usages of a database. simpleDatabaseCreationXYZ
+ * tests the creation and basic usage of a database. simpleDatabaseCreationXYZ
  * test: - create database - create tables - add facts, - retrieve facts -
  * delete facts virtualDatabaseCreationXYZ test: - same as above but checking
  * the cache functions as well.
