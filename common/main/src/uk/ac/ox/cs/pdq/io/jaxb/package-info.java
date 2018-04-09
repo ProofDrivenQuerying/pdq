@@ -15,5 +15,7 @@
  * the adapted versions.
  * 
  * IOManager has the main functions to import export schemas and queries.
+ *  
+ * @author Gabor
  */
 package uk.ac.ox.cs.pdq.io.jaxb;
