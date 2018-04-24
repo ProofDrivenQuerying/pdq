@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
-
 /**
  *
  * @author Efthymia Tsamoura
@@ -32,10 +31,10 @@ public class AccessTerm extends RelationalTerm {
 	/** The access method to use. */
 	protected final AccessMethod accessMethod;
 
-	/**  The constants used to call the underlying access method. */
+	/** The constants used to call the underlying access method. */
 	protected final Map<Integer, TypedConstant> inputConstants;
 
-	/**  Cached string representation. */
+	/** Cached string representation. */
 	protected String toString = null;
 
 	private AccessTerm(Relation relation, AccessMethod accessMethod) {
@@ -48,18 +47,19 @@ public class AccessTerm extends RelationalTerm {
 	}
 
 	private AccessTerm(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
-		super(AlgebraUtilities.computeInputAttributes(relation, accessMethod, inputConstants), relation.getAttributes());
+		super(AlgebraUtilities.computeInputAttributes(relation, accessMethod, inputConstants),
+				relation.getAttributes());
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
 		this.relation = relation;
 		this.accessMethod = accessMethod;
 		this.inputConstants = new LinkedHashMap<>();
-		if (inputConstants!=null) {
-			for(Integer position:inputConstants.keySet()) {
+		if (inputConstants != null) {
+			for (Integer position : inputConstants.keySet()) {
 				Assert.assertTrue(position < relation.getArity());
 				Assert.assertTrue(Arrays.asList(accessMethod.getInputs()).contains(position));
 			}
-			for(java.util.Map.Entry<Integer, TypedConstant> entry:inputConstants.entrySet()) 
+			for (java.util.Map.Entry<Integer, TypedConstant> entry : inputConstants.entrySet())
 				this.inputConstants.put(entry.getKey(), entry.getValue().clone());
 		}
 	}
@@ -83,14 +83,14 @@ public class AccessTerm extends RelationalTerm {
 	public AccessMethod getAccessMethod() {
 		return this.accessMethod;
 	}
-	
+
 	public Map<Integer, TypedConstant> getInputConstants() {
 		return new LinkedHashMap<>(this.inputConstants);
 	}
 
 	@Override
 	public String toString() {
-		if(this.toString == null) {
+		if (this.toString == null) {
 			StringBuilder result = new StringBuilder();
 			result.append("Access").append('{');
 			result.append(this.relation.getName());
@@ -98,20 +98,20 @@ public class AccessTerm extends RelationalTerm {
 			result.append(this.accessMethod.getName());
 			result.append('[');
 			int shiftBack = 0;
-			for(int index = 0; index < this.accessMethod.getInputs().length; ++index) {
+			for (int index = 0; index < this.accessMethod.getInputs().length; ++index) {
 				result.append("#");
 				result.append(this.accessMethod.getInputs()[index]);
 				result.append("=");
 				TypedConstant input = inputConstants.get(this.accessMethod.getInputs()[index]);
-				if (input!=null) {
+				if (input != null) {
 					result.append(inputConstants.get(this.accessMethod.getInputs()[index]));
 					shiftBack++;
 				} else {
-					if (inputAttributes.length > index-shiftBack) {
-						result.append(inputAttributes[index-shiftBack]);
+					if (inputAttributes.length > index - shiftBack) {
+						result.append(inputAttributes[index - shiftBack]);
 					}
 				}
-				if(index < this.accessMethod.getInputs().length - 1)
+				if (index < this.accessMethod.getInputs().length - 1)
 					result.append(",");
 			}
 			result.append(']');
@@ -120,19 +120,20 @@ public class AccessTerm extends RelationalTerm {
 		}
 		return this.toString;
 	}
-	
+
 	@Override
 	public RelationalTerm[] getChildren() {
-		 return new RelationalTerm[]{};
+		return new RelationalTerm[] {};
 	}
 
-    public static AccessTerm create(Relation relation, AccessMethod accessMethod) {
-        return Cache.accessTerm.retrieve(new AccessTerm(relation, accessMethod));
-    }
-    
-    public static AccessTerm create(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
-        return Cache.accessTerm.retrieve(new AccessTerm(relation, accessMethod, inputConstants));
-    }
+	public static AccessTerm create(Relation relation, AccessMethod accessMethod) {
+		return Cache.accessTerm.retrieve(new AccessTerm(relation, accessMethod));
+	}
+
+	public static AccessTerm create(Relation relation, AccessMethod accessMethod,
+			Map<Integer, TypedConstant> inputConstants) {
+		return Cache.accessTerm.retrieve(new AccessTerm(relation, accessMethod, inputConstants));
+	}
 
 	@Override
 	public RelationalTerm getChild(int childIndex) {
@@ -143,7 +144,7 @@ public class AccessTerm extends RelationalTerm {
 	public Integer getNumberOfChildren() {
 		return 0;
 	}
-	
+
 	/**
 	 * 1) RelationalTerm T is an access term for relation R with attributes a1 ...
 	 * an. Let p1 ... pk be the positions that include constants c1.. ck in them.
@@ -154,7 +155,8 @@ public class AccessTerm extends RelationalTerm {
 	 * for other position
 	 * 
 	 * mapping M takes ai to tau_i (we need to access the schema of R to figure out
-	 * the positions of each attribute). </pre>
+	 * the positions of each attribute).
+	 * </pre>
 	 */
 	@Override
 	public RelationalTermAsLogic toLogic() {
@@ -166,7 +168,7 @@ public class AccessTerm extends RelationalTerm {
 			if (at.getInputConstants().containsKey(index)) {
 				tau[index] = at.getInputConstants().get(index);
 			} else {
-				tau[index] = Variable.create("x_" + index + "_"+GlobalCounterProvider.getNext("VariableName")); 
+				tau[index] = Variable.create("x_" + index + "_" + GlobalCounterProvider.getNext("VariableName"));
 			}
 			mapping.put(at.getOutputAttribute(index), tau[index]);
 		}
