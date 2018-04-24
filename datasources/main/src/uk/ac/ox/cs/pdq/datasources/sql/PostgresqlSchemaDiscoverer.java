@@ -25,7 +25,6 @@ import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.utility.Utility;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -97,27 +96,28 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * @see uk.ac.ox.cs.pdq.builder.discovery.sql.AbstractSQLSchemaDiscoverer#getRelationInstance(java.util.Properties, java.lang.String, java.util.List)
 	 */
 	@Override
-	protected Relation getRelationInstance(Properties properties, String relationName, Attribute[] attributes) {
-		return new PostgresqlRelationWrapper(properties, relationName, attributes);
+	protected Relation getRelationInstance(Properties props, String relationName, Attribute[] attributes) {
+		Relation relation = new Relation(relationName, attributes);
+		relation.addAccessMethod(new DatabaseAccessMethod(relation, props));
+		return relation;
 	}
 
 	/**
 	 * Gets the view instance.
 	 *
-	 * @param properties Properties
+	 * @param props Properties
 	 * @param viewName String
 	 * @param relationMap Map<String,Relation>
 	 * @return View
 	 */
 	@Override
-	protected View getViewInstance(Properties properties, String viewName, Map<String, Relation> relationMap) {
+	protected View getViewInstance(Properties props, String viewName, Map<String, Relation> relationMap) {
 		String definition = this.getViewDefinition(viewName);
-		return new PostgresqlViewWrapper(properties, this.parseViewDefinition(viewName, definition, relationMap),convertRelationMapToSchema(relationMap));
-	}
-
-	private Schema convertRelationMapToSchema(Map<String, Relation> relationMap2) {
-		Relation r[] = relationMap2.values().toArray(new Relation[relationMap2.values().size()]);
-		return new Schema(r);
+		LinearGuarded viewToRelationDependency = this.parseViewDefinition(viewName, definition, relationMap);		
+		View view = new View(viewName, relationMap.get(viewName).getAttributes());
+		view.setViewToRelationDependency(viewToRelationDependency);
+		view.addAccessMethod(new DatabaseAccessMethod(view, props));
+		return view;
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		List<Term> freeTerms = freeTermsAndAttributes.getLeft();
 		List<Attribute> attributes = freeTermsAndAttributes.getRight();
 		Atom[] right = atoms.values().toArray(new Atom[atoms.values().size()]);
-		return LinearGuarded.create(Atom.create(Relation.create(viewName, attributes.toArray(new Attribute[attributes.size()])), freeTerms.toArray(new Term[freeTerms.size()])), right);
+		return LinearGuarded.create(Atom.create(new Relation(viewName, attributes.toArray(new Attribute[attributes.size()])), freeTerms.toArray(new Term[freeTerms.size()])), right);
 	}
 	
 	/**

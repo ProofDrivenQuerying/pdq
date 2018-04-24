@@ -1,0 +1,151 @@
+package uk.ac.ox.cs.pdq.runtime.exec.spliterator;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import com.google.common.base.Preconditions;
+import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.util.TupleType;
+
+/**
+ * An executable access plan. 
+ * 
+ * Note that the child field in an {@code Access} instance is not used, but 
+ * instead has an underlying {@code AccessMethod}. 
+ * 
+ * @author Tim Hobson
+ *
+ */
+public class Access extends UnaryExecutablePlan {
+
+	// Dynamic input.
+	protected Iterator<Tuple> inputTuples;
+
+	public Access(Plan plan) {
+		super(plan);
+		// Check compatibility with the given Plan instance.
+		Preconditions.checkArgument(plan instanceof AccessTerm);
+	}
+
+	@Override
+	public UnaryPlanSpliterator spliterator() {
+
+		AccessTerm accessTerm = (AccessTerm) this.getDecoratedPlan();
+
+		Spliterator<Tuple> underlying = null;
+
+		// Case 1: the underlying access method has no input attributes.
+		if (accessTerm.getAccessMethod().inputAttributes().length == 0)
+			underlying = accessTerm.getAccessMethod().access().spliterator();
+
+		// Case 2: the access method has input attributes but the AccessTerm does not 
+		// (i.e. if all of the access method inputs are supplied by input constants).
+		if (accessTerm.getAccessMethod().inputAttributes().length != 0 && 
+				accessTerm.getInputAttributes().length == 0)
+			underlying = accessTerm.getAccessMethod().access(this.constantInput()).spliterator();
+
+		// Case 3: the AccessTerm has inputs.
+		if (accessTerm.getInputAttributes().length != 0) {
+			Preconditions.checkState(this.inputTuples != null && this.inputTuples.hasNext(), 
+					"Missing dynamic input accessing relation: " + ((AccessTerm) this.getDecoratedPlan()).getRelation().getName());
+			underlying = accessTerm.getAccessMethod().access(this.combineInputs()).spliterator();
+		}
+		
+		return new AccessSpliterator(underlying);
+	}
+
+	@Override
+	public void setInputTuples(Iterator<Tuple> inputTuples) {
+		this.inputTuples = inputTuples;
+	}
+
+	Relation getRelation() {
+		return ((AccessTerm) this.getDecoratedPlan()).getRelation();
+	}
+
+	@Override
+	public void close() {
+		this.inputTuples = null;
+		// TODO: the AccessTerm's AccessMethod does the actual I/O. Should that be closed here?  
+	}
+	
+	/*
+	 * Converts the inputConstants map into an iterator over a single tuple, 
+	 * for use in the case where there is no dynamic input.
+	 */
+	private Iterator<Tuple> constantInput() {
+		AccessTerm accessTerm = (AccessTerm) this.getDecoratedPlan();
+		Preconditions.checkState(accessTerm.getInputAttributes().length == 0);
+		Preconditions.checkState(accessTerm.getInputConstants().size() != 0);
+
+		Attribute[] inputAttributes = accessTerm.getAccessMethod().inputAttributes();
+		List<Tuple> constantInput = new ArrayList<Tuple>();
+		TupleType tt = TupleType.createFromTyped(inputAttributes);
+		Object[] values = new Object[tt.size()];
+
+		// Since the AccessTerm has no input attributes, the input constants must provide
+		// all inputs to the underlying AccessMethod.
+		for (int i = 0; i != inputAttributes.length; i++)
+			values[i] = accessTerm.getInputConstants().get(inputAttributes[i]).getValue();
+		constantInput.add(tt.createTuple(values));
+		return constantInput.iterator();
+	}
+
+	/*
+	 * Takes the inputTuples iterator and combines with the input constants.
+	 */
+	private Iterator<Tuple> combineInputs() {
+
+		AccessTerm accessTerm = (AccessTerm) this.getDecoratedPlan();
+		if (accessTerm.getInputConstants().size() == 0)
+			return this.inputTuples;
+		return new CombinedInputsIterator();
+	}
+
+	private class CombinedInputsIterator implements Iterator<Tuple> {
+
+		Attribute[] allInputAttributes = ((AccessTerm) getDecoratedPlan()).getAccessMethod().inputAttributes(true);
+		Map<Attribute, TypedConstant> inputConstants = ((AccessTerm) getDecoratedPlan()).getInputConstants();
+		TupleType tt = TupleType.createFromTyped(allInputAttributes);
+
+		@Override
+		public boolean hasNext() {
+			return inputTuples.hasNext();
+		}
+
+		@Override
+		public Tuple next() {
+			// Combine the input constants with the dynamic input tuple.
+			Tuple dynamicInput = inputTuples.next();
+			Object[] values = new Object[tt.size()];
+			int dynamicCount = 0;
+			for (int i = 0; i != this.allInputAttributes.length; i++) {
+				values[i] = inputConstants.containsKey(allInputAttributes[i]) ? 
+						inputConstants.get(allInputAttributes[i]).getValue() : 
+							dynamicInput.getValue(dynamicCount++);
+			}
+			return tt.createTuple(values);
+		}
+	}
+
+	private class AccessSpliterator extends UnaryPlanSpliterator {
+
+		public AccessSpliterator(Spliterator<Tuple> childSpliterator) {
+			super(childSpliterator);
+		}
+
+		@Override
+		public boolean tryAdvance(Consumer<? super Tuple> action) {
+			return childSpliterator.tryAdvance(action);
+		}
+	}
+
+}

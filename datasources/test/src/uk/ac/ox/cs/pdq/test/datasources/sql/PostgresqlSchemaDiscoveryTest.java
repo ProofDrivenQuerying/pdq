@@ -15,15 +15,16 @@ import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.sql.PostgresqlSchemaDiscoverer;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 
 /**
  * The Class PostgresqlSchemaDiscoveryTest.
- * This test requires "tpch_0001" database in postgres, username: "root", password: "root"
  */
-public class PostgresqlSchemaDiscoveryTest {
+public class PostgresqlSchemaDiscoveryTest extends PdqTest {
 
 	/** The schema. */
 	private Schema schema = null;
@@ -31,17 +32,17 @@ public class PostgresqlSchemaDiscoveryTest {
 	/**
 	 * The Class Relation.
 	 */
-	private static class Relation {
+	private static class TmpRelation {
 		
 		/** The attributes. */
 		String[] attributes;
 		
 		/** The bindings. */
-		AccessMethod[] bindings;
+		AccessMethodGenerator bindings;
 	}
 	
 	/** The relations. */
-	private Map<String, Relation> relations = new LinkedHashMap<>();
+	private Map<String, TmpRelation> relations = new LinkedHashMap<>();
 	
 	/** The relation names. */
 	private String[] relationNames = new String[] {"customer", "lineitem", "nation", "orders",
@@ -80,9 +81,11 @@ public class PostgresqlSchemaDiscoveryTest {
 		properties.put("driver","org.postgresql.Driver");		
 		int i = 0;
 		for(String n: this.relationNames) {
-			Relation r = new Relation();
+			TmpRelation r = new TmpRelation();
 			r.attributes = this.attributesNames[i];
-			r.bindings = new AccessMethod[]{AccessMethod.create(this.bindingPositions[i])};
+			
+			
+			r.bindings = new AccessMethodGenerator(this.bindingPositions[i]);
 			this.relations.put(n, r);
 			i++;
 		}
@@ -122,11 +125,11 @@ public class PostgresqlSchemaDiscoveryTest {
 		properties.put("database", "tpch_0001");
 		properties.put("username", "root");
 		properties.put("password", "root");
-		Map<String, uk.ac.ox.cs.pdq.db.Relation> map = new LinkedHashMap<>();
-		map.put("customer", uk.ac.ox.cs.pdq.db.Relation.create("customer", this.makeAttributes(this.attributesNames[0])));
-		map.put("lineitem", uk.ac.ox.cs.pdq.db.Relation.create("lineitem", this.makeAttributes(this.attributesNames[1])));
-		map.put("orders", uk.ac.ox.cs.pdq.db.Relation.create("orders", this.makeAttributes(this.attributesNames[3])));
-		map.put("part", uk.ac.ox.cs.pdq.db.Relation.create("part", this.makeAttributes(this.attributesNames[4])));
+		Map<String, Relation> map = new LinkedHashMap<>();
+		map.put("customer", new Relation("customer", this.makeAttributes(this.attributesNames[0])));
+		map.put("lineitem", new Relation("lineitem", this.makeAttributes(this.attributesNames[1])));
+		map.put("orders", new Relation("orders", this.makeAttributes(this.attributesNames[3])));
+		map.put("part", new Relation("part", this.makeAttributes(this.attributesNames[4])));
 		PostgresqlSchemaDiscoverer disco = new PostgresqlSchemaDiscoverer();
 		disco.setProperties(properties);
 //		disco.parseViewDefinition(
@@ -205,9 +208,8 @@ public class PostgresqlSchemaDiscoveryTest {
 	@Test
 	public void testAccessMethodMethods() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
-			int i = 0;
 			for (AccessMethod b: r.getAccessMethods()) 
-				Assert.assertArrayEquals(b.getInputs(), this.relations.get(r.getName()).bindings[i++].getInputs());
+				Assert.assertArrayEquals(b.getInputs(), this.relations.get(r.getName()).bindings.getInputs());
 		}
 	}
 

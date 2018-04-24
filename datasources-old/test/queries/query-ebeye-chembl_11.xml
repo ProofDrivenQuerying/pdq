@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query name="Example 1" description="" type="conjunctive">
+	<body>
+
+
+		<atom name="EBEYETarget">
+			<variable name="organism" />
+			<constant value="CHEMBL2433" />
+			<variable name="target_component_id" />
+		</atom>
+
+
+	</body>
+	<head name="Q">
+		<variable name="organism" />
+		<variable name="target_component_id" />
+	</head>
+
+</query>

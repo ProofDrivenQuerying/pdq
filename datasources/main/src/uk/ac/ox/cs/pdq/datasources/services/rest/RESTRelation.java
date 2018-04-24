@@ -41,11 +41,11 @@ import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicyViolationException;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsageViolationExceptionHandler;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
-import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
-import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -107,7 +107,8 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 			MediaType mimeType, 
 			String resultDelim,
 			Collection<UsagePolicy> policies) {
-		super(name, attributes, accessMethods);
+		super(name, attributes);
+		this.addAccessMethods(accessMethods);
 		Preconditions.checkArgument(url != null);
 		Preconditions.checkArgument(policies != null);
 

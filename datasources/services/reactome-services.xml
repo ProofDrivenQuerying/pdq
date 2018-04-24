@@ -4,6 +4,7 @@
 		<input-method name="id"  		type="path-element" template="/{1}"/>
 	</input-methods>
 	
+	<!--  This does not exist any more -->
 	<service
 		name="PathwayBySpecies"
 		protocol="REST"
@@ -27,6 +28,7 @@
 	</service>
 	
 	
+	<!--  This does not exist any more -->
 	<service
 		name="PathwayById"
 		protocol="REST"
@@ -49,8 +51,9 @@
 		<access-method type="LIMITED" name="reactome_pathway_2" inputs="1"   cost="1.0" />
 	</service>
 	
-	<service
-		name="OrganismById"
+	<!--  This does not exist any more -->
+	<service   
+		name="OrganismById" 
 		protocol="REST"
 		url="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/RESTfulWS/queryById/Species" 
 		media-type="application/xml"

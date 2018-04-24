@@ -1,0 +1,151 @@
+\section{Service descriptions}
+The attached files named ``google-services.xml'' and
+``yahoo-services.xml'' are examples our service descriptions.
+
+\subsection{Definitions} 
+In the following, capitalized names correspond to actual classes in the
+code:
+\begin{itemize}
+    \item a {\em \code{Service}} is an implementation or
+      \code{Relation}, whose \code{access()} method performs the an access
+      with input and output tuples, hiding all the details about how
+      it is actually done.
+    \item a {\em \code{ServiceRepository}} is a collection of \code{Service}s
+    \item a {\em \code{UsagePolicy}}, is a rule that a service vendor imposes on
+      users (e.g. max per-day request, max per-day results, paging,
+      monetary cost, ``backoff'' policy, etc.)
+    \item an {\em \code{InputMethod}} is a scheme imposed on the user to provide
+      input value (e.g. URL params, URL path element, batch inputs, etc.)
+    \item an {\em \code{OutputMethod}} is a schema to extract a piece of results
+      (that usually comes as a tree) and put it into a
+      tuple. Currently, this is expressed as a path.
+\end{itemize}
+
+\subsection{Service descriptions structure}
+The service description files are structured as follows:
+\begin{itemize}
+    \item each represent exactly one \code{ServiceRepository}
+    \item a \code{ServiceRepository} may define a set of common usage
+      policies (shared across all its services)
+    \item a \code{ServiceRepository} may define a set of common input methods
+      (shared across all its services)
+\end{itemize}
+
+Then follow a collection of Services, each one is structured as
+follows:
+\begin{itemize}
+    \item a \code{Service} has a name (the relation name), a protocol, some
+      base URI, link to the online documentation, and a path fragment
+      defining how sequential results are delimited.
+    \item a \code{Service} may define specific usage policies and input
+      methods.
+    \item then comes a list of static inputs and attributes. These may
+      be interleaves, but the order is important.
+    \item finally, comes a list of access methods, with the usual
+      name, type, inputs positions, and (currently fixed) cost.
+\end{itemize}
+
+\subsection{Inputs and attributes}
+Static inputs are typical inputs that are required for the service to
+function, but have little (or nothing) to do with the results content.
+They are specified at the level of a single Service as they may be
+different from one \code{Service} to another in a single \code{ServiceRepository}.
+They are used during an access to form the request, but they do not
+appear as part of the relation's attribute.
+Each static input is associated with an \code{InputMethod}, and possibly a
+static value.
+
+\code{Attribute}s are the actual attributes of the \code{Service}/\code{Relation}.
+In addition to the usual type, that are associated with an
+\code{InputMethod} (if they can be used as inputs), and an output path.
+Some attributes may be used as both inputs and outputs, in which case,
+they required both input and output methods.
+However, sometimes an attribute can only be used as an input, in which
+case, it is not always possible to get a value for it from the service
+response.
+For instance, the YahooPlaces has a ``keyword'' attribute. If used, it
+is possible to place the input value in the output tuple.
+When it is not used, say the woeid was used as input instead, the
+attributes will have no value in the resulting tuples.
+
+The limited access method's input positions corresponds to attributes
+only (i.e. static inputs are ignored).
+
+\subsection{Input and output methods}
+The rationale for introducing the input and output method was to avoid
+(or a least postpone) the need for defining complex types in Java
+class.
+It is easy to get caught into defining classes for every complex type
+we come across, and I am afraid we would have to maintain a lot of
+those if we follow this path.
+
+What I came up with may be perfectible, but I think it will allows us
+to cover a lot of cases will sticking to simple type for our relation
+attributes.
+You will notice that some input methods feature a ``template''
+attribute, with values of the form ``.type('{1}')'', such as (in the
+google file)
+
+\begin{verbatim}
+    <input-method name="locations" type="url-param" template="{1},{2}"  />
+\end{verbatim}
+
+When an attribute or static input is associated with such an input
+method, it must specify where in the template its value will be
+placed. For instance, 
+
+\begin{verbatim}
+    <attribute name="latitude"  input-method="locations.1" path="location/lat" ... />
+    <attribute name="longitude" input-method="locations.2" path="location/lng" ... /> 
+\end{verbatim}
+
+An access with input tuple (``33.5'', ``-142.1'') will form a URL
+param ``locations=33.5,-142.1''.
+
+The outpath extract scheme is primitive for now, i.e. does now always
+very complex expression. But it can already let us ``simplify''
+complex type, as in the latitude/longitude case above.
+
+\subsection{Usage policies}
+
+One can define usage policies for various kind of cases. Usage
+policies are class than implement either or both of the
+\code{PreAccessUsagePolicy} and \code{PostAccessUsagePolicy}.
+
+The actual behaviour of this method is proper to each implementation.
+A usage policy may for instance,
+\begin{inparaenum}[(i)]
+  \item put the current thread to sleep for a given period of time if
+    the service requires the client to wait before sending a request,
+  \item throw a \code{UsagePolicyViolationException} if the policy
+    prevent the access complitaly (\eg a quote was reached),
+  \item modify the service request building process (\eg if paging is
+    required to obtained a complete results for a single access),
+\end{inparaenum}
+etc.
+
+The \code{UsagePolicy} classes follow an event based architecture.
+Pre- and post-access events are generate for each access. A policy may
+have to pre- and/or post-process access, which explains why they may
+implement the \code{processAccessRequest(RESTRequestEvent event)} and
+\code{processAccessResponse(RESTResponseEvent event)} methods. The
+\code{RESTRequestEvent} and \code{RESTResponseEvent} events given as
+parameters to these method, contains the information about the access,
+its inputs and outputs. The policy may use that information to
+determine whether there is a violation, or event modify them, \eg a
+paging policy will adapter the request to add page select information.
+
+Each \code{Service} may be initialized with a collection of
+\code{UsagePolicy}s or register/unregister policies at runtime.
+Policies register at the service repository level are shared by all
+services in the repository, \ie any limit enforced by the policies
+must be globally satisified by all services. For instance, a shared
+policies of $n$ requests per day, will generate an
+\code{AccessException} if the limit is reached through any
+combinations of accesses.
+
+A service may or may not adhere to shared policy. For a service to adhere to a
+policy, the service defintion must referred to the policy by its name
+only.
+If a policy is fully defined in a single service definition, the scope
+of that policy will that service exclusively.

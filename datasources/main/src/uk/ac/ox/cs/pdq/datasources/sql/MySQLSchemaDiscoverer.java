@@ -25,7 +25,6 @@ import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.utility.Utility;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -41,7 +40,7 @@ import uk.ac.ox.cs.pdq.util.Triple;
  *
  */
 public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
-	
+
 	private Map<String, Relation> relationMap;
 
 	/*
@@ -88,9 +87,10 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * @see uk.ac.ox.cs.pdq.builder.discovery.sql.AbstractSQLSchemaDiscoverer#getRelationInstance(java.util.Properties, java.lang.String, java.util.List)
 	 */
 	@Override
-	protected Relation getRelationInstance(Properties props,
-			String relationName, Attribute[] attributes) {
-		return new SQLRelationWrapper(props, relationName, attributes);
+	protected Relation getRelationInstance(Properties props, String relationName, Attribute[] attributes) {
+		Relation relation = new Relation(relationName, attributes);
+		relation.addAccessMethod(new DatabaseAccessMethod(relation, props));
+		return relation;
 	}
 
 	/**
@@ -102,14 +102,13 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * @return View
 	 */
 	@Override
-	protected View getViewInstance(Properties props, String viewName,
-			Map<String, Relation> relationMap) {
+	protected View getViewInstance(Properties props, String viewName, Map<String, Relation> relationMap) {
 		String definition = this.getViewDefinition(viewName);
-		return new SQLViewWrapper(props, this.parseViewDefinition(viewName, definition, relationMap),convertRelationMapToSchema(relationMap));
-	}
-	private Schema convertRelationMapToSchema(Map<String, Relation> relationMap2) {
-		Relation r[] = relationMap2.values().toArray(new Relation[relationMap2.values().size()]);
-		return new Schema(r);
+		LinearGuarded viewToRelationDependency = this.parseViewDefinition(viewName, definition, relationMap);		
+		View view = new View(viewName, relationMap.get(viewName).getAttributes());
+		view.setViewToRelationDependency(viewToRelationDependency);
+		view.addAccessMethod(new DatabaseAccessMethod(view, props));
+		return view;
 	}
 
 	/**
@@ -124,7 +123,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 				Connection connection = getConnection(this.properties);
 				Statement stmt = connection.createStatement();
 				ResultSet rs = stmt.executeQuery("SHOW CREATE VIEW " + viewName);
-		) {
+				) {
 			if (rs.next()) {
 				return rs.getString(2);
 			}
@@ -147,16 +146,16 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	protected LinearGuarded parseViewDefinition(String viewDef, Map<String, Relation> relationMap) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	/** The Constant TOP_PATTERN. */
 	private static final String TOP_PATTERN = "select (?<select>.*) from (?<from>.*) where (?<where>.*)";
-	
+
 	/** The Constant ALIAS_PATTERN. */
 	private static final String ALIAS_PATTERN = "((?<alias>\\w*)\\.)?(?<attribute>\\w*)(\\s*as\\s*(?<renamed>\\w*))?";
-	
+
 	/** The Constant NESTED_CONJUNCTION_PATTERN. */
 	private static final String NESTED_CONJUNCTION_PATTERN = "\\((?<condition>.*)(\\s*and\\s*(?<rest>.*))+?\\)";
-	
+
 	/** The Constant CONDITION_PATTERN. */
 	private static final String CONDITION_PATTERN = "\\((?<condition>.*)\\)";
 
@@ -191,9 +190,9 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		List<Term> freeTerms = freeTermsAndAttributes.getLeft();
 		List<Attribute> attributes = freeTermsAndAttributes.getRight();
 		Atom[] right = atoms.values().toArray(new Atom[atoms.values().size()]);
-		return LinearGuarded.create(Atom.create(Relation.create(viewName, attributes.toArray(new Attribute[attributes.size()])), freeTerms.toArray(new Term[freeTerms.size()])), right);
+		return LinearGuarded.create(Atom.create(new Relation(viewName, attributes.toArray(new Attribute[attributes.size()])), freeTerms.toArray(new Term[freeTerms.size()])), right);
 	}
-	
+
 	/**
 	 * Parse a SQL from clause and returns a map from relation aliases to 
 	 * predicates featuring fresh variables.
@@ -220,7 +219,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Parse a SQL where clause and returns a map from relation aliases to 
 	 * predicates featuring fresh variables.
@@ -292,7 +291,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		}
 		return Pair.of(terms, attributes);
 	}
-	
+
 	/**
 	 * Parses the alias.
 	 *
@@ -316,7 +315,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		if (Strings.isNullOrEmpty(attribute)) {
 			throw new IllegalArgumentException("Not a valid alias clause in view definition " + token);
 		}
-		
+
 		Atom pred = null;
 		Integer index = null;
 		Attribute att = null;
@@ -340,7 +339,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		}
 		return new Triple<>(pred, index, att);
 	}
-	
+
 	/**
 	 * Parses the constant.
 	 *
@@ -350,24 +349,22 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * given attribute and its position.
 	 */
 	private Pair<Term, Attribute> parseConstant(String token, Collection<Atom> atoms) {
-//		String alias = null;
 		String attribute = null;
 		String renamed = null;
 		Matcher m = Pattern.compile(ALIAS_PATTERN, Pattern.CASE_INSENSITIVE).matcher(token);
 		if (m.find()) {
-//			alias = m.group("alias").trim();
 			attribute = m.group("attribute").trim();
 			renamed = m.group("renamed").trim();
 		}
 		if (Strings.isNullOrEmpty(attribute)) {
 			throw new IllegalArgumentException("Not a valid select clause in view definition " + token);
 		}
-		
+
 		Term term = null;
 		Attribute att = null;
 		if (attribute != null
 				&& ((attribute.startsWith("\"") && attribute.endsWith("\""))
-				|| (attribute.startsWith("'") && attribute.endsWith("'")))) {
+						|| (attribute.startsWith("'") && attribute.endsWith("'")))) {
 			term = TypedConstant.create(attribute.substring(1, attribute.length() - 1));
 		}
 		if (renamed != null && !renamed.isEmpty()) 

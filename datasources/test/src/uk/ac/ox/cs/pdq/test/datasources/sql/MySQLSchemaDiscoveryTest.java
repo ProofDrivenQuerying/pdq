@@ -48,7 +48,7 @@ public class MySQLSchemaDiscoveryTest {
 					"part", "partsupp", "region", "supplier"};
 
 	/** The binding positions. */
-	private Integer[][] bindingPositions = new Integer[][] {{}, {}, {}, {}, {}, {}, {}, {}};
+	protected Integer[][] bindingPositions = new Integer[][] {{}, {}, {}, {}, {}, {}, {}, {}};
 	
 	/** The attributes names. */
 	private String[][] attributesNames = new String[][] {
@@ -88,7 +88,7 @@ public class MySQLSchemaDiscoveryTest {
 		for(String n: this.relationNames) {
 			Relation r = new Relation();
 			r.attributes = this.attributesNames[i];
-			r.bindings = new AccessMethod[]{AccessMethod.create(this.bindingPositions[i])};
+//			r.bindings = new AccessMethod[]{AccessMethod.create(this.bindingPositions[i])};
 			this.relations.put(n, r);
 			i++;
 		}

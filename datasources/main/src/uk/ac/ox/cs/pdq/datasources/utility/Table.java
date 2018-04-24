@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Spliterator;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Interner;
@@ -13,6 +18,8 @@ import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 /**
@@ -38,9 +45,7 @@ public class Table implements Result, Iterable<Tuple> {
 	 */
 	private Interner<Tuple> interner = Interners.newWeakInterner();
 
-
-	/** TOCOMMENT:??? If true, tuple added to the table are first interned. */
-  
+	/** If true, tuple added to the table are first interned. */
 	private final boolean internTuples;
 
 	/**
@@ -66,6 +71,7 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Gets the type.
 	 *
 	 * @return the tuple type of the table
 	 */
@@ -117,6 +123,7 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Gets the column.
 	 *
 	 * @param <T> the generic type
 	 * @param c Column
@@ -133,6 +140,7 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Contains.
 	 *
 	 * @param t Input tuple
 	 * @return returns true if the input tuple is contained in the current table
@@ -198,6 +206,7 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Columns.
 	 *
 	 * @return the number of columns
 	 */
@@ -206,6 +215,7 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Iterator.
 	 *
 	 * @return a resetable tuple iterator over the table's tuples.
 	 * @see java.lang.Iterable#iterator()
@@ -246,6 +256,38 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Creates a Spliterator over the elements of the table.
+	 */
+	@Override
+	public Spliterator<Tuple> spliterator() {
+		return this.data.spliterator();
+	}
+
+    /**
+     * Returns a {@code Collector} that accumulates the input elements into a
+     * new {@code Table}.
+     *
+     * @param <T> the type of the input elements
+     * @return a {@code Collector} which collects all the input elements into a
+     * {@code List}, in encounter order
+     */
+    public static Collector<Tuple, Table, Table> toTable(Supplier<Table> supplier) {
+    	
+    	// old: Supplier<Table> supplier = (Supplier<Table>) Table::new;
+    	BiConsumer<Table, Tuple> accumulator = (table, tuple) -> table.appendRow(tuple);
+    	BinaryOperator<Table> combiner = (table1, table2) -> {
+    		table1.appendRows(table2);
+    		return table1;
+    	};
+    	
+    	return Collector.of(supplier, accumulator, combiner, 
+    			Collector.Characteristics.CONCURRENT, 
+    			Collector.Characteristics.IDENTITY_FINISH, 
+    			Collector.Characteristics.UNORDERED);
+    }
+    
+	/**
+	 * Gets the header.
 	 *
 	 * @return the table header
 	 */
@@ -263,6 +305,7 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Checks for header.
 	 *
 	 * @return true, if the table has a non-empty header
 	 */
@@ -272,6 +315,7 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Gets the data.
 	 *
 	 * @return the data contained in the table as a list of tuples.
 	 */

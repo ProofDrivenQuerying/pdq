@@ -1,0 +1,59 @@
+package uk.ac.ox.cs.pdq.runtime.exec.spliterator;
+
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.StreamSupport;
+
+import jersey.repackaged.com.google.common.base.Preconditions;
+import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
+import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
+import uk.ac.ox.cs.pdq.util.Tuple;
+
+/**
+ * An executable projection plan. 
+ * 
+ * @author Tim Hobson
+ *
+ */
+public class Projection extends UnaryExecutablePlan {
+
+	private final Function<Tuple, Tuple> projectionFunction;
+
+	public Projection(Plan plan) {
+		super(plan);
+		// Check compatibility with the given Plan instance.
+		Preconditions.checkArgument(plan instanceof ProjectionTerm);
+		
+		// Assign the (decorated) child plan to the child field.
+		this.child = PlanDecorator.decorate(this.decoratedPlan.getChildren()[0]); 
+		
+		// Assign the projection function (as a closure).
+		this.projectionFunction = ExecutablePlan.tupleProjector(plan.getChildren()[0].getOutputAttributes(), 
+				((ProjectionTerm) plan).getProjections());
+	}
+	
+	@Override
+	public Spliterator<Tuple> spliterator() {
+		return new ProjectionSpliterator(this.child.spliterator());
+	}
+
+	public Function<Tuple, Tuple> getProjectionFunction() {
+		return this.projectionFunction;
+	}
+	
+	private class ProjectionSpliterator extends UnaryPlanSpliterator {
+
+		public ProjectionSpliterator(Spliterator<Tuple> childSpliterator) {
+			super(childSpliterator);
+		}
+
+		@Override
+		public boolean tryAdvance(Consumer<? super Tuple> action) {
+			return StreamSupport.stream(this.childSpliterator, false)
+					.map(projectionFunction)
+					.spliterator().tryAdvance(action);
+		}
+	}
+}

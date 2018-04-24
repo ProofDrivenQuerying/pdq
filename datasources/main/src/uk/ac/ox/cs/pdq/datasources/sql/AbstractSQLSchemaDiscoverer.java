@@ -40,7 +40,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	protected Properties properties = null;
 
 	protected Schema discovered = null;
-	
+
 	/**
 	 *
 	 * @param p Properties
@@ -75,14 +75,11 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 			String database = this.properties.getProperty("database");
 			log.info("Discovering schema '" + url + database + "'... ");
 			try {
-//				if (driver != null) {
-					Class.forName(driver);
-//				}
+				Class.forName(driver);
 				Collection<Relation> relations = new ArrayList<>(this.discoverRelations());
 				Map<String, Relation> relationMap = new LinkedHashMap<>();
-				for (Relation r: relations) {
+				for (Relation r: relations) 
 					relationMap.put(r.getName(), r);
-				}
 				this.discoverForeignKeys(relationMap);
 				relations.addAll(this.discoverViews(relationMap));
 				this.discovered =  new Schema(relations.toArray(new Relation[relations.size()]));
@@ -92,7 +89,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 		}
 		return this.discovered;
 	}
-	
+
 	/**
 	 *
 	 * @param databaseName the database name
@@ -100,7 +97,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	 * the given database.
 	 */
 	protected abstract String getRelationsDiscoveryStatement(String databaseName);
-	
+
 	/**
 	 *
 	 * @return a collection of relations stored in the underlying database
@@ -114,8 +111,8 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 
 		// Fetch relations from the database
 		try(Connection connection = getConnection(this.properties);
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery(this.getRelationsDiscoveryStatement(databaseName))) {
+				Statement stmt = connection.createStatement();
+				ResultSet rs = stmt.executeQuery(this.getRelationsDiscoveryStatement(databaseName))) {
 			if (rs.next()) {
 				do {
 					Relation r = this.discoverRelation(rs.getString(1));
@@ -129,11 +126,11 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 			log.error(e);
 			throw e;
 		}
-		
-		
+
+
 		return result.values();
 	}
-	
+
 	/**
 	 *
 	 * @param relationName the relation name
@@ -143,7 +140,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	protected String getRelationDiscoveryStatement(String relationName) {
 		return "SELECT * FROM " + relationName + " LIMIT 1";
 	}
-	
+
 	/**
 	 * Gets the relation instance.
 	 *
@@ -153,7 +150,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	 * @return an database-specific instance of Relation
 	 */
 	protected abstract Relation getRelationInstance(Properties p, String relationName, Attribute[] attributes);
-	
+
 	/**
 	 * Gets the view instance.
 	 *
@@ -162,9 +159,8 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	 * @param relationMap Map<String,Relation>
 	 * @return an database-specific instance of View
 	 */
-	protected abstract View getViewInstance(Properties p,
-			String viewName, Map<String, Relation> relationMap);
-	
+	protected abstract View getViewInstance(Properties p, String viewName, Map<String, Relation> relationMap);
+
 	/**
 	 *
 	 * @param relationName the relation name
@@ -173,8 +169,8 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	 */
 	public Relation discoverRelation(String relationName) throws BuilderException {
 		try(Connection connection = getConnection(this.properties);
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery(this.getRelationDiscoveryStatement(relationName))) {
+				Statement stmt = connection.createStatement();
+				ResultSet rs = stmt.executeQuery(this.getRelationDiscoveryStatement(relationName))) {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			List<Attribute> attributes = new ArrayList<>();
 			for (int i = 0, l = rsmd.getColumnCount(); i < l; i++) {
@@ -188,7 +184,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 			throw new BuilderException(e.getMessage(), e);
 		}
 	}
-	
+
 	/**
 	 *
 	 * @param relationName the relation name
@@ -199,7 +195,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 		return "SELECT count(*) FROM " + relationName;
 	}
 
-	
+
 	/**
 	 * Discover relation size.
 	 *
@@ -209,8 +205,8 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	 */
 	public int discoverRelationSize(String relationName) throws SQLException {
 		try(Connection connection = getConnection(this.properties);
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery(this.getRelationSizeDiscoveryStatement(relationName))) {
+				Statement stmt = connection.createStatement();
+				ResultSet rs = stmt.executeQuery(this.getRelationSizeDiscoveryStatement(relationName))) {
 			if (rs.next()) {
 				return rs.getInt(1);
 			}
@@ -221,7 +217,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 *
 	 * @param relationName the relation name
@@ -239,8 +235,8 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	public void discoverForeignKeys(Map<String, Relation> relationMap) throws BuilderException {
 		for (String relationName: relationMap.keySet()) {
 			try(Connection connection = getConnection(this.properties);
-				Statement stmt = connection.createStatement();
-				ResultSet rs = stmt.executeQuery(this.getForeignKeyDiscoveryStatement(relationName))) {
+					Statement stmt = connection.createStatement();
+					ResultSet rs = stmt.executeQuery(this.getForeignKeyDiscoveryStatement(relationName))) {
 				Map<String, Relation> remoteRelations = new LinkedHashMap<>();
 				Map<String, Collection<Reference>> refMap = new LinkedHashMap<>();
 				if (rs.next()) {
@@ -280,7 +276,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 			}
 		}
 	}
-	
+
 	/**
 	 * TOCOMMENT:??? Gets the views discovery statement.
 	 *
@@ -289,7 +285,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	 * the given database.
 	 */
 	protected abstract String getViewsDiscoveryStatement(String databaseName);
-	
+
 	/**
 	 * Gets the view definition.
 	 *
@@ -298,7 +294,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	 * the given view.
 	 */
 	protected abstract String getViewDefinition(String viewName);
-	
+
 	/**
 	 * Discover views.
 	 *
@@ -310,14 +306,14 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 		Collection<View> result = new LinkedHashSet<>();
 		String database = this.properties.getProperty("database");
 		try(Connection connection = getConnection(this.properties);
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery(this.getViewsDiscoveryStatement(database))) {
+				Statement stmt = connection.createStatement();
+				ResultSet rs = stmt.executeQuery(this.getViewsDiscoveryStatement(database))) {
 			if (rs.next()) {
 				do {
 					result.add(this.discoverView(rs.getString(1), relationMap));
 				} while(rs.next());
 			}
-			
+
 		} catch (Throwable e) {
 			e.printStackTrace();
 			log.error(e);
@@ -325,7 +321,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 		}
 		return result;
 	}
-	
+
 	/**
 	 *
 	 * @param viewName the view name
@@ -335,8 +331,8 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	 */
 	public View discoverView(String viewName, Map<String, Relation> relationMap) throws BuilderException  {
 		try(Connection connection = getConnection(this.properties);
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery(this.getRelationDiscoveryStatement(viewName))) {
+				Statement stmt = connection.createStatement();
+				ResultSet rs = stmt.executeQuery(this.getRelationDiscoveryStatement(viewName))) {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			List<Attribute> attributes = new ArrayList<>();
 			for (int i = 0, l = rsmd.getColumnCount(); i < l; i++) {

@@ -125,13 +125,14 @@ public class AdaptedDbSchema {
 						//throw new IllegalArgumentException("Access method merging is not implemented!");
 					}
 					if (dr instanceof View) {
-						View v = new View(dr.getName(), dr.getAttributes(),am);
+						View v = new View(dr.getName(), dr.getAttributes());
+						v.addAccessMethod(am);
 						v.setViewToRelationDependency(((View) dr).getViewToRelationDependency());
 						discoveredRelations.remove(dr.getName());
 						discoveredRelations.put(dr.getName(),v);
 					} else {
 						if (!discoveredRelations.containsKey(dr.getName())) {
-							discoveredRelations.put(dr.getName(),Relation.create(dr.getName(), dr.getAttributes(),am,dr.getForeignKeys(),dr.isEquality()));
+							discoveredRelations.put(dr.getName(), new Relation(dr.getName(), dr.getAttributes(),/*am, dr.getForeignKeys(),*/dr.isEquality()));
 						}
 					}
 				}
