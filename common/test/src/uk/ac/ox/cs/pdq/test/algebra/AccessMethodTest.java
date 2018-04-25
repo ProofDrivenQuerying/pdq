@@ -6,8 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
@@ -32,9 +30,7 @@ public class AccessMethodTest extends PdqTest {
 	 */
 	@Test
 	public void testCreation() {
-		Relation relation = Relation.create("test",new Attribute[] {a,b,c});
 		AccessMethod am1 = AccessMethod.create("am", new Integer[] {0});
-		Relation relationB = Relation.create("test1",new Attribute[] {a,b,c});
 		
 		AccessMethod am2 = AccessMethod.create("am2", new Integer[] {0});
 		AccessMethod am3 = AccessMethod.create("am", new Integer[] {0});
