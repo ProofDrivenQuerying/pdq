@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
-import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -45,16 +44,16 @@ public class CartesianProductTermTest extends PdqTest {
 	
 		Attribute[] a = new Attribute[1];
 		a[0] = Attribute.create(String.class, "mark");
-		Relation r = new Relation("mark", a);
-		AccessMethod am = method_0.getMethod(r);
-		AccessTerm at1 = new AccessTerm(am);
-		AccessTerm at2 = new AccessTerm(am);
+		Relation r = Relation.create("mark", a);
+		AccessMethod am = AccessMethod.create("am", new Integer[] {0});
+		AccessTerm at1 = AccessTerm.create(r, am);
+		AccessTerm at2 = AccessTerm.create(r, am);
 			
 		RelationalTerm rt1 = at1;
 		RelationalTerm rt2 = at2;
 		
 		// Constructor tests invariant
-		CartesianProductTerm cpt = new CartesianProductTerm(rt1, rt2);
+		CartesianProductTerm cpt = CartesianProductTerm.create(rt1, rt2);
 		
 		// CartesianProductTerm.equals null should be false
 		boolean b = cpt.equals(null);
@@ -68,11 +67,11 @@ public class CartesianProductTermTest extends PdqTest {
 		Assert.assertTrue(h >= 0);
 			
 		// Set returned from AccessTerm.getAccesses is empty
-		Set<AccessTerm> sat = cpt.accessPlans();
+		Set<AccessTerm> sat = cpt.getAccesses();
 		Assert.assertTrue(sat.size() == 2);
 
 		// RelationalTerm returned from CartesianProductTerm.getChild is invariant
-		Plan p = cpt.getChild(0);
+		RelationalTerm p = cpt.getChild(0);
 		Assert.assertNotNull(p);
 
 		// RelationalTerm returned from CartesianProductTerm.getInputAttribute is invariant
