@@ -13,10 +13,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.db.AbstractAccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -26,20 +24,19 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 public class ProjectionTermTest extends PdqTest {
 
 	// Dummy concrete class for testing.
-	public class ConcreteAccessMethod  extends AbstractAccessMethod {
+	public class ConcreteAccessMethod  extends AccessMethod {
 		private static final long serialVersionUID = 1L;
 		
 		public ConcreteAccessMethod(Attribute[] attributes, Integer[] inputs, Relation relation, 
 				Map<Attribute, Attribute> attributeMapping) {
-			super(attributes, inputs, relation, attributeMapping);
+			super(inputs);
 		}
 		
 		public ConcreteAccessMethod(Attribute[] attributes, Set<Attribute> inputAttributes, 
 				Relation relation, Map<Attribute, Attribute> attributeMapping) {
-			super(attributes, inputAttributes, relation, attributeMapping);
+			super(new Integer[] {0});
 		}
 		
-		@Override
 		protected Stream<Tuple> fetchTuples(Iterator<Tuple> inputTuples) {
 			return null;
 		}
@@ -72,27 +69,31 @@ public class ProjectionTermTest extends PdqTest {
 		inputs = new Integer[0];
 		accessMethod= new ConcreteAccessMethod(amAttributes, inputs, relation, attributeMapping);
 
-		AccessTerm accessTerm = new AccessTerm(accessMethod);
+		AccessTerm accessTerm = AccessTerm.create(relation, accessMethod);
 
 		/*
 		 * Plan: projection onto attribute "a".
 		 */
-		target = new ProjectionTerm(new Attribute[]{Attribute.create(Integer.class, "a")}, accessTerm);
+		target = ProjectionTerm.create(new Attribute[]{Attribute.create(Integer.class, "a")}, accessTerm);
 		Assert.assertNotNull(target);
 		
 		// Test illegal constructions: projection attributes must be found in the relation attributes.
 		boolean caught = false;
 		try {
-			new ProjectionTerm(new Attribute[]{Attribute.create(Integer.class, "A")}, accessTerm);
+			ProjectionTerm.create(new Attribute[]{Attribute.create(Integer.class, "A")}, accessTerm);
 		} catch (IllegalArgumentException e) {
+			caught = true;
+		} catch (AssertionError e) {
 			caught = true;
 		}
 		Assert.assertTrue(caught);
 		
 		caught = false;
 		try {
-			new ProjectionTerm(new Attribute[]{Attribute.create(String.class, "a")}, accessTerm);
+			ProjectionTerm.create(new Attribute[]{Attribute.create(String.class, "a")}, accessTerm);
 		} catch (IllegalArgumentException e) {
+			caught = true;
+		} catch (AssertionError e) {
 			caught = true;
 		}
 		Assert.assertTrue(caught);
@@ -113,11 +114,11 @@ public class ProjectionTermTest extends PdqTest {
 				Attribute.create(String.class, "attribute1"),
 				Attribute.create(String.class, "attribute2")
 				};
-		Relation relation = new Relation("relation", projections);
-		RelationalTerm child = new AccessTerm(method_0.getMethod(relation));
+		Relation relation = Relation.create("relation", projections);
+		RelationalTerm child = AccessTerm.create(relation, AccessMethod.create("am", new Integer[] {0}));
 	
 		// Constructor tests invariant
-		ProjectionTerm pt = new ProjectionTerm(projections, child);
+		ProjectionTerm pt = ProjectionTerm.create(projections, child);
 		
 		// ProjectionTerm.equals null should be false
 		boolean b = pt.equals(null);
@@ -132,19 +133,19 @@ public class ProjectionTermTest extends PdqTest {
 
 		// ProjectionTerm.toString is #1=#2&#3=#4
 		String s = pt.toString();
-		Assert.assertTrue(s.equals("Project{[attribute1,attribute2]Access{relation.mt_0[#0=attribute1]}}"));
+		Assert.assertTrue(s.equals("Project{[attribute1,attribute2]Access{relation.am[#0=attribute1]}}"));
 		
 		// RelationalTerm returned from ProjectionTerm.getAccesses is invariant
-		Set<AccessTerm> sat = pt.accessPlans();
+		Set<AccessTerm> sat = pt.getAccesses();
 		Assert.assertNotNull(sat);
 		Assert.assertFalse(sat.isEmpty());
 
 		// RelationalTerm returned from ProjectionTerm.getChild is invariant
-		Plan p = pt.getChild(0);
+		RelationalTerm p = pt.getChild(0);
 		Assert.assertNotNull(p);
 
 		// array returned from ProjectionTerm.getChildren has zero length
-		Plan[] pp = pt.getChildren();
+		RelationalTerm[] pp = pt.getChildren();
 		Assert.assertTrue(pp.length == 1);
 
         // Class returned from getClass has name ProjectionTerm 

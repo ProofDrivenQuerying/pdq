@@ -19,7 +19,7 @@ public class JoinTerm extends RelationalTerm {
 	/**  Cached string representation. */
 	protected String toString = null;
 	
-	private JoinTerm(RelationalTerm child1, RelationalTerm child2) {
+	protected JoinTerm(RelationalTerm child1, RelationalTerm child2) {
 		super(AlgebraUtilities.computeInputAttributes(child1, child2), 
 				AlgebraUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
