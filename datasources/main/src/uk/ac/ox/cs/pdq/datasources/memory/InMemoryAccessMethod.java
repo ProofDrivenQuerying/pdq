@@ -5,14 +5,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import jersey.repackaged.com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.db.AbstractAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.util.Tuple;
@@ -51,11 +50,6 @@ public class InMemoryAccessMethod extends AbstractAccessMethod {
 	}
 
 	@Override
-	public Properties getProperties() {
-		return null;
-	}
-
-	@Override
 	protected Stream<Tuple> fetchTuples(Iterator<Tuple> inputTuples) {
 		
 		if (inputTuples == null)
@@ -68,7 +62,7 @@ public class InMemoryAccessMethod extends AbstractAccessMethod {
 		List<ConjunctiveCondition> accessConditions = new ArrayList<ConjunctiveCondition>();
 		while (inputTuples.hasNext())
 			accessConditions.add(this.accessCondition(inputTuples.next()));
-		Predicate<Tuple> filterPredicate = (tuple) -> accessConditions.stream().anyMatch(c -> c.isSatisfied(tuple));
+		Predicate<Tuple> filterPredicate = (tuple) -> accessConditions.stream().anyMatch(c -> c.isSatisfied(tuple)); 
 
 		return this.getData().stream().filter(filterPredicate);	
 	}

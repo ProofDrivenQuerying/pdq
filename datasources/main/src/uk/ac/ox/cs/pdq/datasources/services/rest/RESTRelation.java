@@ -107,8 +107,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 			MediaType mimeType, 
 			String resultDelim,
 			Collection<UsagePolicy> policies) {
-		super(name, attributes);
-		this.addAccessMethods(accessMethods);
+		super(name, attributes,accessMethods);
 		Preconditions.checkArgument(url != null);
 		Preconditions.checkArgument(policies != null);
 
