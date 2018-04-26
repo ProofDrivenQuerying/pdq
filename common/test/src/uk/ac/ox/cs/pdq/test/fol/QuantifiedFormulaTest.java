@@ -7,7 +7,6 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
-import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -15,22 +14,14 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-/**
- * The Class QuantifiedFormulaTest.
- */
 public class QuantifiedFormulaTest {
 	
-	/**
-	 * Makes sure assertions are enabled.
-	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
-
-	/**
-	 * Test universal.
-	 */
+	
+	// Creates a quantified formula from atom with predicate and 5 terms, then checks children
 	@Test public void testUniversal() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
@@ -45,9 +36,7 @@ public class QuantifiedFormulaTest {
 		Assert.assertEquals("Universal subformulation must match that of construction ", p, n.getChild(0));
 	}
 	
-	/**
-	 * Test equals universal.
-	 */
+	// Creates 2 quantified formulae from 2 atoms with predicate and 5 terms, then checks for equality
 	@Test public void testEqualsUniversal() {
 		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
@@ -74,36 +63,7 @@ public class QuantifiedFormulaTest {
 		Assert.assertTrue("Universal subformulation must match that of construction ", n1.equals(n2));
 	}
 
-	/**
-	 * Test not equals universal.
-	 */
-	@Test public void testNotEqualsUniversal() {
-		Predicate s1 = Predicate.create("s", 5);
-		Term[] t1 = new Term[]{
-				Variable.create("x1"), 
-				Variable.create("x2"), 
-				Variable.create("x3"),
-				UntypedConstant.create("x4"), 
-				TypedConstant.create("x5")
-		};
-		Atom p1 = Atom.create(s1, t1);
-		Predicate s2 = Predicate.create("s", 5);
-		Term[] t2 = new Term[]{
-				Variable.create("x1"), 
-				Variable.create("x2"), 
-				Variable.create("x3"),
-				UntypedConstant.create("x4"), 
-				TypedConstant.create("y")
-		};
-		Atom p2 = Atom.create(s2, t2);
-		Negation n1 = Negation.of(p1);
-		Negation n2 = Negation.of(p2);
-		Assert.assertFalse("Universal subformulation must match that of construction ", n1.equals(n2));
-	}
-
-	/**
-	 * Test existential.
-	 */
+	// Creates a quantified formula from atom with predicate and 5 terms, then checks children
 	@Test public void testExistential() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
@@ -118,9 +78,7 @@ public class QuantifiedFormulaTest {
 		Assert.assertEquals("Universal subformulation must match that of construction ", p, n.getChild(0));
 	}
 	
-	/**
-	 * Test equals existential.
-	 */
+	// Creates 2 quantified formulae from 2 atoms with predicate and 5 terms each, then checks for equality
 	@Test public void testEqualsExistential() {
 		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
@@ -147,9 +105,7 @@ public class QuantifiedFormulaTest {
 		Assert.assertTrue("Universal subformulation must match that of construction ", n1.equals(n2));
 	}
 
-	/**
-	 * Test not equals existential.
-	 */
+	// Creates 2 quantified formulae from 2 atoms with predicate and 5 terms each, then checks for inequality
 	@Test public void testNotEqualsExistential() {
 		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{

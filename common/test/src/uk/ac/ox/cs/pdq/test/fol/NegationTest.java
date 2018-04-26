@@ -14,24 +14,15 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-/**
- * The Class NegationTest.
- *
- * @author Julien Leblay
- */
+// @author Julien Leblay
 public final class NegationTest {
 
-	/**
-	 * Makes sure assertions are enabled.
-	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
-	/**
-	 * Test of.
-	 */
+	// Creates negation from an atom with predicate and 5 terms, then checks children
 	@Test public void testOf() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
@@ -46,9 +37,7 @@ public final class NegationTest {
 		Assert.assertEquals("Negation subformulation must match that of construction ", p, n.getChild(0));
 	}
 
-	/**
-	 * Test equals.
-	 */
+	// Creates 2 negations from 2 atoms with predicate and 5 terms each, then checks for equality
 	@Test public void testEquals() {
 		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
@@ -74,9 +63,7 @@ public final class NegationTest {
 		Assert.assertTrue("Negation subformulation must match that of construction ", n1.equals(n2));
 	}
 
-	/**
-	 * Test not equals.
-	 */
+	// Creates 2 negations from 2 atoms with predicate and 5 terms each, then checks for inequality
 	@Test public void testNotEquals() {
 		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{

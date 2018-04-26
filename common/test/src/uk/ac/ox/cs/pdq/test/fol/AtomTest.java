@@ -1,7 +1,9 @@
 package uk.ac.ox.cs.pdq.test.fol;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -16,31 +18,23 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-/**
- * The Class PredicateFormulaTest.
- */
 public class AtomTest {
 
-	/** The random. */
 	private Random random = new Random();
 	
-	/**
-	 * Makes sure assertions are enabled.
-	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
-	/**
-	 * Test hash code.
-	 */
+	// Create a linked hash set with terms of random arity, variables and predicates
 	@Test
 	public void testHashCode() {
 		int n = 100, m = 10;
@@ -66,9 +60,7 @@ public class AtomTest {
 		}
 	}
 
-	/**
-	 * Test predicate formula valid.
-	 */
+	// Creates a predicate, terms of variables and un/typed constants, then creates an atom from that
 	@Test public void testPredicateFormulaValid() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
@@ -80,9 +72,7 @@ public class AtomTest {
 		Assert.assertArrayEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 
-	/**
-	 * Test predicate formula zero arity.
-	 */
+	// Creates an atom with minimal predicate and term
 	@Test public void testPredicateFormulaZeroArity() {
 		Predicate s = Predicate.create("s", 0);
 		Term[] t = new Term[0];
@@ -91,35 +81,29 @@ public class AtomTest {
 		Assert.assertArrayEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 
-	/**
-	 * Test predicate formula valid relation1.
-	 */
+	// Creates an atom from relation and term of Variable
 	@Test
 	public void testPredicateFormulaValidRelation1() {
 		Relation r = Relation.create("s",
 				new Attribute[]{Attribute.create(String.class, "a")});
 		Term[] t = new Term[]{Variable.create("x")};
 		Atom p = Atom.create(r, t);
-		Assert.assertNotEquals("Atom must have name signature " + r, r, p.getPredicate());
+		Assert.assertNotEquals("Atom must not have name signature " + r, r, p.getPredicate());
 		Assert.assertArrayEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 
-	/**
-	 * Test predicate formula valid relation2.
-	 */
+	// Creates an atom from relation and term of TypedConstant, x
 	@Test
 	public void testPredicateFormulaValidRelation2() {
 		Relation r = Relation.create("s",
 				new Attribute[]{Attribute.create(String.class, "a")});
 		Term[] t = new Term[]{TypedConstant.create("x")};
 		Atom p = Atom.create(r, t);
-		Assert.assertNotEquals("Atom must have name signature " + r, r, p.getPredicate());
+		Assert.assertNotEquals("Atom must not have name signature " + r, r, p.getPredicate());
 		Assert.assertArrayEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 
-	/**
-	 * Test equality.
-	 */
+	// Creates 2 atoms from relation and term of TypedConstant, x
 	@Test public void testEquality() {
 		Relation r = Relation.create("s",
 				new Attribute[]{Attribute.create(String.class, "a")});
@@ -129,9 +113,7 @@ public class AtomTest {
 		Assert.assertTrue("PredicateFormula p1 and p2 must be the same", p1.equals(p2));
 	}
 
-	/**
-	 * Test equality wrong arity.
-	 */
+	// Creates 2 atoms from 2 relations, r, and 2 terms of TypedConstant, x, y and x
 	@Test public void testEqualityWrongArity() {
 		Relation r1 = Relation.create("r", new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2")});
 		Relation r2 = Relation.create("r", new Attribute[]{Attribute.create(String.class, "a")});
@@ -142,9 +124,7 @@ public class AtomTest {
 		Assert.assertFalse("PredicateFormula p1 and p2 have different arities", p1.equals(p2));
 	}
 
-	/**
-	 * Test equality wrong name.
-	 */
+	//  Creates 2 atoms from 2 relations, r1, r2, and 2 terms of TypedConstant, x, y and x, y
 	@Test public void testEqualityWrongName() {
 		Relation r1 = Relation.create("r1", new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2")});
 		Relation r2 = Relation.create("r2", new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2")});
@@ -155,9 +135,7 @@ public class AtomTest {
 		Assert.assertFalse("PredicateFormula p1 and p2 have different names", p1.equals(p2));
 	}
 
-	/**
-	 * Test hash duplicates.
-	 */
+	// Creates a set of atoms from typed and untyped constants and variables with duplicates
 	@Test public void testHashDuplicates() {
 		Set<Atom> set = new LinkedHashSet<>();
 		Relation r = Relation.create("r", new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2")});
@@ -175,9 +153,7 @@ public class AtomTest {
 		Assert.assertEquals("PredicateFormula set must have 4 elements", 4, set.size());
 	}
 
-	/**
-	 * Test hash no duplicates.
-	 */
+	// Creates a set of atoms from typed and untyped constants and variables with no duplicates
 	@Test public void testHashNoDuplicates() {
 		Set<Atom> set = new LinkedHashSet<>();
 		Relation r = Relation.create("r", new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2")});
@@ -195,9 +171,7 @@ public class AtomTest {
 		Assert.assertEquals("PredicateFormula set must have 8 elements", 8, set.size());
 	}
 
-	/**
-	 * Test get term count.
-	 */
+	// Creates an atom from predicate and 5 terms and checks length
 	@Test public void testGetTermCount() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
@@ -208,9 +182,7 @@ public class AtomTest {
 		Assert.assertEquals("Atom must have " + t.length +  " terms ", t.length, p.getPredicate().getArity());
 	}
 
-	/**
-	 * Test get term.
-	 */
+	// Creates an atom from predicate and 5 terms and checks them all
 	@Test public void testGetTerm() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
@@ -222,9 +194,7 @@ public class AtomTest {
 		}
 	}
 
-	/**
-	 * Test get term out of range1.
-	 */
+	// Creates an atom from predicate and 5 terms then causes an OutOfBounds exception (low)
 	@Test (expected=IndexOutOfBoundsException.class)
 	public void testGetTermOutOfRange1() {
 		Predicate s = Predicate.create("s", 5);
@@ -233,9 +203,7 @@ public class AtomTest {
 		Atom.create(s, t).getTerm(-1);
 	}
 
-	/**
-	 * Test get term out of range2.
-	 */
+	// Creates an atom from predicate and 5 terms then causes an OutOfBounds exception (high)
 	@Test (expected=IndexOutOfBoundsException.class)
 	public void testGetTermOutOfRange2() {
 		Predicate s = Predicate.create("s", 5);
@@ -244,9 +212,7 @@ public class AtomTest {
 		Atom.create(s, t).getTerm(5);
 	}
 
-	/**
-	 * Test get terms.
-	 */
+	// Creates an atom from predicate and 5 terms then compares with getTerms
 	@Test public void testGetTerms() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
@@ -256,9 +222,7 @@ public class AtomTest {
 		Assert.assertArrayEquals("Atom terms must match term list of constructor",t, p.getTerms());
 	}
 
-	/**
-	 * Test get selected terms.
-	 */
+	// Creates an atom from predicate and 5 terms then compares atom term subsets
 	@Test public void testGetSelectedTerms() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
@@ -277,9 +241,7 @@ public class AtomTest {
 				p.getTerms(Lists.<Integer>newArrayList(2, 3, 4)));
 	}
 
-	/**
-	 * Test get selected terms outof range1.
-	 */
+	// Creates an atom from predicate and 5 terms then causes an OutOfBounds exception (low)
 	@Test(expected=IndexOutOfBoundsException.class)
 	public void testGetSelectedTermsOutofRange1() {
 		Predicate s = Predicate.create("s", 5);
@@ -290,9 +252,7 @@ public class AtomTest {
 		Atom.create(s, t).getTerms(Lists.<Integer>newArrayList(0, 2, -1));
 	}
 
-	/**
-	 * Test get selected terms outof range2.
-	 */
+	// Creates an atom from predicate and 5 terms then causes an OutOfBounds exception (high)
 	@Test(expected=IndexOutOfBoundsException.class)
 	public void testGetSelectedTermsOutofRange2() {
 		Predicate s = Predicate.create("s", 5);
@@ -302,23 +262,21 @@ public class AtomTest {
 		Atom.create(s, t).getTerms(Lists.<Integer>newArrayList(2, 1, 5));
 	}
 
-	/**
-	 * Test get constants.
-	 */
-	@SuppressWarnings("unchecked")
+	// Creates an atom from predicate and 5 terms then checks atom terms subsets
 	@Test public void testGetConstants() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
 				UntypedConstant.create("x4"), TypedConstant.create("x5")};
 		Atom p = Atom.create(s, t);
+		List<Constant> list = new ArrayList<>();
+		list.add(UntypedConstant.create("x4"));
+		list.add(TypedConstant.create("x5"));
 		Assert.assertEquals("Atom terms subset must match",
-				Lists.newArrayList(UntypedConstant.create("x4"), TypedConstant.create("x5")),
+				list,
 				Utility.getTypedAndUntypedConstants(p, new Integer[]{3, 4}));
 	}
 
-	/**
-	 * Test get constants invalid.
-	 */
+	// Creates an atom from predicate and 5 terms then calls Utility.getTypedAndUntypedConstants
 	@Test(expected=IllegalArgumentException.class)
 	public void testGetConstantsInvalid() {
 		Predicate s = Predicate.create("s", 5);
@@ -328,9 +286,7 @@ public class AtomTest {
 		Utility.getTypedAndUntypedConstants(Atom.create(s, t),new Integer[]{0, 1});
 	}
 
-	/**
-	 * Test get variable.
-	 */
+	// Creates an atom from predicate and 5 terms then compares variables subset
 	@Test public void testGetVariable() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
@@ -342,26 +298,23 @@ public class AtomTest {
 				p.getVariables());
 	}
 
-	/**
-	 * Test get all constants.
-	 */
-	@SuppressWarnings("unchecked")
+	// Creates an atom from predicate and 5 terms then compares constants subset
 	@Test public void testGetAllConstants() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), UntypedConstant.create("x3"),
 				Variable.create("x4"), TypedConstant.create("x5")};
 		Atom p = Atom.create(s, t);
+		Set<Constant> list = new HashSet<>();
+		list.add(UntypedConstant.create("x3"));
+		list.add(TypedConstant.create("x5"));
+		
 		Assert.assertEquals("Atom variables subset must match",
-				Sets.newHashSet(UntypedConstant.create("x3"), TypedConstant.create("x5")),
+				list,
 				Utility.getTypedAndUntypedConstants(p));
 	}
 
-	/**
-	 * Gets the schema constants.
-	 *
-	 * @return the schema constants
-	 */
+	// Creates an atom from predicate and 5 terms then compares typed constants subset
 	@Test public void getSchemaConstants() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
@@ -373,9 +326,7 @@ public class AtomTest {
 				Utility.getTypedConstants(p));
 	}
 
-	/**
-	 * Test get predicates.
-	 */
+	// Creates an atom from predicate and 5 terms then compares atom lists
 	@Test public void testGetPredicates() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
@@ -385,22 +336,7 @@ public class AtomTest {
 		Assert.assertArrayEquals("Atom lists must match", new Atom[]{p}, p.getAtoms());
 	}
 
-	/**
-	 * Test get atoms.
-	 */
-	@Test public void testGetAtoms() {
-		Predicate s = Predicate.create("s", 5);
-		Term[] t = new Term[]{
-				Variable.create("x1"), TypedConstant.create("x2"), UntypedConstant.create("x3"),
-				Variable.create("x4"), TypedConstant.create("x5")
-		};
-		Atom p = Atom.create(s, t);
-		Assert.assertArrayEquals("Atom lists must match", new Atom[]{p}, p.getAtoms());
-	}
-
-	/**
-	 * Test get term positions.
-	 */
+	// Creates an atom from predicate and 5 terms then checks atom term positions
 	@Test public void testGetTermPositions() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
@@ -414,11 +350,7 @@ public class AtomTest {
 		Assert.assertEquals("Atom x4 term positions must match", Lists.newArrayList(4), Utility.getTermPositions(p,TypedConstant.create("x4")));
 	}
 
-	/**
-	 * Gets the term positions not found.
-	 *
-	 * @return the term positions not found
-	 */
+	// Creates an atom from predicate and 5 terms then checks atom term positions list is empty
 	@Test public void getTermPositionsNotFound() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
@@ -429,9 +361,7 @@ public class AtomTest {
 
 	}
 
-	/**
-	 * Test is fact.
-	 */
+	// Creates an atom from predicate and 5 constant terms then checks atom is ground
 	@Test public void testIsFact() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
@@ -442,9 +372,7 @@ public class AtomTest {
 		Assert.assertTrue("Fact terms must contain schema constants only", p.isGround());
 	}
 
-	/**
-	 * Test is not fact.
-	 */
+	// Creates an atom from predicate and 5 constant and variable terms then checks atom is not ground
 	@Test public void testIsNotFact() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{Variable.create("x1"), Variable.create("x2"), UntypedConstant.create("x3"), Variable.create("x1"), TypedConstant.create("x4")};

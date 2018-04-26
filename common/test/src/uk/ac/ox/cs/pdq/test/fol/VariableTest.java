@@ -13,60 +13,42 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-/**
- * The Class VariableTest.
- */
 public class VariableTest {
 	
-	/**
-	 * Makes sure assertions are enabled.
-	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
-	/**
-	 * Test variable is variable.
-	 */
+	// Assert that Variable.isVariable is true
 	@Test public void testVariableIsVariable() {
 		Assert.assertTrue("Variable.isVariable must be always true", Variable.create("v").isVariable());
 	}
 
-	/**
-	 * Test variable is not skolem.
-	 */
+	// Assert that Variable.isUntypedConstant is false
 	@Test public void testVariableIsNotSkolem() {
 		Assert.assertFalse("Variable.isSkolem must be always false", Variable.create("v").isUntypedConstant());
 	}
 
-	/**
-	 * Test variable valid.
-	 */
+	// Assert that Variable.getSymbol is name
 	@Test public void testVariableValid() {
 		Variable v = Variable.create("v");
 		Assert.assertEquals("Variable must have name 'v'", "v", v.getSymbol());
 	}
 
-	/**
-	 * Test variable empty name.
-	 */
+	// Creates a variable with empty name then expects an IllegalArgumentsException
 	@Test(expected=IllegalArgumentException.class)
 	public void testVariableEmptyName() {
 		Variable.create("");
 	}
 
-	/**
-	 * Test variable null name.
-	 */
+	// Creates a variable with null name then expects an IllegalArgumentsException
 	@Test(expected=IllegalArgumentException.class)
 	public void testVariableNullName() {
 		Variable.create(null);
 	}
 
-	/**
-	 * Test hash code.
-	 */
+	// Creates a has set on uniquely named variables then checks they are there
 	@Test public void testHashCode() {
 		int n = 100;
 		HashSet<Variable> terms = new HashSet<>();
@@ -86,9 +68,7 @@ public class VariableTest {
 		}
 	}
 
-	/**
-	 * Test equals.
-	 */
+	// Assert that 2 variables with the same name are the same
 	@Test public void testEquals() {
 		int n = 100;
 		for (int i = 0; i < n; i++) {
@@ -96,9 +76,7 @@ public class VariableTest {
 		}
 	}
 
-	/**
-	 * Test not equals.
-	 */
+	// Assert that 2 variables with different names are different
 	@Test public void testNotEquals() {
 		int n = 100;
 		for (int i = 0; i < n; i++) {

@@ -14,24 +14,15 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-/**
- * An implication.
- *
- * @author Julien Leblay
- */
+// @author Julien Leblay
 public class ImplicationTest {
 
-	/**
-	 * Makes sure assertions are enabled.
-	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
-	/**
-	 * Test of.
-	 */
+	// Creates implication from 2 atoms with predicate and 5 or 2 terms each, then checks children
 	@Test public void testOf() {
 		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
@@ -52,9 +43,7 @@ public class ImplicationTest {
 		Assert.assertEquals("Implication head must match that of construction ", p2, i.getChild(1));
 	}
 
-	/**
-	 * Test equals.
-	 */
+	// Creates 2 implications from 2 atoms with predicate and 5 terms each, then checks for equality
 	@Test public void testEquals() {
 		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
@@ -79,9 +68,7 @@ public class ImplicationTest {
 		Assert.assertTrue("Implications must match be equal ", i1.equals(i2));
 	}
 
-	/**
-	 * Test not equals.
-	 */
+	// Creates 2 implications from 3 atoms with predicate and 5 terms each, then checks for equality
 	@Test public void testNotEquals() {
 		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{

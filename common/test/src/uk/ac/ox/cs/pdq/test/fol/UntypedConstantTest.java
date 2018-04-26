@@ -14,24 +14,15 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 
-/**
- * The Class UntypedConstantTest.
- *
- * @author Julien Leblay
- */
+// @author Julien Leblay
 public final class UntypedConstantTest {
 	
-	/**
-	 * Makes sure assertions are enabled.
-	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
-	/**
-	 * Test no two similary generated skolems.
-	 */
+	// Assert that 2 consecutively generated constants are not the same
 	@Test public void testNoTwoSimilaryGeneratedUntypedConstants() {
 		Assert.assertNotEquals(
 				"Two UntypedConstant generated consecutively must not be equals",
@@ -40,47 +31,35 @@ public final class UntypedConstantTest {
 	}
 
 
-	/**
-	 * Test skolem is skolem.
-	 */
+	// Assert that UntypedConstant.isUntypedConstant is true
 	@Test public void testUntypedConstantIsUntypedConstant() {
 		Assert.assertTrue("UntypedConstant.isUntypedConstant must be always true", UntypedConstant.create("v").isUntypedConstant());
 	}
 
-	/**
-	 * Test skolem is not variable.
-	 */
+	// Assert that UntypedConstant.isVariable is false
 	@Test public void testUntypedConstantIsNotVariable() {
 		Assert.assertFalse("UntypedConstant.isVariable must be always false", UntypedConstant.create("v").isVariable());
 	}
 
-	/**
-	 * Test skolem valid.
-	 */
+	// Assert that UntypedConstant.getSymbol is name
 	@Test public void testUntypedConstantValid() {
 		UntypedConstant v = UntypedConstant.create("v");
 		Assert.assertEquals("UntypedConstant must have name 'v'", "v", v.getSymbol());
 	}
 
-	/**
-	 * Test skolem empty name.
-	 */
+	// Creates an untyped constant with an empty name and expects an IllegalArgumentsException
 	@Test(expected=IllegalArgumentException.class)
 	public void testUntypedConstantEmptyName() {
 		UntypedConstant.create("");
 	}
 
-	/**
-	 * Test skolem null name.
-	 */
+	// Creates an untyped constant with a null name and expects an IllegalArgumentsException
 	@Test(expected=IllegalArgumentException.class)
 	public void testUntypedConstantNullName() {
 		UntypedConstant.create(null);
 	}
 
-	/**
-	 * Test hash code.
-	 */
+	// Creates a hash set of uniquely named untyped constants and check that they are there
 	@Test public void testHashCode() {
 		int n = 100;
 		HashSet<UntypedConstant> terms = new HashSet<>();
@@ -100,9 +79,7 @@ public final class UntypedConstantTest {
 		}
 	}
 
-	/**
-	 * Test equals.
-	 */
+	// Assert that untyped constants with the same name are the same
 	@Test public void testEquals() {
 		int n = 100;
 		for (int i = 0; i < n; i++) {
@@ -110,9 +87,7 @@ public final class UntypedConstantTest {
 		}
 	}
 
-	/**
-	 * Test not equals.
-	 */
+	// Assert that untyped constants with different names are different
 	@Test public void testNotEquals() {
 		int n = 100;
 		for (int i = 0; i < n; i++) {
