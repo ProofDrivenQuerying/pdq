@@ -15,10 +15,8 @@ import org.mockito.Mockito;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
-import uk.ac.ox.cs.pdq.db.AbstractAccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -29,20 +27,19 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 public class SelectionTermTest extends PdqTest {
 
 	// Dummy concrete class for testing.
-	public class ConcreteAccessMethod  extends AbstractAccessMethod {
+	public class ConcreteAccessMethod  extends AccessMethod {
 		private static final long serialVersionUID = 1L;
 		
 		public ConcreteAccessMethod(Attribute[] attributes, Integer[] inputs, Relation relation, 
 				Map<Attribute, Attribute> attributeMapping) {
-			super(attributes, inputs, relation, attributeMapping);
+			super(inputs);
 		}
 		
 		public ConcreteAccessMethod(Attribute[] attributes, Set<Attribute> inputAttributes, 
 				Relation relation, Map<Attribute, Attribute> attributeMapping) {
-			super(attributes, inputAttributes, relation, attributeMapping);
+			super(new Integer[] {0});
 		}
 		
-		@Override
 		protected Stream<Tuple> fetchTuples(Iterator<Tuple> inputTuples) {
 			return null;
 		}
@@ -72,7 +69,7 @@ public class SelectionTermTest extends PdqTest {
 		
 		Condition condition = ConstantEqualityCondition.create(2, TypedConstant.create("BRAZIL"));
 		
-		SelectionTerm target = new SelectionTerm(condition, new AccessTerm(amFree));
+		SelectionTerm target = SelectionTerm.create(condition, AccessTerm.create(relation, amFree));
 		Assert.assertTrue(target instanceof SelectionTerm);
 		
 		// Check that construction of the SelectionTerm object fails unless the type of constant
@@ -81,7 +78,7 @@ public class SelectionTermTest extends PdqTest {
 		condition = ConstantEqualityCondition.create(2, TypedConstant.create(1));
 		boolean caught = false;
 		try {
-			target = new SelectionTerm(condition, new AccessTerm(amFree));
+			target = SelectionTerm.create(condition, AccessTerm.create(relation, amFree));
 		} catch (IllegalArgumentException e) {
 			caught = true;
 		}
@@ -99,11 +96,11 @@ public class SelectionTermTest extends PdqTest {
 	@Test
 	public void testCreation() {
 		
-		Relation relation = new Relation("relation", new Attribute[] {Attribute.create(String.class, "attribute1")});
-		RelationalTerm child = new AccessTerm(method_0.getMethod(relation));
+		Relation relation = Relation.create("relation", new Attribute[] {Attribute.create(String.class, "attribute1")});
+		RelationalTerm child = AccessTerm.create(relation, AccessMethod.create("am", new Integer[] {0}));
 	    Condition selection = ConstantEqualityCondition.create(0, TypedConstant.create((String) "hello"));
 		// Constructor tests invariant
-		SelectionTerm st = new SelectionTerm(selection, child);
+		SelectionTerm st = SelectionTerm.create(selection, child);
 		
 		// SelectionTerm.equals null should be false
 		boolean b = st.equals(null);
@@ -118,14 +115,15 @@ public class SelectionTermTest extends PdqTest {
 
 		// SelectionTerm.toString is #1=#2&#3=#4
 		String s = st.toString();
-		Assert.assertTrue(s.equals("Select{[#0=hello]Access{relation.mt_0[#0=attribute1]}}"));
+		Assert.assertTrue(s.equals("Select{[#0=hello]Access{relation.am[#0=attribute1]}}"));
+		
 		// RelationalTerm returned from SelectionTerm.getAccesses is invariant
-		Set<AccessTerm> sat = st.accessPlans();
+		Set<AccessTerm> sat = st.getAccesses();
 		Assert.assertNotNull(sat);
 		Assert.assertFalse(sat.isEmpty());
 
 		// RelationalTerm returned from SelectionTerm.getChild is invariant
-		Plan p = st.getChild(0);
+		RelationalTerm p = st.getChild(0);
 		Assert.assertNotNull(p);
 
         // Class returned from getClass has name SelectionTerm 
