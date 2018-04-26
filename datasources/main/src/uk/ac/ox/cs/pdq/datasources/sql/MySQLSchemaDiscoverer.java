@@ -23,6 +23,7 @@ import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.utility.Utility;
+import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -88,8 +89,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 */
 	@Override
 	protected Relation getRelationInstance(Properties props, String relationName, Attribute[] attributes) {
-		Relation relation = new Relation(relationName, attributes);
-		relation.addAccessMethod(new DatabaseAccessMethod(relation, props));
+		Relation relation = Relation.create(relationName, attributes,new AccessMethod[] {new DatabaseAccessMethod(Relation.create(relationName, attributes), props)});
 		return relation;
 	}
 
@@ -104,10 +104,13 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	@Override
 	protected View getViewInstance(Properties props, String viewName, Map<String, Relation> relationMap) {
 		String definition = this.getViewDefinition(viewName);
-		LinearGuarded viewToRelationDependency = this.parseViewDefinition(viewName, definition, relationMap);		
+		LinearGuarded viewToRelationDependency = this.parseViewDefinition(viewName, definition, relationMap);
+		// view without access method
 		View view = new View(viewName, relationMap.get(viewName).getAttributes());
 		view.setViewToRelationDependency(viewToRelationDependency);
-		view.addAccessMethod(new DatabaseAccessMethod(view, props));
+		// re create the view now with the access method.
+		view = new View(viewName, relationMap.get(viewName).getAttributes(),new AccessMethod[] {new DatabaseAccessMethod(view, props)});
+		view.setViewToRelationDependency(viewToRelationDependency);
 		return view;
 	}
 
@@ -190,7 +193,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		List<Term> freeTerms = freeTermsAndAttributes.getLeft();
 		List<Attribute> attributes = freeTermsAndAttributes.getRight();
 		Atom[] right = atoms.values().toArray(new Atom[atoms.values().size()]);
-		return LinearGuarded.create(Atom.create(new Relation(viewName, attributes.toArray(new Attribute[attributes.size()])), freeTerms.toArray(new Term[freeTerms.size()])), right);
+		return LinearGuarded.create(Atom.create(Relation.create(viewName, attributes.toArray(new Attribute[attributes.size()])), freeTerms.toArray(new Term[freeTerms.size()])), right);
 	}
 
 	/**

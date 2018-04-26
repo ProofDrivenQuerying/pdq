@@ -21,9 +21,9 @@ import com.google.common.base.Preconditions;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
-import uk.ac.ox.cs.pdq.db.AbstractAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.util.DistinctIterator;
@@ -47,29 +47,36 @@ public class DatabaseAccessMethod extends AbstractAccessMethod {
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(DatabaseAccessMethod.class);
+
+	private Properties properties;
 	
 	public DatabaseAccessMethod(Relation relation, Properties properties) {
-		super(relation, properties);
+		super(relation.getAttributes(),new Integer[] {},relation, getDefaultMapping(relation));
+		this.properties = properties;
 	}
 
 	public DatabaseAccessMethod(Attribute[] attributes, Integer[] inputs, Relation relation,
 			Map<Attribute, Attribute> attributeMapping, Properties properties) {
-		super(attributes, inputs, relation, attributeMapping, properties);
+		super(attributes, inputs, relation, attributeMapping);
+		this.properties = properties;
 	}
 
 	public DatabaseAccessMethod(String name, Attribute[] attributes, Integer[] inputs, Relation relation,
 			Map<Attribute, Attribute> attributeMapping, Properties properties) {
-		super(name, attributes, inputs, relation, attributeMapping, properties);
+		super(name, attributes, inputs, relation, attributeMapping);
+		this.properties = properties;
 	}
 
 	public DatabaseAccessMethod(Attribute[] attributes, Set<Attribute> inputAttributes,
 			Relation relation, Map<Attribute, Attribute> attributeMapping, Properties properties) {
-		super(attributes, inputAttributes, relation, attributeMapping, properties);
+		super(attributes, inputAttributes, relation, attributeMapping);
+		this.properties = properties;
 	}
 
 	public DatabaseAccessMethod(String name, Attribute[] attributes, Set<Attribute> inputAttributes,
 			Relation relation, Map<Attribute, Attribute> attributeMapping, Properties properties) {
-		super(name, attributes, inputAttributes, relation, attributeMapping, properties);
+		super(name, attributes, inputAttributes, relation, attributeMapping);
+		this.properties = properties;
 	}
 
 	@Override
