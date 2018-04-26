@@ -38,7 +38,7 @@ public class PostgresqlSchemaDiscoveryTest extends PdqTest {
 		String[] attributes;
 		
 		/** The bindings. */
-		AccessMethodGenerator bindings;
+		AccessMethod bindings;
 	}
 	
 	/** The relations. */
@@ -83,9 +83,7 @@ public class PostgresqlSchemaDiscoveryTest extends PdqTest {
 		for(String n: this.relationNames) {
 			TmpRelation r = new TmpRelation();
 			r.attributes = this.attributesNames[i];
-			
-			
-			r.bindings = new AccessMethodGenerator(this.bindingPositions[i]);
+			r.bindings = new AccessMethod(this.bindingPositions[i]);
 			this.relations.put(n, r);
 			i++;
 		}
@@ -126,10 +124,10 @@ public class PostgresqlSchemaDiscoveryTest extends PdqTest {
 		properties.put("username", "root");
 		properties.put("password", "root");
 		Map<String, Relation> map = new LinkedHashMap<>();
-		map.put("customer", new Relation("customer", this.makeAttributes(this.attributesNames[0])));
-		map.put("lineitem", new Relation("lineitem", this.makeAttributes(this.attributesNames[1])));
-		map.put("orders", new Relation("orders", this.makeAttributes(this.attributesNames[3])));
-		map.put("part", new Relation("part", this.makeAttributes(this.attributesNames[4])));
+		map.put("customer", Relation.create("customer", this.makeAttributes(this.attributesNames[0])));
+		map.put("lineitem", Relation.create("lineitem", this.makeAttributes(this.attributesNames[1])));
+		map.put("orders", Relation.create("orders", this.makeAttributes(this.attributesNames[3])));
+		map.put("part", Relation.create("part", this.makeAttributes(this.attributesNames[4])));
 		PostgresqlSchemaDiscoverer disco = new PostgresqlSchemaDiscoverer();
 		disco.setProperties(properties);
 //		disco.parseViewDefinition(
