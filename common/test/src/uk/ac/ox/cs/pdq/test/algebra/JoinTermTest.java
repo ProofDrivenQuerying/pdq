@@ -1,12 +1,9 @@
 package uk.ac.ox.cs.pdq.test.algebra;
 
-import static org.mockito.Mockito.when;
-
 import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.Condition;

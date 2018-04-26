@@ -5,10 +5,8 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,7 +19,6 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
-import uk.ac.ox.cs.pdq.util.Tuple;
 
 public class AccessTermTest extends PdqTest {
 
