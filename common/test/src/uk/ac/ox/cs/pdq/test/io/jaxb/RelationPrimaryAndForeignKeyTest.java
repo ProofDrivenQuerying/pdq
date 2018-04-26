@@ -5,7 +5,6 @@ import java.io.File;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
@@ -15,6 +14,8 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 
 public class RelationPrimaryAndForeignKeyTest {
+	
+	// Calls IOManager.importSchema then asserts everything associated with it
 	@Test
 	public void testReadingSchema() {
 		try {
@@ -34,6 +35,8 @@ public class RelationPrimaryAndForeignKeyTest {
 			Assert.fail(e.getMessage());
 		}
 	}
+	
+	// Creates attributes, primary key, relations with foreign key then calls IOManager.exportSchemaToXml
 	@Test
 	public void testWritingSchema() {
 		try {
@@ -47,15 +50,12 @@ public class RelationPrimaryAndForeignKeyTest {
 			
 			Attribute attrF = Attribute.create(Integer.class, "r1_F");
 			
-			Relation r2 = Relation.create("r2", new Attribute[] { attrF}, new AccessMethod[] { }, new ForeignKey[] {}, false,
-					new String[] { attrF.getName()});
+			Relation r2 = Relation.create("r2", new Attribute[] { attrF});
 			fk1.addReference(new Reference(attr1,attrF));
 			fk1.setForeignRelation(r2);
-			AccessMethod am1 = AccessMethod.create("m1", new Integer[] {});
-			AccessMethod am2 = AccessMethod.create("m2", new Integer[] { 0, 1 });
-			Relation r = Relation.create("r1", new Attribute[] { attr1, attr2, attr3, attr4 }, new AccessMethod[] { am1, am2 }, new ForeignKey[] {fk1,fk2}, false,
-					new String[] { attr1.getName(), attr2.getName() });
-			
+			Relation r = Relation.create("r1", new Attribute[] { attr1, attr2, attr3, attr4 });
+			r.addForeignKey(fk1);
+			r.addForeignKey(fk2);
 			r.setKey(pk);
 			Schema schema = new Schema(new Relation[] {r});
 			File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "schemaWithKeys.xml");
@@ -66,6 +66,7 @@ public class RelationPrimaryAndForeignKeyTest {
 		}
 	}
 	
+	// Calls IOManager.exportSchemaToXml using importSchema as a starting point then checks file lengths
 	@Test
 	public void ImportExportTest() {
 		try {
