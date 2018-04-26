@@ -31,8 +31,11 @@ public class AdaptedView extends AdaptedRelation {
 		this.accessMethods = r.getAccessMethods().clone();
 		this.foreignKeys = r.getForeignKeys().clone();
 		this.primaryKey = new String[r.getForeignKeys().length];
-		for (int i = 0; i < r.getKey().getNumberOfAttributes(); i++) {
-			this.primaryKey[i] = r.getKey().getAttributes()[i].getName();
+		if(r.getKey() != null)
+		{
+			for (int i = 0; i < r.getKey().getNumberOfAttributes(); i++) {
+				this.primaryKey[i] = r.getKey().getAttributes()[i].getName();
+			}
 		}
 		this.setName(r.getName());
 	}
