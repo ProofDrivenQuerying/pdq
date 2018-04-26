@@ -42,20 +42,20 @@ public class RelationalTermAsLogicTest extends PdqTest {
 		dm.initialiseDatabaseForSchema(s);
 		Attribute[] ra1 = new Attribute[] { Attribute.create(String.class, "c1"), Attribute.create(String.class, "c2"),
 				Attribute.create(String.class, "c3") };
-		RelationalTerm a1 = new AccessTerm(s.getRelation("R0").getAccessMethod("mt_0"));
-		RelationalTerm r1 = new RenameTerm(ra1, a1);
+		RelationalTerm a1 = AccessTerm.create(s.getRelation("R0"), s.getRelation("R0").getAccessMethod("mt_0"));
+		RelationalTerm r1 = RenameTerm.create(ra1, a1);
 
 		Attribute[] ra2 = new Attribute[] { Attribute.create(String.class, "c1"), Attribute.create(String.class, "c4"),
 				Attribute.create(String.class, "c3") };
 		Map<Attribute, TypedConstant> map2 = new HashMap<>();
 		TypedConstant constant = TypedConstant.create("a");
 		map2.put(s.getRelation("R1").getAttribute(0), constant);
-		RelationalTerm a2 = new AccessTerm(s.getRelation("R1").getAccessMethod("mt_1"), map2);
-		RelationalTerm c2 = new RenameTerm(ra2, a2);
+		RelationalTerm a2 = AccessTerm.create(s.getRelation("R1"), s.getRelation("R1").getAccessMethod("mt_1"));
+		RelationalTerm c2 = RenameTerm.create(ra2, a2);
 
-		RelationalTerm plan = new JoinTerm(r1, c2);
+		RelationalTerm plan = JoinTerm.create(r1, c2);
 		Attribute c1 = Attribute.create(String.class, "c1") ;
-		RelationalTerm plan2 = new ProjectionTerm(new Attribute[] { c1}, plan);
+		RelationalTerm plan2 = ProjectionTerm.create(new Attribute[] { c1}, plan);
 		
 		RelationalTermAsLogic asLogic = plan2.toLogic();
 		Assert.assertNotNull(asLogic.getFormula());

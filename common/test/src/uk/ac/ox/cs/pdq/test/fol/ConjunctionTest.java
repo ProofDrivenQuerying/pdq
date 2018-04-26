@@ -14,24 +14,16 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-/**
- * The Class ConjunctionTest.
- *
- * @author Julien Leblay
- */
+// @Author Julien Leblay
+
 public class ConjunctionTest {
 	
-	/**
-	 * Makes sure assertions are enabled.
-	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
-	/**
-	 * Test of.
-	 */
+	// Creates a conjunction from 2 atoms with 1 predicate and 5 or 2 terms each, then compares atoms
 	@Test public void testOf() {
 		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
@@ -47,9 +39,7 @@ public class ConjunctionTest {
 				new Atom[]{p1, p2}, i.getAtoms());
 	}
 
-	/**
-	 * Test equals.
-	 */
+	// Creates 2 conjunctions from 2 atoms with 1 predicates and 5 terms each, then checks for equality
 	@Test public void testEquals() {
 		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
@@ -68,9 +58,7 @@ public class ConjunctionTest {
 		Assert.assertTrue("Conjunctions must match be equal ", i1.equals(i2));
 	}
 
-	/**
-	 * Test not equals.
-	 */
+	// Creates 2 conjunctions from 3 atoms with 1 predicate and 5 terms each, then checks for equality
 	@Test public void testNotEquals() {
 		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{

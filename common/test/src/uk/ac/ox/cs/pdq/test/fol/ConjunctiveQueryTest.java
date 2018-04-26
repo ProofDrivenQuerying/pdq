@@ -14,25 +14,15 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-/**
- * A conjunctive query.
- *
- * @author Julien Leblay
- * @author Julien Leblay
- */
+// @author Julien Leblay
 public class ConjunctiveQueryTest {
 	
-	/**
-	 * Makes sure assertions are enabled.
-	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
-	/**
-	 * Test conjunctive query construction1.
-	 */
+	// Creates a conjunctive query from 2 atoms with predicate and terms, then checks several things
 	@Test public void testConjunctiveQueryConstruction1() {
 		Predicate s2 = Predicate.create("s", 2);
 		Term[] t2 = new Term[]{TypedConstant.create("x5"), Variable.create("x1")};
@@ -59,9 +49,7 @@ public class ConjunctiveQueryTest {
 				q.getTerms());
 	}
 
-	/**
-	 * Test equals.
-	 */
+	// Creates 2 conjunctive queries from 2 atoms with predicate and terms then checks for equality 
 	@Test public void testEquals() {
 		Predicate s2 = Predicate.create("s", 2);
 		Term[] t2 = new Term[]{TypedConstant.create("x5"), Variable.create("x1")};

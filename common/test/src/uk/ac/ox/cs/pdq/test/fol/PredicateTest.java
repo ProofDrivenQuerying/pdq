@@ -10,93 +10,69 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-/**
- * A predicate's signature, associate a symbol with an arity..
- *
- * @author Julien Leblay
- */
+// @author Julien Leblay
 public class PredicateTest {
 
-	/**
-	 * Makes sure assertions are enabled.
-	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 	
-	/**
-	 * Test signature valid.
-	 */
+	// Creates predicate then checks for name and arity of one
 	@Test public void testSignatureValid() {
 		Predicate s = Predicate.create("s", 1);
 		Assert.assertEquals("Predicate must have name 's'", "s", s.getName());
 		Assert.assertEquals("Predicate must have arity 1", 1, s.getArity());
 	}
 
-	/**
-	 * Test signature zero arity.
-	 */
+	// Creates predicate then checks for name and arity of zero
 	@Test public void testSignatureZeroArity() {
 		Predicate s = Predicate.create("s", 0);
 		Assert.assertEquals("Predicate must have name 's'", "s", s.getName());
 		Assert.assertEquals("Predicate must have arity 0", 0, s.getArity());
 	}
 
-	/**
-	 * Test signature empty name.
-	 */
+	// Creates predicate with no name and expects IllegalArgumentException
 	@Test(expected=IllegalArgumentException.class)
 	public void testSignatureEmptyName() {
 		Predicate.create("", 0);
 	}
 
-	/**
-	 * Test signature null name.
-	 */
+	
+	// Creates predicate with null name and expects IllegalArgumentException
 	@Test(expected=IllegalArgumentException.class)
 	public void testSignatureNullName() {
 		Predicate.create(null, 0);
 	}
 
-	/**
-	 * Test negative arity.
-	 */
+	// Creates predicate with negative arity and expects IllegalArgumentException
 	@Test(expected=IllegalArgumentException.class)
 	public void testNegativeArity() {
 		Predicate.create("s", -1);
 	}
 
-	/**
-	 * Test equality.
-	 */
+	// Creates 2 predicates and checks for equality
 	@Test public void testEquality() {
 		Predicate s1 = Predicate.create("s", 5);
 		Predicate s2 = Predicate.create("s", 5);
 		Assert.assertTrue("Signatures s1 and s2 must be the same", s1.equals(s2));
 	}
 
-	/**
-	 * Test equality wrong arity.
-	 */
+	// Creates 2 predicates with different aritys and checks for inequality
 	@Test public void testEqualityWrongArity() {
 		Predicate s1 = Predicate.create("s", 5);
 		Predicate s2 = Predicate.create("s", 1);
 		Assert.assertFalse("Signatures s1 and s2 have different arities", s1.equals(s2));
 	}
 
-	/**
-	 * Test equality wrong name.
-	 */
+	// Creates 2 predicates with different aritys and checks for inequality
 	@Test public void testEqualityWrongName() {
-		Predicate s1 = Predicate.create("s", 5);
-		Predicate s2 = Predicate.create("s", 1);
-		Assert.assertNotEquals("Signatures s1 and s2 have different arities", s1.equals(s2));
+		Predicate s1 = Predicate.create("s1", 5);
+		Predicate s2 = Predicate.create("s2", 5);
+		Assert.assertFalse("Signatures s1 and s2 have different arities", s1.equals(s2));
 	}
 
-	/**
-	 * Test hash duplicates.
-	 */
+	// Creates a set of 8 predicates with 4 uniques, then tests for set size
 	@Test public void testHashDuplicates() {
 		Set<Predicate> set = new LinkedHashSet<>();
 		set.add(Predicate.create("s", 0));
@@ -110,9 +86,7 @@ public class PredicateTest {
 		Assert.assertEquals("Predicate set must have 4 elements", 4, set.size());
 	}
 
-	/**
-	 * Test hash no duplicates.
-	 */
+	// Creates a set of 8 unique predicates, then tests for set size
 	@Test public void testHashNoDuplicates() {
 		Set<Predicate> set = new LinkedHashSet<>();
 		set.add(Predicate.create("s", 0));

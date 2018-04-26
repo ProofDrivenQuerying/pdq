@@ -11,22 +11,14 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-/**
- * The Class VariableTermTest.
- */
 public class TermTest {
 	
-	/**
-	 * Makes sure assertions are enabled.
-	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
-	/**
-	 * Test hash code.
-	 */
+	// Creates a hash set of uniquely named variables then asserts that the set contains those variables
 	@Test
 	public void testHashCode() {
 		int n = 100;
@@ -40,9 +32,7 @@ public class TermTest {
 		}
 	}
 
-	/**
-	 * Test equals.
-	 */
+	// Assert that variables with the same name are the same
 	@Test
 	public void testEquals() {
 		int n = 100;

@@ -9,9 +9,7 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
@@ -31,6 +29,7 @@ public class IOManagerTest extends PdqTest {
 		Utility.assertsEnabled();
 	}
 
+	// Calls IOManager.importQuery then asserts everything expected about the query
 	@Test
 	public void testReadingQuery() {
 		try {													 
@@ -50,6 +49,7 @@ public class IOManagerTest extends PdqTest {
 		}
 	}
 
+	// Calls IOManager.exportQuery using importQuery as a starting point
 	@Test
 	public void testWritingQuery() {
 		try {
@@ -67,6 +67,7 @@ public class IOManagerTest extends PdqTest {
 		}
 	}
 
+	// Calls IOManager.importSchema and then asserts everything about the relations
 	@Test
 	public void testReadingSchema() {
 		try {
@@ -77,22 +78,21 @@ public class IOManagerTest extends PdqTest {
 			Assert.assertNotNull(s.getRelations()[0]);
 			Assert.assertNotNull(s.getRelations()[0].getName());
 			Assert.assertNotNull(s.getNonEgdDependencies());
-			Assert.assertTrue(s.getNonEgdDependencies().length > 0);
+			Assert.assertEquals(2, s.getRelation("r1").getAccessMethods().length);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
 		}
 	}
 
+	// Calls IOManager.exportSchemaToXML using importSchema as a starting point
 	@Test
 	public void testWritingSchema() {
 		try {
 			Attribute attr1 = Attribute.create(Integer.class, "r1.1");
 			Attribute attr2 = Attribute.create(Integer.class, "r1.2");
-			AccessMethod am1 = AccessMethod.create("m1", new Integer[] {});
-			AccessMethod am2 = AccessMethod.create("m2", new Integer[] { 0, 1 });
-			Relation r = Relation.create("r1", new Attribute[] { attr1, attr2 }, new AccessMethod[] { am1, am2 }, new ForeignKey[] {}, false, new String[] {attr1.getName(),attr2.getName()});
-			Relation r2 = new View("myView", new Attribute[] { attr1, attr2 }, new AccessMethod[] { am1, am2 });
+			Relation r = Relation.create("r1", new Attribute[] { attr1, attr2 });
+			Relation r2 = new View("myView", new Attribute[] { attr1, attr2 });
 			
 			Schema s = new Schema(new Relation[] { r, r2 },new Dependency[] { this.tgd, this.tgd2, this.egd });
 			File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "schemaOut.xml");
@@ -113,6 +113,7 @@ public class IOManagerTest extends PdqTest {
 		}
 	}
 
+	// Calls IOManager.read-and-writeRelationTerm using importSchema as a starting point
 	@Test
 	public void testReadingAccessTerm() {
 		try {
@@ -131,6 +132,7 @@ public class IOManagerTest extends PdqTest {
 		}
 	}
 
+	// Calls IOManager.writeRelationalTerm using importSchema as a starting point
 	@Test
 	public void testWritingAccessTerm() {
 		try {
@@ -150,6 +152,7 @@ public class IOManagerTest extends PdqTest {
 		}
 	}
 
+	// Calls IOManager.writeRelationalTerm using importSchema as a starting point
 	@Test
 	public void testWritingProjectionTerm() {
 		try {
@@ -157,7 +160,7 @@ public class IOManagerTest extends PdqTest {
 			Schema schema = IOManager.importSchema(schemaFile);
 			File ref = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "ProjectionTerm.xml");
 			File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "ProjectionTermOut.xml");
-			RelationalTerm child1 = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
+			RelationalTerm child1 = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[0]);
 			Attribute[] attributes = new Attribute[] { schema.getRelations()[0].getAttributes()[0], schema.getRelations()[0].getAttributes()[1] };
 			RelationalTerm child2 = ProjectionTerm.create(attributes, child1);
 			IOManager.writeRelationalTerm(child2, out);

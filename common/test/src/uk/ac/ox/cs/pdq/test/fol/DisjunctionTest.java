@@ -14,24 +14,15 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-/**
- * The Class DisjunctionTest.
- *
- * @author Julien Leblay
- */
+// @author Julien Leblay
 public final class DisjunctionTest {
 
-	/**
-	 * Makes sure assertions are enabled.
-	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
-	/**
-	 * Test of.
-	 */
+	// Creates disjunction from atoms with predicate and 5 or 2 terms each, then checks for equality
 	@Test public void testOf() {
 		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
@@ -52,9 +43,7 @@ public final class DisjunctionTest {
 				new Atom[]{p1, p2}, i.getAtoms());
 	}
 
-	/**
-	 * Test equals.
-	 */
+	// Creates 2 disjunctions from 2 atoms with predicate and 5 terms each, then checks for equality
 	@Test public void testEquals() {
 		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
@@ -79,9 +68,7 @@ public final class DisjunctionTest {
 		Assert.assertTrue("Disjunctions must match be equal ", i1.equals(i2));
 	}
 
-	/**
-	 * Test not equals.
-	 */
+	// Creates 2 disjunctions from 3 atoms with predicate and 5 terms each, then checks for inequality
 	@Test public void testNotEquals() {
 		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
