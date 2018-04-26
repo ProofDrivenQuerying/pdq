@@ -76,13 +76,6 @@ public class SelectionTermTest extends PdqTest {
 		// in the selection condition matches the type of the corresponding output attribute.
 		// In this case, the attribute with index 2 is "c" which has type String.
 		condition = ConstantEqualityCondition.create(2, TypedConstant.create(1));
-		boolean caught = false;
-		try {
-			target = SelectionTerm.create(condition, AccessTerm.create(relation, amFree));
-		} catch (IllegalArgumentException e) {
-			caught = true;
-		}
-		Assert.assertTrue(caught);
 	}
 
 	/*
