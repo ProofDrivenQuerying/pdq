@@ -2,6 +2,9 @@ package uk.ac.ox.cs.pdq.algebra;
 
 import org.junit.Assert;
 
+import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.util.Typed;
+
 /**
  * Represents a condition, that can be used to create -for example- a SelectionTerm, or a dependent join term. 
  *  
@@ -43,5 +46,27 @@ public class ConjunctiveCondition extends Condition {
     public static ConjunctiveCondition create(SimpleCondition[] predicates) {
         return Cache.conjunctiveCondition.retrieve(new ConjunctiveCondition(predicates));
     }
-    
+
+
+	public boolean isSatisfied(Tuple tuple) {
+
+//		return Arrays.stream(this.getSimpleConditions())
+//				.allMatch(c -> c.isSatisfied(tuple));
+				for (SimpleCondition simpleCondition: this.getSimpleConditions()) {
+					if (!simpleCondition.isSatisfied(tuple)) 
+						return false;
+				}
+				return true;
+	}
+
+	public boolean isSatisfied(Typed[] typeds) {
+//		return Arrays.stream(this.getSimpleConditions())
+//				.allMatch(c -> c.isSatisfied(typeds));
+
+				for (SimpleCondition simpleCondition: this.getSimpleConditions()) {
+					if (!simpleCondition.isSatisfied(typeds)) 
+						return false;
+				}
+				return true;
+	}    
 }

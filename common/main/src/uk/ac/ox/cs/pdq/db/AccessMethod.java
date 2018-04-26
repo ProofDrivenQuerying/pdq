@@ -32,7 +32,7 @@ public class AccessMethod implements Serializable {
 	/**  String representation of the object. */
 	protected String toString = null;
 	
-	protected AccessMethod(Integer[] inputs) {
+	public AccessMethod(Integer[] inputs) {
 		this(DEFAULT_PREFIX + GlobalCounterProvider.getNext("AccessMethodName"), inputs);
 	}
 

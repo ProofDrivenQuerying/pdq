@@ -2,7 +2,11 @@ package uk.ac.ox.cs.pdq.algebra;
 
 import org.junit.Assert;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.util.Typed;
 
 /**
  * Represents a constant equality condition, that can be used to create -for example- a SelectionTerm.
@@ -20,6 +24,7 @@ public class ConstantEqualityCondition extends SimpleCondition {
 	protected final TypedConstant constant;
 
 	private ConstantEqualityCondition(int position, TypedConstant constant) {
+		super(position);
 		Assert.assertTrue(position >= 0 && constant != null);
 		this.position = position;
 		this.constant = constant;
@@ -44,4 +49,24 @@ public class ConstantEqualityCondition extends SimpleCondition {
 		result.append(this.constant);
 		return result.toString();
 	}
+
+
+	// Return true iff the tuple value at the 'position' index is equal to that
+	// of the constant value in this condition.
+	@Override
+	public boolean isSatisfied(Tuple tuple) {
+		Preconditions.checkArgument(tuple.size() > this.position);
+
+		Object value = tuple.getValue(this.position);
+		Object targetValue = this.getConstant().getValue();
+		if (value == null)
+			return targetValue == null;
+		return this.compareValues(value, targetValue);
+	}
+
+	@Override
+	public boolean isSatisfied(Typed[] typeds) {
+		// TODO Auto-generated method stub
+		return false;
+	}	
 }

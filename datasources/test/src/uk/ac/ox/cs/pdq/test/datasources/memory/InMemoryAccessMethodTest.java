@@ -423,7 +423,7 @@ public class InMemoryAccessMethodTest {
 
 		Attribute[] relationR1Attributes = new Attribute[] {Attribute.create(String.class, "a"),
 				Attribute.create(String.class, "b")};
-		Relation relationR1 = new Relation("R1", relationR1Attributes);
+		Relation relationR1 = Relation.create("R1", relationR1Attributes);
 
 		Map<Attribute, Attribute> attributeMapping1 = ImmutableMap.of(
 				Attribute.create(String.class, "A"), Attribute.create(String.class, "b"),
