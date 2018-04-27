@@ -9,10 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.algebra.Condition;
-import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
+import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
@@ -22,22 +21,18 @@ import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-/**
- * @author Gabor
- *
- */
+// @author Gabor
 public class RelationalTermIOTest {
-	/**
-	 * Makes sure assertions are enabled.
-	 */
 	@Before
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
+	// Calls IOManager.writeRelationalTerm then reads it back in and compares
 	private void testIO(RelationalTerm t) {
 		try {
 			File out = new File("test/src/uk/ac/ox/cs/pdq/test/io/jaxb/RelationalTermTest.xml");
@@ -51,6 +46,7 @@ public class RelationalTermIOTest {
 		}
 	}
 
+	// Calls IOManager.importSchema then creates a projection term and calls testIO
 	@Test
 	public void testProjectionTerm() {
 		try {
@@ -66,6 +62,7 @@ public class RelationalTermIOTest {
 		}
 	}
 
+	// Calls IOManager.importSchema then creates a cartesian product term and calls testIO
 	@Test
 	public void testCartesianProductTerm() {
 		try {
@@ -82,6 +79,7 @@ public class RelationalTermIOTest {
 		}
 	}
 
+	// Calls IOManager.importSchema then creates a dependent join term and calls testIO
 	@Test
 	public void testDependentJoinTerm() {
 		try {
@@ -97,6 +95,7 @@ public class RelationalTermIOTest {
 		}
 	}
 
+	// Calls IOManager.importSchema then creates a join term and calls testIO
 	@Test
 	public void testJoinTerm() {
 		try {
@@ -112,6 +111,7 @@ public class RelationalTermIOTest {
 		}
 	}
 
+	// Calls IOManager.importSchema then creates a rename term and calls testIO
 	@Test
 	public void testRenameTerm() {
 		try {
@@ -127,13 +127,14 @@ public class RelationalTermIOTest {
 		}
 	}
 
+	// Calls IOManager.importSchema then creates a selection term and calls testIO
 	@Test
 	public void testSelectionTerm() {
 		try {
 			File schemaFile = new File("test/src/uk/ac/ox/cs/pdq/test/io/jaxb/schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
-			Condition predicate = AttributeEqualityCondition.create(0, 1);
+			Condition predicate = ConstantEqualityCondition.create(0, TypedConstant.create(new Integer(1)));
 			SelectionTerm selectionTerm = SelectionTerm.create(predicate, access);
 			testIO(selectionTerm);
 		} catch (Exception e) {
@@ -142,15 +143,14 @@ public class RelationalTermIOTest {
 		}
 	}
 
+	// Calls IOManager.importSchema then creates a selection term with condition and calls testIO
 	@Test
 	public void testSelectionTermWithCondition() {
 		try {
 			File schemaFile = new File("test/src/uk/ac/ox/cs/pdq/test/io/jaxb/schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
-			SimpleCondition predicate = AttributeEqualityCondition.create(0, 1);
-			SimpleCondition predicate2 = AttributeEqualityCondition.create(1, 0);
-			ConjunctiveCondition concon = ConjunctiveCondition.create(new SimpleCondition[] { predicate, predicate2, predicate, predicate });
+			ConstantEqualityCondition concon = ConstantEqualityCondition.create(0, TypedConstant.create(new Integer(1)));
 			SelectionTerm selectionTerm = SelectionTerm.create(concon, access);
 
 			testIO(selectionTerm);
@@ -160,20 +160,21 @@ public class RelationalTermIOTest {
 		}
 	}
 
+	// Calls IOManager.importSchema then creates a ;arge relational term and calls testIO
 	@Test
 	public void testLargeRelationalTerm() {
 		try {
 			File schemaFile = new File("test/src/uk/ac/ox/cs/pdq/test/io/jaxb/schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
-			Condition predicate = AttributeEqualityCondition.create(0, 1);
+			Condition predicate = ConstantEqualityCondition.create(0, TypedConstant.create(new Integer(1)));
 			ProjectionTerm p = ProjectionTerm.create(access.getInputAttributes(), access);
 			ProjectionTerm p1 = ProjectionTerm.create(p.getInputAttributes(), p);
 			SelectionTerm selectionTerm = SelectionTerm.create(predicate, p1);
 			ProjectionTerm p2 = ProjectionTerm.create(selectionTerm.getInputAttributes(), selectionTerm);
 
 			RelationalTerm accessX = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
-			Condition predicateX = AttributeEqualityCondition.create(0, 1);
+			Condition predicateX = ConstantEqualityCondition.create(0, TypedConstant.create(new Integer(1)));
 			ProjectionTerm pX = ProjectionTerm.create(accessX.getInputAttributes(), accessX);
 			ProjectionTerm p1X = ProjectionTerm.create(pX.getInputAttributes(), pX);
 			SelectionTerm selectionTermX = SelectionTerm.create(predicateX, p1X);
