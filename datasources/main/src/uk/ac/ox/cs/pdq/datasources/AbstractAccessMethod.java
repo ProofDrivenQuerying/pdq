@@ -41,9 +41,6 @@ public class AbstractAccessMethod extends AccessMethod {
 	/** A Constant DEFAULT_PREFIX for all automatically generated access methods names */
 	public static  String DEFAULT_PREFIX = "mt_";
 	
-	/**  Name of the access method. */
-	protected  String name;
-	
 	/** Output attributes. */
 	protected  Attribute[] attributes;
 	
@@ -76,28 +73,44 @@ public class AbstractAccessMethod extends AccessMethod {
 	
 	/**  String representation of the object. */
 	protected String toString = null;
-
+	
 	public AbstractAccessMethod(Attribute[] attributes, Integer[] inputs, Relation relation,
 			Map<Attribute, Attribute> attributeMapping) {
 		super(inputs);
+		this.attributes = attributes;
+		this.inputs = inputs;
+		this.relation = relation;
+		this.attributeMapping = attributeMapping;
 		init();
 	}
 
 	public AbstractAccessMethod(String name, Attribute[] attributes, Integer[] inputs, Relation relation,
 			Map<Attribute, Attribute> attributeMapping) {
 		super(name, inputs);
+		this.attributes = attributes;
+		this.inputs = inputs;
+		this.relation = relation;
+		this.attributeMapping = attributeMapping;
 		init();
 	}
 
 	public AbstractAccessMethod(Attribute[] attributes, Set<Attribute> inputAttributes, Relation relation,
 			Map<Attribute, Attribute> attributeMapping) {
 		super(convertInputs(attributes, inputAttributes));
+		this.attributes = attributes;
+		this.inputs = convertInputs(attributes, inputAttributes);
+		this.relation = relation;
+		this.attributeMapping = attributeMapping;
 		init();
 	}
 
 	public AbstractAccessMethod(String name, Attribute[] attributes, Set<Attribute> inputAttributes, Relation relation,
 			Map<Attribute, Attribute> attributeMapping) {
 		super(name, convertInputs(attributes, inputAttributes));
+		this.attributes = attributes;
+		this.inputs = convertInputs(attributes, inputAttributes);
+		this.relation = relation;
+		this.attributeMapping = attributeMapping;
 		init();
 	}
 
