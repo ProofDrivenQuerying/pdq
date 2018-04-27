@@ -87,6 +87,14 @@ public class AccessTerm extends RelationalTerm {
 	public Map<Integer, TypedConstant> getInputConstants() {
 		return new LinkedHashMap<>(this.inputConstants);
 	}
+	
+	public Map<Attribute, TypedConstant> getInputConstantsAsAttributes() {
+		Map<Attribute, TypedConstant> ret = new HashMap<>();
+		for (Integer index: inputConstants.keySet()) {
+			ret.put(relation.getAttribute(index), inputConstants.get(index));
+		}
+		return ret;
+	}
 
 	@Override
 	public String toString() {

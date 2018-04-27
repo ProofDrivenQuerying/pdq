@@ -9,6 +9,8 @@ import java.util.function.Consumer;
 import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -41,22 +43,22 @@ public class Access extends UnaryExecutablePlan {
 		AccessTerm accessTerm = (AccessTerm) this.getDecoratedPlan();
 
 		Spliterator<Tuple> underlying = null;
-
+		AbstractAccessMethod aam = (AbstractAccessMethod) accessTerm.getAccessMethod(); 
 		// Case 1: the underlying access method has no input attributes.
-		if (accessTerm.getAccessMethod().inputAttributes().length == 0)
-			underlying = accessTerm.getAccessMethod().access().spliterator();
+		if (aam.inputAttributes().length == 0)
+			underlying = aam.access().spliterator();
 
 		// Case 2: the access method has input attributes but the AccessTerm does not 
 		// (i.e. if all of the access method inputs are supplied by input constants).
-		if (accessTerm.getAccessMethod().inputAttributes().length != 0 && 
+		if (aam.inputAttributes().length != 0 && 
 				accessTerm.getInputAttributes().length == 0)
-			underlying = accessTerm.getAccessMethod().access(this.constantInput()).spliterator();
+			underlying = aam.access(this.constantInput()).spliterator();
 
 		// Case 3: the AccessTerm has inputs.
 		if (accessTerm.getInputAttributes().length != 0) {
 			Preconditions.checkState(this.inputTuples != null && this.inputTuples.hasNext(), 
 					"Missing dynamic input accessing relation: " + ((AccessTerm) this.getDecoratedPlan()).getRelation().getName());
-			underlying = accessTerm.getAccessMethod().access(this.combineInputs()).spliterator();
+			underlying = aam.access(this.combineInputs()).spliterator();
 		}
 		
 		return new AccessSpliterator(underlying);
@@ -86,7 +88,7 @@ public class Access extends UnaryExecutablePlan {
 		Preconditions.checkState(accessTerm.getInputAttributes().length == 0);
 		Preconditions.checkState(accessTerm.getInputConstants().size() != 0);
 
-		Attribute[] inputAttributes = accessTerm.getAccessMethod().inputAttributes();
+		Attribute[] inputAttributes = ((AbstractAccessMethod)accessTerm.getAccessMethod()).inputAttributes();
 		List<Tuple> constantInput = new ArrayList<Tuple>();
 		TupleType tt = TupleType.createFromTyped(inputAttributes);
 		Object[] values = new Object[tt.size()];
@@ -94,7 +96,7 @@ public class Access extends UnaryExecutablePlan {
 		// Since the AccessTerm has no input attributes, the input constants must provide
 		// all inputs to the underlying AccessMethod.
 		for (int i = 0; i != inputAttributes.length; i++)
-			values[i] = accessTerm.getInputConstants().get(inputAttributes[i]).getValue();
+			values[i] = accessTerm.getInputConstantsAsAttributes().get(inputAttributes[i]).getValue();
 		constantInput.add(tt.createTuple(values));
 		return constantInput.iterator();
 	}
@@ -111,9 +113,9 @@ public class Access extends UnaryExecutablePlan {
 	}
 
 	private class CombinedInputsIterator implements Iterator<Tuple> {
-
-		Attribute[] allInputAttributes = ((AccessTerm) getDecoratedPlan()).getAccessMethod().inputAttributes(true);
-		Map<Attribute, TypedConstant> inputConstants = ((AccessTerm) getDecoratedPlan()).getInputConstants();
+		AccessMethod am = ((AccessTerm) getDecoratedPlan()).getAccessMethod();
+		Attribute[] allInputAttributes = ((AbstractAccessMethod)am).inputAttributes(true);
+		Map<Attribute, TypedConstant> inputConstants = ((AccessTerm) getDecoratedPlan()).getInputConstantsAsAttributes();
 		TupleType tt = TupleType.createFromTyped(allInputAttributes);
 
 		@Override

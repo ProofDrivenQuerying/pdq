@@ -6,13 +6,17 @@ import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Assert;
 
+import com.google.common.base.Preconditions;
+
+import uk.ac.ox.cs.pdq.db.Attribute;
+
 
 /**
  * 
  * @author Efthymia Tsamoura
  *
  */
-public class DependentJoinTerm extends RelationalTerm {
+public class DependentJoinTerm extends JoinTerm {
 	protected static final long serialVersionUID = 3160309108592668317L;
 
 	protected final RelationalTerm[] children = new RelationalTerm[2];
@@ -27,7 +31,8 @@ public class DependentJoinTerm extends RelationalTerm {
 	protected String toString = null;
 
 	private DependentJoinTerm(RelationalTerm child1, RelationalTerm child2) {
-		super(AlgebraUtilities.computeInputAttributesForDependentJoinTerm(child1, child2), AlgebraUtilities.computeOutputAttributes(child1, child2));
+		super(child1,child2);
+		//super(AlgebraUtilities.computeInputAttributesForDependentJoinTerm(child1, child2), AlgebraUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		// The first child most have at least one output that can be used as an input for the second.
@@ -49,6 +54,31 @@ public class DependentJoinTerm extends RelationalTerm {
 		return this.joinConditions;
 	}
 
+	/**
+	 * Returns true iff the given input attribute in the right child is bound
+	 * from the left child.
+	 *  
+	 * @return true iff the given attribute is bound from the left child. 
+	 * @throws IllegalArgumentException if the given attribute is not an input
+	 * attribute in the right child.
+	 */
+	public boolean isBound(Attribute attribute) {
+
+		Preconditions.checkArgument(Arrays.asList(this.getChild(1).getInputAttributes()).contains(attribute));
+		return this.joinMap().containsValue(attribute);
+	}
+
+	/**
+	 * Returns an array containing those input attribute in the right child 
+	 * that are bound from the left child.
+	 *  
+	 * @return An array of attributes. 
+	 */
+	public Attribute[] boundAttributes() {
+		return Arrays.stream(this.getChild(1).getInputAttributes())
+				.filter(attr -> this.isBound(attr)).toArray(Attribute[]::new);
+	}
+	
 	@Override
 	public String toString() {
 		if(this.toString == null) {

@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.algebra;
 
 import java.io.Serializable;
+import java.util.function.Predicate;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -32,11 +33,11 @@ public abstract class Condition implements Serializable {
 	 */
 	public abstract boolean isSatisfied(Tuple tuple);
 	
-//	/**
-//	 * Returns a Predicate representation of the condition.
-//	 * @return The condition expressed as a java.util.function.Predicate object. 
-//	 */
-//	public Predicate<Tuple> asPredicate() {
-//		return (tuple) -> this.isSatisfied(tuple);
-//	}	
+	/**
+	 * Returns a Predicate representation of the condition.
+	 * @return The condition expressed as a java.util.function.Predicate object. 
+	 */
+	public Predicate<Tuple> asPredicate() {
+		return (tuple) -> this.isSatisfied(tuple);
+	}	
 }

@@ -60,7 +60,7 @@ public abstract class BinaryExecutablePlan extends ExecutablePlan {
 	}
 
 	public Condition getJoinCondition() {
-		return ((JoinTerm) this.getDecoratedPlan()).getJoinCondition();
+		return ((JoinTerm) this.getDecoratedPlan()).getJoinConditions();
 	}
 
 	public Condition getJoinCondition(Tuple tuple) {
