@@ -75,8 +75,9 @@ public class PostgresqlSchemaDiscoveryTest extends PdqTest {
 	public PostgresqlSchemaDiscoveryTest() throws BuilderException {
 		Properties properties = new Properties();
 		properties.put("url", "jdbc:postgresql://localhost/");
-		properties.put("database", "tpch_0001");
+		properties.put("database", "tpch");
 		properties.put("username", "root");
+		properties.put("username", "postgres");
 		properties.put("password", "root");
 		properties.put("driver","org.postgresql.Driver");		
 		int i = 0;
