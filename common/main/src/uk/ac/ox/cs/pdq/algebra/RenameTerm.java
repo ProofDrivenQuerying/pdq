@@ -1,9 +1,12 @@
 package uk.ac.ox.cs.pdq.algebra;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Assert;
+
+import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -118,4 +121,16 @@ public class RenameTerm extends RelationalTerm {
 		}
 		return new RelationalTermAsLogic(t0Logic.getFormula(),mapNew);
 	}
+	
+	protected static Attribute[] getInputAttributes(Attribute[] renamings, Plan child) {
+		Attribute[] newInputAttributes = new Attribute[child.getInputAttributes().length];
+		Attribute[] oldOutputAttributes = child.getOutputAttributes();
+		for (int i = 0; i < child.getInputAttributes().length; ++i) {
+			int indexInputAttribute = Arrays.asList(oldOutputAttributes).indexOf(child.getInputAttributes()[i]);
+			Preconditions.checkArgument(indexInputAttribute >= 0, "Input attribute not found");
+			newInputAttributes[i] = renamings[indexInputAttribute];
+		}
+		return newInputAttributes;
+	}
+	
 }

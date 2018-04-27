@@ -11,16 +11,18 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.junit.Assert;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.RelationalTermAdapter;
 
 /**
  * 
  * @author Efthymia Tsamoura
- *
+ * @author Tim Hobson
  */
 @XmlJavaTypeAdapter(RelationalTermAdapter.class)
-public abstract class RelationalTerm implements Serializable {
+public abstract class RelationalTerm implements Serializable, Plan {
 
 	private static final long serialVersionUID = 1734503933593174613L;
 
@@ -56,11 +58,11 @@ public abstract class RelationalTerm implements Serializable {
 		return this.inputAttributes[index];
 	}
 
-	public Integer getNumberOfOutputAttributes() {
+	public int getNumberOfOutputAttributes() {
 		return this.outputAttributes.length;
 	}
 
-	public Integer getNumberOfInputAttributes() {
+	public int getNumberOfInputAttributes() {
 		return this.inputAttributes.length;
 	}
 
@@ -69,10 +71,6 @@ public abstract class RelationalTerm implements Serializable {
 	public abstract RelationalTerm getChild(int childIndex);
 
 	public abstract Integer getNumberOfChildren();
-
-	public boolean isClosed() {
-		return this.inputAttributes.length == 0;
-	}
 
 	/**
 	 * Gets the accesses, and caches them, since it is a slow operation to generate
@@ -112,6 +110,79 @@ public abstract class RelationalTerm implements Serializable {
 		return result;
 	}
 
+	/**
+	 * Sets one of the child query plans. Once set, a child cannot be reset. 
+	 * @param index the array index
+	 * @param child the child query plan
+	 */
+	protected void setChild(int index, Plan child) {
+		Preconditions.checkElementIndex(index, this.getChildren().length);
+		// Enforce the rule that child plans cannot be reset.
+		Preconditions.checkState(this.getChildren()[index] == null, 
+				"Child at index " + index + " is already non-null and cannot be reset.");
+		Preconditions.checkNotNull(child);
+		this.setChild(index, child);
+	}
+
+	/**
+	 * Gets the position of an output attribute.
+	 * 
+	 * @param attribute the attribute
+	 * @return the index of the corresponding attribute, or -1 iff the plan has no such attribute. 
+	 */
+	@Override
+	public int getAttributePosition(Attribute attribute) {
+
+		List<Attribute> attrs = Arrays.asList(this.outputAttributes);
+		if (!attrs.stream().anyMatch(attr -> attr.equals(attribute)))
+			return -1;
+		return attrs.indexOf(attribute);
+	}
+	
+	// TODO: Untested!
+	@Override
+	public Set<AccessTerm> accessPlans() {
+
+		Set<AccessTerm> ret = new LinkedHashSet<AccessTerm>();
+
+		if (this instanceof AccessTerm)
+			ret.add((AccessTerm) this);
+		else {
+			for (Plan child: this.getChildren()) 
+				ret.addAll(child.accessPlans());
+		}
+		return ret;
+	}
+
+	public boolean isClosed() {
+		return this.getInputAttributes().length == 0;
+	}
+
+	@Override
+	public Integer[] getInputIndices() {
+
+		return Arrays.stream(this.getInputAttributes())
+				.map(a -> Arrays.asList(this.getOutputAttributes()).indexOf(a))
+				.sorted()
+				.toArray(Integer[]::new);
+	}
+
+	public String toString(String type, String body) {
+
+		StringBuilder result = new StringBuilder();
+		result.append(type);
+		result.append('{');
+		if (body != null)
+			result.append('[').append(body).append(']');
+		for (int i = 0; i != this.getChildren().length; i++) {
+			result.append(this.getChildren()[i].toString());
+			if (i != this.getChildren().length - 1)
+				result.append(',');
+		}
+		result.append('}');
+		return result.toString();	
+	}
+	
 	/**
 	 * Recursively converts this RelationalTerm into logic objects.
 	 * 

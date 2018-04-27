@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -16,10 +17,10 @@ import org.mockito.Mockito;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -65,7 +66,7 @@ public class AccessTest {
 		/*
 		 * Plan: Free access.
 		 */
-		Access target = new Access(new AccessTerm(amFree));
+		Access target = new Access(AccessTerm.create(amFree.getRelation(), amFree));
 
 		// Here we demonstrate the two plan execution methods:
 
@@ -102,10 +103,13 @@ public class AccessTest {
 		/*
 		 * Plan: Access with constant input on attribute "b".
 		 */
-		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
-		inputConstants.put(Attribute.create(Integer.class, "b"), TypedConstant.create(101));
+//		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
+//		inputConstants.put(Attribute.create(Integer.class, "b"), TypedConstant.create(101));
+		//Access target = new Access(new AccessTerm(am1, inputConstants));
+		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
+		inputConstants.put(1, TypedConstant.create(101));
 
-		Access target = new Access(new AccessTerm(am1, inputConstants));
+		Access target = new Access(AccessTerm.create(am1.getRelation(), am1,inputConstants));
 
 		// Create some tuples
 		List<Tuple> tuples = new ArrayList<Tuple>();
@@ -158,8 +162,9 @@ public class AccessTest {
 		/*
 		 * Plan: Access with dynamic input on attribute "b".
 		 */
-		Access target = new Access(new AccessTerm(am1));
-
+		//Access target = new Access(new AccessTerm(am1));
+		Access target = new Access(AccessTerm.create(am1.getRelation(), am1));
+		
 		// Create some dynamic input.
 		TupleType ttInteger = TupleType.DefaultFactory.create(Integer.class);
 		List<Tuple> dynamicInput = new ArrayList<Tuple>();
@@ -212,7 +217,10 @@ public class AccessTest {
 		/*
 		 *  Test with invalid dynamic input.
 		 */
-		target = new Access(new AccessTerm(am1));
+//		target = new Access(new AccessTerm(am1));
+		target.close();
+		target = new Access(AccessTerm.create(am1.getRelation(), am1));
+		
 
 		TupleType ttString = TupleType.DefaultFactory.create(String.class);
 		List<Tuple> invalidDynamicInput = new ArrayList<Tuple>();
@@ -237,7 +245,9 @@ public class AccessTest {
 		/*
 		 * Test with mixed valid and invalid dynamic input.
 		 */
-		target = new Access(new AccessTerm(am1));
+		//target = new Access(new AccessTerm(am1));
+		target.close();
+		target = new Access(AccessTerm.create(am1.getRelation(), am1));
 
 		List<Tuple> mixedDynamicInput = new ArrayList<Tuple>();
 		mixedDynamicInput.add(ttInteger.createTuple(101));
@@ -265,13 +275,15 @@ public class AccessTest {
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
 
 		Integer[] inputs = new Integer[0];
-		AccessMethod amFree = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, 
+		AbstractAccessMethod amFree = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, 
 				TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		/*
 		 *  Plan: free access on relation NATION. 
 		 */
-		Access target = new Access(new AccessTerm(amFree));
+		//Access target = new Access(new AccessTerm(amFree));
+		Access target = new Access(AccessTerm.create(amFree.getRelation(), amFree));
+
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -290,16 +302,21 @@ public class AccessTest {
 
 		// Specify input attributes by passing an array of indices. 
 		Integer[] inputs = new Integer[] {2};
-		AccessMethod am2 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, 
+		AbstractAccessMethod am2 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, 
 				TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		/*
 		 * Plan: Access on relation NATION with constant input on attribute "regionKey".
 		 */
-		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
-		inputConstants.put(Attribute.create(Integer.class, "regionKey"), TypedConstant.create(2));
-
-		Access target = new Access(new AccessTerm(am2, inputConstants));
+//		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
+//		inputConstants.put(Attribute.create(Integer.class, "regionKey"), TypedConstant.create(2));
+//
+//		Access target = new Access(new AccessTerm(am2, inputConstants));
+		
+		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
+		inputConstants.put(2, TypedConstant.create(2));
+		Access target = new Access(AccessTerm.create(am2.getRelation(), am2,inputConstants));
+		
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -318,16 +335,19 @@ public class AccessTest {
 
 		// Specify input attributes by passing a set of attributes. 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_REGIONKEY"));
-		AccessMethod am2 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
+		AbstractAccessMethod am2 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
 				relation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		/*
 		 * Plan: Access on relation NATION with constant input on attribute "regionKey".
 		 */
-		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
-		inputConstants.put(Attribute.create(Integer.class, "regionKey"), TypedConstant.create(2));
-
-		Access target = new Access(new AccessTerm(am2, inputConstants));
+//		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
+//		inputConstants.put(Attribute.create(Integer.class, "regionKey"), TypedConstant.create(2));
+//
+//		Access target = new Access(new AccessTerm(am2, inputConstants));
+		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
+		inputConstants.put(2, TypedConstant.create(2));
+		Access target = new Access(AccessTerm.create(am2.getRelation(), am2,inputConstants));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -346,13 +366,14 @@ public class AccessTest {
 
 		// Specify input attributes by passing a set of attributes. 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_REGIONKEY"));
-		AccessMethod am2 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, relation, 
+		AbstractAccessMethod am2 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, relation, 
 				TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		/*
 		 * Plan: Access on relation NATION with dynamic input on attribute "regionKey".
 		 */
-		Access target = new Access(new AccessTerm(am2));
+		//Access target = new Access(new AccessTerm(am2));
+		Access target = new Access(AccessTerm.create(am2.getRelation(), am2));
 
 		// Attempting to execute the plan without specifying dynamic inputs
 		// results in an IllegalStateException.
@@ -411,16 +432,19 @@ public class AccessTest {
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(String.class, "N_NAME"), 
 				Attribute.create(Integer.class, "N_REGIONKEY"));
 
-		AccessMethod am12 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, relation, 
+		AbstractAccessMethod am12 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, relation, 
 				TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		/*
 		 * Plan: Access on relation NATION with constant input on attribute "regionKey" and dynamic input on attribute "name".
 		 */
-		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
-		inputConstants.put(Attribute.create(Integer.class, "regionKey"), TypedConstant.create(2));
-
-		Access target = new Access(new AccessTerm(am12, inputConstants));
+//		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
+//		inputConstants.put(Attribute.create(Integer.class, "regionKey"), TypedConstant.create(2));
+//
+//		Access target = new Access(new AccessTerm(am12, inputConstants));
+		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
+		inputConstants.put(2, TypedConstant.create(2));
+		Access target = new Access(AccessTerm.create(am12.getRelation(), am12,inputConstants));
 
 		// Attempting to execute the plan without specifying dynamic inputs
 		// results in an IllegalStateException.
@@ -459,17 +483,19 @@ public class AccessTest {
 		// Specify input attributes by passing a set of attributes. 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "L_SUPPKEY"));
 
-		AccessMethod am2 = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
+		AbstractAccessMethod am2 = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
 				inputAttributes, relation, TPCHelper.attrMap_lineItem, TPCHelper.getProperties());
 
 		/*
 		 * Plan: Access on relation LINEITEM with constant input on attribute "suppKey".
 		 */
-		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
-		inputConstants.put(Attribute.create(Integer.class, "suppKey"), TypedConstant.create(22));
-
-		Access target = new Access(new AccessTerm(am2, inputConstants));
-
+//		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
+//		inputConstants.put(Attribute.create(Integer.class, "suppKey"), TypedConstant.create(22));
+//		Access target = new Access(new AccessTerm(am2, inputConstants));
+		
+		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
+		inputConstants.put(2, TypedConstant.create(22));
+		Access target = new Access(AccessTerm.create(am2.getRelation(), am2,inputConstants));
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
 
@@ -489,13 +515,14 @@ public class AccessTest {
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "L_SUPPKEY"), 
 				Attribute.create(Integer.class, "L_QUANTITY"));
 
-		AccessMethod am23 = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
+		AbstractAccessMethod am23 = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
 				inputAttributes, relation, TPCHelper.attrMap_lineItem, TPCHelper.getProperties());
 
 		/*
 		 * Plan: Access on relation LINEITEM with dynamic input on attributes "suppKey" and "quantity".
 		 */
-		Access target = new Access(new AccessTerm(am23));
+		//Access target = new Access(new AccessTerm(am23));
+		Access target = new Access(AccessTerm.create(am23.getRelation(), am23));
 
 		// Attempting to execute the plan without specifying dynamic inputs
 		// results in an IllegalStateException.
@@ -531,13 +558,14 @@ public class AccessTest {
 		// Specify input attributes by passing a set of attributes. 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "L_QUANTITY"));
 
-		AccessMethod am3 = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
+		AbstractAccessMethod am3 = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
 				inputAttributes, TPCHelper.relationLineItem, TPCHelper.attrMap_lineItem, TPCHelper.getProperties());
 
 		/*
 		 * Plan: Access on relation LINEITEM with dynamic input on attributes "quantity".
 		 */
-		Access target = new Access(new AccessTerm(am3));
+//		Access target = new Access(new AccessTerm(am3));
+		Access target = new Access(AccessTerm.create(am3.getRelation(), am3));
 
 		// Attempting to execute the plan without specifying dynamic inputs
 		// results in an IllegalStateException.
