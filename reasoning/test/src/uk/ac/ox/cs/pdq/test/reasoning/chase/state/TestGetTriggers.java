@@ -179,11 +179,8 @@ public class TestGetTriggers extends PdqTest {
 		Atom eq2 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c3"));
 		chaseState[0].addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
 		List<Match> matches1 = chaseState[0].getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE);
-		chaseState[1].addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
-		List<Match> matches2 = chaseState[1].getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE);
 
 		Assert.assertEquals(7, matches1.size());
-		Assert.assertEquals(7, matches2.size());
 	}
 
 	@Test
