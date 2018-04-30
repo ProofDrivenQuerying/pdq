@@ -24,6 +24,7 @@ import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantInequalityCondition;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.algebra.TypeEqualityCondition;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
@@ -833,8 +834,7 @@ public class DependentJoinTest {
 
 		// DependentJoin{b}(dependentJoinR1R2, dependentJoinR3R4).
 		DependentJoin target = new DependentJoin(DependentJoinTerm.create(
-				dependentJoinR1R2, 
-				dependentJoinR3R4));
+				(RelationalTerm)dependentJoinR1R2.getDecoratedPlan(), (RelationalTerm)dependentJoinR3R4.getDecoratedPlan()));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream()
@@ -842,6 +842,8 @@ public class DependentJoinTest {
 
 		Assert.assertEquals(N, result.size());
 		target.close();
+		dependentJoinR1R2.close();
+		dependentJoinR3R4.close();
 	}
 
 	/*
@@ -899,9 +901,8 @@ public class DependentJoinTest {
 
 		// DependentJoin{e}(AccessR5, dependentJoinR3R4).
 		DependentJoin target = new DependentJoin(DependentJoinTerm.create(
-				accessR5, 
-				dependentJoinR3R4));
-
+				(RelationalTerm)accessR5.getDecoratedPlan(), (RelationalTerm)dependentJoinR3R4.getDecoratedPlan()));
+		
 		// Execute the plan. 
 		List<Tuple> result = target.stream()
 				.collect(Collectors.toList());
@@ -916,6 +917,8 @@ public class DependentJoinTest {
 
 		Assert.assertEquals(N, result.size());
 		target.close();
+		dependentJoinR3R4.close();
+		accessR5.close();
 	}
 
 	/*

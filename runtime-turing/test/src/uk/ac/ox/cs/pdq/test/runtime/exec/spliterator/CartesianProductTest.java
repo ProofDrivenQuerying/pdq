@@ -186,6 +186,7 @@ public class CartesianProductTest {
 		/*
 		 *  Test with dynamic input containing no duplicates for either child. 
 		 */
+		target.close();
 		target = new CartesianProduct(CartesianProductTerm.create(leftChild, rightChild));
 		dynamicInput = new ArrayList<Tuple>();
 		dynamicInput.add(ttIntegerInteger.createTuple(4, 0));

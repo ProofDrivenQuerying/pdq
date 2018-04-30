@@ -19,24 +19,24 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.TypeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantInequalityCondition;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
+import uk.ac.ox.cs.pdq.algebra.TypeEqualityCondition;
 import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.runtime.exec.spliterator.NestedLoopJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.BinaryExecutablePlan;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.DependentJoin;
+import uk.ac.ox.cs.pdq.runtime.exec.spliterator.NestedLoopJoin;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
@@ -478,8 +478,10 @@ public class NestedLoopJoinTest {
 		// Construct a custom join condition to join on the 0th NATION attribute 
 		// (nationKey) and the 0th REGION attribute (regionKey).
 		Condition joinCondition = TypeEqualityCondition.create(1, 3);
-
-		target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild, joinCondition));
+		target.close();
+// TOCOMMENT do we want JoinTerm to support external join conditions?		
+//		target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild, joinCondition));
+		target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Construct some dummy tuples to test the tuple-dependent getJoinCondition method.
 		TupleType ttN = TupleType.DefaultFactory.create(String.class, Integer.class, Integer.class); // name, nationKey, regionKey
@@ -942,12 +944,14 @@ public class NestedLoopJoinTest {
 		am40.load(tuples4);
 
 		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(
-				dependentJoinR1R2, dependentJoinR3R4));
+				(RelationalTerm)dependentJoinR1R2.getDecoratedPlan(), (RelationalTerm)dependentJoinR3R4.getDecoratedPlan()));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
 
 		Assert.assertEquals(N, result.size());
+		dependentJoinR3R4.close();
+		dependentJoinR1R2.close();
 		target.close();
 	}
 
