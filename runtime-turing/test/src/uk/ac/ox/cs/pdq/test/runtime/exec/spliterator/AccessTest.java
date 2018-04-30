@@ -84,10 +84,9 @@ public class AccessTest {
 	@Test
 	public void integrationTestInMemory2() {
 
-		Relation relation = Mockito.mock(Relation.class);
 		Attribute[] relationAttributes = new Attribute[] {Attribute.create(Integer.class, "a"),
 				Attribute.create(Integer.class, "b"), Attribute.create(String.class, "c")};
-		when(relation.getAttributes()).thenReturn(relationAttributes.clone());
+		Relation relation = Relation.create("R1", relationAttributes);
 
 		Attribute[] amAttributes = new Attribute[] {
 				Attribute.create(String.class, "W"), Attribute.create(Integer.class, "X"),

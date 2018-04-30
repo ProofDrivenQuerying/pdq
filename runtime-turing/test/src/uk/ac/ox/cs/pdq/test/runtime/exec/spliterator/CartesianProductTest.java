@@ -53,9 +53,9 @@ public class CartesianProductTest {
 		/*
 		 * Plan: Free access on the NATION and REGION relations, then Cartesian product.
 		 */
-		AccessTerm leftChild = new AccessTerm(amFreeNation);
-		AccessTerm rightChild = new AccessTerm(amFreeRegion);
-		CartesianProduct target = new CartesianProduct(new CartesianProductTerm(leftChild, rightChild));
+		AccessTerm leftChild = AccessTerm.create(relationNation, amFreeNation);
+		AccessTerm rightChild = AccessTerm.create(relationRegion ,amFreeRegion);
+		CartesianProduct target = new CartesianProduct(CartesianProductTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -97,9 +97,9 @@ public class CartesianProductTest {
 		 * Free access on the NATION relation and access on the REGION relation with input
 		 * on the R_REGIONKEY attribute, then Cartesian product.
 		 */
-		AccessTerm leftChild = new AccessTerm(amFreeNation);
-		AccessTerm rightChild = new AccessTerm(am0Region);
-		CartesianProduct target = new CartesianProduct(new CartesianProductTerm(leftChild, rightChild));
+		AccessTerm leftChild = AccessTerm.create(relationNation ,amFreeNation);
+		AccessTerm rightChild = AccessTerm.create(relationRegion ,am0Region);
+		CartesianProduct target = new CartesianProduct(CartesianProductTerm.create(leftChild, rightChild));
 
 		// Attempting to execute the plan before setting the dynamic input raises an exception.
 		boolean caught = false;
@@ -154,9 +154,9 @@ public class CartesianProductTest {
 		 * and access on the REGION relation with input on the R_REGIONKEY attribute, 
 		 * then Cartesian product.
 		 */
-		AccessTerm leftChild = new AccessTerm(am2Nation);
-		AccessTerm rightChild = new AccessTerm(am0Region);
-		CartesianProduct target = new CartesianProduct(new CartesianProductTerm(leftChild, rightChild));
+		AccessTerm leftChild = AccessTerm.create(relationNation ,am2Nation);
+		AccessTerm rightChild = AccessTerm.create(relationRegion ,am0Region);
+		CartesianProduct target = new CartesianProduct(CartesianProductTerm.create(leftChild, rightChild));
 
 		// Attempting to execute the plan before setting the dynamic input raises an exception.
 		boolean caught = false;
@@ -186,7 +186,7 @@ public class CartesianProductTest {
 		/*
 		 *  Test with dynamic input containing no duplicates for either child. 
 		 */
-		target = new CartesianProduct(new CartesianProductTerm(leftChild, rightChild));
+		target = new CartesianProduct(CartesianProductTerm.create(leftChild, rightChild));
 		dynamicInput = new ArrayList<Tuple>();
 		dynamicInput.add(ttIntegerInteger.createTuple(4, 0));
 		dynamicInput.add(ttIntegerInteger.createTuple(2, 1));
@@ -225,11 +225,11 @@ public class CartesianProductTest {
 		AccessMethod am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
-		AccessTerm leftChild = new AccessTerm(amFreeNation);
-		AccessTerm rightChild = new AccessTerm(am0Region);
+		AccessTerm leftChild = AccessTerm.create(relationNation ,amFreeNation);
+		AccessTerm rightChild = AccessTerm.create(relationRegion ,am0Region);
 
 		// Construct the target plan.
-		CartesianProduct target = new CartesianProduct(new CartesianProductTerm(leftChild, rightChild));
+		CartesianProduct target = new CartesianProduct(CartesianProductTerm.create(leftChild, rightChild));
 
 		// Attempting to execute the plan before setting the dynamic input raises an exception.
 		boolean caught = false;
@@ -319,16 +319,17 @@ public class CartesianProductTest {
 		/*
 		 * CartesianProduct{a}(R1, R2).
 		 */
-		Access accessR1 = new Access(new AccessTerm(am1Free));
-		Access accessR2 = new Access(new AccessTerm(am2Free));
-		CartesianProduct cartesianProductR1R2 = new CartesianProduct(new CartesianProductTerm(
-				accessR1, accessR2));
+		
+		Access accessR1 = new Access(AccessTerm.create(relationR1 ,am1Free));
+		Access accessR2 = new Access(AccessTerm.create(relationR2 ,am2Free));
+		CartesianProduct cartesianProductR1R2 = new CartesianProduct(CartesianProductTerm.create(
+				AccessTerm.create(relationR1 ,am1Free), AccessTerm.create(relationR2 ,am2Free)));
 
 		/*
 		 * CartesianProduct{d}(R3, R4).
 		 */
-		CartesianProduct cartesianProductR3R4 = new CartesianProduct(new CartesianProductTerm(
-				new AccessTerm(am3Free), new AccessTerm(am4Free)));
+		CartesianProduct cartesianProductR3R4 = new CartesianProduct(CartesianProductTerm.create(
+				AccessTerm.create(relationR3, am3Free), AccessTerm.create(relationR4, am4Free)));
 
 		// Create some tuples. 
 		Collection<Tuple> tuples1 = new ArrayList<Tuple>();
@@ -371,8 +372,11 @@ public class CartesianProductTest {
 		/*
 		 * CartesianProduct(dependentJoinR1R2, dependentJoinR3R4).
 		 */
-		CartesianProduct target = new CartesianProduct(new CartesianProductTerm(
-				cartesianProductR1R2, cartesianProductR3R4));
+		CartesianProduct target = new CartesianProduct(CartesianProductTerm.create(
+				CartesianProductTerm.create(
+						AccessTerm.create(relationR1 ,am1Free), AccessTerm.create(relationR2 ,am2Free)), 
+				CartesianProductTerm.create(
+						AccessTerm.create(relationR3, am3Free), AccessTerm.create(relationR4, am4Free))));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -387,9 +391,9 @@ public class CartesianProductTest {
 	@Test
 	public void stressTestSql1() {
 
-		CartesianProduct target = new CartesianProduct(new CartesianProductTerm(
-				new AccessTerm(TPCHelper.amFreeNation), 
-				new AccessTerm(TPCHelper.amFreeSupplier)));
+		CartesianProduct target = new CartesianProduct(CartesianProductTerm.create(
+				AccessTerm.create(TPCHelper.relationNation,TPCHelper.amFreeNation), 
+				AccessTerm.create(TPCHelper.relationSupplier,TPCHelper.amFreeSupplier)));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -408,9 +412,9 @@ public class CartesianProductTest {
 	@Test
 	public void stressTestSql1a() {
 
-		CartesianProduct target = new CartesianProduct(new CartesianProductTerm(
-				new AccessTerm(TPCHelper.amFreeNation_less), 
-				new AccessTerm(TPCHelper.amFreeSupplier_less)));
+		CartesianProduct target = new CartesianProduct(CartesianProductTerm.create(
+		AccessTerm.create(TPCHelper.relationNation_less,TPCHelper.amFreeNation_less), 
+		AccessTerm.create(TPCHelper.relationSupplier_less,TPCHelper.amFreeSupplier_less)));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -429,10 +433,10 @@ public class CartesianProductTest {
 	@Test
 	public void stressTestSql2() {
 
-		CartesianProduct target = new CartesianProduct(new CartesianProductTerm(
-				new AccessTerm(TPCHelper.amFreeNation), 
-				new AccessTerm(TPCHelper.amFreeCustomer)));
-
+		CartesianProduct target = new CartesianProduct(CartesianProductTerm.create(
+				AccessTerm.create(TPCHelper.relationNation,TPCHelper.amFreeNation), 
+				AccessTerm.create(TPCHelper.relationCustomer,TPCHelper.amFreeCustomer)));
+		
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
 
@@ -449,9 +453,9 @@ public class CartesianProductTest {
 	@Test
 	public void stressTestSql2a() {
 
-		CartesianProduct target = new CartesianProduct(new CartesianProductTerm(
-				new AccessTerm(TPCHelper.amFreeNation_less), 
-				new AccessTerm(TPCHelper.amFreeCustomer_less)));
+		CartesianProduct target = new CartesianProduct(CartesianProductTerm.create(
+				AccessTerm.create(TPCHelper.relationNation_less,TPCHelper.amFreeNation_less), 
+				AccessTerm.create(TPCHelper.relationCustomer_less,TPCHelper.amFreeCustomer_less)));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
