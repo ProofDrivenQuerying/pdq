@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -22,9 +23,9 @@ import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
+import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -54,7 +55,7 @@ public class ProjectionTest {
 		InMemoryAccessMethod amFree = new InMemoryAccessMethod(amAttributes, new Integer[0], relation, attributeMapping);
 
 		Attribute[] projectionAttributes = new Attribute[]{Attribute.create(Integer.class, "b")};
-		ProjectionTerm plan = new ProjectionTerm(projectionAttributes, new AccessTerm(amFree));
+		ProjectionTerm plan = ProjectionTerm.create(projectionAttributes, AccessTerm.create(amFree.getRelation(),amFree));
 
 		Projection target = new Projection(plan);
 
@@ -69,7 +70,7 @@ public class ProjectionTest {
 
 		// Now test with multiple projection attributes.
 		projectionAttributes = new Attribute[]{Attribute.create(String.class, "c"), Attribute.create(Integer.class, "a")};
-		plan = new ProjectionTerm(projectionAttributes, new AccessTerm(amFree));
+		plan = ProjectionTerm.create(projectionAttributes, AccessTerm.create(amFree.getRelation(),amFree));
 		target.close();
 
 		target = new Projection(plan);
@@ -113,7 +114,7 @@ public class ProjectionTest {
 		 */
 		InMemoryAccessMethod amFree = new InMemoryAccessMethod(amAttributes, new Integer[0], relation, attributeMapping);
 		projectionAttributes = new Attribute[]{Attribute.create(Integer.class, "b")};
-		plan = new ProjectionTerm(projectionAttributes, new AccessTerm(amFree));
+		plan = ProjectionTerm.create(projectionAttributes, AccessTerm.create(amFree.getRelation(),amFree));
 
 		target = new Projection(plan);
 
@@ -143,7 +144,7 @@ public class ProjectionTest {
 		 * Plan: free access and projection onto columns ("b", "c").
 		 */
 		projectionAttributes = new Attribute[]{Attribute.create(Integer.class, "b"), Attribute.create(String.class, "c")};
-		plan = new ProjectionTerm(projectionAttributes, new AccessTerm(amFree));
+		plan = ProjectionTerm.create(projectionAttributes, AccessTerm.create(amFree.getRelation(),amFree));
 
 		target = new Projection(plan);
 
@@ -192,7 +193,7 @@ public class ProjectionTest {
 		InMemoryAccessMethod am12 = new InMemoryAccessMethod(amAttributes, inputs, relation, attributeMapping);
 
 		projectionAttributes = new Attribute[]{Attribute.create(Integer.class, "b"), Attribute.create(String.class, "c")};
-		plan = new ProjectionTerm(projectionAttributes, new AccessTerm(am12));
+		plan = ProjectionTerm.create(projectionAttributes, AccessTerm.create(am12.getRelation(),am12));
 
 		target = new Projection(plan);
 
@@ -268,7 +269,7 @@ public class ProjectionTest {
 		InMemoryAccessMethod amFree = new InMemoryAccessMethod(amAttributes, new Integer[0], relation, attributeMapping);
 		Condition condition = ConstantInequalityCondition.create(0, TypedConstant.create(10), false);
 		projectionAttributes = new Attribute[]{Attribute.create(Integer.class, "b"), Attribute.create(String.class, "c")};
-		plan = new ProjectionTerm(projectionAttributes, new SelectionTerm(condition, new AccessTerm(amFree)));
+		plan = ProjectionTerm.create(projectionAttributes, SelectionTerm.create(condition, AccessTerm.create(amFree.getRelation(),amFree)));
 
 		target = new Projection(plan);
 
@@ -311,7 +312,7 @@ public class ProjectionTest {
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_customer.clone());
 
 		Integer[] inputs = new Integer[0];
-		AccessMethod amFree = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputs, relation, 
+		AbstractAccessMethod amFree = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputs, relation, 
 				TPCHelper.attrMap_customer, TPCHelper.getProperties());
 
 		/*
@@ -322,8 +323,8 @@ public class ProjectionTest {
 				Attribute.create(Float.class, "custAcctBal")};
 
 		Condition condition = ConstantEqualityCondition.create(4, TypedConstant.create(23));
-		RelationalTerm child = new SelectionTerm(condition, new AccessTerm(amFree));
-		ProjectionTerm plan = new ProjectionTerm(projectionAttributes, child);
+		RelationalTerm child = SelectionTerm.create(condition, AccessTerm.create(amFree.getRelation(),amFree));
+		ProjectionTerm plan = ProjectionTerm.create(projectionAttributes, child);
 
 		Projection target = new Projection(plan); 
 
@@ -353,7 +354,7 @@ public class ProjectionTest {
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_customer.clone());
 
 		Integer[] inputs = new Integer[] { 3 };
-		AccessMethod am3 = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputs, relation, 
+		AbstractAccessMethod am3 = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputs, relation, 
 				TPCHelper.attrMap_customer, TPCHelper.getProperties());
 
 		/*
@@ -364,8 +365,8 @@ public class ProjectionTest {
 		Attribute[] projectionAttributes = new Attribute[]{Attribute.create(String.class, "custName"), 
 				Attribute.create(Float.class, "custAcctBal")};
 
-		RelationalTerm child = new AccessTerm(am3);
-		ProjectionTerm plan = new ProjectionTerm(projectionAttributes, child);
+		RelationalTerm child = AccessTerm.create(am3.getRelation(),am3);
+		ProjectionTerm plan = ProjectionTerm.create(projectionAttributes, child);
 
 		Projection target = new Projection(plan); 
 
@@ -412,12 +413,12 @@ public class ProjectionTest {
 	public void stressTestSql1() {
 
 		// Construct the target plan.
-		JoinTerm leftChild = new JoinTerm(
-				new AccessTerm(TPCHelper.amFreeNation), 
-				new AccessTerm(TPCHelper.amFreeSupplier));
-		JoinTerm rightChild = new JoinTerm(
-				new AccessTerm(TPCHelper.amFreePart), 
-				new AccessTerm(TPCHelper.amFreePartSupp));
+		JoinTerm leftChild = JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+				AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier));
+		JoinTerm rightChild = JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart), 
+				AccessTerm.create(TPCHelper.amFreePartSupp.getRelation(),TPCHelper.amFreePartSupp));
 
 		Attribute[] projectionAttributes = new Attribute[]{
 				Attribute.create(Integer.class, "nationKey"), 
@@ -426,7 +427,7 @@ public class ProjectionTest {
 				Attribute.create(Integer.class, "partKey"), 
 				Attribute.create(Integer.class, "availQty")
 		};
-		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new JoinTerm(leftChild, rightChild)));
+		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, JoinTerm.create(leftChild, rightChild)));
 		
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -443,19 +444,19 @@ public class ProjectionTest {
 	public void stressTestSql1a() {
 
 		// Construct the target plan.
-		JoinTerm leftChild = new JoinTerm(
-				new AccessTerm(TPCHelper.amFreeNation_less), 
-				new AccessTerm(TPCHelper.amFreeSupplier_less));
-		JoinTerm rightChild = new JoinTerm(
-				new AccessTerm(TPCHelper.amFreePart_less), 
-				new AccessTerm(TPCHelper.amFreePartSupp_less));
+		JoinTerm leftChild = JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+				AccessTerm.create(TPCHelper.amFreeSupplier_less.getRelation(),TPCHelper.amFreeSupplier_less));
+		JoinTerm rightChild = JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less), 
+				AccessTerm.create(TPCHelper.amFreePartSupp_less.getRelation(),TPCHelper.amFreePartSupp_less));
 
 		Attribute[] projectionAttributes = new Attribute[]{
 				Attribute.create(Integer.class, "nationKey"), 
 				Attribute.create(Integer.class, "suppKey"), 
 				Attribute.create(Integer.class, "partKey")
 		};
-		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new JoinTerm(leftChild, rightChild)));
+		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, JoinTerm.create(leftChild, rightChild)));
 		
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -472,12 +473,12 @@ public class ProjectionTest {
 //	public void stressTestSql2() {
 //
 //		// Construct the target plan.
-//		DependentJoinTerm leftChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreeNation), 
-//				new AccessTerm(TPCHelper.am3Supplier));
-//		DependentJoinTerm rightChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreePart), 
-//				new AccessTerm(TPCHelper.am01PartSupp));
+//		DependentJoinTerm leftChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+//				AccessTerm.create(TPCHelper.am3Supplier.getRelation(),TPCHelper.am3Supplier));
+//		DependentJoinTerm rightChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart), 
+//				AccessTerm.create(TPCHelper.am01PartSupp.getRelation(),TPCHelper.am01PartSupp));
 //
 //		Attribute[] projectionAttributes = new Attribute[]{
 //				Attribute.create(Integer.class, "nationKey"), 
@@ -486,7 +487,7 @@ public class ProjectionTest {
 //				Attribute.create(Integer.class, "partKey"), 
 //				Attribute.create(Integer.class, "availQty")
 //		};
-//		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new DependentJoinTerm(leftChild, rightChild)));
+//		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, DependentJoinTerm.create(leftChild, rightChild)));
 //		
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -503,19 +504,19 @@ public class ProjectionTest {
 //	public void stressTestSql2a() {
 //
 //		// Construct the target plan.
-//		DependentJoinTerm leftChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreeNation_less), 
-//				new AccessTerm(TPCHelper.am3Supplier_less));
-//		DependentJoinTerm rightChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreePart_less), 
-//				new AccessTerm(TPCHelper.am01PartSupp_less));
+//		DependentJoinTerm leftChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+//				AccessTerm.create(TPCHelper.am3Supplier_less.getRelation(),TPCHelper.am3Supplier_less));
+//		DependentJoinTerm rightChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less), 
+//				AccessTerm.create(TPCHelper.am01PartSupp_less.getRelation(),TPCHelper.am01PartSupp_less));
 //
 //		Attribute[] projectionAttributes = new Attribute[]{
 //				Attribute.create(Integer.class, "nationKey"), 
 //				Attribute.create(Integer.class, "suppKey"), 
 //				Attribute.create(Integer.class, "partKey")
 //		};
-//		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new DependentJoinTerm(leftChild, rightChild)));
+//		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, DependentJoinTerm.create(leftChild, rightChild)));
 //		
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -532,12 +533,12 @@ public class ProjectionTest {
 //	public void stressTestSql3() {
 //
 //		// Construct the target plan.
-//		JoinTerm leftChild = new JoinTerm(
-//				new AccessTerm(TPCHelper.amFreeNation), 
-//				new AccessTerm(TPCHelper.amFreeSupplier));
-//		JoinTerm rightChild = new JoinTerm(
-//				new AccessTerm(TPCHelper.amFreeCustomer), 
-//				new AccessTerm(TPCHelper.amFreeOrders));
+//		JoinTerm leftChild = JoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+//				AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier));
+//		JoinTerm rightChild = JoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeCustomer.getRelation(),TPCHelper.amFreeCustomer), 
+//				AccessTerm.create(TPCHelper.amFreeOrders.getRelation(),TPCHelper.amFreeOrders));
 //
 //		Attribute[] projectionAttributes = new Attribute[]{
 //				Attribute.create(Integer.class, "nationKey"), 
@@ -547,7 +548,7 @@ public class ProjectionTest {
 //				Attribute.create(Integer.class, "orderKey"),
 //				Attribute.create(String.class, "orderDate") 
 //		};
-//		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new JoinTerm(leftChild, rightChild)));
+//		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, JoinTerm.create(leftChild, rightChild)));
 //		
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -564,12 +565,12 @@ public class ProjectionTest {
 //	public void stressTestSql3a() {
 //
 //		// Construct the target plan.
-//		JoinTerm leftChild = new JoinTerm(
-//				new AccessTerm(TPCHelper.amFreeNation_less), 
-//				new AccessTerm(TPCHelper.amFreeSupplier_less));
-//		JoinTerm rightChild = new JoinTerm(
-//				new AccessTerm(TPCHelper.amFreeCustomer_less), 
-//				new AccessTerm(TPCHelper.amFreeOrders_less));
+//		JoinTerm leftChild = JoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+//				AccessTerm.create(TPCHelper.amFreeSupplier_less.getRelation(),TPCHelper.amFreeSupplier_less));
+//		JoinTerm rightChild = JoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeCustomer_less.getRelation(),TPCHelper.amFreeCustomer_less), 
+//				AccessTerm.create(TPCHelper.amFreeOrders_less.getRelation(),TPCHelper.amFreeOrders_less));
 //
 //		Attribute[] projectionAttributes = new Attribute[]{
 //				Attribute.create(Integer.class, "nationKey"), 
@@ -577,7 +578,7 @@ public class ProjectionTest {
 //				Attribute.create(Integer.class, "custKey"), 
 //				Attribute.create(Integer.class, "orderKey")
 //		};
-//		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new JoinTerm(leftChild, rightChild)));
+//		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, JoinTerm.create(leftChild, rightChild)));
 //		
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -594,12 +595,12 @@ public class ProjectionTest {
 //	public void stressTestSql4() {
 //
 //		// Construct the target plan.
-//		DependentJoinTerm leftChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreeNation), 
-//				new AccessTerm(TPCHelper.am3Supplier));
-//		DependentJoinTerm rightChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.am3Customer), 
-//				new AccessTerm(TPCHelper.am1Orders));
+//		DependentJoinTerm leftChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+//				AccessTerm.create(TPCHelper.am3Supplier.getRelation(),TPCHelper.am3Supplier));
+//		DependentJoinTerm rightChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.am3Customer.getRelation(),TPCHelper.am3Customer), 
+//				AccessTerm.create(TPCHelper.am1Orders.getRelation(),TPCHelper.am1Orders));
 //
 //		Attribute[] projectionAttributes = new Attribute[]{
 //				Attribute.create(Integer.class, "nationKey"), 
@@ -609,7 +610,7 @@ public class ProjectionTest {
 //				Attribute.create(Integer.class, "orderKey"),
 //				Attribute.create(String.class, "orderDate") 
 //		};
-//		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new DependentJoinTerm(leftChild, rightChild)));
+//		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, DependentJoinTerm.create(leftChild, rightChild)));
 //		
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -626,12 +627,12 @@ public class ProjectionTest {
 //	public void stressTestSql4a() {
 //
 //		// Construct the target plan.
-//		DependentJoinTerm leftChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreeNation_less), 
-//				new AccessTerm(TPCHelper.am3Supplier_less));
-//		DependentJoinTerm rightChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.am3Customer_less), 
-//				new AccessTerm(TPCHelper.am1Orders_less));
+//		DependentJoinTerm leftChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+//				AccessTerm.create(TPCHelper.am3Supplier_less.getRelation(),TPCHelper.am3Supplier_less));
+//		DependentJoinTerm rightChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.am3Customer_less.getRelation(),TPCHelper.am3Customer_less), 
+//				AccessTerm.create(TPCHelper.am1Orders_less.getRelation(),TPCHelper.am1Orders_less));
 //
 //		Attribute[] projectionAttributes = new Attribute[]{
 //				Attribute.create(Integer.class, "nationKey"), 
@@ -639,7 +640,7 @@ public class ProjectionTest {
 //				Attribute.create(Integer.class, "custKey"), 
 //				Attribute.create(Integer.class, "orderKey")
 //		};
-//		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new DependentJoinTerm(leftChild, rightChild)));
+//		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, DependentJoinTerm.create(leftChild, rightChild)));
 //		
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -656,12 +657,12 @@ public class ProjectionTest {
 	public void stressTestSql5() {
 
 		// Construct the target plan.
-		JoinTerm leftChild = new JoinTerm(
-				new AccessTerm(TPCHelper.amFreeNation), 
-				new AccessTerm(TPCHelper.amFreeSupplier));
-		JoinTerm rightChild = new JoinTerm(
-				new AccessTerm(TPCHelper.amFreePart), 
-				new AccessTerm(TPCHelper.amFreePartSupp));
+		JoinTerm leftChild = JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+				AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier));
+		JoinTerm rightChild = JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart), 
+				AccessTerm.create(TPCHelper.amFreePartSupp.getRelation(),TPCHelper.amFreePartSupp));
 
 		Attribute[] projectionAttributes = new Attribute[]{
 				Attribute.create(Integer.class, "nationKey"), 
@@ -670,7 +671,7 @@ public class ProjectionTest {
 				Attribute.create(Integer.class, "partKey"), 
 				Attribute.create(Integer.class, "availQty")
 		};
-		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new JoinTerm(leftChild, rightChild)));
+		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, JoinTerm.create(leftChild, rightChild)));
 		
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -687,19 +688,19 @@ public class ProjectionTest {
 	public void stressTestSql5a() {
 
 		// Construct the target plan.
-		JoinTerm leftChild = new JoinTerm(
-				new AccessTerm(TPCHelper.amFreeNation_less), 
-				new AccessTerm(TPCHelper.amFreeSupplier_less));
-		JoinTerm rightChild = new JoinTerm(
-				new AccessTerm(TPCHelper.amFreePart_less), 
-				new AccessTerm(TPCHelper.amFreePartSupp_less));
+		JoinTerm leftChild = JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+				AccessTerm.create(TPCHelper.amFreeSupplier_less.getRelation(),TPCHelper.amFreeSupplier_less));
+		JoinTerm rightChild = JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less), 
+				AccessTerm.create(TPCHelper.amFreePartSupp_less.getRelation(),TPCHelper.amFreePartSupp_less));
 
 		Attribute[] projectionAttributes = new Attribute[]{
 				Attribute.create(Integer.class, "nationKey"), 
 				Attribute.create(Integer.class, "suppKey"), 
 				Attribute.create(Integer.class, "partKey")
 		};
-		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new JoinTerm(leftChild, rightChild)));
+		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, JoinTerm.create(leftChild, rightChild)));
 		
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -716,12 +717,12 @@ public class ProjectionTest {
 	public void stressTestSql6() {
 
 		// Construct the target plan.
-		DependentJoinTerm leftChild = new DependentJoinTerm(
-				new AccessTerm(TPCHelper.amFreeNation), 
-				new AccessTerm(TPCHelper.am3Supplier));
-		DependentJoinTerm rightChild = new DependentJoinTerm(
-				new AccessTerm(TPCHelper.amFreePart), 
-				new AccessTerm(TPCHelper.am0PartSupp));
+		DependentJoinTerm leftChild = DependentJoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+				AccessTerm.create(TPCHelper.am3Supplier.getRelation(),TPCHelper.am3Supplier));
+		DependentJoinTerm rightChild = DependentJoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart), 
+				AccessTerm.create(TPCHelper.am0PartSupp.getRelation(),TPCHelper.am0PartSupp));
 
 		Attribute[] projectionAttributes = new Attribute[]{
 				Attribute.create(Integer.class, "nationKey"), 
@@ -730,7 +731,7 @@ public class ProjectionTest {
 				Attribute.create(Integer.class, "partKey"), 
 				Attribute.create(Integer.class, "availQty")
 		};
-		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new JoinTerm(leftChild, rightChild)));
+		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, JoinTerm.create(leftChild, rightChild)));
 		
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -747,17 +748,19 @@ public class ProjectionTest {
 	public void stressTestSql6a() {
 
 		// Construct the target plan.
-		DependentJoinTerm leftChild = new DependentJoinTerm(
-				new AccessTerm(TPCHelper.amFreeNation_less), new AccessTerm(TPCHelper.am3Supplier_less));
-		DependentJoinTerm rightChild = new DependentJoinTerm(
-				new AccessTerm(TPCHelper.amFreePart_less), new AccessTerm(TPCHelper.am0PartSupp_less));
+		DependentJoinTerm leftChild = DependentJoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+				AccessTerm.create(TPCHelper.am3Supplier_less.getRelation(),TPCHelper.am3Supplier_less));
+		DependentJoinTerm rightChild = DependentJoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less), 
+				AccessTerm.create(TPCHelper.am0PartSupp_less.getRelation(),TPCHelper.am0PartSupp_less));
 
 		Attribute[] projectionAttributes = new Attribute[]{
 				Attribute.create(Integer.class, "nationKey"), 
 				Attribute.create(Integer.class, "suppKey"), 
 				Attribute.create(Integer.class, "partKey")
 		};
-		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new JoinTerm(leftChild, rightChild)));
+		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, JoinTerm.create(leftChild, rightChild)));
 		
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -774,12 +777,12 @@ public class ProjectionTest {
 //	public void stressTestSql7() {
 //
 //		// Construct the target plan.
-//		JoinTerm leftChild = new JoinTerm(
-//				new AccessTerm(TPCHelper.amFreeNation), 
-//				new AccessTerm(TPCHelper.amFreeSupplier));
-//		JoinTerm rightChild = new JoinTerm(
-//				new AccessTerm(TPCHelper.amFreeCustomer), 
-//				new AccessTerm(TPCHelper.amFreeOrders));
+//		JoinTerm leftChild = JoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+//				AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier));
+//		JoinTerm rightChild = JoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeCustomer.getRelation(),TPCHelper.amFreeCustomer), 
+//				AccessTerm.create(TPCHelper.amFreeOrders.getRelation(),TPCHelper.amFreeOrders));
 //
 //		Attribute[] projectionAttributes = new Attribute[]{
 //				Attribute.create(Integer.class, "nationKey"), 
@@ -789,7 +792,7 @@ public class ProjectionTest {
 //				Attribute.create(Integer.class, "orderKey"),
 //				Attribute.create(String.class, "orderDate") 
 //		};
-//		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new JoinTerm(leftChild, rightChild)));
+//		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, JoinTerm.create(leftChild, rightChild)));
 //		
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -806,12 +809,12 @@ public class ProjectionTest {
 //	public void stressTestSql7a() {
 //
 //		// Construct the target plan.
-//		JoinTerm leftChild = new JoinTerm(
-//				new AccessTerm(TPCHelper.amFreeNation_less), 
-//				new AccessTerm(TPCHelper.amFreeSupplier_less));
-//		JoinTerm rightChild = new JoinTerm(
-//				new AccessTerm(TPCHelper.amFreeCustomer_less), 
-//				new AccessTerm(TPCHelper.amFreeOrders_less));
+//		JoinTerm leftChild = JoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+//				AccessTerm.create(TPCHelper.amFreeSupplier_less.getRelation(),TPCHelper.amFreeSupplier_less));
+//		JoinTerm rightChild = JoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeCustomer_less.getRelation(),TPCHelper.amFreeCustomer_less), 
+//				AccessTerm.create(TPCHelper.amFreeOrders_less.getRelation(),TPCHelper.amFreeOrders_less));
 //
 //		Attribute[] projectionAttributes = new Attribute[]{
 //				Attribute.create(Integer.class, "nationKey"), 
@@ -819,7 +822,7 @@ public class ProjectionTest {
 //				Attribute.create(Integer.class, "custKey"), 
 //				Attribute.create(Integer.class, "orderKey")
 //		};
-//		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new JoinTerm(leftChild, rightChild)));
+//		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, JoinTerm.create(leftChild, rightChild)));
 //		
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -836,12 +839,12 @@ public class ProjectionTest {
 //	public void stressTestSql8() {
 //
 //		// Construct the target plan.
-//		DependentJoinTerm leftChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreeNation), 
-//				new AccessTerm(TPCHelper.am3Supplier));
-//		DependentJoinTerm rightChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreeCustomer), 
-//				new AccessTerm(TPCHelper.am1Orders));
+//		DependentJoinTerm leftChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+//				AccessTerm.create(TPCHelper.am3Supplier.getRelation(),TPCHelper.am3Supplier));
+//		DependentJoinTerm rightChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeCustomer.getRelation(),TPCHelper.amFreeCustomer), 
+//				AccessTerm.create(TPCHelper.am1Orders.getRelation(),TPCHelper.am1Orders));
 //
 //		Attribute[] projectionAttributes = new Attribute[]{
 //				Attribute.create(Integer.class, "nationKey"), 
@@ -851,7 +854,7 @@ public class ProjectionTest {
 //				Attribute.create(Integer.class, "orderKey"),
 //				Attribute.create(String.class, "orderDate") 
 //		};
-//		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new JoinTerm(leftChild, rightChild)));
+//		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, JoinTerm.create(leftChild, rightChild)));
 //		
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -868,12 +871,12 @@ public class ProjectionTest {
 //	public void stressTestSql8a() {
 //
 //		// Construct the target plan.
-//		DependentJoinTerm leftChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreeNation_less), 
-//				new AccessTerm(TPCHelper.am3Supplier_less));
-//		DependentJoinTerm rightChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreeCustomer_less), 
-//				new AccessTerm(TPCHelper.am1Orders_less));
+//		DependentJoinTerm leftChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+//				AccessTerm.create(TPCHelper.am3Supplier_less.getRelation(),TPCHelper.am3Supplier_less));
+//		DependentJoinTerm rightChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeCustomer_less.getRelation(),TPCHelper.amFreeCustomer_less), 
+//				AccessTerm.create(TPCHelper.am1Orders_less.getRelation(),TPCHelper.am1Orders_less));
 //
 //		Attribute[] projectionAttributes = new Attribute[]{
 //				Attribute.create(Integer.class, "nationKey"), 
@@ -882,7 +885,7 @@ public class ProjectionTest {
 //				Attribute.create(Float.class, "custAcctBal"), 
 //				Attribute.create(Integer.class, "orderKey")
 //		};
-//		Projection target = new Projection(new ProjectionTerm(projectionAttributes, new JoinTerm(leftChild, rightChild)));
+//		Projection target = new Projection(ProjectionTerm.create(projectionAttributes, JoinTerm.create(leftChild, rightChild)));
 //		
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());

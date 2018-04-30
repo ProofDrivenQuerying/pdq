@@ -27,6 +27,7 @@ import uk.ac.ox.cs.pdq.algebra.ConstantInequalityCondition;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
+import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
@@ -69,11 +70,11 @@ public class NestedLoopJoinTest {
 
 		InMemoryAccessMethod amFree = new InMemoryAccessMethod(amAttributes, new Integer[0], relation, attributeMapping);
 
-		AccessTerm leftChild = new AccessTerm(amFree);
-		AccessTerm rightChild = new AccessTerm(amFree);
+		AccessTerm leftChild = AccessTerm.create(amFree.getRelation(),amFree);
+		AccessTerm rightChild = AccessTerm.create(amFree.getRelation(),amFree);
 
 		// Construct the target from a JoinTerm.
-		BinaryExecutablePlan target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+		BinaryExecutablePlan target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 		Assert.assertNotNull(target);
 	}
 
@@ -118,8 +119,9 @@ public class NestedLoopJoinTest {
 		 *  Test with a simple join condition, arising from the common attribute"c".
 		 */
 		@SuppressWarnings("resource")
-		BinaryExecutablePlan target = new NestedLoopJoin(new JoinTerm(new AccessTerm(amFree1), 
-				new AccessTerm(amFree2)));
+		BinaryExecutablePlan target = new NestedLoopJoin(JoinTerm.create(AccessTerm.create(amFree1.getRelation(),amFree1), 
+				AccessTerm.create(amFree2.getRelation(),amFree2)
+				));
 
 		Condition result = target.getJoinCondition();
 
@@ -154,8 +156,9 @@ public class NestedLoopJoinTest {
 
 		InMemoryAccessMethod amFree3 = new InMemoryAccessMethod(amAttributes3, new Integer[0], relation3, attributeMapping3);
 
-		target = new NestedLoopJoin(new JoinTerm(new AccessTerm(amFree1), 
-				new AccessTerm(amFree3)));		
+		target = new NestedLoopJoin(JoinTerm.create(AccessTerm.create(amFree1.getRelation(),amFree1), 
+				AccessTerm.create(amFree3.getRelation(),amFree3)
+				));		
 
 		result = target.getJoinCondition();
 
@@ -209,9 +212,9 @@ public class NestedLoopJoinTest {
 		InMemoryAccessMethod amFree2 = new InMemoryAccessMethod(amAttributes2, new Integer[0], relation2, attributeMapping2);
 
 		// Construct the target plan.
-		AccessTerm leftChild = new AccessTerm(amFree1);
-		AccessTerm rightChild = new AccessTerm(amFree2);
-		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+		AccessTerm leftChild = AccessTerm.create(amFree1.getRelation(),amFree1);
+		AccessTerm rightChild = AccessTerm.create(amFree2.getRelation(),amFree2);
+		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Create some tuples. 
 		// Here we join on columns containing no duplicates.  
@@ -299,12 +302,13 @@ public class NestedLoopJoinTest {
 		// Construct the target plan.
 
 		// Free access on relation 1.
-		AccessTerm leftChild = new AccessTerm(amFree1);
+		AccessTerm leftChild = AccessTerm.create(amFree1.getRelation(),amFree1);
 
 		// Free access on relation 2, then select rows where attribute "k" is greater than 10.
 		Condition condition = ConstantInequalityCondition.create(0, TypedConstant.create(10), false);
-		SelectionTerm rightChild = new SelectionTerm(condition, new AccessTerm(amFree2));
-		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+		SelectionTerm rightChild = SelectionTerm.create(condition, AccessTerm.create(amFree2.getRelation(),amFree2)
+				);
+		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Create some tuples. 
 		// Here we join on columns containing no duplicates.  
@@ -387,11 +391,12 @@ public class NestedLoopJoinTest {
 
 		// Free access on relation 1, then select rows where attribute "j" is less than 8.
 		Condition condition = ConstantInequalityCondition.create(1, TypedConstant.create(8));
-		SelectionTerm leftChild = new SelectionTerm(condition, new AccessTerm(amFree1));
+		SelectionTerm leftChild = SelectionTerm.create(condition, AccessTerm.create(amFree1.getRelation(),amFree1)
+				);
 
 		// Free access on relation 2.
-		AccessTerm rightChild = new AccessTerm(amFree2);
-		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+		AccessTerm rightChild = AccessTerm.create(amFree2.getRelation(),amFree2);
+		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Create some tuples. 
 		// Here we join on columns containing no duplicates.  
@@ -440,19 +445,19 @@ public class NestedLoopJoinTest {
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
 		Integer[] inputs = new Integer[0];
-		AccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, 
+		AbstractAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
-		AccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputs, 
+		AbstractAccessMethod  amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputs, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
-		AccessTerm leftChild = new AccessTerm(amFreeNation);
-		AccessTerm rightChild = new AccessTerm(amFreeRegion);
+		AccessTerm leftChild = AccessTerm.create(amFreeNation.getRelation(),amFreeNation);
+		AccessTerm rightChild = AccessTerm.create(amFreeRegion.getRelation(),amFreeRegion);
 
 		// Test with and without a custom join condition (to join on attributes with different names).
 
 		// First test without a custom join condition.
-		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Check the inferred join condition. The common attribute "regionKey" is in 
 		// position 2 in the nation relation and position 0 in the region relation 
@@ -474,7 +479,7 @@ public class NestedLoopJoinTest {
 		// (nationKey) and the 0th REGION attribute (regionKey).
 		Condition joinCondition = TypeEqualityCondition.create(1, 3);
 
-		target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild, joinCondition));
+		target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild, joinCondition));
 
 		// Construct some dummy tuples to test the tuple-dependent getJoinCondition method.
 		TupleType ttN = TupleType.DefaultFactory.create(String.class, Integer.class, Integer.class); // name, nationKey, regionKey
@@ -523,18 +528,18 @@ public class NestedLoopJoinTest {
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
-		AccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
+		AbstractAccessMethod  amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "R_REGIONKEY"));
-		AccessMethod am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
+		AbstractAccessMethod  am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
-		AccessTerm leftChild = new AccessTerm(amFreeNation);
-		AccessTerm rightChild = new AccessTerm(am0Region);
+		AccessTerm leftChild = AccessTerm.create(amFreeNation.getRelation(),amFreeNation);
+		AccessTerm rightChild = AccessTerm.create(am0Region.getRelation(),am0Region);
 
-		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Attempting to execute the plan before setting the dynamic input raises an exception.
 		boolean caught = false;
@@ -588,17 +593,17 @@ public class NestedLoopJoinTest {
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_NATIONKEY"));
-		AccessMethod am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
+		AbstractAccessMethod  am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
-		AccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
+		AbstractAccessMethod  amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
-		AccessTerm leftChild = new AccessTerm(am0Nation);
-		AccessTerm rightChild = new AccessTerm(amFreeRegion);
+		AccessTerm leftChild = AccessTerm.create(am0Nation.getRelation(),am0Nation);
+		AccessTerm rightChild = AccessTerm.create(amFreeRegion.getRelation(),amFreeRegion);
 
-		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Attempting to execute the plan before setting the dynamic input raises an exception.
 		boolean caught = false;
@@ -656,18 +661,18 @@ public class NestedLoopJoinTest {
 		Set<Attribute> inputAttributes;
 
 		inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_NATIONKEY"));
-		AccessMethod am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
+		AbstractAccessMethod  am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "R_REGIONKEY"));
-		AccessMethod am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
+		AbstractAccessMethod  am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
-		AccessTerm leftChild = new AccessTerm(am0Nation);
-		AccessTerm rightChild = new AccessTerm(am0Region);
+		AccessTerm leftChild = AccessTerm.create(am0Nation.getRelation(),am0Nation);
+		AccessTerm rightChild = AccessTerm.create(am0Region.getRelation(),am0Region);
 
-		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Attempting to execute the plan before setting the dynamic input raises an exception.
 		boolean caught = false;
@@ -728,22 +733,23 @@ public class NestedLoopJoinTest {
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
-		AccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
+		AbstractAccessMethod  amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
-		AccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
+		AbstractAccessMethod  amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
 
 		// Free access on NATION.
-		AccessTerm leftChild = new AccessTerm(amFreeNation);
+		AccessTerm leftChild = AccessTerm.create(amFreeNation.getRelation(),amFreeNation);
 
 		// Free access on REGION, then select rows where regionKey < 4.
 		Condition condition = ConstantInequalityCondition.create(0, TypedConstant.create(4));
-		SelectionTerm rightChild = new SelectionTerm(condition, new AccessTerm(amFreeRegion));
+		SelectionTerm rightChild = SelectionTerm.create(condition, AccessTerm.create(amFreeRegion.getRelation(),amFreeRegion)
+				);
 
-		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -770,22 +776,23 @@ public class NestedLoopJoinTest {
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
-		AccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
+		AbstractAccessMethod  amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
-		AccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
+		AbstractAccessMethod  amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
 
 		// Free access on NATION, then select rows where nationKey > 8.
 		Condition condition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-		SelectionTerm leftChild = new SelectionTerm(condition, new AccessTerm(amFreeNation));
+		SelectionTerm leftChild = SelectionTerm.create(condition, AccessTerm.create(amFreeNation.getRelation(),amFreeNation)
+				);
 
 		// Free access on REGION.
-		AccessTerm rightChild = new AccessTerm(amFreeRegion);
+		AccessTerm rightChild = AccessTerm.create(amFreeRegion.getRelation(),amFreeRegion);
 
-		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -805,16 +812,16 @@ public class NestedLoopJoinTest {
 //	public void integrationTestSql7() {
 //
 //		// Construct the target plan.
-//		DependentJoinTerm leftChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreeNation), 
-//				new AccessTerm(TPCHelper.am0Region));
+//		DependentJoinTerm leftChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+//				AccessTerm.create(TPCHelper.am0Region).getRelation(),TPCHelper.am0Region));
 //
 //		Condition condition = ConstantEqualityCondition.create(4, TypedConstant.create(5));
-//		NestedLoopJoin rightChild = new NestedLoopJoin(new JoinTerm(
-//				new SelectionTerm(condition, new AccessTerm(TPCHelper.amFreeCustomer)), 
-//				new AccessTerm(TPCHelper.amFreeSupplier)));
+//		NestedLoopJoin rightChild = new NestedLoopJoin(JoinTerm.create(
+//				SelectionTerm.create(condition, AccessTerm.create(TPCHelper.amFreeCustomer).getRelation(),TPCHelper.amFreeCustomer)), 
+//				AccessTerm.create(TPCHelper.amFreeSupplier)).getRelation(),TPCHelper.amFreeSupplier)));
 //
-//		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+//		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 //
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -835,19 +842,19 @@ public class NestedLoopJoinTest {
 
 	Attribute[] relationR1Attributes = new Attribute[] {Attribute.create(String.class, "a"),
 			Attribute.create(String.class, "b")};
-	Relation relationR1 = new Relation("R1", relationR1Attributes);
+	Relation relationR1 = Relation.create("R1", relationR1Attributes);
 
 	Attribute[] relationR2Attributes = new Attribute[] {Attribute.create(String.class, "a"),
 			Attribute.create(String.class, "c")};
-	Relation relationR2 = new Relation("R2", relationR2Attributes);
+	Relation relationR2 = Relation.create("R2", relationR2Attributes);
 
 	Attribute[] relationR3Attributes = new Attribute[] {Attribute.create(String.class, "b"),
 			Attribute.create(String.class, "d")};
-	Relation relationR3 = new Relation("R3", relationR3Attributes);
+	Relation relationR3 = Relation.create("R3", relationR3Attributes);
 
 	Attribute[] relationR4Attributes = new Attribute[] {Attribute.create(String.class, "d"),
 			Attribute.create(String.class, "e")};
-	Relation relationR4 = new Relation("R4", relationR4Attributes);
+	Relation relationR4 = Relation.create("R4", relationR4Attributes);
 
 	Map<Attribute, Attribute> attributeMapping1 = ImmutableMap.of(
 			Attribute.create(String.class, "a"), Attribute.create(String.class, "a"),
@@ -893,14 +900,18 @@ public class NestedLoopJoinTest {
 		/*
 		 * DependentJoin{a}(R1, R2).
 		 */
-		DependentJoin dependentJoinR1R2 = new DependentJoin(new DependentJoinTerm(
-				new AccessTerm(am1Free), new AccessTerm(am20)));
+		DependentJoin dependentJoinR1R2 = new DependentJoin(DependentJoinTerm.create(
+				AccessTerm.create(am1Free.getRelation(),am1Free), 
+				AccessTerm.create(am20.getRelation(),am20)
+				));
 
 		/*
 		 * DependentJoin{d}(R3, R4).
 		 */
-		DependentJoin dependentJoinR3R4 = new DependentJoin(new DependentJoinTerm(
-				new AccessTerm(am3Free), new AccessTerm(am40)));
+		DependentJoin dependentJoinR3R4 = new DependentJoin(DependentJoinTerm.create(
+				AccessTerm.create(am3Free.getRelation(),am3Free), 
+				AccessTerm.create(am40.getRelation(),am40)
+				));
 
 		// Create some tuples. 
 		Collection<Tuple> tuples1 = new ArrayList<Tuple>();
@@ -930,7 +941,7 @@ public class NestedLoopJoinTest {
 		am3Free.load(tuples3);
 		am40.load(tuples4);
 
-		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(
+		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(
 				dependentJoinR1R2, dependentJoinR3R4));
 
 		// Execute the plan. 
@@ -946,9 +957,10 @@ public class NestedLoopJoinTest {
 	@Test
 	public void stressTestSql1() {
 
-		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(
-				new AccessTerm(TPCHelper.amFreeNation), 
-				new AccessTerm(TPCHelper.amFreeSupplier)));
+		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+				AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier)
+				));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -967,9 +979,10 @@ public class NestedLoopJoinTest {
 	@Test
 	public void stressTestSql1a() {
 
-		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(
-				new AccessTerm(TPCHelper.amFreeNation_less), 
-				new AccessTerm(TPCHelper.amFreeSupplier_less)));
+		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+				AccessTerm.create(TPCHelper.amFreeSupplier_less.getRelation(),TPCHelper.amFreeSupplier_less)
+				));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -988,9 +1001,9 @@ public class NestedLoopJoinTest {
 //	@Test
 //	public void stressTestSql2() {
 //
-//		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(
-//				new AccessTerm(TPCHelper.amFreePart), 
-//				new AccessTerm(TPCHelper.amFreePartSupp)));
+//		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart), 
+//				AccessTerm.create(TPCHelper.amFreePartSupp)).getRelation(),TPCHelper.amFreePartSupp)));
 //
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1009,9 +1022,9 @@ public class NestedLoopJoinTest {
 //	@Test
 //	public void stressTestSql2a() {
 //
-//		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(
-//				new AccessTerm(TPCHelper.amFreePart_less), 
-//				new AccessTerm(TPCHelper.amFreePartSupp_less)));
+//		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less), 
+//				AccessTerm.create(TPCHelper.amFreePartSupp_less)).getRelation(),TPCHelper.amFreePartSupp_less)));
 //
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1031,13 +1044,13 @@ public class NestedLoopJoinTest {
 //	public void stressTestSql3() {
 //
 //		// Specify the nested loop join algorithm throughout. 
-//		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(
-//				new NestedLoopJoin(new JoinTerm(
-//						new AccessTerm(TPCHelper.amFreeNation), 
-//						new AccessTerm(TPCHelper.amFreeSupplier))),
-//				new NestedLoopJoin(new JoinTerm(
-//						new AccessTerm(TPCHelper.amFreePart), 
-//						new AccessTerm(TPCHelper.amFreePartSupp)))
+//		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(
+//				new NestedLoopJoin(JoinTerm.create(
+//						AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+//						AccessTerm.create(TPCHelper.amFreeSupplier)).getRelation(),TPCHelper.amFreeSupplier))),
+//				new NestedLoopJoin(JoinTerm.create(
+//						AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart), 
+//						AccessTerm.create(TPCHelper.amFreePartSupp)).getRelation(),TPCHelper.amFreePartSupp)))
 //				));
 //
 //		// Execute the plan. 
@@ -1062,13 +1075,13 @@ public class NestedLoopJoinTest {
 //	public void stressTestSql3a() {
 //
 //		// Specify the nested loop join algorithm throughout. 
-//		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(
-//				new NestedLoopJoin(new JoinTerm(
-//						new AccessTerm(TPCHelper.amFreeNation_less), 
-//						new AccessTerm(TPCHelper.amFreeSupplier_less))),
-//				new NestedLoopJoin(new JoinTerm(
-//						new AccessTerm(TPCHelper.amFreePart_less), 
-//						new AccessTerm(TPCHelper.amFreePartSupp_less)))
+//		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(
+//				new NestedLoopJoin(JoinTerm.create(
+//						AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+//						AccessTerm.create(TPCHelper.amFreeSupplier_less)).getRelation(),TPCHelper.amFreeSupplier_less))),
+//				new NestedLoopJoin(JoinTerm.create(
+//						AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less), 
+//						AccessTerm.create(TPCHelper.amFreePartSupp_less)).getRelation(),TPCHelper.amFreePartSupp_less)))
 //				));
 //
 //		// Execute the plan. 
@@ -1094,17 +1107,17 @@ public class NestedLoopJoinTest {
 //
 //		// Select nations whose nation key is greater than 8.
 //		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-//		DependentJoinTerm leftChild = new DependentJoinTerm(
-//				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation)), 
-//				new AccessTerm(TPCHelper.am3Supplier));
+//		DependentJoinTerm leftChild = DependentJoinTerm.create(
+//				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation).getRelation(),TPCHelper.amFreeNation)), 
+//				AccessTerm.create(TPCHelper.am3Supplier).getRelation(),TPCHelper.am3Supplier));
 //
 //		// Select orders whose total price is greater than 200000.
 //		Condition totalPriceCondition = ConstantInequalityCondition.create(2, TypedConstant.create(200000f), false);
-//		DependentJoinTerm rightChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreeCustomer), 
-//				new SelectionTerm(totalPriceCondition, new AccessTerm(TPCHelper.am1Orders)));
+//		DependentJoinTerm rightChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeCustomer.getRelation(),TPCHelper.amFreeCustomer), 
+//				SelectionTerm.create(totalPriceCondition, AccessTerm.create(TPCHelper.am1Orders)).getRelation(),TPCHelper.am1Orders)));
 //
-//		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+//		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 //
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1122,17 +1135,17 @@ public class NestedLoopJoinTest {
 //
 //		// Select nations whose nation key is greater than 8.
 //		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-//		DependentJoinTerm leftChild = new DependentJoinTerm(
-//				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation_less)), 
-//				new AccessTerm(TPCHelper.am3Supplier_less));
+//		DependentJoinTerm leftChild = DependentJoinTerm.create(
+//				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation_less).getRelation(),TPCHelper.amFreeNation_less)), 
+//				AccessTerm.create(TPCHelper.am3Supplier_less).getRelation(),TPCHelper.am3Supplier_less));
 //
 //		// Select orders whose total price is greater than 200000.
 //		Condition totalPriceCondition = ConstantInequalityCondition.create(2, TypedConstant.create(200000f), false);
-//		DependentJoinTerm rightChild = new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreeCustomer_less), 
-//				new SelectionTerm(totalPriceCondition, new AccessTerm(TPCHelper.am1Orders_less)));
+//		DependentJoinTerm rightChild = DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeCustomer_less.getRelation(),TPCHelper.amFreeCustomer_less), 
+//				SelectionTerm.create(totalPriceCondition, AccessTerm.create(TPCHelper.am1Orders_less)).getRelation(),TPCHelper.am1Orders_less)));
 //
-//		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+//		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 //
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1150,19 +1163,19 @@ public class NestedLoopJoinTest {
 //
 //		// Select nations whose nation key is greater than 8.
 //		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-//		DependentJoinTerm leftChild = new DependentJoinTerm(
-//				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation)), 
-//				new AccessTerm(TPCHelper.am3Supplier));
+//		DependentJoinTerm leftChild = DependentJoinTerm.create(
+//				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation).getRelation(),TPCHelper.amFreeNation)), 
+//				AccessTerm.create(TPCHelper.am3Supplier).getRelation(),TPCHelper.am3Supplier));
 //
 //		// Select orders whose total price is greater than 200000.
 //		Condition totalPriceCondition = ConstantInequalityCondition.create(2, TypedConstant.create(200000f), false);
 //		// Select orders from customers with a negative account balance.
 //		Condition acctBalCondition = ConstantInequalityCondition.create(2, TypedConstant.create(0f));
-//		SelectionTerm rightChild = new SelectionTerm(acctBalCondition, new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreeCustomer), 
-//				new SelectionTerm(totalPriceCondition, new AccessTerm(TPCHelper.am1Orders))));
+//		SelectionTerm rightChild = SelectionTerm.create(acctBalCondition, DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeCustomer.getRelation(),TPCHelper.amFreeCustomer), 
+//				SelectionTerm.create(totalPriceCondition, AccessTerm.create(TPCHelper.am1Orders))).getRelation(),TPCHelper.am1Orders))));
 //
-//		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+//		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 //
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1180,19 +1193,19 @@ public class NestedLoopJoinTest {
 //
 //		// Select nations whose nation key is greater than 8.
 //		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-//		DependentJoinTerm leftChild = new DependentJoinTerm(
-//				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation_less)), 
-//				new AccessTerm(TPCHelper.am3Supplier_less));
+//		DependentJoinTerm leftChild = DependentJoinTerm.create(
+//				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation_less).getRelation(),TPCHelper.amFreeNation_less)), 
+//				AccessTerm.create(TPCHelper.am3Supplier_less).getRelation(),TPCHelper.am3Supplier_less));
 //
 //		// Select orders whose total price is greater than 200000.
 //		Condition totalPriceCondition = ConstantInequalityCondition.create(2, TypedConstant.create(200000f), false);
 //		// Select orders from customers with a negative account balance.
 //		Condition acctBalCondition = ConstantInequalityCondition.create(2, TypedConstant.create(0f));
-//		SelectionTerm rightChild = new SelectionTerm(acctBalCondition, new DependentJoinTerm(
-//				new AccessTerm(TPCHelper.amFreeCustomer_less), 
-//				new SelectionTerm(totalPriceCondition, new AccessTerm(TPCHelper.am1Orders_less))));
+//		SelectionTerm rightChild = SelectionTerm.create(acctBalCondition, DependentJoinTerm.create(
+//				AccessTerm.create(TPCHelper.amFreeCustomer_less.getRelation(),TPCHelper.amFreeCustomer_less), 
+//				SelectionTerm.create(totalPriceCondition, AccessTerm.create(TPCHelper.am1Orders_less))).getRelation(),TPCHelper.am1Orders_less))));
 //
-//		NestedLoopJoin target = new NestedLoopJoin(new JoinTerm(leftChild, rightChild));
+//		NestedLoopJoin target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild));
 //
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());

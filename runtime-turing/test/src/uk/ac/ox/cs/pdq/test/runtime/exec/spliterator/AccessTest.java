@@ -104,7 +104,7 @@ public class AccessTest {
 		 */
 //		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
 //		inputConstants.put(Attribute.create(Integer.class, "b"), TypedConstant.create(101));
-		//Access target = new Access(new AccessTerm(am1, inputConstants));
+		//Access target = new Access(AccessTerm.create(am1, inputConstants));
 		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
 		inputConstants.put(1, TypedConstant.create(101));
 
@@ -161,7 +161,7 @@ public class AccessTest {
 		/*
 		 * Plan: Access with dynamic input on attribute "b".
 		 */
-		//Access target = new Access(new AccessTerm(am1));
+		//Access target = new Access(AccessTerm.create(am1));
 		Access target = new Access(AccessTerm.create(am1.getRelation(), am1));
 		
 		// Create some dynamic input.
@@ -216,7 +216,7 @@ public class AccessTest {
 		/*
 		 *  Test with invalid dynamic input.
 		 */
-//		target = new Access(new AccessTerm(am1));
+//		target = new Access(AccessTerm.create(am1));
 		target.close();
 		target = new Access(AccessTerm.create(am1.getRelation(), am1));
 		
@@ -244,7 +244,7 @@ public class AccessTest {
 		/*
 		 * Test with mixed valid and invalid dynamic input.
 		 */
-		//target = new Access(new AccessTerm(am1));
+		//target = new Access(AccessTerm.create(am1));
 		target.close();
 		target = new Access(AccessTerm.create(am1.getRelation(), am1));
 
@@ -280,7 +280,7 @@ public class AccessTest {
 		/*
 		 *  Plan: free access on relation NATION. 
 		 */
-		//Access target = new Access(new AccessTerm(amFree));
+		//Access target = new Access(AccessTerm.create(amFree));
 		Access target = new Access(AccessTerm.create(amFree.getRelation(), amFree));
 
 
@@ -310,7 +310,7 @@ public class AccessTest {
 //		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
 //		inputConstants.put(Attribute.create(Integer.class, "regionKey"), TypedConstant.create(2));
 //
-//		Access target = new Access(new AccessTerm(am2, inputConstants));
+//		Access target = new Access(AccessTerm.create(am2, inputConstants));
 		
 		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
 		inputConstants.put(2, TypedConstant.create(2));
@@ -343,7 +343,7 @@ public class AccessTest {
 //		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
 //		inputConstants.put(Attribute.create(Integer.class, "regionKey"), TypedConstant.create(2));
 //
-//		Access target = new Access(new AccessTerm(am2, inputConstants));
+//		Access target = new Access(AccessTerm.create(am2, inputConstants));
 		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
 		inputConstants.put(2, TypedConstant.create(2));
 		Access target = new Access(AccessTerm.create(am2.getRelation(), am2,inputConstants));
@@ -371,7 +371,7 @@ public class AccessTest {
 		/*
 		 * Plan: Access on relation NATION with dynamic input on attribute "regionKey".
 		 */
-		//Access target = new Access(new AccessTerm(am2));
+		//Access target = new Access(AccessTerm.create(am2));
 		Access target = new Access(AccessTerm.create(am2.getRelation(), am2));
 
 		// Attempting to execute the plan without specifying dynamic inputs
@@ -440,7 +440,7 @@ public class AccessTest {
 //		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
 //		inputConstants.put(Attribute.create(Integer.class, "regionKey"), TypedConstant.create(2));
 //
-//		Access target = new Access(new AccessTerm(am12, inputConstants));
+//		Access target = new Access(AccessTerm.create(am12, inputConstants));
 		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
 		inputConstants.put(2, TypedConstant.create(2));
 		Access target = new Access(AccessTerm.create(am12.getRelation(), am12,inputConstants));
@@ -490,7 +490,7 @@ public class AccessTest {
 		 */
 //		Map<Attribute, TypedConstant> inputConstants = new HashMap<>();
 //		inputConstants.put(Attribute.create(Integer.class, "suppKey"), TypedConstant.create(22));
-//		Access target = new Access(new AccessTerm(am2, inputConstants));
+//		Access target = new Access(AccessTerm.create(am2, inputConstants));
 		
 		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
 		inputConstants.put(2, TypedConstant.create(22));
@@ -520,7 +520,7 @@ public class AccessTest {
 		/*
 		 * Plan: Access on relation LINEITEM with dynamic input on attributes "suppKey" and "quantity".
 		 */
-		//Access target = new Access(new AccessTerm(am23));
+		//Access target = new Access(AccessTerm.create(am23));
 		Access target = new Access(AccessTerm.create(am23.getRelation(), am23));
 
 		// Attempting to execute the plan without specifying dynamic inputs
@@ -563,7 +563,7 @@ public class AccessTest {
 		/*
 		 * Plan: Access on relation LINEITEM with dynamic input on attributes "quantity".
 		 */
-//		Access target = new Access(new AccessTerm(am3));
+//		Access target = new Access(AccessTerm.create(am3));
 		Access target = new Access(AccessTerm.create(am3.getRelation(), am3));
 
 		// Attempting to execute the plan without specifying dynamic inputs
@@ -633,7 +633,7 @@ public class AccessTest {
 //		/*
 //		 * Plan: Free Access on relation LINEITEM.
 //		 */
-//		Access target = new Access(new AccessTerm(TPCHelper.amFreeLineItem));
+//		Access target = new Access(AccessTerm.create(TPCHelper.amFreeLineItem));
 //
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -651,7 +651,7 @@ public class AccessTest {
 //		/*
 //		 * Plan: Free Access on relation LINEITEM_LESS.
 //		 */
-//		Access target = new Access(new AccessTerm(TPCHelper.amFreeLineItem_less));
+//		Access target = new Access(AccessTerm.create(TPCHelper.amFreeLineItem_less));
 //
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());

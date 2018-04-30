@@ -28,6 +28,7 @@ import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.algebra.TypeEqualityCondition;
+import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
@@ -71,11 +72,11 @@ public class SymmetricMemoryHashJoinTest {
 
 		InMemoryAccessMethod amFree = new InMemoryAccessMethod(amAttributes, new Integer[0], relation, attributeMapping);
 
-		AccessTerm leftChild = new AccessTerm(amFree);
-		AccessTerm rightChild = new AccessTerm(amFree);
+		AccessTerm leftChild = AccessTerm.create(amFree.getRelation(),amFree);
+		AccessTerm rightChild = AccessTerm.create(amFree.getRelation(),amFree);
 
 		// Construct the target from a JoinTerm.
-		BinaryExecutablePlan target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		BinaryExecutablePlan target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 		Assert.assertNotNull(target);
 	}
 
@@ -120,8 +121,8 @@ public class SymmetricMemoryHashJoinTest {
 		 *  Test with a simple join condition, arising from the common attribute"c".
 		 */
 		@SuppressWarnings("resource")
-		BinaryExecutablePlan target = new SymmetricMemoryHashJoin(new JoinTerm(new AccessTerm(amFree1), 
-				new AccessTerm(amFree2)));
+		BinaryExecutablePlan target = new SymmetricMemoryHashJoin(JoinTerm.create(AccessTerm.create(amFree1.getRelation(),amFree1), 
+				AccessTerm.create(amFree2.getRelation(),amFree2)));
 
 		Condition result = target.getJoinCondition();
 
@@ -156,8 +157,8 @@ public class SymmetricMemoryHashJoinTest {
 
 		InMemoryAccessMethod amFree3 = new InMemoryAccessMethod(amAttributes3, new Integer[0], relation3, attributeMapping3);
 
-		target = new SymmetricMemoryHashJoin(new JoinTerm(new AccessTerm(amFree1), 
-				new AccessTerm(amFree3)));		
+		target = new SymmetricMemoryHashJoin(JoinTerm.create(AccessTerm.create(amFree1.getRelation(),amFree1), 
+				AccessTerm.create(amFree3.getRelation(),amFree3)));		
 
 		result = target.getJoinCondition();
 
@@ -211,9 +212,9 @@ public class SymmetricMemoryHashJoinTest {
 		InMemoryAccessMethod amFree2 = new InMemoryAccessMethod(amAttributes2, new Integer[0], relation2, attributeMapping2);
 
 		// Construct the target plan.
-		AccessTerm leftChild = new AccessTerm(amFree1);
-		AccessTerm rightChild = new AccessTerm(amFree2);
-		BinaryExecutablePlan target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		AccessTerm leftChild = AccessTerm.create(amFree1.getRelation(),amFree1);
+		AccessTerm rightChild = AccessTerm.create(amFree2.getRelation(),amFree2);
+		BinaryExecutablePlan target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Create some tuples. 
 		// Here we join on columns containing no duplicates.  
@@ -301,12 +302,12 @@ public class SymmetricMemoryHashJoinTest {
 		// Construct the target plan.
 
 		// Free access on relation 1.
-		AccessTerm leftChild = new AccessTerm(amFree1);
+		AccessTerm leftChild = AccessTerm.create(amFree1.getRelation(),amFree1);
 
 		// Free access on relation 2, then select rows where attribute "k" is greater than 10.
 		Condition condition = ConstantInequalityCondition.create(0, TypedConstant.create(10), false);
-		SelectionTerm rightChild = new SelectionTerm(condition, new AccessTerm(amFree2));
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SelectionTerm rightChild = SelectionTerm.create(condition, AccessTerm.create(amFree2.getRelation(),amFree2));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Create some tuples. 
 		// Here we join on columns containing no duplicates.  
@@ -389,11 +390,11 @@ public class SymmetricMemoryHashJoinTest {
 
 		// Free access on relation 1, then select rows where attribute "j" is less than 8.
 		Condition condition = ConstantInequalityCondition.create(1, TypedConstant.create(8));
-		SelectionTerm leftChild = new SelectionTerm(condition, new AccessTerm(amFree1));
+		SelectionTerm leftChild = SelectionTerm.create(condition, AccessTerm.create(amFree1.getRelation(),amFree1));
 
 		// Free access on relation 2.
-		AccessTerm rightChild = new AccessTerm(amFree2);
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		AccessTerm rightChild = AccessTerm.create(amFree2.getRelation(),amFree2);
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Create some tuples. 
 		// Here we join on columns containing no duplicates.  
@@ -439,13 +440,13 @@ public class SymmetricMemoryHashJoinTest {
 
 		int N = 10;
 
-		Relation relation1 = new Relation("relation1", 
+		Relation relation1 = Relation.create("relation1", 
 				new Attribute[] {Attribute.create(String.class, "a"), Attribute.create(String.class, "b")});
-		Relation relation2 = new Relation("relation2", 
+		Relation relation2 = Relation.create("relation2", 
 				new Attribute[] {Attribute.create(String.class, "a"), Attribute.create(String.class, "c")});
-		Relation relation3 = new Relation("relation3", 
+		Relation relation3 = Relation.create("relation3", 
 				new Attribute[] {Attribute.create(String.class, "b"), Attribute.create(String.class, "d")});
-		Relation relation4 = new Relation("relation4", 
+		Relation relation4 = Relation.create("relation4", 
 				new Attribute[] {Attribute.create(String.class, "d"), Attribute.create(String.class, "e")});
 
 		Map<Attribute, Attribute> attributeMapping1 = ImmutableMap.of(
@@ -472,9 +473,24 @@ public class SymmetricMemoryHashJoinTest {
 		/*
 		 * Join(R1, R2).
 		 */
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
-				new JoinTerm(new AccessTerm(am1Free), new AccessTerm(am2Free)), 
-				new JoinTerm(new AccessTerm(am3Free), new AccessTerm(am4Free))
+//		SymmetricMemoryHashJoin target = 
+//				new SymmetricMemoryHashJoin(
+//						new JoinTerm(
+//								new JoinTerm(
+//										new AccessTerm(am1Free), 
+//										new AccessTerm(am2Free)
+//								), 
+//								new JoinTerm(new AccessTerm(am3Free), new AccessTerm(am4Free)
+//						)
+//				));
+		
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(
+				JoinTerm.create(
+						JoinTerm.create(
+								AccessTerm.create(am1Free.getRelation(),am1Free), AccessTerm.create(am2Free.getRelation(),am2Free)),
+								
+						JoinTerm.create(
+								AccessTerm.create(am3Free.getRelation(),am3Free), AccessTerm.create(am4Free.getRelation(),am4Free))
 				));
 
 		// Create some tuples. 
@@ -536,19 +552,19 @@ public class SymmetricMemoryHashJoinTest {
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
 		Integer[] inputs = new Integer[0];
-		AccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, 
+		AbstractAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
-		AccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputs, 
+		AbstractAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputs, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
-		AccessTerm leftChild = new AccessTerm(amFreeNation);
-		AccessTerm rightChild = new AccessTerm(amFreeRegion);
+		AccessTerm leftChild = AccessTerm.create(amFreeNation.getRelation(),amFreeNation);
+		AccessTerm rightChild = AccessTerm.create(amFreeRegion.getRelation(),amFreeRegion);
 
 		// Test with and without a custom join condition (to join on attributes with different names).
 
 		// First test without a custom join condition.
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Check the inferred join condition. The common attribute "regionKey" is in 
 		// position 2 in the nation relation and position 0 in the region relation 
@@ -571,7 +587,7 @@ public class SymmetricMemoryHashJoinTest {
 		// (nationKey) and the 0th REGION attribute (regionKey).
 		Condition joinCondition = TypeEqualityCondition.create(1, 3);
 
-		target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild, joinCondition));
+		target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild, joinCondition));
 
 		// Construct some dummy tuples to test the tuple-dependent getJoinCondition method.
 		TupleType ttN = TupleType.DefaultFactory.create(String.class, Integer.class, Integer.class); // name, nationKey, regionKey
@@ -620,18 +636,18 @@ public class SymmetricMemoryHashJoinTest {
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
-		AccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
+		AbstractAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "R_REGIONKEY"));
-		AccessMethod am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
+		AbstractAccessMethod am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
-		AccessTerm leftChild = new AccessTerm(amFreeNation);
-		AccessTerm rightChild = new AccessTerm(am0Region);
+		AccessTerm leftChild = AccessTerm.create(amFreeNation.getRelation(),amFreeNation);
+		AccessTerm rightChild = AccessTerm.create(am0Region.getRelation(),am0Region);
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Attempting to execute the plan before setting the dynamic input raises an exception.
 		boolean caught = false;
@@ -685,17 +701,17 @@ public class SymmetricMemoryHashJoinTest {
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_NATIONKEY"));
-		AccessMethod am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
+		AbstractAccessMethod am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
-		AccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
+		AbstractAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
-		AccessTerm leftChild = new AccessTerm(am0Nation);
-		AccessTerm rightChild = new AccessTerm(amFreeRegion);
+		AccessTerm leftChild = AccessTerm.create(am0Nation.getRelation(),am0Nation);
+		AccessTerm rightChild = AccessTerm.create(amFreeRegion.getRelation(),amFreeRegion);
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Attempting to execute the plan before setting the dynamic input raises an exception.
 		boolean caught = false;
@@ -753,18 +769,18 @@ public class SymmetricMemoryHashJoinTest {
 		Set<Attribute> inputAttributes;
 
 		inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_NATIONKEY"));
-		AccessMethod am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
+		AbstractAccessMethod am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "R_REGIONKEY"));
-		AccessMethod am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
+		AbstractAccessMethod am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
-		AccessTerm leftChild = new AccessTerm(am0Nation);
-		AccessTerm rightChild = new AccessTerm(am0Region);
+		AccessTerm leftChild = AccessTerm.create(am0Nation.getRelation(),am0Nation);
+		AccessTerm rightChild = AccessTerm.create(am0Region.getRelation(),am0Region);
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Attempting to execute the plan before setting the dynamic input raises an exception.
 		boolean caught = false;
@@ -825,22 +841,22 @@ public class SymmetricMemoryHashJoinTest {
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
-		AccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
+		AbstractAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
-		AccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
+		AbstractAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
 
 		// Free access on NATION.
-		AccessTerm leftChild = new AccessTerm(amFreeNation);
+		AccessTerm leftChild = AccessTerm.create(amFreeNation.getRelation(),amFreeNation);
 
 		// Free access on REGION, then select rows where regionKey < 4.
 		Condition condition = ConstantInequalityCondition.create(0, TypedConstant.create(4));
-		SelectionTerm rightChild = new SelectionTerm(condition, new AccessTerm(amFreeRegion));
+		SelectionTerm rightChild = SelectionTerm.create(condition, AccessTerm.create(amFreeRegion.getRelation(),amFreeRegion));
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -867,22 +883,22 @@ public class SymmetricMemoryHashJoinTest {
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
-		AccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
+		AbstractAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
-		AccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
+		AbstractAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
 
 		// Free access on NATION, then select rows where nationKey > 8.
 		Condition condition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-		SelectionTerm leftChild = new SelectionTerm(condition, new AccessTerm(amFreeNation));
+		SelectionTerm leftChild = SelectionTerm.create(condition, AccessTerm.create(amFreeNation.getRelation(),amFreeNation));
 
 		// Free access on REGION.
-		AccessTerm rightChild = new AccessTerm(amFreeRegion);
+		AccessTerm rightChild = AccessTerm.create(amFreeRegion.getRelation(),amFreeRegion);
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -913,27 +929,29 @@ public class SymmetricMemoryHashJoinTest {
 		Relation relationSupplier = Mockito.mock(Relation.class);
 		when(relationSupplier.getAttributes()).thenReturn(TPCHelper.attrs_supplier.clone());
 
-		AccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
+		AbstractAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "R_REGIONKEY"));		
-		AccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
+		AbstractAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
-		AccessMethod amFreeCustomer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, new Integer[0], 
+		AbstractAccessMethod amFreeCustomer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, new Integer[0], 
 				relationCustomer, TPCHelper.attrMap_customer, TPCHelper.getProperties());
 
-		AccessMethod amFreeSupplier = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S, new Integer[0], 
+		AbstractAccessMethod amFreeSupplier = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S, new Integer[0], 
 				relationSupplier, TPCHelper.attrMap_supplier, TPCHelper.getProperties());
 
 
 		// Construct the target plan.
-		DependentJoinTerm leftChild = new DependentJoinTerm(new AccessTerm(amFreeNation), new AccessTerm(amFreeRegion));
+		DependentJoinTerm leftChild = DependentJoinTerm.create(
+				AccessTerm.create(amFreeNation.getRelation(),amFreeNation), AccessTerm.create(amFreeRegion.getRelation(),amFreeRegion));
 
 		Condition condition = ConstantEqualityCondition.create(4, TypedConstant.create(5));
-		JoinTerm rightChild = new JoinTerm(new SelectionTerm(condition, new AccessTerm(amFreeCustomer)), new AccessTerm(amFreeSupplier));
+		JoinTerm rightChild = JoinTerm.create(SelectionTerm.create(condition, 
+				AccessTerm.create(amFreeCustomer.getRelation(),amFreeCustomer)), AccessTerm.create(amFreeSupplier.getRelation(),amFreeSupplier));
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -952,18 +970,18 @@ public class SymmetricMemoryHashJoinTest {
 	@Test
 	public void integrationTestSql8() {
 
-		Relation relationCustomer = new Relation("customer", TPCHelper.attrs_customer);
-		AccessMethod amFreeCustomer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, 
+		Relation relationCustomer = Relation.create("customer", TPCHelper.attrs_customer);
+		AbstractAccessMethod amFreeCustomer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, 
 				new Integer[0], relationCustomer, TPCHelper.attrMap_customer, TPCHelper.getProperties());
 
-		Relation relationSupplier = new Relation("supplier", TPCHelper.attrs_supplier);
-		AccessMethod amFreeSupplier = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S, 
+		Relation relationSupplier = Relation.create("supplier", TPCHelper.attrs_supplier);
+		AbstractAccessMethod amFreeSupplier = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S, 
 				new Integer[0], relationSupplier, TPCHelper.attrMap_supplier, TPCHelper.getProperties());
 
 		Condition condition = ConstantEqualityCondition.create(4, TypedConstant.create(5));
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
-				new SelectionTerm(condition, new AccessTerm(amFreeCustomer)), 
-				new AccessTerm(amFreeSupplier))
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				SelectionTerm.create(condition, AccessTerm.create(amFreeCustomer.getRelation(),amFreeCustomer)), 
+				AccessTerm.create(amFreeSupplier.getRelation(),amFreeSupplier))
 				);
 
 		// Execute the plan. 
@@ -980,32 +998,32 @@ public class SymmetricMemoryHashJoinTest {
 	@Test
 	public void integrationTestSql9() {
 
-		Relation relationNation = new Relation("nation", TPCHelper.attrs_nation);
-		AccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, 
+		Relation relationNation = Relation.create("nation", TPCHelper.attrs_nation);
+		AbstractAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, 
 				new Integer[0], relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
-		Relation relationRegion = new Relation("region", TPCHelper.attrs_region);
-		AccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, 
+		Relation relationRegion = Relation.create("region", TPCHelper.attrs_region);
+		AbstractAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, 
 				new Integer[0], relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
-		Relation relationCustomer = new Relation("customer", TPCHelper.attrs_customer);
-		AccessMethod amFreeCustomer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, 
+		Relation relationCustomer = Relation.create("customer", TPCHelper.attrs_customer);
+		AbstractAccessMethod amFreeCustomer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, 
 				new Integer[0], relationCustomer, TPCHelper.attrMap_customer, TPCHelper.getProperties());
 
-		Relation relationSupplier = new Relation("supplier", TPCHelper.attrs_supplier);
-		AccessMethod amFreeSupplier = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S, 
+		Relation relationSupplier = Relation.create("supplier", TPCHelper.attrs_supplier);
+		AbstractAccessMethod amFreeSupplier = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S, 
 				new Integer[0], relationSupplier, TPCHelper.attrMap_supplier, TPCHelper.getProperties());
 
-		SymmetricMemoryHashJoin leftChild = new SymmetricMemoryHashJoin(new JoinTerm(
-				new AccessTerm(amFreeNation), 
-				new AccessTerm(amFreeRegion)));
+		SymmetricMemoryHashJoin leftChild = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(amFreeNation.getRelation(),amFreeNation), 
+				AccessTerm.create(amFreeRegion.getRelation(),amFreeRegion)));
 
 		Condition condition = ConstantEqualityCondition.create(4, TypedConstant.create(5));
-		SymmetricMemoryHashJoin rightChild = new SymmetricMemoryHashJoin(new JoinTerm(
-				new SelectionTerm(condition, new AccessTerm(amFreeCustomer)), 
-				new AccessTerm(amFreeSupplier)));
+		SymmetricMemoryHashJoin rightChild = new SymmetricMemoryHashJoin(JoinTerm.create(
+				SelectionTerm.create(condition, AccessTerm.create(amFreeCustomer.getRelation(),amFreeCustomer)), 
+				AccessTerm.create(amFreeSupplier.getRelation(),amFreeSupplier)));
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1025,33 +1043,33 @@ public class SymmetricMemoryHashJoinTest {
 	@Test
 	public void integrationTestSql10() {
 
-		Relation relationNation = new Relation("nation", TPCHelper.attrs_nation);
-		AccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, 
+		Relation relationNation = Relation.create("nation", TPCHelper.attrs_nation);
+		AbstractAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, 
 				new Integer[0], relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
-		Relation relationRegion = new Relation("region", TPCHelper.attrs_region);
-		AccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, 
+		Relation relationRegion = Relation.create("region", TPCHelper.attrs_region);
+		AbstractAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, 
 				new Integer[0], relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
-		Relation relationCustomer = new Relation("customer", TPCHelper.attrs_customer);
-		AccessMethod amFreeCustomer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, 
+		Relation relationCustomer = Relation.create("customer", TPCHelper.attrs_customer);
+		AbstractAccessMethod amFreeCustomer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, 
 				new Integer[0], relationCustomer, TPCHelper.attrMap_customer, TPCHelper.getProperties());
 
-		Relation relationSupplier = new Relation("supplier", TPCHelper.attrs_supplier);
-		AccessMethod amFreeSupplier = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S, 
+		Relation relationSupplier = Relation.create("supplier", TPCHelper.attrs_supplier);
+		AbstractAccessMethod amFreeSupplier = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S, 
 				new Integer[0], relationSupplier, TPCHelper.attrMap_supplier, TPCHelper.getProperties());
 
 		// Test with nested loop joins on the children.
-		NestedLoopJoin leftChild = new NestedLoopJoin(new JoinTerm(
-				new AccessTerm(amFreeNation), 
-				new AccessTerm(amFreeRegion)));
+		NestedLoopJoin leftChild = new NestedLoopJoin(JoinTerm.create(
+				AccessTerm.create(amFreeNation.getRelation(),amFreeNation), 
+				AccessTerm.create(amFreeRegion.getRelation(),amFreeRegion)));
 
 		Condition condition = ConstantEqualityCondition.create(4, TypedConstant.create(5));
-		NestedLoopJoin rightChild = new NestedLoopJoin(new JoinTerm(
-				new SelectionTerm(condition, new AccessTerm(amFreeCustomer)), 
-				new AccessTerm(amFreeSupplier)));
+		NestedLoopJoin rightChild = new NestedLoopJoin(JoinTerm.create(
+				SelectionTerm.create(condition, AccessTerm.create(amFreeCustomer.getRelation(),amFreeCustomer)), 
+				AccessTerm.create(amFreeSupplier.getRelation(),amFreeSupplier)));
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1129,12 +1147,12 @@ public class SymmetricMemoryHashJoinTest {
 		InMemoryAccessMethod am40 = new InMemoryAccessMethod(relationR4Attributes, inputAttributes4, relationR4, attributeMapping4);
 
 		// DependentJoin{a}(R1, R2).
-		DependentJoin dependentJoinR1R2 = new DependentJoin(new DependentJoinTerm(
-				new AccessTerm(am1Free), new AccessTerm(am20)));
+		DependentJoin dependentJoinR1R2 = new DependentJoin(DependentJoinTerm.create(
+				AccessTerm.create(am1Free.getRelation(),am1Free), AccessTerm.create(am20.getRelation(),am20)));
 
 		// DependentJoin{d}(R3, R4).
-		DependentJoin dependentJoinR3R4 = new DependentJoin(new DependentJoinTerm(
-				new AccessTerm(am3Free), new AccessTerm(am40)));
+		DependentJoin dependentJoinR3R4 = new DependentJoin(DependentJoinTerm.create(
+				AccessTerm.create(am3Free.getRelation(),am3Free), AccessTerm.create(am40.getRelation(), am40)));
 
 		// Create some tuples. 
 		Collection<Tuple> tuples1 = new ArrayList<Tuple>();
@@ -1165,7 +1183,7 @@ public class SymmetricMemoryHashJoinTest {
 		am40.load(tuples4);
 
 		// Join[b](dependentJoinR1R2, dependentJoinR3R4).
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
 				dependentJoinR1R2, 
 				dependentJoinR3R4));
 
@@ -1183,8 +1201,8 @@ public class SymmetricMemoryHashJoinTest {
 	@Test
 	public void stressTestSql1() {
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
-				new AccessTerm(TPCHelper.amFreeNation), new AccessTerm(TPCHelper.amFreeSupplier)));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier)));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1203,9 +1221,9 @@ public class SymmetricMemoryHashJoinTest {
 	@Test
 	public void stressTestSql1a() {
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
-				new AccessTerm(TPCHelper.amFreeNation_less), 
-				new AccessTerm(TPCHelper.amFreeSupplier_less)));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+				AccessTerm.create(TPCHelper.amFreeSupplier_less.getRelation(),TPCHelper.amFreeSupplier_less)));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1224,8 +1242,8 @@ public class SymmetricMemoryHashJoinTest {
 	@Test
 	public void stressTestSql2() {
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
-				new AccessTerm(TPCHelper.amFreePart), new AccessTerm(TPCHelper.amFreePartSupp)));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart), AccessTerm.create(TPCHelper.amFreePartSupp.getRelation(),TPCHelper.amFreePartSupp)));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1244,9 +1262,9 @@ public class SymmetricMemoryHashJoinTest {
 	@Test
 	public void stressTestSql2a() {
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
-				new AccessTerm(TPCHelper.amFreePart_less), 
-				new AccessTerm(TPCHelper.amFreePartSupp_less)));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less), 
+				AccessTerm.create(TPCHelper.amFreePartSupp_less.getRelation(),TPCHelper.amFreePartSupp_less)));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1266,13 +1284,13 @@ public class SymmetricMemoryHashJoinTest {
 	public void stressTestSql3() {
 
 		// Specify the symmetric memory hash join algorithm throughout. 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
-				new SymmetricMemoryHashJoin(new JoinTerm(
-						new AccessTerm(TPCHelper.amFreeNation), 
-						new AccessTerm(TPCHelper.amFreeSupplier))),
-				new SymmetricMemoryHashJoin(new JoinTerm( 
-						new AccessTerm(TPCHelper.amFreePart), 
-						new AccessTerm(TPCHelper.amFreePartSupp)))
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				new SymmetricMemoryHashJoin(JoinTerm.create(
+						AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+						AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier))),
+				new SymmetricMemoryHashJoin(JoinTerm.create( 
+						AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart), 
+						AccessTerm.create(TPCHelper.amFreePartSupp.getRelation(),TPCHelper.amFreePartSupp)))
 				));
 
 		// Execute the plan. 
@@ -1296,13 +1314,13 @@ public class SymmetricMemoryHashJoinTest {
 	@Test
 	public void stressTestSql3a() {
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
-				new SymmetricMemoryHashJoin(new JoinTerm(
-						new AccessTerm(TPCHelper.amFreeNation_less), 
-						new AccessTerm(TPCHelper.amFreeSupplier_less))),
-				new SymmetricMemoryHashJoin(new JoinTerm(
-						new AccessTerm(TPCHelper.amFreePart_less), 
-						new AccessTerm(TPCHelper.amFreePartSupp_less)))
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				new SymmetricMemoryHashJoin(JoinTerm.create(
+						AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+						AccessTerm.create(TPCHelper.amFreeSupplier_less.getRelation(),TPCHelper.amFreeSupplier_less))),
+				new SymmetricMemoryHashJoin(JoinTerm.create(
+						AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less), 
+						AccessTerm.create(TPCHelper.amFreePartSupp_less.getRelation(),TPCHelper.amFreePartSupp_less)))
 				));
 
 		// Execute the plan. 
@@ -1329,9 +1347,9 @@ public class SymmetricMemoryHashJoinTest {
 		Attribute[] projectionAttributesNation = TPCHelper.attrs_nation_less;
 		Attribute[] projectionAttributesSupplier = TPCHelper.attrs_supplier_less;
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
-				new ProjectionTerm(projectionAttributesNation, new AccessTerm(TPCHelper.amFreeNation)), 
-				new ProjectionTerm(projectionAttributesSupplier, new AccessTerm(TPCHelper.amFreeSupplier))));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				ProjectionTerm.create(projectionAttributesNation, AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation)), 
+				ProjectionTerm.create(projectionAttributesSupplier, AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier))));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1353,9 +1371,9 @@ public class SymmetricMemoryHashJoinTest {
 		Attribute[] projectionAttributesNation = TPCHelper.attrs_nation_less;
 		Attribute[] projectionAttributesSupplier = TPCHelper.attrs_supplier_less;
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
-				new ProjectionTerm(projectionAttributesNation, new AccessTerm(TPCHelper.amFreeNation_less)), 
-				new ProjectionTerm(projectionAttributesSupplier, new AccessTerm(TPCHelper.amFreeSupplier_less))));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				ProjectionTerm.create(projectionAttributesNation, AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less)), 
+				ProjectionTerm.create(projectionAttributesSupplier, AccessTerm.create(TPCHelper.amFreeSupplier_less.getRelation(),TPCHelper.amFreeSupplier_less))));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1377,9 +1395,9 @@ public class SymmetricMemoryHashJoinTest {
 		Attribute[] projectionAttributesPart = TPCHelper.attrs_part_less;
 		Attribute[] projectionAttributesPartSupp = TPCHelper.attrs_partSupp_less;
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
-				new ProjectionTerm(projectionAttributesPart, new AccessTerm(TPCHelper.amFreePart)), 
-				new ProjectionTerm(projectionAttributesPartSupp, new AccessTerm(TPCHelper.amFreePartSupp))));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				 ProjectionTerm.create(projectionAttributesPart, AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart)), 
+				 ProjectionTerm.create(projectionAttributesPartSupp, AccessTerm.create(TPCHelper.amFreePartSupp.getRelation(),TPCHelper.amFreePartSupp))));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1401,9 +1419,9 @@ public class SymmetricMemoryHashJoinTest {
 		Attribute[] projectionAttributesPart = TPCHelper.attrs_part_less;
 		Attribute[] projectionAttributesPartSupp = TPCHelper.attrs_partSupp_less;
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
-				new ProjectionTerm(projectionAttributesPart, new AccessTerm(TPCHelper.amFreePart_less)), 
-				new ProjectionTerm(projectionAttributesPartSupp, new AccessTerm(TPCHelper.amFreePartSupp_less))));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				ProjectionTerm.create(projectionAttributesPart, AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less)), 
+				ProjectionTerm.create(projectionAttributesPartSupp, AccessTerm.create(TPCHelper.amFreePartSupp_less.getRelation(),TPCHelper.amFreePartSupp_less))));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1427,13 +1445,13 @@ public class SymmetricMemoryHashJoinTest {
 		Attribute[] projectionAttributesPart = TPCHelper.attrs_part_less;
 		Attribute[] projectionAttributesPartSupp = TPCHelper.attrs_partSupp_less;
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
-				new SymmetricMemoryHashJoin(new JoinTerm(
-						new ProjectionTerm(projectionAttributesNation, new AccessTerm(TPCHelper.amFreeNation)), 
-						new ProjectionTerm(projectionAttributesSupplier, new AccessTerm(TPCHelper.amFreeSupplier)))),
-				new SymmetricMemoryHashJoin(new JoinTerm(
-						new ProjectionTerm(projectionAttributesPart, new AccessTerm(TPCHelper.amFreePart)), 
-						new ProjectionTerm(projectionAttributesPartSupp, new AccessTerm(TPCHelper.amFreePartSupp))))
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				new SymmetricMemoryHashJoin(JoinTerm.create(
+						ProjectionTerm.create(projectionAttributesNation, AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation)), 
+						ProjectionTerm.create(projectionAttributesSupplier, AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier)))),
+				new SymmetricMemoryHashJoin(JoinTerm.create(
+						ProjectionTerm.create(projectionAttributesPart, AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart)), 
+						ProjectionTerm.create(projectionAttributesPartSupp, AccessTerm.create(TPCHelper.amFreePartSupp.getRelation(),TPCHelper.amFreePartSupp))))
 				));
 
 		// Execute the plan. 
@@ -1463,13 +1481,13 @@ public class SymmetricMemoryHashJoinTest {
 		Attribute[] projectionAttributesPart = TPCHelper.attrs_part_less;
 		Attribute[] projectionAttributesPartSupp = TPCHelper.attrs_partSupp_less;
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(
-				new SymmetricMemoryHashJoin(new JoinTerm(
-						new ProjectionTerm(projectionAttributesNation, new AccessTerm(TPCHelper.amFreeNation_less)), 
-						new ProjectionTerm(projectionAttributesSupplier, new AccessTerm(TPCHelper.amFreeSupplier_less)))),
-				new SymmetricMemoryHashJoin(new JoinTerm(
-						new ProjectionTerm(projectionAttributesPart, new AccessTerm(TPCHelper.amFreePart_less)), 
-						new ProjectionTerm(projectionAttributesPartSupp, new AccessTerm(TPCHelper.amFreePartSupp_less))))
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				new SymmetricMemoryHashJoin(JoinTerm.create(
+						ProjectionTerm.create(projectionAttributesNation, AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less)), 
+						ProjectionTerm.create(projectionAttributesSupplier, AccessTerm.create(TPCHelper.amFreeSupplier_less.getRelation(),TPCHelper.amFreeSupplier_less)))),
+				new SymmetricMemoryHashJoin(JoinTerm.create(
+						ProjectionTerm.create(projectionAttributesPart, AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less)), 
+						ProjectionTerm.create(projectionAttributesPartSupp, AccessTerm.create(TPCHelper.amFreePartSupp_less.getRelation(),TPCHelper.amFreePartSupp_less))))
 				));
 
 		// Execute the plan. 
@@ -1498,17 +1516,17 @@ public class SymmetricMemoryHashJoinTest {
 
 		// Select nations whose nation key is greater than 8.
 		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-		SymmetricMemoryHashJoin leftChild = new SymmetricMemoryHashJoin(new JoinTerm(
-				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation)), 
-				new AccessTerm(TPCHelper.amFreeSupplier)));
+		SymmetricMemoryHashJoin leftChild = new SymmetricMemoryHashJoin(JoinTerm.create(
+				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation)), 
+				AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier)));
 
 		// Select part supplies whose available quantity is greater than 500.
 		Condition availQtyCondition = ConstantInequalityCondition.create(2, TypedConstant.create(500), false);
-		SymmetricMemoryHashJoin rightChild = new SymmetricMemoryHashJoin(new JoinTerm(
-				new AccessTerm(TPCHelper.amFreePart), 
-				new SelectionTerm(availQtyCondition, new AccessTerm(TPCHelper.amFreePartSupp))));
+		SymmetricMemoryHashJoin rightChild = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart), 
+				SelectionTerm.create(availQtyCondition, AccessTerm.create(TPCHelper.amFreePartSupp.getRelation(),TPCHelper.amFreePartSupp))));
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1526,17 +1544,17 @@ public class SymmetricMemoryHashJoinTest {
 
 		// Select nations whose nation key is greater than 8.
 		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-		SymmetricMemoryHashJoin leftChild = new SymmetricMemoryHashJoin(new JoinTerm(
-				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation_less)), 
-				new AccessTerm(TPCHelper.amFreeSupplier_less)));
+		SymmetricMemoryHashJoin leftChild = new SymmetricMemoryHashJoin(JoinTerm.create(
+				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less)), 
+				AccessTerm.create(TPCHelper.amFreeSupplier_less.getRelation(),TPCHelper.amFreeSupplier_less)));
 
 		// Select part supplies whose available quantity is greater than 500.
 		Condition availQtyCondition = ConstantInequalityCondition.create(2, TypedConstant.create(500), false);
-		SymmetricMemoryHashJoin rightChild = new SymmetricMemoryHashJoin(new JoinTerm(
-				new AccessTerm(TPCHelper.amFreePart_less), 
-				new SelectionTerm(availQtyCondition, new AccessTerm(TPCHelper.amFreePartSupp_less))));
+		SymmetricMemoryHashJoin rightChild = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less), 
+				SelectionTerm.create(availQtyCondition, AccessTerm.create(TPCHelper.amFreePartSupp_less.getRelation(),TPCHelper.amFreePartSupp_less))));
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1554,17 +1572,17 @@ public class SymmetricMemoryHashJoinTest {
 
 		// Select nations whose nation key is greater than 8.
 		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-		SymmetricMemoryHashJoin leftChild = new SymmetricMemoryHashJoin(new JoinTerm(
-				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation)), 
-				new AccessTerm(TPCHelper.amFreeSupplier)));
+		SymmetricMemoryHashJoin leftChild = new SymmetricMemoryHashJoin(JoinTerm.create(
+				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation)), 
+				AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier)));
 
 		// Select orders whose total price is greater than 200000.
 		Condition totalPriceCondition = ConstantInequalityCondition.create(2, TypedConstant.create(200000f), false);
-		SymmetricMemoryHashJoin rightChild = new SymmetricMemoryHashJoin(new JoinTerm(
-				new AccessTerm(TPCHelper.amFreeCustomer), 
-				new SelectionTerm(totalPriceCondition, new AccessTerm(TPCHelper.amFreeOrders))));
+		SymmetricMemoryHashJoin rightChild = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeCustomer.getRelation(),TPCHelper.amFreeCustomer), 
+				SelectionTerm.create(totalPriceCondition, AccessTerm.create(TPCHelper.amFreeOrders.getRelation(),TPCHelper.amFreeOrders))));
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1582,17 +1600,17 @@ public class SymmetricMemoryHashJoinTest {
 
 		// Select nations whose nation key is greater than 8.
 		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-		SymmetricMemoryHashJoin leftChild = new SymmetricMemoryHashJoin(new JoinTerm(
-				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation_less)), 
-				new AccessTerm(TPCHelper.amFreeSupplier_less)));
+		SymmetricMemoryHashJoin leftChild = new SymmetricMemoryHashJoin(JoinTerm.create(
+				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less)), 
+				AccessTerm.create(TPCHelper.amFreeSupplier_less.getRelation(),TPCHelper.amFreeSupplier_less)));
 
 		// Select orders whose total price is greater than 200000.
 		Condition totalPriceCondition = ConstantInequalityCondition.create(2, TypedConstant.create(200000f), false);
-		SymmetricMemoryHashJoin rightChild = new SymmetricMemoryHashJoin(new JoinTerm(
-				new AccessTerm(TPCHelper.amFreeCustomer_less), 
-				new SelectionTerm(totalPriceCondition, new AccessTerm(TPCHelper.amFreeOrders_less))));
+		SymmetricMemoryHashJoin rightChild = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeCustomer_less.getRelation(),TPCHelper.amFreeCustomer_less), 
+				SelectionTerm.create(totalPriceCondition, AccessTerm.create(TPCHelper.amFreeOrders_less.getRelation(),TPCHelper.amFreeOrders_less))));
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1612,20 +1630,20 @@ public class SymmetricMemoryHashJoinTest {
 
 		// Select nations whose nation key is greater than 8.
 		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-		SymmetricMemoryHashJoin leftChild = new SymmetricMemoryHashJoin(new JoinTerm(
-				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation)), 
-				new AccessTerm(TPCHelper.amFreeSupplier)));
+		SymmetricMemoryHashJoin leftChild = new SymmetricMemoryHashJoin(JoinTerm.create(
+				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation)), 
+				AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier)));
 
 		// Select orders whose total price is greater than 200000.
 		Condition totalPriceCondition = ConstantInequalityCondition.create(2, TypedConstant.create(200000f), false);
 		// Select customers with a negative account balance.
 		Condition acctBalCondition = ConstantInequalityCondition.create(2, TypedConstant.create(0f));
 
-		SelectionTerm rightChild = new SelectionTerm(acctBalCondition, new SymmetricMemoryHashJoin(new JoinTerm(
-				new AccessTerm(TPCHelper.amFreeCustomer), 
-				new SelectionTerm(totalPriceCondition, new AccessTerm(TPCHelper.amFreeOrders)))));
+		SelectionTerm rightChild = SelectionTerm.create(acctBalCondition, new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeCustomer.getRelation(),TPCHelper.amFreeCustomer), 
+				SelectionTerm.create(totalPriceCondition, AccessTerm.create(TPCHelper.amFreeOrders.getRelation(),TPCHelper.amFreeOrders)))));
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1643,20 +1661,20 @@ public class SymmetricMemoryHashJoinTest {
 
 		// Select nations whose nation key is greater than 8.
 		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-		SymmetricMemoryHashJoin leftChild = new SymmetricMemoryHashJoin(new JoinTerm(
-				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation_less)), 
-				new AccessTerm(TPCHelper.amFreeSupplier_less)));
+		SymmetricMemoryHashJoin leftChild = new SymmetricMemoryHashJoin(JoinTerm.create(
+				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less)), 
+				AccessTerm.create(TPCHelper.amFreeSupplier_less.getRelation(),TPCHelper.amFreeSupplier_less)));
 
 		// Select orders whose total price is greater than 200000.
 		Condition totalPriceCondition = ConstantInequalityCondition.create(2, TypedConstant.create(200000f), false);
 		// Select customers with a negative account balance.
 		Condition acctBalCondition = ConstantInequalityCondition.create(2, TypedConstant.create(0f));
 
-		SelectionTerm rightChild = new SelectionTerm(acctBalCondition, new SymmetricMemoryHashJoin(new JoinTerm(
-				new AccessTerm(TPCHelper.amFreeCustomer_less), 
-				new SelectionTerm(totalPriceCondition, new AccessTerm(TPCHelper.amFreeOrders_less)))));
+		SelectionTerm rightChild = SelectionTerm.create(acctBalCondition, new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeCustomer_less.getRelation(),TPCHelper.amFreeCustomer_less), 
+				SelectionTerm.create(totalPriceCondition, AccessTerm.create(TPCHelper.amFreeOrders_less.getRelation(),TPCHelper.amFreeOrders_less)))));
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1674,17 +1692,17 @@ public class SymmetricMemoryHashJoinTest {
 
 		// Select nations whose nation key is greater than 8.
 		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-		DependentJoinTerm leftChild = new DependentJoinTerm(
-				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation)), 
-				new AccessTerm(TPCHelper.am3Supplier));
+		DependentJoinTerm leftChild = DependentJoinTerm.create(
+				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation)), 
+				AccessTerm.create(TPCHelper.am3Supplier.getRelation(),TPCHelper.am3Supplier));
 
 		// Select orders whose total price is greater than 200000.
 		Condition totalPriceCondition = ConstantInequalityCondition.create(2, TypedConstant.create(200000f), false);
-		DependentJoinTerm rightChild = new DependentJoinTerm(
-				new AccessTerm(TPCHelper.amFreeCustomer), 
-				new SelectionTerm(totalPriceCondition, new AccessTerm(TPCHelper.am1Orders)));
+		DependentJoinTerm rightChild = DependentJoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeCustomer.getRelation(),TPCHelper.amFreeCustomer), 
+				SelectionTerm.create(totalPriceCondition, AccessTerm.create(TPCHelper.am1Orders.getRelation(),TPCHelper.am1Orders)));
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1702,17 +1720,17 @@ public class SymmetricMemoryHashJoinTest {
 
 		// Select nations whose nation key is greater than 8.
 		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-		DependentJoinTerm leftChild = new DependentJoinTerm(
-				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation_less)), 
-				new AccessTerm(TPCHelper.am3Supplier_less));
+		DependentJoinTerm leftChild = DependentJoinTerm.create(
+				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less)), 
+				AccessTerm.create(TPCHelper.am3Supplier_less.getRelation(),TPCHelper.am3Supplier_less));
 
 		// Select orders whose total price is greater than 200000.
 		Condition totalPriceCondition = ConstantInequalityCondition.create(2, TypedConstant.create(200000f), false);
-		DependentJoinTerm rightChild = new DependentJoinTerm(
-				new AccessTerm(TPCHelper.amFreeCustomer_less), 
-				new SelectionTerm(totalPriceCondition, new AccessTerm(TPCHelper.am1Orders_less)));
+		DependentJoinTerm rightChild = DependentJoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeCustomer_less.getRelation(),TPCHelper.amFreeCustomer_less), 
+				SelectionTerm.create(totalPriceCondition, AccessTerm.create(TPCHelper.am1Orders_less.getRelation(),TPCHelper.am1Orders_less)));
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1730,19 +1748,20 @@ public class SymmetricMemoryHashJoinTest {
 
 		// Select nations whose nation key is greater than 8.
 		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-		DependentJoinTerm leftChild = new DependentJoinTerm(
-				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation)), 
-				new AccessTerm(TPCHelper.am3Supplier));
+		DependentJoinTerm leftChild = DependentJoinTerm.create(
+				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation)), 
+				AccessTerm.create(TPCHelper.am3Supplier.getRelation(),TPCHelper.am3Supplier));
 
 		// Select orders whose total price is greater than 200000.
 		Condition totalPriceCondition = ConstantInequalityCondition.create(2, TypedConstant.create(200000f), false);
 		// Select orders from customers with a negative account balance.
 		Condition acctBalCondition = ConstantInequalityCondition.create(2, TypedConstant.create(0f));
-		SelectionTerm rightChild = new SelectionTerm(acctBalCondition, new DependentJoinTerm(
-				new AccessTerm(TPCHelper.amFreeCustomer), 
-				new SelectionTerm(totalPriceCondition, new AccessTerm(TPCHelper.am1Orders))));
+		SelectionTerm rightChild = SelectionTerm.create(acctBalCondition, 
+				DependentJoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeCustomer.getRelation(),TPCHelper.amFreeCustomer), 
+				SelectionTerm.create(totalPriceCondition, AccessTerm.create(TPCHelper.am1Orders.getRelation(),TPCHelper.am1Orders))));
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1760,19 +1779,19 @@ public class SymmetricMemoryHashJoinTest {
 
 		// Select nations whose nation key is greater than 8.
 		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-		DependentJoinTerm leftChild = new DependentJoinTerm(
-				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation_less)), 
-				new AccessTerm(TPCHelper.am3Supplier_less));
+		DependentJoinTerm leftChild = DependentJoinTerm.create(
+				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less)), 
+				AccessTerm.create(TPCHelper.am3Supplier_less.getRelation(),TPCHelper.am3Supplier_less));
 
 		// Select orders whose total price is greater than 200000.
 		Condition totalPriceCondition = ConstantInequalityCondition.create(2, TypedConstant.create(200000f), false);
 		// Select orders from customers with a negative account balance.
 		Condition acctBalCondition = ConstantInequalityCondition.create(2, TypedConstant.create(0f));
-		SelectionTerm rightChild = new SelectionTerm(acctBalCondition, new DependentJoinTerm(
-				new AccessTerm(TPCHelper.amFreeCustomer_less), 
-				new SelectionTerm(totalPriceCondition, new AccessTerm(TPCHelper.am1Orders_less))));
+		SelectionTerm rightChild = SelectionTerm.create(acctBalCondition, DependentJoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeCustomer_less.getRelation(),TPCHelper.amFreeCustomer_less), 
+				SelectionTerm.create(totalPriceCondition, AccessTerm.create(TPCHelper.am1Orders_less.getRelation(),TPCHelper.am1Orders_less))));
 
-		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(new JoinTerm(leftChild, rightChild));
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());

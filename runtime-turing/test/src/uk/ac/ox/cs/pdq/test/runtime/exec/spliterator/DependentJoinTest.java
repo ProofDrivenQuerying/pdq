@@ -93,8 +93,8 @@ public class DependentJoinTest {
 		// The right child requires input in position 0, which is supplied by 
 		// the left child output in position 2 (attribute "c"). Therefore the 
 		// dependent join plan has no input attributes in this case.
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(new AccessTerm(amFree), 
-				new AccessTerm(am0)));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(AccessTerm.create(amFree.getRelation(),amFree), 
+				AccessTerm.create(am0.getRelation(),am0)));
 		Assert.assertNotNull(target);
 	}
 
@@ -143,9 +143,9 @@ public class DependentJoinTest {
 		/*
 		 * Plan: DependentJoin{k}(Access1, Access2).
 		 */
-		AccessTerm leftChild = new AccessTerm(amFree);
-		AccessTerm rightChild = new AccessTerm(am0);
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+		AccessTerm leftChild = AccessTerm.create(amFree.getRelation(),amFree);
+		AccessTerm rightChild = AccessTerm.create(am0.getRelation(),am0);
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 
 		// Check the inferred join condition. The common attribute "k" is in 
 		// position 2 in relation1 and position 0 in relation2 
@@ -235,12 +235,12 @@ public class DependentJoinTest {
 		/*
 		 * Plan: DependentJoin{k}(Access1, Selection(Access2)).
 		 */
-		AccessTerm leftChild = new AccessTerm(amFree);
+		AccessTerm leftChild = AccessTerm.create(amFree.getRelation(),amFree);
 
 		Condition condition = ConstantInequalityCondition.create(0, TypedConstant.create(10));
-		SelectionTerm rightChild = new SelectionTerm(condition, new AccessTerm(am0));
+		SelectionTerm rightChild = SelectionTerm.create(condition, AccessTerm.create(am0.getRelation(),am0));
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 
 		// Create some tuples. 
 		// Here we join on columns containing no duplicates.  
@@ -319,11 +319,11 @@ public class DependentJoinTest {
 		 * Plan: DependentJoin{k}(Selection(Access1), Access2).
 		 */
 		Condition condition = ConstantInequalityCondition.create(0, TypedConstant.create(7), false);
-		SelectionTerm leftChild = new SelectionTerm(condition, new AccessTerm(amFree));
+		SelectionTerm leftChild = SelectionTerm.create(condition, AccessTerm.create(amFree.getRelation(),amFree));
 
-		AccessTerm rightChild = new AccessTerm(am0);
+		AccessTerm rightChild = AccessTerm.create(am0.getRelation(),am0);
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 
 		// Create some tuples. 
 		// Here we join on columns containing no duplicates.  
@@ -368,10 +368,10 @@ public class DependentJoinTest {
 	@Test
 	public void integrationTestSql1() {
 
-		AccessTerm leftChild = new AccessTerm(TPCHelper.amFreeNation);
-		AccessTerm rightChild = new AccessTerm(TPCHelper.am0Region);
+		AccessTerm leftChild = AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation);
+		AccessTerm rightChild = AccessTerm.create(TPCHelper.am0Region.getRelation(),TPCHelper.am0Region);
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 
 		// Check that the plan has no input attributes (the left child has no input attributes
 		// and the right child has only one, namely "nationKey", which is supplied by the left child).
@@ -397,10 +397,10 @@ public class DependentJoinTest {
 	@Test
 	public void integrationTestSql1a() {
 
-		AccessTerm leftChild = new AccessTerm(TPCHelper.am0Nation);
-		AccessTerm rightChild = new AccessTerm(TPCHelper.am0Region);
+		AccessTerm leftChild = AccessTerm.create(TPCHelper.am0Nation.getRelation(),TPCHelper.am0Nation);
+		AccessTerm rightChild = AccessTerm.create(TPCHelper.am0Region.getRelation(),TPCHelper.am0Region);
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 
 		// Check that the plan has one (unbound) input attribute.
 		Assert.assertEquals(1, target.getInputAttributes().length);
@@ -446,10 +446,10 @@ public class DependentJoinTest {
 	@Test
 	public void integrationTestSql2() {
 
-		AccessTerm leftChild = new AccessTerm(TPCHelper.amFreeNation);
-		AccessTerm rightChild = new AccessTerm(TPCHelper.am3Customer);
+		AccessTerm leftChild = AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation);
+		AccessTerm rightChild = AccessTerm.create(TPCHelper.am3Customer.getRelation(),TPCHelper.am3Customer);
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 
 		// Check that the plan has no input attributes (the left child has no input attributes
 		// and the right child has only one, namely "nationKey", which is supplied by the left child).
@@ -475,10 +475,10 @@ public class DependentJoinTest {
 	@Test
 	public void integrationTestSql2a() {
 
-		AccessTerm leftChild = new AccessTerm(TPCHelper.am2Nation);
-		AccessTerm rightChild = new AccessTerm(TPCHelper.am3Customer);
+		AccessTerm leftChild = AccessTerm.create(TPCHelper.am2Nation.getRelation(),TPCHelper.am2Nation);
+		AccessTerm rightChild = AccessTerm.create(TPCHelper.am3Customer.getRelation(),TPCHelper.am3Customer);
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 
 		// Check that the plan has one (unbound) input attribute.
 		Assert.assertEquals(1, target.getInputAttributes().length);
@@ -523,10 +523,10 @@ public class DependentJoinTest {
 	@Test
 	public void integrationTestSql2b() {
 
-		AccessTerm leftChild = new AccessTerm(TPCHelper.amFreeNation);
-		AccessTerm rightChild = new AccessTerm(TPCHelper.am03Customer);
+		AccessTerm leftChild = AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation);
+		AccessTerm rightChild = AccessTerm.create(TPCHelper.am03Customer.getRelation(),TPCHelper.am03Customer);
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 
 		// Check that the plan has one (unbound) input attribute.
 		Assert.assertEquals(1, target.getInputAttributes().length);
@@ -573,12 +573,12 @@ public class DependentJoinTest {
 	@Test
 	public void integrationTestSql3() {
 
-		AccessTerm leftChild = new AccessTerm(TPCHelper.amFreeNation); 
+		AccessTerm leftChild = AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation); 
 
 		Condition condition = ConstantEqualityCondition.create(3, TypedConstant.create("AUTOMOBILE"));
-		SelectionTerm rightChild = new SelectionTerm(condition, new AccessTerm(TPCHelper.am3Customer));
+		SelectionTerm rightChild = SelectionTerm.create(condition, AccessTerm.create(TPCHelper.am3Customer.getRelation(),TPCHelper.am3Customer));
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 
 		// Check that the plan has no input attributes (the left child has no input attributes
 		// and the right child has only one, namely "NATIONKEY", which is supplied by the left child).
@@ -601,11 +601,11 @@ public class DependentJoinTest {
 	public void integrationTestSql4() {
 
 		Condition condition = ConstantInequalityCondition.create(2, TypedConstant.create(1), false);
-		SelectionTerm leftChild = new SelectionTerm(condition, new AccessTerm(TPCHelper.amFreeNation)); 
+		SelectionTerm leftChild = SelectionTerm.create(condition, AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation)); 
 
-		AccessTerm rightChild = new AccessTerm(TPCHelper.am3Customer);
+		AccessTerm rightChild = AccessTerm.create(TPCHelper.am3Customer.getRelation(),TPCHelper.am3Customer);
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 
 		// Check that the plan has no input attributes (the left child has no input attributes
 		// and the right child has only one, namely "NATIONKEY", which is supplied by the left child).
@@ -627,10 +627,10 @@ public class DependentJoinTest {
 	@Test
 	public void integrationTestSql5() {
 
-		AccessTerm leftChild =  new AccessTerm(TPCHelper.amFreeSupplier);
-		AccessTerm rightChild = new AccessTerm(TPCHelper.am0Nation);
+		AccessTerm leftChild =  AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier);
+		AccessTerm rightChild = AccessTerm.create(TPCHelper.am0Nation.getRelation(),TPCHelper.am0Nation);
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 
 		// Check that the plan has no input attributes (the left child has no input attributes
 		// and the right child has only one, namely "NATIONKEY", which is supplied by the left child).
@@ -654,9 +654,9 @@ public class DependentJoinTest {
 
 		// Select suppliers whose account balance is negative.
 		Condition acctBalCondition = ConstantInequalityCondition.create(3, TypedConstant.create(0.0f));
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(
-				new	AccessTerm(TPCHelper.amFreeNation_less), 
-				new SelectionTerm(acctBalCondition, new AccessTerm(TPCHelper.am3Supplier_less))));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+				SelectionTerm.create(acctBalCondition, AccessTerm.create(TPCHelper.am3Supplier_less.getRelation(),TPCHelper.am3Supplier_less))));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream()
@@ -675,9 +675,9 @@ public class DependentJoinTest {
 
 		// Select parts whose size is greater than 40.
 		Condition sizeCondition = ConstantInequalityCondition.create(2, TypedConstant.create(40), false);
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(
-				new	SelectionTerm(sizeCondition, new AccessTerm(TPCHelper.amFreePart_less)), 
-				new AccessTerm(TPCHelper.am0PartSupp_less)));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(
+				SelectionTerm.create(sizeCondition, AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less)), 
+				AccessTerm.create(TPCHelper.am0PartSupp_less.getRelation(),TPCHelper.am0PartSupp_less)));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream()
@@ -696,9 +696,9 @@ public class DependentJoinTest {
 
 		// Select parts whose size is greater than 40.
 		Condition sizeCondition = ConstantInequalityCondition.create(2, TypedConstant.create(40), false);
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(
-				new	SelectionTerm(sizeCondition, new AccessTerm(TPCHelper.amFreePart_less)), 
-				new AccessTerm(TPCHelper.am01PartSupp_less)));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(
+				SelectionTerm.create(sizeCondition, AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less)), 
+				AccessTerm.create(TPCHelper.am01PartSupp_less.getRelation(),TPCHelper.am01PartSupp_less)));
 
 		// This dependent join plan requires external dynamic input (on the PartSupp's suppKey attribute).
 		// Attempting to execute the plan before setting the dynamic input raises an exception.
@@ -734,22 +734,22 @@ public class DependentJoinTest {
 	Attribute[] relationR1Attributes = new Attribute[] {Attribute.create(String.class, "a"),
 			Attribute.create(String.class, "b")};
 	
-	Relation relationR1 = new Relation("R1", relationR1Attributes.clone());
+	Relation relationR1 = Relation.create("R1", relationR1Attributes.clone());
 
 	Attribute[] relationR2Attributes = new Attribute[] {Attribute.create(String.class, "a"),
 			Attribute.create(String.class, "c")};
-	Relation relationR2 = new Relation("R2", relationR2Attributes.clone());
+	Relation relationR2 = Relation.create("R2", relationR2Attributes.clone());
 
 	Attribute[] relationR3Attributes = new Attribute[] {Attribute.create(String.class, "b"),
 			Attribute.create(String.class, "d")};
-	Relation relationR3 = new Relation("R3", relationR3Attributes.clone());
+	Relation relationR3 = Relation.create("R3", relationR3Attributes.clone());
 
 	Attribute[] relationR4Attributes = new Attribute[] {Attribute.create(String.class, "d"),
 			Attribute.create(String.class, "e")};
-	Relation relationR4 = new Relation("R4", relationR4Attributes.clone());
+	Relation relationR4 = Relation.create("R4", relationR4Attributes.clone());
 
 	Attribute[] relationR5Attributes = new Attribute[] {Attribute.create(String.class, "e")};
-	Relation relationR5 = new Relation("R5", relationR5Attributes.clone());
+	Relation relationR5 = Relation.create("R5", relationR5Attributes.clone());
 
 	Map<Attribute, Attribute> attributeMapping1 = ImmutableMap.of(
 			Attribute.create(String.class, "a"), Attribute.create(String.class, "a"),
@@ -794,14 +794,14 @@ public class DependentJoinTest {
 		InMemoryAccessMethod am40 = new InMemoryAccessMethod(relationR4Attributes, inputAttributes4, relationR4, attributeMapping4);
 
 		// DependentJoin{a}(R1, R2).
-		DependentJoin dependentJoinR1R2 = new DependentJoin(new DependentJoinTerm(
-				new AccessTerm(am1Free), 
-				new AccessTerm(am20)));
+		DependentJoin dependentJoinR1R2 = new DependentJoin(DependentJoinTerm.create(
+				AccessTerm.create(am1Free.getRelation(),am1Free), 
+				AccessTerm.create(am20.getRelation(),am20)));
 
 		// DependentJoin{d}(R3, R4).
-		DependentJoin dependentJoinR3R4 = new DependentJoin(new DependentJoinTerm(
-				new AccessTerm(am30), 
-				new AccessTerm(am40)));
+		DependentJoin dependentJoinR3R4 = new DependentJoin(DependentJoinTerm.create(
+				AccessTerm.create(am30.getRelation(),am30), 
+				AccessTerm.create(am40.getRelation(),am40)));
 
 		// Create some tuples. 
 		Collection<Tuple> tuples1 = new ArrayList<Tuple>();
@@ -832,7 +832,7 @@ public class DependentJoinTest {
 		am40.load(tuples4);
 
 		// DependentJoin{b}(dependentJoinR1R2, dependentJoinR3R4).
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(
 				dependentJoinR1R2, 
 				dependentJoinR3R4));
 
@@ -861,12 +861,12 @@ public class DependentJoinTest {
 		InMemoryAccessMethod am5Free = new InMemoryAccessMethod(relationR5Attributes, new Integer[0], relationR5, attributeMapping5);
 
 		// Access(R5).
-		Access accessR5 = new Access(new AccessTerm(am5Free));
+		Access accessR5 = new Access(AccessTerm.create(am5Free.getRelation(),am5Free));
 
 		// DependentJoin{d}(R3, R4).
-		DependentJoin dependentJoinR3R4 = new DependentJoin(new DependentJoinTerm(
-				new AccessTerm(am3Free), 
-				new AccessTerm(am401)));
+		DependentJoin dependentJoinR3R4 = new DependentJoin(DependentJoinTerm.create(
+				AccessTerm.create(am3Free.getRelation(),am3Free), 
+				AccessTerm.create(am401.getRelation(),am401)));
 
 		// Create some tuples. 
 		Collection<Tuple> tuples3 = new ArrayList<Tuple>();
@@ -898,7 +898,7 @@ public class DependentJoinTest {
 		Assert.assertEquals(N, dependentJoinR3R4.execute().size());
 
 		// DependentJoin{e}(AccessR5, dependentJoinR3R4).
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(
 				accessR5, 
 				dependentJoinR3R4));
 
@@ -924,9 +924,9 @@ public class DependentJoinTest {
 	@Test
 	public void stressTestSql1() {
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(
-				new AccessTerm(TPCHelper.amFreeNation), 
-				new AccessTerm(TPCHelper.am3Supplier)));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+				AccessTerm.create(TPCHelper.am3Supplier.getRelation(),TPCHelper.am3Supplier)));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -945,9 +945,9 @@ public class DependentJoinTest {
 	@Test
 	public void stressTestSql1a() {
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(
-				new AccessTerm(TPCHelper.amFreeNation_less), 
-				new AccessTerm(TPCHelper.am3Supplier_less)));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+				AccessTerm.create(TPCHelper.am3Supplier_less.getRelation(),TPCHelper.am3Supplier_less)));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -966,9 +966,9 @@ public class DependentJoinTest {
 	@Test
 	public void stressTestSql2() {
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(
-				new AccessTerm(TPCHelper.amFreePart), 
-				new AccessTerm(TPCHelper.am0PartSupp)));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart), 
+				AccessTerm.create(TPCHelper.am0PartSupp.getRelation(),TPCHelper.am0PartSupp)));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -987,9 +987,9 @@ public class DependentJoinTest {
 	@Test
 	public void stressTestSql2a() {
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(
-				new AccessTerm(TPCHelper.amFreePart_less), 
-				new AccessTerm(TPCHelper.am0PartSupp_less)));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less), 
+				AccessTerm.create(TPCHelper.am0PartSupp_less.getRelation(),TPCHelper.am0PartSupp_less)));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream()
@@ -1009,13 +1009,13 @@ public class DependentJoinTest {
 	//	@Test
 	//	public void stressTestSql3() {
 	//
-	//		DependentJoin target = new DependentJoin(new DependentJoinTerm(
-	//				new DependentJoinTerm(
-	//						new AccessTerm(TPCHelper.amFreeNation), 
-	//						new AccessTerm(TPCHelper.am3Supplier)),
-	//				new DependentJoinTerm(
-	//						new AccessTerm(TPCHelper.amFreePart), 
-	//						new AccessTerm(TPCHelper.am01PartSupp))
+	//		DependentJoin target = new DependentJoin(DependentJoinTerm.create(
+	//				DependentJoinTerm.create(
+	//						AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+	//						AccessTerm.create(TPCHelper.am3Supplier.getRelation(),TPCHelper.am3Supplier)),
+	//				DependentJoinTerm.create(
+	//						AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart), 
+	//						AccessTerm.create(TPCHelper.am01PartSupp.getRelation(),TPCHelper.am01PartSupp))
 	//				));
 	//
 	//		// Execute the plan. 
@@ -1039,13 +1039,13 @@ public class DependentJoinTest {
 	//	@Test
 	//	public void stressTestSql3a() {
 	//
-	//		DependentJoin target = new DependentJoin(new DependentJoinTerm(
-	//				new DependentJoinTerm(
-	//						new AccessTerm(TPCHelper.amFreeNation_less), 
-	//						new AccessTerm(TPCHelper.am3Supplier_less)),
-	//				new DependentJoinTerm(
-	//						new AccessTerm(TPCHelper.amFreePart_less), 
-	//						new AccessTerm(TPCHelper.am01PartSupp_less))
+	//		DependentJoin target = new DependentJoin(DependentJoinTerm.create(
+	//				DependentJoinTerm.create(
+	//						AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+	//						AccessTerm.create(TPCHelper.am3Supplier_less.getRelation(),TPCHelper.am3Supplier_less)),
+	//				DependentJoinTerm.create(
+	//						AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less), 
+	//						AccessTerm.create(TPCHelper.am01PartSupp_less.getRelation(),TPCHelper.am01PartSupp_less))
 	//				));
 	//
 	//		// Execute the plan. 
@@ -1072,17 +1072,17 @@ public class DependentJoinTest {
 //
 //		// Select suppliers whose account balance is negative.
 //		Condition acctBalCondition = ConstantInequalityCondition.create(4, TypedConstant.create(0.0f));
-//		DependentJoinTerm leftChild = new DependentJoinTerm(new 
+//		DependentJoinTerm leftChild = DependentJoinTerm.create(new 
 //				AccessTerm(TPCHelper.amFreeNation), 
-//				new SelectionTerm(acctBalCondition, new AccessTerm(TPCHelper.am3Supplier)));
+//				SelectionTerm.create(acctBalCondition, AccessTerm.create(TPCHelper.am3Supplier.getRelation(),TPCHelper.am3Supplier)));
 //
 //		// Select parts whose size is greater than 10.
 //		Condition sizeCondition = ConstantInequalityCondition.create(3, TypedConstant.create(10), false);
-//		DependentJoinTerm rightChild = new DependentJoinTerm(new 
-//				SelectionTerm(sizeCondition, new AccessTerm(TPCHelper.amFreePart)), 
-//				new AccessTerm(TPCHelper.am01PartSupp));
+//		DependentJoinTerm rightChild = DependentJoinTerm.create(new 
+//				SelectionTerm(sizeCondition, AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart)), 
+//				AccessTerm.create(TPCHelper.am01PartSupp.getRelation(),TPCHelper.am01PartSupp));
 //
-//		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+//		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 //
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1100,17 +1100,17 @@ public class DependentJoinTest {
 //
 //		// Select suppliers whose account balance is negative.
 //		Condition acctBalCondition = ConstantInequalityCondition.create(3, TypedConstant.create(0.0f));
-//		DependentJoinTerm leftChild = new DependentJoinTerm(
+//		DependentJoinTerm leftChild = DependentJoinTerm.create(
 //				new	AccessTerm(TPCHelper.amFreeNation_less), 
-//				new SelectionTerm(acctBalCondition, new AccessTerm(TPCHelper.am3Supplier_less)));
+//				SelectionTerm.create(acctBalCondition, AccessTerm.create(TPCHelper.am3Supplier_less.getRelation(),TPCHelper.am3Supplier_less)));
 //
 //		// Select parts whose size is greater than 40.
 //		Condition sizeCondition = ConstantInequalityCondition.create(2, TypedConstant.create(40), false);
-//		DependentJoinTerm rightChild = new DependentJoinTerm(
-//				new	SelectionTerm(sizeCondition, new AccessTerm(TPCHelper.amFreePart_less)), 
-//				new AccessTerm(TPCHelper.am01PartSupp_less));
+//		DependentJoinTerm rightChild = DependentJoinTerm.create(
+//				new	SelectionTerm(sizeCondition, AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less)), 
+//				AccessTerm.create(TPCHelper.am01PartSupp_less.getRelation(),TPCHelper.am01PartSupp_less));
 //
-//		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+//		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 //
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream()
@@ -1129,17 +1129,17 @@ public class DependentJoinTest {
 	//
 	//		// Select nations whose nation key is greater than 8.
 	//		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-	//		DependentJoinTerm leftChild = new DependentJoinTerm(
-	//				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation)), 
-	//				new AccessTerm(TPCHelper.am3Supplier));
+	//		DependentJoinTerm leftChild = DependentJoinTerm.create(
+	//				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation)), 
+	//				AccessTerm.create(TPCHelper.am3Supplier.getRelation(),TPCHelper.am3Supplier));
 	//
 	//		// Select orders whose total price is greater than 200000.
 	//		Condition totalPriceCondition = ConstantInequalityCondition.create(2, TypedConstant.create(200000f), false);
-	//		DependentJoinTerm rightChild = new DependentJoinTerm(
-	//				new AccessTerm(TPCHelper.am3Customer), 
-	//				new SelectionTerm(totalPriceCondition, new AccessTerm(TPCHelper.am1Orders)));
+	//		DependentJoinTerm rightChild = DependentJoinTerm.create(
+	//				AccessTerm.create(TPCHelper.am3Customer.getRelation(),TPCHelper.am3Customer), 
+	//				SelectionTerm.create(totalPriceCondition, AccessTerm.create(TPCHelper.am1Orders.getRelation(),TPCHelper.am1Orders)));
 	//
-	//		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+	//		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 	//
 	//		// Execute the plan. 
 	//		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1157,17 +1157,17 @@ public class DependentJoinTest {
 	//
 	//		// Select nations whose nation key is greater than 8.
 	//		Condition nationCondition = ConstantInequalityCondition.create(1, TypedConstant.create(8), false);
-	//		DependentJoinTerm leftChild = new DependentJoinTerm(
-	//				new SelectionTerm(nationCondition, new AccessTerm(TPCHelper.amFreeNation_less)), 
-	//				new AccessTerm(TPCHelper.am3Supplier_less));
+	//		DependentJoinTerm leftChild = DependentJoinTerm.create(
+	//				SelectionTerm.create(nationCondition, AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less)), 
+	//				AccessTerm.create(TPCHelper.am3Supplier_less.getRelation(),TPCHelper.am3Supplier_less));
 	//
 	//		// Select orders whose total price is greater than 200000.
 	//		Condition totalPriceCondition = ConstantInequalityCondition.create(2, TypedConstant.create(200000f), false);
-	//		DependentJoinTerm rightChild = new DependentJoinTerm(
-	//				new AccessTerm(TPCHelper.am3Customer_less), 
-	//				new SelectionTerm(totalPriceCondition, new AccessTerm(TPCHelper.am1Orders_less)));
+	//		DependentJoinTerm rightChild = DependentJoinTerm.create(
+	//				AccessTerm.create(TPCHelper.am3Customer_less.getRelation(),TPCHelper.am3Customer_less), 
+	//				SelectionTerm.create(totalPriceCondition, AccessTerm.create(TPCHelper.am1Orders_less.getRelation(),TPCHelper.am1Orders_less)));
 	//
-	//		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+	//		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 	//
 	//		// Execute the plan. 
 	//		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1185,17 +1185,17 @@ public class DependentJoinTest {
 
 		// Select suppliers whose account balance is negative.
 		Condition acctBalCondition = ConstantInequalityCondition.create(4, TypedConstant.create(0.0f));
-		JoinTerm leftChild = new JoinTerm(
-				new AccessTerm(TPCHelper.amFreeNation), 
-				new SelectionTerm(acctBalCondition, new AccessTerm(TPCHelper.amFreeSupplier)));
+		JoinTerm leftChild = JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreeNation.getRelation(),TPCHelper.amFreeNation), 
+				SelectionTerm.create(acctBalCondition, AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier)));
 
 		// Select parts whose size is greater than 10.
 		Condition sizeCondition = ConstantInequalityCondition.create(3, TypedConstant.create(10), false);
-		DependentJoinTerm rightChild = new DependentJoinTerm(
-				new SelectionTerm(sizeCondition, new AccessTerm(TPCHelper.amFreePart)), 
-				new AccessTerm(TPCHelper.am01PartSupp));
+		DependentJoinTerm rightChild = DependentJoinTerm.create(
+				SelectionTerm.create(sizeCondition, AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart)), 
+				AccessTerm.create(TPCHelper.am01PartSupp.getRelation(),TPCHelper.am01PartSupp));
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1213,17 +1213,17 @@ public class DependentJoinTest {
 	//
 	//		// Select suppliers whose account balance is negative.
 	//		Condition acctBalCondition = ConstantInequalityCondition.create(4, TypedConstant.create(0.0f));
-	//		JoinTerm leftChild = new JoinTerm(
-	//				new AccessTerm(TPCHelper.amFreeNation_less), 
-	//				new SelectionTerm(acctBalCondition, new AccessTerm(TPCHelper.amFreeSupplier_less)));
+	//		JoinTerm leftChild = JoinTerm.create(
+	//				AccessTerm.create(TPCHelper.amFreeNation_less.getRelation(),TPCHelper.amFreeNation_less), 
+	//				SelectionTerm.create(acctBalCondition, AccessTerm.create(TPCHelper.amFreeSupplier_less.getRelation(),TPCHelper.amFreeSupplier_less)));
 	//
 	//		// Select parts whose size is greater than 10.
 	//		Condition sizeCondition = ConstantInequalityCondition.create(3, TypedConstant.create(10), false);
-	//		DependentJoinTerm rightChild = new DependentJoinTerm(
-	//				new SelectionTerm(sizeCondition, new AccessTerm(TPCHelper.amFreePart_less)), 
-	//				new AccessTerm(TPCHelper.am01PartSupp_less));
+	//		DependentJoinTerm rightChild = DependentJoinTerm.create(
+	//				SelectionTerm.create(sizeCondition, AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less)), 
+	//				AccessTerm.create(TPCHelper.am01PartSupp_less.getRelation(),TPCHelper.am01PartSupp_less));
 	//
-	//		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+	//		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 	//
 	//		// Execute the plan. 
 	//		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1250,34 +1250,34 @@ public class DependentJoinTest {
 		// Construct the target plan in stages.
 
 		// 1. Join[NATIONKEY](DependentJoin{REGIONKEY}(REGION, NATION), SUPPLIER)
-		JoinTerm joinRNS = new JoinTerm(
-				new DependentJoinTerm(
-						new AccessTerm(TPCHelper.amFreeRegion), new AccessTerm(TPCHelper.am0Nation)), 
-				new AccessTerm(TPCHelper.amFreeSupplier));
+		JoinTerm joinRNS = JoinTerm.create(
+				DependentJoinTerm.create(
+						AccessTerm.create(TPCHelper.amFreeRegion.getRelation(),TPCHelper.amFreeRegion), AccessTerm.create(TPCHelper.am0Nation.getRelation(),TPCHelper.am0Nation)), 
+				AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(),TPCHelper.amFreeSupplier));
 
 		// 2. Join[PARTKEY](PART, PARTSUPP)
-		JoinTerm joinPPS = new JoinTerm(
-				new AccessTerm(TPCHelper.amFreePart), 
-				new AccessTerm(TPCHelper.am1PartSupp));
+		JoinTerm joinPPS = JoinTerm.create(
+				AccessTerm.create(TPCHelper.amFreePart.getRelation(),TPCHelper.amFreePart), 
+				AccessTerm.create(TPCHelper.am1PartSupp.getRelation(),TPCHelper.am1PartSupp));
 
 		// 3. DependentJoin{SUPPKEY}(Join[NATIONKEY](DependentJoin{REGIONKEY}(REGION, NATION), SUPPLIER), Join[PARTKEY](PART, PARTSUPP))
-		DependentJoinTerm leftChild = new DependentJoinTerm(joinRNS, joinPPS);
+		DependentJoinTerm leftChild = DependentJoinTerm.create(joinRNS, joinPPS);
 
 		// 4. DependentJoin{CUSTKEY}(Selection(CUSTOMER), ORDERS)
 		// Select customers whose account balance is negative.
 		Condition customerCondition = ConstantInequalityCondition.create(2, TypedConstant.create(0.0f));
-		DependentJoinTerm depJoinCO = new DependentJoinTerm(
-				new SelectionTerm(customerCondition, new AccessTerm(TPCHelper.amFreeCustomer)), 
-				new AccessTerm(TPCHelper.am1Orders));
+		DependentJoinTerm depJoinCO = DependentJoinTerm.create(
+				SelectionTerm.create(customerCondition, AccessTerm.create(TPCHelper.amFreeCustomer.getRelation(),TPCHelper.amFreeCustomer)), 
+				AccessTerm.create(TPCHelper.am1Orders.getRelation(),TPCHelper.am1Orders));
 
 		// 5. Join[ORDERKEY](DependentJoin{CUSTKEY}(Selection(CUSTOMER), ORDERS), Selection(LINEITEM))
 		// Select lineItems whose quantity is less that 20.
 		Condition lineItemCondition = ConstantInequalityCondition.create(3, TypedConstant.create(20));
-		JoinTerm rightChild = new JoinTerm(
+		JoinTerm rightChild = JoinTerm.create(
 				depJoinCO, 
-				new SelectionTerm(lineItemCondition, new AccessTerm(TPCHelper.am012LineItem)));
+				SelectionTerm.create(lineItemCondition, AccessTerm.create(TPCHelper.am012LineItem.getRelation(),TPCHelper.am012LineItem)));
 
-		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 
 		// Execute the plan. 
 		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -1304,34 +1304,34 @@ public class DependentJoinTest {
 	//		// Construct the target plan in stages.
 	//
 	//		// 1. Join[NATIONKEY](DependentJoin{REGIONKEY}(REGION, NATION), SUPPLIER)
-	//		JoinTerm joinRNS = new JoinTerm(
-	//				new DependentJoinTerm(
-	//						new AccessTerm(TPCHelper.amFreeRegion_less), new AccessTerm(TPCHelper.am0Nation_less)), 
-	//				new AccessTerm(TPCHelper.amFreeSupplier_less));
+	//		JoinTerm joinRNS = JoinTerm.create(
+	//				DependentJoinTerm.create(
+	//						AccessTerm.create(TPCHelper.amFreeRegion_less.getRelation(),TPCHelper.amFreeRegion_less), AccessTerm.create(TPCHelper.am0Nation_less.getRelation(),TPCHelper.am0Nation_less)), 
+	//				AccessTerm.create(TPCHelper.amFreeSupplier_less.getRelation(),TPCHelper.amFreeSupplier_less));
 	//
 	//		// 2. Join[PARTKEY](PART, PARTSUPP)
-	//		JoinTerm joinPPS = new JoinTerm(
-	//				new AccessTerm(TPCHelper.amFreePart_less), 
-	//				new AccessTerm(TPCHelper.am1PartSupp_less));
+	//		JoinTerm joinPPS = JoinTerm.create(
+	//				AccessTerm.create(TPCHelper.amFreePart_less.getRelation(),TPCHelper.amFreePart_less), 
+	//				AccessTerm.create(TPCHelper.am1PartSupp_less.getRelation(),TPCHelper.am1PartSupp_less));
 	//
 	//		// 3. DependentJoin{SUPPKEY}(Join[NATIONKEY](DependentJoin{REGIONKEY}(REGION, NATION), SUPPLIER), Join[PARTKEY](PART, PARTSUPP))
-	//		DependentJoinTerm leftChild = new DependentJoinTerm(joinRNS, joinPPS);
+	//		DependentJoinTerm leftChild = DependentJoinTerm.create(joinRNS, joinPPS);
 	//
 	//		// 4. DependentJoin{CUSTKEY}(Selection(CUSTOMER), ORDERS)
 	//		// Select customers whose account balance is negative.
 	//		Condition customerCondition = ConstantInequalityCondition.create(2, TypedConstant.create(0.0f));
-	//		DependentJoinTerm depJoinCO = new DependentJoinTerm(
-	//				new SelectionTerm(customerCondition, new AccessTerm(TPCHelper.amFreeCustomer_less)), 
-	//				new AccessTerm(TPCHelper.am1Orders_less));
+	//		DependentJoinTerm depJoinCO = DependentJoinTerm.create(
+	//				SelectionTerm.create(customerCondition, AccessTerm.create(TPCHelper.amFreeCustomer_less.getRelation(),TPCHelper.amFreeCustomer_less)), 
+	//				AccessTerm.create(TPCHelper.am1Orders_less.getRelation(),TPCHelper.am1Orders_less));
 	//
 	//		// 5. Join[ORDERKEY](DependentJoin{CUSTKEY}(Selection(CUSTOMER), ORDERS), Selection(LINEITEM))
 	//		// Select lineItems whose quantity is less that 20.
 	//		Condition lineItemCondition = ConstantInequalityCondition.create(3, TypedConstant.create(20));
-	//		JoinTerm rightChild = new JoinTerm(
+	//		JoinTerm rightChild = JoinTerm.create(
 	//				depJoinCO, 
-	//				new SelectionTerm(lineItemCondition, new AccessTerm(TPCHelper.am012LineItem_less)));
+	//				SelectionTerm.create(lineItemCondition, AccessTerm.create(TPCHelper.am012LineItem_less.getRelation(),TPCHelper.am012LineItem_less)));
 	//
-	//		DependentJoin target = new DependentJoin(new DependentJoinTerm(leftChild, rightChild));
+	//		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild));
 	//
 	//		// Execute the plan. 
 	//		List<Tuple> result = target.stream().collect(Collectors.toList());

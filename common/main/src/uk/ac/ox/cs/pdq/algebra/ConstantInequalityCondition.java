@@ -28,13 +28,13 @@ public class ConstantInequalityCondition extends ConstantComparisonCondition {
 		this.lessThan = lessThan;
 	}
 
-//	public static ConstantInequalityCondition create(int position, TypedConstant constant, boolean lessThan) {
-//		return Cache.constantInequalityCondition.retrieve(new ConstantInequalityCondition(position, constant, lessThan));
-//	}
-//
-//	public static ConstantInequalityCondition create(int position, TypedConstant constant) {
-//		return Cache.constantInequalityCondition.retrieve(new ConstantInequalityCondition(position, constant));
-//	}
+	public static ConstantInequalityCondition create(int position, TypedConstant constant, boolean lessThan) {
+		return new ConstantInequalityCondition(position, constant, lessThan);
+	}
+
+	public static ConstantInequalityCondition create(int position, TypedConstant constant) {
+		return new ConstantInequalityCondition(position, constant);
+	}
 	
 	// Return true iff the tuple value at the 'position' index is less than that
 	// of the constant value in this condition, if the lessThan field is true.

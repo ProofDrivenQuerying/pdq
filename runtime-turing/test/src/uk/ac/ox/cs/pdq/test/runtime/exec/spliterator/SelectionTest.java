@@ -21,9 +21,9 @@ import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantInequalityCondition;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
+import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -61,7 +61,7 @@ public class SelectionTest {
 		 *  is equal to the constant value 10. 
 		 */
 		Condition condition = ConstantEqualityCondition.create(0, TypedConstant.create(10));
-		Plan plan = new SelectionTerm(condition, new AccessTerm(amFree));
+		Plan plan = SelectionTerm.create(condition, AccessTerm.create(amFree.getRelation(),amFree));
 		Selection target = new Selection(plan);
 
 		// Create some tuples
@@ -145,7 +145,7 @@ public class SelectionTest {
 		Condition conditionA = ConstantInequalityCondition.create(0, TypedConstant.create(10), false);
 		Condition conditionB = ConstantInequalityCondition.create(0, TypedConstant.create(40), true);
 		
-		Plan plan = new SelectionTerm(conditionB, new SelectionTerm(conditionA, new AccessTerm(amFree)));
+		Plan plan = SelectionTerm.create(conditionB, SelectionTerm.create(conditionA, AccessTerm.create(amFree.getRelation(),amFree)));
 		Selection target = new Selection(plan);
 
 		// Create some tuples
@@ -190,14 +190,14 @@ public class SelectionTest {
 		attributeMapping.put(Attribute.create(Integer.class, "N_REGIONKEY"), Attribute.create(Integer.class, "regionKey"));
 
 		Integer[] inputs = new Integer[0];
-		AccessMethod amFree = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, attributeMapping, TPCHelper.getProperties());
+		AbstractAccessMethod amFree = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, attributeMapping, TPCHelper.getProperties());
 		
 		/*
 		 *  Plan: free access on relation NATION then select the rows where 
 		 *  the N_NAME attribute is equal to the constant 'BRAZIL'. 
 		 */
 		Condition condition = ConstantEqualityCondition.create(0, TypedConstant.create("BRAZIL"));
-		Plan plan = new SelectionTerm(condition, new AccessTerm(amFree));
+		Plan plan = SelectionTerm.create(condition, AccessTerm.create(amFree.getRelation(), amFree));
 		Selection target = new Selection(plan);
 
 		// Execute the plan. 
@@ -218,7 +218,7 @@ public class SelectionTest {
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
 
 		Integer[] inputs = new Integer[0];
-		AccessMethod amFree = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, 
+		AbstractAccessMethod amFree = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, 
 				TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		/*
@@ -226,7 +226,7 @@ public class SelectionTest {
 		 *  of the N_REGIONKEY attribute is equal to the constant 2. 
 		 */
 		Condition condition = ConstantEqualityCondition.create(2, TypedConstant.create(2));
-		Plan plan = new SelectionTerm(condition, new AccessTerm(amFree));
+		Plan plan = SelectionTerm.create(condition, AccessTerm.create(amFree.getRelation(), amFree));
 		Selection target = new Selection(plan);
 		
 		// Execute the plan. 
@@ -247,7 +247,7 @@ public class SelectionTest {
 		Set<Attribute> inputAttributes = new HashSet<Attribute>();
 		inputAttributes.add(Attribute.create(Integer.class, "C_NATIONKEY"));
 		
-		AccessMethod am4 = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputAttributes, relation, 
+		AbstractAccessMethod am4 = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputAttributes, relation, 
 				TPCHelper.attrMap_customer, TPCHelper.getProperties());
 		
 		/*
@@ -255,7 +255,7 @@ public class SelectionTest {
 		 *  then select the rows where the value of of C_MKTSEGMENT is "MACHINERY". 
 		 */
 		Condition condition = ConstantEqualityCondition.create(3, TypedConstant.create("MACHINERY"));
-		Plan plan = new SelectionTerm(condition, new AccessTerm(am4));
+		Plan plan = SelectionTerm.create(condition, AccessTerm.create(am4.getRelation(), am4));
 		Selection target = new Selection(plan);
 		
 		// Attempting to execute the plan before setting the dynamic input raises an exception.
@@ -293,7 +293,7 @@ public class SelectionTest {
 		Set<Attribute> inputAttributes = new HashSet<Attribute>();
 		inputAttributes.add(Attribute.create(Integer.class, "C_NATIONKEY"));
 		
-		AccessMethod am4 = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputAttributes, relation, 
+		AbstractAccessMethod am4 = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputAttributes, relation, 
 				TPCHelper.attrMap_customer, TPCHelper.getProperties());
 		
 		/*
@@ -306,7 +306,7 @@ public class SelectionTest {
 		Condition mktSegmentCondition = ConstantEqualityCondition.create(3, TypedConstant.create("MACHINERY"));
 		Condition acctBalCondition = ConstantInequalityCondition.create(2, TypedConstant.create(0.0f));
 		
-		Plan plan = new SelectionTerm(acctBalCondition, new SelectionTerm(mktSegmentCondition, new AccessTerm(am4)));
+		Plan plan = SelectionTerm.create(acctBalCondition, SelectionTerm.create(mktSegmentCondition, AccessTerm.create(am4.getRelation(), am4)));
 		Selection target = new Selection(plan);
 		
 		// Attempting to execute the plan before setting the dynamic input raises an exception.
@@ -344,7 +344,7 @@ public class SelectionTest {
 //		 */
 //		// Select line items with quantity is less than 10.
 //		Condition condition = ConstantInequalityCondition.create(3, TypedConstant.create(10));
-//		Selection target = new Selection(new SelectionTerm(condition, new AccessTerm(TPCHelper.amFreeLineItem)));
+//		Selection target = new Selection(SelectionTerm.create(condition, AccessTerm.create(TPCHelper.amFreeLineItem)));
 //
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
@@ -363,7 +363,7 @@ public class SelectionTest {
 //		 */
 //		// Select line items with quantity is less than 10.
 //		Condition condition = ConstantInequalityCondition.create(3, TypedConstant.create(10));
-//		Selection target = new Selection(new SelectionTerm(condition, new AccessTerm(TPCHelper.amFreeLineItem_less)));
+//		Selection target = new Selection(SelectionTerm.create(condition, AccessTerm.create(TPCHelper.amFreeLineItem_less)));
 //
 //		// Execute the plan. 
 //		List<Tuple> result = target.stream().collect(Collectors.toList());
