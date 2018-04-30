@@ -101,7 +101,7 @@
 			</dependency>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>pdq-runtime</artifactId>
+				<artifactId>pdq-runtime-turing</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
 			<dependency>
@@ -128,7 +128,7 @@
 		</dependency>
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>pdq-runtime</artifactId>
+			<artifactId>pdq-runtime-turing</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
