@@ -43,7 +43,14 @@ public class AlgebraUtilities {
 	}
 
 	public static boolean assertSelectionCondition(SimpleCondition selectionCondition, Attribute[] outputAttributes) {
-		if (selectionCondition instanceof ConstantEqualityCondition) {
+		if (selectionCondition instanceof ConstantInequalityCondition) {
+			int position = ((ConstantInequalityCondition) selectionCondition).getPosition();
+			if (position > outputAttributes.length || !((ConstantInequalityCondition) selectionCondition).getConstant()
+					.getType().equals(outputAttributes[position].getType()))
+				return false;
+			else
+				return true;
+		} else if (selectionCondition instanceof ConstantEqualityCondition) {
 			int position = ((ConstantEqualityCondition) selectionCondition).getPosition();
 			if (position > outputAttributes.length || !((ConstantEqualityCondition) selectionCondition).getConstant()
 					.getType().equals(outputAttributes[position].getType()))
