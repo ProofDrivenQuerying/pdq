@@ -14,7 +14,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.datasources.utility.Result;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
-import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -29,6 +28,7 @@ import uk.ac.ox.cs.pdq.runtime.exec.PipelinedPlanExecutor.TimeoutChecker;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanTranslator;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Distinct;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
+import uk.ac.ox.cs.pdq.util.Tuple;
 
 /**
  * Tests the translation from a RelationalTerm object to a TupleIterator plan.

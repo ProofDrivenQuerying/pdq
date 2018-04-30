@@ -26,6 +26,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.runtime.io.DataReader;
 import uk.ac.ox.cs.pdq.util.TupleCounter;
+import uk.ac.ox.cs.pdq.util.TuplePrinter;
 
 /**
  * Bootstrapping class for starting the runtime. 

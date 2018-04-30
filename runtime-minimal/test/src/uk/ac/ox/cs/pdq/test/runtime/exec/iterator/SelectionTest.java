@@ -16,8 +16,6 @@ import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.datasources.sql.PostgresqlRelationWrapper;
 import uk.ac.ox.cs.pdq.datasources.sql.SQLRelationWrapper;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
-import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
-import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -26,6 +24,8 @@ import uk.ac.ox.cs.pdq.runtime.exec.PipelinedPlanExecutor.TimeoutChecker;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Access;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Selection;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
+import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.util.TupleType;
 
 public class SelectionTest {
 
