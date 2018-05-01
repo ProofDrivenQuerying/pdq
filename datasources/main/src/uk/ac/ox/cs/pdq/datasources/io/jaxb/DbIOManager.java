@@ -13,7 +13,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.adapted.AdaptedDbSchema;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedAccessMethod;
@@ -80,7 +80,7 @@ public class DbIOManager extends IOManager {
 		}
 	}
 	
-	public static Map<AccessMethod,String> createCatalog(File schema, File to) throws JAXBException, FileNotFoundException {
+	public static Map<AccessMethodDescriptor,String> createCatalog(File schema, File to) throws JAXBException, FileNotFoundException {
 		try {
 			if (!schema.exists() )
 				throw new FileNotFoundException(schema.getAbsolutePath());
@@ -90,7 +90,7 @@ public class DbIOManager extends IOManager {
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			AdaptedDbSchema customer = (AdaptedDbSchema) jaxbUnmarshaller.unmarshal(schema);
 			customer.toSchema(null);
-			Map<AccessMethod, String> map = AdaptedAccessMethod.getMapOfCosts();
+			Map<AccessMethodDescriptor, String> map = AdaptedAccessMethod.getMapOfCosts();
 			for (AdaptedRelation r: customer.getAdaptedRelations()) {
 				if (r.getSize()!=null) {
 					//System.out.println("" + r.getName() + " size = " + r.getSize());
@@ -98,7 +98,7 @@ public class DbIOManager extends IOManager {
 					bw.write("RE:"+r.getName() + "\t\t\t\t\t\t\t\t\t" + "CA:"+r.getSize()+"\n");
 				}
 				if (r.getAccessMethods()!=null) {
-					for (AccessMethod am: r.getAccessMethods()) {
+					for (AccessMethodDescriptor am: r.getAccessMethods()) {
 						//RE:relation_name  BI:access_method_name  			RT:cost_as_in_xml
 						bw.write("RE:"+r.getName() + "\t\t\t\t" + "BI:" + am.getName() + "\t\tRT:"+map.get(am)+"\n");
 						//System.out.println("\t" + r.getName() + "." + am.getName() + " cost = " + map.get(am));

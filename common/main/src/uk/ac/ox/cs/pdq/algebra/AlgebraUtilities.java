@@ -18,7 +18,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -130,7 +130,7 @@ public class AlgebraUtilities {
 		return ConjunctiveCondition.create(equalities.toArray(new SimpleCondition[equalities.size()]));
 	}
 
-	public static Attribute[] computeInputAttributes(Relation relation, AccessMethod accessMethod) {
+	public static Attribute[] computeInputAttributes(Relation relation, AccessMethodDescriptor accessMethod) {
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
 		if (accessMethod.getInputs().length == 0) {
@@ -145,7 +145,7 @@ public class AlgebraUtilities {
 
 	// TOCOMMENT: ALL OF THESE NEED COMMENTS!
 
-	public static Attribute[] computeInputAttributes(Relation relation, AccessMethod accessMethod,
+	public static Attribute[] computeInputAttributes(Relation relation, AccessMethodDescriptor accessMethod,
 			Map<Integer, TypedConstant> inputConstants) {
 		Assert.assertNotNull(relation);
 		if (!(accessMethod != null && accessMethod.getInputs().length > 0)

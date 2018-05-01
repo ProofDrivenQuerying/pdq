@@ -8,7 +8,7 @@ import java.util.Set;
 
 import com.google.common.collect.Lists;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -51,7 +51,7 @@ public class PlannerUtility {
 	 * @param fact the fact
 	 * @return the constants in the input positions of the given fact
 	 */
-	public static List<Constant> getInputConstants(AccessMethod accessMethod, Atom fact) {
+	public static List<Constant> getInputConstants(AccessMethodDescriptor accessMethod, Atom fact) {
 		List<Constant> ret  = Utility.getTypedAndUntypedConstants(fact,accessMethod.getInputs());
 		return Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.removeDuplicates(ret));
 	}

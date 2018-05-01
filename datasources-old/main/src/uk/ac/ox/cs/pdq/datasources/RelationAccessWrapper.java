@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.datasources;
 
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 
 /**
@@ -64,7 +64,7 @@ public interface RelationAccessWrapper extends Pipelineable {
 	 * @param name the name
 	 * @return an access method by its name.
 	 */
-	AccessMethod getAccessMethod(String name);
+	AccessMethodDescriptor getAccessMethod(String name);
 	
 	int getArity();
 }

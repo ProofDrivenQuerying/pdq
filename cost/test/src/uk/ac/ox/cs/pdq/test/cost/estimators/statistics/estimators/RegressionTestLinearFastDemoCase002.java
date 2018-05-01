@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.FixedCostPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -38,15 +38,15 @@ public class RegressionTestLinearFastDemoCase002 extends PdqTest {
 	protected Attribute[] attributes21Old = new Attribute[21];
 	protected Attribute[] newAttributes = new Attribute[30];
 
-	protected AccessMethod method1 = AccessMethod.create(new Integer[] { 0 });
-	protected AccessMethod method2 = AccessMethod.create(new Integer[] { 0, 1 });
+	protected AccessMethodDescriptor method1 = AccessMethodDescriptor.create(new Integer[] { 0 });
+	protected AccessMethodDescriptor method2 = AccessMethodDescriptor.create(new Integer[] { 0, 1 });
 	protected Relation YahooPlaceCode;
 	protected Relation YahooPlaceRelationship;
 	protected Relation YahooWeather;
 	protected Relation YahooPlaces;
-	protected AccessMethod yh_geo_name = AccessMethod.create(new Integer[] { 1 });
-	protected AccessMethod yh_geo_woeid = AccessMethod.create(new Integer[] { 0 });
-	protected AccessMethod yh_geo_type = AccessMethod.create(new Integer[] { 1, 2 });
+	protected AccessMethodDescriptor yh_geo_name = AccessMethodDescriptor.create(new Integer[] { 1 });
+	protected AccessMethodDescriptor yh_geo_woeid = AccessMethodDescriptor.create(new Integer[] { 0 });
+	protected AccessMethodDescriptor yh_geo_type = AccessMethodDescriptor.create(new Integer[] { 1, 2 });
 
 	@Mock
 	protected SimpleCatalog catalog;
@@ -75,10 +75,10 @@ public class RegressionTestLinearFastDemoCase002 extends PdqTest {
 			this.newAttributes[index] = Attribute.create(String.class, "c" + index);
 		}
 
-		this.YahooPlaceCode = Relation.create("YahooPlaceCode", this.attributes3Old, new AccessMethod[] { this.method2 });
-		this.YahooPlaceRelationship = Relation.create("YahooPlaceRelationship", this.attributes6Old, new AccessMethod[] { this.method2 });
-		this.YahooWeather = Relation.create("YahooWeather", this.attributes21Old, new AccessMethod[] { this.method1 });
-		this.YahooPlaces = Relation.create("YahooPlaces", this.attributes3Old, new AccessMethod[] { this.yh_geo_name, this.yh_geo_woeid, this.yh_geo_type });
+		this.YahooPlaceCode = Relation.create("YahooPlaceCode", this.attributes3Old, new AccessMethodDescriptor[] { this.method2 });
+		this.YahooPlaceRelationship = Relation.create("YahooPlaceRelationship", this.attributes6Old, new AccessMethodDescriptor[] { this.method2 });
+		this.YahooWeather = Relation.create("YahooWeather", this.attributes21Old, new AccessMethodDescriptor[] { this.method1 });
+		this.YahooPlaces = Relation.create("YahooPlaces", this.attributes3Old, new AccessMethodDescriptor[] { this.yh_geo_name, this.yh_geo_woeid, this.yh_geo_type });
 		// Create the mock catalog object
 		when(this.catalog.getCardinality(this.YahooPlaceCode)).thenReturn(10000000);
 		when(this.catalog.getCardinality(this.YahooPlaceRelationship)).thenReturn(10000000);

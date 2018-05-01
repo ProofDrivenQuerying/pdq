@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -44,7 +44,7 @@ public class AccessibleSchema extends Schema {
 	/**  The accessible relations. */
 	public static final Relation accessibleRelation = Relation.create("Accessible", 
 			new Attribute[]{Attribute.create(String.class, "x0") }, 
-			new AccessMethod[]{AccessMethod.create(new Integer[]{})});
+			new AccessMethodDescriptor[]{AccessMethodDescriptor.create(new Integer[]{})});
 
 	/**  Mapping from a relation-access method pair to an accessibility axioms. */
 	private final AccessibilityAxiom[] accessibilityAxioms;
@@ -139,14 +139,14 @@ public class AccessibleSchema extends Schema {
 		Collection<Relation> output  = new LinkedHashSet<>();
 		output.addAll(Arrays.asList(relations));
 		for(Relation relation:relations) 
-			output.add(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality()));
+			output.add(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethodDescriptor[]{}, relation.isEquality()));
 		return output.toArray(new Relation[output.size()]);
 	}
 
 	public static AccessibilityAxiom[] computeAccessibilityAxioms(Relation[] relations) {
 		List<AccessibilityAxiom> accessibilityAxioms = new LinkedList<>();
 		for (Relation relation:relations) {
-			for (AccessMethod method:relation.getAccessMethods()) 
+			for (AccessMethodDescriptor method:relation.getAccessMethods()) 
 				accessibilityAxioms.add(new AccessibilityAxiom(relation, method));
 		}
 		return accessibilityAxioms.toArray(new AccessibilityAxiom[accessibilityAxioms.size()]);

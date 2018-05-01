@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
@@ -68,7 +68,7 @@ public class SQLViewWrapper extends View implements RelationAccessWrapper {
 	 * @param definition LinearGuarded
 	 * @param methods List<AccessMethod>
 	 */
-	public SQLViewWrapper(Properties properties, LinearGuarded definition, AccessMethod[] methods,Schema schema) {
+	public SQLViewWrapper(Properties properties, LinearGuarded definition, AccessMethodDescriptor[] methods,Schema schema) {
 		super(definition, methods,schema);
 		this.properties.putAll(properties);
 	}

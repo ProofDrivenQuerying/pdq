@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
@@ -25,7 +25,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 public class AdaptedRelation implements Serializable {
 	private static final long serialVersionUID = -9222721018270749836L;
 	protected Attribute[] attributes;
-	protected AccessMethod[] accessMethods;
+	protected AccessMethodDescriptor[] accessMethods;
 	protected ForeignKey[] foreignKeys;
 	protected String[] primaryKey; // one or more attribute names that form the primary key.
 	protected Properties properties;
@@ -40,7 +40,7 @@ public class AdaptedRelation implements Serializable {
 	private String size;
 
 	public AdaptedRelation() {
-		accessMethods = new AccessMethod[0];
+		accessMethods = new AccessMethodDescriptor[0];
 		foreignKeys = new ForeignKey[0];
 	}
 
@@ -75,11 +75,11 @@ public class AdaptedRelation implements Serializable {
 	}
 
 	@XmlElement(name = "access-method")
-	public AccessMethod[] getAccessMethods() {
+	public AccessMethodDescriptor[] getAccessMethods() {
 		return this.accessMethods;
 	}
 
-	public void setAccessMethods(AccessMethod[] am) {
+	public void setAccessMethods(AccessMethodDescriptor[] am) {
 		this.accessMethods = am;
 	}
 

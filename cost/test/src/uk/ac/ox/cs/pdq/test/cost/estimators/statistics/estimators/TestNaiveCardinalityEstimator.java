@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -70,10 +70,10 @@ public class TestNaiveCardinalityEstimator extends PdqTest {
 		for (int index = 0; index < newAttributes.length; ++index)
 			this.newAttributes[index] = Attribute.create(String.class, "c" + index);
 
-		this.YahooPlaceCode = Relation.create("YahooPlaceCode", this.attributes3Old, new AccessMethod[] { this.method2 });
-		this.YahooPlaceRelationship = Relation.create("YahooPlaceRelationship", this.attributes6Old, new AccessMethod[] { this.method2 });
-		this.YahooWeather = Relation.create("YahooWeather", this.attributes21Old, new AccessMethod[] { this.method1 });
-		this.YahooPlaces = Relation.create("YahooPlaces", this.attributes18Old, new AccessMethod[] { this.method3 });
+		this.YahooPlaceCode = Relation.create("YahooPlaceCode", this.attributes3Old, new AccessMethodDescriptor[] { this.method2 });
+		this.YahooPlaceRelationship = Relation.create("YahooPlaceRelationship", this.attributes6Old, new AccessMethodDescriptor[] { this.method2 });
+		this.YahooWeather = Relation.create("YahooWeather", this.attributes21Old, new AccessMethodDescriptor[] { this.method1 });
+		this.YahooPlaces = Relation.create("YahooPlaces", this.attributes18Old, new AccessMethodDescriptor[] { this.method3 });
 
 		// Create the mock catalog object
 		when(this.catalog.getCardinality(this.YahooPlaceCode)).thenReturn(10000000);

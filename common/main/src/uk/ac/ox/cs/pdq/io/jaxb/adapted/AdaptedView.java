@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.io.jaxb.adapted;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.View;
@@ -19,7 +19,7 @@ public class AdaptedView extends AdaptedRelation {
 	
 	private LinearGuarded dependency;
 	protected Attribute[] attributes;
-	protected AccessMethod[] accessMethods;
+	protected AccessMethodDescriptor[] accessMethods;
 	protected ForeignKey[] foreignKeys;
 	protected String[] primaryKey;
 
@@ -77,11 +77,11 @@ public class AdaptedView extends AdaptedRelation {
 	}
 
 	@XmlElement(name = "access-method")
-	public AccessMethod[] getAccessMethods() {
+	public AccessMethodDescriptor[] getAccessMethods() {
 		return accessMethods;
 	}
 
-	public void setAccessMethods(AccessMethod[] accessMethods) {
+	public void setAccessMethods(AccessMethodDescriptor[] accessMethods) {
 		this.accessMethods = accessMethods;
 	}
 

@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.datasources.services.rest.OutputMethod;
 import uk.ac.ox.cs.pdq.datasources.services.rest.RESTAttribute;
 import uk.ac.ox.cs.pdq.datasources.services.rest.RESTRelation;
 import uk.ac.ox.cs.pdq.datasources.services.rest.RESTStaticInput;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -58,7 +58,7 @@ public class ServiceBuilder implements Builder<Service> {
 	
 	private Map<Attribute, OutputMethod> outputMethods = new LinkedHashMap<>();
 
-	private List<AccessMethod> accessMethods = new ArrayList<>();
+	private List<AccessMethodDescriptor> accessMethods = new ArrayList<>();
 
 	private Collection<UsagePolicy> policies = new ArrayList<>();
 	
@@ -239,7 +239,7 @@ public class ServiceBuilder implements Builder<Service> {
 	 * @param c Cost
 	 * @return ServiceBuilder
 	 */
-	public ServiceBuilder addAccessMethod(AccessMethod b) {
+	public ServiceBuilder addAccessMethod(AccessMethodDescriptor b) {
 		this.accessMethods.add(b);
 		return this;
 	}
@@ -283,7 +283,7 @@ public class ServiceBuilder implements Builder<Service> {
 			}
 			Relation result = new RESTRelation(this.name, 
 					nonStaticInputs.toArray(new RESTAttribute[nonStaticInputs.size()]),
-					this.accessMethods.toArray(new AccessMethod[this.accessMethods.size()]),
+					this.accessMethods.toArray(new AccessMethodDescriptor[this.accessMethods.size()]),
 					allAttributes.toArray(new RESTAttribute[allAttributes.size()]),
 					this.url, this.mediaType, this.resultDelimiter, this.policies);
 			result.setKey(this.primaryKey);

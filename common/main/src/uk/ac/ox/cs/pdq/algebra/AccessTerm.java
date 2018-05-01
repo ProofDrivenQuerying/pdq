@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -29,7 +29,7 @@ public class AccessTerm extends RelationalTerm {
 	protected final Relation relation;
 
 	/** The access method to use. */
-	protected final AccessMethod accessMethod;
+	protected final AccessMethodDescriptor accessMethod;
 
 	/** The constants used to call the underlying access method. */
 	protected final Map<Integer, TypedConstant> inputConstants;
@@ -37,7 +37,7 @@ public class AccessTerm extends RelationalTerm {
 	/** Cached string representation. */
 	protected String toString = null;
 
-	private AccessTerm(Relation relation, AccessMethod accessMethod) {
+	private AccessTerm(Relation relation, AccessMethodDescriptor accessMethod) {
 		super(AlgebraUtilities.computeInputAttributes(relation, accessMethod), relation.getAttributes());
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
@@ -46,7 +46,7 @@ public class AccessTerm extends RelationalTerm {
 		this.inputConstants = new LinkedHashMap<>();
 	}
 
-	private AccessTerm(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
+	private AccessTerm(Relation relation, AccessMethodDescriptor accessMethod, Map<Integer, TypedConstant> inputConstants) {
 		super(AlgebraUtilities.computeInputAttributes(relation, accessMethod, inputConstants),
 				relation.getAttributes());
 		Assert.assertNotNull(relation);
@@ -80,7 +80,7 @@ public class AccessTerm extends RelationalTerm {
 	 * @return the access method used
 	 * @see uk.ac.ox.cs.pdq.plan.AccessOperator#getAccessMethod()
 	 */
-	public AccessMethod getAccessMethod() {
+	public AccessMethodDescriptor getAccessMethod() {
 		return this.accessMethod;
 	}
 
@@ -134,11 +134,11 @@ public class AccessTerm extends RelationalTerm {
 		return new RelationalTerm[] {};
 	}
 
-	public static AccessTerm create(Relation relation, AccessMethod accessMethod) {
+	public static AccessTerm create(Relation relation, AccessMethodDescriptor accessMethod) {
 		return Cache.accessTerm.retrieve(new AccessTerm(relation, accessMethod));
 	}
 
-	public static AccessTerm create(Relation relation, AccessMethod accessMethod,
+	public static AccessTerm create(Relation relation, AccessMethodDescriptor accessMethod,
 			Map<Integer, TypedConstant> inputConstants) {
 		return Cache.accessTerm.retrieve(new AccessTerm(relation, accessMethod, inputConstants));
 	}

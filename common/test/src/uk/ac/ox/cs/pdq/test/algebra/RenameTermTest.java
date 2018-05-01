@@ -9,7 +9,7 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
@@ -47,7 +47,7 @@ public class RenameTermTest extends PdqTest {
 				Attribute.create(String.class, "attribute2")
 				};
 		Relation relation = Relation.create("relation", renamings);
-		RelationalTerm child = AccessTerm.create(relation, AccessMethod.create(new Integer[] {0}));
+		RelationalTerm child = AccessTerm.create(relation, AccessMethodDescriptor.create(new Integer[] {0}));
 	
 		// Constructor tests invariant
 		RenameTerm rt = RenameTerm.create(renamings, child);

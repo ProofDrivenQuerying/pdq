@@ -10,13 +10,18 @@ import uk.ac.ox.cs.pdq.io.jaxb.adapters.AccessMethodAdapter;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
- * An access method defines the positions of a relation's attributes whose values are required to access the relation.
- *
+ * An access method defines the positions of a relation's attributes whose
+ * values are required to access the relation. An AccessMethodDescriptor cannot
+ * be used for actual data access. It is a place holder that can be used for
+ * reasoning/planing. In runtime these access method descriptors have to be
+ * replaced by the executable access method.
+ * 
  * @author Efthymia Tsamoura
  * @author Julien Leblay
+ * @author Gabor Gyorkei
  */
 @XmlJavaTypeAdapter(AccessMethodAdapter.class)
-public class AccessMethod implements Serializable {
+public class AccessMethodDescriptor implements Serializable {
 
 	protected static final long serialVersionUID = -5821292665848480210L;
 
@@ -32,11 +37,11 @@ public class AccessMethod implements Serializable {
 	/**  String representation of the object. */
 	protected String toString = null;
 	
-	public AccessMethod(Integer[] inputs) {
+	public AccessMethodDescriptor(Integer[] inputs) {
 		this(DEFAULT_PREFIX + GlobalCounterProvider.getNext("AccessMethodName"), inputs);
 	}
 
-	protected AccessMethod(String name, Integer[] inputs) {
+	protected AccessMethodDescriptor(String name, Integer[] inputs) {
 		this.name = name;
 		this.inputs = inputs.clone();
 	}
@@ -58,12 +63,12 @@ public class AccessMethod implements Serializable {
 		return this.name;
 	}
 
-	public static AccessMethod create(String name, Integer[] inputs) {
-		return Cache.accessMethod.retrieve(new AccessMethod(name, inputs));
+	public static AccessMethodDescriptor create(String name, Integer[] inputs) {
+		return Cache.accessMethod.retrieve(new AccessMethodDescriptor(name, inputs));
 	}
 	
-	public static AccessMethod create(Integer[] inputs) {
-		return Cache.accessMethod.retrieve(new AccessMethod(inputs));
+	public static AccessMethodDescriptor create(Integer[] inputs) {
+		return Cache.accessMethod.retrieve(new AccessMethodDescriptor(inputs));
 	}
 
 	@Override

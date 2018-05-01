@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.sql.PostgresqlSchemaDiscoverer;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -37,7 +37,7 @@ public class PostgresqlSchemaDiscoveryTest {
 		String[] attributes;
 		
 		/** The bindings. */
-		AccessMethod[] bindings;
+		AccessMethodDescriptor[] bindings;
 	}
 	
 	/** The relations. */
@@ -82,7 +82,7 @@ public class PostgresqlSchemaDiscoveryTest {
 		for(String n: this.relationNames) {
 			Relation r = new Relation();
 			r.attributes = this.attributesNames[i];
-			r.bindings = new AccessMethod[]{AccessMethod.create(this.bindingPositions[i])};
+			r.bindings = new AccessMethodDescriptor[]{AccessMethodDescriptor.create(this.bindingPositions[i])};
 			this.relations.put(n, r);
 			i++;
 		}
@@ -206,7 +206,7 @@ public class PostgresqlSchemaDiscoveryTest {
 	public void testAccessMethodMethods() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
 			int i = 0;
-			for (AccessMethod b: r.getAccessMethods()) 
+			for (AccessMethodDescriptor b: r.getAccessMethods()) 
 				Assert.assertArrayEquals(b.getInputs(), this.relations.get(r.getName()).bindings[i++].getInputs());
 		}
 	}

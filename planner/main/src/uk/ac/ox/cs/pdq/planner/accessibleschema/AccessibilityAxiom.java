@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -27,7 +27,7 @@ public class AccessibilityAxiom extends TGD {
 	private static final long serialVersionUID = 4888518579167846542L;
 
 	/**  The access method that this axiom maps to *. */
-	private final AccessMethod method;
+	private final AccessMethodDescriptor method;
 	
 	private final Relation relation;
 
@@ -37,7 +37,7 @@ public class AccessibilityAxiom extends TGD {
 	 * @param relation 		An inferred accessible relation
 	 * @param method 		A method to access this relation
 	 */
-	public AccessibilityAxiom(Relation relation, AccessMethod method) {
+	public AccessibilityAxiom(Relation relation, AccessMethodDescriptor method) {
 		super(createLeft(relation, method), createRight(relation, method));
 		this.relation = relation;
 		this.method = method;
@@ -49,7 +49,7 @@ public class AccessibilityAxiom extends TGD {
 	 * @param method 		A method to access this relation
 	 * @return 		the atoms of the left-hand side of the accessibility axiom that corresponds to the input relation and the input access method
 	 */
-	private static Atom[] createLeft(Relation relation, AccessMethod method) {
+	private static Atom[] createLeft(Relation relation, AccessMethodDescriptor method) {
 		List<Formula> leftAtoms = new ArrayList<>();
 		Integer[] inputPositions = method.getInputs();
 		Atom atom = createAtom(relation);
@@ -74,10 +74,10 @@ public class AccessibilityAxiom extends TGD {
 	 * @param method the binding
 	 * @return 		the atoms of the right-hand side of the accessibility axiom that corresponds to the input relation and the input access method
 	 */
-	private static Atom[] createRight(Relation relation, AccessMethod method) {
+	private static Atom[] createRight(Relation relation, AccessMethodDescriptor method) {
 		List<Formula> rightAtoms = new ArrayList<>();
 		Integer[] inputPositions = method.getInputs();
-		Atom f = createAtom(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality()));
+		Atom f = createAtom(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethodDescriptor[]{}, relation.isEquality()));
 		Term[] terms = f.getTerms();
 		for (int i = 0; i < terms.length; ++i) {
 			if (!Arrays.asList(inputPositions).contains(i)) 
@@ -99,7 +99,7 @@ public class AccessibilityAxiom extends TGD {
 	 *
 	 * @return the access method of the accessibility axiom.
 	 */
-	public AccessMethod getAccessMethod() {
+	public AccessMethodDescriptor getAccessMethod() {
 		return this.method;
 	}
 

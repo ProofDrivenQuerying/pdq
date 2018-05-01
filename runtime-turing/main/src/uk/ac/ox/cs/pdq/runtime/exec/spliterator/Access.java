@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
-import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -43,7 +43,7 @@ public class Access extends UnaryExecutablePlan {
 		AccessTerm accessTerm = (AccessTerm) this.getDecoratedPlan();
 
 		Spliterator<Tuple> underlying = null;
-		AbstractAccessMethod aam = (AbstractAccessMethod) accessTerm.getAccessMethod(); 
+		ExecutableAccessMethod aam = (ExecutableAccessMethod) accessTerm.getAccessMethod(); 
 		// Case 1: the underlying access method has no input attributes.
 		if (aam.inputAttributes().length == 0)
 			underlying = aam.access().spliterator();
@@ -88,7 +88,7 @@ public class Access extends UnaryExecutablePlan {
 		Preconditions.checkState(accessTerm.getInputAttributes().length == 0);
 		Preconditions.checkState(accessTerm.getInputConstants().size() != 0);
 
-		Attribute[] inputAttributes = ((AbstractAccessMethod)accessTerm.getAccessMethod()).inputAttributes();
+		Attribute[] inputAttributes = ((ExecutableAccessMethod)accessTerm.getAccessMethod()).inputAttributes();
 		List<Tuple> constantInput = new ArrayList<Tuple>();
 		TupleType tt = TupleType.createFromTyped(inputAttributes);
 		Object[] values = new Object[tt.size()];
@@ -113,8 +113,8 @@ public class Access extends UnaryExecutablePlan {
 	}
 
 	private class CombinedInputsIterator implements Iterator<Tuple> {
-		AccessMethod am = ((AccessTerm) getDecoratedPlan()).getAccessMethod();
-		Attribute[] allInputAttributes = ((AbstractAccessMethod)am).inputAttributes(true);
+		AccessMethodDescriptor am = ((AccessTerm) getDecoratedPlan()).getAccessMethod();
+		Attribute[] allInputAttributes = ((ExecutableAccessMethod)am).inputAttributes(true);
 		Map<Attribute, TypedConstant> inputConstants = ((AccessTerm) getDecoratedPlan()).getInputConstantsAsAttributes();
 		TupleType tt = TupleType.createFromTyped(allInputAttributes);
 

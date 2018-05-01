@@ -6,7 +6,7 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.FixedCostPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -37,10 +37,10 @@ public class SimpleCatalogTest extends PdqTest {
 	 */
 	@Test
 	public void case1() {
-		AccessMethod am1 = AccessMethod.create("access_method1", new Integer[] { 0 });
-		AccessMethod am2 = AccessMethod.create("access_method2", new Integer[] { 0 });
-		Relation relation1 = Relation.create("R1", new Attribute[] { Attribute.create(Integer.class, "r1_attribute") }, new AccessMethod[] { am1 });
-		Relation relation2 = Relation.create("R2", new Attribute[] { Attribute.create(Integer.class, "r2_attribute") }, new AccessMethod[] { am2 });
+		AccessMethodDescriptor am1 = AccessMethodDescriptor.create("access_method1", new Integer[] { 0 });
+		AccessMethodDescriptor am2 = AccessMethodDescriptor.create("access_method2", new Integer[] { 0 });
+		Relation relation1 = Relation.create("R1", new Attribute[] { Attribute.create(Integer.class, "r1_attribute") }, new AccessMethodDescriptor[] { am1 });
+		Relation relation2 = Relation.create("R2", new Attribute[] { Attribute.create(Integer.class, "r2_attribute") }, new AccessMethodDescriptor[] { am2 });
 		Schema schema = new Schema(new Relation[] { relation1, relation2 });
 		try {
 			SimpleCatalog catalog = new SimpleCatalog(schema, "test//catalog.properties");

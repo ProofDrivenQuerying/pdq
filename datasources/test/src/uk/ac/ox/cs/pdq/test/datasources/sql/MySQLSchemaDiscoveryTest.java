@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.sql.MySQLSchemaDiscoverer;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -37,7 +37,7 @@ public class MySQLSchemaDiscoveryTest {
 		String[] attributes;
 		
 		/** The bindings. */
-		AccessMethod[] bindings;
+		AccessMethodDescriptor[] bindings;
 	}
 	
 	/** The relations. */
@@ -153,7 +153,7 @@ public class MySQLSchemaDiscoveryTest {
 	public void testAccessMethodMethods() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
 			int i = 0;
-			for (AccessMethod b: r.getAccessMethods()) 
+			for (AccessMethodDescriptor b: r.getAccessMethods()) 
 				Assert.assertArrayEquals(b.getInputs(), this.relations.get(r.getName()).bindings[i++].getInputs());
 		}
 	}

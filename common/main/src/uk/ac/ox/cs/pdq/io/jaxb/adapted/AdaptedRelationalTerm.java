@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -57,7 +57,7 @@ public class AdaptedRelationalTerm implements Serializable {
 
 	protected Attribute[] projections;
 	/** The access method to use. */
-	protected AccessMethod accessMethod;
+	protected AccessMethodDescriptor accessMethod;
 
 	/** The constants used to call the underlying access method. */
 	protected Map<Integer, TypedConstant> inputConstants;
@@ -187,11 +187,11 @@ public class AdaptedRelationalTerm implements Serializable {
 	}
 
 	@XmlElement
-	public AccessMethod getAccessMethod() {
+	public AccessMethodDescriptor getAccessMethod() {
 		return accessMethod;
 	}
 
-	public void setAccessMethod(AccessMethod accessMethod) {
+	public void setAccessMethod(AccessMethodDescriptor accessMethod) {
 		this.accessMethod = accessMethod;
 	}
 

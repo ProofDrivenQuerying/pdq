@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -62,7 +62,7 @@ public class TestExternalDatabaseManager extends PdqTest {
 	 * @throws DatabaseException
 	 */
 	private void simpleDatabaseCreation(DatabaseParameters parameters) throws DatabaseException {
-		Relation R = Relation.create("R", new Attribute[] { a_s, b_s, c_s }, new AccessMethod[] { this.method0, this.method2 });
+		Relation R = Relation.create("R", new Attribute[] { a_s, b_s, c_s }, new AccessMethodDescriptor[] { this.method0, this.method2 });
 
 		ExternalDatabaseManager manager = new ExternalDatabaseManager(parameters);
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R }));

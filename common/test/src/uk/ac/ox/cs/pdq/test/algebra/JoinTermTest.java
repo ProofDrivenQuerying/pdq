@@ -10,7 +10,7 @@ import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
@@ -76,9 +76,9 @@ public class JoinTermTest extends PdqTest {
 		/*
 		 * Using the internal schema.
 		 */
-		leftChild = AccessTerm.create(Relation.create("r",  attributes_nation), AccessMethod.create("am", new Integer[] {0}));
+		leftChild = AccessTerm.create(Relation.create("r",  attributes_nation), AccessMethodDescriptor.create("am", new Integer[] {0}));
 
-		rightChild = AccessTerm.create(Relation.create("r",  attributes_region), AccessMethod.create("am", new Integer[] {0}));
+		rightChild = AccessTerm.create(Relation.create("r",  attributes_region), AccessMethodDescriptor.create("am", new Integer[] {0}));
 	
 		// Construct with the default join condition.
 		target = JoinTerm.create(leftChild, rightChild);
@@ -135,9 +135,9 @@ public class JoinTermTest extends PdqTest {
 		RelationalTerm leftChild;
 		RelationalTerm rightChild;
 
-		leftChild = AccessTerm.create(Relation.create("r",  attributes_nation), AccessMethod.create("am", new Integer[] {0}));
+		leftChild = AccessTerm.create(Relation.create("r",  attributes_nation), AccessMethodDescriptor.create("am", new Integer[] {0}));
 
-		rightChild = AccessTerm.create(Relation.create("r",  attributes_region), AccessMethod.create("am", new Integer[] {0}));
+		rightChild = AccessTerm.create(Relation.create("r",  attributes_region), AccessMethodDescriptor.create("am", new Integer[] {0}));
 
 		target = new DummyJoinTerm(leftChild, rightChild);
 
@@ -162,9 +162,9 @@ public class JoinTermTest extends PdqTest {
 		/*
 		 * Using the external schema.
 		 */
-		leftChild = AccessTerm.create(Relation.create("r",  new Attribute[] { Attribute.create(Integer.class, "c") }), AccessMethod.create("am", new Integer[] {0}));
+		leftChild = AccessTerm.create(Relation.create("r",  new Attribute[] { Attribute.create(Integer.class, "c") }), AccessMethodDescriptor.create("am", new Integer[] {0}));
 
-		rightChild = AccessTerm.create(Relation.create("r",  new Attribute[] { Attribute.create(Integer.class, "c") }), AccessMethod.create("am", new Integer[] {0}));
+		rightChild = AccessTerm.create(Relation.create("r",  new Attribute[] { Attribute.create(Integer.class, "c") }), AccessMethodDescriptor.create("am", new Integer[] {0}));
 
 		JoinTerm.create(leftChild, rightChild);
 
@@ -207,9 +207,9 @@ public class JoinTermTest extends PdqTest {
 		AccessTerm leftChild; 
 		AccessTerm rightChild;
 
-		leftChild = AccessTerm.create(Relation.create("r",  new Attribute[] { Attribute.create(Integer.class, "c") }), AccessMethod.create("am", new Integer[] {0}));
+		leftChild = AccessTerm.create(Relation.create("r",  new Attribute[] { Attribute.create(Integer.class, "c") }), AccessMethodDescriptor.create("am", new Integer[] {0}));
 
-		rightChild = AccessTerm.create(Relation.create("r",  new Attribute[] { Attribute.create(Integer.class, "c") }), AccessMethod.create("am", new Integer[] {0}));
+		rightChild = AccessTerm.create(Relation.create("r",  new Attribute[] { Attribute.create(Integer.class, "c") }), AccessMethodDescriptor.create("am", new Integer[] {0}));
 
 		// Construct with the default join condition.
 		JoinTerm.create(leftChild, rightChild);
@@ -237,8 +237,8 @@ public class JoinTermTest extends PdqTest {
 				});
 		Relation relation2 = Relation.create("relation2", new Attribute[] {
 				Attribute.create(String.class, "attribute2")});
-		RelationalTerm child1 = AccessTerm.create(relation1, AccessMethod.create("am", new Integer[] {0}));
-		RelationalTerm child2 = AccessTerm.create(relation2, AccessMethod.create("am", new Integer[] {0}));
+		RelationalTerm child1 = AccessTerm.create(relation1, AccessMethodDescriptor.create("am", new Integer[] {0}));
+		RelationalTerm child2 = AccessTerm.create(relation2, AccessMethodDescriptor.create("am", new Integer[] {0}));
 	
 		// Constructor tests invariant
 		JoinTerm jt = JoinTerm.create(child1, child2);

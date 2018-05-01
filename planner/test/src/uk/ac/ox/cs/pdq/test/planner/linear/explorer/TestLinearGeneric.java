@@ -33,7 +33,7 @@ import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -392,7 +392,7 @@ public class TestLinearGeneric extends PdqTest {
 		Relation[] relations = new Relation[(int) (numberOfRelations + Math.pow(2.0, numberOfRelations)) + 1];
 		for (int index = 0; index < numberOfRelations; ++index)
 			relations[index] = Relation.create("R" + index, new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
-					new AccessMethod[] { AccessMethod.create(new Integer[0]) });
+					new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[0]) });
 		relations[numberOfRelations] = Relation.create("Accessible", new Attribute[] { this.a_s });
 
 		// Create a conjunctive query that joins all relations in the first three
@@ -413,7 +413,7 @@ public class TestLinearGeneric extends PdqTest {
 		int viewIndex = numberOfRelations + 1;
 		Dependency[] dependencies = new Dependency[(powerSet.size() - 1) * 2];
 		for (Set<Atom> set : powerSet) {
-			View view = new View("V" + powersetIndex++, new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[0]) });
+			View view = new View("V" + powersetIndex++, new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[0]) });
 			relations[viewIndex++] = view;
 			int index = 0;
 			Atom[] head = new Atom[set.size()];

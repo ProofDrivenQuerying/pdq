@@ -4,17 +4,17 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedAccessMethod;
 
 /**
  * @author Gabor
  *
  */
-public class AccessMethodAdapter extends XmlAdapter<AdaptedAccessMethod, AccessMethod> {
+public class AccessMethodAdapter extends XmlAdapter<AdaptedAccessMethod, AccessMethodDescriptor> {
 
 	@Override
-	public AccessMethod unmarshal(AdaptedAccessMethod v) throws Exception {
+	public AccessMethodDescriptor unmarshal(AdaptedAccessMethod v) throws Exception {
 		try {
 			return v.toAccessMethod();
 		} catch (Throwable t) {
@@ -24,7 +24,7 @@ public class AccessMethodAdapter extends XmlAdapter<AdaptedAccessMethod, AccessM
 	}
 
 	@Override
-	public AdaptedAccessMethod marshal(AccessMethod v) throws Exception {
+	public AdaptedAccessMethod marshal(AccessMethodDescriptor v) throws Exception {
 		try {
 			if (v==null)
 				return null;

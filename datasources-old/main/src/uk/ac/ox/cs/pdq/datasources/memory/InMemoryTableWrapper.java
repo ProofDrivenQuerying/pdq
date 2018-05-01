@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.datasources.utility.Utility;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 
@@ -57,7 +57,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	 * @param methods List<AccessMethod>
 	 * @param isEquality the is equality
 	 */
-	public InMemoryTableWrapper(String name, Attribute[] attributes, AccessMethod[] methods, boolean isEquality) {
+	public InMemoryTableWrapper(String name, Attribute[] attributes, AccessMethodDescriptor[] methods, boolean isEquality) {
 		super(name, attributes, methods, isEquality);
 	}
 
@@ -68,7 +68,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	 * @param attributes List<Attribute>
 	 * @param bm List<AccessMethod>
 	 */
-	public InMemoryTableWrapper(String name, Attribute[] attributes, AccessMethod[] methods) {
+	public InMemoryTableWrapper(String name, Attribute[] attributes, AccessMethodDescriptor[] methods) {
 		this(name, attributes, methods, false);
 	}
 
@@ -80,7 +80,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	 * @param isEquality the is equality
 	 */
 	public InMemoryTableWrapper(String name, Attribute[] attributes, boolean isEquality) {
-		this(name, attributes, new AccessMethod[]{}, isEquality);
+		this(name, attributes, new AccessMethodDescriptor[]{}, isEquality);
 	}
 
 	/**

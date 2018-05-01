@@ -20,7 +20,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -38,9 +38,9 @@ public class RelationalTermTest extends PdqTest {
 	public void testAccessCreation() {
 		Relation relation = Relation.create("R0", new Attribute[] {Attribute.create(Integer.class, "attr1")});
 		Relation relation1 = Relation.create("R1", new Attribute[] {Attribute.create(Integer.class, "attr2")});
-		RelationalTerm	child1 = AccessTerm.create(relation, AccessMethod.create("am", new Integer[] {0}));
-		RelationalTerm	child2 = AccessTerm.create(relation1, AccessMethod.create("am", new Integer[] {1}));
-		RelationalTerm	child3 = AccessTerm.create(relation, AccessMethod.create("am", new Integer[] {0}));
+		RelationalTerm	child1 = AccessTerm.create(relation, AccessMethodDescriptor.create("am", new Integer[] {0}));
+		RelationalTerm	child2 = AccessTerm.create(relation1, AccessMethodDescriptor.create("am", new Integer[] {1}));
+		RelationalTerm	child3 = AccessTerm.create(relation, AccessMethodDescriptor.create("am", new Integer[] {0}));
 		
 		// child1 and child3 should have the same reference because they're based on the same relation
 		if (child1 != child3) {
@@ -249,8 +249,8 @@ public class RelationalTermTest extends PdqTest {
 	}
 	
 	@Test public void test3() {
-		AccessTerm access1 = AccessTerm.create(this.R, AccessMethod.create("am", new Integer[] {0}));
-		AccessTerm access2 = AccessTerm.create(this.S, AccessMethod.create("am", new Integer[] {1}));
+		AccessTerm access1 = AccessTerm.create(this.R, AccessMethodDescriptor.create("am", new Integer[] {0}));
+		AccessTerm access2 = AccessTerm.create(this.S, AccessMethodDescriptor.create("am", new Integer[] {1}));
 		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
 		
 		// Output attributes are {a, b, c, d}
@@ -286,8 +286,8 @@ public class RelationalTermTest extends PdqTest {
 	
 	
 	@Test public void test4() {
-		AccessTerm access1 = AccessTerm.create(this.R, AccessMethod.create("am", new Integer[] {0}));
-		AccessTerm access2 = AccessTerm.create(this.S, AccessMethod.create("am", new Integer[] {1}));			
+		AccessTerm access1 = AccessTerm.create(this.R, AccessMethodDescriptor.create("am", new Integer[] {0}));
+		AccessTerm access2 = AccessTerm.create(this.S, AccessMethodDescriptor.create("am", new Integer[] {1}));			
 		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
 		
 		// Output attributes are {a, b, c, d}
@@ -323,8 +323,8 @@ public class RelationalTermTest extends PdqTest {
 	}
 	
 	@Test public void test5() {
-		AccessTerm access1 = AccessTerm.create(this.R, AccessMethod.create("am", new Integer[] {0}));
-		AccessTerm access2 = AccessTerm.create(this.S, AccessMethod.create("am", new Integer[] {1}));
+		AccessTerm access1 = AccessTerm.create(this.R, AccessMethodDescriptor.create("am", new Integer[] {0}));
+		AccessTerm access2 = AccessTerm.create(this.S, AccessMethodDescriptor.create("am", new Integer[] {1}));
 		SelectionTerm selectionTerm = SelectionTerm.create(ConstantEqualityCondition.create(0, TypedConstant.create(new Integer(1))), access1);
 		DependentJoinTerm plan1 = DependentJoinTerm.create(selectionTerm, access2);
 		
@@ -363,8 +363,8 @@ public class RelationalTermTest extends PdqTest {
 	@Test public void test6() {
 		Map<Integer, TypedConstant> inputConstants1 = new HashMap<>();
 		inputConstants1.put(0, TypedConstant.create(TypedConstant.create(new Integer(1))));
-		AccessTerm access1 = AccessTerm.create(this.R, AccessMethod.create("am", new Integer[] {0}));
-		AccessTerm access2 = AccessTerm.create(this.S, AccessMethod.create("am", new Integer[] {1}));
+		AccessTerm access1 = AccessTerm.create(this.R, AccessMethodDescriptor.create("am", new Integer[] {0}));
+		AccessTerm access2 = AccessTerm.create(this.S, AccessMethodDescriptor.create("am", new Integer[] {1}));
 		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
 		
 		Assert.assertArrayEquals(new Attribute[] {a,b,c,b,c}, plan1.getOutputAttributes());
@@ -397,8 +397,8 @@ public class RelationalTermTest extends PdqTest {
 	}
 	
 	@Test public void test7() {
-		AccessTerm access1 = AccessTerm.create(this.R, AccessMethod.create("am", new Integer[] {0}));
-		AccessTerm access2 = AccessTerm.create(this.S, AccessMethod.create("am", new Integer[] {1}));			
+		AccessTerm access1 = AccessTerm.create(this.R, AccessMethodDescriptor.create("am", new Integer[] {0}));
+		AccessTerm access2 = AccessTerm.create(this.S, AccessMethodDescriptor.create("am", new Integer[] {1}));			
 		JoinTerm plan1 = JoinTerm.create(access1, access2);
 	
 		// Output attributes are {a,b,c,b,c}
@@ -413,8 +413,8 @@ public class RelationalTermTest extends PdqTest {
 	
 	@Test public void test8() {
 		
-		AccessMethod am1 = AccessMethod.create("am1", new Integer[] {0});
-		AccessMethod am2 = AccessMethod.create("am2", new Integer[] {1});
+		AccessMethodDescriptor am1 = AccessMethodDescriptor.create("am1", new Integer[] {0});
+		AccessMethodDescriptor am2 = AccessMethodDescriptor.create("am2", new Integer[] {1});
 		
 		Relation.create("R1", new Attribute[] {Attribute.create(Integer.class, "a"),
 				Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c")});

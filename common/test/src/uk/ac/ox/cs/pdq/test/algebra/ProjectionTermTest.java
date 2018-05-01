@@ -15,7 +15,7 @@ import org.mockito.Mockito;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
@@ -24,7 +24,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 public class ProjectionTermTest extends PdqTest {
 
 	// Dummy concrete class for testing.
-	public class ConcreteAccessMethod  extends AccessMethod {
+	public class ConcreteAccessMethod  extends AccessMethodDescriptor {
 		private static final long serialVersionUID = 1L;
 		
 		public ConcreteAccessMethod(Attribute[] attributes, Integer[] inputs, Relation relation, 
@@ -46,7 +46,7 @@ public class ProjectionTermTest extends PdqTest {
 	public void testProjectionTerm() {
 
 		ProjectionTerm target;
-		AccessMethod accessMethod;
+		AccessMethodDescriptor accessMethod;
 		Integer[] inputs;
 		
 		Relation relation = Mockito.mock(Relation.class);
@@ -115,7 +115,7 @@ public class ProjectionTermTest extends PdqTest {
 				Attribute.create(String.class, "attribute2")
 				};
 		Relation relation = Relation.create("relation", projections);
-		RelationalTerm child = AccessTerm.create(relation, AccessMethod.create("am", new Integer[] {0}));
+		RelationalTerm child = AccessTerm.create(relation, AccessMethodDescriptor.create("am", new Integer[] {0}));
 	
 		// Constructor tests invariant
 		ProjectionTerm pt = ProjectionTerm.create(projections, child);

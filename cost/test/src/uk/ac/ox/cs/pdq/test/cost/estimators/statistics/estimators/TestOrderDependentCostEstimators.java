@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TotalNumberOfOutputTuplesPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -34,10 +34,10 @@ import uk.ac.ox.cs.pdq.util.Utility;
  */
 
 public class TestOrderDependentCostEstimators {
-	protected AccessMethod method0 = AccessMethod.create(new Integer[]{});
-	protected AccessMethod method1 = AccessMethod.create(new Integer[]{0});
-	protected AccessMethod method2 = AccessMethod.create(new Integer[]{0,1});
-	protected AccessMethod method3 = AccessMethod.create(new Integer[]{1});
+	protected AccessMethodDescriptor method0 = AccessMethodDescriptor.create(new Integer[]{});
+	protected AccessMethodDescriptor method1 = AccessMethodDescriptor.create(new Integer[]{0});
+	protected AccessMethodDescriptor method2 = AccessMethodDescriptor.create(new Integer[]{0,1});
+	protected AccessMethodDescriptor method3 = AccessMethodDescriptor.create(new Integer[]{1});
 	
 	protected Attribute a = Attribute.create(String.class, "a");
 	protected Attribute b = Attribute.create(String.class, "b");
@@ -68,10 +68,10 @@ public class TestOrderDependentCostEstimators {
 	//We do not use constants to access relations
 	//Plans have no selections
 	@Test public void test1() {
-        this.R = Relation.create("R", new Attribute[]{a,b,c,InstanceID}, new AccessMethod[]{this.method0});
-        this.S = Relation.create("S", new Attribute[]{b,c,InstanceID}, new AccessMethod[]{this.method1});
-        this.T = Relation.create("T", new Attribute[]{a,d,e,InstanceID}, new AccessMethod[]{this.method0});
-        this.U = Relation.create("U", new Attribute[]{d,e,InstanceID}, new AccessMethod[]{this.method2});
+        this.R = Relation.create("R", new Attribute[]{a,b,c,InstanceID}, new AccessMethodDescriptor[]{this.method0});
+        this.S = Relation.create("S", new Attribute[]{b,c,InstanceID}, new AccessMethodDescriptor[]{this.method1});
+        this.T = Relation.create("T", new Attribute[]{a,d,e,InstanceID}, new AccessMethodDescriptor[]{this.method0});
+        this.U = Relation.create("U", new Attribute[]{d,e,InstanceID}, new AccessMethodDescriptor[]{this.method2});
         this.access = Relation.create("Accessible", new Attribute[]{i,InstanceID});
         AccessTerm access0 = AccessTerm.create(this.R, this.method0);
         AccessTerm access1 = AccessTerm.create(this.S, this.method1);
@@ -116,10 +116,10 @@ public class TestOrderDependentCostEstimators {
 	//We use constants to access relations
 	//Plans have no selections
 	@Test public void test2() {
-        this.R = Relation.create("R", new Attribute[]{a,b,c,InstanceID}, new AccessMethod[]{this.method0});
-        this.S = Relation.create("S", new Attribute[]{b,c,InstanceID}, new AccessMethod[]{this.method1});
-        this.T = Relation.create("T", new Attribute[]{a,d,e,InstanceID}, new AccessMethod[]{this.method0});
-        this.U = Relation.create("U", new Attribute[]{d,e,InstanceID}, new AccessMethod[]{this.method1});
+        this.R = Relation.create("R", new Attribute[]{a,b,c,InstanceID}, new AccessMethodDescriptor[]{this.method0});
+        this.S = Relation.create("S", new Attribute[]{b,c,InstanceID}, new AccessMethodDescriptor[]{this.method1});
+        this.T = Relation.create("T", new Attribute[]{a,d,e,InstanceID}, new AccessMethodDescriptor[]{this.method0});
+        this.U = Relation.create("U", new Attribute[]{d,e,InstanceID}, new AccessMethodDescriptor[]{this.method1});
         this.access = Relation.create("Accessible", new Attribute[]{i,InstanceID});
         AccessTerm access0 = AccessTerm.create(this.R, this.method0);
         AccessTerm access1 = AccessTerm.create(this.S, this.method1);
@@ -168,10 +168,10 @@ public class TestOrderDependentCostEstimators {
 	//We do not use constants to access relations
 	//Plans have selections
 	@Test public void test3() {
-        this.R = Relation.create("R", new Attribute[]{a,b,c,InstanceID}, new AccessMethod[]{this.method0});
-        this.S = Relation.create("S", new Attribute[]{b,c,InstanceID}, new AccessMethod[]{this.method0});
-        this.T = Relation.create("T", new Attribute[]{a,d,e,InstanceID}, new AccessMethod[]{this.method0});
-        this.U = Relation.create("U", new Attribute[]{d,e,InstanceID}, new AccessMethod[]{this.method0});
+        this.R = Relation.create("R", new Attribute[]{a,b,c,InstanceID}, new AccessMethodDescriptor[]{this.method0});
+        this.S = Relation.create("S", new Attribute[]{b,c,InstanceID}, new AccessMethodDescriptor[]{this.method0});
+        this.T = Relation.create("T", new Attribute[]{a,d,e,InstanceID}, new AccessMethodDescriptor[]{this.method0});
+        this.U = Relation.create("U", new Attribute[]{d,e,InstanceID}, new AccessMethodDescriptor[]{this.method0});
         this.access = Relation.create("Accessible", new Attribute[]{i,InstanceID});
         SelectionTerm access0 = SelectionTerm.create(ConstantEqualityCondition.create(2, TypedConstant.create("dummy1")), AccessTerm.create(this.R, this.method0));
         SelectionTerm access1 = SelectionTerm.create(ConstantEqualityCondition.create(1, TypedConstant.create("dummy2")), AccessTerm.create(this.S, this.method0));

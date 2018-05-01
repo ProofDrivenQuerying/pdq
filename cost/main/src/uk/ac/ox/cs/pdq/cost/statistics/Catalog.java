@@ -4,7 +4,7 @@ package uk.ac.ox.cs.pdq.cost.statistics;
 
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -61,7 +61,7 @@ public interface Catalog {
 	 * @param method the method
 	 * @return the estimated result size per invocation of the input access
 	 */
-	int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethod method);
+	int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethodDescriptor method);
 	
 	/**
 	 * Gets the erpsi.
@@ -71,7 +71,7 @@ public interface Catalog {
 	 * @param inputs the inputs
 	 * @return the estimated result size per invocation of the input access
 	 */
-	int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethod method, Map<Integer, TypedConstant> inputs);
+	int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethodDescriptor method, Map<Integer, TypedConstant> inputs);
 		
 	/**
 	 * Gets the cost.
@@ -80,7 +80,7 @@ public interface Catalog {
 	 * @param method the method
 	 * @return the estimated cost of the input access
 	 */
-	double getCost(Relation relation, AccessMethod method);
+	double getCost(Relation relation, AccessMethodDescriptor method);
 	
 	/**
 	 * Gets the cost.
@@ -90,7 +90,7 @@ public interface Catalog {
 	 * @param inputs the inputs
 	 * @return the estimated cost of the input access
 	 */
-	double getCost(Relation relation, AccessMethod method, Map<Integer, TypedConstant> inputs);
+	double getCost(Relation relation, AccessMethodDescriptor method, Map<Integer, TypedConstant> inputs);
 	
 	
 	/**

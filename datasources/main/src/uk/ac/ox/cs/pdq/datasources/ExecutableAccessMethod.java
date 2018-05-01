@@ -19,7 +19,7 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -36,7 +36,7 @@ import uk.ac.ox.cs.pdq.util.TupleType;
  * @author gabor
  *
  */
-public class AbstractAccessMethod extends AccessMethod {
+public class ExecutableAccessMethod extends AccessMethodDescriptor {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * A Constant DEFAULT_PREFIX for all automatically generated access methods
@@ -78,7 +78,7 @@ public class AbstractAccessMethod extends AccessMethod {
 	/** String representation of the object. */
 	protected String toString = null;
 
-	public AbstractAccessMethod(Attribute[] attributes, Integer[] inputs, Relation relation,
+	public ExecutableAccessMethod(Attribute[] attributes, Integer[] inputs, Relation relation,
 			Map<Attribute, Attribute> attributeMapping) {
 		super(inputs);
 		this.attributes = attributes;
@@ -88,7 +88,7 @@ public class AbstractAccessMethod extends AccessMethod {
 	}
 
 
-	public AbstractAccessMethod(String name, Attribute[] attributes, Integer[] inputs, Relation relation,
+	public ExecutableAccessMethod(String name, Attribute[] attributes, Integer[] inputs, Relation relation,
 			Map<Attribute, Attribute> attributeMapping) {
 		super(name, inputs);
 		this.attributes = attributes;
@@ -97,7 +97,7 @@ public class AbstractAccessMethod extends AccessMethod {
 		init();
 	}
 
-	public AbstractAccessMethod(Attribute[] attributes, Set<Attribute> inputAttributes, Relation relation,
+	public ExecutableAccessMethod(Attribute[] attributes, Set<Attribute> inputAttributes, Relation relation,
 			Map<Attribute, Attribute> attributeMapping) {
 		super(convertInputs(attributes, inputAttributes));
 		this.attributes = attributes;
@@ -106,7 +106,7 @@ public class AbstractAccessMethod extends AccessMethod {
 		init();
 	}
 
-	public AbstractAccessMethod(String name, Attribute[] attributes, Set<Attribute> inputAttributes, Relation relation,
+	public ExecutableAccessMethod(String name, Attribute[] attributes, Set<Attribute> inputAttributes, Relation relation,
 			Map<Attribute, Attribute> attributeMapping) {
 		super(name, convertInputs(attributes, inputAttributes));
 		this.attributes = attributes;

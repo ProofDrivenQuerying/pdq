@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.datasources.sql;
 
 import java.util.Properties;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 
@@ -54,7 +54,7 @@ public final class PostgresqlRelationWrapper extends SQLRelationWrapper {
 	 * @param attributes List<Attribute>
 	 * @param methods List<AccessMethod>
 	 */
-	public PostgresqlRelationWrapper(Properties properties, String name, Attribute[] attributes, AccessMethod[] methods) {
+	public PostgresqlRelationWrapper(Properties properties, String name, Attribute[] attributes, AccessMethodDescriptor[] methods) {
 		super(properties, name, attributes, methods);
 	}
 	

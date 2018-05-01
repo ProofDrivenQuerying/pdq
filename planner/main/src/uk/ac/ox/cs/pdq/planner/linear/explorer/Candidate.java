@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import com.google.common.collect.Lists;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -114,14 +114,14 @@ public class Candidate implements Cloneable{
 	public Atom getInferredAccessibleFact() {
 		Atom accessed = (Atom) Utility.applySubstitution(this.rule.getGuard(),this.match.getMapping());
 		Relation relation = this.rule.getBaseRelation();
-		return Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality()), accessed.getTerms());
+		return Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethodDescriptor[]{}, relation.isEquality()), accessed.getTerms());
 	}
 
 	public Relation getRelation() {
 		return this.rule.getBaseRelation();
 	}
 
-	public AccessMethod getAccessMethod() {
+	public AccessMethodDescriptor getAccessMethod() {
 		return this.rule.getAccessMethod();
 	}
 

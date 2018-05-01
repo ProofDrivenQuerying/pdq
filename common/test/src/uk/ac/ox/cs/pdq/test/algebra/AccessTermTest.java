@@ -14,7 +14,7 @@ import org.mockito.Mockito;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 public class AccessTermTest extends PdqTest {
 
 	// Dummy concrete class for testing.
-	public class ConcreteAccessMethod  extends AccessMethod {
+	public class ConcreteAccessMethod  extends AccessMethodDescriptor {
 		private static final long serialVersionUID = 1L;
 		
 		public ConcreteAccessMethod(Attribute[] attributes, Integer[] inputs, Relation relation, 
@@ -41,7 +41,7 @@ public class AccessTermTest extends PdqTest {
 	@Test
 	public void testAccessTerm() {
 		
-		AccessMethod accessMethod;
+		AccessMethodDescriptor accessMethod;
 		AccessTerm target;
 		Integer[] inputs;
 		Map<Attribute, TypedConstant> inputConstants;
@@ -122,7 +122,7 @@ public class AccessTermTest extends PdqTest {
 	@Test
 	public void testGetInputAttributes() {
 		
-		AccessMethod accessMethod;
+		AccessMethodDescriptor accessMethod;
 		AccessTerm target;
 		Integer[] inputs;
 		Set<Attribute> inputAttributes;
@@ -256,7 +256,7 @@ public class AccessTermTest extends PdqTest {
 		attributeMapping.put(Attribute.create(String.class, "W"), Attribute.create(String.class, "c"));
 
 		Integer[] inputs = new Integer[0];
-		AccessMethod accessMethod= new ConcreteAccessMethod(amAttributes, inputs, relation, attributeMapping);
+		AccessMethodDescriptor accessMethod= new ConcreteAccessMethod(amAttributes, inputs, relation, attributeMapping);
 		
 		AccessTerm target = AccessTerm.create(relation, accessMethod);
 
@@ -280,7 +280,7 @@ public class AccessTermTest extends PdqTest {
 		Attribute[] a = new Attribute[1];
 		a[0] = Attribute.create(String.class, "mark");
 		Relation r = Relation.create("mark", a);
-		AccessMethod am = AccessMethod.create("am", new Integer[] {0});
+		AccessMethodDescriptor am = AccessMethodDescriptor.create("am", new Integer[] {0});
 		AccessTerm at = AccessTerm.create(r, am);
 		
 		// Set returned from AccessTerm.getAccesses is empty
@@ -288,7 +288,7 @@ public class AccessTermTest extends PdqTest {
 		Assert.assertTrue(sat.size() == 1);
 	
 		// AccessMethod returned from AccessTerm.getAccessMethod is invariant
-		AccessMethod ams = at.getAccessMethod();
+		AccessMethodDescriptor ams = at.getAccessMethod();
 		Assert.assertNotNull(ams);
 
 		// array returned from AccessTerm.getChildren has zero length

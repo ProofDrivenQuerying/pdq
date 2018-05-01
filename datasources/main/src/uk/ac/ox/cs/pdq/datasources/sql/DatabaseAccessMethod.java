@@ -21,7 +21,7 @@ import com.google.common.base.Preconditions;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -38,7 +38,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * @author Julien Leblay
  * 
  */
-public class DatabaseAccessMethod extends AbstractAccessMethod {
+public class DatabaseAccessMethod extends ExecutableAccessMethod {
 
 	private static final long serialVersionUID = 8271122449201089556L;
 

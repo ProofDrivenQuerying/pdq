@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
@@ -30,10 +30,10 @@ public class AccessMethodTest extends PdqTest {
 	 */
 	@Test
 	public void testCreation() {
-		AccessMethod am1 = AccessMethod.create("am", new Integer[] {0});
+		AccessMethodDescriptor am1 = AccessMethodDescriptor.create("am", new Integer[] {0});
 		
-		AccessMethod am2 = AccessMethod.create("am2", new Integer[] {0});
-		AccessMethod am3 = AccessMethod.create("am", new Integer[] {0});
+		AccessMethodDescriptor am2 = AccessMethodDescriptor.create("am2", new Integer[] {0});
+		AccessMethodDescriptor am3 = AccessMethodDescriptor.create("am", new Integer[] {0});
 		
 		// Test that 2 AccessMethods with the same name will be the same
 		if (am1 != am3) {

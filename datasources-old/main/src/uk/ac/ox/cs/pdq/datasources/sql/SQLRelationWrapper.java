@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -73,7 +73,7 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 	 * @param attributes List<Attribute>
 	 * @param methods List<AccessMethod>
 	 */
-	public SQLRelationWrapper(Properties properties, String name, Attribute[] attributes, AccessMethod[] methods) {
+	public SQLRelationWrapper(Properties properties, String name, Attribute[] attributes, AccessMethodDescriptor[] methods) {
 		super(name, attributes, methods);
 		this.properties.putAll(properties);
 	}

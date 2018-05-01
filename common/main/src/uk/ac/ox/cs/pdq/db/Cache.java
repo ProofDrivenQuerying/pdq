@@ -12,7 +12,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  *
  */
 public class Cache {
-	protected static ClassManager<AccessMethod> accessMethod = null;
+	protected static ClassManager<AccessMethodDescriptor> accessMethod = null;
 	protected static ClassManager<Attribute> attribute = null;
 	protected static ClassManager<Match> match = null;
 	protected static ClassManager<PrimaryKey> primaryKey = null;
@@ -39,8 +39,8 @@ public class Cache {
 	}
 
 	private static void startCaches() {
-		accessMethod = new ClassManager<AccessMethod>() {
-			protected boolean equal(AccessMethod object1, AccessMethod object2) {
+		accessMethod = new ClassManager<AccessMethodDescriptor>() {
+			protected boolean equal(AccessMethodDescriptor object1, AccessMethodDescriptor object2) {
 				if (!object1.name.equals(object2.name) || object1.inputs.length != object2.inputs.length)
 					return false;
 				for (int index = object1.inputs.length - 1; index >= 0; --index)
@@ -49,7 +49,7 @@ public class Cache {
 				return true;
 			}
 
-			protected int getHashCode(AccessMethod object) {
+			protected int getHashCode(AccessMethodDescriptor object) {
 				int hashCode = object.name.hashCode();
 				for (int index = object.inputs.length - 1; index >= 0; --index)
 					hashCode = hashCode * 7 + object.inputs[index].hashCode();

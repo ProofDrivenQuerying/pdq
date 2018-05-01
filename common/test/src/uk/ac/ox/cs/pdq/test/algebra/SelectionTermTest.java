@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 public class SelectionTermTest extends PdqTest {
 
 	// Dummy concrete class for testing.
-	public class ConcreteAccessMethod  extends AccessMethod {
+	public class ConcreteAccessMethod  extends AccessMethodDescriptor {
 		private static final long serialVersionUID = 1L;
 		
 		public ConcreteAccessMethod(Attribute[] attributes, Integer[] inputs, Relation relation, 
@@ -65,7 +65,7 @@ public class SelectionTermTest extends PdqTest {
 		/*
 		 * Free access.
 		 */
-		AccessMethod amFree = new ConcreteAccessMethod(amAttributes, new Integer[0], relation, attributeMapping);
+		AccessMethodDescriptor amFree = new ConcreteAccessMethod(amAttributes, new Integer[0], relation, attributeMapping);
 		
 		Condition condition = ConstantEqualityCondition.create(2, TypedConstant.create("BRAZIL"));
 		
@@ -90,7 +90,7 @@ public class SelectionTermTest extends PdqTest {
 	public void testCreation() {
 		
 		Relation relation = Relation.create("relation", new Attribute[] {Attribute.create(String.class, "attribute1")});
-		RelationalTerm child = AccessTerm.create(relation, AccessMethod.create("am", new Integer[] {0}));
+		RelationalTerm child = AccessTerm.create(relation, AccessMethodDescriptor.create("am", new Integer[] {0}));
 	    Condition selection = ConstantEqualityCondition.create(0, TypedConstant.create((String) "hello"));
 		// Constructor tests invariant
 		SelectionTerm st = SelectionTerm.create(selection, child);

@@ -34,9 +34,9 @@ public class Relation implements Serializable {
 	 * The relation's access methods, i.e. the positions of the inputAttributes
 	 * which require input values.
 	 */
-	protected Map<String, AccessMethod> accessMethodsMaps;
+	protected Map<String, AccessMethodDescriptor> accessMethodsMaps;
 
-	protected AccessMethod[] accessMethods;
+	protected AccessMethodDescriptor[] accessMethods;
 
 	/**
 	 * The relation's foreign keys.
@@ -96,29 +96,29 @@ public class Relation implements Serializable {
 	 * If no properties are defined, then this an an empty Properties instance. */
 	protected final Properties properties = new Properties();
 	
-	protected Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys) {
+	protected Relation(String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods, ForeignKey[] foreignKeys) {
 		this(name, attributes, accessMethods, foreignKeys, false);
 	}
 
-	protected Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods) {
+	protected Relation(String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods) {
 		this(name, attributes, accessMethods, false);
 	}
 
-	protected Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, boolean isEquality) {
+	protected Relation(String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods, boolean isEquality) {
 		this(name, attributes, accessMethods, new ForeignKey[]{}, isEquality);
 	}
 
 	protected Relation(String name, Attribute[] attributes, boolean isEquality) {
-		this(name, attributes, new AccessMethod[]{}, isEquality);
+		this(name, attributes, new AccessMethodDescriptor[]{}, isEquality);
 	}
 
 	protected Relation(String name, Attribute[] attributes) {
-		this(name, attributes, new AccessMethod[]{}, false);
+		this(name, attributes, new AccessMethodDescriptor[]{}, false);
 	}
-	protected Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality) {
+	protected Relation(String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality) {
 		this(name, attributes, accessMethods, foreignKeys, isEquality,null);
 	}
-	protected Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality, String[] indexedAttributes) {
+	protected Relation(String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality, String[] indexedAttributes) {
 		//super(name, attributes.length, isEquality);
 		this.name = name;
 		arity = attributes.length;
@@ -130,12 +130,12 @@ public class Relation implements Serializable {
 		this.attributePositions = new LinkedHashMap<>();
 		this.attributePositions.putAll(positions);
 		if (accessMethods==null) {
-			this.accessMethods = new AccessMethod[]{};
+			this.accessMethods = new AccessMethodDescriptor[]{};
 		} else {
 			this.accessMethods = accessMethods.clone();
 		}
 		this.accessMethodsMaps = new LinkedHashMap<>();
-		for(AccessMethod accessMethod:this.accessMethods) 
+		for(AccessMethodDescriptor accessMethod:this.accessMethods) 
 			this.accessMethodsMaps.put(accessMethod.getName(), accessMethod);
 		this.foreignKeys = foreignKeys.clone();
 		if (indexedAttributes!=null) {
@@ -172,11 +172,11 @@ public class Relation implements Serializable {
 		return null;
 	}
 
-	public AccessMethod[] getAccessMethods() {
+	public AccessMethodDescriptor[] getAccessMethods() {
 		return this.accessMethods.clone();
 	}
 	
-	public AccessMethod getAccessMethod(String acceessMethodName) {
+	public AccessMethodDescriptor getAccessMethod(String acceessMethodName) {
 		return this.accessMethodsMaps.get(acceessMethodName);
 	}
 
@@ -257,17 +257,17 @@ public class Relation implements Serializable {
 		return this.properties;
 	}
 	
-	public static Relation create(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys) {
+	public static Relation create(String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods, ForeignKey[] foreignKeys) {
 		return Cache.relation.retrieve(new Relation(name, attributes, accessMethods, foreignKeys){
 			private static final long serialVersionUID = -3703847952934804655L;});
 	}
 	
-	public static  Relation create(String name, Attribute[] attributes, AccessMethod[] accessMethods) {
+	public static  Relation create(String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods) {
 		return Cache.relation.retrieve(new Relation(name, attributes, accessMethods){
 			private static final long serialVersionUID = -8683688887610525202L;});
 	}
 	
-	public static  Relation create(String name, Attribute[] attributes, AccessMethod[] accessMethods, boolean isEquality) {
+	public static  Relation create(String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods, boolean isEquality) {
 		return Cache.relation.retrieve(new Relation(name, attributes, accessMethods,isEquality){
 			private static final long serialVersionUID = 6919596537308356684L;});
 	}
@@ -282,11 +282,11 @@ public class Relation implements Serializable {
 			private static final long serialVersionUID = -8215821247702132205L;});
 	}
 	
-	public static  Relation create (String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality) {
+	public static  Relation create (String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality) {
 		return Cache.relation.retrieve(new Relation(name, attributes, accessMethods, foreignKeys, isEquality){
 			private static final long serialVersionUID = -8215821247702132205L;});
 	}
-	public static  Relation create (String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality,String[] indexedAttributes) {
+	public static  Relation create (String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality,String[] indexedAttributes) {
 		return Cache.relation.retrieve(new Relation(name, attributes, accessMethods, foreignKeys, isEquality,indexedAttributes){
 			private static final long serialVersionUID = -8215821247702132205L;});
 	}

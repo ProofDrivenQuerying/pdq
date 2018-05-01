@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.datasources.sql;
 
 import java.util.Properties;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
@@ -53,7 +53,7 @@ public final class PostgresqlViewWrapper extends SQLViewWrapper {
 	 * @param definition LinearGuarded
 	 * @param b List<AccessMethod>
 	 */
-	public PostgresqlViewWrapper(Properties properties, LinearGuarded definition, AccessMethod[] b,Schema schema) {
+	public PostgresqlViewWrapper(Properties properties, LinearGuarded definition, AccessMethodDescriptor[] b,Schema schema) {
 		super(properties, definition, b,schema);
 	}
 

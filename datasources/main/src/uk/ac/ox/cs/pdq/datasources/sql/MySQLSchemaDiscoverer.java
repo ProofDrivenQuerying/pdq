@@ -23,7 +23,7 @@ import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.utility.Utility;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -89,7 +89,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 */
 	@Override
 	protected Relation getRelationInstance(Properties props, String relationName, Attribute[] attributes) {
-		Relation relation = Relation.create(relationName, attributes,new AccessMethod[] {new DatabaseAccessMethod(Relation.create(relationName, attributes), props)});
+		Relation relation = Relation.create(relationName, attributes,new AccessMethodDescriptor[] {new DatabaseAccessMethod(Relation.create(relationName, attributes), props)});
 		return relation;
 	}
 
@@ -109,7 +109,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		View view = new View(viewName, relationMap.get(viewName).getAttributes());
 		view.setViewToRelationDependency(viewToRelationDependency);
 		// re create the view now with the access method.
-		view = new View(viewName, relationMap.get(viewName).getAttributes(),new AccessMethod[] {new DatabaseAccessMethod(view, props)});
+		view = new View(viewName, relationMap.get(viewName).getAttributes(),new AccessMethodDescriptor[] {new DatabaseAccessMethod(view, props)});
 		view.setViewToRelationDependency(viewToRelationDependency);
 		return view;
 	}

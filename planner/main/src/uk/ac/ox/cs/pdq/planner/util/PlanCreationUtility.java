@@ -26,7 +26,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -73,7 +73,7 @@ public class PlanCreationUtility {
 	 * @param toProject 		Terms to project in the resulting plan
 	 * @return the left deep plan
 	 */
-	public static RelationalTerm createSingleAccessPlan(Relation relation, AccessMethod accessMethod, Collection<Atom> exposedFacts) {
+	public static RelationalTerm createSingleAccessPlan(Relation relation, AccessMethodDescriptor accessMethod, Collection<Atom> exposedFacts) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(accessMethod);
 		Preconditions.checkArgument(exposedFacts != null && exposedFacts.size() > 0);
@@ -137,7 +137,7 @@ public class PlanCreationUtility {
 		return false;
 	}
 
-	private static Map<Integer, TypedConstant> computeInputConstants(AccessMethod method, Term[] terms) {
+	private static Map<Integer, TypedConstant> computeInputConstants(AccessMethodDescriptor method, Term[] terms) {
 		Map<Integer, TypedConstant> ret = new HashMap<>();
 		for(Integer i: method.getInputs()) {
 			if (terms[i] instanceof TypedConstant)

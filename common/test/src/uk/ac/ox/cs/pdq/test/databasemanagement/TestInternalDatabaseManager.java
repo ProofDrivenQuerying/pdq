@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -247,9 +247,9 @@ public class TestInternalDatabaseManager extends PdqTest {
 	@Test
 	public void largeTableTestWithConstantsInQuery() throws DatabaseException {
 		InternalDatabaseManager manager = new InternalDatabaseManager();
-		Relation R = Relation.create("R", new Attribute[] { a_s, b_s, c_s }, new AccessMethod[] { this.method0, this.method2 });
-		Relation S = Relation.create("S", new Attribute[] { b_s, c_s }, new AccessMethod[] { this.method0, this.method1, this.method2 });
-		Relation T = Relation.create("T", new Attribute[] { b_s, c_s, d_s }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+		Relation R = Relation.create("R", new Attribute[] { a_s, b_s, c_s }, new AccessMethodDescriptor[] { this.method0, this.method2 });
+		Relation S = Relation.create("S", new Attribute[] { b_s, c_s }, new AccessMethodDescriptor[] { this.method0, this.method1, this.method2 });
+		Relation T = Relation.create("T", new Attribute[] { b_s, c_s, d_s }, new AccessMethodDescriptor[] { this.method0, this.method1, this.method2 });
 
 		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, S, T }));
 		List<Atom> facts = new ArrayList<>();

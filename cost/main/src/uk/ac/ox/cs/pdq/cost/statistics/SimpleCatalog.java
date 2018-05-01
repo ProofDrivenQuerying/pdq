@@ -20,7 +20,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -67,9 +67,9 @@ public class SimpleCatalog implements Catalog{
 	/** Cardinalities of the relations' attributes*/
 	private final Map<Pair<Relation,Attribute>,Integer> columnCardinalities;
 	/** The estimated result size per invocation of each access method*/
-	private final Map<Pair<Relation,AccessMethod>,Integer> numberOfOutputTuplesPerInput;
+	private final Map<Pair<Relation,AccessMethodDescriptor>,Integer> numberOfOutputTuplesPerInput;
 	/** The response time of each access method*/
-	private final Map<Pair<Relation,AccessMethod>,Double> costs;
+	private final Map<Pair<Relation,AccessMethodDescriptor>,Double> costs;
 	/** The selectivity of each attribute*/
 	private final Map<Pair<Relation,Attribute>,Double> columnSelectivity;
 	/** The frequency histogram of each attribute*/
@@ -210,7 +210,7 @@ public class SimpleCatalog implements Catalog{
 			String erspi = m.group(6);
 			if(schema.contains(relation)) {
 				Relation r = schema.getRelation(relation);
-				AccessMethod b = r.getAccessMethod(binding);
+				AccessMethodDescriptor b = r.getAccessMethod(binding);
 				if(b != null) {
 					this.numberOfOutputTuplesPerInput.put( Pair.of(r,b), Integer.parseInt(erspi));  
 					log.info("RELATION: " + relation + " BINDING: " + binding + " ERPSI: " + erspi);
@@ -233,7 +233,7 @@ public class SimpleCatalog implements Catalog{
 			String cost = m.group(6);
 			if(schema.contains(relation)) {
 				Relation r = schema.getRelation(relation);
-				AccessMethod b = r.getAccessMethod(binding);
+				AccessMethodDescriptor b = r.getAccessMethod(binding);
 				if(b != null) {
 					this.costs.put( Pair.of(r,b), Double.parseDouble(cost));  
 					log.info("RELATION: " + relation + " BINDING: " + binding + " COST: " + cost);
@@ -293,7 +293,7 @@ public class SimpleCatalog implements Catalog{
 	 * @param frequencyMaps the frequency maps
 	 * @param SQLServerHistograms the SQL server histograms
 	 */
-	private SimpleCatalog(Schema schema, Map<Relation,Integer> cardinalities, Map<Pair<Relation,AccessMethod>,Integer> erpsi, Map<Pair<Relation,AccessMethod>,Double> responseTimes,
+	private SimpleCatalog(Schema schema, Map<Relation,Integer> cardinalities, Map<Pair<Relation,AccessMethodDescriptor>,Integer> erpsi, Map<Pair<Relation,AccessMethodDescriptor>,Double> responseTimes,
 			Map<Pair<Relation,Attribute>,Double> columnSelectivity, Map<Pair<Relation,Attribute>,Integer> columnCardinalities, 
 			Map<Pair<Relation,Attribute>, SimpleFrequencyMap> frequencyMaps,
 			Map<Pair<Relation,Attribute>, SQLServerHistogram> SQLServerHistograms
@@ -417,7 +417,7 @@ public class SimpleCatalog implements Catalog{
 	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getERPSI(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod)
 	 */
 	@Override
-	public int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethod method) {
+	public int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethodDescriptor method) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(method);
 		Integer erspi = this.numberOfOutputTuplesPerInput.get(Pair.of(relation, method));
@@ -451,7 +451,7 @@ public class SimpleCatalog implements Catalog{
 	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getERPSI(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod, java.util.Map)
 	 */
 	@Override
-	public int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethod method, Map<Integer, TypedConstant> inputs) {
+	public int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethodDescriptor method, Map<Integer, TypedConstant> inputs) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(inputs);
 		if(inputs.size() == 1 && method.getInputs().length == 1) {
@@ -496,7 +496,7 @@ public class SimpleCatalog implements Catalog{
 	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getCost(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod)
 	 */
 	@Override
-	public double getCost(Relation relation, AccessMethod method) {
+	public double getCost(Relation relation, AccessMethodDescriptor method) {
 		Preconditions.checkNotNull(relation);		
 		Preconditions.checkNotNull(method);		
 		Double cost = this.costs.get(Pair.of(relation, method));
@@ -507,7 +507,7 @@ public class SimpleCatalog implements Catalog{
 	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getCost(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod, java.util.Map)
 	 */
 	@Override
-	public double getCost(Relation relation, AccessMethod method, Map<Integer, TypedConstant> inputs) {
+	public double getCost(Relation relation, AccessMethodDescriptor method, Map<Integer, TypedConstant> inputs) {
 		Preconditions.checkNotNull(relation);		
 		Preconditions.checkNotNull(method);		
 		double erpsi = -1;

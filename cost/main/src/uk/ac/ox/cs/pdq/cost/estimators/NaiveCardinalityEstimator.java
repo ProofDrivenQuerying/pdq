@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Relation;
 
 /**
@@ -259,7 +259,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	protected Double estimateOutputCardinality(AccessTerm o) {
-		AccessMethod binding = o.getAccessMethod();
+		AccessMethodDescriptor binding = o.getAccessMethod();
 		Relation relation = o.getRelation();
 		if (binding.getNumberOfInputs() == 0) 
 			return new Double(this.catalog.getCardinality(relation));

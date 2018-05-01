@@ -13,7 +13,7 @@ import com.google.common.collect.Lists;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -37,13 +37,13 @@ public class FastFactDominanceTest {
 	protected Attribute a3 = Attribute.create(String.class, "a3");
 	protected Attribute a4 = Attribute.create(String.class, "a4");
 	
-	protected Relation r1 = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R1", new Attribute[]{a1,a2,a3}, new AccessMethod[]{});
-	protected Relation r2 = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R2", new Attribute[]{a1,a2,a3,a4}, new AccessMethod[]{});
-	protected Relation r3 = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R3", new Attribute[]{a1,a2}, new AccessMethod[]{});
-	protected Relation r4 = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R4", new Attribute[]{a1}, new AccessMethod[]{});
-	protected Relation r5 = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R5", new Attribute[]{a1,a2,a3}, new AccessMethod[]{});
-	protected Relation r6 = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R6", new Attribute[]{a1,a2}, new AccessMethod[]{});
-	protected Relation r7 = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R7", new Attribute[]{a1}, new AccessMethod[]{});
+	protected Relation r1 = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R1", new Attribute[]{a1,a2,a3}, new AccessMethodDescriptor[]{});
+	protected Relation r2 = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R2", new Attribute[]{a1,a2,a3,a4}, new AccessMethodDescriptor[]{});
+	protected Relation r3 = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R3", new Attribute[]{a1,a2}, new AccessMethodDescriptor[]{});
+	protected Relation r4 = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R4", new Attribute[]{a1}, new AccessMethodDescriptor[]{});
+	protected Relation r5 = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R5", new Attribute[]{a1,a2,a3}, new AccessMethodDescriptor[]{});
+	protected Relation r6 = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R6", new Attribute[]{a1,a2}, new AccessMethodDescriptor[]{});
+	protected Relation r7 = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R7", new Attribute[]{a1}, new AccessMethodDescriptor[]{});
 
 	protected Atom p1 = Atom.create(r1, new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c3")});
 	protected Atom p2 = Atom.create(r2, new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c3"), UntypedConstant.create("c4")});

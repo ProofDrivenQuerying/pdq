@@ -9,7 +9,7 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
@@ -45,7 +45,7 @@ public class CartesianProductTermTest extends PdqTest {
 		Attribute[] a = new Attribute[1];
 		a[0] = Attribute.create(String.class, "mark");
 		Relation r = Relation.create("mark", a);
-		AccessMethod am = AccessMethod.create("am", new Integer[] {0});
+		AccessMethodDescriptor am = AccessMethodDescriptor.create("am", new Integer[] {0});
 		AccessTerm at1 = AccessTerm.create(r, am);
 		AccessTerm at2 = AccessTerm.create(r, am);
 			

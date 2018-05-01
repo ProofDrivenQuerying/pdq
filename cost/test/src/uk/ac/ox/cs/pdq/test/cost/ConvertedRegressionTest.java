@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -62,13 +62,13 @@ public class ConvertedRegressionTest extends PdqTest {
 		Attribute attr[] = new Attribute[] { Attribute.create(Integer.class, "ps_partkey"), Attribute.create(Integer.class, "ps_suppkey"),
 				Attribute.create(Integer.class, "ps_availqty"), Attribute.create(java.math.BigDecimal.class, "ps_supplycost"), Attribute.create(String.class, "ps_comment") };
 
-		AccessMethod mthds1[] = new AccessMethod[] { AccessMethod.create("m4", new Integer[] { 0 }), AccessMethod.create("m5", new Integer[] { 1 }),
-				AccessMethod.create("m6", new Integer[] { 0, 1 }) };
+		AccessMethodDescriptor mthds1[] = new AccessMethodDescriptor[] { AccessMethodDescriptor.create("m4", new Integer[] { 0 }), AccessMethodDescriptor.create("m5", new Integer[] { 1 }),
+				AccessMethodDescriptor.create("m6", new Integer[] { 0, 1 }) };
 		Relation partsupp = Relation.create("partsupp", attr, mthds1);
 		Attribute attr2[] = new Attribute[] { Attribute.create(Integer.class, "p_partkey"), Attribute.create(String.class, "p_name"), Attribute.create(String.class, "p_mfgr"),
 				Attribute.create(String.class, "p_brand"), Attribute.create(String.class, "p_type"), Attribute.create(Integer.class, "p_size"),
 				Attribute.create(String.class, "p_container"), Attribute.create(java.math.BigDecimal.class, "p_retailprice"), Attribute.create(String.class, "p_comment") };
-		AccessMethod mthds2[] = new AccessMethod[] { AccessMethod.create("m2", new Integer[] {}) };
+		AccessMethodDescriptor mthds2[] = new AccessMethodDescriptor[] { AccessMethodDescriptor.create("m2", new Integer[] {}) };
 		Relation part = Relation.create("part", attr2, mthds2);
 		TGD tgd = TGD.create(
 				new Atom[] {
@@ -129,27 +129,27 @@ public class ConvertedRegressionTest extends PdqTest {
 		Attribute attr[] = new Attribute[] { Attribute.create(Integer.class, "ps_partkey"), Attribute.create(Integer.class, "ps_suppkey"),
 				Attribute.create(Integer.class, "ps_availqty"), Attribute.create(java.math.BigDecimal.class, "ps_supplycost"), Attribute.create(String.class, "ps_comment") };
 
-		AccessMethod mthds1[] = new AccessMethod[] { AccessMethod.create("m4", new Integer[] { 0 }), AccessMethod.create("m5", new Integer[] { 1 }),
-				AccessMethod.create("m6", new Integer[] { 0, 1 }) };
+		AccessMethodDescriptor mthds1[] = new AccessMethodDescriptor[] { AccessMethodDescriptor.create("m4", new Integer[] { 0 }), AccessMethodDescriptor.create("m5", new Integer[] { 1 }),
+				AccessMethodDescriptor.create("m6", new Integer[] { 0, 1 }) };
 		Relation partsupp = Relation.create("partsupp", attr, mthds1);
 
 		Attribute attrRegion[] = new Attribute[] { Attribute.create(Integer.class, "r_regionkey"), Attribute.create(String.class, "r_name"),
 				Attribute.create(String.class, "r_comment") };
-		Relation region = Relation.create("region", attrRegion, new AccessMethod[] { method0 });
+		Relation region = Relation.create("region", attrRegion, new AccessMethodDescriptor[] { method0 });
 
 		Attribute attrNation[] = new Attribute[] { Attribute.create(Integer.class, "n_nationkey"), Attribute.create(String.class, "n_name"),
 				Attribute.create(Integer.class, "n_regionkey"), Attribute.create(String.class, "n_comment") };
-		Relation nation = Relation.create("region", attrNation, new AccessMethod[] { AccessMethod.create("m7", new Integer[] { 2 }) });
+		Relation nation = Relation.create("region", attrNation, new AccessMethodDescriptor[] { AccessMethodDescriptor.create("m7", new Integer[] { 2 }) });
 
 		Attribute attrSupplier[] = new Attribute[] { Attribute.create(Integer.class, "s_suppkey"), Attribute.create(String.class, "s_name"),
 				Attribute.create(String.class, "s_address"), Attribute.create(Integer.class, "s_nationkey"), Attribute.create(String.class, "s_phone"),
 				Attribute.create(String.class, "s_acctbal"), Attribute.create(String.class, "r_comment") };
-		Relation supplier = Relation.create("region", attrSupplier, new AccessMethod[] { AccessMethod.create("m3", new Integer[] { 3 }) });
+		Relation supplier = Relation.create("region", attrSupplier, new AccessMethodDescriptor[] { AccessMethodDescriptor.create("m3", new Integer[] { 3 }) });
 
 		Attribute attr2[] = new Attribute[] { Attribute.create(Integer.class, "p_partkey"), Attribute.create(String.class, "p_name"), Attribute.create(String.class, "p_mfgr"),
 				Attribute.create(String.class, "p_brand"), Attribute.create(String.class, "p_type"), Attribute.create(Integer.class, "p_size"),
 				Attribute.create(String.class, "p_container"), Attribute.create(java.math.BigDecimal.class, "p_retailprice"), Attribute.create(String.class, "p_comment") };
-		AccessMethod mthds2[] = new AccessMethod[] { AccessMethod.create("m2", new Integer[] {}) };
+		AccessMethodDescriptor mthds2[] = new AccessMethodDescriptor[] { AccessMethodDescriptor.create("m2", new Integer[] {}) };
 		Relation part = Relation.create("part", attr2, mthds2);
 		TGD tgd = TGD.create(
 				new Atom[] {

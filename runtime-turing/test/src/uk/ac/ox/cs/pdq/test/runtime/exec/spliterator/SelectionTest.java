@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantInequalityCondition;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
-import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -191,7 +191,7 @@ public class SelectionTest {
 		attributeMapping.put(Attribute.create(Integer.class, "N_REGIONKEY"), Attribute.create(Integer.class, "regionKey"));
 
 		Integer[] inputs = new Integer[0];
-		AbstractAccessMethod amFree = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, attributeMapping, TPCHelper.getProperties());
+		ExecutableAccessMethod amFree = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, attributeMapping, TPCHelper.getProperties());
 		
 		/*
 		 *  Plan: free access on relation NATION then select the rows where 
@@ -219,7 +219,7 @@ public class SelectionTest {
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
 
 		Integer[] inputs = new Integer[0];
-		AbstractAccessMethod amFree = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, 
+		ExecutableAccessMethod amFree = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, 
 				TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		/*
@@ -248,7 +248,7 @@ public class SelectionTest {
 		Set<Attribute> inputAttributes = new HashSet<Attribute>();
 		inputAttributes.add(Attribute.create(Integer.class, "C_NATIONKEY"));
 		
-		AbstractAccessMethod am4 = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputAttributes, relation, 
+		ExecutableAccessMethod am4 = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputAttributes, relation, 
 				TPCHelper.attrMap_customer, TPCHelper.getProperties());
 		
 		/*
@@ -294,7 +294,7 @@ public class SelectionTest {
 		Set<Attribute> inputAttributes = new HashSet<Attribute>();
 		inputAttributes.add(Attribute.create(Integer.class, "C_NATIONKEY"));
 		
-		AbstractAccessMethod am4 = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputAttributes, relation, 
+		ExecutableAccessMethod am4 = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputAttributes, relation, 
 				TPCHelper.attrMap_customer, TPCHelper.getProperties());
 		
 		/*

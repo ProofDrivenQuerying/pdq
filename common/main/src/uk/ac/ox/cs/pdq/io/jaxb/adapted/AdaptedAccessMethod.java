@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 
 /**
  * @author Gabor
@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
  */
 @XmlType(propOrder = { "type", "name", "inputs", "cost" })
 public class AdaptedAccessMethod implements Serializable {
-	private static Map<AccessMethod,String> costs = new HashMap<>();
+	private static Map<AccessMethodDescriptor,String> costs = new HashMap<>();
 	protected static final long serialVersionUID = -5821292665848480210L;
 	private String inputs = null;
 	private String name;
@@ -33,13 +33,13 @@ public class AdaptedAccessMethod implements Serializable {
 		this.setInputs(createCommaSeparatedString(inputs));
 	}
 
-	public AccessMethod toAccessMethod() {
+	public AccessMethodDescriptor toAccessMethod() {
 		try {
-			AccessMethod ret;
+			AccessMethodDescriptor ret;
 			if (getInputs() != null) {
-				ret = AccessMethod.create(getName(), parseIntArrayFromCommaSeparatedList(getInputs()));
+				ret = AccessMethodDescriptor.create(getName(), parseIntArrayFromCommaSeparatedList(getInputs()));
 			} else {
-				ret = AccessMethod.create(getName(), new Integer[] {});
+				ret = AccessMethodDescriptor.create(getName(), new Integer[] {});
 			}
 			
 			if (cost!=null)
@@ -50,7 +50,7 @@ public class AdaptedAccessMethod implements Serializable {
 			throw t;
 		}
 	}
-	public static Map<AccessMethod,String> getMapOfCosts() {
+	public static Map<AccessMethodDescriptor,String> getMapOfCosts() {
 		return costs;
 	}
 	

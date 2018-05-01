@@ -28,10 +28,10 @@ import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.algebra.TypeEqualityCondition;
-import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -585,9 +585,9 @@ public class SymmetricMemoryHashJoinTest {
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
 		Integer[] inputs = new Integer[0];
-		AbstractAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, 
+		ExecutableAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
-		AbstractAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputs, 
+		ExecutableAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputs, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
@@ -670,11 +670,11 @@ public class SymmetricMemoryHashJoinTest {
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
-		AbstractAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
+		ExecutableAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "R_REGIONKEY"));
-		AbstractAccessMethod am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
+		ExecutableAccessMethod am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
@@ -735,10 +735,10 @@ public class SymmetricMemoryHashJoinTest {
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_NATIONKEY"));
-		AbstractAccessMethod am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
+		ExecutableAccessMethod am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
-		AbstractAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
+		ExecutableAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
@@ -803,11 +803,11 @@ public class SymmetricMemoryHashJoinTest {
 		Set<Attribute> inputAttributes;
 
 		inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_NATIONKEY"));
-		AbstractAccessMethod am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
+		ExecutableAccessMethod am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "R_REGIONKEY"));
-		AbstractAccessMethod am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
+		ExecutableAccessMethod am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
@@ -875,10 +875,10 @@ public class SymmetricMemoryHashJoinTest {
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
-		AbstractAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
+		ExecutableAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
-		AbstractAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
+		ExecutableAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
@@ -917,10 +917,10 @@ public class SymmetricMemoryHashJoinTest {
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
-		AbstractAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
+		ExecutableAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
-		AbstractAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
+		ExecutableAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
@@ -963,17 +963,17 @@ public class SymmetricMemoryHashJoinTest {
 		Relation relationSupplier = Mockito.mock(Relation.class);
 		when(relationSupplier.getAttributes()).thenReturn(TPCHelper.attrs_supplier.clone());
 
-		AbstractAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
+		ExecutableAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "R_REGIONKEY"));		
-		AbstractAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
+		ExecutableAccessMethod amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
-		AbstractAccessMethod amFreeCustomer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, new Integer[0], 
+		ExecutableAccessMethod amFreeCustomer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, new Integer[0], 
 				relationCustomer, TPCHelper.attrMap_customer, TPCHelper.getProperties());
 
-		AbstractAccessMethod amFreeSupplier = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S, new Integer[0], 
+		ExecutableAccessMethod amFreeSupplier = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S, new Integer[0], 
 				relationSupplier, TPCHelper.attrMap_supplier, TPCHelper.getProperties());
 
 
@@ -1005,11 +1005,11 @@ public class SymmetricMemoryHashJoinTest {
 	public void integrationTestSql8() {
 
 		Relation relationCustomer = Relation.create("customer", TPCHelper.attrs_customer);
-		AbstractAccessMethod amFreeCustomer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, 
+		ExecutableAccessMethod amFreeCustomer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, 
 				new Integer[0], relationCustomer, TPCHelper.attrMap_customer, TPCHelper.getProperties());
 
 		Relation relationSupplier = Relation.create("supplier", TPCHelper.attrs_supplier);
-		AbstractAccessMethod amFreeSupplier = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S, 
+		ExecutableAccessMethod amFreeSupplier = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S, 
 				new Integer[0], relationSupplier, TPCHelper.attrMap_supplier, TPCHelper.getProperties());
 
 		Condition condition = ConstantEqualityCondition.create(4, TypedConstant.create(5));

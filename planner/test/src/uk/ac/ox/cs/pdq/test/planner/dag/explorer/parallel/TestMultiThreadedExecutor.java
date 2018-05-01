@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -429,10 +429,10 @@ public class TestMultiThreadedExecutor extends PdqTest {
 		for (int i = 0; i < relations.length - 1; i++) {
 			if (i % 2 == 0)
 				relations[i] = Relation.create("R" + i, new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
-						new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+						new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
 			else
 				relations[i] = Relation.create("R" + i, new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
-						new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
+						new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 2, 3 }) });
 		}
 		relations[relations.length - 1] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query

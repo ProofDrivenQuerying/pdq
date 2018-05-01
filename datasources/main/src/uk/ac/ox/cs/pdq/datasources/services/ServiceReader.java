@@ -31,7 +31,7 @@ import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.rest.InputMethod;
 import uk.ac.ox.cs.pdq.datasources.services.rest.OutputMethod;
 import uk.ac.ox.cs.pdq.datasources.services.rest.PathOutputMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -233,7 +233,7 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 			List<Integer> inputs = new ArrayList<>();
 			if (positions != null && !positions.trim().isEmpty()) 
 				inputs.addAll(toIntList(positions));
-			AccessMethod b = null;
+			AccessMethodDescriptor b = null;
 //			String n = this.getValue(atts, QNames.NAME);
 //			if (n != null && !n.trim().isEmpty()) 
 //				b = AccessMethod.create(n, inputs.toArray(new Integer[inputs.size()]));

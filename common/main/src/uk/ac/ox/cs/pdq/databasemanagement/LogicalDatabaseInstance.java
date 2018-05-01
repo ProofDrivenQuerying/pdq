@@ -10,7 +10,7 @@ import java.util.Map;
 import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateTable;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -48,7 +48,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	protected static final String FACT_ID_ATTRIBUTE_NAME = "FactId";
 	protected static final Attribute FACT_ID_ATTRIBUTE = Attribute.create(Integer.class, FACT_ID_ATTRIBUTE_NAME);
 	protected static final Relation factIdInstanceIdMappingTable = Relation.create("InstanceIdMapping",
-			new Attribute[] { FACT_ID_ATTRIBUTE, Attribute.create(Integer.class, "DatabaseInstanceID") }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+			new Attribute[] { FACT_ID_ATTRIBUTE, Attribute.create(Integer.class, "DatabaseInstanceID") }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
 
 	protected MultiInstanceFactCache multiCache;
 	private ExternalDatabaseManager edm;

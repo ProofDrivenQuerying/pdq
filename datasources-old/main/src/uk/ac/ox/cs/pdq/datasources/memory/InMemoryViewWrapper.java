@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.datasources.utility.Utility;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.View;
 
@@ -43,7 +43,7 @@ public class InMemoryViewWrapper extends View implements Pipelineable, RelationA
 	 * @param attributes List<Attribute>
 	 * @param methods List<AccessMethod>
 	 */
-	public InMemoryViewWrapper(String name, Attribute[] attributes, AccessMethod[] methods) {
+	public InMemoryViewWrapper(String name, Attribute[] attributes, AccessMethodDescriptor[] methods) {
 		super(name, attributes, methods);
 	}
 	

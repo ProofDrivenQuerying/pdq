@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -63,7 +63,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		this.InferredAccessibleR = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R2", new Attribute[] { at21, at22 }, new AccessMethod[] {});
+		this.InferredAccessibleR = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R2", new Attribute[] { at21, at22 }, new AccessMethodDescriptor[] {});
 		Schema schema = new Schema(new Relation[] { this.rel2, this.S_s });
 		this.accessibleSchema = new AccessibleSchema(schema);
 	}

@@ -28,7 +28,7 @@ import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.algebra.TypeEqualityCondition;
-import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -445,9 +445,9 @@ public class NestedLoopJoinTest {
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
 		Integer[] inputs = new Integer[0];
-		AbstractAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, 
+		ExecutableAccessMethod amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
-		AbstractAccessMethod  amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputs, 
+		ExecutableAccessMethod  amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputs, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
@@ -530,11 +530,11 @@ public class NestedLoopJoinTest {
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
-		AbstractAccessMethod  amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
+		ExecutableAccessMethod  amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "R_REGIONKEY"));
-		AbstractAccessMethod  am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
+		ExecutableAccessMethod  am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
@@ -595,10 +595,10 @@ public class NestedLoopJoinTest {
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_NATIONKEY"));
-		AbstractAccessMethod  am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
+		ExecutableAccessMethod  am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
-		AbstractAccessMethod  amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
+		ExecutableAccessMethod  amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
@@ -663,11 +663,11 @@ public class NestedLoopJoinTest {
 		Set<Attribute> inputAttributes;
 
 		inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_NATIONKEY"));
-		AbstractAccessMethod  am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
+		ExecutableAccessMethod  am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "R_REGIONKEY"));
-		AbstractAccessMethod  am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
+		ExecutableAccessMethod  am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes, 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
@@ -735,10 +735,10 @@ public class NestedLoopJoinTest {
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
-		AbstractAccessMethod  amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
+		ExecutableAccessMethod  amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
-		AbstractAccessMethod  amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
+		ExecutableAccessMethod  amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.
@@ -778,10 +778,10 @@ public class NestedLoopJoinTest {
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
-		AbstractAccessMethod  amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
+		ExecutableAccessMethod  amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0], 
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
-		AbstractAccessMethod  amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
+		ExecutableAccessMethod  amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0], 
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		// Construct the target plan.

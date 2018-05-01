@@ -13,18 +13,18 @@ import uk.ac.ox.cs.pdq.datasources.sql.SQLRelationWrapper;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 
 public class PostgresqlRelationWrapperTest {
 
-	AccessMethod amFree= AccessMethod.create("free_access", new Integer[] {});
-	AccessMethod am0 = AccessMethod.create("access_0", new Integer[] {0});
-	AccessMethod am1 = AccessMethod.create("access_1", new Integer[] {1});
-	AccessMethod am4 = AccessMethod.create("access_4", new Integer[] {4});
-	AccessMethod am5 = AccessMethod.create("access_5", new Integer[] {5});
+	AccessMethodDescriptor amFree= AccessMethodDescriptor.create("free_access", new Integer[] {});
+	AccessMethodDescriptor am0 = AccessMethodDescriptor.create("access_0", new Integer[] {0});
+	AccessMethodDescriptor am1 = AccessMethodDescriptor.create("access_1", new Integer[] {1});
+	AccessMethodDescriptor am4 = AccessMethodDescriptor.create("access_4", new Integer[] {4});
+	AccessMethodDescriptor am5 = AccessMethodDescriptor.create("access_5", new Integer[] {5});
 
-	AccessMethod am015 = AccessMethod.create("access_015", new Integer[] {015});
+	AccessMethodDescriptor am015 = AccessMethodDescriptor.create("access_015", new Integer[] {015});
 
 	TupleType ttInteger = TupleType.DefaultFactory.create(Integer.class);
 	TupleType ttFloat = TupleType.DefaultFactory.create(Float.class);
@@ -87,7 +87,7 @@ public class PostgresqlRelationWrapperTest {
 		
 		
 		SQLRelationWrapper target = new PostgresqlRelationWrapper(this.getProperties(), "NATION", 
-				attributes_N, new AccessMethod[] {amFree});
+				attributes_N, new AccessMethodDescriptor[] {amFree});
 		
 		Assert.assertNotNull(target);
 		
@@ -103,7 +103,7 @@ public class PostgresqlRelationWrapperTest {
 	public void testAccess() {
 		
 		SQLRelationWrapper target = new PostgresqlRelationWrapper(this.getProperties(), "NATION", 
-				attributes_N, new AccessMethod[] {amFree});
+				attributes_N, new AccessMethodDescriptor[] {amFree});
 		
 		Table result = target.access(); 
 		
@@ -118,7 +118,7 @@ public class PostgresqlRelationWrapperTest {
 		 * Test on the NATION relation.
 		 */
 		SQLRelationWrapper target = new PostgresqlRelationWrapper(this.getProperties(), "NATION", 
-				attributes_N, new AccessMethod[] {am1});
+				attributes_N, new AccessMethodDescriptor[] {am1});
 		
 		Attribute[] inputAttributes = new Attribute[] { Attribute.create(String.class, "N_NAME") };
 		
@@ -150,7 +150,7 @@ public class PostgresqlRelationWrapperTest {
 		 * Test on the SUPPLIER relation.
 		 */
 		target = new PostgresqlRelationWrapper(this.getProperties(), "SUPPLIER", 
-				attributes_S, new AccessMethod[] {am5});
+				attributes_S, new AccessMethodDescriptor[] {am5});
 		
 		inputAttributes = new Attribute[] { Attribute.create(String.class, "S_SUPPKEY") };
 		
@@ -169,7 +169,7 @@ public class PostgresqlRelationWrapperTest {
 		 * Test on the PART relation.
 		 */
 		target = new PostgresqlRelationWrapper(this.getProperties(), "PART", 
-				attributes_P, new AccessMethod[] {am5});
+				attributes_P, new AccessMethodDescriptor[] {am5});
 		
 		inputAttributes = new Attribute[] { Attribute.create(String.class, "P_SIZE") };
 		
@@ -189,7 +189,7 @@ public class PostgresqlRelationWrapperTest {
 		 * Test on the CUSTOMER relation.
 		 */
 		target = new PostgresqlRelationWrapper(this.getProperties(), "CUSTOMER", 
-				attributes_C, new AccessMethod[] {am015});
+				attributes_C, new AccessMethodDescriptor[] {am015});
 		
 		inputAttributes = new Attribute[] { Attribute.create(Integer.class, "C_CUSTKEY"), 
 				Attribute.create(String.class, "C_NAME"), Attribute.create(Float.class, "C_ACCTBAL") };

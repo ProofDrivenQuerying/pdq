@@ -17,7 +17,7 @@ import org.mockito.Mockito;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.datasources.AbstractAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
@@ -274,7 +274,7 @@ public class AccessTest {
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
 
 		Integer[] inputs = new Integer[0];
-		AbstractAccessMethod amFree = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, 
+		ExecutableAccessMethod amFree = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, 
 				TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		/*
@@ -301,7 +301,7 @@ public class AccessTest {
 
 		// Specify input attributes by passing an array of indices. 
 		Integer[] inputs = new Integer[] {2};
-		AbstractAccessMethod am2 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, 
+		ExecutableAccessMethod am2 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation, 
 				TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		/*
@@ -334,7 +334,7 @@ public class AccessTest {
 
 		// Specify input attributes by passing a set of attributes. 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_REGIONKEY"));
-		AbstractAccessMethod am2 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
+		ExecutableAccessMethod am2 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, 
 				relation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		/*
@@ -365,7 +365,7 @@ public class AccessTest {
 
 		// Specify input attributes by passing a set of attributes. 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_REGIONKEY"));
-		AbstractAccessMethod am2 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, relation, 
+		ExecutableAccessMethod am2 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, relation, 
 				TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		/*
@@ -431,7 +431,7 @@ public class AccessTest {
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(String.class, "N_NAME"), 
 				Attribute.create(Integer.class, "N_REGIONKEY"));
 
-		AbstractAccessMethod am12 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, relation, 
+		ExecutableAccessMethod am12 = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes, relation, 
 				TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		/*
@@ -482,7 +482,7 @@ public class AccessTest {
 		// Specify input attributes by passing a set of attributes. 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "L_SUPPKEY"));
 
-		AbstractAccessMethod am2 = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
+		ExecutableAccessMethod am2 = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
 				inputAttributes, relation, TPCHelper.attrMap_lineItem, TPCHelper.getProperties());
 
 		/*
@@ -514,7 +514,7 @@ public class AccessTest {
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "L_SUPPKEY"), 
 				Attribute.create(Integer.class, "L_QUANTITY"));
 
-		AbstractAccessMethod am23 = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
+		ExecutableAccessMethod am23 = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
 				inputAttributes, relation, TPCHelper.attrMap_lineItem, TPCHelper.getProperties());
 
 		/*
@@ -557,7 +557,7 @@ public class AccessTest {
 		// Specify input attributes by passing a set of attributes. 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "L_QUANTITY"));
 
-		AbstractAccessMethod am3 = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
+		ExecutableAccessMethod am3 = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
 				inputAttributes, TPCHelper.relationLineItem, TPCHelper.attrMap_lineItem, TPCHelper.getProperties());
 
 		/*

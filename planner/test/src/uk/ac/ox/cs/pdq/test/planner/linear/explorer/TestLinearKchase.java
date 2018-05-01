@@ -26,7 +26,7 @@ import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -154,10 +154,10 @@ public class TestLinearKchase extends PdqTest {
 		when(this.catalog.getCardinality(ts.getSchema().getRelations()[1])).thenReturn(10000);
 		when(this.catalog.getCardinality(ts.getSchema().getRelations()[2])).thenReturn(100);
 		when(this.catalog.getCardinality(ts.getSchema().getRelations()[3])).thenReturn(10000);
-		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(ts.getSchema().getRelations()[0], AccessMethod.create(new Integer[] {}))).thenReturn(10);
-		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(ts.getSchema().getRelations()[1], AccessMethod.create(new Integer[] { 0 }))).thenReturn(100);
-		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(ts.getSchema().getRelations()[2], AccessMethod.create(new Integer[] {}))).thenReturn(10);
-		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(ts.getSchema().getRelations()[3], AccessMethod.create(new Integer[] { 0 }))).thenReturn(100);
+		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(ts.getSchema().getRelations()[0], AccessMethodDescriptor.create(new Integer[] {}))).thenReturn(10);
+		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(ts.getSchema().getRelations()[1], AccessMethodDescriptor.create(new Integer[] { 0 }))).thenReturn(100);
+		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(ts.getSchema().getRelations()[2], AccessMethodDescriptor.create(new Integer[] {}))).thenReturn(10);
+		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(ts.getSchema().getRelations()[3], AccessMethodDescriptor.create(new Integer[] { 0 }))).thenReturn(100);
 
 		CardinalityEstimator card = new NaiveCardinalityEstimator(this.catalog);
 		// TextBookCostEstimator costEstimator = null;

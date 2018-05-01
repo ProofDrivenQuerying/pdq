@@ -12,7 +12,7 @@ import org.mockito.MockitoAnnotations;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -45,10 +45,10 @@ public class PdqTest {
 	protected Variable w = Variable.create("w");
 
 	/* example access methods */
-	protected AccessMethod method0 = AccessMethod.create(new Integer[] {});
-	protected AccessMethod method1 = AccessMethod.create(new Integer[] { 0 });
-	protected AccessMethod method2 = AccessMethod.create(new Integer[] { 0, 1 });
-	protected AccessMethod method3 = AccessMethod.create(new Integer[] { 1 });
+	protected AccessMethodDescriptor method0 = AccessMethodDescriptor.create(new Integer[] {});
+	protected AccessMethodDescriptor method1 = AccessMethodDescriptor.create(new Integer[] { 0 });
+	protected AccessMethodDescriptor method2 = AccessMethodDescriptor.create(new Integer[] { 0, 1 });
+	protected AccessMethodDescriptor method3 = AccessMethodDescriptor.create(new Integer[] { 1 });
 
 	/* example attributes */
 	protected Attribute a = Attribute.create(Integer.class, "a");
@@ -74,23 +74,23 @@ public class PdqTest {
 	protected Attribute at32 = Attribute.create(String.class, "at32");
 
 	/* example relations */
-	protected Relation R = Relation.create("R", new Attribute[] { a, b, c }, new AccessMethod[] { this.method0, this.method2 });
-	protected Relation S = Relation.create("S", new Attribute[] { b, c }, new AccessMethod[] { this.method0, this.method1, this.method2 });
-	protected Relation T = Relation.create("T", new Attribute[] { b, c, d }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+	protected Relation R = Relation.create("R", new Attribute[] { a, b, c }, new AccessMethodDescriptor[] { this.method0, this.method2 });
+	protected Relation S = Relation.create("S", new Attribute[] { b, c }, new AccessMethodDescriptor[] { this.method0, this.method1, this.method2 });
+	protected Relation T = Relation.create("T", new Attribute[] { b, c, d }, new AccessMethodDescriptor[] { this.method0, this.method1, this.method2 });
 	/* same as R,S,T relations but with instanceID */
-	protected Relation Ri = Relation.create("R", new Attribute[] { a, b, c }, new AccessMethod[] { this.method0, this.method2 });
-	protected Relation Si = Relation.create("S", new Attribute[] { b, c }, new AccessMethod[] { this.method0, this.method1, this.method2 });
-	protected Relation Ti = Relation.create("T", new Attribute[] { b, c, d }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+	protected Relation Ri = Relation.create("R", new Attribute[] { a, b, c }, new AccessMethodDescriptor[] { this.method0, this.method2 });
+	protected Relation Si = Relation.create("S", new Attribute[] { b, c }, new AccessMethodDescriptor[] { this.method0, this.method1, this.method2 });
+	protected Relation Ti = Relation.create("T", new Attribute[] { b, c, d }, new AccessMethodDescriptor[] { this.method0, this.method1, this.method2 });
 
 	/* same as the Ri,Si,Ri tables but with string attribute types. */
-	protected Relation R_s = Relation.create("R", new Attribute[] { a_s, b_s, c_s }, new AccessMethod[] { this.method0, this.method2 });
-	protected Relation S_s = Relation.create("S", new Attribute[] { b_s, c_s }, new AccessMethod[] { this.method0, this.method1, this.method2 });
-	protected Relation T_s = Relation.create("T", new Attribute[] { b_s, c_s, d_s }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+	protected Relation R_s = Relation.create("R", new Attribute[] { a_s, b_s, c_s }, new AccessMethodDescriptor[] { this.method0, this.method2 });
+	protected Relation S_s = Relation.create("S", new Attribute[] { b_s, c_s }, new AccessMethodDescriptor[] { this.method0, this.method1, this.method2 });
+	protected Relation T_s = Relation.create("T", new Attribute[] { b_s, c_s, d_s }, new AccessMethodDescriptor[] { this.method0, this.method1, this.method2 });
 
 	protected Relation access = Relation.create("Accessible", new Attribute[] { i });
 
 	protected Relation rel1 = Relation.create("R1", new Attribute[] { at11, at12, at13 });
-	protected Relation rel2 = Relation.create("R2", new Attribute[] { at21, at22 }, new AccessMethod[] { this.method0, this.method2 });
+	protected Relation rel2 = Relation.create("R2", new Attribute[] { at21, at22 }, new AccessMethodDescriptor[] { this.method0, this.method2 });
 	protected Relation rel3 = Relation.create("R3", new Attribute[] { at31, at32 });
 
 	/* example atoms */
@@ -158,9 +158,9 @@ public class PdqTest {
 	public TestScenario getScenario1() {
 		// Create the relations
 		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] { 1 }) });
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 0 }) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 1 }) });
 		relations[3] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query
 		Atom[] atoms = new Atom[3];
@@ -213,9 +213,9 @@ public class PdqTest {
 	public TestScenario getScenario2() {
 		// Create the relations
 		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] { 1 }) });
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 0 }) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 0 }) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 1 }) });
 		relations[3] = Relation.create("Accessible", new Attribute[] { this.a_s });
 
 		// Create query
@@ -267,10 +267,10 @@ public class PdqTest {
 	public TestScenario getScenario3() {
 		// Create the relations
 		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
 		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s, this.c_s },
-				new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }), AccessMethod.create(new Integer[] { 2 }) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethod[] { AccessMethod.create(new Integer[] { 1 }) });
+				new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 0 }), AccessMethodDescriptor.create(new Integer[] { 2 }) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 1 }) });
 		relations[3] = Relation.create("Accessible", new Attribute[] { this.a_s });
 
 		// Create query
@@ -305,13 +305,13 @@ public class PdqTest {
 		// Create the relations
 		Relation[] relations = new Relation[5];
 		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
-				new AccessMethod[] { AccessMethod.create(new Integer[] {}), AccessMethod.create(new Integer[] { 0 }) });
+				new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}), AccessMethodDescriptor.create(new Integer[] { 0 }) });
 		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
-				new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }), AccessMethod.create(new Integer[] { 2, 3 }) });
+				new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 0 }), AccessMethodDescriptor.create(new Integer[] { 2, 3 }) });
 
-		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
 		relations[3] = Relation.create("R3", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
-				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
+				new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 2, 3 }) });
 		relations[4] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query
 		// R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w')
@@ -355,13 +355,13 @@ public class PdqTest {
 	public TestScenario getScenario5() {
 		// Create the relations
 		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
 		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
-				new AccessMethod[] { AccessMethod.create(new Integer[] { 0 }), AccessMethod.create(new Integer[] { 2, 3 }) });
+				new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 0 }), AccessMethodDescriptor.create(new Integer[] { 2, 3 }) });
 
-		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
 		relations[3] = Relation.create("R3", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
-				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
+				new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 2, 3 }) });
 		relations[4] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query
 		// R0('constant1',y,z,w) R1('constant2',_,z,w) R2(x,y,z',w') R3(_,_,z',w')
@@ -396,13 +396,13 @@ public class PdqTest {
 	public TestScenario getScenario6() {
 		// Create the relations
 		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
 		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
-				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
+				new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 2, 3 }) });
 
-		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
 		relations[3] = Relation.create("R3", new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
-				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
+				new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 2, 3 }) });
 		relations[4] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query
 		// R0('constant1',y,z,w) R1('constant2',_,z,w) R2(x,y,z',w') R3(_,_,z',w')
@@ -433,10 +433,10 @@ public class PdqTest {
 	public TestScenario getStandardScenario1() {
 		// Create the relations
 		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[3] = Relation.create("R3", new Attribute[] { this.a_s, this.b_s }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
+		relations[3] = Relation.create("R3", new Attribute[] { this.a_s, this.b_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
 		relations[4] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query
 		Atom[] atoms = new Atom[2];

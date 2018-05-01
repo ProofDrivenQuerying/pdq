@@ -21,7 +21,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.Source;
 import uk.ac.ox.cs.pdq.datasources.utility.FormulaEquivalence;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Cache;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Reference;
@@ -118,7 +118,7 @@ public class AdaptedDbSchema {
 				for (int i = 0; i <discoveredPartialSchema.getNumberOfRelations(); i++) {
 					Relation dr = discoveredPartialSchema.getRelation(i);
 					AdaptedRelation xmlRelation = getRelationByName(dr.getName());
-					AccessMethod[] am = null; 
+					AccessMethodDescriptor[] am = null; 
 					if (xmlRelation !=null && xmlRelation.getAccessMethods() !=null && xmlRelation.getAccessMethods().length > 0 ) 
 						am = xmlRelation.getAccessMethods();
 					if (dr.getAccessMethods() != null && dr.getAccessMethods().length > 0) {

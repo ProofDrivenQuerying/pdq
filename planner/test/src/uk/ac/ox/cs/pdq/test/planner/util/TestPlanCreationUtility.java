@@ -12,7 +12,7 @@ import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -309,7 +309,7 @@ public class TestPlanCreationUtility extends PdqTest {
 	// These two terms should be joined on the attribute c40
 	@Test
 	public void test7() {
-		AccessMethod method0 = AccessMethod.create(new Integer[] { 3 });
+		AccessMethodDescriptor method0 = AccessMethodDescriptor.create(new Integer[] { 3 });
 		Attribute a = Attribute.create(String.class, "a");
 		Attribute b = Attribute.create(String.class, "b");
 		Attribute c = Attribute.create(String.class, "c");
@@ -319,7 +319,7 @@ public class TestPlanCreationUtility extends PdqTest {
 		Attribute g = Attribute.create(String.class, "g");
 		Attribute h = Attribute.create(String.class, "h");
 
-		Relation customer = Relation.create("customer", new Attribute[] { a, b, c, d, e, f, g, h }, new AccessMethod[] { method0 });
+		Relation customer = Relation.create("customer", new Attribute[] { a, b, c, d, e, f, g, h }, new AccessMethodDescriptor[] { method0 });
 		Atom fact1 = Atom.create(customer, new UntypedConstant[] { UntypedConstant.create("c46"), UntypedConstant.create("c52"), UntypedConstant.create("c53"),
 				UntypedConstant.create("c40"), UntypedConstant.create("c54"), UntypedConstant.create("c55"), UntypedConstant.create("c56"), UntypedConstant.create("c57") });
 
