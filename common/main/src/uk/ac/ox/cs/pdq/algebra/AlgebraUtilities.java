@@ -155,7 +155,7 @@ public class AlgebraUtilities {
 		Assert.assertTrue(accessMethod != null && accessMethod.getInputs().length > 0);
 		Assert.assertNotNull(inputConstants);
 		for (Integer position : inputConstants.keySet()) {
-			Assert.assertTrue(position < relation.getArity());
+			Assert.assertTrue(position < relation.getAttributes().length);
 			Assert.assertTrue(Arrays.asList(accessMethod.getInputs()).contains(position));
 		}
 		List<Attribute> inputs = new ArrayList<>();

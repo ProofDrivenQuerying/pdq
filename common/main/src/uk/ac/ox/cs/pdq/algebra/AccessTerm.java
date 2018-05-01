@@ -56,7 +56,7 @@ public class AccessTerm extends RelationalTerm {
 		this.inputConstants = new LinkedHashMap<>();
 		if (inputConstants != null) {
 			for (Integer position : inputConstants.keySet()) {
-				Assert.assertTrue(position < relation.getArity());
+				Assert.assertTrue(position < relation.getAttributes().length);
 				Assert.assertTrue(Arrays.asList(accessMethod.getInputs()).contains(position));
 			}
 			for (java.util.Map.Entry<Integer, TypedConstant> entry : inputConstants.entrySet())
@@ -91,7 +91,7 @@ public class AccessTerm extends RelationalTerm {
 	public Map<Attribute, TypedConstant> getInputConstantsAsAttributes() {
 		Map<Attribute, TypedConstant> ret = new HashMap<>();
 		for (Integer index: inputConstants.keySet()) {
-			ret.put(relation.getAttribute(index), inputConstants.get(index));
+			ret.put(relation.getAttributes()[index], inputConstants.get(index));
 		}
 		return ret;
 	}

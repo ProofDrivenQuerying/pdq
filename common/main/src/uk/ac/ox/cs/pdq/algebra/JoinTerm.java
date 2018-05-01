@@ -1,6 +1,8 @@
 package uk.ac.ox.cs.pdq.algebra;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -43,12 +45,20 @@ public class JoinTerm extends RelationalTerm {
 		return this.joinConditions;
 	}
 
-	public TypeEqualityCondition[] simpleJoinConditions() {
-		if (joinConditions instanceof TypeEqualityCondition)
-			return new TypeEqualityCondition[] {(TypeEqualityCondition) joinConditions};
+	/** Filters the attribute equality conditions from all other conditions.
+	 * @return
+	 */
+	public AttributeEqualityCondition[] simpleJoinConditions() {
+		if (joinConditions instanceof AttributeEqualityCondition)
+			return new AttributeEqualityCondition[] {(AttributeEqualityCondition) joinConditions};
 		
 		SimpleCondition[] conditions = ((ConjunctiveCondition) joinConditions).getSimpleConditions();
-		return Arrays.copyOf(conditions, conditions.length, TypeEqualityCondition[].class);
+		List<AttributeEqualityCondition> attEC = new ArrayList<>();
+		for (SimpleCondition sc:conditions) {
+			if (sc instanceof AttributeEqualityCondition)
+				attEC.add((AttributeEqualityCondition) sc);
+		}
+		return attEC.toArray(new AttributeEqualityCondition[attEC.size()]);
 	}
 	/**
 	 * Returns an attribute map representing the join condition.

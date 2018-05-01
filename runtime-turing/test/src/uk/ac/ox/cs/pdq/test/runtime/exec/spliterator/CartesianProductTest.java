@@ -130,12 +130,14 @@ public class CartesianProductTest {
 	@Test
 	public void integrationTestSql3() {
 
-		Relation relationNation = Mockito.mock(Relation.class);
-		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		//Relation relationNation = Mockito.mock(Relation.class);
+//		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		Relation relationNation = Relation.create("Nation", TPCHelper.attrs_nation.clone());
 
-		Relation relationRegion = Mockito.mock(Relation.class);
-		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
-
+		//Relation relationRegion = Mockito.mock(Relation.class);
+		//when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		Relation relationRegion = Relation.create("Region", TPCHelper.attrs_region.clone());
+		
 		Set<Attribute> inputAttributes;
 
 		inputAttributes = new HashSet<Attribute>();
@@ -290,6 +292,9 @@ public class CartesianProductTest {
 		Relation relationR4 = Mockito.mock(Relation.class);
 		Attribute[] relationR4Attributes = new Attribute[] {Attribute.create(String.class, "d")};
 
+		
+		
+		
 		Map<Attribute, Attribute> attributeMapping1 = ImmutableMap.of(
 				Attribute.create(String.class, "a"), Attribute.create(String.class, "a"));
 
