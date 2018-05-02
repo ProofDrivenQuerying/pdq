@@ -29,6 +29,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
@@ -219,7 +220,16 @@ private static FileWriter summary = null;
 				AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance = acceptance(plannerParams, costParams);
 				this.out.print("Using " + acceptance.getClass().getSimpleName() + ": ");
 				acceptance.check(expectedPlan, observedPlan).report(this.out);
-
+				
+				if(observedPlan != null)
+				{
+					PlanPrinter.openPngPlan(observedPlan.getKey());
+				}
+				if(expectedPlan != null)
+				{
+					PlanPrinter.openPngPlan(expectedPlan.getKey());
+				}
+				
 				if (observedPlan != null
 						&& (expectedPlan == null || expectedPlan.getValue().greaterThan(observedPlan.getValue())) ) {
 					this.out.print("\twriting plan: " + observedPlan + " " + observedPlan.getValue());
