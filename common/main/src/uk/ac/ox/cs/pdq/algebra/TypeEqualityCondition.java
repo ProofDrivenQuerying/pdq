@@ -31,8 +31,8 @@ public class TypeEqualityCondition extends SimpleCondition {
 	}
 	
     public static TypeEqualityCondition create(int position, int other) {
-    	throw new RuntimeException("NotImplemented");
-        //return Cache.typeEqualityCondition.retrieve(new TypeEqualityCondition(position, other));
+    	//throw new RuntimeException("NotImplemented");
+        return new TypeEqualityCondition(position, other);
     }
 
 	@Override

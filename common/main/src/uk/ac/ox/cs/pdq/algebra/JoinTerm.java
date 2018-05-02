@@ -20,10 +20,10 @@ import uk.ac.ox.cs.pdq.util.Tuple;
  * @author Efthymia Tsamoura
  *
  */
-public class JoinTerm extends RelationalTerm {
+public class JoinTerm extends CartesianProductTerm {
 	protected static final long serialVersionUID = -2424275295263353630L;
 
-	protected final RelationalTerm[] children = new RelationalTerm[2];
+	//protected final RelationalTerm[] children = new RelationalTerm[2];
 
 	/** The join conditions. */
 	protected final Condition joinConditions;
@@ -32,12 +32,13 @@ public class JoinTerm extends RelationalTerm {
 	protected String toString = null;
 	
 	protected JoinTerm(RelationalTerm child1, RelationalTerm child2) {
-		super(AlgebraUtilities.computeInputAttributes(child1, child2), 
-				AlgebraUtilities.computeOutputAttributes(child1, child2));
-		Assert.assertNotNull(child1);
-		Assert.assertNotNull(child2);
-		this.children[0] = child1;
-		this.children[1] = child2;
+		super(child1, child2);
+//		super(AlgebraUtilities.computeInputAttributes(child1, child2), 
+//				AlgebraUtilities.computeOutputAttributes(child1, child2));
+//		Assert.assertNotNull(child1);
+//		Assert.assertNotNull(child2);
+//		this.children[0] = child1;
+//		this.children[1] = child2;
 		this.joinConditions = AlgebraUtilities.computeJoinConditions(this.children);
 	}
 
@@ -103,8 +104,10 @@ public class JoinTerm extends RelationalTerm {
 		// one-by-one and return a conjunction of ConstantEqualityConditions.
 		Condition[] simpleConditions = ((ConjunctiveCondition) joinConditions).getSimpleConditions();
 		SimpleCondition[] predicates = new SimpleCondition[simpleConditions.length];
-		for (int i = 0; i != simpleConditions.length; i++)
-			predicates[i] = this.getJoinCondition(tuple, (TypeEqualityCondition) simpleConditions[i]);
+		for (int i = 0; i != simpleConditions.length; i++) {
+			AttributeEqualityCondition ac = (AttributeEqualityCondition) simpleConditions[i];
+			predicates[i] = this.getJoinCondition(tuple, TypeEqualityCondition.create(ac.getPosition(),ac.getOther()) );
+		}
 
 		return ConjunctiveCondition.create(predicates);
 	}
