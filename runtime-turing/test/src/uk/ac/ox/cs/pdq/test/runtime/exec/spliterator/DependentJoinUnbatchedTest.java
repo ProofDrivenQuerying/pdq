@@ -19,7 +19,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantInequalityCondition;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
@@ -150,10 +152,13 @@ public class DependentJoinUnbatchedTest {
 		// Check the inferred join condition. The common attribute "k" is in 
 		// position 2 in relation1 and position 0 in relation2 
 		// (i.e. position 3 in the concatenated attributes).
-		Assert.assertTrue(target.getJoinCondition() instanceof TypeEqualityCondition);
-		TypeEqualityCondition condition = (TypeEqualityCondition) target.getJoinCondition();
-		Assert.assertEquals(2, condition.getPosition());
-		Assert.assertEquals(3, condition.getOther());
+		
+//		Assert.assertTrue(target.getJoinCondition() instanceof TypeEqualityCondition);
+//		TypeEqualityCondition condition = (TypeEqualityCondition) target.getJoinCondition();
+//		Assert.assertEquals(2, condition.getPosition());
+//		Assert.assertEquals(3, condition.getOther());
+		Assert.assertEquals(2, ((AttributeEqualityCondition) ((ConjunctiveCondition)target.getJoinCondition()).getSimpleConditions()[0]).getPosition());
+		Assert.assertEquals(3, ((AttributeEqualityCondition) ((ConjunctiveCondition)target.getJoinCondition()).getSimpleConditions()[0]).getOther());
 
 		// Create some tuples. 
 		// Here we join on columns containing no duplicates.  

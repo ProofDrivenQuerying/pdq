@@ -269,7 +269,6 @@ public class DependentJoin extends BinaryExecutablePlan {
 		}
 
 		@Override
-		public boolean tryAdvance(Consumer<? super Tuple> action) {
 
 			/* 
 			 * Algorithm:
@@ -280,35 +279,43 @@ public class DependentJoin extends BinaryExecutablePlan {
 			 * - Add the right tuple to the cache of accessed right tuples (unless that cache is already in use) 
 			 * - Prepend the current leftTuple to the current rightTuple
 			 * - Test the join condition on the joined tuple
-			 * 		- recursively call this method if the condition is not satisfied
+			 * 		- recursively call this method if the condition is not satisfied -- Gabor: I changed this to use a do-while loop instead of recursively calling itself, since there is no way of knowing how deep that recursion would go ( worst case scenario is that you call itself as many times as many tuples are created from a cartesian product, causing stack overflow )  
 			 * - Pass the joined tuple to the given action & return true
 			 */
-
-			boolean rightIsExhausted = !rightChildSpliterator.tryAdvance(this.rightTupleAction);
-
-			//			// TODO: RE-INCLUDE THIS (OR EXPLAIN WHY IT'S NOT A VALID CHECK): 
-			//			// It should never be the case that right was exhausted and still is.
-			//			Preconditions.checkState(!(rightWasExhausted && rightIsExhausted));
-
-			if (rightIsExhausted) {
-				if (!useAccessedRightTuplesCache && !useMatchingRightTuplesCache)
-					updateMatchingRightTuplesCache();
-				if (!useMatchingRightTuplesCache)
-					useAccessedRightTuplesCache = true;
-				if (!this.advanceLeftTuple()) // This also resets the right child spliterator.
-					return false;
-				return this.tryAdvance(action);
-			}
-
-			Preconditions.checkState(this.rightTuple != null);
-
-			if (!useAccessedRightTuplesCache)
-				accessedRightTuplesCache.add(this.rightTuple);
-
-			Tuple joinedTuple = leftTuple.appendTuple(this.rightTuple);
-
-			if (!getJoinCondition(joinedTuple).isSatisfied(joinedTuple))
-				return this.tryAdvance(action);
+		public boolean tryAdvance(Consumer<? super Tuple> action) {
+			Tuple joinedTuple = null;
+			boolean advance;
+			do {
+				advance = false;
+				boolean rightIsExhausted = !rightChildSpliterator.tryAdvance(this.rightTupleAction);
+	
+				//			// TODO: RE-INCLUDE THIS (OR EXPLAIN WHY IT'S NOT A VALID CHECK): 
+				//			// It should never be the case that right was exhausted and still is.
+				//			Preconditions.checkState(!(rightWasExhausted && rightIsExhausted));
+	
+				if (rightIsExhausted) {
+					if (!useAccessedRightTuplesCache && !useMatchingRightTuplesCache)
+						updateMatchingRightTuplesCache();
+					if (!useMatchingRightTuplesCache)
+						useAccessedRightTuplesCache = true;
+					if (!this.advanceLeftTuple()) // This also resets the right child spliterator.
+						return false;
+					advance = true;
+				} else {
+	
+					Preconditions.checkState(this.rightTuple != null);
+		
+					if (!useAccessedRightTuplesCache)
+						accessedRightTuplesCache.add(this.rightTuple);
+		
+					joinedTuple = leftTuple.appendTuple(this.rightTuple);
+		
+					if (!getJoinCondition(joinedTuple).isSatisfied(joinedTuple)) {
+						advance = true;
+					}
+				}
+				//if we haven't found a matching tuple keep try to advance forward until we reach the end of both streams or a match found. 
+			} while(advance);
 
 			action.accept(joinedTuple);
 			return true;

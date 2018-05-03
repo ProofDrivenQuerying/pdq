@@ -167,14 +167,20 @@ public class AlgebraUtilities {
 		return inputs.toArray(new Attribute[inputs.size()]);
 	}
 
-	public static Attribute[] computeInputAttributes(RelationalTerm child1, RelationalTerm child2) {
-		Assert.assertNotNull(child1);
-		Assert.assertNotNull(child2);
-		Attribute[] input = new Attribute[child1.getNumberOfInputAttributes() + child2.getNumberOfInputAttributes()];
-		System.arraycopy(child1.getInputAttributes(), 0, input, 0, child1.getNumberOfInputAttributes());
-		System.arraycopy(child2.getInputAttributes(), 0, input, child1.getNumberOfInputAttributes(),
-				child2.getNumberOfInputAttributes());
-		return input;
+	public static Attribute[] computeInputAttributes(RelationalTerm left, RelationalTerm right) {
+		Assert.assertNotNull(left);
+		Assert.assertNotNull(right);
+		Attribute[] leftInputs = left.getInputAttributes();
+		Attribute[] leftOutputs = left.getOutputAttributes();
+		Attribute[] rightInputs = right.getInputAttributes();
+		List<Attribute> result = Lists.newArrayList(leftInputs);
+		for (int attributeIndex = 0; attributeIndex < right.getNumberOfInputAttributes(); attributeIndex++) {
+			Attribute inputAttribute = right.getInputAttribute(attributeIndex);
+			if (!Arrays.asList(leftOutputs).contains(inputAttribute))
+				result.add(rightInputs[attributeIndex]);
+		}
+		return result.toArray(new Attribute[result.size()]);
+		
 	}
 
 	public static Attribute[] computeOutputAttributes(RelationalTerm child1, RelationalTerm child2) {
