@@ -138,7 +138,7 @@ public class AlgebraUtilities {
 		}
 		List<Attribute> inputs = new ArrayList<>();
 		for (Integer i : accessMethod.getInputs()) {
-			inputs.add(relation.getAttribute(i));
+			inputs.add(relation.getAttributes()[i]);
 		}
 		return inputs.toArray(new Attribute[inputs.size()]);
 	}
