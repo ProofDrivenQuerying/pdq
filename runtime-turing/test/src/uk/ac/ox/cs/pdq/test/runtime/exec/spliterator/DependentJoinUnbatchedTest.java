@@ -27,7 +27,6 @@ import uk.ac.ox.cs.pdq.algebra.ConstantInequalityCondition;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
-import uk.ac.ox.cs.pdq.algebra.TypeEqualityCondition;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;

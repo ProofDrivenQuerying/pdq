@@ -10,12 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-import com.google.common.collect.Sets;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
@@ -388,6 +389,10 @@ public class CartesianProductTest {
 		List<Tuple> result = target.stream().collect(Collectors.toList());
 
 		Assert.assertEquals(N*N*N*N, result.size());
+		accessR1.close();
+		accessR2.close();
+		cartesianProductR1R2.close();
+		cartesianProductR3R4.close();
 		target.close();
 	}
 	
