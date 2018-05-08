@@ -10,6 +10,7 @@ import jersey.repackaged.com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.runtime.conditions.ConditionUtils;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
@@ -64,7 +65,7 @@ public abstract class BinaryExecutablePlan extends ExecutablePlan {
 	}
 
 	public Condition getJoinCondition(Tuple tuple) {
-		return ((JoinTerm) this.getDecoratedPlan()).getJoinCondition(tuple);
+		return ConditionUtils.getJoinCondition( ((JoinTerm) this.getDecoratedPlan()),tuple);
 	}
 
 	@Override

@@ -1,7 +1,8 @@
-package uk.ac.ox.cs.pdq.algebra;
+package uk.ac.ox.cs.pdq.runtime.conditions;
 
 import com.google.common.base.Preconditions;
 
+import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;

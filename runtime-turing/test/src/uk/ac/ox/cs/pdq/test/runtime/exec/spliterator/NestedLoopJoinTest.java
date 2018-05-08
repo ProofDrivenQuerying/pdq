@@ -28,13 +28,14 @@ import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
-import uk.ac.ox.cs.pdq.algebra.TypeEqualityCondition;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.runtime.conditions.ConditionUtils;
+import uk.ac.ox.cs.pdq.runtime.conditions.TypeEqualityCondition;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.BinaryExecutablePlan;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.DependentJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.NestedLoopJoin;
@@ -496,8 +497,7 @@ public class NestedLoopJoinTest {
 		Tuple tupleR2 = ttR.createTuple(1, "AMERICA", "ijk");
 
 		// Check that the ConstantEqualityCondition join condition is as expected.
-		Condition actualJoinCondition = ((JoinTerm) target.getDecoratedPlan()).getJoinCondition(tupleN);
-
+		Condition actualJoinCondition = ConditionUtils.getJoinCondition( ((JoinTerm) target.getDecoratedPlan()),tupleN);
 		// Recall that the actual join condition (which depends on the type-only 
 		// join condition _and_ the tuple) is of type ConstantEqualityCondition.
 		Assert.assertNotEquals(joinCondition, actualJoinCondition);
