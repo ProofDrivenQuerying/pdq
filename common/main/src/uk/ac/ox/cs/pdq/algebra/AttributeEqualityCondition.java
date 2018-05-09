@@ -1,9 +1,13 @@
 package uk.ac.ox.cs.pdq.algebra;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.junit.Assert;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.Typed;
 
 
 /**
@@ -48,30 +52,24 @@ public class AttributeEqualityCondition extends SimpleCondition {
  	// constant.
  	@Override
  	public boolean isSatisfied(Tuple tuple) {
- 		throw new RuntimeException("Not implemented");
-// 		Preconditions.checkArgument(tuple.size() > this.position);
-//
-// 		Object value = tuple.getValue(this.position);
-// 		Object targetValue = this.getConstant().getValue();
-// 		if (value == null || targetValue == null)
-// 			return false;
-//
-// 		if (!(value instanceof Comparable<?> && targetValue instanceof Comparable<?>)) {
-// 			throw new RuntimeException("Incomparable values:" + value + " and " + targetValue);
-// 		}
-//
-// 		int comparison;
-// 		try {
-// 			Method m = Comparable.class.getMethod("compareTo", Object.class);
-// 			comparison = (int) m.invoke(value, targetValue);
-// 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-// 			throw new RuntimeException("Failed to check isSatisfied on " + tuple,e);
-// 		}
-// 		return lessThan ? comparison < 0: comparison > 0;
- 	}
+ 		Preconditions.checkArgument(tuple.size() > this.position);
+ 		Preconditions.checkArgument(tuple.size() > this.other);
 
-	@Override
-	public boolean isSatisfied(Typed[] typeds) {
- 		throw new RuntimeException("Not implemented");
-	} 
+ 		Object value = tuple.getValue(this.position);
+ 		Object targetValue = tuple.getValue(this.other);
+ 		if (value == null || targetValue == null)
+ 			return false;
+
+ 		if (!(value instanceof Comparable<?> && targetValue instanceof Comparable<?>)) {
+ 			throw new RuntimeException("Incomparable values:" + value + " and " + targetValue);
+ 		}
+ 		int comparison;
+ 		try {
+ 			Method m = Comparable.class.getMethod("compareTo", Object.class);
+ 			comparison = (int) m.invoke(value, targetValue);
+ 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+ 			throw new RuntimeException("Failed to check isSatisfied on " + tuple,e);
+ 		}
+ 		return comparison == 0;
+ 	}
 }

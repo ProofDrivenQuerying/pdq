@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.Typed;
 
 /**
  * Represents a constant equality condition, that can be used to create -for example- a SelectionTerm.
@@ -64,9 +63,4 @@ public class ConstantEqualityCondition extends SimpleCondition {
 		return this.compareValues(value, targetValue);
 	}
 
-	@Override
-	public boolean isSatisfied(Typed[] typeds) {
-		// TODO Auto-generated method stub
-		return false;
-	}	
 }

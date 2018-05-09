@@ -5,7 +5,6 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
-import uk.ac.ox.cs.pdq.util.Typed;
 
 public class TypeEqualityCondition extends SimpleCondition {
 
@@ -44,17 +43,4 @@ public class TypeEqualityCondition extends SimpleCondition {
 		TupleType tupleType = tuple.getType();
 		return this.compareTypes(tupleType.getType(this.other), tupleType.getType(this.position));
 	}
-
-	@Override
-	public boolean isSatisfied(Typed[] typeds) {
-
-		// Note: the legacy AlgebraUtilities method
-		// assertSelectionCondition(SimpleCondition selectionCondition, Attribute[] outputAttributes)
-		// contained the following logic (which appears incomplete):
-		// return !(this.position > typeds.length || this.other > typeds.length);
-		// Here we check for type equality too.
-		
-		if (typeds.length <= Math.max(this.position, this.other))
-			return false;
-		return typeds[position].getType().equals(typeds[other].getType());
-	}}
+}
