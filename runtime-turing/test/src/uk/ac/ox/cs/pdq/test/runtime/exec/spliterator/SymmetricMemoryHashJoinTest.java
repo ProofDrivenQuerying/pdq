@@ -33,8 +33,6 @@ import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.runtime.conditions.ConditionUtils;
-import uk.ac.ox.cs.pdq.runtime.conditions.TypeEqualityCondition;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.BinaryExecutablePlan;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.SymmetricMemoryHashJoin;
 import uk.ac.ox.cs.pdq.util.Tuple;
@@ -620,7 +618,7 @@ public class SymmetricMemoryHashJoinTest {
 
 		// Construct a custom join condition to join on the 0th NATION attribute 
 		// (nationKey) and the 0th REGION attribute (regionKey).
-		Condition joinCondition = TypeEqualityCondition.create(1, 3);
+		Condition joinCondition = AttributeEqualityCondition.create(1, 3);
 
 		// TOCOMMENT extra join condition ? 
 		target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild /*, joinCondition*/));
@@ -633,12 +631,12 @@ public class SymmetricMemoryHashJoinTest {
 		Tuple tupleR2 = ttR.createTuple(1, "AMERICA", "ijk");
 
 		// Check that the ConstantEqualityCondition join condition is as expected.
-		Condition actualJoinCondition = ConditionUtils.getJoinCondition( ((JoinTerm) target.getDecoratedPlan()),tupleN);
+		Condition actualJoinCondition = ((JoinTerm) target.getDecoratedPlan()).getJoinConditions();
 
 		// Recall that the actual join condition (which depends on the type-only 
 		// join condition _and_ the tuple) is of type ConstantEqualityCondition.
 		Assert.assertNotEquals(joinCondition, actualJoinCondition);
-		Assert.assertTrue(joinCondition instanceof TypeEqualityCondition);
+		Assert.assertTrue(joinCondition instanceof AttributeEqualityCondition);
 //		Assert.assertTrue(actualJoinCondition instanceof ConstantEqualityCondition);
 //		Assert.assertEquals(2, ((AttributeEqualityCondition) ((ConjunctiveCondition)result).getSimpleConditions()[0]).getPosition());
 //		Assert.assertEquals(3, ((AttributeEqualityCondition) ((ConjunctiveCondition)result).getSimpleConditions()[0]).getOther());

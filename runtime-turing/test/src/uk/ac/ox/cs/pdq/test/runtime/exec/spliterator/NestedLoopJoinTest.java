@@ -22,7 +22,6 @@ import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantInequalityCondition;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
@@ -34,8 +33,6 @@ import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.runtime.conditions.ConditionUtils;
-import uk.ac.ox.cs.pdq.runtime.conditions.TypeEqualityCondition;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.BinaryExecutablePlan;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.DependentJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.NestedLoopJoin;
@@ -483,7 +480,7 @@ public class NestedLoopJoinTest {
 
 		// Construct a custom join condition to join on the 0th NATION attribute 
 		// (nationKey) and the 0th REGION attribute (regionKey).
-		Condition joinCondition = TypeEqualityCondition.create(1, 3);
+		Condition joinCondition = AttributeEqualityCondition.create(1, 3);
 		target.close();
 // TOCOMMENT do we want JoinTerm to support external join conditions?		
 //		target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild, joinCondition));
@@ -497,13 +494,13 @@ public class NestedLoopJoinTest {
 		Tuple tupleR2 = ttR.createTuple(1, "AMERICA", "ijk");
 
 		// Check that the ConstantEqualityCondition join condition is as expected.
-		Condition actualJoinCondition = ConditionUtils.getJoinCondition( ((JoinTerm) target.getDecoratedPlan()),tupleN);
+		Condition actualJoinCondition = ((JoinTerm) target.getDecoratedPlan()).getJoinConditions();
 		// Recall that the actual join condition (which depends on the type-only 
 		// join condition _and_ the tuple) is of type ConstantEqualityCondition.
 		Assert.assertNotEquals(joinCondition, actualJoinCondition);
 		
-		Assert.assertTrue(joinCondition instanceof TypeEqualityCondition);
-		Assert.assertTrue(((ConjunctiveCondition)actualJoinCondition).getSimpleConditions()[0] instanceof ConstantEqualityCondition);
+		Assert.assertTrue(joinCondition instanceof AttributeEqualityCondition);
+		Assert.assertTrue(((ConjunctiveCondition)actualJoinCondition).getSimpleConditions()[0] instanceof AttributeEqualityCondition);
 
 		Assert.assertTrue(actualJoinCondition.isSatisfied(tupleN.appendTuple(tupleR1)));
 		Assert.assertFalse(actualJoinCondition.isSatisfied(tupleN.appendTuple(tupleR2)));
