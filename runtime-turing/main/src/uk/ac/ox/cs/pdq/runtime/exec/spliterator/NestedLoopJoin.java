@@ -26,7 +26,7 @@ public class NestedLoopJoin extends CartesianProduct {
 		
 		// Filter the Cartesian plan on the tuple-dependent joinCondition. 
 		return StreamSupport.stream(super.spliterator(), false)
-				.filter(tuple -> this.getJoinCondition(tuple).isSatisfied(tuple))
+				.filter(tuple -> this.getJoinCondition().isSatisfied(tuple))
 				.spliterator();
 	}
 }

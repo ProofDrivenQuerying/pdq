@@ -63,10 +63,6 @@ public abstract class BinaryExecutablePlan extends ExecutablePlan {
 		return ((JoinTerm) this.getDecoratedPlan()).getJoinConditions();
 	}
 
-	public Condition getJoinCondition(Tuple tuple) {
-		return ((JoinTerm) this.getDecoratedPlan()).getJoinConditions();
-	}
-
 	@Override
 	public void close() {
 		this.leftChild.close();

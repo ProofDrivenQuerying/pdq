@@ -310,7 +310,7 @@ public class DependentJoin extends BinaryExecutablePlan {
 		
 					joinedTuple = leftTuple.appendTuple(this.rightTuple);
 		
-					if (!getJoinCondition(joinedTuple).isSatisfied(joinedTuple)) {
+					if (!getJoinCondition().isSatisfied(joinedTuple)) {
 						advance = true;
 					}
 				}
