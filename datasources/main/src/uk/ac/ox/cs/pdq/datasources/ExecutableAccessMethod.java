@@ -36,7 +36,7 @@ import uk.ac.ox.cs.pdq.util.TupleType;
  * @author gabor
  *
  */
-public class ExecutableAccessMethod extends AccessMethodDescriptor {
+public abstract class ExecutableAccessMethod extends AccessMethodDescriptor {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * A Constant DEFAULT_PREFIX for all automatically generated access methods
@@ -520,4 +520,6 @@ public class ExecutableAccessMethod extends AccessMethodDescriptor {
 			res.put(a, a);
 		return res;
 	}
+	
+	public abstract void close();
 }

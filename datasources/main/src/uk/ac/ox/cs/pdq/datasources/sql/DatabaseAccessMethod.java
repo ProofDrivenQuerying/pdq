@@ -224,4 +224,16 @@ public class DatabaseAccessMethod extends ExecutableAccessMethod {
 		}
 		return this.connection;
 	}
+
+	@Override
+	public void close() {
+		if (connection!=null) {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 }

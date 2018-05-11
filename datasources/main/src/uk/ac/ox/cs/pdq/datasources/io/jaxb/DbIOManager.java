@@ -12,6 +12,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.adapted.AdaptedDbSchema;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -121,6 +122,15 @@ public class DbIOManager extends IOManager {
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.marshal(s, out);
+	}
+
+	public static ExecutableAccessMethod importAccess(File xmlFile) {
+//		public static ExecutableAccessMethod  am012LineItem = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
+//		Sets.newHashSet(Attribute.create(Integer.class, "L_ORDERKEY"), 
+//				Attribute.create(Integer.class, "L_PARTKEY"), Attribute.create(Integer.class, "L_SUPPKEY")), 
+//		relationLineItem, TPCHelper.attrMap_lineItem, TPCHelper.getProperties());
+		
+		return null;
 	}
 	
 }

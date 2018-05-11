@@ -78,4 +78,9 @@ public class InMemoryAccessMethod extends ExecutableAccessMethod {
 		}
 	}
 
+	@Override
+	public void close() {
+		data = null; // let garbage collector do its magic.
+	}
+
 }
