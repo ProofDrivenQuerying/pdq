@@ -82,5 +82,8 @@ public class InMemoryAccessMethod extends ExecutableAccessMethod {
 	public void close() {
 		data = null; // let garbage collector do its magic.
 	}
-
+	@Override
+	public boolean isClosed() throws Exception {
+		return data == null;
+	}
 }

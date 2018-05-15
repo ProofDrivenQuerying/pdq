@@ -451,4 +451,6 @@ public abstract class ExecutableAccessMethod extends AccessMethodDescriptor {
 	}
 	
 	public abstract void close();
+	public abstract boolean isClosed() throws Exception;
+	
 }

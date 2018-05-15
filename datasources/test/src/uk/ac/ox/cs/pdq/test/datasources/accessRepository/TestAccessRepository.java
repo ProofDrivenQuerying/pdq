@@ -15,6 +15,8 @@ import org.mockito.Mockito;
 
 import com.google.common.collect.ImmutableMap;
 
+import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -24,7 +26,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 public class TestAccessRepository extends PdqTest{
 	Properties properties;
-	
+	boolean print = false;
 	public TestAccessRepository() {
 		properties = new Properties();
 		properties.setProperty("url", "jdbc:postgresql://localhost:5432/");
@@ -79,7 +81,7 @@ public class TestAccessRepository extends PdqTest{
 		int counter = 0;
 		while(it.hasNext()) {
 			Tuple t = it.next();
-			System.out.println(t);
+			if (print) System.out.println(t);
 			counter++;
 		}
 		Assert.assertEquals(25,counter);
@@ -110,11 +112,28 @@ public class TestAccessRepository extends PdqTest{
 		int counter = 0;
 		while(it.hasNext()) {
 			Tuple t = it.next();
-			System.out.println(t);
+			if (print) System.out.println(t);
 			counter++;
 		}
 		Assert.assertEquals(25,counter);
 		target.close();
+	}
+	@Test
+	public void testAccessRepositorty() throws Exception {
+		AccessRepository repo = AccessRepository.getRepository("test/schemas/accesses");
+		ExecutableAccessMethod accessMethod = repo.getAccess("NATION");
+		Iterable<Tuple> data = accessMethod.access();
+		Assert.assertNotNull(data);
+		Iterator<Tuple> it = data.iterator();
+		int counter = 0;
+		while(it.hasNext()) {
+			Tuple t = it.next();
+			if (print) System.out.println(t);
+			counter++;
+		}
+		Assert.assertEquals(25,counter);
+		repo.closeAllAccesses();
+		Assert.assertTrue(accessMethod.isClosed());
 	}
 	
 }
