@@ -225,6 +225,11 @@ public class DatabaseAccessMethod extends ExecutableAccessMethod {
 		return this.connection;
 	}
 
+	public boolean isClosed() throws Exception {
+		if (connection==null)
+			return true;
+		return connection.isClosed();
+	}
 	@Override
 	public void close() {
 		if (connection!=null) {

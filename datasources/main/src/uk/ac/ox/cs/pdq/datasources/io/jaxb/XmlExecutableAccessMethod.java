@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.datasources.io.jaxb;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,6 +57,7 @@ public class XmlExecutableAccessMethod {
 	private String restUrl;
 	private String restDocumentationUrl;
 	private String restProtocol;
+	private String dataFileName;
 	
 	public XmlExecutableAccessMethod() {
 	}
@@ -91,7 +93,7 @@ public class XmlExecutableAccessMethod {
 		case IN_MEMORY_ACCESS_METHOD:
 			InMemoryAccessMethod am = new InMemoryAccessMethod(accessMethodName, attributes.toArray(new Attribute[attributes.size()]), 
 					inputAttributes, r, attributeMapping);
-			am.load(data);
+			am.load(DbIOManager.importTuples(attributes.toArray(new Attribute[attributes.size()]), dataFileName));
 			return am;
 		case DB_ACCESS_METHOD:
 			DatabaseAccessMethod dam = new DatabaseAccessMethod(accessMethodName, attributes.toArray(new Attribute[attributes.size()]), 
@@ -104,9 +106,6 @@ public class XmlExecutableAccessMethod {
 			throw new RuntimeException("Unknown accessType! : " + accessType);
 		} 
 	}
-//	@XmlElementWrapper(name = "relations")
-//	@XmlElements({ @XmlElement(name = "relation", type = AdaptedRelation.class), @XmlElement(name = "view", type = AdaptedView.class) })
-//	public AdaptedRelation[] getRelations() {
 	
 	@XmlAttribute(name = "access-type")
 	public String getAccessType() {
@@ -165,34 +164,19 @@ public class XmlExecutableAccessMethod {
 				attributeMapping.put(newAttribute, Attribute.create(a.getType(),a.getMapsToRelationAttribute()));
 		}
 	}
-//	public Set<Attribute> getInputAttributes() {
-//		return inputAttributes;
-//	}
-//	public void setInputAttributes(Set<Attribute> inputAttributes) {
-//		this.inputAttributes = inputAttributes;
-//	}
-//	public Map<Attribute, Attribute> getAttributeMapping() {
-//		return attributeMapping;
-//	}
-//	public void setAttributeMapping(Map<Attribute, Attribute> attributeMapping) {
-//		this.attributeMapping = attributeMapping;
-//	}
 	@XmlElement(name = "data-scv-file")	
-	public String getData() {
+	public String getData() throws IOException {
 		if (accessType == ACCESS_TYPE.IN_MEMORY_ACCESS_METHOD) {
-			//	TOCOMMENT exportCsvFile 
-			return "tmp csv file path";
+			return DbIOManager.exportTuples(relationName, DbIOManager.CSV_FOLDER, data).getAbsolutePath(); 
 		}
 		return null;
 	}
 	public void setData(String filePath) {
-		Relation r = getRelationObject(null);
-		this.data = DbIOManager.importTuples(r, filePath);
+		this.dataFileName = filePath;
 	}
 	@XmlElement(name = "database-properties")	
 	public Properties getDbProperties() {
 		if (accessType == ACCESS_TYPE.DB_ACCESS_METHOD) {
-			//	TOCOMMENT exportCsvFile 
 			return dbProperties;
 		}
 		return null;

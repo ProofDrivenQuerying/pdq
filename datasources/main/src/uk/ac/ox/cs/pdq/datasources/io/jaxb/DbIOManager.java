@@ -23,6 +23,7 @@ import com.google.common.collect.Sets;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.adapted.AdaptedDbSchema;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -47,6 +48,11 @@ import uk.ac.ox.cs.pdq.util.TupleType;
  *
  */
 public class DbIOManager extends IOManager {
+	public static File CSV_FOLDER = new File("test/schemas/accesses/data/");
+	static {
+		// create the data folder for csv files if it does not exists.
+		CSV_FOLDER.mkdirs();
+	}
 	/**
 	 * Imports a Schema object from file.
 	 * 
@@ -189,21 +195,51 @@ public class DbIOManager extends IOManager {
 		}
 		return facts;
 	}
-	public static Collection<Tuple> importTuples(Relation r, String csvFile) {
+	//
+	/** Creates a file called relationName.csv in the given folder containing all tuples line by line like: "alpha","beta","gamma"
+	 * @param relationName
+	 * @param folder
+	 * @param tuples
+	 * @return the created csv file.
+	 * @throws IOException 
+	 */
+	public static File exportTuples(String relationName, File folder, Collection<Tuple> tuples) throws IOException {
+		File target = new File(folder,relationName+".csv");
+		try (FileWriter fw = new FileWriter(target)) {
+			for (Tuple t:tuples) {
+				StringBuilder builder = null;
+				for (Object value:t.getValues()) {
+					if (builder == null) {
+						builder = new StringBuilder();
+					} else {
+						builder.append(",");
+					}
+					builder.append("\"");
+					builder.append(value);
+					builder.append("\"");
+				}
+				builder.append("\r\n");
+				fw.write(builder.toString());
+			}
+			fw.close();
+		}
+		return target;
+	}
+	public static Collection<Tuple> importTuples(Attribute[] attributes, String csvFile) {
 		Collection<Tuple> facts = Sets.newHashSet();
 		BufferedReader reader = null;
-		TupleType tt = TupleType.DefaultFactory.createFromTyped(r.getAttributes());
+		TupleType tt = TupleType.DefaultFactory.createFromTyped(attributes);
 		try {
 			// Open the csv file for reading
 			reader = new BufferedReader(new FileReader(csvFile));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				String[] tuple = line.split(",");
-				List<Term> constants = Lists.newArrayList();
+				Object[] constants = new Object[attributes.length];
 				for (int i = 0; i < tuple.length; ++i) {
-					constants.add(TypedConstant.create(tuple[i].replace("\"", "")));
+					constants[i] = (TypedConstant.convertStringToType(tuple[i].replace("\"", ""), attributes[i].getType()));
 				}
-				facts.add(tt.createTuple((Object[])constants.toArray(new TypedConstant[constants.size()])));
+				facts.add(tt.createTuple(constants));
 			}
 
 		} catch (FileNotFoundException e) {
