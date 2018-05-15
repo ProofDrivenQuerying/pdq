@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.JAXBException;
+
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 
@@ -24,15 +26,17 @@ public class AccessRepository {
 	
 	/** Creates or retrieves the repository pointing to the default repository location. 
 	 * @return
+	 * @throws JAXBException 
 	 */
-	public static AccessRepository getRepository() {
+	public static AccessRepository getRepository() throws JAXBException {
 		return getRepository(DEFAULT_REPOSITORY_LOCATION);
 	}
 	
 	/** Creates or retrieves the repository pointing to the given location. 
 	 * @return
+	 * @throws JAXBException 
 	 */
-	public static AccessRepository getRepository(String location) {
+	public static AccessRepository getRepository(String location) throws JAXBException {
 		if (!cachedRepositories.containsKey(location)) {
 			cachedRepositories.put(location, new AccessRepository(location));
 		}
@@ -41,8 +45,9 @@ public class AccessRepository {
 	
 	/** Loops over the files of the repositoryFolderName, and parses the xml descriptors using the IO manager.
 	 * @param repositoryFolderName
+	 * @throws JAXBException 
 	 */
-	private AccessRepository(String repositoryFolderName) {
+	private AccessRepository(String repositoryFolderName) throws JAXBException {
 		File repo = new File(repositoryFolderName);
 		if (!repo.exists())
 			throw new RuntimeException("Datasource Repository: \"" + repo.getAbsolutePath() + "\" not found!");
@@ -53,8 +58,9 @@ public class AccessRepository {
 	/** Import a single access and adds it to the repository
 	 * @param xmlFile
 	 * @return
+	 * @throws JAXBException 
 	 */
-	public ExecutableAccessMethod addAccessFromXml(File xmlFile) {
+	public ExecutableAccessMethod addAccessFromXml(File xmlFile) throws JAXBException {
 		ExecutableAccessMethod eam = DbIOManager.importAccess(xmlFile);
 		if (eam == null)
 			throw new RuntimeException("Failed to import file: " + xmlFile);

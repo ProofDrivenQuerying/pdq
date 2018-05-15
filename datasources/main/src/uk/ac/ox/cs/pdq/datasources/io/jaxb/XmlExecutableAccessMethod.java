@@ -3,16 +3,23 @@ package uk.ac.ox.cs.pdq.datasources.io.jaxb;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
@@ -24,12 +31,17 @@ import uk.ac.ox.cs.pdq.util.Tuple;
  * @author gabor
  *
  */
+@XmlRootElement(name = "Access")
+@XmlType (propOrder={"accessType","accessMethodName", "relationName","xmlAttributes","data","dbProperties","restUrl","restDocumentationUrl","restProtocol"})
 public class XmlExecutableAccessMethod {
 	public enum ACCESS_TYPE {IN_MEMORY_ACCESS_METHOD, DB_ACCESS_METHOD, REST_ACCESS_METHOD};
 	private ACCESS_TYPE accessType;
 	/* Generic ExecutableAccessMethod properties */
 	private String accessMethodName;
 	private String relationName;
+	/**
+	 * Attributes of the access method
+	 */
 	private List<Attribute> attributes;
 	private Set<Attribute> inputAttributes;
 	private Map<Attribute,Attribute> attributeMapping;
@@ -66,72 +78,129 @@ public class XmlExecutableAccessMethod {
 			throw new RuntimeException("Unknown executable access method type! : " + eam);
 		}
 	}
-
-	public ExecutableAccessMethod toAccessMethod(Schema s) {
+	private Relation getRelationObject(Schema s) {
+		Relation r = null;
+		if (s!=null) r = s.getRelation(relationName);
+		else
+		r = Relation.create(relationName, attributeMapping.values().toArray(new Attribute[attributeMapping.values().size()]));
+		return r;
+	}
+	public ExecutableAccessMethod toExecutableAccessMethod(Schema s) {
+		Relation r = getRelationObject(s);
 		switch (accessType) {
 		case IN_MEMORY_ACCESS_METHOD:
 			InMemoryAccessMethod am = new InMemoryAccessMethod(accessMethodName, attributes.toArray(new Attribute[attributes.size()]), 
-					inputAttributes, s.getRelation(relationName), attributeMapping);
+					inputAttributes, r, attributeMapping);
 			am.load(data);
 			return am;
 		case DB_ACCESS_METHOD:
 			DatabaseAccessMethod dam = new DatabaseAccessMethod(accessMethodName, attributes.toArray(new Attribute[attributes.size()]), 
-					inputAttributes, s.getRelation(relationName), attributeMapping, dbProperties);
+					inputAttributes, r, attributeMapping, dbProperties);
 			return dam;
 		case REST_ACCESS_METHOD:
+			/* we need to implement this case */
 			return null;
 		default:
-			return null;
+			throw new RuntimeException("Unknown accessType! : " + accessType);
 		} 
 	}
-	public ACCESS_TYPE getAccessType() {
-		return accessType;
+//	@XmlElementWrapper(name = "relations")
+//	@XmlElements({ @XmlElement(name = "relation", type = AdaptedRelation.class), @XmlElement(name = "view", type = AdaptedView.class) })
+//	public AdaptedRelation[] getRelations() {
+	
+	@XmlAttribute(name = "access-type")
+	public String getAccessType() {
+		return accessType.name();
 	}
-	public void setAccessType(ACCESS_TYPE accessType) {
-		this.accessType = accessType;
+	public void setAccessType(String accessType) {
+		for (ACCESS_TYPE type:ACCESS_TYPE.values()) {
+			if (type.name().equalsIgnoreCase(accessType)) {
+				this.accessType = type;
+				return;
+			}
+		}
+		throw new RuntimeException("Invalid access type: \""+accessType+"\".");
 	}
+	@XmlAttribute(name = "name")
 	public String getAccessMethodName() {
 		return accessMethodName;
 	}
 	public void setAccessMethodName(String accessMethodName) {
 		this.accessMethodName = accessMethodName;
 	}
+	@XmlAttribute(name = "relation-name")
 	public String getRelationName() {
 		return relationName;
 	}
 	public void setRelationName(String relationName) {
 		this.relationName = relationName;
 	}
-	public List<Attribute> getAttributes() {
-		return attributes;
+	//@XmlElements({ @XmlElement(name = "attribute", type = Attribute.class) })
+	@XmlElement(name = "attribute")
+	public uk.ac.ox.cs.pdq.datasources.io.jaxb.XmlAttribute[] getXmlAttributes() {
+		List<uk.ac.ox.cs.pdq.datasources.io.jaxb.XmlAttribute> xmlAttr = new ArrayList<>();
+		if (attributes==null)
+			return null;
+		for (Attribute a: attributes) {
+			String mapsTo= null;
+			if (this.attributeMapping.get(a)!=null) {
+				mapsTo = this.attributeMapping.get(a).getName();
+			}
+			xmlAttr.add(new uk.ac.ox.cs.pdq.datasources.io.jaxb.XmlAttribute(a.getName(),a.getType(),inputAttributes.contains(a),
+					mapsTo));
+		}
+		return xmlAttr.toArray(new uk.ac.ox.cs.pdq.datasources.io.jaxb.XmlAttribute[xmlAttr.size()]);
 	}
-	public void setAttributes(List<Attribute> attributes) {
-		this.attributes = attributes;
+	public void setXmlAttributes(uk.ac.ox.cs.pdq.datasources.io.jaxb.XmlAttribute[] attributes) {
+		this.attributes = new ArrayList<>();;
+		if (this.inputAttributes==null) this.inputAttributes = new HashSet<>();
+		if (this.attributeMapping==null) this.attributeMapping = new HashMap<>();
+		for (uk.ac.ox.cs.pdq.datasources.io.jaxb.XmlAttribute a: attributes) {
+			Attribute newAttribute = Attribute.create(a.getType(),a.getName());
+			this.attributes.add(newAttribute);
+			if (a.isInput) {
+				this.inputAttributes.add(newAttribute);				
+			}
+			if (a.getMapsToRelationAttribute()!=null) // not every attribute maps to a relation attribute
+				attributeMapping.put(newAttribute, Attribute.create(a.getType(),a.getMapsToRelationAttribute()));
+		}
 	}
-	public Set<Attribute> getInputAttributes() {
-		return inputAttributes;
+//	public Set<Attribute> getInputAttributes() {
+//		return inputAttributes;
+//	}
+//	public void setInputAttributes(Set<Attribute> inputAttributes) {
+//		this.inputAttributes = inputAttributes;
+//	}
+//	public Map<Attribute, Attribute> getAttributeMapping() {
+//		return attributeMapping;
+//	}
+//	public void setAttributeMapping(Map<Attribute, Attribute> attributeMapping) {
+//		this.attributeMapping = attributeMapping;
+//	}
+	@XmlElement(name = "data-scv-file")	
+	public String getData() {
+		if (accessType == ACCESS_TYPE.IN_MEMORY_ACCESS_METHOD) {
+			//	TOCOMMENT exportCsvFile 
+			return "tmp csv file path";
+		}
+		return null;
 	}
-	public void setInputAttributes(Set<Attribute> inputAttributes) {
-		this.inputAttributes = inputAttributes;
+	public void setData(String filePath) {
+		Relation r = getRelationObject(null);
+		this.data = DbIOManager.importTuples(r, filePath);
 	}
-	public Map<Attribute, Attribute> getAttributeMapping() {
-		return attributeMapping;
-	}
-	public void setAttributeMapping(Map<Attribute, Attribute> attributeMapping) {
-		this.attributeMapping = attributeMapping;
-	}
-	public Collection<Tuple> getData() {
-		return data;
-	}
-	public void setData(Collection<Tuple> data) {
-		this.data = data;
-	}
+	@XmlElement(name = "database-properties")	
 	public Properties getDbProperties() {
-		return dbProperties;
+		if (accessType == ACCESS_TYPE.DB_ACCESS_METHOD) {
+			//	TOCOMMENT exportCsvFile 
+			return dbProperties;
+		}
+		return null;
 	}
 	public void setDbProperties(Properties dbProperties) {
 		this.dbProperties = dbProperties;
 	}
+	@XmlElement(name = "webservice-url")	
 	public String getRestUrl() {
 		return restUrl;
 	}

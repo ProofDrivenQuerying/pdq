@@ -1,9 +1,14 @@
 package uk.ac.ox.cs.pdq.datasources.io.jaxb;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -12,13 +17,22 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.adapted.AdaptedDbSchema;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedAccessMethod;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedRelation;
+import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.util.TupleType;
 
 /**
  * Reads a Schema that contains external (database) sources, such as: 
@@ -124,13 +138,88 @@ public class DbIOManager extends IOManager {
 		jaxbMarshaller.marshal(s, out);
 	}
 
-	public static ExecutableAccessMethod importAccess(File xmlFile) {
-//		public static ExecutableAccessMethod  am012LineItem = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
-//		Sets.newHashSet(Attribute.create(Integer.class, "L_ORDERKEY"), 
-//				Attribute.create(Integer.class, "L_PARTKEY"), Attribute.create(Integer.class, "L_SUPPKEY")), 
-//		relationLineItem, TPCHelper.attrMap_lineItem, TPCHelper.getProperties());
+	public static ExecutableAccessMethod importAccess(File xmlFile) throws JAXBException {
 		
-		return null;
+		try {
+			if (!xmlFile.exists() )
+				throw new FileNotFoundException(xmlFile.getAbsolutePath());
+			JAXBContext jaxbContext = JAXBContext.newInstance(XmlExecutableAccessMethod.class);
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			XmlExecutableAccessMethod xmlAccessMethod = (XmlExecutableAccessMethod) jaxbUnmarshaller.unmarshal(xmlFile);
+			return xmlAccessMethod.toExecutableAccessMethod(null);
+		}catch(Throwable t) {
+			throw new JAXBException("Error while parsing file: "+ xmlFile.getAbsolutePath(),t);
+		}
+	}
+	public static void exportAccessMethod(ExecutableAccessMethod m, File out) throws JAXBException {
+		JAXBContext jaxbContext = JAXBContext.newInstance(XmlExecutableAccessMethod.class);
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		jaxbMarshaller.marshal(new XmlExecutableAccessMethod(m), out);
+	}
+	
+	public static Collection<Atom> importFacts(Relation r, String csvFile) {
+		Collection<Atom> facts = Sets.newHashSet();
+		BufferedReader reader = null;
+		try {
+			// Open the csv file for reading
+			reader = new BufferedReader(new FileReader(csvFile));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				String[] tuple = line.split(",");
+				List<Term> constants = Lists.newArrayList();
+				for (int i = 0; i < tuple.length; ++i) {
+					constants.add(TypedConstant.create(tuple[i].replace("\"", "")));
+				}
+				facts.add(Atom.create(r, constants.toArray(new Term[constants.size()])));
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return facts;
+	}
+	public static Collection<Tuple> importTuples(Relation r, String csvFile) {
+		Collection<Tuple> facts = Sets.newHashSet();
+		BufferedReader reader = null;
+		TupleType tt = TupleType.DefaultFactory.createFromTyped(r.getAttributes());
+		try {
+			// Open the csv file for reading
+			reader = new BufferedReader(new FileReader(csvFile));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				String[] tuple = line.split(",");
+				List<Term> constants = Lists.newArrayList();
+				for (int i = 0; i < tuple.length; ++i) {
+					constants.add(TypedConstant.create(tuple[i].replace("\"", "")));
+				}
+				facts.add(tt.createTuple((Object[])constants.toArray(new TypedConstant[constants.size()])));
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return facts;
 	}
 	
 }

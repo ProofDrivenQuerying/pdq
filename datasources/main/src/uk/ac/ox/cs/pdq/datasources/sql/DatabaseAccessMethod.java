@@ -235,5 +235,7 @@ public class DatabaseAccessMethod extends ExecutableAccessMethod {
 			}
 		}
 	}
-	
+	public Properties getProperties() {
+		return properties;
+	}
 }

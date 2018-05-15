@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -67,13 +66,13 @@ public abstract class ExecutableAccessMethod extends AccessMethodDescriptor {
 	protected TupleType inputTupleTypeInternal;
 	protected TupleType inputTupleTypeExternal;
 
-	/**
-	 * Properties associated with this access method; these may be SQL connection
-	 * parameters, web service settings, etc. depending on the underlying
-	 * implementation. If no properties are defined, then this an an empty
-	 * Properties instance.
-	 */
-	protected Properties properties;
+//	/**
+//	 * Properties associated with this access method; these may be SQL connection
+//	 * parameters, web service settings, etc. depending on the underlying
+//	 * implementation. If no properties are defined, then this an an empty
+//	 * Properties instance.
+//	 */
+//	protected Properties properties;
 
 	/** String representation of the object. */
 	protected String toString = null;
@@ -115,76 +114,6 @@ public abstract class ExecutableAccessMethod extends AccessMethodDescriptor {
 		init();
 	}
 
-	//
-	//
-	//
-	// protected AbstractAccessMethod(Relation relation, Properties properties) {
-	//
-	// this(DEFAULT_PREFIX + GlobalCounterProvider.getNext("AccessMethodName"),
-	// relation.getAttributes(), new Integer[]{}, relation,
-	// createTrivialAttributeMapping(relation), properties);
-	// }
-	//
-	// protected AbstractAccessMethod(Attribute[] attributes, Set<Attribute>
-	// inputAttributes,
-	// Relation relation, Map<Attribute, Attribute> attributeMapping) {
-	//
-	// this(DEFAULT_PREFIX + GlobalCounterProvider.getNext("AccessMethodName"),
-	// attributes, inputAttributes, relation, attributeMapping);
-	// }
-	//
-	// protected AbstractAccessMethod(Attribute[] attributes, Set<Attribute>
-	// inputAttributes,
-	// Relation relation, Map<Attribute, Attribute> attributeMapping, Properties
-	// properties) {
-	//
-	// this(DEFAULT_PREFIX + GlobalCounterProvider.getNext("AccessMethodName"),
-	// attributes, inputAttributes, relation, attributeMapping, properties);
-	// }
-	//
-	// protected AbstractAccessMethod(String name, Attribute[] attributes,
-	// Set<Attribute> inputAttributes,
-	// Relation relation, Map<Attribute, Attribute> attributeMapping) {
-	//
-	// this(name, attributes, inputAttributes, relation, attributeMapping, new
-	// Properties());
-	// }
-	//
-	// protected AbstractAccessMethod(String name, Attribute[] attributes,
-	// Set<Attribute> inputAttributes,
-	// Relation relation, Map<Attribute, Attribute> attributeMapping, Properties
-	// properties) {
-	//
-	// this(name, attributes, inputAttributes.stream().map(a ->
-	// Arrays.asList(attributes).indexOf(a)).toArray(Integer[]::new),
-	// relation, attributeMapping, properties);
-	// }
-	//
-	// protected AbstractAccessMethod(Attribute[] attributes, Integer[] inputs,
-	// Relation relation, Map<Attribute, Attribute> attributeMapping) {
-	//
-	// this(DEFAULT_PREFIX + GlobalCounterProvider.getNext("AccessMethodName"),
-	// attributes, inputs, relation, attributeMapping);
-	// }
-	//
-	// protected AbstractAccessMethod(Attribute[] attributes, Integer[] inputs,
-	// Relation relation, Map<Attribute, Attribute> attributeMapping, Properties
-	// properties) {
-	//
-	// this(DEFAULT_PREFIX + GlobalCounterProvider.getNext("AccessMethodName"),
-	// attributes, inputs, relation, attributeMapping, properties);
-	// }
-	//
-	// protected AbstractAccessMethod(String name, Attribute[] attributes, Integer[]
-	// inputs,
-	// Relation relation, Map<Attribute, Attribute> attributeMapping) {
-	// this(name, attributes, inputs, relation, attributeMapping, new Properties());
-	// }
-	//
-	// protected AbstractAccessMethod(String name, Attribute[] attributes, Integer[]
-	// inputs,
-	// Relation relation, Map<Attribute, Attribute> attributeMapping, Properties
-	// properties) {
 	/**
 	 * Converts between the method's input positions and the relation's input
 	 * positions. 
@@ -477,17 +406,17 @@ public abstract class ExecutableAccessMethod extends AccessMethodDescriptor {
 		return attributeMapping;
 	}
 
-	/**
-	 * Returns properties associated with this relation, these may be SQL connection
-	 * parameters, web service settings, etc. depending on the underlying
-	 * implementation. If no properties are defined, an empty {@code Properties}
-	 * instance (not null) is returned.
-	 * 
-	 * @return The properties associated with this relation.
-	 */
-	public Properties getProperties() {
-		return this.properties;
-	}
+//	/**
+//	 * Returns properties associated with this relation, these may be SQL connection
+//	 * parameters, web service settings, etc. depending on the underlying
+//	 * implementation. If no properties are defined, an empty {@code Properties}
+//	 * instance (not null) is returned.
+//	 * 
+//	 * @return The properties associated with this relation.
+//	 */
+//	public Properties getProperties() {
+//		return this.properties;
+//	}
 
 	/**
 	 * Converts the set of input attributes to an array of input indexes.
