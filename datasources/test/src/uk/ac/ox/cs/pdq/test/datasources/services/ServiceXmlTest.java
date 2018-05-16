@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.accessmethod.AccessMethodManager;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.accessmethod.AccessMethodRoot;
+import uk.ac.ox.cs.pdq.datasources.services.RESTExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleImpl;
@@ -23,7 +24,8 @@ public class ServiceXmlTest {
 			AccessMethodRoot amr = AccessMethodManager.importAccessMethod(schemaFile);
 			System.out.println(amr.toString());
 			Tuple input = new TupleImpl(TupleType.EmptyTupleType);
-			Table t = amr.restAccess(input);
+			RESTExecutableAccessMethod ream = new RESTExecutableAccessMethod(amr);
+			Table t = ream.access(input);
 			System.out.println(t);
 			AccessMethodManager.exportAccessMethod(amr, outputFile);
 		}

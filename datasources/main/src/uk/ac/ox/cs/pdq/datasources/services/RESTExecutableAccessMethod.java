@@ -1,13 +1,7 @@
 package uk.ac.ox.cs.pdq.datasources.services;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -17,10 +11,8 @@ import javax.ws.rs.core.Response;
 import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
 
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.accessmethod.AccessMethodAttribute;
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.accessmethod.AccessMethodRest;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.accessmethod.AccessMethodRoot;
-import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.InputMethod;
-import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTRequestEvent;
-import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTResponseEvent;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.util.Tuple;
@@ -37,22 +29,18 @@ public class RESTExecutableAccessMethod {
 	private MediaType mediaType;
 	private Attribute[] inputattributes;
 	private Attribute[] outputattributes;
-	private List<String> resultDelimiter = new LinkedList<String>(); // not supposed to be needed
-	private Map<String, Object> urlParams = new HashMap<String, Object>(); // where does this come from??
-	private Set<InputMethod> pathMethods = new LinkedHashSet<>(); // where does this come from??
-	private Map<String, Object> pathParams = new LinkedHashMap<>(); // where does this come from??
 	private RequestMarshaller requestMarshaller = new RequestMarshaller();
 	private JsonResponseUnmarshaller jsonResponseUnmarshaller;
 	private XmlResponseUnmarshaller xmlResponseUnmarshaller;
-	private RESTRequestEvent restRequestEvent;
-	private RESTResponseEvent restResponseEvent;
 	private RESTRawAccess restRawAccess = new RESTRawAccess();
 	
 	
-	public RESTExecutableAccessMethod(String url, String documentation, String mediaType, AccessMethodRoot amr)
+	public RESTExecutableAccessMethod(AccessMethodRoot amr)
 	{
-		this.url = url;
+		AccessMethodRest rest = amr.getRest();
+		this.url = rest.getUrl();
 		this.mediaType = new MediaType("application", "json");
+		String mediaType = rest.getMediaType();
 		if((mediaType != null) && mediaType.equals("application/xml"))	this.mediaType = new MediaType("application", "xml");
 		LinkedList<Attribute> inputs = new LinkedList<Attribute>();
 		LinkedList<Attribute> outputs = new LinkedList<Attribute>();

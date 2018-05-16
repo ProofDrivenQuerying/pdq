@@ -73,13 +73,4 @@ public class AccessMethodRoot {
 	{
 		return "AccessMethod";
 	}
-	
-	// Performs a service access for an access method with Table as input and result
-	public Table restAccess(Tuple input)
-	{
-		RESTExecutableAccessMethod ream = new
-			RESTExecutableAccessMethod(rest.getUrl(), rest.getDocumentation(), rest.getMediaType(), this);
-		return ream.access(input);
-	}
-
 }
