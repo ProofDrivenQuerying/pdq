@@ -5,10 +5,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import uk.ac.ox.cs.pdq.datasources.services.RESTExecutableAccessMethod;
-import uk.ac.ox.cs.pdq.datasources.utility.Table;
-import uk.ac.ox.cs.pdq.util.Tuple;
-
 /**
  * @author Mark Ridler
  *
