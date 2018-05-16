@@ -6,18 +6,18 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.datasources.services.AccessPostProcessor;
-import uk.ac.ox.cs.pdq.datasources.services.AccessPreProcessor;
-import uk.ac.ox.cs.pdq.datasources.services.ServiceRepository;
-import uk.ac.ox.cs.pdq.datasources.services.rest.InputMethod;
-import uk.ac.ox.cs.pdq.datasources.services.rest.PathOutputMethod;
-import uk.ac.ox.cs.pdq.datasources.services.rest.RESTAccess;
-import uk.ac.ox.cs.pdq.datasources.services.rest.RESTAttribute;
-import uk.ac.ox.cs.pdq.datasources.services.rest.RESTRequestEvent;
-import uk.ac.ox.cs.pdq.datasources.services.rest.RESTResponseEvent;
-import uk.ac.ox.cs.pdq.db.Attribute;
-
 import com.google.common.base.Preconditions;
+
+import uk.ac.ox.cs.pdq.datasources.legacy.services.AccessPostProcessor;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.AccessPreProcessor;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceRepository;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.InputMethod;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.PathOutputMethod;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTAccess;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTAttribute;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTRequestEvent;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTResponseEvent;
+import uk.ac.ox.cs.pdq.db.Attribute;
 
 /**
  * This usage policy incorporates paging constraints on the access to be 

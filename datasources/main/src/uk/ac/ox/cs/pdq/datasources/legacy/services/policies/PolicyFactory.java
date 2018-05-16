@@ -5,7 +5,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.datasources.services.ServiceRepository;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceRepository;
 
 /**
  * Factory for usage policies.

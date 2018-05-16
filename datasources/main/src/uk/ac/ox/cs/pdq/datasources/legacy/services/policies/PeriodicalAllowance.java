@@ -6,10 +6,10 @@ import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.datasources.services.AccessPostProcessor;
-import uk.ac.ox.cs.pdq.datasources.services.AccessPreProcessor;
-import uk.ac.ox.cs.pdq.datasources.services.rest.RESTRequestEvent;
-import uk.ac.ox.cs.pdq.datasources.services.rest.RESTResponseEvent;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.AccessPostProcessor;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.AccessPreProcessor;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTRequestEvent;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTResponseEvent;
 
 /**
  * This class factorizes the behavior of usage policies that check if some

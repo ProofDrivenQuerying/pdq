@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 // AccessMethodAttribute is the XML element corresponding to the <attribute> tag
-@XmlType (propOrder= {"name", "type", "input", "relationAttribute"})
+@XmlType (propOrder= {"name", "type", "value", "input", "output", "encoding", "relationAttribute"})
 public class AccessMethodAttribute {
 	
 	private String name;
@@ -16,7 +16,7 @@ public class AccessMethodAttribute {
 	private String input;
 	private String output;
 	private String value;
-	private String param;
+	private String encoding;
 	private String relationAttribute;
 	
 	@XmlAttribute
@@ -55,11 +55,11 @@ public class AccessMethodAttribute {
 		this.value = value;
 	}
 	@XmlAttribute
-	public String getParam() {
-		return param;
+	public String getEncoding() {
+		return encoding;
 	}
-	public void setParam(String param) {
-		this.param = param;
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
 	}
 	@XmlAttribute (name = "relation-attribute")
 	public String getRelationAttribute() {

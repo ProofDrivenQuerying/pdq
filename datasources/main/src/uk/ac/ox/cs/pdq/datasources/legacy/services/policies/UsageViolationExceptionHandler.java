@@ -1,10 +1,10 @@
 package uk.ac.ox.cs.pdq.datasources.legacy.services.policies;
 
-import uk.ac.ox.cs.pdq.datasources.AccessException;
-import uk.ac.ox.cs.pdq.datasources.services.AccessEvent;
-
 import com.google.common.eventbus.SubscriberExceptionContext;
 import com.google.common.eventbus.SubscriberExceptionHandler;
+
+import uk.ac.ox.cs.pdq.datasources.AccessException;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.AccessEvent;
 
 /**
  * This handler is required by the EventBus class which does not allow

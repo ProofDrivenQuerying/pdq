@@ -7,11 +7,11 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import uk.ac.ox.cs.pdq.datasources.services.policies.PolicyFactory;
-import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
-import uk.ac.ox.cs.pdq.datasources.services.rest.InputMethod;
-
 import com.google.common.base.Preconditions;
+
+import uk.ac.ox.cs.pdq.datasources.legacy.services.policies.PolicyFactory;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.policies.UsagePolicy;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.InputMethod;
 
 /**
  * A collection of Services, with shared usage policies and input methods.

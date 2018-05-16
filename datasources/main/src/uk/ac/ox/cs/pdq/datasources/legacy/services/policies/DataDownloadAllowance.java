@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.datasources.legacy.services.policies;
 
 import java.util.Properties;
 
-import uk.ac.ox.cs.pdq.datasources.services.rest.RESTResponseEvent;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTResponseEvent;
 
 /**
  * Check whether the amount of data for a given period has exceeded, waits

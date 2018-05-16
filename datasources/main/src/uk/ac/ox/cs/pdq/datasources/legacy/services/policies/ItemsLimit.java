@@ -2,8 +2,8 @@ package uk.ac.ox.cs.pdq.datasources.legacy.services.policies;
 
 import java.util.Properties;
 
-import uk.ac.ox.cs.pdq.datasources.services.ServiceRepository;
-import uk.ac.ox.cs.pdq.datasources.services.rest.RESTAttribute;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceRepository;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTAttribute;
 
 /**
  * Variant of the PagingLimit usage policy, where the start of a window is 

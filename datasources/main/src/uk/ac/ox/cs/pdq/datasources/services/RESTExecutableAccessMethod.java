@@ -62,15 +62,11 @@ public class RESTExecutableAccessMethod {
 			if((aa.getInput() != null) && aa.getInput().equals("true"))
 			{
 				inputs.add(Attribute.create(typeType(aa.getType()), aa.getName()));
-				if(aa.getParam() != null)
+				if(aa.getEncoding() != null)
 				{
-					if(aa.getParam().equals("path-element"))
+					if(aa.getEncoding().equals("path-element"))
 					{
-						uri.append(aa.getValue());
-					}
-					else if(aa.getParam().equals("url-param"))
-					{
-						this.target = target.queryParam(aa.getName(), aa.getValue());
+						uri.append("/" + aa.getValue());
 					}
 				}
 			}
@@ -84,15 +80,17 @@ public class RESTExecutableAccessMethod {
 		{
 			if((aa.getInput() != null) && aa.getInput().equals("true"))
 			{
-				if(aa.getParam() != null)
+				if(aa.getEncoding() != null)
 				{
-					if(aa.getParam().equals("url-param"))
+					if(aa.getEncoding().equals("url-param"))
 					{
 						this.target = target.queryParam(aa.getName(), aa.getValue());
 					}
 				}
 			}
 		}
+		
+		System.out.println(this.target.toString());
 
 		inputattributes = new Attribute[inputs.size()];
 		for(int i = 0; i < inputs.size(); i++) inputattributes[i] = inputs.get(i);
