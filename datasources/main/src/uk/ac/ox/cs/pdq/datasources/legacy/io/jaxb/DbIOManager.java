@@ -12,7 +12,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import uk.ac.ox.cs.pdq.datasources.io.jaxb.adapted.AdaptedDbSchema;
+import uk.ac.ox.cs.pdq.datasources.legacy.io.jaxb.adapted.AdaptedDbSchema;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
