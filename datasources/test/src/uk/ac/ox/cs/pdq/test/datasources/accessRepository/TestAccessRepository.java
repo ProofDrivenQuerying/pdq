@@ -107,7 +107,7 @@ public class TestAccessRepository extends PdqTest {
 		when(relation.getName()).thenReturn(name);
 
 		inputs = new Integer[0];
-		target = new InMemoryAccessMethod(name, this.attrs_N, inputs, relation, this.attrMap_nation);
+		target = new InMemoryAccessMethod("NATION_MEM", this.attrs_N, inputs, relation, this.attrMap_nation);
 		Collection<Tuple> tuples = new ArrayList<>();
 		TupleType tt = TupleType.DefaultFactory.createFromTyped(this.attrs_N);
 		for (int index = 0; index < 25; index++) {
@@ -191,6 +191,15 @@ public class TestAccessRepository extends PdqTest {
 	public void testAccessRepositorty() throws Exception {
 		AccessRepository repo = AccessRepository.getRepository("test/schemas/accesses");
 		ExecutableAccessMethod accessMethod = repo.getAccess("NATION");
+		testReadingData(accessMethod);
+		ExecutableAccessMethod accessMethod2 = repo.getAccess("NATION_MEM");
+		testReadingData(accessMethod2);
+		repo.closeAllAccesses();
+		Assert.assertTrue(accessMethod.isClosed());
+		Assert.assertTrue(accessMethod2.isClosed());
+	}
+
+	private void testReadingData(ExecutableAccessMethod accessMethod) {
 		Iterable<Tuple> data = accessMethod.access();
 		Assert.assertNotNull(data);
 		Iterator<Tuple> it = data.iterator();
@@ -202,8 +211,6 @@ public class TestAccessRepository extends PdqTest {
 			counter++;
 		}
 		Assert.assertEquals(25, counter);
-		repo.closeAllAccesses();
-		Assert.assertTrue(accessMethod.isClosed());
 	}
 
 }
