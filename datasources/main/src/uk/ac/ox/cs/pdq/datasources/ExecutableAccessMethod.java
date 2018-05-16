@@ -330,9 +330,6 @@ public abstract class ExecutableAccessMethod extends AccessMethodDescriptor {
 
 		// Check that the input tuple conforms to the types of the input attributes in
 		// the external schema.
-		if (tuple.getType().getTypes().equals(this.inputTupleTypeExternal.getTypes()) == false) {
-			System.out.println();
-		}
 		Preconditions.checkArgument(tuple.getType().getTypes().equals(this.inputTupleTypeExternal.getTypes()));
 
 		// Get the values from the next tuple, which is assumed to correspond
