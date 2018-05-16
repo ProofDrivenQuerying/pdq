@@ -1,0 +1,9 @@
+<access-method type="FREE" name="reactome_species_1" cost="1.0">	
+	<rest
+		url="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/RESTfulWS/speciesList" 
+		media-type="application/xml"
+		documentation="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/ReactomeRESTFulAPI.html"/>
+
+	<attribute name="displayName" type="String" relation-attribute="displayName"/>
+	<attribute name="schemaClass" type="String" input="true" encoding="path-element" value="12345" relation-attribute="schemaClass"/>
+</access-method>
