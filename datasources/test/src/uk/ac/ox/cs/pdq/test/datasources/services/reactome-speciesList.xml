@@ -4,6 +4,6 @@
 		media-type="application/xml"
 		documentation="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/ReactomeRESTFulAPI.html"/>
 
-	<attribute name="displayName" type="String" relation-attribute="displayName"/>
-	<attribute name="schemaClass" type="String" input="true" encoding="path-element" value="12345" relation-attribute="schemaClass"/>
+	<attribute name="displayName" type="String" output="true" relation-attribute="displayName"/>
+	<attribute name="schemaClass" type="String" output="true" relation-attribute="schemaClass"/>
 </access-method>
