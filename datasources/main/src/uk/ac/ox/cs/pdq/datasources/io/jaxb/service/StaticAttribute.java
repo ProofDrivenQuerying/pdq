@@ -1,11 +1,7 @@
 package uk.ac.ox.cs.pdq.datasources.io.jaxb.service;
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-
-import uk.ac.ox.cs.pdq.datasources.utility.Table;
 
 /**
  * @author Mark Ridler
