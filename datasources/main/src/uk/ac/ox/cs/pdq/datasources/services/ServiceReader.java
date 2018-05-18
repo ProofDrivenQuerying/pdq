@@ -234,11 +234,7 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 			if (positions != null && !positions.trim().isEmpty()) 
 				inputs.addAll(toIntList(positions));
 			AccessMethodDescriptor b = null;
-//			String n = this.getValue(atts, QNames.NAME);
-//			if (n != null && !n.trim().isEmpty()) 
-//				b = AccessMethod.create(n, inputs.toArray(new Integer[inputs.size()]));
-//			else 
-//				b = AccessMethod.create(inputs.toArray(new Integer[inputs.size()]));
+
 			String cost = this.getValue(atts, QNames.COST);
 			if (cost == null || cost.trim().isEmpty()) {
 				throw new ReaderException("Cost is a mandatory attribute in " + QNames.ACCESS_METHOD);
