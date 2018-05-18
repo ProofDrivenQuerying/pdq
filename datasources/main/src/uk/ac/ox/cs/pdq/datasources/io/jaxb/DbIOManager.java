@@ -36,9 +36,9 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
 /**
- * Reads a Schema that contains external (database) sources, such as: 
- * <code>
- * <source name="tpch" discoverer="uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer" 
+ * Reads a Schema that contains external (database) sources, such as: <code>
+ * <source name="tpch" discoverer=
+"uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer" 
  * 		driver="org.postgresql.Driver" 
  * 		url="jdbc:postgresql://localhost/" 
  * 		database="tpch_0001" username="root" password="root" />
@@ -53,6 +53,7 @@ public class DbIOManager extends IOManager {
 		// create the data folder for csv files if it does not exists.
 		CSV_FOLDER.mkdirs();
 	}
+
 	/**
 	 * Imports a Schema object from file.
 	 * 
@@ -61,49 +62,51 @@ public class DbIOManager extends IOManager {
 	 * @return parsed Schema object
 	 * @throws JAXBException
 	 *             In case importing fails.
-	 * @throws FileNotFoundException 
-	 * @throws ClassNotFoundException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
 	 */
-	public static Schema importSchema(File schema, Properties props) throws JAXBException, FileNotFoundException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-		if (!schema.exists() )
+	public static Schema importSchema(File schema, Properties props) throws JAXBException, FileNotFoundException,
+			ClassNotFoundException, InstantiationException, IllegalAccessException {
+		if (!schema.exists())
 			throw new FileNotFoundException(schema.getAbsolutePath());
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedDbSchema.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		AdaptedDbSchema customer = (AdaptedDbSchema) jaxbUnmarshaller.unmarshal(schema);
 		return customer.toSchema(props);
 	}
-	
+
 	public static Schema importSchema(File schema) throws JAXBException, FileNotFoundException {
 		try {
-			if (!schema.exists() )
+			if (!schema.exists())
 				throw new FileNotFoundException(schema.getAbsolutePath());
 			JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedDbSchema.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			AdaptedDbSchema customer = (AdaptedDbSchema) jaxbUnmarshaller.unmarshal(schema);
 			return customer.toSchema(null);
-		}catch(Throwable t) {
-			throw new JAXBException("Error while parsing file: "+ schema.getAbsolutePath(),t);
+		} catch (Throwable t) {
+			throw new JAXBException("Error while parsing file: " + schema.getAbsolutePath(), t);
 		}
 	}
-	
+
 	public static AdaptedDbSchema readAdaptedSchema(File schema) throws JAXBException, FileNotFoundException {
 		try {
-			if (!schema.exists() )
+			if (!schema.exists())
 				throw new FileNotFoundException(schema.getAbsolutePath());
 			JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedDbSchema.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			AdaptedDbSchema customer = (AdaptedDbSchema) jaxbUnmarshaller.unmarshal(schema);
 			return customer;
-		}catch(Throwable t) {
-			throw new JAXBException("Error while parsing file: "+ schema.getAbsolutePath(),t);
+		} catch (Throwable t) {
+			throw new JAXBException("Error while parsing file: " + schema.getAbsolutePath(), t);
 		}
 	}
-	
-	public static Map<AccessMethodDescriptor,String> createCatalog(File schema, File to) throws JAXBException, FileNotFoundException {
+
+	public static Map<AccessMethodDescriptor, String> createCatalog(File schema, File to)
+			throws JAXBException, FileNotFoundException {
 		try {
-			if (!schema.exists() )
+			if (!schema.exists())
 				throw new FileNotFoundException(schema.getAbsolutePath());
 			FileWriter fw = new FileWriter(to);
 			BufferedWriter bw = new BufferedWriter(fw);
@@ -112,28 +115,30 @@ public class DbIOManager extends IOManager {
 			AdaptedDbSchema customer = (AdaptedDbSchema) jaxbUnmarshaller.unmarshal(schema);
 			customer.toSchema(null);
 			Map<AccessMethodDescriptor, String> map = AdaptedAccessMethod.getMapOfCosts();
-			for (AdaptedRelation r: customer.getAdaptedRelations()) {
-				if (r.getSize()!=null) {
-					//System.out.println("" + r.getName() + " size = " + r.getSize());
-					//RE:AssayLimited										CA:1148942
-					bw.write("RE:"+r.getName() + "\t\t\t\t\t\t\t\t\t" + "CA:"+r.getSize()+"\n");
+			for (AdaptedRelation r : customer.getAdaptedRelations()) {
+				if (r.getSize() != null) {
+					// System.out.println("" + r.getName() + " size = " + r.getSize());
+					// RE:AssayLimited CA:1148942
+					bw.write("RE:" + r.getName() + "\t\t\t\t\t\t\t\t\t" + "CA:" + r.getSize() + "\n");
 				}
-				if (r.getAccessMethods()!=null) {
-					for (AccessMethodDescriptor am: r.getAccessMethods()) {
-						//RE:relation_name  BI:access_method_name  			RT:cost_as_in_xml
-						bw.write("RE:"+r.getName() + "\t\t\t\t" + "BI:" + am.getName() + "\t\tRT:"+map.get(am)+"\n");
-						//System.out.println("\t" + r.getName() + "." + am.getName() + " cost = " + map.get(am));
+				if (r.getAccessMethods() != null) {
+					for (AccessMethodDescriptor am : r.getAccessMethods()) {
+						// RE:relation_name BI:access_method_name RT:cost_as_in_xml
+						bw.write("RE:" + r.getName() + "\t\t\t\t" + "BI:" + am.getName() + "\t\tRT:" + map.get(am)
+								+ "\n");
+						// System.out.println("\t" + r.getName() + "." + am.getName() + " cost = " +
+						// map.get(am));
 					}
 				}
-				
+
 			}
 			bw.close();
-			if (to.length()==0) {
+			if (to.length() == 0) {
 				to.delete();
 			}
 			return map;
-		}catch(Throwable t) {
-			throw new JAXBException("Error while parsing file: "+ schema.getAbsolutePath(),t);
+		} catch (Throwable t) {
+			throw new JAXBException("Error while parsing file: " + schema.getAbsolutePath(), t);
 		}
 	}
 
@@ -144,26 +149,49 @@ public class DbIOManager extends IOManager {
 		jaxbMarshaller.marshal(s, out);
 	}
 
+	/**
+	 * Reads and executable access method from an xml file.
+	 * 
+	 * @param xmlFile
+	 * @return
+	 * @throws JAXBException
+	 */
 	public static ExecutableAccessMethod importAccess(File xmlFile) throws JAXBException {
-		
+
 		try {
-			if (!xmlFile.exists() )
+			if (!xmlFile.exists())
 				throw new FileNotFoundException(xmlFile.getAbsolutePath());
 			JAXBContext jaxbContext = JAXBContext.newInstance(XmlExecutableAccessMethod.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			XmlExecutableAccessMethod xmlAccessMethod = (XmlExecutableAccessMethod) jaxbUnmarshaller.unmarshal(xmlFile);
 			return xmlAccessMethod.toExecutableAccessMethod(null);
-		}catch(Throwable t) {
-			throw new JAXBException("Error while parsing file: "+ xmlFile.getAbsolutePath(),t);
+		} catch (Throwable t) {
+			throw new JAXBException("Error while parsing file: " + xmlFile.getAbsolutePath(), t);
 		}
 	}
+
+	/**
+	 * Prints an executable access method to Xml.
+	 * 
+	 * @param m
+	 * @param out
+	 * @throws JAXBException
+	 */
 	public static void exportAccessMethod(ExecutableAccessMethod m, File out) throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(XmlExecutableAccessMethod.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.marshal(new XmlExecutableAccessMethod(m), out);
 	}
-	
+
+	/**
+	 * Imports comma separated file as a list of atoms. Inputs are the path to the
+	 * file and the Relation which is needed to know how to convert the data.
+	 * 
+	 * @param r
+	 * @param csvFile
+	 * @return
+	 */
 	public static Collection<Atom> importFacts(Relation r, String csvFile) {
 		Collection<Atom> facts = Sets.newHashSet();
 		BufferedReader reader = null;
@@ -195,20 +223,23 @@ public class DbIOManager extends IOManager {
 		}
 		return facts;
 	}
-	//
-	/** Creates a file called relationName.csv in the given folder containing all tuples line by line like: "alpha","beta","gamma"
+
+	/**
+	 * Creates a file called relationName.csv in the given folder containing all
+	 * tuples line by line like: "alpha","beta","gamma"
+	 * 
 	 * @param relationName
 	 * @param folder
 	 * @param tuples
 	 * @return the created csv file.
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static File exportTuples(String relationName, File folder, Collection<Tuple> tuples) throws IOException {
-		File target = new File(folder,relationName+".csv");
+		File target = new File(folder, relationName + ".csv");
 		try (FileWriter fw = new FileWriter(target)) {
-			for (Tuple t:tuples) {
+			for (Tuple t : tuples) {
 				StringBuilder builder = null;
-				for (Object value:t.getValues()) {
+				for (Object value : t.getValues()) {
 					if (builder == null) {
 						builder = new StringBuilder();
 					} else {
@@ -225,6 +256,7 @@ public class DbIOManager extends IOManager {
 		}
 		return target;
 	}
+
 	public static Collection<Tuple> importTuples(Attribute[] attributes, String csvFile) {
 		Collection<Tuple> facts = Sets.newHashSet();
 		BufferedReader reader = null;
@@ -237,7 +269,8 @@ public class DbIOManager extends IOManager {
 				String[] tuple = line.split(",");
 				Object[] constants = new Object[attributes.length];
 				for (int i = 0; i < tuple.length; ++i) {
-					constants[i] = (TypedConstant.convertStringToType(tuple[i].replace("\"", ""), attributes[i].getType()));
+					constants[i] = (TypedConstant.convertStringToType(tuple[i].replace("\"", ""),
+							attributes[i].getType()));
 				}
 				facts.add(tt.createTuple(constants));
 			}
@@ -257,5 +290,5 @@ public class DbIOManager extends IOManager {
 		}
 		return facts;
 	}
-	
+
 }
