@@ -22,9 +22,6 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 // JsonResponseUnmarshaller deals with a web response in Json format
 public class JsonResponseUnmarshaller extends ResponseUnmarshaller {
 	
-	private Attribute[] attributes;
-	private List<String> resultDelimiter = new LinkedList<String>(); // not supposed to be needed	
-
 	JsonResponseUnmarshaller(Attribute[] attributes){
 		this.attributes = attributes;
 	}

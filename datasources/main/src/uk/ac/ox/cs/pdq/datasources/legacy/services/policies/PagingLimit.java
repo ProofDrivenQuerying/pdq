@@ -126,7 +126,7 @@ public class PagingLimit implements UsagePolicy,
 	/**
 	 *
 	 * @return the usage policy
-	 * @see uk.ac.ox.cs.pdq.XmlUsagePolicy.wrappers.service.UsagePolicy#copy()
+	 * @see uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.XmlUsagePolicy.wrappers.service.UsagePolicy#copy()
 	 */
 	@Override
 	public UsagePolicy copy() {

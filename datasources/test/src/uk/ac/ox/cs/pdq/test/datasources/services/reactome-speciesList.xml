@@ -1,9 +1,18 @@
-<access-method type="FREE" name="reactome_species_1" cost="1.0">	
-	<rest
-		url="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/RESTfulWS/speciesList" 
-		media-type="application/xml"
-		documentation="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/ReactomeRESTFulAPI.html"/>
-
-	<attribute name="displayName" type="String" output="true" relation-attribute="displayName"/>
-	<attribute name="schemaClass" type="String" output="true" relation-attribute="schemaClass"/>
-</access-method>
+<service name="reactome-speciesList"
+			url="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/RESTfulWS/speciesList" 
+			media-type="application/xml"
+			documentation="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/ReactomeRESTFulAPI.html"
+			result-delimiter="places/place">
+			
+	<policy name="url_auth"/>
+	<policy name="2000_request_per_day"/>
+	<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+			limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
+			
+	<static-attribute name="format" attribute-encoding="format" value="weather.forecast"/>
+	
+	<access-method name="reactome_species_1" cost="1.0">
+		<attribute name="displayName" type="String" input="true" output="true" relation-attribute="displayName" attribute-encoding="woeid.1" attribute-encoding-param="1" path="woeid"/>
+		<attribute name="schemaClass" type="String" output="true" relation-attribute="schemaClass" path="placeTypeName"/>
+	</access-method>
+</service>

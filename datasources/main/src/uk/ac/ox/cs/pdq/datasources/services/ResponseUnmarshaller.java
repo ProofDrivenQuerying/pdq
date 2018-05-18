@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 public class ResponseUnmarshaller {
 	
 	protected Attribute[] attributes;
-	protected List<String> resultDelimiter = new LinkedList<String>(); // not supposed to be needed
+	protected List<String> resultDelimiter = new LinkedList<String>(); 
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Collection<Tuple> processItems (

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.io.jaxb.accessmethod;
+package uk.ac.ox.cs.pdq.datasources.io.jaxb.service;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -9,15 +9,15 @@ import javax.xml.bind.annotation.XmlType;
  * @author Mark Ridler
  *
  */
-// AccessMethodRoot is the XML element which corresponds to the <access-method> tag
-@XmlRootElement (name="access-method")
-@XmlType (propOrder= {"name", "type", "cost", "rest", "attributes"})
-public class AccessMethodRoot {
+// AccessMethod is the XML element which corresponds to the <access-method> tag
+@XmlType (propOrder= {"name", "type", "cost", "template", "rest", "attributes"})
+public class AccessMethod {
 	
 	private String name;
 	private String type;
 	private String cost;
-	private AccessMethodRest rest;
+	private String template;
+	private StaticAttribute rest;
 	private AccessMethodAttribute[] attributes;
 	
 	@XmlAttribute
@@ -47,12 +47,21 @@ public class AccessMethodRoot {
 		this.cost = cost;
 	}
 
+	@XmlAttribute
+	public String getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(String template) {
+		this.template = template;
+	}
+
 	@XmlElement (name="rest")
-	public AccessMethodRest getRest() {
+	public StaticAttribute getRest() {
 		return rest;
 	}
 
-	public void setRest(AccessMethodRest rest) {
+	public void setRest(StaticAttribute rest) {
 		this.rest = rest;
 	}
 

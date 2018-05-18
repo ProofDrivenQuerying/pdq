@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.io.jaxb.accessmethod;
+package uk.ac.ox.cs.pdq.datasources.io.jaxb.service;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 // AccessMethodAttribute is the XML element corresponding to the <attribute> tag
-@XmlType (propOrder= {"name", "type", "value", "input", "output", "encoding", "relationAttribute"})
+@XmlType (propOrder= {"name", "type", "value", "input", "output", "attributeEncoding", "attributeEncodingIndex", "relationAttribute"})
 public class AccessMethodAttribute {
 	
 	private String name;
@@ -16,7 +16,8 @@ public class AccessMethodAttribute {
 	private String input;
 	private String output;
 	private String value;
-	private String encoding;
+	private String attributeEncoding;
+	private String attributeEncodingIndex;
 	private String relationAttribute;
 	
 	@XmlAttribute
@@ -55,11 +56,18 @@ public class AccessMethodAttribute {
 		this.value = value;
 	}
 	@XmlAttribute
-	public String getEncoding() {
-		return encoding;
+	public String getAttributeEncoding() {
+		return attributeEncoding;
 	}
-	public void setEncoding(String encoding) {
-		this.encoding = encoding;
+	public void setEncoding(String attributeEncoding) {
+		this.attributeEncoding = attributeEncoding;
+	}
+	@XmlAttribute
+	public String getAttributeEncodingIndex() {
+		return attributeEncodingIndex;
+	}
+	public void setAttributeEncodingIndex(String attributeEncodingIndex) {
+		this.attributeEncodingIndex = attributeEncodingIndex;
 	}
 	@XmlAttribute (name = "relation-attribute")
 	public String getRelationAttribute() {
