@@ -419,7 +419,7 @@ public class InMemoryAccessMethodTest {
 	public void stressTest1() {
 
 		// Scale parameter (number of tuples in each relation):
-		int N = 30000000;
+		int N = 3000000;
 
 		Attribute[] relationR1Attributes = new Attribute[] {Attribute.create(String.class, "a"),
 				Attribute.create(String.class, "b")};
