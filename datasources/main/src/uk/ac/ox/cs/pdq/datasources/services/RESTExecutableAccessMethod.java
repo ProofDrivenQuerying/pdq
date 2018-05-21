@@ -93,6 +93,37 @@ public class RESTExecutableAccessMethod {
 	{
 		String result = "";
 		TreeMap<AttributeEncoding, String> map2 = new TreeMap<AttributeEncoding, String>();
+		for(StaticAttribute sa: sr.getStaticAttribute())
+		{
+			String encoding = sa.getAttributeEncoding();
+			String index = sa.getAttributeEncodingIndex();	
+			if(encoding != null)
+			{
+				AttributeEncoding ae;
+				if((ae = map1.get(encoding)) != null)
+				{
+					String template;
+					if((template = map2.get(ae)) != null)
+					{
+						if(index != null)
+						{
+							template = template.replace("{" + index + "}", index);
+						}
+					}
+					else
+					{
+						if((template = ae.getTemplate()) != null)
+						{
+							if(index != null)
+							{
+								template = template.replace("{" + index + "}", index);
+							}
+							map2.put(ae, template);
+						}
+					}
+				}
+			}
+		}
 		for(AccessMethodAttribute aa: am.getAttributes())
 		{
 			String encoding = aa.getAttributeEncoding();
@@ -207,11 +238,29 @@ public class RESTExecutableAccessMethod {
 				AttributeEncoding ae;
 				if((ae = map1.get(sa.getAttributeEncoding())) != null)
 				{
-					if((ae.getType() != null) && ae.getType().equals("url-index"))
+					if((ae.getType() != null) && ae.getType().equals("url-param"))
 					{
-						if((sa.getName() != null) && (sa.getValue() != null))
+						if(sa.getName() != null)
 						{
-							this.target = target.queryParam(sa.getName(), sa.getValue());
+							if(sa.getValue() != null)
+							{
+								this.target = target.queryParam(sa.getName(), sa.getValue());
+							}
+							else if(ae.getValue() != null)
+							{
+								this.target = target.queryParam(sa.getName(), ae.getValue());								
+							}
+						}
+						else if(ae.getName() != null)
+						{
+							if(sa.getValue() != null)
+							{
+								this.target = target.queryParam(ae.getName(), sa.getValue());
+							}
+							else if(ae.getValue() != null)
+							{
+								this.target = target.queryParam(ae.getName(), ae.getValue());								
+							}						
 						}
 					}
 				}
@@ -226,11 +275,31 @@ public class RESTExecutableAccessMethod {
 					AttributeEncoding ae;
 					if((ae = map1.get(aa.getAttributeEncoding())) != null)
 					{
-						if((ae.getType() != null) && ae.getType().equals("url-index"))
+						if((ae.getType() != null) && ae.getType().equals("url-param"))
 						{
-							if((aa.getName() != null) && (aa.getValue() != null))
+							if(aa.getName() != null)
 							{
-								this.target = target.queryParam(aa.getName(), aa.getValue()); // TODO: input tuple
+								// TODO: input tuple
+								if(aa.getValue() != null)
+								{
+									this.target = target.queryParam(aa.getName(), aa.getValue()); 
+								}
+								else if(ae.getValue() != null)
+								{
+									this.target = target.queryParam(aa.getName(), ae.getValue()); 
+								}
+							}
+							else if(ae.getName() != null)
+							{
+								// TODO: input tuple
+								if(aa.getValue() != null)
+								{
+									this.target = target.queryParam(ae.getName(), aa.getValue()); 
+								}
+								else if(ae.getValue() != null)
+								{
+									this.target = target.queryParam(ae.getName(), ae.getValue()); 
+								}
 							}
 						}
 					}
