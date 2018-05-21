@@ -8,12 +8,13 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 // StaticAttribute is the XML element which corresponds to the <static-attribute> tag
-@XmlType (propOrder= {"name", "type", "attributeEncoding", "value"})
+@XmlType (propOrder= {"name", "type", "attributeEncoding", "attributeEncodingIndex", "value"})
 public class StaticAttribute {
 	
 	private String name;
 	private String type;
 	private String attributeEncoding;
+	private String attributeEncodingIndex;
 	private String value;
 	
 	@XmlAttribute
@@ -45,6 +46,15 @@ public class StaticAttribute {
 
 	public void setAttributeEncoding(String attributeEncoding) {
 		this.attributeEncoding = attributeEncoding;
+	}
+
+	@XmlAttribute (name = "attribute-encoding-index")
+	public String getAttributeEncodingIndex() {
+		return attributeEncodingIndex;
+	}
+
+	public void setAttributeEncodingIndex(String attributeEncodingIndex) {
+		this.attributeEncodingIndex = attributeEncodingIndex;
 	}
 
 	@XmlAttribute
