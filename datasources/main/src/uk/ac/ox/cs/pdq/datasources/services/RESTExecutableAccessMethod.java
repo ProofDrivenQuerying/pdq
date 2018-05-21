@@ -17,6 +17,7 @@ import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.AccessMethod;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.AccessMethodAttribute;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.ServiceRoot;
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.StaticAttribute;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.AttributeEncoding;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.ServiceGroupsRoot;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
@@ -40,7 +41,7 @@ public class RESTExecutableAccessMethod {
 	private RESTRawAccess restRawAccess = new RESTRawAccess();
 	private TreeMap<String, AttributeEncoding> map1 = new TreeMap<String, AttributeEncoding>();
 
-	
+	// Constructor takes XML-derived objects and builds a structure ready to run
 	public RESTExecutableAccessMethod(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am)
 	{
 		this.url = sr.getUrl();
@@ -52,11 +53,11 @@ public class RESTExecutableAccessMethod {
 		LinkedList<Attribute> inputs = new LinkedList<Attribute>();
 		LinkedList<Attribute> outputs = new LinkedList<Attribute>();
 		StringBuilder uri = new StringBuilder(this.url);
-		Map<String, Object> indexs = new TreeMap<String, Object>();
-		mapAttributesPhase1(am, inputs, outputs, uri, indexs);
+		Map<String, Object> params = new TreeMap<String, Object>();
+		mapAttributesPhase1(sr, am, inputs, outputs, uri, params);
 		if(this.template != null) uri.append(this.template);
 		this.target = ClientBuilder.newClient().register(JacksonFeatures.class).target(uri.toString());
-		mapAttributesPhase2(am);
+		mapAttributesPhase2(sr, am);
 		
 		System.out.println(this.target.toString());
 
@@ -68,6 +69,8 @@ public class RESTExecutableAccessMethod {
 		jsonResponseUnmarshaller = new JsonResponseUnmarshaller(outputattributes);
 		xmlResponseUnmarshaller = new XmlResponseUnmarshaller(outputattributes);
 	}
+	
+	// Conversion from string to type ... there may be a better way of doing this
 	public Type typeType(String type)
 	{
 		if(type.equals("String"))
@@ -84,28 +87,64 @@ public class RESTExecutableAccessMethod {
 		}
 		return null;
 	}
-	public void mapAttributesPhase1(AccessMethod am, List<Attribute> inputs, List<Attribute> outputs, StringBuilder uri, Map<String, Object> indexs)
+	
+	// Phase 1 builds structures ready for the 2nd phase to begin and template formatting
+	public void mapAttributesPhase1(ServiceRoot sr, AccessMethod am, List<Attribute> inputs, List<Attribute> outputs, StringBuilder uri, Map<String, Object> params)
 	{
+		for(StaticAttribute sa : sr.getStaticAttribute())
+		{
+			if(sa.getAttributeEncoding() != null)
+			{
+				AttributeEncoding ae = map1.get(sa.getAttributeEncoding());
+				if(ae != null)
+				{
+					if((sa.getName() != null) && (sa.getType() != null))
+					{
+						inputs.add(Attribute.create(typeType(sa.getType()), sa.getName()));
+						if((ae.getType() != null) && ae.getType().equals("path-element"))
+						{
+							if(sa.getValue() != null)
+							{
+								if(this.template == null)
+								{
+									uri.append("/" + sa.getValue());
+								}
+								else
+								{
+									params.put(sa.getName(), sa.getValue());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 		for(AccessMethodAttribute aa : am.getAttributes())
 		{
 			if((aa.getInput() != null) && aa.getInput().equals("true"))
 			{
-				inputs.add(Attribute.create(typeType(aa.getType()), aa.getName()));
-				if(aa.getAttributeEncoding() != null)
+				if((aa.getName() != null) && (aa.getType() != null))
 				{
-					AttributeEncoding ae;
-					if((ae = map1.get(aa.getAttributeEncoding())) != null)
+					inputs.add(Attribute.create(typeType(aa.getType()), aa.getName()));
+					if(aa.getAttributeEncoding() != null)
 					{
-						if((ae.getType() != null) && (ae.getType().equals("path-element")))
+						AttributeEncoding ae;
+						if((ae = map1.get(aa.getAttributeEncoding())) != null)
 						{
-							if(this.template == null)
+							if((ae.getType() != null) && (ae.getType().equals("path-element")))
 							{
-								uri.append("/" + aa.getValue());
+								if(aa.getValue() != null)
+								{
+									if(this.template == null)
+									{
+										uri.append("/" + aa.getValue());
+									}
+									else
+									{
+										params.put(aa.getName(), aa.getValue()); // TODO: input tuple
+									}
+								}
 							}
-							else
-							{
-								indexs.put(aa.getName(), aa.getValue());
-							}		
 						}
 					}
 				}
@@ -116,8 +155,27 @@ public class RESTExecutableAccessMethod {
 			}
 		}
 	}
-	public void mapAttributesPhase2(AccessMethod am)
+	
+	// Phase 2 processes the name/value pairs, adding them onto the web target
+	public void mapAttributesPhase2(ServiceRoot sr, AccessMethod am)
 	{
+		for(StaticAttribute sa : sr.getStaticAttribute())
+		{
+			if(sa.getAttributeEncoding() != null)
+			{
+				AttributeEncoding ae;
+				if((ae = map1.get(sa.getAttributeEncoding())) != null)
+				{
+					if((ae.getType() != null) && ae.getType().equals("url-index"))
+					{
+						if((sa.getName() != null) && (sa.getValue() != null))
+						{
+							this.target = target.queryParam(sa.getName(), sa.getValue());
+						}
+					}
+				}
+			}
+		}
 		for(AccessMethodAttribute aa : am.getAttributes())
 		{
 			if((aa.getInput() != null) && aa.getInput().equals("true"))
@@ -127,15 +185,20 @@ public class RESTExecutableAccessMethod {
 					AttributeEncoding ae;
 					if((ae = map1.get(aa.getAttributeEncoding())) != null)
 					{
-						if(ae.getType().equals("url-index"))
+						if((ae.getType() != null) && ae.getType().equals("url-index"))
 						{
-							this.target = target.queryParam(aa.getName(), aa.getValue());
+							if((aa.getName() != null) && (aa.getValue() != null))
+							{
+								this.target = target.queryParam(aa.getName(), aa.getValue()); // TODO: input tuple
+							}
 						}
 					}
 				}
 			}
 		}
 	}
+	
+	// Perform the main access to the REST protocol and parse the results
 	public Table access()
 	{
 		Response response = restRawAccess.access(target, mediaType);
@@ -149,6 +212,8 @@ public class RESTExecutableAccessMethod {
 		}
 		return new Table();		
 	}
+	
+	// Format a list of templates as presented by the AttributeEncodings
 	public void formatTemplate(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am)
 	{
 		String result = "";
