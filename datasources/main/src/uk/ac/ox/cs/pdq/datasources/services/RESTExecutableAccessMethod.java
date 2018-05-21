@@ -88,7 +88,48 @@ public class RESTExecutableAccessMethod {
 		return null;
 	}
 	
-	// Phase 1 builds structures ready for the 2nd phase to begin and template formatting
+	// Format a list of templates as presented by the AttributeEncodings
+	public void formatTemplate(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am)
+	{
+		String result = "";
+		TreeMap<AttributeEncoding, String> map2 = new TreeMap<AttributeEncoding, String>();
+		for(AccessMethodAttribute aa: am.getAttributes())
+		{
+			String encoding = aa.getAttributeEncoding();
+			String index = aa.getAttributeEncodingIndex();	
+			if(encoding != null)
+			{
+				AttributeEncoding ae;
+				if((ae = map1.get(encoding)) != null)
+				{
+					String template;
+					if((template = map2.get(ae)) != null)
+					{
+						if(index != null)
+						{
+							template = template.replace("{" + index + "}", index);
+						}
+					}
+					else
+					{
+						if((template = ae.getTemplate()) != null)
+						{
+							if(index != null)
+							{
+								template = template.replace("{" + index + "}", index);
+							}
+							map2.put(ae, template);
+						}
+					}
+				}
+			}
+		}
+		Collection<String> cs = map2.values();
+		for(String s: cs) result += s;
+		this.template = result;
+	}
+
+	// Phase 1 builds structures and processes path-elements
 	public void mapAttributesPhase1(ServiceRoot sr, AccessMethod am, List<Attribute> inputs, List<Attribute> outputs, StringBuilder uri, Map<String, Object> params)
 	{
 		for(StaticAttribute sa : sr.getStaticAttribute())
@@ -213,44 +254,4 @@ public class RESTExecutableAccessMethod {
 		return new Table();		
 	}
 	
-	// Format a list of templates as presented by the AttributeEncodings
-	public void formatTemplate(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am)
-	{
-		String result = "";
-		TreeMap<AttributeEncoding, String> map2 = new TreeMap<AttributeEncoding, String>();
-		for(AccessMethodAttribute aa: am.getAttributes())
-		{
-			String encoding = aa.getAttributeEncoding();
-			String index = aa.getAttributeEncodingIndex();	
-			if(encoding != null)
-			{
-				AttributeEncoding ae;
-				if((ae = map1.get(encoding)) != null)
-				{
-					String template;
-					if((template = map2.get(ae)) != null)
-					{
-						if(index != null)
-						{
-							template = template.replace("{" + index + "}", index);
-						}
-					}
-					else
-					{
-						if((template = ae.getTemplate()) != null)
-						{
-							if(index != null)
-							{
-								template = template.replace("{" + index + "}", index);
-							}
-							map2.put(ae, template);
-						}
-					}
-				}
-			}
-		}
-		Collection<String> cs = map2.values();
-		for(String s: cs) result += s;
-		this.template = result;
-	}
 }
