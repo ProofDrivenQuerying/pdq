@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 // AttributeEncoding is the XML element which corresponds to the <attribute-encoding> tag
 @XmlType (propOrder= {"name", "type", "value", "template"})
-public class AttributeEncoding {
+public class AttributeEncoding implements Comparable<String> {
 	
 	private String name;
 	private String type;
@@ -63,6 +63,12 @@ public class AttributeEncoding {
 	public String toString()
 	{
 		return "AttributeEncoding";
+	}
+
+
+	@Override
+	public int compareTo(String o) {
+		return (name + type + value + template).compareTo(o);
 	}
 
 }
