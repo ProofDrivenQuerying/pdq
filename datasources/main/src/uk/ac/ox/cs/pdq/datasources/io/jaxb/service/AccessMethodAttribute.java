@@ -13,9 +13,9 @@ public class AccessMethodAttribute {
 	
 	private String name;
 	private String type;
+	private String value;
 	private String input;
 	private String output;
-	private String value;
 	private String attributeEncoding;
 	private String attributeEncodingIndex;
 	private String relationAttribute;
@@ -35,6 +35,13 @@ public class AccessMethodAttribute {
 		this.type = type;
 	}
 	@XmlAttribute
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
+	}
+	@XmlAttribute
 	public String getInput() {
 		return input;
 	}
@@ -48,18 +55,11 @@ public class AccessMethodAttribute {
 	public void setOutput(String output) {
 		this.output = output;
 	}
-	@XmlAttribute
-	public String getValue() {
-		return value;
-	}
-	public void setValue(String value) {
-		this.value = value;
-	}
 	@XmlAttribute (name="attribute-encoding")
 	public String getAttributeEncoding() {
 		return attributeEncoding;
 	}
-	public void setEncoding(String attributeEncoding) {
+	public void setAttributeEncoding(String attributeEncoding) {
 		this.attributeEncoding = attributeEncoding;
 	}
 	@XmlAttribute (name = "attribute-encoding-index")
