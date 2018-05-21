@@ -55,14 +55,14 @@ public class AccessMethodAttribute {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	@XmlAttribute
+	@XmlAttribute (name="attribute-encoding")
 	public String getAttributeEncoding() {
 		return attributeEncoding;
 	}
 	public void setEncoding(String attributeEncoding) {
 		this.attributeEncoding = attributeEncoding;
 	}
-	@XmlAttribute
+	@XmlAttribute (name = "attribute-encoding-index")
 	public String getAttributeEncodingIndex() {
 		return attributeEncodingIndex;
 	}
