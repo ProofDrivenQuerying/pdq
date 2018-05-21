@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlType;
  * @author Mark Ridler
  *
  */
-// AccessMethodRoot is the XML element which corresponds to the <access-method> tag
+// AttributeEncoding is the XML element which corresponds to the <attribute-encoding> tag
 @XmlType (propOrder= {"name", "type", "value", "template"})
 public class AttributeEncoding {
 	

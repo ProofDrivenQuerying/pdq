@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlType;
  * @author Mark Ridler
  *
  */
-// AccessMethodRest is the XML element which corresponds to the <rest> tag
+// StaticAttribute is the XML element which corresponds to the <static-attribute> tag
 @XmlType (propOrder= {"name", "attributeEncoding", "value"})
 public class StaticAttribute {
 	

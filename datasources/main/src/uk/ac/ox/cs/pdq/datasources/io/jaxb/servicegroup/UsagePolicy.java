@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlType;
  * @author Mark Ridler
  *
  */
-// AccessMethodRoot is the XML element which corresponds to the <access-method> tag
+// UsagePolicy is the XML element which corresponds to the <usage-policy> tag
 @XmlType (propOrder= {"name", "type", "limit", "period"})
 public class UsagePolicy {
 	

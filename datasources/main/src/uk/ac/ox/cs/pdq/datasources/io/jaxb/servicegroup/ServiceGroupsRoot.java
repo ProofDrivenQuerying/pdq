@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
  * @author Mark Ridler
  *
  */
-// AccessMethodRoot is the XML element which corresponds to the <access-method> tag
+// ServiceGroupsRoot is the XML element which corresponds to the <service-groups> tag
 @XmlRootElement (name="service-groups")
 @XmlType (propOrder= {"attributeEncoding", "usagePolicy", "service"})
 public class ServiceGroupsRoot {

@@ -10,14 +10,12 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 // AccessMethod is the XML element which corresponds to the <access-method> tag
-@XmlType (propOrder= {"name", "type", "cost", "template", "rest", "attributes"})
+@XmlType (propOrder= {"name", "type", "cost", "attributes"})
 public class AccessMethod {
 	
 	private String name;
 	private String type;
 	private String cost;
-	private String template;
-	private StaticAttribute rest;
 	private AccessMethodAttribute[] attributes;
 	
 	@XmlAttribute
@@ -45,24 +43,6 @@ public class AccessMethod {
 
 	public void setCost(String cost) {
 		this.cost = cost;
-	}
-
-	@XmlAttribute
-	public String getTemplate() {
-		return template;
-	}
-
-	public void setTemplate(String template) {
-		this.template = template;
-	}
-
-	@XmlElement (name="rest")
-	public StaticAttribute getRest() {
-		return rest;
-	}
-
-	public void setRest(StaticAttribute rest) {
-		this.rest = rest;
 	}
 
 	@XmlElement (name="attribute")
