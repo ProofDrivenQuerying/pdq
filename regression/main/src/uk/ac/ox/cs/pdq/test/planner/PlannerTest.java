@@ -150,7 +150,7 @@ public class PlannerTest extends RegressionTest {
 				return this.compare(directory);
 			}
 		}
-private static FileWriter summary = null;
+		private static FileWriter summary = null;
 		/**
 		 * Runs a single test case base on the .
 		 *

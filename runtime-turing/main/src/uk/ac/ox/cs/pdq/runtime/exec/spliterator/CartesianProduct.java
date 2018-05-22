@@ -11,6 +11,7 @@ import java.util.stream.StreamSupport;
 import jersey.repackaged.com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 /**
@@ -31,8 +32,8 @@ public class CartesianProduct extends BinaryExecutablePlan {
 	private List<Tuple> rightResultsCache = new ArrayList<Tuple>();
 	private boolean useResultsCache = false;
 
-	public CartesianProduct(Plan plan) {
-		super(plan);
+	public CartesianProduct(Plan plan, PlanDecorator decorator) throws Exception {
+		super(plan,decorator);
 		// Check compatibility with the given Plan instance.
 		Preconditions.checkArgument(plan instanceof CartesianProductTerm);
 	}

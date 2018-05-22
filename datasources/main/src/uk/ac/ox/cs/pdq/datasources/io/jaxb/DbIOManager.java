@@ -193,6 +193,9 @@ public class DbIOManager extends IOManager {
 	 * @return
 	 */
 	public static Collection<Atom> importFacts(Relation r, String csvFile) {
+		return importFacts(r, new File(csvFile));
+	}
+	public static Collection<Atom> importFacts(Relation r, File csvFile) {
 		Collection<Atom> facts = Sets.newHashSet();
 		BufferedReader reader = null;
 		try {

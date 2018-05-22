@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.runtime.exec.spliterator;
 import java.util.Iterator;
 
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 /**
@@ -14,8 +15,8 @@ public abstract class UnaryExecutablePlan extends ExecutablePlan {
 
 	protected ExecutablePlan child;
 
-	public UnaryExecutablePlan(Plan plan) {
-		super(plan);
+	public UnaryExecutablePlan(Plan plan, PlanDecorator decorator) {
+		super(plan,decorator);
 	}
 	
 	@Override

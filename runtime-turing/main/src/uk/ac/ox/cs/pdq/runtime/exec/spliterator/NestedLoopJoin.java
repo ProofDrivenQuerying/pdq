@@ -6,6 +6,7 @@ import java.util.stream.StreamSupport;
 import jersey.repackaged.com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 /**
@@ -15,8 +16,8 @@ import uk.ac.ox.cs.pdq.util.Tuple;
  */
 public class NestedLoopJoin extends CartesianProduct {
 
-	public NestedLoopJoin(Plan plan) {
-		super(plan);
+	public NestedLoopJoin(Plan plan, PlanDecorator decorator) throws Exception {
+		super(plan,decorator);
 		// Check compatibility with the given Plan instance.
 		Preconditions.checkArgument(plan instanceof JoinTerm);
 	}

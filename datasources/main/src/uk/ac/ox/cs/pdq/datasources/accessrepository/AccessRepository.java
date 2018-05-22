@@ -17,12 +17,13 @@ import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
  */
 public class AccessRepository {
 	
-	private static String DEFAULT_REPOSITORY_LOCATION= "/services";
+	private static String DEFAULT_REPOSITORY_LOCATION= "./services";
 	// There can be multiple repositories. This static field maps between locations and repositories.		
 	public static Map<String,AccessRepository> cachedRepositories = new HashMap<>();
 	
 	// In each repository there can be multiple accesses. This field maps the name of each access with the actual access.		
 	private Map<String, ExecutableAccessMethod> accesses = new HashMap<>();
+	private String repositoryFolderName;
 	
 	/** Creates or retrieves the repository pointing to the default repository location. 
 	 * @return
@@ -49,6 +50,7 @@ public class AccessRepository {
 	 */
 	private AccessRepository(String repositoryFolderName) throws JAXBException {
 		File repo = new File(repositoryFolderName);
+		this.repositoryFolderName = repo.getAbsolutePath();
 		if (!repo.exists())
 			throw new RuntimeException("Datasource Repository: \"" + repo.getAbsolutePath() + "\" not found!");
 		for(File f:repo.listFiles())
@@ -85,5 +87,13 @@ public class AccessRepository {
 			am.close();
 		}
 	}
-	
+
+	@Override
+	public String toString() {
+		return "AccessMethod repository for directory: " + this.repositoryFolderName + ".";
+	}
+
+	public static void setDefaultLocation(String newDefaultLocation) {
+		DEFAULT_REPOSITORY_LOCATION = newDefaultLocation;
+	}
 }

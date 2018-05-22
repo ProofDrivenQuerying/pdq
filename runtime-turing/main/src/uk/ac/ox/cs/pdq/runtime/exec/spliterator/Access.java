@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
@@ -31,8 +32,8 @@ public class Access extends UnaryExecutablePlan {
 	// Dynamic input.
 	protected Iterator<Tuple> inputTuples;
 
-	public Access(Plan plan) {
-		super(plan);
+	public Access(Plan plan, PlanDecorator decorator) {
+		super(plan,decorator);
 		// Check compatibility with the given Plan instance.
 		Preconditions.checkArgument(plan instanceof AccessTerm);
 	}

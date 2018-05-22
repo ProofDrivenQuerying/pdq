@@ -25,14 +25,14 @@ public abstract class BinaryExecutablePlan extends ExecutablePlan {
 	protected ExecutablePlan leftChild;
 	protected ExecutablePlan rightChild;
 	
-	public BinaryExecutablePlan(Plan plan) {
-		super(plan);
+	public BinaryExecutablePlan(Plan plan, PlanDecorator decorator) throws Exception {
+		super(plan,decorator);
 		// Check compatibility with the given Plan instance.
 		Preconditions.checkArgument(plan.getChildren().length == 2);
 
 		// Assign the child fields to those of the (decorated) child plans.
-		this.leftChild = PlanDecorator.decorate(this.getDecoratedPlan().getChildren()[0]);
-		this.rightChild = PlanDecorator.decorate(this.getDecoratedPlan().getChildren()[1]);
+		this.leftChild = decorator.decorate(this.getDecoratedPlan().getChildren()[0]);
+		this.rightChild = decorator.decorate(this.getDecoratedPlan().getChildren()[1]);
 	}
 
 	// Base setInputTuples method appropriately sets the fields on the children.

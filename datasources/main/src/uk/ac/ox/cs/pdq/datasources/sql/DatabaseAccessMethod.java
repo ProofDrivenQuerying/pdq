@@ -168,7 +168,7 @@ public class DatabaseAccessMethod extends ExecutableAccessMethod {
 	 */
 	private String selectClause() {
 		return "SELECT " + Joiner.on(",").join(this.outputAttributes(false)) 
-				+ " FROM " + this.getName();
+				+ " FROM " + this.relation.getName();
 	}
 
 	/**

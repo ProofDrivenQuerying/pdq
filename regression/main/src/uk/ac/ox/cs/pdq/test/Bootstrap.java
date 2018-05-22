@@ -9,14 +9,16 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.ParametersException;
-import uk.ac.ox.cs.pdq.test.planner.PlannerTest.PlannerTestCommand;
-
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
+
+import uk.ac.ox.cs.pdq.ParametersException;
+import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
+import uk.ac.ox.cs.pdq.test.planner.PlannerTest.PlannerTestCommand;
+import uk.ac.ox.cs.pdq.test.runtime.RuntimeTest.RuntimeTestCommand;
 
 /**
  * The entry point for the regression package.
@@ -47,17 +49,16 @@ public class Bootstrap {
 	 * @param args the command line parameters as given by the main method.
 	 */
 	public Bootstrap(String... args) {
-
+		AccessRepository.setDefaultLocation("./test/schemas/accesses");
 		JCommander jc = new JCommander(this);
 		Map<String, Command> commands = new LinkedHashMap<>();
 		{
 			Command c = new PlannerTestCommand();
 			commands.put(c.name, c);
 			jc.addCommand(c.name, c);
-			//TOCOMMENT commented out until runtime gets finalized. 
-//			c = new RuntimeTestCommand();
-//			commands.put(c.name, c);
-//			jc.addCommand(c.name, c);
+			c = new RuntimeTestCommand();
+			commands.put(c.name, c);
+			jc.addCommand(c.name, c);
 		}
 		jc.setProgramName(Bootstrap.PROGRAM_NAME);
 		try {
