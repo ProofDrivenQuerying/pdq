@@ -71,7 +71,7 @@ public class RESTExecutableAccessMethod {
 	}
 	
 	// Conversion from string to type ... there may be a better way of doing this
-	public Type typeType(String type)
+	private Type typeType(String type)
 	{
 		if(type.equals("String"))
 		{
@@ -89,7 +89,7 @@ public class RESTExecutableAccessMethod {
 	}
 	
 	// Format a list of templates as presented by the AttributeEncodings
-	public void formatTemplate(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am)
+	private void formatTemplate(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am)
 	{
 		String result = "";
 		TreeMap<AttributeEncoding, String> map2 = new TreeMap<AttributeEncoding, String>();
@@ -161,7 +161,7 @@ public class RESTExecutableAccessMethod {
 	}
 
 	// Phase 1 builds structures and processes path-elements
-	public void mapAttributesPhase1(ServiceRoot sr, AccessMethod am, List<Attribute> inputs, List<Attribute> outputs, StringBuilder uri, Map<String, Object> params)
+	private void mapAttributesPhase1(ServiceRoot sr, AccessMethod am, List<Attribute> inputs, List<Attribute> outputs, StringBuilder uri, Map<String, Object> params)
 	{
 		for(StaticAttribute sa : sr.getStaticAttribute())
 		{
@@ -229,7 +229,7 @@ public class RESTExecutableAccessMethod {
 	}
 	
 	// Phase 2 processes the name/value pairs, adding them onto the web target
-	public void mapAttributesPhase2(ServiceRoot sr, AccessMethod am)
+	private void mapAttributesPhase2(ServiceRoot sr, AccessMethod am)
 	{
 		for(StaticAttribute sa : sr.getStaticAttribute())
 		{
@@ -322,5 +322,4 @@ public class RESTExecutableAccessMethod {
 		}
 		return new Table();		
 	}
-	
 }
