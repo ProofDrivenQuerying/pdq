@@ -10,6 +10,8 @@ import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.ServiceGroupsRoot;
 import uk.ac.ox.cs.pdq.datasources.services.RESTExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.services.ServiceManager;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.util.TupleType;
 
 public class ServiceXmlTest {
 	
@@ -28,7 +30,9 @@ public class ServiceXmlTest {
 			{
 				AccessMethod am = sr.getAccessMethod()[i];
 				RESTExecutableAccessMethod ream = new RESTExecutableAccessMethod(sgr, sr, am);
-				Table t = ream.access();
+				TupleType tupleType = TupleType.DefaultFactory.createFromTyped();
+				Tuple input = tupleType.createTuple();
+				Table t = ream.access(input);
 				System.out.println(t);
 			}
 			ServiceManager.exportAccessMethod(sr, outputFile);
