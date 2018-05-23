@@ -44,7 +44,7 @@ public class RESTExecutableAccessMethod {
 	private Attribute[] outputattributes;
 	private JsonResponseUnmarshaller jsonResponseUnmarshaller;
 	private XmlResponseUnmarshaller xmlResponseUnmarshaller;
-	private TreeMap<String, AttributeEncoding> attributeEncodingMap1 = new TreeMap<String, AttributeEncoding>();
+	private TreeMap<String, AttributeEncoding> attributeEncodingMap = new TreeMap<String, AttributeEncoding>();
 	private TreeMap<String, UsagePolicy> usagePolicyMap = new TreeMap<String, UsagePolicy>();
 
 	// Constructor takes XML-derived objects and builds a structure ready to run
@@ -54,7 +54,8 @@ public class RESTExecutableAccessMethod {
 		this.mediaType = new MediaType("application", "json");
 		String mediaType = sr.getMediaType();
 		if((mediaType != null) && mediaType.equals("application/xml"))	this.mediaType = new MediaType("application", "xml");
-		for(AttributeEncoding ae: sgr.getAttributeEncoding()) attributeEncodingMap1.put(ae.getName(), ae);
+		for(AttributeEncoding ae: sgr.getAttributeEncoding()) attributeEncodingMap.put(ae.getName(), ae);
+		compileUsagePolicies(sgr);
 		formatTemplate(sgr, sr, am);
 		LinkedList<Attribute> inputs = new LinkedList<Attribute>();
 		LinkedList<Attribute> outputs = new LinkedList<Attribute>();
@@ -92,10 +93,10 @@ public class RESTExecutableAccessMethod {
 		return null;
 	}
 	
+	// Put all usage polcies in a map for future reference
 	@SuppressWarnings("unchecked")
-	public void usagePolicies(ServiceGroupsRoot sgr) throws ReaderException, ClassNotFoundException
+	public void compileUsagePolicies(ServiceGroupsRoot sgr)
 	{
-		Properties prop = new Properties();
 		for(GroupUsagePolicy gup : sgr.getUsagePolicy())
 		{
 			if(gup.getName() != null)
@@ -103,15 +104,29 @@ public class RESTExecutableAccessMethod {
 				UsagePolicy up = usagePolicyMap.get(gup.getName());
 				if(up != null)
 				{
-					throw new ReaderException("Duplicate usage policy '" + gup.getName() + "'");					
+					try
+					{
+						throw new ReaderException("Duplicate usage policy '" + gup.getName() + "'");
+					}
+					catch(ReaderException e)
+					{
+						System.out.println(e.toString());
+					}
 				}
 				else if(gup.getType() != null)
 				{
-					String className = gup.getType();
-					Class<UsagePolicy> cl = (Class<UsagePolicy>) Class.forName(className);
-					if(cl != null)
+					try
 					{
-						usagePolicyMap.put(gup.getName(), PolicyFactory.getInstance(cl, prop));
+						String className = gup.getType();
+						Class<UsagePolicy> cl = (Class<UsagePolicy>) Class.forName(className);
+						if(cl != null)
+						{
+							usagePolicyMap.put(gup.getName(), PolicyFactory.getInstance(cl, gup));
+						}
+					}
+					catch(ClassNotFoundException e)
+					{
+						System.out.println(e.toString());
 					}
 				}
 			}
@@ -130,7 +145,7 @@ public class RESTExecutableAccessMethod {
 			if(encoding != null)
 			{
 				AttributeEncoding ae;
-				if((ae = attributeEncodingMap1.get(encoding)) != null)
+				if((ae = attributeEncodingMap.get(encoding)) != null)
 				{
 					String template;
 					if((template = map2.get(ae)) != null)
@@ -161,7 +176,7 @@ public class RESTExecutableAccessMethod {
 			if(encoding != null)
 			{
 				AttributeEncoding ae;
-				if((ae = attributeEncodingMap1.get(encoding)) != null)
+				if((ae = attributeEncodingMap.get(encoding)) != null)
 				{
 					String template;
 					if((template = map2.get(ae)) != null)
@@ -197,7 +212,7 @@ public class RESTExecutableAccessMethod {
 		{
 			if(sa.getAttributeEncoding() != null)
 			{
-				AttributeEncoding ae = attributeEncodingMap1.get(sa.getAttributeEncoding());
+				AttributeEncoding ae = attributeEncodingMap.get(sa.getAttributeEncoding());
 				if(ae != null)
 				{
 					if((sa.getName() != null) && (sa.getType() != null))
@@ -231,7 +246,7 @@ public class RESTExecutableAccessMethod {
 					if(aa.getAttributeEncoding() != null)
 					{
 						AttributeEncoding ae;
-						if((ae = attributeEncodingMap1.get(aa.getAttributeEncoding())) != null)
+						if((ae = attributeEncodingMap.get(aa.getAttributeEncoding())) != null)
 						{
 							if((ae.getType() != null) && (ae.getType().equals("path-element")))
 							{
@@ -266,7 +281,7 @@ public class RESTExecutableAccessMethod {
 			if(sa.getAttributeEncoding() != null)
 			{
 				AttributeEncoding ae;
-				if((ae = attributeEncodingMap1.get(sa.getAttributeEncoding())) != null)
+				if((ae = attributeEncodingMap.get(sa.getAttributeEncoding())) != null)
 				{
 					if((ae.getType() != null) && ae.getType().equals("url-param"))
 					{
@@ -303,7 +318,7 @@ public class RESTExecutableAccessMethod {
 				if(aa.getAttributeEncoding() != null)
 				{
 					AttributeEncoding ae;
-					if((ae = attributeEncodingMap1.get(aa.getAttributeEncoding())) != null)
+					if((ae = attributeEncodingMap.get(aa.getAttributeEncoding())) != null)
 					{
 						if((ae.getType() != null) && ae.getType().equals("url-param"))
 						{
