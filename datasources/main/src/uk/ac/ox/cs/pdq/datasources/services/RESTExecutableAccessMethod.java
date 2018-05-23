@@ -10,18 +10,20 @@ import java.util.TreeMap;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
 
+import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.AccessMethod;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.AccessMethodAttribute;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.ServiceRoot;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.StaticAttribute;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.AttributeEncoding;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.ServiceGroupsRoot;
+import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.util.Tuple;
 
 /**
  * @author Mark Ridler
@@ -38,8 +40,8 @@ public class RESTExecutableAccessMethod {
 	private Attribute[] outputattributes;
 	private JsonResponseUnmarshaller jsonResponseUnmarshaller;
 	private XmlResponseUnmarshaller xmlResponseUnmarshaller;
-	private RESTRawAccess restRawAccess = new RESTRawAccess();
-	private TreeMap<String, AttributeEncoding> map1 = new TreeMap<String, AttributeEncoding>();
+	private TreeMap<String, AttributeEncoding> attributeEncodingMap1 = new TreeMap<String, AttributeEncoding>();
+	private TreeMap<String, UsagePolicy> usagePolicyMap = new TreeMap<String, UsagePolicy>();
 
 	// Constructor takes XML-derived objects and builds a structure ready to run
 	public RESTExecutableAccessMethod(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am)
@@ -48,7 +50,7 @@ public class RESTExecutableAccessMethod {
 		this.mediaType = new MediaType("application", "json");
 		String mediaType = sr.getMediaType();
 		if((mediaType != null) && mediaType.equals("application/xml"))	this.mediaType = new MediaType("application", "xml");
-		for(AttributeEncoding ae: sgr.getAttributeEncoding()) map1.put(ae.getName(), ae);
+		for(AttributeEncoding ae: sgr.getAttributeEncoding()) attributeEncodingMap1.put(ae.getName(), ae);
 		formatTemplate(sgr, sr, am);
 		LinkedList<Attribute> inputs = new LinkedList<Attribute>();
 		LinkedList<Attribute> outputs = new LinkedList<Attribute>();
@@ -59,8 +61,6 @@ public class RESTExecutableAccessMethod {
 		this.target = ClientBuilder.newClient().register(JacksonFeatures.class).target(uri.toString());
 		mapAttributesPhase2(sr, am);
 		
-		System.out.println(this.target.toString());
-
 		inputattributes = new Attribute[inputs.size()];
 		for(int i = 0; i < inputs.size(); i++) inputattributes[i] = inputs.get(i);
 		outputattributes = new Attribute[outputs.size()];
@@ -88,6 +88,31 @@ public class RESTExecutableAccessMethod {
 		return null;
 	}
 	
+/*	@SuppressWarnings("unchecked")
+	private void usagePolicies(ServiceGroupsRoot sgr)
+	{
+		for(GroupUsagePolicy gup : sgr.getUsagePolicy())
+		{
+			if(gup.getName() != null)
+			{
+				UsagePolicy up = usagePolicyMap.get(gup.getName());
+				if(up != null)
+				{
+					throw new ReaderException("Duplicate usage policy '" + gup.getName() + "'");					
+				}
+				else if(gup.getType() != null)
+				{
+					String className = gup.getType();
+					Class<UsagePolicy> cl = (Class<UsagePolicy>) Class.forName(className);
+					if(cl != null)
+					{
+						usagePolicyMap.put(gup.getName(), PolicyFactory.getInstance(cl, prop));
+					}
+				}
+			}
+		}
+	}*/
+	
 	// Format a list of templates as presented by the AttributeEncodings
 	private void formatTemplate(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am)
 	{
@@ -100,7 +125,7 @@ public class RESTExecutableAccessMethod {
 			if(encoding != null)
 			{
 				AttributeEncoding ae;
-				if((ae = map1.get(encoding)) != null)
+				if((ae = attributeEncodingMap1.get(encoding)) != null)
 				{
 					String template;
 					if((template = map2.get(ae)) != null)
@@ -131,7 +156,7 @@ public class RESTExecutableAccessMethod {
 			if(encoding != null)
 			{
 				AttributeEncoding ae;
-				if((ae = map1.get(encoding)) != null)
+				if((ae = attributeEncodingMap1.get(encoding)) != null)
 				{
 					String template;
 					if((template = map2.get(ae)) != null)
@@ -167,7 +192,7 @@ public class RESTExecutableAccessMethod {
 		{
 			if(sa.getAttributeEncoding() != null)
 			{
-				AttributeEncoding ae = map1.get(sa.getAttributeEncoding());
+				AttributeEncoding ae = attributeEncodingMap1.get(sa.getAttributeEncoding());
 				if(ae != null)
 				{
 					if((sa.getName() != null) && (sa.getType() != null))
@@ -201,7 +226,7 @@ public class RESTExecutableAccessMethod {
 					if(aa.getAttributeEncoding() != null)
 					{
 						AttributeEncoding ae;
-						if((ae = map1.get(aa.getAttributeEncoding())) != null)
+						if((ae = attributeEncodingMap1.get(aa.getAttributeEncoding())) != null)
 						{
 							if((ae.getType() != null) && (ae.getType().equals("path-element")))
 							{
@@ -236,7 +261,7 @@ public class RESTExecutableAccessMethod {
 			if(sa.getAttributeEncoding() != null)
 			{
 				AttributeEncoding ae;
-				if((ae = map1.get(sa.getAttributeEncoding())) != null)
+				if((ae = attributeEncodingMap1.get(sa.getAttributeEncoding())) != null)
 				{
 					if((ae.getType() != null) && ae.getType().equals("url-param"))
 					{
@@ -273,7 +298,7 @@ public class RESTExecutableAccessMethod {
 				if(aa.getAttributeEncoding() != null)
 				{
 					AttributeEncoding ae;
-					if((ae = map1.get(aa.getAttributeEncoding())) != null)
+					if((ae = attributeEncodingMap1.get(aa.getAttributeEncoding())) != null)
 					{
 						if((ae.getType() != null) && ae.getType().equals("url-param"))
 						{
@@ -309,16 +334,27 @@ public class RESTExecutableAccessMethod {
 	}
 	
 	// Perform the main access to the REST protocol and parse the results
-	public Table access()
+	public Table access(Tuple input)
 	{
-		Response response = restRawAccess.access(target, mediaType);
+		RESTRequestEvent request = new RESTRequestEvent(target, mediaType);
+		
+		RESTResponseEvent response = request.processRequest();
 		
 		Table table = new Table();
 				
-		if(mediaType.getType().equals("application"))
-		{
-			if(mediaType.getSubtype().equals("xml")) return xmlResponseUnmarshaller.unmarshalXml(response, table);
-			else if(mediaType.getSubtype().equals("json")) return jsonResponseUnmarshaller.unmarshalJson(response, table); 
+		int status = response.getResponse().getStatus();
+		if (status == 200) {
+			if(mediaType.getType().equals("application"))
+			{
+				if(mediaType.getSubtype().equals("xml")) return xmlResponseUnmarshaller.unmarshalXml(response.getResponse(), table);
+				else if(mediaType.getSubtype().equals("json")) return jsonResponseUnmarshaller.unmarshalJson(response.getResponse(), table); 
+			}
+		} else if ((status == 404) || (status == 400)) {
+			System.out.println(response.getResponse().getStatusInfo().getReasonPhrase());
+		} else {
+			throw new AccessException(status
+					+ " - " + response.getResponse().getStatusInfo().getReasonPhrase()
+					+ "\n" + response.getResponse().readEntity(String.class));
 		}
 		return new Table();		
 	}
