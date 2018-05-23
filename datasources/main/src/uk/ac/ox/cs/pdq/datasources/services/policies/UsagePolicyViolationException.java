@@ -15,26 +15,14 @@ public class UsagePolicyViolationException extends AccessException {
 
 	private static final long serialVersionUID = -8611823447617411625L;
 
-	/**
-	 * Instantiates a new usage policy violation exception.
-	 */
 	public UsagePolicyViolationException() {
 		super();
 	}
 
-	/**
-	 * Constructor for UsagePolicyViolationException.
-	 * @param msg String
-	 */
 	public UsagePolicyViolationException(String msg) {
 		super(msg);
 	}
 
-	/**
-	 * Constructor for UsagePolicyViolationException.
-	 * @param msg String
-	 * @param cause Throwable
-	 */
 	public UsagePolicyViolationException(String msg, Throwable cause) {
 		super(msg, cause);
 	}

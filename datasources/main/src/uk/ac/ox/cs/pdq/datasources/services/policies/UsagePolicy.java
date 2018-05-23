@@ -13,9 +13,5 @@ package uk.ac.ox.cs.pdq.datasources.services.policies;
  */
 public interface UsagePolicy {
 
-	/**
-	 *
-	 * @return a field-to-field copy of the usage policy
-	 */
 	UsagePolicy copy();
 }

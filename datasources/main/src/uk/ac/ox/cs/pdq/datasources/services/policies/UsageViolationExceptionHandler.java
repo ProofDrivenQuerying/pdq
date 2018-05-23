@@ -15,10 +15,6 @@ import uk.ac.ox.cs.pdq.datasources.legacy.services.AccessEvent;
  */
 public class UsageViolationExceptionHandler implements SubscriberExceptionHandler {
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.google.common.eventbus.SubscriberExceptionHandler#handleException(java.lang.Throwable, com.google.common.eventbus.SubscriberExceptionContext)
-	 */
 	@Override
 	public void handleException(Throwable arg0, SubscriberExceptionContext arg1) {
 		if (arg0 instanceof AccessException) {

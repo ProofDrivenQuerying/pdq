@@ -3,6 +3,8 @@ package uk.ac.ox.cs.pdq.datasources.services.policies;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.GroupUsagePolicy;
+
 /**
  * Factory for usage policies.
  * Assume all the relevant class have a constructor taking a single Properties
@@ -12,17 +14,9 @@ import java.util.Properties;
  */
 public class PolicyFactory {
 
-	/**
-	 * Gets the single instance of PolicyFactory.
-	 *
-	 * @param cl the cl
-	 * @param properties the properties
-	 * @return a instance of the given usage policy class, initialized with the
-	 * given properties.
-	 */
-	public static UsagePolicy getInstance(Class<UsagePolicy> cl, Properties properties) {
+	public static UsagePolicy getInstance(Class<UsagePolicy> cl, GroupUsagePolicy gup) {
 		try {
-			return cl.getConstructor(Properties.class).newInstance(properties);
+			return cl.getConstructor(GroupUsagePolicy.class).newInstance(gup);
 		} catch (NoSuchMethodException
 				| InvocationTargetException
 				| IllegalAccessException

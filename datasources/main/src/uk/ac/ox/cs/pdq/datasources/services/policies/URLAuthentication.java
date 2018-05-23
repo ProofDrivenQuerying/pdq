@@ -32,11 +32,6 @@ public class URLAuthentication  implements UsagePolicy, AccessPreProcessor<RESTR
 	/**  The set of input methods used by this policy. */
 	private Set<InputMethod> inputMethods = new LinkedHashSet<>();		
 	
-	/**
-	 * Default constructor.
-	 *
-	 * @param keyAtt the key att
-	 */
 	protected URLAuthentication(RESTAttribute keyAtt) {
 		super();
 		Preconditions.checkArgument(keyAtt != null);
@@ -45,32 +40,17 @@ public class URLAuthentication  implements UsagePolicy, AccessPreProcessor<RESTR
 		this.inputMethods.add(this.keyAttributes.getInputMethod());
 	}
 
-	/**
-	 * Constructor used by the usage policy factory.
-	 *
-	 * @param repo the repo
-	 * @param properties the properties
-	 */
 	public URLAuthentication(ServiceRepository repo, Properties properties) {
 		this(new RESTAttribute(
 				Attribute.create(String.class, repo.getInputMethod(properties.getProperty(INPUT_METHOD)).getName()),
 			repo.getInputMethod(properties.getProperty(INPUT_METHOD))));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.wrappers.service.UsagePolicy#copy()
-	 */
 	@Override
 	public UsagePolicy copy() {
 		return new URLAuthentication(this.keyAttributes);
 	}
 
-	/**
-	 *
-	 * @param event RESTRequestEvent
-	 * @throws UsagePolicyViolationException the usage policy violation exception
-	 */
 	@Override
 	public void processAccessRequest(RESTRequestEvent event) throws UsagePolicyViolationException {
 		RESTAccess access = event.getAccess();

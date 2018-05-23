@@ -6,6 +6,7 @@ import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.GroupUsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.AccessPostProcessor;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.AccessPreProcessor;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTRequestEvent;
@@ -22,10 +23,6 @@ public abstract class PeriodicalAllowance
 			implements UsagePolicy, AccessPreProcessor<RESTRequestEvent>,
 					AccessPostProcessor<RESTResponseEvent> {
 
-	/**
-	 *
-	 * @return int
-	 */
 	public int getTotal() {
 		return this.total;
 	}
@@ -59,40 +56,26 @@ public abstract class PeriodicalAllowance
 	/** Total number of items recorded so far. */
 	private int total = 0;
 
-	/**
-	 * Default constructor.
-	 *
-	 * @param limit the limit
-	 * @param period the period
-	 * @param wait the wait
-	 */
 	public PeriodicalAllowance(int limit, long period, boolean wait) {
 		this.limit = limit;
 		this.period = period;
 		this.wait = wait;
 	}
 	
-	/**
-	 * Properties-based constructor.
-	 *
-	 * @param properties the properties
-	 */
 	public PeriodicalAllowance(Properties properties) {
 		this(Integer.parseInt(properties.getProperty(LIMIT, "-1")),
 				Periods.parse(properties.getProperty(PERIOD, "24h")),
 				Boolean.parseBoolean(properties.getProperty(WAIT, "false")));
 	}
+	
+	public PeriodicalAllowance(GroupUsagePolicy gup) {
+		this(Integer.parseInt((gup.getLimit() != null) ? gup.getLimit() : "-1"),
+				Periods.parse((gup.getPeriod() != null) ? gup.getPeriod() : "24h"),
+				Boolean.parseBoolean((gup.getWait() != null) ? gup.getWait() : "false"));
+	}
+	
+	
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.service.AccessPreProcessor#processAccessRequest(uk.ac.ox.cs.pdq.runtime.wrappers.service.RequestEvent)
-	 */
-	/**
-	 * Process access request.
-	 *
-	 * @param event RESTRequestEvent
-	 * @throws UsagePolicyViolationException the usage policy violation exception
-	 */
 	@Override
 	public void processAccessRequest(RESTRequestEvent event) throws UsagePolicyViolationException {
 		this.updateHistory();
@@ -126,22 +109,8 @@ public abstract class PeriodicalAllowance
 		}
 	}
 	
-	/**
-	 *
-	 * @param event the event
-	 * @return the amount associated with the given response event.
-	 */
 	protected abstract int getAmount(RESTResponseEvent event);
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.service.AccessPostProcessor#processAccessResponse(uk.ac.ox.cs.pdq.runtime.wrappers.service.ResponseEvent)
-	 */
-	/**
-	 *
-	 * @param event RESTResponseEvent
-	 * @throws UsagePolicyViolationException the usage policy violation exception
-	 */
 	@Override
 	public void processAccessResponse(RESTResponseEvent event) throws UsagePolicyViolationException {
 		int total = this.getAmount(event);
@@ -149,9 +118,6 @@ public abstract class PeriodicalAllowance
 		this.total += total;
 	}
 
-	/**
-	 * Remove obsolete entries in the request history.
-	 */
 	private void updateHistory() {
 		Iterator<Long> i = this.history.keySet().iterator();
 		Long key = null;
@@ -162,12 +128,6 @@ public abstract class PeriodicalAllowance
 		}
 	}
 	
-	/**
-	 * Gets the wait period.
-	 *
-	 * @return a waiting period in millisecond by check the last request
-	 * timestamp when the limit was not exceeded.
-	 */
 	private Long getWaitPeriod() {
 		int i = 0;
 		long l = System.currentTimeMillis();
@@ -179,27 +139,14 @@ public abstract class PeriodicalAllowance
 		return this.period - (System.currentTimeMillis() - l);
 	}
 
-	/**
-	 *TOCOMMENT:???
-	 * @return boolean
-	 */
 	public boolean isWait() {
 		return this.wait;
 	}
 
-	/**
-	 *
-	 * @return int
-	 */
 	public int getLimit() {
 		return this.limit;
 	}
 
-	/**
-	 * Gets the period.
-	 *
-	 * @return long
-	 */
 	public long getPeriod() {
 		return this.period;
 	}

@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.datasources.services.policies;
 
 import java.util.Properties;
 
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.GroupUsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTResponseEvent;
 
 /**
@@ -13,39 +14,23 @@ import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTResponseEvent;
  */
 public class ResultAllowance extends PeriodicalAllowance {
 	
-	/**
-	 * Constructor for ResultAllowance.
-	 * @param limit int
-	 * @param period long
-	 * @param wait boolean
-	 */
 	public ResultAllowance(int limit, long period, boolean wait) {
 		super(limit, period, wait);
 	}
 	
-	/**
-	 * Constructor for ResultAllowance.
-	 * @param properties Properties
-	 */
 	public ResultAllowance(Properties properties) {
 		super(properties);
 	}
 
-	/**
-	 *
-	 * @return UsagePolicy
-	 * @see uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.GroupUsagePolicy.UsagePolicy#copy()
-	 */
+	public ResultAllowance(GroupUsagePolicy gup) {
+		super(gup);
+	}
+
 	@Override
 	public UsagePolicy copy() {
 		return new ResultAllowance(this.getLimit(), this.getPeriod(), this.isWait());
 	}
 
-	/**
-	 *
-	 * @param event RESTResponseEvent
-	 * @return int
-	 */
 	@Override
 	protected int getAmount(RESTResponseEvent event) {
 		return event.getOutput().size();
