@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TreeMap;
 
 import javax.ws.rs.client.ClientBuilder;
@@ -19,10 +20,13 @@ import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.AccessMethodAttribute;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.ServiceRoot;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.StaticAttribute;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.AttributeEncoding;
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.GroupUsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.ServiceGroupsRoot;
+import uk.ac.ox.cs.pdq.datasources.services.policies.PolicyFactory;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 /**
@@ -88,9 +92,10 @@ public class RESTExecutableAccessMethod {
 		return null;
 	}
 	
-/*	@SuppressWarnings("unchecked")
-	private void usagePolicies(ServiceGroupsRoot sgr)
+	@SuppressWarnings("unchecked")
+	public void usagePolicies(ServiceGroupsRoot sgr) throws ReaderException, ClassNotFoundException
 	{
+		Properties prop = new Properties();
 		for(GroupUsagePolicy gup : sgr.getUsagePolicy())
 		{
 			if(gup.getName() != null)
@@ -111,7 +116,7 @@ public class RESTExecutableAccessMethod {
 				}
 			}
 		}
-	}*/
+	}
 	
 	// Format a list of templates as presented by the AttributeEncodings
 	private void formatTemplate(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am)
