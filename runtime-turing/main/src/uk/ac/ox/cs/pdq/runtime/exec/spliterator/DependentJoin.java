@@ -17,6 +17,7 @@ import jersey.repackaged.com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
@@ -51,8 +52,8 @@ public class DependentJoin extends BinaryExecutablePlan {
 	private final List<Attribute> boundRightInputs;
 	private final List<Attribute> unboundRightInputs;
 
-	public DependentJoin(Plan plan) {
-		super(plan);
+	public DependentJoin(Plan plan, PlanDecorator decorator) throws Exception {
+		super(plan,decorator);
 		// Check compatibility with the given Plan instance.
 		Preconditions.checkArgument(plan instanceof DependentJoinTerm);
 

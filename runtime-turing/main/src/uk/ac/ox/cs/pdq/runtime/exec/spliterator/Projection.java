@@ -21,13 +21,13 @@ public class Projection extends UnaryExecutablePlan {
 
 	private final Function<Tuple, Tuple> projectionFunction;
 
-	public Projection(Plan plan) {
-		super(plan);
+	public Projection(Plan plan, PlanDecorator decorator) throws Exception {
+		super(plan, decorator);
 		// Check compatibility with the given Plan instance.
 		Preconditions.checkArgument(plan instanceof ProjectionTerm);
 		
 		// Assign the (decorated) child plan to the child field.
-		this.child = PlanDecorator.decorate(this.decoratedPlan.getChildren()[0]); 
+		this.child = decorator.decorate(this.decoratedPlan.getChildren()[0]); 
 		
 		// Assign the projection function (as a closure).
 		this.projectionFunction = ExecutablePlan.tupleProjector(plan.getChildren()[0].getOutputAttributes(), 

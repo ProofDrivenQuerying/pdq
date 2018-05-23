@@ -21,13 +21,13 @@ public class Selection extends UnaryExecutablePlan {
 
 	private final Predicate<Tuple> filterPredicate;
 
-	public Selection(Plan plan) {
-		super(plan);
+	public Selection(Plan plan, PlanDecorator decorator) throws Exception {
+		super(plan,decorator);
 		// Check compatibility with the given Plan instance.
 		Preconditions.checkArgument(plan instanceof SelectionTerm);
 
 		// Assign the (decorated) child plan to the child field.
-		this.child = PlanDecorator.decorate(this.getDecoratedPlan().getChildren()[0]);
+		this.child = decorator.decorate(this.getDecoratedPlan().getChildren()[0]);
 
 		// Assign the filter predicate field, based on the selection condition.
 		this.filterPredicate = ((SelectionTerm) this.getDecoratedPlan()).getSelectionCondition().asPredicate();

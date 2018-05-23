@@ -15,6 +15,7 @@ import jersey.repackaged.com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 /**
@@ -42,8 +43,8 @@ public class SymmetricMemoryHashJoin extends BinaryExecutablePlan {
 	private final Function<Tuple, Tuple> leftProjector;
 	private final Function<Tuple, Tuple> rightProjector;
 
-	public SymmetricMemoryHashJoin(Plan plan) {
-		super(plan);
+	public SymmetricMemoryHashJoin(Plan plan, PlanDecorator decorator) throws Exception {
+		super(plan, decorator);
 		// Check compatibility with the given Plan instance.
 		Preconditions.checkArgument(plan instanceof JoinTerm);
 

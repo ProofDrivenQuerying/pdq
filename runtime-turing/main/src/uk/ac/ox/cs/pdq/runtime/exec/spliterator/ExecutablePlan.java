@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
@@ -27,12 +28,14 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 public abstract class ExecutablePlan implements Plan, AutoCloseable {
 
 	protected final Plan decoratedPlan;
+	private PlanDecorator decorator;
 
-	public ExecutablePlan(Plan plan) {
+	public ExecutablePlan(Plan plan, PlanDecorator decorator) {
 		// Note that we do not attempt to decorate the children of the given plan.
 		// This would not be easy, since the children field is protected, and is
 		// also unnecessary, since we can decorate on-the-fly when required.
 		this.decoratedPlan = plan;
+		this.decorator = decorator;
 	}
 	
 	/**
@@ -168,5 +171,9 @@ public abstract class ExecutablePlan implements Plan, AutoCloseable {
 	@Override
 	public boolean isClosed() {
 		return decoratedPlan.isClosed();
+	}
+	
+	public PlanDecorator getDecorator() {
+		return this.decorator;
 	}
 }
