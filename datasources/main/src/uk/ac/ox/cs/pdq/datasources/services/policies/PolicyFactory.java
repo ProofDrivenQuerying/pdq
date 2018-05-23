@@ -3,10 +3,6 @@ package uk.ac.ox.cs.pdq.datasources.services.policies;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-
-import uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceRepository;
-
 /**
  * Factory for usage policies.
  * Assume all the relevant class have a constructor taking a single Properties
