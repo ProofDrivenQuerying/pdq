@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlType;
 public class ServiceGroupsRoot {
 	
 	private AttributeEncoding[] attributeEncoding;
-	private UsagePolicy[] usagePolicy;
+	private GroupUsagePolicy[] usagePolicy;
 	private Service[] service;
 
 	@XmlElement (name = "attribute-encoding")
@@ -27,11 +27,11 @@ public class ServiceGroupsRoot {
 	}
 
 	@XmlElement (name = "usage-policy")
-	public UsagePolicy[] getUsagePolicy() {
+	public GroupUsagePolicy[] getUsagePolicy() {
 		return usagePolicy;
 	}
 
-	public void setUsagePolicy(UsagePolicy[] usagePolicy) {
+	public void setUsagePolicy(GroupUsagePolicy[] usagePolicy) {
 		this.usagePolicy = usagePolicy;
 	}
 
