@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.ox.cs.pdq</groupId>
-	<artifactId>pdq-runtime-turing</artifactId>
+	<artifactId>pdq-runtime</artifactId>
 	<version>1.0.0-Beta</version>
 	<build>
 		<sourceDirectory>main/src</sourceDirectory>
@@ -84,7 +84,7 @@ This projects also contains schema and relation wrappers, to access underlying
 data sources such as RDBMSs and webservices.
 </description>
 	<url>http://www.cs.ox.ac.uk/pdq/</url>
-	<name>PDQ runtime-turing library </name>
+	<name>PDQ runtime library </name>
 	<organization>
 		<name>Oxford University - Department of Computer Science</name>
 		<url>http://www.cs.ox.ac.uk</url>
