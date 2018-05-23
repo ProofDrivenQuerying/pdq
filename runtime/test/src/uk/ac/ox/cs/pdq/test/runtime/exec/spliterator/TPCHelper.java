@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
-import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 
@@ -489,77 +489,77 @@ public class TPCHelper {
 	// REGION relation
 	// 
 	public static Relation relationRegion = Relation.create("region", TPCHelper.attrs_region);
-	public static ExecutableAccessMethod  amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, 
+	public static ExecutableAccessMethod  amFreeRegion = new SqlAccessMethod("REGION", TPCHelper.attrs_R, 
 			new Integer[0], relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, 
+	public static ExecutableAccessMethod  am0Region = new SqlAccessMethod("REGION", TPCHelper.attrs_R, 
 			Sets.newHashSet(Attribute.create(Integer.class, "R_REGIONKEY")), relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 	
 	public static Relation relationRegion_less = Relation.create("region_less", TPCHelper.attrs_region_less);
-	public static ExecutableAccessMethod  amFreeRegion_less = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R_LESS, 
+	public static ExecutableAccessMethod  amFreeRegion_less = new SqlAccessMethod("REGION", TPCHelper.attrs_R_LESS, 
 			new Integer[0], relationRegion_less, TPCHelper.attrMap_region_less, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am0Region_less = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R_LESS, 
+	public static ExecutableAccessMethod  am0Region_less = new SqlAccessMethod("REGION", TPCHelper.attrs_R_LESS, 
 			Sets.newHashSet(Attribute.create(Integer.class, "R_REGIONKEY")), relationRegion_less, TPCHelper.attrMap_region_less, TPCHelper.getProperties());
 	
 	//
 	// NATION relation
 	// 
 	public static Relation relationNation = Relation.create("nation", TPCHelper.attrs_nation);
-	public static ExecutableAccessMethod  amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, 
+	public static ExecutableAccessMethod  amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, 
 			new Integer[0], relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am0Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, 
+	public static ExecutableAccessMethod  am0Nation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, 
 			Sets.newHashSet(Attribute.create(Integer.class, "N_NATIONKEY")), relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am2Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, 
+	public static ExecutableAccessMethod  am2Nation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, 
 			Sets.newHashSet(Attribute.create(Integer.class, "N_REGIONKEY")), relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 	public static Relation relationNation_less = Relation.create("nation_less", TPCHelper.attrs_nation_less);
-	public static ExecutableAccessMethod amFreeNation_less = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N_LESS, 
+	public static ExecutableAccessMethod amFreeNation_less = new SqlAccessMethod("NATION", TPCHelper.attrs_N_LESS, 
 			new Integer[0], relationNation_less, TPCHelper.attrMap_nation_less, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am0Nation_less = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N_LESS, 
+	public static ExecutableAccessMethod  am0Nation_less = new SqlAccessMethod("NATION", TPCHelper.attrs_N_LESS, 
 			Sets.newHashSet(Attribute.create(Integer.class, "N_NATIONKEY")), relationNation_less, TPCHelper.attrMap_nation_less, TPCHelper.getProperties());
 
 	//
 	// SUPPLIER relation
 	// 
 	public static Relation relationSupplier = Relation.create("supplier", TPCHelper.attrs_supplier);
-	public static ExecutableAccessMethod  amFreeSupplier = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S, 
+	public static ExecutableAccessMethod  amFreeSupplier = new SqlAccessMethod("SUPPLIER", TPCHelper.attrs_S, 
 			new Integer[0], relationSupplier, TPCHelper.attrMap_supplier, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am3Supplier = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S, 
+	public static ExecutableAccessMethod  am3Supplier = new SqlAccessMethod("SUPPLIER", TPCHelper.attrs_S, 
 			Sets.newHashSet(Attribute.create(Integer.class, "S_NATIONKEY")), relationSupplier, TPCHelper.attrMap_supplier, TPCHelper.getProperties());
 
 	public static Relation relationSupplier_less = Relation.create("supplier_less", TPCHelper.attrs_supplier_less);
 
-	public static ExecutableAccessMethod  amFreeSupplier_less = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S_LESS, 
+	public static ExecutableAccessMethod  amFreeSupplier_less = new SqlAccessMethod("SUPPLIER", TPCHelper.attrs_S_LESS, 
 			new Integer[0], relationSupplier_less, TPCHelper.attrMap_supplier_less, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am3Supplier_less = new DatabaseAccessMethod("SUPPLIER", TPCHelper.attrs_S_LESS, 
+	public static ExecutableAccessMethod  am3Supplier_less = new SqlAccessMethod("SUPPLIER", TPCHelper.attrs_S_LESS, 
 			Sets.newHashSet(Attribute.create(Integer.class, "S_NATIONKEY")), relationSupplier_less, TPCHelper.attrMap_supplier_less, TPCHelper.getProperties());
 
 	//
 	// CUSTOMER relation
 	// 
 	public static Relation relationCustomer = Relation.create("customer", TPCHelper.attrs_customer);
-	public static ExecutableAccessMethod  amFreeCustomer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, 
+	public static ExecutableAccessMethod  amFreeCustomer = new SqlAccessMethod("CUSTOMER", TPCHelper.attrs_C, 
 			new Integer[0], relationCustomer, TPCHelper.attrMap_customer, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am03Customer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, 
+	public static ExecutableAccessMethod  am03Customer = new SqlAccessMethod("CUSTOMER", TPCHelper.attrs_C, 
 			Sets.newHashSet(Attribute.create(Integer.class, "C_CUSTKEY"), Attribute.create(Integer.class, "C_NATIONKEY")), 
 			relationCustomer, attrMap_customer, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am3Customer = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, 
+	public static ExecutableAccessMethod  am3Customer = new SqlAccessMethod("CUSTOMER", TPCHelper.attrs_C, 
 			Sets.newHashSet(Attribute.create(Integer.class, "C_NATIONKEY")), relationCustomer, attrMap_customer, TPCHelper.getProperties());
 
 	public static Relation relationCustomer_less = Relation.create("customer", TPCHelper.attrs_customer_less);
-	public static ExecutableAccessMethod  amFreeCustomer_less = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C_LESS, 
+	public static ExecutableAccessMethod  amFreeCustomer_less = new SqlAccessMethod("CUSTOMER", TPCHelper.attrs_C_LESS, 
 			new Integer[0], relationCustomer_less, TPCHelper.attrMap_customer_less, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am3Customer_less = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C_LESS, 
+	public static ExecutableAccessMethod  am3Customer_less = new SqlAccessMethod("CUSTOMER", TPCHelper.attrs_C_LESS, 
 			Sets.newHashSet(Attribute.create(Integer.class, "C_NATIONKEY")), relationCustomer_less, TPCHelper.attrMap_customer_less, TPCHelper.getProperties());
 
 	//
 	// PART relation
 	// 
 	public static Relation relationPart = Relation.create("part", TPCHelper.attrs_part);
-	public static ExecutableAccessMethod  amFreePart = new DatabaseAccessMethod("PART", TPCHelper.attrs_P, 
+	public static ExecutableAccessMethod  amFreePart = new SqlAccessMethod("PART", TPCHelper.attrs_P, 
 			new Integer[0], relationPart, TPCHelper.attrMap_part, TPCHelper.getProperties());
 
 	public static Relation relationPart_less = Relation.create("part_less", TPCHelper.attrs_part_less);
-	public static ExecutableAccessMethod  amFreePart_less = new DatabaseAccessMethod("PART", TPCHelper.attrs_P_LESS, 
+	public static ExecutableAccessMethod  amFreePart_less = new SqlAccessMethod("PART", TPCHelper.attrs_P_LESS, 
 			new Integer[0], relationPart_less, TPCHelper.attrMap_part_less, TPCHelper.getProperties());
 
 
@@ -567,28 +567,28 @@ public class TPCHelper {
 	// PARTSUPP relation
 	// 
 	public static Relation relationPartSupp = Relation.create("partSupp", TPCHelper.attrs_partSupp);
-	public static ExecutableAccessMethod  amFreePartSupp = new DatabaseAccessMethod("PARTSUPP", TPCHelper.attrs_PS, 
+	public static ExecutableAccessMethod  amFreePartSupp = new SqlAccessMethod("PARTSUPP", TPCHelper.attrs_PS, 
 			new Integer[0], relationPartSupp, TPCHelper.attrMap_partSupp, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am0PartSupp = new DatabaseAccessMethod("PARTSUPP", TPCHelper.attrs_PS, 
+	public static ExecutableAccessMethod  am0PartSupp = new SqlAccessMethod("PARTSUPP", TPCHelper.attrs_PS, 
 			Sets.newHashSet(Attribute.create(Integer.class, "PS_PARTKEY")), 
 			relationPartSupp, TPCHelper.attrMap_partSupp, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am1PartSupp = new DatabaseAccessMethod("PARTSUPP", TPCHelper.attrs_PS, 
+	public static ExecutableAccessMethod  am1PartSupp = new SqlAccessMethod("PARTSUPP", TPCHelper.attrs_PS, 
 			Sets.newHashSet(Attribute.create(Integer.class, "PS_SUPPKEY")), 
 			relationPartSupp, TPCHelper.attrMap_partSupp, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am01PartSupp = new DatabaseAccessMethod("PARTSUPP", TPCHelper.attrs_PS, 
+	public static ExecutableAccessMethod  am01PartSupp = new SqlAccessMethod("PARTSUPP", TPCHelper.attrs_PS, 
 			Sets.newHashSet(Attribute.create(Integer.class, "PS_PARTKEY"), Attribute.create(Integer.class, "PS_SUPPKEY")), 
 			relationPartSupp, TPCHelper.attrMap_partSupp, TPCHelper.getProperties());
 
 	public static Relation relationPartSupp_less = Relation.create("partSupp_less", TPCHelper.attrs_partSupp_less);
-	public static ExecutableAccessMethod  amFreePartSupp_less = new DatabaseAccessMethod("PARTSUPP", TPCHelper.attrs_PS_LESS, 
+	public static ExecutableAccessMethod  amFreePartSupp_less = new SqlAccessMethod("PARTSUPP", TPCHelper.attrs_PS_LESS, 
 			new Integer[0], relationPartSupp_less, TPCHelper.attrMap_partSupp_less, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am0PartSupp_less = new DatabaseAccessMethod("PARTSUPP", TPCHelper.attrs_PS_LESS, 
+	public static ExecutableAccessMethod  am0PartSupp_less = new SqlAccessMethod("PARTSUPP", TPCHelper.attrs_PS_LESS, 
 			Sets.newHashSet(Attribute.create(Integer.class, "PS_PARTKEY")), 
 			relationPartSupp_less, TPCHelper.attrMap_partSupp_less, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am1PartSupp_less = new DatabaseAccessMethod("PARTSUPP", TPCHelper.attrs_PS_LESS, 
+	public static ExecutableAccessMethod  am1PartSupp_less = new SqlAccessMethod("PARTSUPP", TPCHelper.attrs_PS_LESS, 
 			Sets.newHashSet(Attribute.create(Integer.class, "PS_SUPPKEY")), 
 			relationPartSupp_less, TPCHelper.attrMap_partSupp_less, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am01PartSupp_less = new DatabaseAccessMethod("PARTSUPP", TPCHelper.attrs_PS_LESS, 
+	public static ExecutableAccessMethod  am01PartSupp_less = new SqlAccessMethod("PARTSUPP", TPCHelper.attrs_PS_LESS, 
 			Sets.newHashSet(Attribute.create(Integer.class, "PS_PARTKEY"), Attribute.create(Integer.class, "PS_SUPPKEY")), 
 			relationPartSupp_less, TPCHelper.attrMap_partSupp_less, TPCHelper.getProperties());
 
@@ -597,33 +597,33 @@ public class TPCHelper {
 	// 
 	public static Relation relationOrders = Relation.create("orders", TPCHelper.attrs_orders);
 
-	public static ExecutableAccessMethod  amFreeOrders = new DatabaseAccessMethod("ORDERS", TPCHelper.attrs_O, 
+	public static ExecutableAccessMethod  amFreeOrders = new SqlAccessMethod("ORDERS", TPCHelper.attrs_O, 
 			new Integer[0], relationOrders, TPCHelper.attrMap_orders, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am1Orders = new DatabaseAccessMethod("ORDERS", TPCHelper.attrs_O, 
+	public static ExecutableAccessMethod  am1Orders = new SqlAccessMethod("ORDERS", TPCHelper.attrs_O, 
 			Sets.newHashSet(Attribute.create(Integer.class, "O_CUSTKEY")), relationOrders, TPCHelper.attrMap_orders, TPCHelper.getProperties());
 
 	public static Relation relationOrders_less = Relation.create("orders", TPCHelper.attrs_orders_less);
 
-	public static ExecutableAccessMethod  amFreeOrders_less = new DatabaseAccessMethod("ORDERS", TPCHelper.attrs_O_LESS, 
+	public static ExecutableAccessMethod  amFreeOrders_less = new SqlAccessMethod("ORDERS", TPCHelper.attrs_O_LESS, 
 			new Integer[0], relationOrders_less, TPCHelper.attrMap_orders_less, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am1Orders_less = new DatabaseAccessMethod("ORDERS", TPCHelper.attrs_O_LESS, 
+	public static ExecutableAccessMethod  am1Orders_less = new SqlAccessMethod("ORDERS", TPCHelper.attrs_O_LESS, 
 			Sets.newHashSet(Attribute.create(Integer.class, "O_CUSTKEY")), relationOrders_less, TPCHelper.attrMap_orders_less, TPCHelper.getProperties());
 
 	//
 	// LINEITEM relation
 	// 
 	public static Relation relationLineItem = Relation.create("lineItem", TPCHelper.attrs_lineItem);
-	public static ExecutableAccessMethod  amFreeLineItem = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
+	public static ExecutableAccessMethod  amFreeLineItem = new SqlAccessMethod("LINEITEM", TPCHelper.attrs_L, 
 			new Integer[0],	relationLineItem, TPCHelper.attrMap_lineItem, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am012LineItem = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L, 
+	public static ExecutableAccessMethod  am012LineItem = new SqlAccessMethod("LINEITEM", TPCHelper.attrs_L, 
 			Sets.newHashSet(Attribute.create(Integer.class, "L_ORDERKEY"), 
 					Attribute.create(Integer.class, "L_PARTKEY"), Attribute.create(Integer.class, "L_SUPPKEY")), 
 			relationLineItem, TPCHelper.attrMap_lineItem, TPCHelper.getProperties());
 
 	public static Relation relationLineItem_less = Relation.create("lineItem_less", TPCHelper.attrs_lineItem_less);
-	public static ExecutableAccessMethod  amFreeLineItem_less = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L_LESS, 
+	public static ExecutableAccessMethod  amFreeLineItem_less = new SqlAccessMethod("LINEITEM", TPCHelper.attrs_L_LESS, 
 			new Integer[0],	relationLineItem_less, TPCHelper.attrMap_lineItem_less, TPCHelper.getProperties());
-	public static ExecutableAccessMethod  am012LineItem_less = new DatabaseAccessMethod("LINEITEM", TPCHelper.attrs_L_LESS, 
+	public static ExecutableAccessMethod  am012LineItem_less = new SqlAccessMethod("LINEITEM", TPCHelper.attrs_L_LESS, 
 			Sets.newHashSet(Attribute.create(Integer.class, "L_ORDERKEY"), 
 					Attribute.create(Integer.class, "L_PARTKEY"), Attribute.create(Integer.class, "L_SUPPKEY")), 
 			relationLineItem_less, TPCHelper.attrMap_lineItem_less, TPCHelper.getProperties());

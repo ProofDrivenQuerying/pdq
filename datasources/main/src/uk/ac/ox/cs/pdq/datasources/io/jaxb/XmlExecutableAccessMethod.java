@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
-import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -70,9 +70,9 @@ public class XmlExecutableAccessMethod {
 		if (eam instanceof InMemoryAccessMethod) {
 			accessType = ACCESS_TYPE.IN_MEMORY_ACCESS_METHOD;
 			data = ((InMemoryAccessMethod) eam).getData();
-		} else if (eam instanceof DatabaseAccessMethod) {
+		} else if (eam instanceof SqlAccessMethod) {
 			accessType = ACCESS_TYPE.DB_ACCESS_METHOD;
-			dbProperties = ((DatabaseAccessMethod) eam).getProperties();
+			dbProperties = ((SqlAccessMethod) eam).getProperties();
 			/*
 			 * } else if (eam instanceof RestAccessMethod) { Do rest specific parameters
 			 * here.
@@ -101,7 +101,7 @@ public class XmlExecutableAccessMethod {
 			am.load(DbIOManager.importTuples(attributes.toArray(new Attribute[attributes.size()]), dataFileName));
 			return am;
 		case DB_ACCESS_METHOD:
-			DatabaseAccessMethod dam = new DatabaseAccessMethod(accessMethodName,
+			SqlAccessMethod dam = new SqlAccessMethod(accessMethodName,
 					attributes.toArray(new Attribute[attributes.size()]), inputAttributes, r, attributeMapping,
 					dbProperties);
 			return dam;

@@ -25,7 +25,7 @@ import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
-import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -57,9 +57,9 @@ public class CartesianProductTest {
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
 		Integer[] inputs = new Integer[0];
-		AccessMethodDescriptor amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs,
+		AccessMethodDescriptor amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, inputs,
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
-		AccessMethodDescriptor amFreeRegion = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputs,
+		AccessMethodDescriptor amFreeRegion = new SqlAccessMethod("REGION", TPCHelper.attrs_R, inputs,
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		/*
@@ -95,13 +95,13 @@ public class CartesianProductTest {
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
 		Integer[] inputs = new Integer[0];
-		AccessMethodDescriptor amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs,
+		AccessMethodDescriptor amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, inputs,
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		Set<Attribute> inputAttributes = new HashSet<Attribute>();
 		inputAttributes.add(Attribute.create(Integer.class, "R_REGIONKEY"));
 
-		AccessMethodDescriptor am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes,
+		AccessMethodDescriptor am0Region = new SqlAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes,
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		/*
@@ -154,12 +154,12 @@ public class CartesianProductTest {
 
 		inputAttributes = new HashSet<Attribute>();
 		inputAttributes.add(Attribute.create(Integer.class, "N_REGIONKEY"));
-		AccessMethodDescriptor am2Nation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes,
+		AccessMethodDescriptor am2Nation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes,
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		inputAttributes = new HashSet<Attribute>();
 		inputAttributes.add(Attribute.create(Integer.class, "R_REGIONKEY"));
-		AccessMethodDescriptor am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes,
+		AccessMethodDescriptor am0Region = new SqlAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes,
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		/*
@@ -232,11 +232,11 @@ public class CartesianProductTest {
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 
-		AccessMethodDescriptor amFreeNation = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0],
+		AccessMethodDescriptor amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0],
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "R_REGIONKEY"));
-		AccessMethodDescriptor am0Region = new DatabaseAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes,
+		AccessMethodDescriptor am0Region = new SqlAccessMethod("REGION", TPCHelper.attrs_R, inputAttributes,
 				relationRegion, TPCHelper.attrMap_region, TPCHelper.getProperties());
 
 		AccessTerm leftChild = AccessTerm.create(relationNation, amFreeNation);

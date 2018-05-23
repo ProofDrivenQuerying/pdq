@@ -98,7 +98,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 */
 	@Override
 	protected Relation getRelationInstance(Properties props, String relationName, Attribute[] attributes) {
-		Relation relation = Relation.create(relationName, attributes,new AccessMethodDescriptor[] {new DatabaseAccessMethod(Relation.create(relationName, attributes), props)});
+		Relation relation = Relation.create(relationName, attributes,new AccessMethodDescriptor[] {new SqlAccessMethod(Relation.create(relationName, attributes), props)});
 		return relation;
 	}
 
@@ -118,7 +118,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		View view = new View(viewName, relationMap.get(viewName).getAttributes());
 		view.setViewToRelationDependency(viewToRelationDependency);
 		// re create the view now with the access method.
-		view = new View(viewName, relationMap.get(viewName).getAttributes(),new AccessMethodDescriptor[] {new DatabaseAccessMethod(view, props)});
+		view = new View(viewName, relationMap.get(viewName).getAttributes(),new AccessMethodDescriptor[] {new SqlAccessMethod(view, props)});
 		view.setViewToRelationDependency(viewToRelationDependency);
 		return view;
 	}

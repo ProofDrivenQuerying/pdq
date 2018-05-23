@@ -32,13 +32,13 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * An access method providing access to relation in an SQL database. 
- * 
+ * @author Gabor
  * @author Tim Hobson
  * @author Efi Tsamoura
  * @author Julien Leblay
  * 
  */
-public class DatabaseAccessMethod extends ExecutableAccessMethod {
+public class SqlAccessMethod extends ExecutableAccessMethod {
 
 	private static final long serialVersionUID = 8271122449201089556L;
 
@@ -46,34 +46,34 @@ public class DatabaseAccessMethod extends ExecutableAccessMethod {
 	private Connection connection = null;
 
 	/** Logger. */
-	private static Logger log = Logger.getLogger(DatabaseAccessMethod.class);
+	private static Logger log = Logger.getLogger(SqlAccessMethod.class);
 
 	private Properties properties;
 	
-	public DatabaseAccessMethod(Relation relation, Properties properties) {
+	public SqlAccessMethod(Relation relation, Properties properties) {
 		super(relation.getAttributes(),new Integer[] {},relation, getDefaultMapping(relation));
 		this.properties = properties;
 	}
 
-	public DatabaseAccessMethod(Attribute[] attributes, Integer[] inputs, Relation relation,
+	public SqlAccessMethod(Attribute[] attributes, Integer[] inputs, Relation relation,
 			Map<Attribute, Attribute> attributeMapping, Properties properties) {
 		super(attributes, inputs, relation, attributeMapping);
 		this.properties = properties;
 	}
 
-	public DatabaseAccessMethod(String name, Attribute[] attributes, Integer[] inputs, Relation relation,
+	public SqlAccessMethod(String name, Attribute[] attributes, Integer[] inputs, Relation relation,
 			Map<Attribute, Attribute> attributeMapping, Properties properties) {
 		super(name, attributes, inputs, relation, attributeMapping);
 		this.properties = properties;
 	}
 
-	public DatabaseAccessMethod(Attribute[] attributes, Set<Attribute> inputAttributes,
+	public SqlAccessMethod(Attribute[] attributes, Set<Attribute> inputAttributes,
 			Relation relation, Map<Attribute, Attribute> attributeMapping, Properties properties) {
 		super(attributes, inputAttributes, relation, attributeMapping);
 		this.properties = properties;
 	}
 
-	public DatabaseAccessMethod(String name, Attribute[] attributes, Set<Attribute> inputAttributes,
+	public SqlAccessMethod(String name, Attribute[] attributes, Set<Attribute> inputAttributes,
 			Relation relation, Map<Attribute, Attribute> attributeMapping, Properties properties) {
 		super(name, attributes, inputAttributes, relation, attributeMapping);
 		this.properties = properties;
