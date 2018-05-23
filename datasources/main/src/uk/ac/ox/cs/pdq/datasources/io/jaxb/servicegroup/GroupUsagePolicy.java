@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 // UsagePolicy is the XML element which corresponds to the <usage-policy> tag
-@XmlType (propOrder= {"name", "type", "limit", "period", "wait"})
+@XmlType (propOrder= {"name", "type", "limit", "period", "wait", "attributeEncoding"})
 public class GroupUsagePolicy {
 	
 	private String name;
@@ -16,6 +16,7 @@ public class GroupUsagePolicy {
 	private String limit;
 	private String period;
 	private String wait;
+	private String attributeEncoding;
 	
 	@XmlAttribute
 	public String getName() {
@@ -69,6 +70,17 @@ public class GroupUsagePolicy {
 
 	public void setWait(String wait) {
 		this.wait = wait;
+	}
+
+
+	@XmlAttribute (name = "attribute-encoding")
+	public String getAttributeEncoding() {
+		return attributeEncoding;
+	}
+
+
+	public void setAttributeEncoding(String attributeEncoding) {
+		this.attributeEncoding = attributeEncoding;
 	}
 
 
