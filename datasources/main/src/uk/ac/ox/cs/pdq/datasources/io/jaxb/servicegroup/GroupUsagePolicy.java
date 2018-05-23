@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 // UsagePolicy is the XML element which corresponds to the <usage-policy> tag
 @XmlType (propOrder= {"name", "type", "limit", "period"})
-public class UsagePolicy {
+public class GroupUsagePolicy {
 	
 	private String name;
 	private String type;

@@ -9,10 +9,10 @@
 	<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
 			limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
 			
-	<static-attribute name="format" attribute-encoding="format" value="weather.forecast"/>
+	<static-attribute name="format" type="String" attribute-encoding="format2" value="weather.forecast"/>
 	
 	<access-method name="reactome_species_1" cost="1.0">
-		<attribute name="displayName" type="String" input="true" output="true" relation-attribute="displayName" attribute-encoding="woeid.1" attribute-encoding-param="1" path="woeid"/>
+		<attribute name="displayName" type="String" value="2" input="true" output="true"  attribute-encoding="apikey2" attribute-encoding-index="1" relation-attribute="displayName" path="woeid"/>
 		<attribute name="schemaClass" type="String" output="true" relation-attribute="schemaClass" path="placeTypeName"/>
 	</access-method>
 </service>
