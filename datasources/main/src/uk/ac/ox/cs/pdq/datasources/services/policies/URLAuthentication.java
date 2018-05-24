@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.google.common.base.Preconditions;
 
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.GroupUsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.AccessPreProcessor;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceRepository;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.InputMethod;
@@ -30,7 +31,9 @@ public class URLAuthentication  implements UsagePolicy, AccessPreProcessor<RESTR
 	protected RESTAttribute keyAttributes;
 
 	/**  The set of input methods used by this policy. */
-	private Set<InputMethod> inputMethods = new LinkedHashSet<>();		
+	private Set<InputMethod> inputMethods = new LinkedHashSet<>();
+	
+	private String attributeEncoding;
 	
 	protected URLAuthentication(RESTAttribute keyAtt) {
 		super();
@@ -40,15 +43,32 @@ public class URLAuthentication  implements UsagePolicy, AccessPreProcessor<RESTR
 		this.inputMethods.add(this.keyAttributes.getInputMethod());
 	}
 
+	protected URLAuthentication(String attributeEncoding) {
+		super();
+		this.attributeEncoding = attributeEncoding;
+	}
+
 	public URLAuthentication(ServiceRepository repo, Properties properties) {
 		this(new RESTAttribute(
 				Attribute.create(String.class, repo.getInputMethod(properties.getProperty(INPUT_METHOD)).getName()),
 			repo.getInputMethod(properties.getProperty(INPUT_METHOD))));
 	}
 
+	public URLAuthentication(GroupUsagePolicy gup) {
+		this(gup.getAttributeEncoding());
+	}
+
 	@Override
 	public UsagePolicy copy() {
 		return new URLAuthentication(this.keyAttributes);
+	}
+
+	public String getAttributeEncoding() {
+		return attributeEncoding;
+	}
+
+	public void setAttributeEncoding(String attributeEncoding) {
+		this.attributeEncoding = attributeEncoding;
 	}
 
 	@Override
