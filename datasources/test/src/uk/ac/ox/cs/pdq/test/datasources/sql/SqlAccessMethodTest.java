@@ -19,13 +19,13 @@ import org.mockito.Mockito;
 
 import com.google.common.collect.ImmutableMap;
 
-import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
-public class DatabaseAccessMethodTest {
+public class SqlAccessMethodTest {
 
 	/*
 	 *  Parameters of the Postgres test instance.
@@ -67,7 +67,7 @@ public class DatabaseAccessMethodTest {
 	@Test
 	public void testQueryString() {
 
-		DatabaseAccessMethod target;
+		SqlAccessMethod target;
 		Integer[] inputs;
 		Relation relation;
 		Collection<Tuple> inputTuples;
@@ -77,14 +77,14 @@ public class DatabaseAccessMethodTest {
 
 		String name = "NATION";
 		inputs = new Integer[0];
-		target = new DatabaseAccessMethod(name, this.attrs_N, inputs, relation, this.attrMap_nation, this.getProperties());
+		target = new SqlAccessMethod(name, this.attrs_N, inputs, relation, this.attrMap_nation, this.getProperties());
 
 		String expected = "SELECT N_NATIONKEY,N_NAME,N_REGIONKEY,N_COMMENT FROM NATION";
 		String actual = target.queryString(null, null);
 		Assert.assertEquals(expected, actual);
 
 		inputs = new Integer[] {1};
-		target = new DatabaseAccessMethod(name, this.attrs_N, inputs, relation, this.attrMap_nation, this.getProperties());
+		target = new SqlAccessMethod(name, this.attrs_N, inputs, relation, this.attrMap_nation, this.getProperties());
 
 		Attribute[] inputAttributes = new Attribute[] { Attribute.create(String.class, "N_NAME") };
 
@@ -121,7 +121,7 @@ public class DatabaseAccessMethodTest {
 		inputAttrs.add(Attribute.create(String.class, "N_NAME"));
 		inputAttrs.add(Attribute.create(Integer.class, "N_REGIONKEY"));
 
-		target = new DatabaseAccessMethod("NATION", this.attrs_N, inputAttrs, relation, this.attrMap_nation, this.getProperties());
+		target = new SqlAccessMethod("NATION", this.attrs_N, inputAttrs, relation, this.attrMap_nation, this.getProperties());
 
 		TupleType ttStringInteger = TupleType.DefaultFactory.create(String.class, Integer.class);
 		inputTuples = new ArrayList<Tuple>();
@@ -167,7 +167,7 @@ public class DatabaseAccessMethodTest {
 	@Test
 	public void testAccess() {
 
-		DatabaseAccessMethod target;
+		SqlAccessMethod target;
 		Iterable<Tuple> result;
 		List<Tuple> tuples;
 
@@ -182,7 +182,7 @@ public class DatabaseAccessMethodTest {
 		 * Free access.
 		 */
 		inputs = new Integer[0];
-		target = new DatabaseAccessMethod(name, this.attrs_N, inputs, relation, this.attrMap_nation, this.getProperties());
+		target = new SqlAccessMethod(name, this.attrs_N, inputs, relation, this.attrMap_nation, this.getProperties());
 
 		// Test with relationSchema = true (the default).
 		result = target.access();
@@ -208,7 +208,7 @@ public class DatabaseAccessMethodTest {
 	@Test
 	public void testAccessIteratorOfTuple() {
 
-		DatabaseAccessMethod target;
+		SqlAccessMethod target;
 		Iterable<Tuple> result;
 		List<Tuple> tuples;
 
@@ -225,7 +225,7 @@ public class DatabaseAccessMethodTest {
 		 * Access with inputs on position 1 (N_NAME).
 		 */
 		inputs = new Integer[] {1};
-		target = new DatabaseAccessMethod(name, this.attrs_N, inputs, relation, this.attrMap_nation, this.getProperties());
+		target = new SqlAccessMethod(name, this.attrs_N, inputs, relation, this.attrMap_nation, this.getProperties());
 
 		// Test with relationSchema = true (the default).
 		tt = TupleType.DefaultFactory.create(String.class);
@@ -277,7 +277,7 @@ public class DatabaseAccessMethodTest {
 		 * Access with inputs on position 2 (N_REGIONKEY).
 		 */
 		inputs = new Integer[] {2};
-		target = new DatabaseAccessMethod(name, this.attrs_N, inputs, relation, this.attrMap_nation, this.getProperties());
+		target = new SqlAccessMethod(name, this.attrs_N, inputs, relation, this.attrMap_nation, this.getProperties());
 
 		// Test with relationSchema = true (the default).
 		tt = TupleType.DefaultFactory.create(Integer.class);

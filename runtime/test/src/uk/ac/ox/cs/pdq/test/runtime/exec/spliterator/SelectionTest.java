@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
-import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -210,7 +210,7 @@ public class SelectionTest {
 				Attribute.create(Integer.class, "regionKey"));
 
 		Integer[] inputs = new Integer[0];
-		ExecutableAccessMethod amFree = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation,
+		ExecutableAccessMethod amFree = new SqlAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation,
 				attributeMapping, TPCHelper.getProperties());
 
 		/*
@@ -239,7 +239,7 @@ public class SelectionTest {
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
 
 		Integer[] inputs = new Integer[0];
-		ExecutableAccessMethod amFree = new DatabaseAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation,
+		ExecutableAccessMethod amFree = new SqlAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation,
 				TPCHelper.attrMap_nation, TPCHelper.getProperties());
 
 		/*
@@ -268,7 +268,7 @@ public class SelectionTest {
 		Set<Attribute> inputAttributes = new HashSet<Attribute>();
 		inputAttributes.add(Attribute.create(Integer.class, "C_NATIONKEY"));
 
-		ExecutableAccessMethod am4 = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputAttributes, relation,
+		ExecutableAccessMethod am4 = new SqlAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputAttributes, relation,
 				TPCHelper.attrMap_customer, TPCHelper.getProperties());
 
 		/*
@@ -317,7 +317,7 @@ public class SelectionTest {
 		Set<Attribute> inputAttributes = new HashSet<Attribute>();
 		inputAttributes.add(Attribute.create(Integer.class, "C_NATIONKEY"));
 
-		ExecutableAccessMethod am4 = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputAttributes, relation,
+		ExecutableAccessMethod am4 = new SqlAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputAttributes, relation,
 				TPCHelper.attrMap_customer, TPCHelper.getProperties());
 
 		/*

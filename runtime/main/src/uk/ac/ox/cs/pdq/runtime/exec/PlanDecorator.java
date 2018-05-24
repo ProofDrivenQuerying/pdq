@@ -21,46 +21,91 @@ import uk.ac.ox.cs.pdq.runtime.exec.spliterator.Projection;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.Selection;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.SymmetricMemoryHashJoin;
 
+/**
+ * The decorator converts RelationalTerm objects to ExecutablePlan objects. The
+ * decoration is done recursively by passing the decorator to the constructor of
+ * the executablePlan to make sure it will use the same parameters/access
+ * repository to decorate the children as well.
+ * 
+ * @author gabor
+ * @author ATI project (Efi, Tim etc)
+ */
 public class PlanDecorator {
 	private AccessRepository repository;
-	
+
+	/**
+	 * Currently the only extra information needed for the decoration is the
+	 * accessRepository that holds the executable access methods. The decoration
+	 * process will replace the access method descriptors to an executable one from
+	 * the repository.
+	 * 
+	 * @param repository
+	 */
 	public PlanDecorator(AccessRepository repository) {
 		this.repository = repository;
 	}
-	
+
+	/**
+	 * The decoration itself. The input plan can be an executablePlan (in that case
+	 * we do nothing) or a Relationalterm. Relationalterms will be enwrapped in the
+	 * corresponding executable objects.
+	 * 
+	 * This function is a false recursive function. The implementation of each
+	 * executable plan's constructor have to make sure that this decorator function
+	 * is called on each children as well.
+	 * 
+	 * The access method descriptors will be replaced with an executable access
+	 * method from the repository.
+	 * 
+	 * @param plan
+	 * @return
+	 * @throws Exception
+	 */
 	public ExecutablePlan decorate(Plan plan) throws Exception {
 		Preconditions.checkNotNull(plan);
-		
+
 		// If the plan is already decorated, do nothing.
 		if (plan instanceof ExecutablePlan)
 			return (ExecutablePlan) plan;
 		if (plan instanceof RenameTerm)
 			return this.decorate(plan.getChild(0));
 		if (plan instanceof AccessTerm) {
-			return new Access(replaceAccess((AccessTerm)plan),this);
-		}else if (plan instanceof SelectionTerm)
-			return new Selection(plan,this);
+			return new Access(replaceAccess((AccessTerm) plan), this);
+		} else if (plan instanceof SelectionTerm)
+			return new Selection(plan, this);
 		else if (plan instanceof ProjectionTerm)
-			return new Projection(plan,this);
+			return new Projection(plan, this);
 		else if (plan instanceof DependentJoinTerm)
-			return new DependentJoin(plan,this);
+			return new DependentJoin(plan, this);
 		else if (plan instanceof JoinTerm)
-			return new SymmetricMemoryHashJoin(plan,this); // IMP TODO: support other join implementations - how?
+			return new SymmetricMemoryHashJoin(plan, this); // IMP TODO: support other join implementations - how?
 		else if (plan instanceof CartesianProductTerm)
-			return new CartesianProduct(plan,this); 
+			return new CartesianProduct(plan, this);
 		else
 			throw new IllegalArgumentException("Unsupported logical plan: " + plan);
 	}
-	
-	private Plan replaceAccess(AccessTerm plan) throws Exception {
+
+	/**
+	 * Creates a new AccessTerm that is identical to the input accessTerm, but the
+	 * access method descriptor is replaced with an executable version from the
+	 * repository.
+	 * 
+	 * The name of the access method descriptor is used to identify the executable
+	 * version to use.
+	 * 
+	 * @param plan
+	 * @return
+	 * @throws Exception
+	 */
+	private AccessTerm replaceAccess(AccessTerm plan) throws Exception {
 		AccessMethodDescriptor amDesc = plan.getAccessMethod();
 		if (amDesc instanceof ExecutableAccessMethod) {
 			// plan is already executable.
 			return plan;
 		}
 		ExecutableAccessMethod newAccess = repository.getAccess(amDesc.getName());
-		if (newAccess==null) {
-			throw new Exception("AccessMethod \"" + amDesc.getName()+"\" not found in repository: " + repository);
+		if (newAccess == null) {
+			throw new Exception("AccessMethod \"" + amDesc.getName() + "\" not found in repository: " + repository);
 		}
 		AccessTerm newAccessTerm;
 		if (plan.getInputConstants() != null) {

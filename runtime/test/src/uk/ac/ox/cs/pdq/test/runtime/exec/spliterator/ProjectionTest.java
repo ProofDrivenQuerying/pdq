@@ -28,7 +28,7 @@ import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
-import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -333,7 +333,7 @@ public class ProjectionTest {
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_customer.clone());
 
 		Integer[] inputs = new Integer[0];
-		ExecutableAccessMethod amFree = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputs, relation,
+		ExecutableAccessMethod amFree = new SqlAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputs, relation,
 				TPCHelper.attrMap_customer, TPCHelper.getProperties());
 
 		/*
@@ -377,7 +377,7 @@ public class ProjectionTest {
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_customer.clone());
 
 		Integer[] inputs = new Integer[] { 3 };
-		ExecutableAccessMethod am3 = new DatabaseAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputs, relation,
+		ExecutableAccessMethod am3 = new SqlAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputs, relation,
 				TPCHelper.attrMap_customer, TPCHelper.getProperties());
 
 		/*

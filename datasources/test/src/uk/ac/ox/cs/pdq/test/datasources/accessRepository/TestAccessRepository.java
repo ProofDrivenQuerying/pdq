@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
-import uk.ac.ox.cs.pdq.datasources.sql.DatabaseAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
@@ -61,7 +61,7 @@ public class TestAccessRepository extends PdqTest {
 	@Test
 	public void testDbAccessExport() throws JAXBException {
 
-		DatabaseAccessMethod target;
+		SqlAccessMethod target;
 		Integer[] inputs;
 		Relation relation;
 
@@ -71,7 +71,7 @@ public class TestAccessRepository extends PdqTest {
 		when(relation.getName()).thenReturn(name);
 
 		inputs = new Integer[0];
-		target = new DatabaseAccessMethod(name, this.attrs_N, inputs, relation, this.attrMap_nation, this.properties);
+		target = new SqlAccessMethod(name, this.attrs_N, inputs, relation, this.attrMap_nation, this.properties);
 		Iterable<Tuple> data = target.access();
 		Assert.assertNotNull(data);
 		Iterator<Tuple> it = data.iterator();
@@ -140,9 +140,9 @@ public class TestAccessRepository extends PdqTest {
 	@Test
 	public void testAccessImport() throws JAXBException {
 
-		DatabaseAccessMethod target = null;
+		SqlAccessMethod target = null;
 		try {
-			target = (DatabaseAccessMethod) DbIOManager
+			target = (SqlAccessMethod) DbIOManager
 					.importAccess(new File("test/schemas/accesses/dbAccessMethod.xml"));
 		} catch (Throwable t) {
 			t.printStackTrace();
