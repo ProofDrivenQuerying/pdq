@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TreeMap;
 
 import javax.ws.rs.client.ClientBuilder;
@@ -18,11 +17,13 @@ import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.AccessMethod;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.AccessMethodAttribute;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.ServiceRoot;
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.ServiceUsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.StaticAttribute;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.AttributeEncoding;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.GroupUsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.ServiceGroupsRoot;
 import uk.ac.ox.cs.pdq.datasources.services.policies.PolicyFactory;
+import uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -137,72 +138,70 @@ public class RESTExecutableAccessMethod {
 	private void formatTemplate(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am)
 	{
 		String result = "";
-		TreeMap<AttributeEncoding, String> map2 = new TreeMap<AttributeEncoding, String>();
-		for(StaticAttribute sa: sr.getStaticAttribute())
+		TreeMap<AttributeEncoding, String> attributeEncodingMap2 = new TreeMap<AttributeEncoding, String>();
+		for(ServiceUsagePolicy sup: sr.getServiceUsagePolicy())
 		{
-			String encoding = sa.getAttributeEncoding();
-			String index = sa.getAttributeEncodingIndex();	
-			if(encoding != null)
+			if(sup.getName() != null)
 			{
-				AttributeEncoding ae;
-				if((ae = attributeEncodingMap.get(encoding)) != null)
+				UsagePolicy up = usagePolicyMap.get(sup.getName());
+				if(up != null)
 				{
-					String template;
-					if((template = map2.get(ae)) != null)
+					if(up instanceof uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication)
 					{
-						if(index != null)
-						{
-							template = template.replace("{" + index + "}", index);
-						}
-					}
-					else
-					{
-						if((template = ae.getTemplate()) != null)
-						{
-							if(index != null)
-							{
-								template = template.replace("{" + index + "}", index);
-							}
-							map2.put(ae, template);
-						}
+						URLAuthentication uae = (URLAuthentication) up;
+						String encoding = uae.getAttributeEncoding();
+						String index = "0";
+						formatTemplateProcessParams(encoding, index, attributeEncodingMap2);
 					}
 				}
 			}
+		}
+		for(StaticAttribute sa: sr.getStaticAttribute())
+		{
+			String encoding = sa.getAttributeEncoding();
+			String index = sa.getAttributeEncodingIndex();
+			formatTemplateProcessParams(encoding, index, attributeEncodingMap2);
 		}
 		for(AccessMethodAttribute aa: am.getAttributes())
 		{
 			String encoding = aa.getAttributeEncoding();
 			String index = aa.getAttributeEncodingIndex();	
-			if(encoding != null)
+			formatTemplateProcessParams(encoding, index, attributeEncodingMap2);		
+		}
+		Collection<String> cs = attributeEncodingMap2.values();
+		for(String s: cs) result += s;
+		this.template = result;
+	}
+
+	// Do the donkey work for formatTemplate()
+	public void formatTemplateProcessParams(String encoding, String index, TreeMap<AttributeEncoding, String> attributeEncodingMap2)
+	{
+		if(encoding != null)
+		{
+			AttributeEncoding ae;
+			if((ae = attributeEncodingMap.get(encoding)) != null)
 			{
-				AttributeEncoding ae;
-				if((ae = attributeEncodingMap.get(encoding)) != null)
+				String template;
+				if((template = attributeEncodingMap2.get(ae)) != null)
 				{
-					String template;
-					if((template = map2.get(ae)) != null)
+					if(index != null)
+					{
+						template = template.replace("{" + index + "}", index);
+					}
+				}
+				else
+				{
+					if((template = ae.getTemplate()) != null)
 					{
 						if(index != null)
 						{
 							template = template.replace("{" + index + "}", index);
 						}
-					}
-					else
-					{
-						if((template = ae.getTemplate()) != null)
-						{
-							if(index != null)
-							{
-								template = template.replace("{" + index + "}", index);
-							}
-							map2.put(ae, template);
-						}
+						attributeEncodingMap2.put(ae, template);
 					}
 				}
 			}
 		}
-		Collection<String> cs = map2.values();
-		for(String s: cs) result += s;
-		this.template = result;
 	}
 
 	// Phase 1 builds structures and processes path-elements
@@ -210,61 +209,13 @@ public class RESTExecutableAccessMethod {
 	{
 		for(StaticAttribute sa : sr.getStaticAttribute())
 		{
-			if(sa.getAttributeEncoding() != null)
-			{
-				AttributeEncoding ae = attributeEncodingMap.get(sa.getAttributeEncoding());
-				if(ae != null)
-				{
-					if((sa.getName() != null) && (sa.getType() != null))
-					{
-						inputs.add(Attribute.create(typeType(sa.getType()), sa.getName()));
-						if((ae.getType() != null) && ae.getType().equals("path-element"))
-						{
-							if(sa.getValue() != null)
-							{
-								if(this.template == null)
-								{
-									uri.append("/" + sa.getValue());
-								}
-								else
-								{
-									params.put(sa.getName(), sa.getValue());
-								}
-							}
-						}
-					}
-				}
-			}
+			mapAttributesPhase1ProcessParams(sa.getAttributeEncoding(), sa.getName(), sa.getType(), sa.getValue(), inputs, uri, params);
 		}
 		for(AccessMethodAttribute aa : am.getAttributes())
 		{
 			if((aa.getInput() != null) && aa.getInput().equals("true"))
 			{
-				if((aa.getName() != null) && (aa.getType() != null))
-				{
-					inputs.add(Attribute.create(typeType(aa.getType()), aa.getName()));
-					if(aa.getAttributeEncoding() != null)
-					{
-						AttributeEncoding ae;
-						if((ae = attributeEncodingMap.get(aa.getAttributeEncoding())) != null)
-						{
-							if((ae.getType() != null) && (ae.getType().equals("path-element")))
-							{
-								if(aa.getValue() != null)
-								{
-									if(this.template == null)
-									{
-										uri.append("/" + aa.getValue());
-									}
-									else
-									{
-										params.put(aa.getName(), aa.getValue()); // TODO: input tuple
-									}
-								}
-							}
-						}
-					}
-				}
+				mapAttributesPhase1ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getType(), aa.getValue(), inputs, uri, params);
 			}
 			if((aa.getOutput() != null) && aa.getOutput().equals("true"))
 			{
@@ -273,78 +224,28 @@ public class RESTExecutableAccessMethod {
 		}
 	}
 	
-	// Phase 2 processes the name/value pairs, adding them onto the web target
-	private void mapAttributesPhase2(ServiceRoot sr, AccessMethod am)
+	// Do the donkey work for mapAttributesPhase1()
+	public void mapAttributesPhase1ProcessParams(String encoding, String name, String type, String value, List<Attribute> inputs, StringBuilder uri, Map<String, Object> params)
 	{
-		for(StaticAttribute sa : sr.getStaticAttribute())
+		if((name != null) && (type != null))
 		{
-			if(sa.getAttributeEncoding() != null)
+			inputs.add(Attribute.create(typeType(type), name));
+			if(encoding != null)
 			{
-				AttributeEncoding ae;
-				if((ae = attributeEncodingMap.get(sa.getAttributeEncoding())) != null)
+				AttributeEncoding ae = attributeEncodingMap.get(encoding);
+				if(ae != null)
 				{
-					if((ae.getType() != null) && ae.getType().equals("url-param"))
+					if((ae.getType() != null) && ae.getType().equals("path-element"))
 					{
-						if(sa.getName() != null)
+						if(value != null)
 						{
-							if(sa.getValue() != null)
+							if(this.template == null)
 							{
-								this.target = target.queryParam(sa.getName(), sa.getValue());
+								uri.append("/" + value);
 							}
-							else if(ae.getValue() != null)
+							else
 							{
-								this.target = target.queryParam(sa.getName(), ae.getValue());								
-							}
-						}
-						else if(ae.getName() != null)
-						{
-							if(sa.getValue() != null)
-							{
-								this.target = target.queryParam(ae.getName(), sa.getValue());
-							}
-							else if(ae.getValue() != null)
-							{
-								this.target = target.queryParam(ae.getName(), ae.getValue());								
-							}						
-						}
-					}
-				}
-			}
-		}
-		for(AccessMethodAttribute aa : am.getAttributes())
-		{
-			if((aa.getInput() != null) && aa.getInput().equals("true"))
-			{
-				if(aa.getAttributeEncoding() != null)
-				{
-					AttributeEncoding ae;
-					if((ae = attributeEncodingMap.get(aa.getAttributeEncoding())) != null)
-					{
-						if((ae.getType() != null) && ae.getType().equals("url-param"))
-						{
-							if(aa.getName() != null)
-							{
-								// TODO: input tuple
-								if(aa.getValue() != null)
-								{
-									this.target = target.queryParam(aa.getName(), aa.getValue()); 
-								}
-								else if(ae.getValue() != null)
-								{
-									this.target = target.queryParam(aa.getName(), ae.getValue()); 
-								}
-							}
-							else if(ae.getName() != null)
-							{
-								// TODO: input tuple
-								if(aa.getValue() != null)
-								{
-									this.target = target.queryParam(ae.getName(), aa.getValue()); 
-								}
-								else if(ae.getValue() != null)
-								{
-									this.target = target.queryParam(ae.getName(), ae.getValue()); 
-								}
+								params.put(name, value);
 							}
 						}
 					}
@@ -353,6 +254,77 @@ public class RESTExecutableAccessMethod {
 		}
 	}
 	
+	// Phase 2 processes the name/value pairs, adding them onto the web target
+	private void mapAttributesPhase2(ServiceRoot sr, AccessMethod am)
+	{
+		for(ServiceUsagePolicy sup: sr.getServiceUsagePolicy())
+		{
+			if(sup.getName() != null)
+			{
+				UsagePolicy up = usagePolicyMap.get(sup.getName());
+				if(up != null)
+				{
+					if(up instanceof uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication)
+					{
+						URLAuthentication uae = (URLAuthentication) up;
+						String encoding = uae.getAttributeEncoding();
+						mapAttributesPhase2ProcessParams(encoding, sup.getName(), null);
+					}
+				}
+			}
+		}
+		for(StaticAttribute sa : sr.getStaticAttribute())
+		{
+			mapAttributesPhase2ProcessParams(sa.getAttributeEncoding(), sa.getName(), sa.getValue());
+		}
+		for(AccessMethodAttribute aa : am.getAttributes())
+		{
+			if((aa.getInput() != null) && aa.getInput().equals("true"))
+			{
+				mapAttributesPhase2ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getValue());
+			}
+		}
+	}
+	
+	// Do the donkey work for mapAttributesPhase2()
+	public void mapAttributesPhase2ProcessParams(String encoding, String name, String value)
+	{
+		if(encoding != null)
+		{
+			AttributeEncoding ae;
+			if((ae = attributeEncodingMap.get(encoding)) != null)
+			{
+				if((ae.getType() != null) && ae.getType().equals("url-param"))
+				{
+					if(name != null)
+					{
+						// TODO: input tuple
+						if(value != null)
+						{
+							this.target = target.queryParam(name, value);
+						}
+						else if(ae.getValue() != null)
+						{
+							this.target = target.queryParam(name, ae.getValue());								
+						}
+					}
+					else if(ae.getName() != null)
+					{
+						// TODO: input tuple
+						if(value != null)
+						{
+							this.target = target.queryParam(ae.getName(), value);
+						}
+						else if(ae.getValue() != null)
+						{
+							this.target = target.queryParam(ae.getName(), ae.getValue());								
+						}						
+					}
+				}
+			}
+		}
+	}
+
 	// Perform the main access to the REST protocol and parse the results
 	public Table access(Tuple input)
 	{
