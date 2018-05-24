@@ -9,7 +9,7 @@ import com.google.common.eventbus.Subscribe;
  * @author Julien Leblay
  * @param <T> the generic type
  */
-public interface AccessPostProcessor<T extends ResponseEvent> {
+public interface AccessPostProcessor<T> {
 	
 	/**
 	 * Method called upon an access ResponseEvent.

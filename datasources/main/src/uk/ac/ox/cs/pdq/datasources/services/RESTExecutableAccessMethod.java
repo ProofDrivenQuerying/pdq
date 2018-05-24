@@ -330,8 +330,29 @@ public class RESTExecutableAccessMethod {
 	{
 		RESTRequestEvent request = new RESTRequestEvent(target, mediaType);
 		
+		Collection<UsagePolicy> cup = usagePolicyMap.values();
+		for(UsagePolicy up : cup)
+		{
+			if(up instanceof AccessPreProcessor)
+			{
+				@SuppressWarnings("unchecked")
+				AccessPreProcessor<RESTRequestEvent> apep = (AccessPreProcessor<RESTRequestEvent>) up;
+				apep.processAccessRequest(request);
+			}
+		}
+		
 		RESTResponseEvent response = request.processRequest();
 		
+		for(UsagePolicy up : cup)
+		{
+			if(up instanceof AccessPostProcessor)
+			{
+				@SuppressWarnings("unchecked")
+				AccessPostProcessor<RESTResponseEvent> apop = (AccessPostProcessor<RESTResponseEvent>) up;
+				apop.processAccessResponse(response);
+			}
+		}
+
 		Table table = new Table();
 				
 		int status = response.getResponse().getStatus();
