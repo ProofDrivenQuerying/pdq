@@ -2,15 +2,15 @@
 	<attribute-encoding name="apikey" type="url-param" value="AIzaSyDN1I2acLKglH3vjzVXeKbXDoSs_oNw6Jc"/>
 	<attribute-encoding name="format" type="path-element" template="&#038;format=json"/>
 
-	<usage-policy name="url_auth"
-			type="uk.ac.ox.cs.pdq.services.policies.URLAuthentication"
-			attribute-encoding="apikey"/>
 	<usage-policy name="2000_request_per_day"
-			type="uk.ac.ox.cs.pdq.services.policies.RequestAllowance"
+			type="uk.ac.ox.cs.pdq.datasources.services.policies.RequestAllowance"
 			limit="2000" period="24h"/>
 	<usage-policy name="10_request_per_second"
-			type="uk.ac.ox.cs.pdq.services.policies.RequestAllowance"
+			type="uk.ac.ox.cs.pdq.datasources.services.policies.RequestAllowance"
 			limit="10" period="1s"/>
+	<usage-policy name="url_auth"
+			type="uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication"
+			attribute-encoding="apikey"/>
 
 	<service name="reactome-speciesList"/>
 	<service name="2"/>
