@@ -11,12 +11,13 @@ import javax.xml.bind.annotation.XmlType;
  */
 // ServiceRoot is the XML element which corresponds to the <service> tag
 @XmlRootElement (name="service")
-@XmlType (propOrder= {"url", "documentation", "mediaType", "staticAttribute", "accessMethod"})
+@XmlType (propOrder= {"url", "documentation", "mediaType", "serviceUsagePolicy", "staticAttribute", "accessMethod"})
 public class ServiceRoot {
 	
 	private String url;
 	private String documentation;
 	private String mediaType;
+	private ServiceUsagePolicy[] serviceUsagePolicy;
 	private StaticAttribute[] staticAttribute;
 	private AccessMethod[] accessMethod;
 	
@@ -25,33 +26,36 @@ public class ServiceRoot {
 		return url;
 	}
 
-
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
 
 	@XmlAttribute
 	public String getDocumentation() {
 		return documentation;
 	}
 
-
 	public void setDocumentation(String documentation) {
 		this.documentation = documentation;
 	}
-
 
 	@XmlAttribute (name = "media-type")
 	public String getMediaType() {
 		return mediaType;
 	}
 
-
 	public void setMediaType(String mediaType) {
 		this.mediaType = mediaType;
 	}
 
+	@XmlElement (name = "policy")
+	public ServiceUsagePolicy[] getServiceUsagePolicy() {
+		return serviceUsagePolicy;
+	}
+
+	public void setServiceUsagePolicy(ServiceUsagePolicy[] serviceUsagePolicy) {
+		this.serviceUsagePolicy = serviceUsagePolicy;
+	}
 
 	@XmlElement (name = "static-attribute")
 	public StaticAttribute[] getStaticAttribute() {
@@ -75,5 +79,4 @@ public class ServiceRoot {
 	{
 		return "Services";
 	}
-
 }
