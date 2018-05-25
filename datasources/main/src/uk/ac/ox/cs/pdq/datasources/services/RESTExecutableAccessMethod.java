@@ -216,7 +216,7 @@ public class RESTExecutableAccessMethod {
 		{
 			if((aa.getInput() != null) && aa.getInput().equals("true"))
 			{
-				mapAttributesPhase1ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getType(), aa.getValue(), inputs, uri, params, tuple.getValue(a));
+				mapAttributesPhase1ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getType(), aa.getValue(), inputs, uri, params, (tuple != null) ? tuple.getValue(a) : null);
 				a++;
 			}
 			if((aa.getOutput() != null) && aa.getOutput().equals("true"))
