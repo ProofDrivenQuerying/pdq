@@ -272,8 +272,12 @@ public class DbIOManager extends IOManager {
 				String[] tuple = line.split(",");
 				Object[] constants = new Object[attributes.length];
 				for (int i = 0; i < tuple.length; ++i) {
-					constants[i] = (TypedConstant.convertStringToType(tuple[i].replace("\"", ""),
+					if (i>=attributes.length) {
+						System.out.println("Warning this tuple has more attributes then expected: " + tuple);
+					} else {
+						constants[i] = (TypedConstant.convertStringToType(tuple[i].replace("\"", ""),
 							attributes[i].getType()));
+					}
 				}
 				facts.add(tt.createTuple(constants));
 			}
