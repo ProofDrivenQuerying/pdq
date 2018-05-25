@@ -51,27 +51,46 @@ public class RESTExecutableAccessMethod {
 	// Constructor takes XML-derived objects and builds a structure ready to run
 	public RESTExecutableAccessMethod(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am, Tuple tuple)
 	{
+		// Get the url and mediatype from the ServiceRoot object
 		this.url = sr.getUrl();
 		this.mediaType = new MediaType("application", "json");
 		String mediaType = sr.getMediaType();
 		if((mediaType != null) && mediaType.equals("application/xml"))	this.mediaType = new MediaType("application", "xml");
+		
+		// Setup the attributeEncodingMap by putting in all AttributeEncodings from the ServiceGroupsRoot object
 		for(AttributeEncoding ae: sgr.getAttributeEncoding()) attributeEncodingMap.put(ae.getName(), ae);
+		
+		// Parse the usage policies from the ServiceGroupsRoot object
 		compileUsagePolicies(sgr);
+		
+		// Format the templates stored in the AttributeEncodings from the ServiceGroupsRoot object 
 		formatTemplate(sgr, sr, am);
+		
+		// Setup inputs, outputs, uri and params
 		LinkedList<Attribute> inputs = new LinkedList<Attribute>();
 		LinkedList<Attribute> outputs = new LinkedList<Attribute>();
 		StringBuilder uri = new StringBuilder(this.url);
 		Map<String, Object> params = new TreeMap<String, Object>();
+		
+		// Parse the static and non-static attributes from the ServiceRoot object, phase1
 		mapAttributesPhase1(sr, am, inputs, outputs, uri, params, tuple);
+		
+		// Apply the template by appending its fully populated format onto the uri
 		if(this.template != null) uri.append(this.template);
+		
+		// Setup the web target
 		this.target = ClientBuilder.newClient().register(JacksonFeatures.class).target(uri.toString());
+		
+		// Parse the static and non-static attributes from the ServiceRoot object, phase1
 		mapAttributesPhase2(sr, am, tuple);
 		
+		// Copy attributes
 		inputattributes = new Attribute[inputs.size()];
 		for(int i = 0; i < inputs.size(); i++) inputattributes[i] = inputs.get(i);
 		outputattributes = new Attribute[outputs.size()];
 		for(int i = 0; i < outputs.size(); i++) outputattributes[i] = outputs.get(i);
 		
+		// Setup response unmarshallers
 		jsonResponseUnmarshaller = new JsonResponseUnmarshaller(outputattributes, sr.getResultDelimiter());
 		xmlResponseUnmarshaller = new XmlResponseUnmarshaller(outputattributes, sr.getResultDelimiter());
 	}
@@ -364,8 +383,10 @@ public class RESTExecutableAccessMethod {
 	// Perform the main access to the REST protocol and parse the results
 	public Table access()
 	{
+		// Setup a RESTRequestEvent from web target and mediaType
 		RESTRequestEvent request = new RESTRequestEvent(target, mediaType);
 		
+		// For all AccessPreProcessors call the processAccessRequest method with the RESTRequestEvent
 		Collection<UsagePolicy> cup = usagePolicyMap.values();
 		for(UsagePolicy up : cup)
 		{
@@ -377,8 +398,10 @@ public class RESTExecutableAccessMethod {
 			}
 		}
 		
+		// Process the RESTRequestEvent to generate a RESTResponseEvent
 		RESTResponseEvent response = request.processRequest();
 		
+		// For all AccessPostProcessors call the processAccessResponse method with the RESTResponse event
 		for(UsagePolicy up : cup)
 		{
 			if(up instanceof AccessPostProcessor)
@@ -389,8 +412,10 @@ public class RESTExecutableAccessMethod {
 			}
 		}
 
+		// Create a new table as input for the unmarshallers
 		Table table = new Table();
 				
+		// Process the HTTP response and call response unmarshallers if appropriate
 		int status = response.getResponse().getStatus();
 		if (status == 200) {
 			if(mediaType.getType().equals("application"))
