@@ -72,7 +72,7 @@ public class Runtime {
 		System.out.println("evaluating plan " + p + " over " + schema + " using facts: " + facts + " and params: " + params);
 		AccessRepository repo = AccessRepository.getRepository();
 		try {
-			ExecutablePlan executable = new PlanDecorator(repo).decorate(p);
+			ExecutablePlan executable = new PlanDecorator(repo,schema).decorate(p);
 			Table res = executable.execute();
 			return res;
 		}catch(Throwable t) {

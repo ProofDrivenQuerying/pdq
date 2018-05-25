@@ -80,7 +80,7 @@ public class PlannerTestUtilities {
 			Cost cost = CostIOManager.readRelationalTermCost(file, schema);
 			return new AbstractMap.SimpleEntry<RelationalTerm,Cost>(plan, cost);
 		} catch (IOException | JAXBException e) {
-			return null;
+			return null; 
 		}
 	}
 

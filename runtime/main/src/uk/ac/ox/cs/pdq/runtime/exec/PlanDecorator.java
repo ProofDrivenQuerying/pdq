@@ -13,6 +13,7 @@ import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.Access;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.CartesianProduct;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.DependentJoin;
@@ -31,7 +32,14 @@ import uk.ac.ox.cs.pdq.runtime.exec.spliterator.SymmetricMemoryHashJoin;
  * @author ATI project (Efi, Tim etc)
  */
 public class PlanDecorator {
+	/**
+	 * Known list of Executable accesses
+	 */
 	private AccessRepository repository;
+	/**
+	 * Every executable access needs to be "updated" with the corresponding schema relation.
+	 */
+	private Schema schema;
 
 	/**
 	 * Currently the only extra information needed for the decoration is the
@@ -42,6 +50,11 @@ public class PlanDecorator {
 	 * @param repository
 	 */
 	public PlanDecorator(AccessRepository repository) {
+		this.repository = repository;
+	}
+
+	public PlanDecorator(AccessRepository repository, Schema schema) {
+		this.schema = schema;
 		this.repository = repository;
 	}
 
@@ -107,6 +120,7 @@ public class PlanDecorator {
 		if (newAccess == null) {
 			throw new Exception("AccessMethod \"" + amDesc.getName() + "\" not found in repository: " + repository);
 		}
+		newAccess.updateRelation(schema.getRelation(newAccess.getRelation().getName()));
 		AccessTerm newAccessTerm;
 		if (plan.getInputConstants() != null) {
 			newAccessTerm = AccessTerm.create(plan.getRelation(), newAccess, plan.getInputConstants());
