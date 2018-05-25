@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.db;
+package uk.ac.ox.cs.pdq.databasemanagement;
 import java.io.File;
 
 import org.apache.log4j.Logger;
