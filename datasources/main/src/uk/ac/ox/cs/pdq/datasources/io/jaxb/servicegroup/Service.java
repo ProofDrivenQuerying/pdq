@@ -13,7 +13,7 @@ public class Service {
 	
 	private String name;
 	
-	@XmlAttribute
+	@XmlAttribute (required=true)
 	public String getName() {
 		return name;
 	}

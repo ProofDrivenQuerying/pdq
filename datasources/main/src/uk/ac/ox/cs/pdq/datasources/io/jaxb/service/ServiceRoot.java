@@ -22,7 +22,7 @@ public class ServiceRoot {
 	private StaticAttribute[] staticAttribute;
 	private AccessMethod[] accessMethod;
 	
-	@XmlAttribute
+	@XmlAttribute (required=true)
 	public String getUrl() {
 		return url;
 	}
@@ -31,7 +31,7 @@ public class ServiceRoot {
 		this.url = url;
 	}
 
-	@XmlAttribute
+	@XmlAttribute (required=false)
 	public String getDocumentation() {
 		return documentation;
 	}
@@ -40,7 +40,7 @@ public class ServiceRoot {
 		this.documentation = documentation;
 	}
 
-	@XmlAttribute (name = "media-type")
+	@XmlAttribute (name = "media-type", required=false)
 	public String getMediaType() {
 		return mediaType;
 	}
@@ -49,7 +49,7 @@ public class ServiceRoot {
 		this.mediaType = mediaType;
 	}
 	
-	@XmlAttribute (name = "result-delimiter")
+	@XmlAttribute (name = "result-delimiter", required=false)
 	public String getResultDelimiter() {
 		return resultDelimiter;
 	}
@@ -58,7 +58,7 @@ public class ServiceRoot {
 		this.resultDelimiter = resultDelimiter;
 	}
 
-	@XmlElement (name = "policy")
+	@XmlElement (name = "policy", required=false)
 	public ServiceUsagePolicy[] getServiceUsagePolicy() {
 		return serviceUsagePolicy;
 	}
@@ -67,7 +67,7 @@ public class ServiceRoot {
 		this.serviceUsagePolicy = serviceUsagePolicy;
 	}
 
-	@XmlElement (name = "static-attribute")
+	@XmlElement (name = "static-attribute", required=false)
 	public StaticAttribute[] getStaticAttribute() {
 		return staticAttribute;
 	}
@@ -76,7 +76,7 @@ public class ServiceRoot {
 		this.staticAttribute = staticAttribute;
 	}
 
-	@XmlElement (name = "access-method")
+	@XmlElement (name = "access-method", required=true)
 	public AccessMethod[] getAccessMethod() {
 		return accessMethod;
 	}
@@ -87,6 +87,6 @@ public class ServiceRoot {
 
 	public String toString()
 	{
-		return "Services";
+		return "Service";
 	}
 }

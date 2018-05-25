@@ -20,56 +20,56 @@ public class AccessMethodAttribute {
 	private String attributeEncodingIndex;
 	private String relationAttribute;
 	
-	@XmlAttribute
+	@XmlAttribute (required=true)
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	@XmlAttribute
+	@XmlAttribute (required=true)
 	public String getType() {
 		return type;
 	}
 	public void setType(String type) {
 		this.type = type;
 	}
-	@XmlAttribute
+	@XmlAttribute (required=false)
 	public String getValue() {
 		return value;
 	}
 	public void setValue(String value) {
 		this.value = value;
 	}
-	@XmlAttribute
+	@XmlAttribute (required=false)
 	public String getInput() {
 		return input;
 	}
 	public void setInput(String input) {
 		this.input = input;
 	}
-	@XmlAttribute
+	@XmlAttribute (required=false)
 	public String getOutput() {
 		return output;
 	}
 	public void setOutput(String output) {
 		this.output = output;
 	}
-	@XmlAttribute (name="attribute-encoding")
+	@XmlAttribute (name="attribute-encoding", required=false)
 	public String getAttributeEncoding() {
 		return attributeEncoding;
 	}
 	public void setAttributeEncoding(String attributeEncoding) {
 		this.attributeEncoding = attributeEncoding;
 	}
-	@XmlAttribute (name = "attribute-encoding-index")
+	@XmlAttribute (name = "attribute-encoding-index", required=false)
 	public String getAttributeEncodingIndex() {
 		return attributeEncodingIndex;
 	}
 	public void setAttributeEncodingIndex(String attributeEncodingIndex) {
 		this.attributeEncodingIndex = attributeEncodingIndex;
 	}
-	@XmlAttribute (name = "relation-attribute")
+	@XmlAttribute (name = "relation-attribute", required=false)
 	public String getRelationAttribute() {
 		return relationAttribute;
 	}

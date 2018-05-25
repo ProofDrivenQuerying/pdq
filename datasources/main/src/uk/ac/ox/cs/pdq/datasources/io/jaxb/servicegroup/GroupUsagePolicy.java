@@ -18,7 +18,7 @@ public class GroupUsagePolicy {
 	private String wait;
 	private String attributeEncoding;
 	
-	@XmlAttribute
+	@XmlAttribute (required=true)
 	public String getName() {
 		return name;
 	}
@@ -29,7 +29,7 @@ public class GroupUsagePolicy {
 	}
 
 
-	@XmlAttribute
+	@XmlAttribute (required=true)
 	public String getType() {
 		return type;
 	}
@@ -40,7 +40,7 @@ public class GroupUsagePolicy {
 	}
 
 
-	@XmlAttribute
+	@XmlAttribute (required=false)
 	public String getLimit() {
 		return limit;
 	}
@@ -51,7 +51,7 @@ public class GroupUsagePolicy {
 	}
 
 
-	@XmlAttribute
+	@XmlAttribute (required=false)
 	public String getPeriod() {
 		return period;
 	}
@@ -62,7 +62,7 @@ public class GroupUsagePolicy {
 	}
 
 
-	@XmlAttribute
+	@XmlAttribute (required=false)
 	public String getWait() {
 		return wait;
 	}
@@ -73,7 +73,7 @@ public class GroupUsagePolicy {
 	}
 
 
-	@XmlAttribute (name = "attribute-encoding")
+	@XmlAttribute (name = "attribute-encoding", required=false)
 	public String getAttributeEncoding() {
 		return attributeEncoding;
 	}

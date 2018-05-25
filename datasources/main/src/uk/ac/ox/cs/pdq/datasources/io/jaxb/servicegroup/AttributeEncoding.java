@@ -16,7 +16,7 @@ public class AttributeEncoding implements Comparable<AttributeEncoding> {
 	private String value;
 	private String template;
 	
-	@XmlAttribute
+	@XmlAttribute (required=true)
 	public String getName() {
 		return name;
 	}
@@ -27,7 +27,7 @@ public class AttributeEncoding implements Comparable<AttributeEncoding> {
 	}
 
 
-	@XmlAttribute
+	@XmlAttribute (required=true)
 	public String getType() {
 		return type;
 	}
@@ -38,7 +38,7 @@ public class AttributeEncoding implements Comparable<AttributeEncoding> {
 	}
 
 
-	@XmlAttribute
+	@XmlAttribute (required=false)
 	public String getValue() {
 		return value;
 	}
@@ -49,7 +49,7 @@ public class AttributeEncoding implements Comparable<AttributeEncoding> {
 	}
 
 
-	@XmlAttribute
+	@XmlAttribute (required=false)
 	public String getTemplate() {
 		return template;
 	}

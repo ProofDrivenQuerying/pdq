@@ -17,7 +17,7 @@ public class ServiceGroupsRoot {
 	private GroupUsagePolicy[] usagePolicy;
 	private Service[] service;
 
-	@XmlElement (name = "attribute-encoding")
+	@XmlElement (name = "attribute-encoding", required=false)
 	public AttributeEncoding[] getAttributeEncoding() {
 		return attributeEncoding;
 	}
@@ -26,7 +26,7 @@ public class ServiceGroupsRoot {
 		this.attributeEncoding = attributeEncoding;
 	}
 
-	@XmlElement (name = "usage-policy")
+	@XmlElement (name = "usage-policy", required=false)
 	public GroupUsagePolicy[] getUsagePolicy() {
 		return usagePolicy;
 	}
@@ -35,7 +35,7 @@ public class ServiceGroupsRoot {
 		this.usagePolicy = usagePolicy;
 	}
 
-	@XmlElement
+	@XmlElement (required=true)
 	public Service[] getService() {
 		return service;
 	}

@@ -17,7 +17,7 @@ public class AccessMethod {
 	private String cost;
 	private AccessMethodAttribute[] attributes;
 	
-	@XmlAttribute
+	@XmlAttribute (required=true)
 	public String getName() {
 		return name;
 	}
@@ -26,7 +26,7 @@ public class AccessMethod {
 		this.name = name;
 	}
 
-	@XmlAttribute
+	@XmlAttribute (required=true)
 	public String getType() {
 		return type;
 	}
@@ -35,7 +35,7 @@ public class AccessMethod {
 		this.type = type;
 	}
 
-	@XmlAttribute
+	@XmlAttribute (required=false)
 	public String getCost() {
 		return cost;
 	}
@@ -44,7 +44,7 @@ public class AccessMethod {
 		this.cost = cost;
 	}
 
-	@XmlElement (name="attribute")
+	@XmlElement (name="attribute", required=true)
 	public AccessMethodAttribute[] getAttributes() {
 		return attributes;
 	}

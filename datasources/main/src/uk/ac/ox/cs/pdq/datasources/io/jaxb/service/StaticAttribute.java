@@ -17,7 +17,7 @@ public class StaticAttribute {
 	private String attributeEncodingIndex;
 	private String value;
 	
-	@XmlAttribute
+	@XmlAttribute (required=true)
 	public String getName() {
 		return name;
 	}
@@ -28,7 +28,7 @@ public class StaticAttribute {
 	}
 
 	
-	@XmlAttribute
+	@XmlAttribute (required=true)
 	public String getType() {
 		return type;
 	}
@@ -39,7 +39,7 @@ public class StaticAttribute {
 	}
 
 
-	@XmlAttribute (name = "attribute-encoding")
+	@XmlAttribute (name = "attribute-encoding", required=false)
 	public String getAttributeEncoding() {
 		return attributeEncoding;
 	}
@@ -48,7 +48,7 @@ public class StaticAttribute {
 		this.attributeEncoding = attributeEncoding;
 	}
 
-	@XmlAttribute (name = "attribute-encoding-index")
+	@XmlAttribute (name = "attribute-encoding-index", required=false)
 	public String getAttributeEncodingIndex() {
 		return attributeEncodingIndex;
 	}
@@ -57,7 +57,7 @@ public class StaticAttribute {
 		this.attributeEncodingIndex = attributeEncodingIndex;
 	}
 
-	@XmlAttribute
+	@XmlAttribute (required=false)
 	public String getValue() {
 		return value;
 	}

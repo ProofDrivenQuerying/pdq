@@ -19,7 +19,7 @@ public class ServiceUsagePolicy {
 	private String pageIndex;
 	private String totalItems;
 
-	@XmlAttribute
+	@XmlAttribute (required=true)
 	public String getName() {
 		return name;
 	}
@@ -29,7 +29,7 @@ public class ServiceUsagePolicy {
 		this.name = name;
 	}
 
-	@XmlAttribute
+	@XmlAttribute (required=true)
 	public String getType() {
 		return type;
 	}
@@ -39,7 +39,7 @@ public class ServiceUsagePolicy {
 		this.type = type;
 	}
 
-	@XmlAttribute
+	@XmlAttribute (required=false)
 	public String getLimit() {
 		return limit;
 	}
@@ -49,7 +49,7 @@ public class ServiceUsagePolicy {
 		this.limit = limit;
 	}
 
-	@XmlAttribute (name = "start-index")
+	@XmlAttribute (name = "start-index", required=false)
 	public String getStartIndex() {
 		return startIndex;
 	}
@@ -60,7 +60,7 @@ public class ServiceUsagePolicy {
 	}
 
 
-	@XmlAttribute (name = "page-size")
+	@XmlAttribute (name = "page-size", required=false)
 	public String getPageSize() {
 		return pageSize;
 	}
@@ -71,7 +71,7 @@ public class ServiceUsagePolicy {
 	}
 
 
-	@XmlAttribute (name = "page-index")
+	@XmlAttribute (name = "page-index", required=false)
 	public String getPageIndex() {
 		return pageIndex;
 	}
@@ -82,7 +82,7 @@ public class ServiceUsagePolicy {
 	}
 
 
-	@XmlAttribute (name = "total-items")
+	@XmlAttribute (name = "total-items", required=false)
 	public String getTotalItems() {
 		return totalItems;
 	}
