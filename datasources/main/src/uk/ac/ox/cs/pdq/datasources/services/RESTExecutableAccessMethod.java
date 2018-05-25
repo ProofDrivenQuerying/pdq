@@ -49,7 +49,7 @@ public class RESTExecutableAccessMethod {
 	private TreeMap<String, UsagePolicy> usagePolicyMap = new TreeMap<String, UsagePolicy>();
 
 	// Constructor takes XML-derived objects and builds a structure ready to run
-	public RESTExecutableAccessMethod(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am)
+	public RESTExecutableAccessMethod(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am, Tuple tuple)
 	{
 		this.url = sr.getUrl();
 		this.mediaType = new MediaType("application", "json");
@@ -62,10 +62,10 @@ public class RESTExecutableAccessMethod {
 		LinkedList<Attribute> outputs = new LinkedList<Attribute>();
 		StringBuilder uri = new StringBuilder(this.url);
 		Map<String, Object> params = new TreeMap<String, Object>();
-		mapAttributesPhase1(sr, am, inputs, outputs, uri, params);
+		mapAttributesPhase1(sr, am, inputs, outputs, uri, params, tuple);
 		if(this.template != null) uri.append(this.template);
 		this.target = ClientBuilder.newClient().register(JacksonFeatures.class).target(uri.toString());
-		mapAttributesPhase2(sr, am);
+		mapAttributesPhase2(sr, am, tuple);
 		
 		inputattributes = new Attribute[inputs.size()];
 		for(int i = 0; i < inputs.size(); i++) inputattributes[i] = inputs.get(i);
@@ -205,17 +205,19 @@ public class RESTExecutableAccessMethod {
 	}
 
 	// Phase 1 builds structures and processes path-elements
-	private void mapAttributesPhase1(ServiceRoot sr, AccessMethod am, List<Attribute> inputs, List<Attribute> outputs, StringBuilder uri, Map<String, Object> params)
+	private void mapAttributesPhase1(ServiceRoot sr, AccessMethod am, List<Attribute> inputs, List<Attribute> outputs, StringBuilder uri, Map<String, Object> params, Tuple tuple)
 	{
 		for(StaticAttribute sa : sr.getStaticAttribute())
 		{
-			mapAttributesPhase1ProcessParams(sa.getAttributeEncoding(), sa.getName(), sa.getType(), sa.getValue(), inputs, uri, params);
+			mapAttributesPhase1ProcessParams(sa.getAttributeEncoding(), sa.getName(), sa.getType(), sa.getValue(), inputs, uri, params, null);
 		}
+		int a = 0;
 		for(AccessMethodAttribute aa : am.getAttributes())
 		{
 			if((aa.getInput() != null) && aa.getInput().equals("true"))
 			{
-				mapAttributesPhase1ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getType(), aa.getValue(), inputs, uri, params);
+				mapAttributesPhase1ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getType(), aa.getValue(), inputs, uri, params, tuple.getValue(a));
+				a++;
 			}
 			if((aa.getOutput() != null) && aa.getOutput().equals("true"))
 			{
@@ -225,7 +227,7 @@ public class RESTExecutableAccessMethod {
 	}
 	
 	// Do the donkey work for mapAttributesPhase1()
-	public void mapAttributesPhase1ProcessParams(String encoding, String name, String type, String value, List<Attribute> inputs, StringBuilder uri, Map<String, Object> params)
+	public void mapAttributesPhase1ProcessParams(String encoding, String name, String type, String value, List<Attribute> inputs, StringBuilder uri, Map<String, Object> params, String tuplevalue)
 	{
 		if((name != null) && (type != null))
 		{
@@ -237,6 +239,7 @@ public class RESTExecutableAccessMethod {
 				{
 					if((ae.getType() != null) && ae.getType().equals("path-element"))
 					{
+						if(tuplevalue != null) value = tuplevalue;
 						if(value != null)
 						{
 							if(this.template == null)
@@ -255,7 +258,7 @@ public class RESTExecutableAccessMethod {
 	}
 	
 	// Phase 2 processes the name/value pairs, adding them onto the web target
-	private void mapAttributesPhase2(ServiceRoot sr, AccessMethod am)
+	private void mapAttributesPhase2(ServiceRoot sr, AccessMethod am, Tuple tuple)
 	{
 		for(ServiceUsagePolicy sup: sr.getServiceUsagePolicy())
 		{
@@ -268,26 +271,27 @@ public class RESTExecutableAccessMethod {
 					{
 						URLAuthentication uae = (URLAuthentication) up;
 						String encoding = uae.getAttributeEncoding();
-						mapAttributesPhase2ProcessParams(encoding, sup.getName(), null);
+						mapAttributesPhase2ProcessParams(encoding, sup.getName(), null, null);
 					}
 				}
 			}
 		}
 		for(StaticAttribute sa : sr.getStaticAttribute())
 		{
-			mapAttributesPhase2ProcessParams(sa.getAttributeEncoding(), sa.getName(), sa.getValue());
+			mapAttributesPhase2ProcessParams(sa.getAttributeEncoding(), sa.getName(), sa.getValue(), null);
 		}
+		int a = 0;
 		for(AccessMethodAttribute aa : am.getAttributes())
 		{
 			if((aa.getInput() != null) && aa.getInput().equals("true"))
 			{
-				mapAttributesPhase2ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getValue());
+				mapAttributesPhase2ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getValue(), tuple.getValue(a));
 			}
 		}
 	}
 	
 	// Do the donkey work for mapAttributesPhase2()
-	public void mapAttributesPhase2ProcessParams(String encoding, String name, String value)
+	public void mapAttributesPhase2ProcessParams(String encoding, String name, String value, String tuplevalue)
 	{
 		if(encoding != null)
 		{
@@ -298,8 +302,11 @@ public class RESTExecutableAccessMethod {
 				{
 					if(name != null)
 					{
-						// TODO: input tuple
-						if(value != null)
+						if(tuplevalue != null)
+						{
+							this.target = target.queryParam(name, tuplevalue);
+						}
+						else if(value != null)
 						{
 							this.target = target.queryParam(name, value);
 						}
@@ -310,8 +317,11 @@ public class RESTExecutableAccessMethod {
 					}
 					else if(ae.getName() != null)
 					{
-						// TODO: input tuple
-						if(value != null)
+						if(tuplevalue != null)
+						{
+							this.target = target.queryParam(ae.getName(), tuplevalue);
+						}
+						else if(value != null)
 						{
 							this.target = target.queryParam(ae.getName(), value);
 						}
@@ -326,7 +336,7 @@ public class RESTExecutableAccessMethod {
 	}
 
 	// Perform the main access to the REST protocol and parse the results
-	public Table access(Tuple input)
+	public Table access()
 	{
 		RESTRequestEvent request = new RESTRequestEvent(target, mediaType);
 		
