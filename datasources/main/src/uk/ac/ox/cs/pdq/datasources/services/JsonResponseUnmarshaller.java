@@ -21,8 +21,9 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 // JsonResponseUnmarshaller deals with a web response in Json format
 public class JsonResponseUnmarshaller extends ResponseUnmarshaller {
 	
-	JsonResponseUnmarshaller(Attribute[] attributes){
+	JsonResponseUnmarshaller(Attribute[] attributes, String resultDelimiter){
 		this.attributes = attributes;
+		this.resultDelimiter.add(resultDelimiter);
 	}
 	
 	Table unmarshalJson(Response response, Table inputs) throws AccessException {

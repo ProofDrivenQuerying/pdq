@@ -72,8 +72,8 @@ public class RESTExecutableAccessMethod {
 		outputattributes = new Attribute[outputs.size()];
 		for(int i = 0; i < outputs.size(); i++) outputattributes[i] = outputs.get(i);
 		
-		jsonResponseUnmarshaller = new JsonResponseUnmarshaller(outputattributes);
-		xmlResponseUnmarshaller = new XmlResponseUnmarshaller(outputattributes);
+		jsonResponseUnmarshaller = new JsonResponseUnmarshaller(outputattributes, sr.getResultDelimiter());
+		xmlResponseUnmarshaller = new XmlResponseUnmarshaller(outputattributes, sr.getResultDelimiter());
 	}
 	
 	// Conversion from string to type ... there may be a better way of doing this

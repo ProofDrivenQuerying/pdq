@@ -21,8 +21,9 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 public class XmlResponseUnmarshaller extends ResponseUnmarshaller {
 	
 	
-	XmlResponseUnmarshaller(Attribute[] attributes){
+	XmlResponseUnmarshaller(Attribute[] attributes, String resultDelimiter){
 		this.attributes = attributes;
+		this.resultDelimiter.add(resultDelimiter);
 	}
 	
 	@SuppressWarnings("rawtypes")
