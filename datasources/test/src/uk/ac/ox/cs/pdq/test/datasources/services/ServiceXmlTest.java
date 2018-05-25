@@ -29,10 +29,10 @@ public class ServiceXmlTest {
 			for(int i = 0; i < sr.getAccessMethod().length; i++)
 			{
 				AccessMethod am = sr.getAccessMethod()[i];
-				RESTExecutableAccessMethod ream = new RESTExecutableAccessMethod(sgr, sr, am);
 				TupleType tupleType = TupleType.DefaultFactory.createFromTyped();
 				Tuple input = tupleType.createTuple();
-				Table t = ream.access(input);
+				RESTExecutableAccessMethod ream = new RESTExecutableAccessMethod(sgr, sr, am, input);
+				Table t = ream.access();
 				System.out.println(t);
 			}
 			ServiceManager.exportAccessMethod(sr, outputFile);
