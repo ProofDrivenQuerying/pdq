@@ -153,7 +153,7 @@ public class RESTExecutableAccessMethod {
 							URLAuthentication uae = (URLAuthentication) up;
 							String encoding = uae.getAttributeEncoding();
 							String index = "0";
-							formatTemplateProcessParams(encoding, index, attributeEncodingMap2);
+							formatTemplateProcessParams(encoding, index, null, attributeEncodingMap2);
 						}
 					}
 				}
@@ -165,7 +165,7 @@ public class RESTExecutableAccessMethod {
 			{
 				String encoding = sa.getAttributeEncoding();
 				String index = sa.getAttributeEncodingIndex();
-				formatTemplateProcessParams(encoding, index, attributeEncodingMap2);
+				formatTemplateProcessParams(encoding, index, sa.getValue(), attributeEncodingMap2);
 			}
 		}
 		if(am.getAttributes() != null)
@@ -174,7 +174,7 @@ public class RESTExecutableAccessMethod {
 			{
 				String encoding = aa.getAttributeEncoding();
 				String index = aa.getAttributeEncodingIndex();	
-				formatTemplateProcessParams(encoding, index, attributeEncodingMap2);		
+				formatTemplateProcessParams(encoding, index, aa.getValue(), attributeEncodingMap2);		
 			}
 		}
 		Collection<String> cs = attributeEncodingMap2.values();
@@ -183,7 +183,7 @@ public class RESTExecutableAccessMethod {
 	}
 
 	// Do the donkey work for formatTemplate()
-	public void formatTemplateProcessParams(String encoding, String index, TreeMap<AttributeEncoding, String> attributeEncodingMap2)
+	public void formatTemplateProcessParams(String encoding, String index, String value, TreeMap<AttributeEncoding, String> attributeEncodingMap2)
 	{
 		if(encoding != null)
 		{
@@ -195,7 +195,9 @@ public class RESTExecutableAccessMethod {
 				{
 					if(index != null)
 					{
-						template = template.replace("{" + index + "}", index);
+						template = template.replace("{" + index + "}", value);
+						attributeEncodingMap2.remove(ae);
+						attributeEncodingMap2.put(ae, template);
 					}
 				}
 				else
@@ -204,7 +206,7 @@ public class RESTExecutableAccessMethod {
 					{
 						if(index != null)
 						{
-							template = template.replace("{" + index + "}", index);
+							template = template.replace("{" + index + "}", value);
 						}
 						attributeEncodingMap2.put(ae, template);
 					}
@@ -396,7 +398,7 @@ public class RESTExecutableAccessMethod {
 				if(mediaType.getSubtype().equals("xml")) return xmlResponseUnmarshaller.unmarshalXml(response.getResponse(), table);
 				else if(mediaType.getSubtype().equals("json")) return jsonResponseUnmarshaller.unmarshalJson(response.getResponse(), table); 
 			}
-		} else if ((status == 404) || (status == 400)) {
+		} else if ((status == 400) || (status == 404) || (status == 406)) {
 			System.out.println(response.getResponse().getStatusInfo().getReasonPhrase());
 		} else {
 			throw new AccessException(status
