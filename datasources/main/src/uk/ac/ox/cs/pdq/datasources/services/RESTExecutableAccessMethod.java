@@ -139,34 +139,43 @@ public class RESTExecutableAccessMethod {
 	{
 		String result = "";
 		TreeMap<AttributeEncoding, String> attributeEncodingMap2 = new TreeMap<AttributeEncoding, String>();
-		for(ServiceUsagePolicy sup: sr.getServiceUsagePolicy())
+		if(sr.getServiceUsagePolicy() != null)
 		{
-			if(sup.getName() != null)
+			for(ServiceUsagePolicy sup: sr.getServiceUsagePolicy())
 			{
-				UsagePolicy up = usagePolicyMap.get(sup.getName());
-				if(up != null)
+				if(sup.getName() != null)
 				{
-					if(up instanceof uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication)
+					UsagePolicy up = usagePolicyMap.get(sup.getName());
+					if(up != null)
 					{
-						URLAuthentication uae = (URLAuthentication) up;
-						String encoding = uae.getAttributeEncoding();
-						String index = "0";
-						formatTemplateProcessParams(encoding, index, attributeEncodingMap2);
+						if(up instanceof uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication)
+						{
+							URLAuthentication uae = (URLAuthentication) up;
+							String encoding = uae.getAttributeEncoding();
+							String index = "0";
+							formatTemplateProcessParams(encoding, index, attributeEncodingMap2);
+						}
 					}
 				}
 			}
 		}
-		for(StaticAttribute sa: sr.getStaticAttribute())
+		if(sr.getStaticAttribute() != null)
 		{
-			String encoding = sa.getAttributeEncoding();
-			String index = sa.getAttributeEncodingIndex();
-			formatTemplateProcessParams(encoding, index, attributeEncodingMap2);
+			for(StaticAttribute sa: sr.getStaticAttribute())
+			{
+				String encoding = sa.getAttributeEncoding();
+				String index = sa.getAttributeEncodingIndex();
+				formatTemplateProcessParams(encoding, index, attributeEncodingMap2);
+			}
 		}
-		for(AccessMethodAttribute aa: am.getAttributes())
+		if(am.getAttributes() != null)
 		{
-			String encoding = aa.getAttributeEncoding();
-			String index = aa.getAttributeEncodingIndex();	
-			formatTemplateProcessParams(encoding, index, attributeEncodingMap2);		
+			for(AccessMethodAttribute aa: am.getAttributes())
+			{
+				String encoding = aa.getAttributeEncoding();
+				String index = aa.getAttributeEncodingIndex();	
+				formatTemplateProcessParams(encoding, index, attributeEncodingMap2);		
+			}
 		}
 		Collection<String> cs = attributeEncodingMap2.values();
 		for(String s: cs) result += s;
@@ -207,21 +216,27 @@ public class RESTExecutableAccessMethod {
 	// Phase 1 builds structures and processes path-elements
 	private void mapAttributesPhase1(ServiceRoot sr, AccessMethod am, List<Attribute> inputs, List<Attribute> outputs, StringBuilder uri, Map<String, Object> params, Tuple tuple)
 	{
-		for(StaticAttribute sa : sr.getStaticAttribute())
+		if(sr.getStaticAttribute() != null)
 		{
-			mapAttributesPhase1ProcessParams(sa.getAttributeEncoding(), sa.getName(), sa.getType(), sa.getValue(), inputs, uri, params, null);
-		}
-		int a = 0;
-		for(AccessMethodAttribute aa : am.getAttributes())
-		{
-			if((aa.getInput() != null) && aa.getInput().equals("true"))
+			for(StaticAttribute sa : sr.getStaticAttribute())
 			{
-				mapAttributesPhase1ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getType(), aa.getValue(), inputs, uri, params, (tuple != null) ? tuple.getValue(a) : null);
-				a++;
+				mapAttributesPhase1ProcessParams(sa.getAttributeEncoding(), sa.getName(), sa.getType(), sa.getValue(), inputs, uri, params, null);
 			}
-			if((aa.getOutput() != null) && aa.getOutput().equals("true"))
+		}
+		if(am.getAttributes() != null)
+		{
+			int a = 0;
+			for(AccessMethodAttribute aa : am.getAttributes())
 			{
-				outputs.add(Attribute.create(typeType(aa.getType()), aa.getName()));
+				if((aa.getInput() != null) && aa.getInput().equals("true"))
+				{
+					mapAttributesPhase1ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getType(), aa.getValue(), inputs, uri, params, (tuple != null) ? tuple.getValue(a) : null);
+					a++;
+				}
+				if((aa.getOutput() != null) && aa.getOutput().equals("true"))
+				{
+					outputs.add(Attribute.create(typeType(aa.getType()), aa.getName()));
+				}
 			}
 		}
 	}
@@ -260,32 +275,41 @@ public class RESTExecutableAccessMethod {
 	// Phase 2 processes the name/value pairs, adding them onto the web target
 	private void mapAttributesPhase2(ServiceRoot sr, AccessMethod am, Tuple tuple)
 	{
-		for(ServiceUsagePolicy sup: sr.getServiceUsagePolicy())
+		if(sr.getServiceUsagePolicy() != null)
 		{
-			if(sup.getName() != null)
+			for(ServiceUsagePolicy sup: sr.getServiceUsagePolicy())
 			{
-				UsagePolicy up = usagePolicyMap.get(sup.getName());
-				if(up != null)
+				if(sup.getName() != null)
 				{
-					if(up instanceof uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication)
+					UsagePolicy up = usagePolicyMap.get(sup.getName());
+					if(up != null)
 					{
-						URLAuthentication uae = (URLAuthentication) up;
-						String encoding = uae.getAttributeEncoding();
-						mapAttributesPhase2ProcessParams(encoding, sup.getName(), null, null);
+						if(up instanceof uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication)
+						{
+							URLAuthentication uae = (URLAuthentication) up;
+							String encoding = uae.getAttributeEncoding();
+							mapAttributesPhase2ProcessParams(encoding, sup.getName(), null, null);
+						}
 					}
 				}
 			}
 		}
-		for(StaticAttribute sa : sr.getStaticAttribute())
+		if(sr.getStaticAttribute() != null)
 		{
-			mapAttributesPhase2ProcessParams(sa.getAttributeEncoding(), sa.getName(), sa.getValue(), null);
-		}
-		int a = 0;
-		for(AccessMethodAttribute aa : am.getAttributes())
-		{
-			if((aa.getInput() != null) && aa.getInput().equals("true"))
+			for(StaticAttribute sa : sr.getStaticAttribute())
 			{
-				mapAttributesPhase2ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getValue(), tuple.getValue(a));
+				mapAttributesPhase2ProcessParams(sa.getAttributeEncoding(), sa.getName(), sa.getValue(), null);
+			}
+		}
+		if(am.getAttributes() != null)
+		{
+			int a = 0;
+			for(AccessMethodAttribute aa : am.getAttributes())
+			{
+				if((aa.getInput() != null) && aa.getInput().equals("true"))
+				{
+					mapAttributesPhase2ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getValue(), tuple.getValue(a));
+				}
 			}
 		}
 	}
