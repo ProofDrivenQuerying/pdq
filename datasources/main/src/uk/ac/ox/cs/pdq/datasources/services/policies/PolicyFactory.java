@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.datasources.services.policies;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Properties;
 
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.GroupUsagePolicy;
 
