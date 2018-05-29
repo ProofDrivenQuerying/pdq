@@ -7,7 +7,9 @@ import javax.xml.bind.annotation.XmlType;
  * @author Mark Ridler
  *
  */
-// AccessMethodAttribute is the XML element corresponding to the <attribute> tag
+// AccessMethodAttribute is the XML element corresponding to the <attribute> tag.
+// It represents the parsed results of the XML as an in-memory object.
+// It has attributes for name, type, value, input, output, attribute-encoding, attribute-encoding-index and relation-attribute
 @XmlType (propOrder= {"name", "type", "value", "input", "output", "attributeEncoding", "attributeEncodingIndex", "relationAttribute"})
 public class AccessMethodAttribute {
 	

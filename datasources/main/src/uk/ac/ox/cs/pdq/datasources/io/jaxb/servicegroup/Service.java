@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 // Service is the XML element which corresponds to the <service> tag
+// This is an empty tag with name attribute only
 @XmlType (propOrder= {"name"})
 public class Service {
 	

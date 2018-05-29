@@ -9,7 +9,11 @@ import javax.xml.bind.annotation.XmlType;
  * @author Mark Ridler
  *
  */
-// ServiceRoot is the XML element which corresponds to the <service> tag
+// ServiceRoot is the XML element which corresponds to the <service> tag.
+// It is the root level object for the $service.xml file.
+// It represents the in-memory results of parsing the XML file for the Service object.
+// It contains policy, static-attribute and access-method elements
+// It also has attributes for url, documentation, media-type and ressult-delimiter
 @XmlRootElement (name="service")
 @XmlType (propOrder= {"url", "documentation", "mediaType", "resultDelimiter", "serviceUsagePolicy", "staticAttribute", "accessMethod"})
 public class ServiceRoot {

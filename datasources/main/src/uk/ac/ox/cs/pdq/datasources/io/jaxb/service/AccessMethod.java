@@ -8,7 +8,9 @@ import javax.xml.bind.annotation.XmlType;
  * @author Mark Ridler
  *
  */
-// AccessMethod is the XML element which corresponds to the <access-method> tag
+// AccessMethod is the XML element which corresponds to the <access-method> tag.
+// It represents the results of parsing the XML as an in-memory object.
+// It contains AccessMethodAttributes and has name, type and cost attributes.
 @XmlType (propOrder= {"name", "type", "cost", "attributes"})
 public class AccessMethod {
 	

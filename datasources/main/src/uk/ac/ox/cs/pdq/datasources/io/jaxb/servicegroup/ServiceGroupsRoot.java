@@ -9,6 +9,9 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 // ServiceGroupsRoot is the XML element which corresponds to the <service-groups> tag
+// It is the root XML element for the service-groups.xml file
+// It represents the in-memory results of parsing the XML file for the ServiceGroupsRoot object
+// It contains  Attribute~Encodings, GroupUsagePolicies and Services.
 @XmlRootElement (name="service-groups")
 @XmlType (propOrder= {"attributeEncoding", "usagePolicy", "service"})
 public class ServiceGroupsRoot {

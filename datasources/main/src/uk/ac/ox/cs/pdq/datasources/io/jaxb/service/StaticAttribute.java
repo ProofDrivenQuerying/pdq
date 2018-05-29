@@ -8,6 +8,8 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 // StaticAttribute is the XML element which corresponds to the <static-attribute> tag
+// It represents the in-memory results of parsing the XML file for the StaticAttribute object.
+// It has attributes for name, type, attribute-encoding, attribute-encoding-index and value
 @XmlType (propOrder= {"name", "type", "attributeEncoding", "attributeEncodingIndex", "value"})
 public class StaticAttribute {
 	

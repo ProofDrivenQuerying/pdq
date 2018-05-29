@@ -8,6 +8,9 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 // ServiceUsagePolicy is the XML element which corresponds to the <policy> tag
+// It represents the in-memory results of parsing the XML file for the ServiceUsagePolicy object
+// It refers by name to a GroupUsagePolicy object in the service-groups.xml file.
+// It has attributes for name, type, limit, start-index, page-size, page=index and total-items
 @XmlType (propOrder= {"name", "type", "limit", "startIndex", "pageSize", "pageIndex", "totalItems"})
 public class ServiceUsagePolicy {
 	

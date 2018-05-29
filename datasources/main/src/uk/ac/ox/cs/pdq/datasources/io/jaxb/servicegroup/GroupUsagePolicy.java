@@ -7,7 +7,9 @@ import javax.xml.bind.annotation.XmlType;
  * @author Mark Ridler
  *
  */
-// UsagePolicy is the XML element which corresponds to the <usage-policy> tag
+// GroupUsagePolicy is the XML element which corresponds to the <usage-policy> tag
+// It represents the in-memory results of parsing the XML file for the GroupUsagePolicy object
+// It has attributes for name, type, limit, period, wait and attribute-encoding
 @XmlType (propOrder= {"name", "type", "limit", "period", "wait", "attributeEncoding"})
 public class GroupUsagePolicy {
 	
