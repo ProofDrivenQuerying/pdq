@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.io.jaxb.service;
+package uk.ac.ox.cs.pdq.datasources.services.service;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;

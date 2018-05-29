@@ -157,7 +157,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 * @param inputHeader the input header
 	 * @param inputTuples the input tuples
 	 * @return Table
-	 * @see uk.ac.ox.cs.pdq.datasources.services.Service#access(Table)
+	 * @see uk.ac.ox.cs.pdq.datasources.services.servicegroup.Service#access(Table)
 	 */
 	@Override
 	public Table access(Attribute[] inputHeader, ResetableIterator<Tuple> inputTuples) {
@@ -176,7 +176,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	/**
 	 *
 	 * @return Table
-	 * @see uk.ac.ox.cs.pdq.datasources.services.Service#access(Table)
+	 * @see uk.ac.ox.cs.pdq.datasources.services.servicegroup.Service#access(Table)
 	 */
 	@Override
 	public Table access() {
@@ -679,7 +679,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	/**
 	 *
 	 * @param p UsagePolicy
-	 * @see uk.ac.ox.cs.pdq.datasources.services.Service#register(UsagePolicy)
+	 * @see uk.ac.ox.cs.pdq.datasources.services.servicegroup.Service#register(UsagePolicy)
 	 */
 	@Override
 	public void register(UsagePolicy p) {
@@ -689,7 +689,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	/**
 	 *
 	 * @param p UsagePolicy
-	 * @see uk.ac.ox.cs.pdq.datasources.services.Service#unregister(UsagePolicy)
+	 * @see uk.ac.ox.cs.pdq.datasources.services.servicegroup.Service#unregister(UsagePolicy)
 	 */
 	@Override
 	public void unregister(UsagePolicy p) {

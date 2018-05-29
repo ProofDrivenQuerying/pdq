@@ -14,17 +14,17 @@ import javax.ws.rs.core.MediaType;
 import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
-import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.AccessMethod;
-import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.AccessMethodAttribute;
-import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.ServiceRoot;
-import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.ServiceUsagePolicy;
-import uk.ac.ox.cs.pdq.datasources.io.jaxb.service.StaticAttribute;
-import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.AttributeEncoding;
-import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.GroupUsagePolicy;
-import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.ServiceGroupsRoot;
 import uk.ac.ox.cs.pdq.datasources.services.policies.PolicyFactory;
 import uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
+import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
+import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodAttributeSoecification;
+import uk.ac.ox.cs.pdq.datasources.services.service.Service;
+import uk.ac.ox.cs.pdq.datasources.services.service.ServiceUsagePolicy;
+import uk.ac.ox.cs.pdq.datasources.services.service.StaticAttribute;
+import uk.ac.ox.cs.pdq.datasources.services.servicegroup.AttributeEncoding;
+import uk.ac.ox.cs.pdq.datasources.services.servicegroup.GroupUsagePolicy;
+import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.io.ReaderException;
@@ -49,7 +49,7 @@ public class RESTExecutableAccessMethod {
 	private TreeMap<String, UsagePolicy> usagePolicyMap = new TreeMap<String, UsagePolicy>();
 
 	// Constructor takes XML-derived objects and builds a structure ready to run
-	public RESTExecutableAccessMethod(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am, Tuple tuple)
+	public RESTExecutableAccessMethod(ServiceGroup sgr, Service sr, RESTExecutableAccessMethodSpecification am, Tuple tuple)
 	{
 		// Get the url and mediatype from the ServiceRoot object
 		this.url = sr.getUrl();
@@ -115,7 +115,7 @@ public class RESTExecutableAccessMethod {
 	
 	// Put all usage polcies in a map for future reference
 	@SuppressWarnings("unchecked")
-	public void compileUsagePolicies(ServiceGroupsRoot sgr)
+	public void compileUsagePolicies(ServiceGroup sgr)
 	{
 		for(GroupUsagePolicy gup : sgr.getUsagePolicy())
 		{
@@ -154,7 +154,7 @@ public class RESTExecutableAccessMethod {
 	}
 	
 	// Format a list of templates as presented by the AttributeEncodings
-	private void formatTemplate(ServiceGroupsRoot sgr, ServiceRoot sr, AccessMethod am)
+	private void formatTemplate(ServiceGroup sgr, Service sr, RESTExecutableAccessMethodSpecification am)
 	{
 		String result = "";
 		TreeMap<AttributeEncoding, String> attributeEncodingMap2 = new TreeMap<AttributeEncoding, String>();
@@ -189,7 +189,7 @@ public class RESTExecutableAccessMethod {
 		}
 		if(am.getAttributes() != null)
 		{
-			for(AccessMethodAttribute aa: am.getAttributes())
+			for(RESTExecutableAccessMethodAttributeSoecification aa: am.getAttributes())
 			{
 				String encoding = aa.getAttributeEncoding();
 				String index = aa.getAttributeEncodingIndex();	
@@ -235,7 +235,7 @@ public class RESTExecutableAccessMethod {
 	}
 
 	// Phase 1 builds structures and processes path-elements
-	private void mapAttributesPhase1(ServiceRoot sr, AccessMethod am, List<Attribute> inputs, List<Attribute> outputs, StringBuilder uri, Map<String, Object> params, Tuple tuple)
+	private void mapAttributesPhase1(Service sr, RESTExecutableAccessMethodSpecification am, List<Attribute> inputs, List<Attribute> outputs, StringBuilder uri, Map<String, Object> params, Tuple tuple)
 	{
 		if(sr.getStaticAttribute() != null)
 		{
@@ -247,7 +247,7 @@ public class RESTExecutableAccessMethod {
 		if(am.getAttributes() != null)
 		{
 			int a = 0;
-			for(AccessMethodAttribute aa : am.getAttributes())
+			for(RESTExecutableAccessMethodAttributeSoecification aa : am.getAttributes())
 			{
 				if((aa.getInput() != null) && aa.getInput().equals("true"))
 				{
@@ -294,7 +294,7 @@ public class RESTExecutableAccessMethod {
 	}
 	
 	// Phase 2 processes the name/value pairs, adding them onto the web target
-	private void mapAttributesPhase2(ServiceRoot sr, AccessMethod am, Tuple tuple)
+	private void mapAttributesPhase2(Service sr, RESTExecutableAccessMethodSpecification am, Tuple tuple)
 	{
 		if(sr.getServiceUsagePolicy() != null)
 		{
@@ -325,7 +325,7 @@ public class RESTExecutableAccessMethod {
 		if(am.getAttributes() != null)
 		{
 			int a = 0;
-			for(AccessMethodAttribute aa : am.getAttributes())
+			for(RESTExecutableAccessMethodAttributeSoecification aa : am.getAttributes())
 			{
 				if((aa.getInput() != null) && aa.getInput().equals("true"))
 				{

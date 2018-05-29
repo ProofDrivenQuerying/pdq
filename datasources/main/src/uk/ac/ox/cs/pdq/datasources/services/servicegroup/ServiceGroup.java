@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup;
+package uk.ac.ox.cs.pdq.datasources.services.servicegroup;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlType;
 // It contains  Attribute~Encodings, GroupUsagePolicies and Services.
 @XmlRootElement (name="service-groups")
 @XmlType (propOrder= {"attributeEncoding", "usagePolicy", "service"})
-public class ServiceGroupsRoot {
+public class ServiceGroup {
 	
 	private AttributeEncoding[] attributeEncoding;
 	private GroupUsagePolicy[] usagePolicy;

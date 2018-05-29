@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.io.jaxb.service;
+package uk.ac.ox.cs.pdq.datasources.services.service;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlType;
 // It represents the parsed results of the XML as an in-memory object.
 // It has attributes for name, type, value, input, output, attribute-encoding, attribute-encoding-index and relation-attribute
 @XmlType (propOrder= {"name", "type", "value", "input", "output", "attributeEncoding", "attributeEncodingIndex", "relationAttribute"})
-public class AccessMethodAttribute {
+public class RESTExecutableAccessMethodAttributeSoecification {
 	
 	private String name;
 	private String type;

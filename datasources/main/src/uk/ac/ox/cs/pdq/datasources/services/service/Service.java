@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.io.jaxb.service;
+package uk.ac.ox.cs.pdq.datasources.services.service;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
 // It also has attributes for url, documentation, media-type and ressult-delimiter
 @XmlRootElement (name="service")
 @XmlType (propOrder= {"url", "documentation", "mediaType", "resultDelimiter", "serviceUsagePolicy", "staticAttribute", "accessMethod"})
-public class ServiceRoot {
+public class Service {
 	
 	private String url;
 	private String documentation;
@@ -24,7 +24,7 @@ public class ServiceRoot {
 	private String resultDelimiter;
 	private ServiceUsagePolicy[] serviceUsagePolicy;
 	private StaticAttribute[] staticAttribute;
-	private AccessMethod[] accessMethod;
+	private RESTExecutableAccessMethodSpecification[] accessMethod;
 	
 	@XmlAttribute (required=true)
 	public String getUrl() {
@@ -81,11 +81,11 @@ public class ServiceRoot {
 	}
 
 	@XmlElement (name = "access-method", required=true)
-	public AccessMethod[] getAccessMethod() {
+	public RESTExecutableAccessMethodSpecification[] getAccessMethod() {
 		return accessMethod;
 	}
 
-	public void setAccessMethod(AccessMethod[] accessMethod) {
+	public void setAccessMethod(RESTExecutableAccessMethodSpecification[] accessMethod) {
 		this.accessMethod = accessMethod;
 	}
 

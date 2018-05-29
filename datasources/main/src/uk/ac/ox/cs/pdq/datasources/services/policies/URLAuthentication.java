@@ -8,13 +8,13 @@ import java.util.Set;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.GroupUsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.AccessPreProcessor;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceRepository;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.InputMethod;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTAccess;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTAttribute;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTRequestEvent;
+import uk.ac.ox.cs.pdq.datasources.services.servicegroup.GroupUsagePolicy;
 import uk.ac.ox.cs.pdq.db.Attribute;
 
 /**

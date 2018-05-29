@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.datasources.services.policies;
 
 import java.lang.reflect.InvocationTargetException;
 
-import uk.ac.ox.cs.pdq.datasources.io.jaxb.servicegroup.GroupUsagePolicy;
+import uk.ac.ox.cs.pdq.datasources.services.servicegroup.GroupUsagePolicy;
 
 /**
  * Factory for usage policies.

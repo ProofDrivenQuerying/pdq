@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.io.jaxb.service;
+package uk.ac.ox.cs.pdq.datasources.services.service;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -12,12 +12,12 @@ import javax.xml.bind.annotation.XmlType;
 // It represents the results of parsing the XML as an in-memory object.
 // It contains AccessMethodAttributes and has name, type and cost attributes.
 @XmlType (propOrder= {"name", "type", "cost", "attributes"})
-public class AccessMethod {
+public class RESTExecutableAccessMethodSpecification {
 	
 	private String name;
 	private String type;
 	private String cost;
-	private AccessMethodAttribute[] attributes;
+	private RESTExecutableAccessMethodAttributeSoecification[] attributes;
 	
 	@XmlAttribute (required=true)
 	public String getName() {
@@ -47,11 +47,11 @@ public class AccessMethod {
 	}
 
 	@XmlElement (name="attribute", required=true)
-	public AccessMethodAttribute[] getAttributes() {
+	public RESTExecutableAccessMethodAttributeSoecification[] getAttributes() {
 		return attributes;
 	}
 
-	public void setAttributes(AccessMethodAttribute[] attributes) {
+	public void setAttributes(RESTExecutableAccessMethodAttributeSoecification[] attributes) {
 		this.attributes = attributes;
 	}
 
