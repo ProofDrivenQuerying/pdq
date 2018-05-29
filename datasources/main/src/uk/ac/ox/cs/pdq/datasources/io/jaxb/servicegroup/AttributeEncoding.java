@@ -10,6 +10,10 @@ import javax.xml.bind.annotation.XmlType;
 // AttributeEncoding is the XML element which corresponds to the <attribute-encoding> tag
 // It represents the in-memory results of parsing the XML file for the AttributeEncoding object
 // It has attributes for name, type, value and template
+//   name = the name of this AttributeEncoding to be referred to elsewhere
+//   type = path-element or url-param depending on the encoding method
+//   value = the default static value for this encoding
+//   template = for example /{1}/{2} the template specification for path-element
 @XmlType (propOrder= {"name", "type", "value", "template"})
 public class AttributeEncoding implements Comparable<AttributeEncoding> {
 	
