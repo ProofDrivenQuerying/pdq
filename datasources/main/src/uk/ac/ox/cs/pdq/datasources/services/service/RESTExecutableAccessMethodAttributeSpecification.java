@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlType;
 // It represents the parsed results of the XML as an in-memory object.
 // It has attributes for name, type, value, input, output, attribute-encoding, attribute-encoding-index and relation-attribute
 @XmlType (propOrder= {"name", "type", "value", "input", "output", "attributeEncoding", "attributeEncodingIndex", "relationAttribute"})
-public class RESTExecutableAccessMethodAttributeSoecification {
+public class RESTExecutableAccessMethodAttributeSpecification {
 	
 	private String name;
 	private String type;

@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.datasources.services.policies.PolicyFactory;
 import uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
-import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodAttributeSoecification;
+import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodAttributeSpecification;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.datasources.services.service.ServiceUsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.service.StaticAttribute;
@@ -189,7 +189,7 @@ public class RESTExecutableAccessMethod {
 		}
 		if(am.getAttributes() != null)
 		{
-			for(RESTExecutableAccessMethodAttributeSoecification aa: am.getAttributes())
+			for(RESTExecutableAccessMethodAttributeSpecification aa: am.getAttributes())
 			{
 				String encoding = aa.getAttributeEncoding();
 				String index = aa.getAttributeEncodingIndex();	
@@ -247,7 +247,7 @@ public class RESTExecutableAccessMethod {
 		if(am.getAttributes() != null)
 		{
 			int a = 0;
-			for(RESTExecutableAccessMethodAttributeSoecification aa : am.getAttributes())
+			for(RESTExecutableAccessMethodAttributeSpecification aa : am.getAttributes())
 			{
 				if((aa.getInput() != null) && aa.getInput().equals("true"))
 				{
@@ -325,7 +325,7 @@ public class RESTExecutableAccessMethod {
 		if(am.getAttributes() != null)
 		{
 			int a = 0;
-			for(RESTExecutableAccessMethodAttributeSoecification aa : am.getAttributes())
+			for(RESTExecutableAccessMethodAttributeSpecification aa : am.getAttributes())
 			{
 				if((aa.getInput() != null) && aa.getInput().equals("true"))
 				{

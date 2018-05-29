@@ -17,7 +17,7 @@ public class RESTExecutableAccessMethodSpecification {
 	private String name;
 	private String type;
 	private String cost;
-	private RESTExecutableAccessMethodAttributeSoecification[] attributes;
+	private RESTExecutableAccessMethodAttributeSpecification[] attributes;
 	
 	@XmlAttribute (required=true)
 	public String getName() {
@@ -47,11 +47,11 @@ public class RESTExecutableAccessMethodSpecification {
 	}
 
 	@XmlElement (name="attribute", required=true)
-	public RESTExecutableAccessMethodAttributeSoecification[] getAttributes() {
+	public RESTExecutableAccessMethodAttributeSpecification[] getAttributes() {
 		return attributes;
 	}
 
-	public void setAttributes(RESTExecutableAccessMethodAttributeSoecification[] attributes) {
+	public void setAttributes(RESTExecutableAccessMethodAttributeSpecification[] attributes) {
 		this.attributes = attributes;
 	}
 
