@@ -34,7 +34,9 @@ import uk.ac.ox.cs.pdq.util.Tuple;
  * @author Mark Ridler
  *
  */
-// RESTExecutableAccessMethod is the implementation which calls REST for an XML-defined access method
+// RESTExecutableAccessMethod is the implementation which calls REST for a defined access method
+// It provides functionality to support the constructor, which does much of the processing, followed
+// by the access method, where the REST call and associated events take place.
 public class RESTExecutableAccessMethod {
 	
 	private String url;
@@ -109,6 +111,10 @@ public class RESTExecutableAccessMethod {
 		else if(type.equals("Double"))
 		{
 			return Double.class;
+		}
+		else if(type.equals("Boolean"))
+		{
+			return Boolean.class;
 		}
 		return null;
 	}
@@ -204,6 +210,7 @@ public class RESTExecutableAccessMethod {
 	// Do the donkey work for formatTemplate()
 	public void formatTemplateProcessParams(String encoding, String index, String value, TreeMap<AttributeEncoding, String> attributeEncodingMap2)
 	{
+		if(value == null) value="";
 		if(encoding != null)
 		{
 			AttributeEncoding ae;
