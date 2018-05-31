@@ -2,6 +2,42 @@
 	<attribute-encoding name="apikey" type="url-param" value="AIzaSyDN1I2acLKglH3vjzVXeKbXDoSs_oNw6Jc"/>
 	<attribute-encoding name="format" type="path-element" template="&#038;format=json"/>
 	<attribute-encoding name="doubleslash" type="path-element" template="/{1}/{2}"/>
+	<attribute-encoding name="author"   type="url-param"    template=":ce:author:{1}"/>
+	<attribute-encoding name="venue"    type="url-param"    template=":ce:venue:{1}"/>
+	<attribute-encoding name="title"    type="url-param"    template=":ce:title:{1}"/>
+	<attribute-encoding name="type"     type="url-param"    template=":ce:type:{1}"/>
+	<attribute-encoding name="year"     type="url-param"    template=":ce:year:{1}"/>
+	<attribute-encoding name="idlist"  		 		type="path-element" template="&#038;resulttype=idlist"/>
+	<attribute-encoding name="s"        				type="path-element" template="" />
+	<attribute-encoding name="i"        				type="path-element" template="&#038;page={1}"/>
+		
+	<attribute-encoding name="i2"        				type="path-element" template="/{1}/json"/>
+		
+	<attribute-encoding name="id"     		 		type="path-element" template="/query=ext_id:{1}" />
+	<attribute-encoding name="src"     		 		type="path-element" template="/query=src:{1}" />
+	<attribute-encoding name="pmcid"     				type="path-element" template="/query=pmcid:{1}" />
+	<attribute-encoding name="doi"     				type="path-element" template="/query=doi:{1}" />
+	<attribute-encoding name="journalTitle"     		type="path-element" template="/query=journal:{1}" />
+	<attribute-encoding name="issue"     				type="path-element" template="/query=issue:{1}" />
+	<attribute-encoding name="journalVolume"     		type="path-element" template="/query=volume:{1}" />
+	<attribute-encoding name="pubYear"     			type="path-element" template="/query=pub_year:{1}" />
+	<attribute-encoding name="pubType"     			type="path-element" template="/query=pub_type:{1}" />
+	<attribute-encoding name="inEPMC"     			type="path-element" template="/query=in_epmc:{1}" />
+	<attribute-encoding name="inPMC"  				type="path-element" template="/query=in_pmc:{1}" />
+	<attribute-encoding name="authors"     			type="path-element" template="/query=auth:{1}" />
+	<attribute-encoding name="gene"     				type="path-element" template="/query=gene_protein:{1}" />
+	<attribute-encoding name="organism"     			type="path-element" template="/query=organism:{1}" />
+	<attribute-encoding name="uniprotPubs"  			type="path-element" template="/query=uniprot_pubs:{1}" />
+				
+	<attribute-encoding name="citation"  				type="path-element" template="/{1}/{2}/citations" />
+	<attribute-encoding name="reference"  			type="path-element" template="/{1}/{2}/references" />
+
+	<attribute-encoding name="id" 						type="path-element" template="?query=id:{1}"/>
+	<attribute-encoding name="organism_scientific_name" 	type="path-element" template="?query=organism_scientific_name:{1}"/>
+	<attribute-encoding name="status" 					type="path-element" template="?query=status:{1}"/>
+		
+	<attribute-encoding name="format"  		 		type="path-element"    	template="&#038;format=json"/>
+	<attribute-encoding name="fields_protein"  		type="path-element" 	template="&#038;fields=id,descRecName,organism_scientific_name,status"/>
 
 	<usage-policy name="2000_request_per_day"
 			type="uk.ac.ox.cs.pdq.datasources.services.policies.RequestAllowance"
@@ -14,5 +50,8 @@
 			attribute-encoding="apikey"/>
 
 	<service name="reactome-speciesList"/>
-	<service name="2"/>
+	<service name="reactome-biopaxExporter"/>
+	<service name="ActivityFree"/>
+	<service name="AssayFree"/>
+	<service name="EBEyeProtein"/>
 </service-groups>
