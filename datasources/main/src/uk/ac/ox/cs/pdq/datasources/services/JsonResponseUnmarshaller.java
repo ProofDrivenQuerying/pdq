@@ -47,7 +47,7 @@ public class JsonResponseUnmarshaller extends ResponseUnmarshaller {
 
 			for (Tuple t: this.processItems(
 					delim, r, result.getType(), inputs)) {
-				result.appendRow(t);
+				if(t != null) result.appendRow(t);
 			}
 			return result;
 		} catch (IOException e) {
