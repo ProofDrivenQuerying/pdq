@@ -1,0 +1,38 @@
+<service
+		name="AssayFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/assay.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="assays">
+
+		<policy name="1000_items_per_page" />
+
+		<access-method type="FREE" 						name="chembl_assay_free" cost="1000.0">
+
+		<attribute name="assay_category"    			output="true" type="String"    	path="assay_category"/>
+		<attribute name="assay_cell_type"     			output="true" type="String"   	path="assay_cell_type"/>
+		<attribute name="assay_chembl_id"     			output="true" type="String"    	path="assay_chembl_id"/>
+		<attribute name="assay_organism" 				output="true" type="String" 	path="assay_organism"/>
+		<attribute name="assay_strain"    				output="true" type="String" 	path="assay_strain"/>
+		<attribute name="assay_subcellular_fraction"    output="true" type="String" 	path="assay_subcellular_fraction"/> 
+		<attribute name="assay_tax_id"        			output="true" type="String" 	path="assay_tax_id"/> 
+		<attribute name="assay_test_type"        		output="true" type="String" 	path="assay_test_type"/>
+		<attribute name="assay_tissue"        			output="true" type="String" 	path="assay_tissue"/>
+		<attribute name="assay_type"     				output="true" type="String" 	path="assay_type"/>
+		<attribute name="assay_type_description"     	output="true" type="String" 	path="assay_type_description"/>
+		<attribute name="bao_format"     				output="true" type="String" 	path="bao_format"/> 
+		<attribute name="cell_chembl_id"        		output="true" type="String" 	path="cell_chembl_id"/>
+		<attribute name="confidence_description"  		output="true" type="String" 	path="confidence_description"/>
+		<attribute name="confidence_score"  			output="true" type="String" 	path="confidence_score"/>
+		<attribute name="description"  					output="true" type="String" 	path="description"/>
+		<attribute name="document_chembl_id"  			output="true" type="String" 	path="document_chembl_id"/>
+		<attribute name="relationship_description"  	output="true" type="String" 	path="relationship_description"/>
+		<attribute name="relationship_type"  			output="true" type="String" 	path="relationship_type"/>
+		<attribute name="src_assay_id"  				output="true" type="String" 	path="src_assay_id"/>
+		<attribute name="src_id"  						output="true" type="String" 	path="src_id"/>
+		<attribute name="target_chembl_id"  			output="true" type="String" 	path="target_chembl_id"/>
+
+		</access-method>
+	
+</service>
