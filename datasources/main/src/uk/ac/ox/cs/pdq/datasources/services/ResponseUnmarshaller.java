@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * @author Mark Ridler
  *
  */
-// RequestMarshaller converts a table of inputs to a target web request format
+// ResponseUnmarshaller provides 2 methods for processItems and processItem applicable to both Json and Xml
 public class ResponseUnmarshaller {
 	
 	protected Attribute[] attributes;
