@@ -33,6 +33,25 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  *
  */
 public class RelationalTermTest extends PdqTest {
+
+	@Test
+	public void testAccessCreation() {
+		Relation relation = Relation.create("R0", new Attribute[] {Attribute.create(Integer.class, "attr1")});
+		Relation relation1 = Relation.create("R1", new Attribute[] {Attribute.create(Integer.class, "attr2")});
+		RelationalTerm	child1 = AccessTerm.create(relation, AccessMethodDescriptor.create("am", new Integer[] {0}));
+		RelationalTerm	child2 = AccessTerm.create(relation1, AccessMethodDescriptor.create("am", new Integer[] {1}));
+		RelationalTerm	child3 = AccessTerm.create(relation, AccessMethodDescriptor.create("am", new Integer[] {0}));
+		
+		// child1 and child3 should have the same reference because they're based on the same relation
+		if (child1 != child3) {
+			Assert.fail("Relation cache does not provide same reference");
+		}
+
+		// child1 and child2 should have different references because they're based on different relations
+		if (child1 == child2) {
+			Assert.fail("Relation cache should not provide same reference");
+		}
+	}
 	
 	@Test
 	public void testProjectionTerm() {
@@ -113,16 +132,19 @@ public class RelationalTermTest extends PdqTest {
 			JoinTerm join = JoinTerm.create(access, access);
 			Attribute[] in = join.getInputAttributes();
 			
-			// There are 2 input attributes named r1.1, r1.2, r1.3 and r1.4
+			// There are 4 input attributes named r1.1, r1.2, r1.3 and r1.4
 			Assert.assertNotNull(in);
-			Assert.assertEquals(2, in.length);
+			Assert.assertEquals(4, in.length);
 			Assert.assertEquals("r1.1", in[0].getName());
 			Assert.assertEquals("r1.2", in[1].getName());
+			//Assert.assertEquals("r1.3", in[2].getName());
+			//Assert.assertEquals("r1.4", in[3].getName());
 			
 			// There are 4 output attributes, the same as input
 			Attribute[] out = join.getOutputAttributes();
 			Assert.assertNotNull(out);
 			Assert.assertEquals(4, out.length);
+			Assert.assertArrayEquals(in,out);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -208,14 +230,17 @@ public class RelationalTermTest extends PdqTest {
 			// There are 4 input attributes with names r1.1, r1.2, r1.3 and r1.4
 			Attribute[] in = jt.getInputAttributes();
 			Assert.assertNotNull(in);
-			Assert.assertEquals(2, in.length);
+			Assert.assertEquals(4, in.length);
 			Assert.assertEquals("r1.1", in[0].getName());
 			Assert.assertEquals("r1.2", in[1].getName());
+			//Assert.assertEquals("r1.3", in[2].getName());
+			//Assert.assertEquals("r1.4", in[3].getName());
 
 			// There are 4 output attributes, the same as input
 			Attribute[] out = jt.getOutputAttributes();
 			Assert.assertNotNull(out);
 			Assert.assertEquals(4, out.length);
+			Assert.assertArrayEquals(in,out);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -268,6 +293,9 @@ public class RelationalTermTest extends PdqTest {
 		// Output attributes are {a, b, c, d}
 		Assert.assertArrayEquals(new Attribute[] {a,b,c,b,c}, plan1.getOutputAttributes());
 
+		// Input attributes are empty
+		Assert.assertArrayEquals(new Attribute[] {}, plan1.getInputAttributes());
+	
 		// Join conditions are ConjunctiveConditions
 		Assert.assertNotNull(plan1.getJoinConditions());
 		Assert.assertTrue(plan1.getJoinConditions() instanceof ConjunctiveCondition);
@@ -278,15 +306,15 @@ public class RelationalTermTest extends PdqTest {
 		Assert.assertEquals(2,sc.length);
 		Assert.assertNotNull(sc[0]);
 		Assert.assertNotNull(sc[1]);
-		Assert.assertTrue(sc[0] instanceof AttributeEqualityCondition);
-		Assert.assertEquals(1, ((AttributeEqualityCondition)sc[0]).getPosition());
-		Assert.assertTrue(sc[1] instanceof AttributeEqualityCondition);
-		Assert.assertEquals(2, ((AttributeEqualityCondition)sc[1]).getPosition());
+		Assert.assertTrue(sc[0] instanceof ConstantEqualityCondition);
+		Assert.assertEquals(1, ((ConstantEqualityCondition)sc[0]).getPosition());
+		Assert.assertTrue(sc[1] instanceof ConstantEqualityCondition);
+		Assert.assertEquals(2, ((ConstantEqualityCondition)sc[1]).getPosition());
 		
 		// getPositionsInLeftChildThatAreInputToRightChild
 		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild());
 		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild().get(new Integer(0)));
-		Assert.assertEquals(new Integer(2),(Integer)plan1.getPositionsInLeftChildThatAreInputToRightChild().get(0));
+		Assert.assertEquals(new Integer(1),(Integer)plan1.getPositionsInLeftChildThatAreInputToRightChild().get(0));
 		
 		// getChildren
 		Assert.assertEquals(2,plan1.getChildren().length);
@@ -303,6 +331,9 @@ public class RelationalTermTest extends PdqTest {
 		// Output attributes are {a, b, c, d}
 		Assert.assertArrayEquals(new Attribute[] {a,b,c,b,c}, plan1.getOutputAttributes());
 
+		// Input attributes are empty
+		Assert.assertArrayEquals(new Attribute[] {}, plan1.getInputAttributes());
+		
 		// Join conditions are ConjunctiveConditions
 		Assert.assertNotNull(plan1.getJoinConditions());
 		Assert.assertTrue(plan1.getJoinConditions() instanceof ConjunctiveCondition);
@@ -313,15 +344,15 @@ public class RelationalTermTest extends PdqTest {
 		Assert.assertEquals(2,sc.length);
 		Assert.assertNotNull(sc[0]);
 		Assert.assertNotNull(sc[1]);
-		Assert.assertTrue(sc[0] instanceof AttributeEqualityCondition);
-		Assert.assertEquals(1, ((AttributeEqualityCondition)sc[0]).getPosition());
-		Assert.assertTrue(sc[1] instanceof AttributeEqualityCondition);
-		Assert.assertEquals(2, ((AttributeEqualityCondition)sc[1]).getPosition());
+		Assert.assertTrue(sc[0] instanceof ConstantEqualityCondition);
+		Assert.assertEquals(1, ((ConstantEqualityCondition)sc[0]).getPosition());
+		Assert.assertTrue(sc[1] instanceof ConstantEqualityCondition);
+		Assert.assertEquals(2, ((ConstantEqualityCondition)sc[1]).getPosition());
 		
 		// getPositionsInLeftChildThatAreInputToRightChild
 		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild());
 		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild().get(new Integer(0)));
-		Assert.assertEquals(new Integer(2),(Integer)plan1.getPositionsInLeftChildThatAreInputToRightChild().get(0));
+		Assert.assertEquals(new Integer(1),(Integer)plan1.getPositionsInLeftChildThatAreInputToRightChild().get(0));
 		
 		// getChildren
 		Assert.assertEquals(2,plan1.getChildren().length);
@@ -337,26 +368,27 @@ public class RelationalTermTest extends PdqTest {
 		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
 		
 		Assert.assertArrayEquals(new Attribute[] {a,b,c,b,c}, plan1.getOutputAttributes());
+		Assert.assertArrayEquals(new Attribute[] {}, plan1.getInputAttributes());
 		
 		// Join conditions are ConjunctiveConditions
 		Assert.assertNotNull(plan1.getJoinConditions());
 		Assert.assertTrue(plan1.getJoinConditions() instanceof ConjunctiveCondition);
 	
-		// There are 2 simple conditions of type AttributeEqualityCondition
+		// There are 2 simple conditions of type ConstantEqualityCondition
 		SimpleCondition[] sc = ((ConjunctiveCondition) plan1.getJoinConditions()).getSimpleConditions();
 		Assert.assertNotNull(sc);
 		Assert.assertEquals(2,sc.length);
 		Assert.assertNotNull(sc[0]);
 		Assert.assertNotNull(sc[1]);
-		Assert.assertTrue(sc[0] instanceof AttributeEqualityCondition);
-		Assert.assertEquals(1, ((AttributeEqualityCondition)sc[0]).getPosition());
-		Assert.assertTrue(sc[1] instanceof AttributeEqualityCondition);
-		Assert.assertEquals(2, ((AttributeEqualityCondition)sc[1]).getPosition());
+		Assert.assertTrue(sc[0] instanceof ConstantEqualityCondition);
+		Assert.assertEquals(1, ((ConstantEqualityCondition)sc[0]).getPosition());
+		Assert.assertTrue(sc[1] instanceof ConstantEqualityCondition);
+		Assert.assertEquals(2, ((ConstantEqualityCondition)sc[1]).getPosition());
 		
 		// getPositionsInLeftChildThatAreInputToRightChild
 		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild());
 		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild().get(new Integer(0)));
-		Assert.assertEquals(new Integer(2),(Integer)plan1.getPositionsInLeftChildThatAreInputToRightChild().get(0));
+		Assert.assertEquals(new Integer(1),(Integer)plan1.getPositionsInLeftChildThatAreInputToRightChild().get(0));
 		
 		// getChildren are of type AccessTerm
 		Assert.assertEquals(2,plan1.getChildren().length);
@@ -371,6 +403,7 @@ public class RelationalTermTest extends PdqTest {
 	
 		// Output attributes are {a,b,c,b,c}
 		Assert.assertArrayEquals(new Attribute[] {a,b,c,b,c}, plan1.getOutputAttributes());
+		Assert.assertArrayEquals(new Attribute[] {}, plan1.getInputAttributes());
 		
 		// getChildren are of type AccessTerm
 		Assert.assertEquals(2,plan1.getChildren().length);
