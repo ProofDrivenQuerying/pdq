@@ -1,4 +1,3 @@
-
 package uk.ac.ox.cs.pdq.test.algebra;
 
 import org.junit.Assert;
@@ -13,7 +12,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * @author Gabor
  *
  */
-public class AccessMethodTest extends PdqTest {
+public class AccessMethodTest {
 
 	public AccessMethodTest() {
 	}
@@ -30,10 +29,9 @@ public class AccessMethodTest extends PdqTest {
 	 */
 	@Test
 	public void testCreation() {
-		AccessMethodDescriptor am1 = AccessMethodDescriptor.create("am", new Integer[] {0});
-		
+		AccessMethodDescriptor am1 = AccessMethodDescriptor.create("am1", new Integer[] {0});
 		AccessMethodDescriptor am2 = AccessMethodDescriptor.create("am2", new Integer[] {0});
-		AccessMethodDescriptor am3 = AccessMethodDescriptor.create("am", new Integer[] {0});
+		AccessMethodDescriptor am3 = AccessMethodDescriptor.create("am1", new Integer[] {0});
 		
 		// Test that 2 AccessMethods with the same name will be the same
 		if (am1 != am3) {
@@ -44,8 +42,15 @@ public class AccessMethodTest extends PdqTest {
 		if (am1 == am2) {
 			Assert.fail("AccessMethod cache provides same reference when it shouldn't");
 		}
-		
 		// Test that the name is as we would expect
-		Assert.assertEquals("am",am1.getName());
+		Assert.assertEquals("am1",am1.getName());
+		if (am1 != am3) { // it have to be two different reference
+			Assert.fail("AccessMethod cache does not provide same reference");
+		}
+		if (am1 == am2) { // it have to be the same reference
+			Assert.fail("AccessMethod cache provides same reference when it shouldn't");
+		}
+		
+		Assert.assertEquals("am1",am1.getName());
 	}
 }
