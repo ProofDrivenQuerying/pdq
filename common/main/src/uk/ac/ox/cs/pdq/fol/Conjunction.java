@@ -18,6 +18,7 @@ public final class Conjunction extends Formula {
 
 	/**
 	 * The operator.
+	 * 
 	 * @see {@link LogicalSymbols}
 	 */
 	protected final LogicalSymbols operator = LogicalSymbols.AND;
@@ -41,20 +42,6 @@ public final class Conjunction extends Formula {
 		Assert.assertNotNull(children);
 		Assert.assertTrue(children.length == 2);
 		this.children = children.clone();
-	}
-
-	public static Formula of(Formula... children) {
-		if (children.length == 2)
-			return Conjunction.create(children[0], children[1]);
-		else if (children.length > 2) {
-			Formula[] destination = new Formula[children.length - 1];
-			System.arraycopy(children, 1, destination, 0, children.length - 1);
-			Formula right = Conjunction.of(destination);
-			return Conjunction.create(children[0], right);
-		} else if (children.length == 1)
-			return children[0];
-		else
-			throw new java.lang.RuntimeException("Illegal number of arguments");
 	}
 
 	/**
@@ -123,8 +110,25 @@ public final class Conjunction extends Formula {
 		return this.boundVariables.clone();
 	}
 
-	public static Conjunction create(Formula... children) {
-		return Cache.conjunction.retrieve(new Conjunction(children));
+	/**
+	 * Recursively builds a binary tree of conjunctions, making sure each
+	 * conjunction is cached.
+	 * In case the input is a single atom it will return that single atom without any change. 
+	 * @param children
+	 * @return
+	 */
+	public static Formula create(Formula... children) {
+		if (children.length == 2)
+			return Cache.conjunction.retrieve(new Conjunction(children[0], children[1]));
+		else if (children.length > 2) {
+			Formula[] destination = new Formula[children.length - 1];
+			System.arraycopy(children, 1, destination, 0, children.length - 1);
+			Formula right = create(destination);
+			return Cache.conjunction.retrieve(new Conjunction(children[0], right));
+		} else if (children.length == 1)
+			return children[0];
+		else
+			throw new java.lang.RuntimeException("Illegal number of arguments");
 	}
 
 	@Override

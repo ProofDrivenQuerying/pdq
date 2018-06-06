@@ -272,7 +272,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 			Variable factId = Variable.create(FACT_ID_ATTRIBUTE_NAME + "_" + factIdNameCounter++);
 			terms.add(factId);
 			Predicate originalPredicate = ((Atom) body).getPredicate();
-			return Conjunction.create(Atom.create(Predicate.create(originalPredicate.getName(), originalPredicate.getArity() + 1), terms.toArray(new Term[terms.size()])),
+			return (Conjunction)Conjunction.create(Atom.create(Predicate.create(originalPredicate.getName(), originalPredicate.getArity() + 1), terms.toArray(new Term[terms.size()])),
 					Atom.create(LogicalDatabaseInstance.factIdInstanceIdMappingTable, new Term[] { factId, TypedConstant.create(databaseInstanceID) }));
 
 		} else {
@@ -281,7 +281,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 			for (Formula child : con.getChildren()) {
 				newChildren.add(addFactIdToConjunction(child, databaseInstanceID));
 			}
-			return Conjunction.create(newChildren.toArray(new Formula[newChildren.size()]));
+			return (Conjunction)Conjunction.create(newChildren.toArray(new Formula[newChildren.size()]));
 		}
 	}
 
@@ -364,7 +364,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		}
 		Variable factID = Variable.create(FACT_ID_TABLE_NAME);
 		body.add(factID);
-		Conjunction conjunction = Conjunction.create(Atom.create(r, body.toArray(new Term[body.size()])),
+		Conjunction conjunction = (Conjunction)Conjunction.create(Atom.create(r, body.toArray(new Term[body.size()])),
 				Atom.create(LogicalDatabaseInstance.factIdInstanceIdMappingTable, new Term[] { factID, TypedConstant.create(databaseInstanceID) }));
 		return ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), conjunction.getAtoms());
 	}

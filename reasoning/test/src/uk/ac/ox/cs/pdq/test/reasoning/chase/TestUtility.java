@@ -53,7 +53,7 @@ public class TestUtility {
 		m.put(Variable.create("x1"), TypedConstant.create("c1"));
 		m.put(Variable.create("x2"), TypedConstant.create("c2"));
 		m.put(Variable.create("x4"), TypedConstant.create("c4"));
-		Formula i = Conjunction.of(p1, p2);
+		Formula i = Conjunction.create(p1, p2);
 		Assert.assertEquals("Grounded conjunction must comply to mapping ", g, Arrays.asList(Utility.applySubstitution(i, m).getTerms()));
 	}
 
@@ -291,7 +291,7 @@ public class TestUtility {
 		m.put(Variable.create("x1"), TypedConstant.create("c1"));
 		m.put(Variable.create("x2"), TypedConstant.create("c2"));
 		m.put(Variable.create("x4"), TypedConstant.create("c4"));
-		Conjunction i = (Conjunction) Conjunction.of(p1, p2);
+		Conjunction i = (Conjunction) Conjunction.create(p1, p2);
 		Assert.assertEquals("Grounded conjunction must comply to mapping ", g, Arrays.asList(Utility.applySubstitution(i, m).getTerms()));
 	}
 }

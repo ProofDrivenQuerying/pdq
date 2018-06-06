@@ -240,7 +240,7 @@ public class AlgebraUtilities {
 			return right;
 		Formula phi_1 = left.getFormula();
 		Formula phi_2 = right.getFormula();
-		Formula phi = Conjunction.of(phi_1, phi_2);
+		Formula phi = Conjunction.create(phi_1, phi_2);
 
 		Map<Attribute, Term> map_1 = left.getMapping();
 		Map<Attribute, Term> map_2 = right.getMapping();
@@ -274,7 +274,7 @@ public class AlgebraUtilities {
 			for (int i = 0; i < atoms.length; i++) {
 				newAtoms[i] = (Atom) replaceTerm(atoms[i], old, newTerm);
 			}
-			return Conjunction.of(newAtoms);
+			return Conjunction.create(newAtoms);
 		}
 	}
 

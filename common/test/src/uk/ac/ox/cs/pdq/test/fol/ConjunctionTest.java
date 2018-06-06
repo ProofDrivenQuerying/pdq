@@ -34,7 +34,7 @@ public class ConjunctionTest {
 		Term[] t2 = new Term[]{TypedConstant.create("x5"), Variable.create("x1")};
 		Atom p1 = Atom.create(s1, t1);
 		Atom p2 = Atom.create(s2, t2);
-		Formula i = Conjunction.of(p1, p2);
+		Formula i = Conjunction.create(p1, p2);
 		Assert.assertArrayEquals("Conjunction atoms must match that of construction",
 				new Atom[]{p1, p2}, i.getAtoms());
 	}
@@ -53,8 +53,8 @@ public class ConjunctionTest {
 				UntypedConstant.create("x4"), TypedConstant.create("x5")
 		};
 		Atom p2 = Atom.create(s2, t2);
-		Formula i1 = Conjunction.of(p1, p2);
-		Formula i2 = Conjunction.of(p1, p2);
+		Formula i1 = Conjunction.create(p1, p2);
+		Formula i2 = Conjunction.create(p1, p2);
 		Assert.assertTrue("Conjunctions must match be equal ", i1.equals(i2));
 	}
 
@@ -78,8 +78,8 @@ public class ConjunctionTest {
 				UntypedConstant.create("x4"), TypedConstant.create("y2")
 		};
 		Atom p3 = Atom.create(s3, t3);
-		Formula i1 = Conjunction.of(p1, p2);
-		Formula i2 = Conjunction.of(p1, p3);
+		Formula i1 = Conjunction.create(p1, p2);
+		Formula i2 = Conjunction.create(p1, p3);
 		Assert.assertFalse("Conjunctions must match be equal ", i1.equals(i2));
 	}
 }

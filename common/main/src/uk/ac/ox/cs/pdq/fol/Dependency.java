@@ -46,17 +46,17 @@ public class Dependency extends QuantifiedFormula {
 	
 	
 	protected Dependency(Atom[] body, Atom[] head) {
-		this(Conjunction.of(body), createHead(body, head));
+		this(Conjunction.create(body), createHead(body, head));
 	}
 	
 	private static Formula createHead(Atom[] body, Atom[] head) {
 		List<Variable> bodyVariables = Utility.getVariables(body);
 		List<Variable> headVariables = Utility.getVariables(head);
 		if(bodyVariables.containsAll(headVariables)) 
-			return Conjunction.of(head);
+			return Conjunction.create(head);
 		else {
 			headVariables.removeAll(bodyVariables);
-			return QuantifiedFormula.create(LogicalSymbols.EXISTENTIAL, headVariables.toArray(new Variable[headVariables.size()]), Conjunction.of(head));
+			return QuantifiedFormula.create(LogicalSymbols.EXISTENTIAL, headVariables.toArray(new Variable[headVariables.size()]), Conjunction.create(head));
 		}
 	}
 	

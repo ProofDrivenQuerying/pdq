@@ -112,7 +112,7 @@ public class AccessibleSchema extends Schema {
 			Formula[] result = new Formula[f.getNumberOfChildren()];
 			for (int index = 0; index < f.getNumberOfChildren(); ++index) 
 				result[index] = computeInferredAccessibleFormula(f.getChild(index));
-			return Conjunction.of(result);
+			return Conjunction.create(result);
 		}
 		else if (f instanceof Disjunction) {
 			Formula[] result = new Formula[f.getNumberOfChildren()];

@@ -41,8 +41,8 @@ public class Utility {
 		Formula[] headAtoms = new Formula[dependency.getNumberOfHeadAtoms()];
 		for(int headAtomIndex = 0; headAtomIndex < dependency.getNumberOfHeadAtoms(); ++headAtomIndex) 
 			headAtoms[headAtomIndex] = Utility.applySubstitution(dependency.getHeadAtom(headAtomIndex), skolemizedMapping);
-		Formula bodyConjunction = Conjunction.of(bodyAtoms);
-		Formula headConjunction = Conjunction.of(headAtoms);
+		Formula bodyConjunction = Conjunction.create(bodyAtoms);
+		Formula headConjunction = Conjunction.create(headAtoms);
 		return Implication.of(bodyConjunction, headConjunction);
 	}
 
@@ -54,8 +54,8 @@ public class Utility {
 		Formula[] headAtoms = new Formula[dependency.getNumberOfHeadAtoms()];
 		for(int headAtomIndex = 0; headAtomIndex < dependency.getNumberOfHeadAtoms(); ++headAtomIndex) 
 			headAtoms[headAtomIndex] = Utility.applySubstitution(dependency.getHeadAtom(headAtomIndex), substitution);
-		Formula bodyConjunction = Conjunction.of(bodyAtoms);
-		Formula headConjunction = Conjunction.of(headAtoms);
+		Formula bodyConjunction = Conjunction.create(bodyAtoms);
+		Formula headConjunction = Conjunction.create(headAtoms);
 		return Implication.of(bodyConjunction, headConjunction);
 	}
 
@@ -83,7 +83,7 @@ public class Utility {
 		if(formula instanceof Conjunction) {
 			Formula child1 = applySubstitution(((Conjunction)formula).getChildren()[0], substitution);
 			Formula child2 = applySubstitution(((Conjunction)formula).getChildren()[1], substitution);
-			return Conjunction.of(child1, child2);
+			return Conjunction.create(child1, child2);
 		}
 		else if(formula instanceof Disjunction) {
 			Formula child1 = applySubstitution(((Disjunction)formula).getChildren()[0], substitution);
@@ -100,7 +100,7 @@ public class Utility {
 			Formula[] bodyAtoms = new Formula[atoms.length];
 			for (int atomIndex = 0; atomIndex < atoms.length; ++atomIndex) 
 				bodyAtoms[atomIndex] = applySubstitution(atoms[atomIndex],substitution);
-			return Conjunction.of(bodyAtoms);
+			return Conjunction.create(bodyAtoms);
 		}
 		else if(formula instanceof Atom) {
 			Term[] nterms = new Term[((Atom)formula).getNumberOfTerms()];

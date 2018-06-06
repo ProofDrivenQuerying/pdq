@@ -56,7 +56,7 @@ public class ConjunctiveQuery extends Formula {
 			this.atoms = child.getAtoms();
 		} else {
 			
-			Conjunction conjunction = (Conjunction)Conjunction.of(children);
+			Conjunction conjunction = (Conjunction)Conjunction.create(children);
 			Assert.assertTrue(Arrays.asList(conjunction.getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
 			this.child = conjunction;
 			this.freeVariables = freeVariables.clone();
@@ -161,7 +161,7 @@ public class ConjunctiveQuery extends Formula {
 		
 		Formula flatFormula = null;
 		if (formula instanceof QuantifiedFormula) {
-			flatFormula = Conjunction.of(formula.getChild(0));
+			flatFormula = Conjunction.create(formula.getChild(0));
 			freeVariables = Arrays.asList(formula.getFreeVariables()); 
 		} else  {
 			freeVariables = new ArrayList<>();

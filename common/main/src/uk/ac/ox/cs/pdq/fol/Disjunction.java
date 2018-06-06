@@ -48,7 +48,7 @@ public final class Disjunction extends Formula {
 		else if(children.length > 2) {
 			Formula[] destination = new Formula[children.length - 1];
 			System.arraycopy(children, 1, destination, 0, children.length - 1);
-			Formula right = Conjunction.of(destination);
+			Formula right = Conjunction.create(destination);
 			return Disjunction.create(children[0], right);
 		}
 		else if(children.length == 1) 
