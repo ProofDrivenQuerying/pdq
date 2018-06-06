@@ -126,7 +126,7 @@ public class AccessTermTest extends PdqTest {
 		AccessTerm target;
 		Integer[] inputs;
 		Set<Attribute> inputAttributes;
-		Map<Attribute, TypedConstant> inputConstants;
+		Map<Integer, TypedConstant> inputConstants;
 		Attribute[] result;
 		
 		/*
@@ -184,7 +184,7 @@ public class AccessTermTest extends PdqTest {
 		accessMethod = new ConcreteAccessMethod(amAttributes, inputs, relation, attributeMapping);
 		
 		inputConstants = new HashMap<>();
-		inputConstants.put(Attribute.create(String.class, "c"), TypedConstant.create("CONSTANT STRING"));
+		inputConstants.put(1, TypedConstant.create("CONSTANT STRING"));
 		
 		target = AccessTerm.create(relation, accessMethod);
 
@@ -198,7 +198,7 @@ public class AccessTermTest extends PdqTest {
 		accessMethod = new ConcreteAccessMethod(amAttributes, inputAttributes, relation, attributeMapping);
 		
 		inputConstants = new HashMap<>();
-		inputConstants.put(Attribute.create(String.class, "c"), TypedConstant.create("CONSTANT STRING"));
+		inputConstants.put(1, TypedConstant.create("CONSTANT STRING"));
 		
 		target = AccessTerm.create(relation, accessMethod);
 
@@ -214,15 +214,15 @@ public class AccessTermTest extends PdqTest {
 		accessMethod = new ConcreteAccessMethod(amAttributes, inputs, relation, attributeMapping);
 
 		inputConstants = new HashMap<>();
-		inputConstants.put(Attribute.create(String.class, "c"), TypedConstant.create("CONSTANT STRING"));
+		inputConstants.put(0, TypedConstant.create("CONSTANT STRING"));
 		
-		target = AccessTerm.create(relation, accessMethod);
-
+		target = AccessTerm.create(relation, accessMethod,inputConstants);
+		//AccessTerm.create(relation, accessMethod)
 		result = target.getInputAttributes();
 		
 		// Here the input at index 0 is supplied by the inputConstants but the
 		// input at index 1 remains as an input attribute of the plan.
-		Assert.assertFalse(result.length == 1);
+		Assert.assertTrue(result.length == 1);
 		Assert.assertFalse(Arrays.asList(result).contains(Attribute.create(Integer.class, "a")));
 		
 		// Repeat with input attributes, rather than indices.
@@ -231,11 +231,10 @@ public class AccessTermTest extends PdqTest {
 		accessMethod = new ConcreteAccessMethod(amAttributes, inputAttributes, relation, attributeMapping);
 
 		target = AccessTerm.create(relation, accessMethod);
-
 		result = target.getInputAttributes();
 		
 		Assert.assertTrue(result.length == 1);
-		Assert.assertFalse(Arrays.asList(result).contains(Attribute.create(Integer.class, "a")));
+		Assert.assertTrue(Arrays.asList(result).contains(Attribute.create(Integer.class, "a")));
 	}
 
 	@Test

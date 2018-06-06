@@ -58,7 +58,7 @@ public class ConjunctiveConditionTest {
 
 		// ConjunctiveCondition.toString is #1=#2&#3=#4
 		String s = cc.toString();
-		Assert.assertTrue(s.equals("(#1=#2&#3=#4)"));
+		Assert.assertTrue(s.equals("(#1=2&#3=4)"));
 		
 		// Number of conjuncts is 2
 		int noc = cc.getNumberOfConjuncts();

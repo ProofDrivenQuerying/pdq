@@ -99,6 +99,11 @@ public abstract class RelationalTerm implements Serializable, Plan {
 				result.addAll(child.getAccesses());
 			accessesCached = result;
 			return result;
+		} else if (this instanceof CartesianProductTerm) {
+			for (RelationalTerm child : ((CartesianProductTerm) this).getChildren())
+				result.addAll(child.getAccesses());
+			accessesCached = result;
+			return result;
 		} else if (this instanceof SelectionTerm) {
 			result.addAll(((SelectionTerm) this).getChildren()[0].getAccesses());
 		} else if (this instanceof ProjectionTerm) {

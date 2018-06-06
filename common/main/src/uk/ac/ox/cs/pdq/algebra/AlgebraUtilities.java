@@ -161,7 +161,7 @@ public class AlgebraUtilities {
 		List<Attribute> inputs = new ArrayList<>();
 		for (Integer i : accessMethod.getInputs()) {
 			if (!inputConstants.containsKey(i)) {
-				inputs.add(relation.getAttribute(i));
+				inputs.add(relation.getAttributes()[i]);
 			}
 		}
 		return inputs.toArray(new Attribute[inputs.size()]);
