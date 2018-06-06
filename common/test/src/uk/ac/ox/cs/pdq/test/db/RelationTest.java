@@ -7,22 +7,17 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
-/**
- * @author Gabor
- *
- */
+// @author Gabor
 public class RelationTest extends PdqTest {
 
-	/**
-	 * Test number of relations.
-	 */
+	// Create three relations and test for equality
 	@Test
 	public void testSimpleCreation() {
 		Relation relation1 = Relation.create("R1", new Attribute[] {Attribute.create(Integer.class, "attr1")});
 		Relation relation2 = Relation.create("R2", new Attribute[] {Attribute.create(Integer.class, "attr2")});
 		Relation relationSameAs1 = Relation.create("R1", new Attribute[] {Attribute.create(Integer.class, "attr1")});
 		
-		if (relation1 != relationSameAs1) { // ATTENTIONAL! it have to be the same reference
+		if (relation1 != relationSameAs1) {
 			Assert.fail("Relation cache does not provide same reference");
 		}
 		Assert.assertEquals("R2",relation2.getName());
@@ -33,18 +28,19 @@ public class RelationTest extends PdqTest {
 		Assert.assertEquals(Integer.class,relation2.getAttribute(0).getType());
 	}
 	
+	// Test a relation during cache restart
 	@Test
 	public void testRelationCacheReset() {
 		Relation relation1 = Relation.create("R1", new Attribute[] {Attribute.create(Integer.class, "attr1")});
 		Relation relationSameAs1 = Relation.create("R1", new Attribute[] {Attribute.create(Integer.class, "attr1")});
-		if (relation1 != relationSameAs1) { // ATTENTIONAL! it have to be the same reference
+		if (relation1 != relationSameAs1) {
 			Assert.fail("Relation cache does not provide same reference");
 		}
 		uk.ac.ox.cs.pdq.algebra.Cache.reStartCaches();
 		uk.ac.ox.cs.pdq.db.Cache.reStartCaches();
 		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 		Relation relationSameAs1_2 = Relation.create("R1", new Attribute[] {Attribute.create(Integer.class, "attr2")});
-		if (relation1 == relationSameAs1_2) { // ATTENTIONAL! it would be the same reference if we did not reset.
+		if (relation1 == relationSameAs1_2) {
 			Assert.fail("Relation cache did not reset.");
 		}
 	}
