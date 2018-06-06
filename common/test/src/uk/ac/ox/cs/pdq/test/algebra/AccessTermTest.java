@@ -223,7 +223,7 @@ public class AccessTermTest extends PdqTest {
 		// Here the input at index 0 is supplied by the inputConstants but the
 		// input at index 1 remains as an input attribute of the plan.
 		Assert.assertFalse(result.length == 1);
-		Assert.assertFalse(Arrays.asList(result).contains(Attribute.create(Integer.class, "a")));
+		Assert.assertTrue(Arrays.asList(result).contains(Attribute.create(Integer.class, "a")));
 		
 		// Repeat with input attributes, rather than indices.
 		inputAttributes = new HashSet<>(Arrays.asList(new Attribute[] {Attribute.create(String.class, "W"), 
@@ -235,7 +235,7 @@ public class AccessTermTest extends PdqTest {
 		result = target.getInputAttributes();
 		
 		Assert.assertTrue(result.length == 1);
-		Assert.assertFalse(Arrays.asList(result).contains(Attribute.create(Integer.class, "a")));
+		Assert.assertTrue(Arrays.asList(result).contains(Attribute.create(Integer.class, "a")));
 	}
 
 	@Test
