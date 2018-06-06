@@ -6,9 +6,9 @@ import java.util.Map;
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
 /**
  * 

@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;

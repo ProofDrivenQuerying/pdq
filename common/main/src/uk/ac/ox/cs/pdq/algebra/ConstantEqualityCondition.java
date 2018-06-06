@@ -4,7 +4,7 @@ import org.junit.Assert;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 /**

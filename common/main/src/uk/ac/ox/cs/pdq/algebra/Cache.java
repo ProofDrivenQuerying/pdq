@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.algebra;
 
 import uk.ac.ox.cs.pdq.ClassManager;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
 /**
  * Creates and maintains a cache of each object type in this package. The

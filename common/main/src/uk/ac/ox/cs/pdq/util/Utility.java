@@ -21,7 +21,6 @@ import com.google.common.collect.Maps;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -33,6 +32,7 @@ import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**

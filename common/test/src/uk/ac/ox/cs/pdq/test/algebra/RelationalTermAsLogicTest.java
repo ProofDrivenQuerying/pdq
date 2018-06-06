@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**

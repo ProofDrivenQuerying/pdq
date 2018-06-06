@@ -20,10 +20,10 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedRelationalTerm;

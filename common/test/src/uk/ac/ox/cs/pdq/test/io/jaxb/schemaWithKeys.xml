@@ -6,16 +6,12 @@
             <attribute name="r1_2" type="java.lang.Integer"/>
             <attribute name="r1_3" type="java.lang.Integer"/>
             <attribute name="r1_4" type="java.lang.Integer"/>
-            <access-method name="m1"/>
-            <access-method name="m2" inputs="0,1"/>
             <primaryKey>r1_1</primaryKey>
             <primaryKey>r1_2</primaryKey>
             <foreign-key autoIndexPresent="false" foreignRelationName="r2" name="ForeignKey1">
                 <References ForeignAttributeName="r1_F" LocalAttributeName="r1_1"/>
             </foreign-key>
             <foreign-key autoIndexPresent="false" name="ForeignKey2"/>
-            <IndexedAttribute>r1_1</IndexedAttribute>
-            <IndexedAttribute>r1_2</IndexedAttribute>
         </relation>
     </relations>
     <dependencies/>

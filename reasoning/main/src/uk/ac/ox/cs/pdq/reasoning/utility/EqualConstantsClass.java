@@ -9,10 +9,10 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.reasoning.chase.ChaseException;
 

@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.algebra;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
 public abstract class ConstantComparisonCondition extends SimpleCondition {
 

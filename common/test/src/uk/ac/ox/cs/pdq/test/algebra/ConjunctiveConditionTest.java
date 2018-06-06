@@ -7,7 +7,7 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**

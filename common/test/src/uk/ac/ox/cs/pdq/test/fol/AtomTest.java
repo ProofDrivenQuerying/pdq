@@ -16,11 +16,11 @@ import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;

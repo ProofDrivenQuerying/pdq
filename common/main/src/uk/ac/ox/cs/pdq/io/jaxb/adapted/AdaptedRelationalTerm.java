@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
 /**
  * @author Gabor

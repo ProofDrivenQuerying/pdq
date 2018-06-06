@@ -8,8 +8,8 @@ import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
 /**
  * @author Gabor

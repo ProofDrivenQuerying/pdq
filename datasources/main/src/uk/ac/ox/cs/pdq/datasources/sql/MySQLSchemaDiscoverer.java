@@ -26,11 +26,11 @@ import uk.ac.ox.cs.pdq.datasources.utility.Utility;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.util.Triple;
 

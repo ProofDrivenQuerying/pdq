@@ -10,7 +10,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
-import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
 /**
  * A tuple type implementation.

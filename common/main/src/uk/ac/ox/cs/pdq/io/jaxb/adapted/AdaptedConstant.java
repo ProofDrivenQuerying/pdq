@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 
 /**

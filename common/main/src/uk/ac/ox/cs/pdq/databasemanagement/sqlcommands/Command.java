@@ -7,8 +7,8 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
 /**
  * Main class of this package. It is the superclass of all database commands. It

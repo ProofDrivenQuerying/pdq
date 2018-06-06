@@ -8,7 +8,6 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -17,6 +16,7 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.chase.Utility;

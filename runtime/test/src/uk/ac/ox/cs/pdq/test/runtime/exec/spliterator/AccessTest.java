@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.Access;
 import uk.ac.ox.cs.pdq.util.Tuple;

@@ -9,11 +9,11 @@ import javax.xml.bind.annotation.XmlElements;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 

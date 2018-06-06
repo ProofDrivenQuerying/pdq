@@ -16,7 +16,6 @@ public class Cache {
 	protected static ClassManager<Attribute> attribute = null;
 	protected static ClassManager<Match> match = null;
 	protected static ClassManager<PrimaryKey> primaryKey = null;
-	protected static ClassManager<TypedConstant> typedConstant = null;
 	protected static ClassManager<Relation> relation = null;
 
 	static {
@@ -28,13 +27,11 @@ public class Cache {
 	 * of unit testing.
 	 */
 	public static void reStartCaches() {
-		accessMethod = null;
-		attribute = null;
-		match = null;
-		primaryKey = null;
-		typedConstant = null;
-		relation = null;
-		
+		accessMethod.reset();
+		attribute.reset();
+		match.reset();
+		primaryKey.reset();
+		relation.reset();
 		startCaches();
 	}
 
@@ -108,15 +105,6 @@ public class Cache {
 			}
 		};
 		
-	    typedConstant  = new ClassManager<TypedConstant>() {
-	        protected boolean equal(TypedConstant object1, TypedConstant object2) {
-	            return object1.value.equals(object2.value);
-	        }
-
-	        protected int getHashCode(TypedConstant object) {
-	            return object.value.hashCode() * 7;
-	        }
-	    };
 		relation  = new ClassManager<Relation>() {
 	        protected boolean equal(Relation object1, Relation object2) {
 	            if (!object1.getName().equals(object2.getName()) || object1.attributes.length != object2.attributes.length || 

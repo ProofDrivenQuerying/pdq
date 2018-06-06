@@ -27,6 +27,7 @@ public class Cache {
 	protected static ClassManager<QuantifiedFormula> quantifiedFormula = null;
 	protected static ClassManager<TGD> tgd = null;
 	protected static ClassManager<UntypedConstant> untypedConstant = null;
+	protected static ClassManager<TypedConstant> typedConstant = null;
 	protected static ClassManager<Variable> variable = null;
 
 	static {
@@ -54,6 +55,7 @@ public class Cache {
 		tgd.reset();
 		untypedConstant.reset();
 		variable.reset();
+		typedConstant.reset();
 	}
 
 	private static synchronized void startCaches() {
@@ -327,6 +329,16 @@ public class Cache {
 				return object.symbol.hashCode() * 7;
 			}
 		};
+		
+	    typedConstant  = new ClassManager<TypedConstant>() {
+	        protected boolean equal(TypedConstant object1, TypedConstant object2) {
+	            return object1.value.equals(object2.value);
+	        }
+
+	        protected int getHashCode(TypedConstant object) {
+	            return object.value.hashCode() * 7;
+	        }
+	    };
 
 		variable = new ClassManager<Variable>() {
 			protected boolean equal(Variable object1, Variable object2) {

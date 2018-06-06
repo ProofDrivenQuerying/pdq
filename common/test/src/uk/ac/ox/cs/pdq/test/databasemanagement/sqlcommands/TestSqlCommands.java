@@ -18,8 +18,8 @@ import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DifferenceQuery;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Insert;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /** This class has a test case for each command object in the sqlcommands package.

@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;

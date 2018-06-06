@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.db;
+package uk.ac.ox.cs.pdq.fol;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -9,8 +9,6 @@ import java.util.Date;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 /**
