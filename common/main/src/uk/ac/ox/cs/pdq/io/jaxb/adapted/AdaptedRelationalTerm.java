@@ -109,8 +109,6 @@ public class AdaptedRelationalTerm implements Serializable {
 		if (t instanceof AccessTerm)
 			return RELATIONAL_TERM_TYPES.AccessTerm;
 
-		if (t instanceof CartesianProductTerm)
-			return RELATIONAL_TERM_TYPES.CartesianProductTerm;
 
 		if (t instanceof DependentJoinTerm)
 			return RELATIONAL_TERM_TYPES.DependentJoinTerm;
@@ -127,6 +125,8 @@ public class AdaptedRelationalTerm implements Serializable {
 		if (t instanceof SelectionTerm)
 			return RELATIONAL_TERM_TYPES.SelectionTerm;
 
+		if (t instanceof CartesianProductTerm)
+			return RELATIONAL_TERM_TYPES.CartesianProductTerm;
 		throw new IllegalArgumentException("RelationalTerm " + t + " has unknown type.");
 	}
 
