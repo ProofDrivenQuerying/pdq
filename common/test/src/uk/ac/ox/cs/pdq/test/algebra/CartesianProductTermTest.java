@@ -68,7 +68,11 @@ public class CartesianProductTermTest extends PdqTest {
 			
 		// Set returned from AccessTerm.getAccesses is empty
 		Set<AccessTerm> sat = cpt.getAccesses();
+<<<<<<< HEAD
 		Assert.assertTrue(sat.size() == 1);
+=======
+		Assert.assertTrue(sat.size() == 0);
+>>>>>>> refs/remotes/origin/newReview
 
 		// RelationalTerm returned from CartesianProductTerm.getChild is invariant
 		RelationalTerm p = cpt.getChild(0);

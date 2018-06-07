@@ -7,26 +7,19 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
-/**
- * Tests the AccessMethod class, and if we created it using the cache or not.
- * @author Gabor
- *
- */
+// Tests the AccessMethod class, and if we created it using the cache or not.
+// @author Gabor
 public class AccessMethodTest {
 
 	public AccessMethodTest() {
 	}
-	/**
-	 * Makes sure assertions are enabled.
-	 */
+	// Makes sure assertions are enabled.
 	@Before 
 	public void setup() {
 		PdqTest.reInitalize(this);
 	}
 
-	/**
-	 * Test number of relations.
-	 */
+	// Test number of relations.
 	@Test
 	public void testCreation() {
 		AccessMethodDescriptor am1 = AccessMethodDescriptor.create("am1", new Integer[] {0});
