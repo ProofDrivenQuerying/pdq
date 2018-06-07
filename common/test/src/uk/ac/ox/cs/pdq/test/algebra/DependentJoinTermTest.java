@@ -1,6 +1,3 @@
-// Commented out since this test is broken. The mock of access method returns null as inputs blowing up everything.
-
-
 package uk.ac.ox.cs.pdq.test.algebra;
 
 import static org.mockito.Mockito.when;
@@ -30,6 +27,7 @@ public class DependentJoinTermTest extends PdqTest {
 			Attribute.create(Integer.class, "d"), Attribute.create(String.class, "e")};
 
 	
+	// Create 2 access terms, dependent join term, then create 2 dependent join terms to fail
 	@Test
 	public void testDependentJoinTerm() {
 
@@ -69,6 +67,7 @@ public class DependentJoinTermTest extends PdqTest {
 		
 	}
 	
+	// Create 2 access terms and 4 dependent join terms
 	@Test
 	public void testBoundIndices() {
 
@@ -105,6 +104,7 @@ public class DependentJoinTermTest extends PdqTest {
 		expected.put(1, 1);
 	}
 	
+	// Create 2 access terms then 4 dependent join terms
 	@Test
 	public void testGetInputAttributes() {
 

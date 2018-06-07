@@ -45,6 +45,7 @@ public class SelectionTermTest extends PdqTest {
 		}
 	}
 
+	// Create a relation, attributes, mapping, access method, 2 constant equality conditions and a selection term,
 	@Test
 	public void testSelectionTerm() {
 		

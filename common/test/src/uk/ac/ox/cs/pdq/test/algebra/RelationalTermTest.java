@@ -33,6 +33,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  */
 public class RelationalTermTest extends PdqTest {
 
+	// Create 2 relations from 2 access method descriptors, then create 3 relational terms and compare
 	@Test
 	public void testAccessCreation() {
 		AccessMethodDescriptor am = AccessMethodDescriptor.create("test",new Integer[] {0});
@@ -43,14 +44,15 @@ public class RelationalTermTest extends PdqTest {
 		RelationalTerm	child2 = AccessTerm.create(relation1,am1);
 		RelationalTerm	child3 = AccessTerm.create(relation,am);
 		
-		if (child1 != child3) { // ATTENTIONAL! it have to be the same reference
+		if (child1 != child3) {
 			Assert.fail("Relation cache does not provide same reference");
 		}
-		if (child1 == child2) { // ATTENTIONAL! it have to be different reference
+		if (child1 == child2) {
 			Assert.fail("Relation cache should not provide same reference");
 		}
 	}
 	
+	// Create relational term and projection term, then compare input and output attributes
 	@Test
 	public void testProjectionTerm() {
 		try {
@@ -73,6 +75,8 @@ public class RelationalTermTest extends PdqTest {
 			Assert.fail(e.getMessage());
 		}
 	}
+	
+	// Create 2 access terms and cartesian product term, then test for 4 output attributes
 	@Test
 	public void testCartesianProductTerm() {
 		try {
@@ -90,6 +94,8 @@ public class RelationalTermTest extends PdqTest {
 			Assert.fail(e.getMessage());
 		}
 	}
+	
+	// Create relational term and dependent join term, then test input and output attributes
 	@Test
 	public void testDependentJoinTerm() {
 		try {
@@ -132,6 +138,8 @@ public class RelationalTermTest extends PdqTest {
 			Assert.fail(e.getMessage());
 		}
 	}
+	
+	// Create access term and rename term, then test input and output attributes
 	@Test
 	public void testRenameTerm() {
 		try {
@@ -154,6 +162,8 @@ public class RelationalTermTest extends PdqTest {
 			Assert.fail(e.getMessage());
 		}
 	}
+	
+	// Create access term, attribute equality condition and selection term, then test input and output attributes
 	@Test
 	public void testSelectionTerm() {
 		try {
@@ -177,6 +187,8 @@ public class RelationalTermTest extends PdqTest {
 			Assert.fail(e.getMessage());
 		}
 	}
+	
+	// Create relational term, attribute equality condition, 3 projection terms and a selection term all twice, then test input and output attributes
 	@Test
 	public void testLargeRelationalTerm() {
 		try {
@@ -214,6 +226,7 @@ public class RelationalTermTest extends PdqTest {
 		}
 	}
 	
+	// Create 2 access terms, a dependent join term, then test input and output attributes and conjunctive join conditions
 	@Test public void test3() {
 		AccessTerm access1 = AccessTerm.create(this.R, this.method0);
 		AccessTerm access2 = AccessTerm.create(this.S, this.method1);
@@ -243,7 +256,7 @@ public class RelationalTermTest extends PdqTest {
 		Assert.assertTrue(plan1.getChildren()[1] instanceof AccessTerm);
 	}
 	
-	
+	// Create 2 access terms and a dependent join term, then test input and output attributes and conjunctive join conditions
 	@Test public void test4() {
 		AccessTerm access1 = AccessTerm.create(this.R, this.method0);
 		AccessTerm access2 = AccessTerm.create(this.S, this.method2);			
@@ -274,6 +287,7 @@ public class RelationalTermTest extends PdqTest {
 		Assert.assertTrue(plan1.getChildren()[1] instanceof AccessTerm);
 	}
 	
+	// Create 2 access terms, a selection term and a dependent join term, then test input and output attributes and conjunctive join conditions
 	@Test public void test5() {
 		AccessTerm access1 = AccessTerm.create(this.R, this.method0);
 		AccessTerm access2 = AccessTerm.create(this.S, this.method2);
@@ -305,6 +319,7 @@ public class RelationalTermTest extends PdqTest {
 		Assert.assertTrue(plan1.getChildren()[1] instanceof AccessTerm);
 	}
 	
+	// Create 2 access terms and a dependent join term, then test input and output attributes and conjunctive join conditions
 	@Test public void test6() {
 		Map<Integer, TypedConstant> inputConstants1 = new HashMap<>();
 		inputConstants1.put(0, TypedConstant.create(TypedConstant.create(new Integer(1))));
@@ -337,6 +352,7 @@ public class RelationalTermTest extends PdqTest {
 		Assert.assertTrue(plan1.getChildren()[1] instanceof AccessTerm);
 	}
 	
+	// Create 2 access terms and a join term, then test input and output attributes and children
 	@Test public void test7() {
 		AccessTerm access1 = AccessTerm.create(this.R, this.method0);
 		AccessTerm access2 = AccessTerm.create(this.S, this.method0);			
@@ -350,6 +366,7 @@ public class RelationalTermTest extends PdqTest {
 		Assert.assertTrue(plan1.getChildren()[1] instanceof AccessTerm);
 	}
 	
+	// Create 2 relations and 2 access terms, then create a dependent join term to fail
 	@Test public void test8() {
 		
 		AccessMethodDescriptor am1 = AccessMethodDescriptor.create("access_method1",new Integer[] {});

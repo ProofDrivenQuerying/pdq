@@ -41,7 +41,8 @@ public class ProjectionTermTest extends PdqTest {
 			return null;
 		}
 	}
-	
+
+	// Create relation, attributes, mapping, access term and projection term, then create 2 projection terms to fail 
 	@Test
 	public void testProjectionTerm() {
 
