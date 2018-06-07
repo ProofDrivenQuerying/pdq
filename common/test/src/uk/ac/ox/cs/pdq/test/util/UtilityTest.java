@@ -35,9 +35,7 @@ public class UtilityTest {
 	protected Relation S;
 	protected Relation T;
 
-	/**
-	 * Makes sure assertions are enabled.
-	 */
+	// Create 3 relations, set primary keys, add a foreign key with 2 references
 	@Before
 	public void setup() {
 		Utility.assertsEnabled();
@@ -54,6 +52,7 @@ public class UtilityTest {
 		this.T.addForeignKey(new ForeignKey());
 	}
 
+	// Create EGD then test atoms
 	@Test
 	public void testGetEGDs1() {
 		EGD egds = Utility.getEGD(this.R, this.R.getKey().getAttributes());
@@ -70,11 +69,13 @@ public class UtilityTest {
 		Assert.assertEquals(Variable.create("?c"),egds.getAtoms()[2].getTerm(1));
 	}
 
+	// Create EGD to fail
 	@Test(expected = RuntimeException.class)
 	public void testGetEGDs2() {
 		Utility.getEGD(this.S, this.S.getKey().getAttributes());
 	}
 
+	// Create EGD then test atoms
 	@Test
 	public void testGetEGDs3() {
 		EGD egds = Utility.getEGD(this.T, this.T.getKey().getAttributes());
