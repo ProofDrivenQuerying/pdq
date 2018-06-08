@@ -18,7 +18,6 @@ public class XmlAttribute {
 	String mapsToRelationAttribute;
 	
 	public XmlAttribute() {
-		System.out.println();
 	}
 	public XmlAttribute(String name, Type type, boolean isInput,String mapsToRelationAttribute) {
 		this.name = name;
