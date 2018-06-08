@@ -1,7 +1,20 @@
 package uk.ac.ox.cs.pdq.regression;
 
 /**
-	@author Efthymia Tsamoura
+	@author Mark Ridler and Efthymia Tsamoura
+	
+	This package contains:
+	
+	- Bootstrap.java
+		* The entry point for the regression package.
+	- PlanConverter.java
+		* Hard-wired to run on Gabor's machine
+	- RegressionParameters.java
+		* Hold the initialConfig of an execution.
+	- RegressionTest.java
+		* Runs regression tests.
+	- RegressionTestException.java
+ 		* Exception that occurred during a regression test.
 
 	This package is the entry point for running regression tests.
 	There are different types of regression tests:

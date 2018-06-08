@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.reasoning.chase;
+package uk.ac.ox.cs.pdq.regression.reasoning.chase;
 
 /**
 	@author Mark Ridler

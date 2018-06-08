@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.chasebench;
+package uk.ac.ox.cs.pdq.regression.chasebench;
 
 /**
 	@author Mark Ridler

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.cost.estimators;
+package uk.ac.ox.cs.pdq.regression.cost.estimators;
 
 /**
 	@author Mark Ridler
