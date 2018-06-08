@@ -76,9 +76,8 @@ public class Runtime {
 			return res;
 		}catch(Throwable t) {
 			t.printStackTrace();
+			throw t;
 		}
-		
-		throw new Exception("Plan evaluation is not implemented yet.");
 	}
 
 	/**
