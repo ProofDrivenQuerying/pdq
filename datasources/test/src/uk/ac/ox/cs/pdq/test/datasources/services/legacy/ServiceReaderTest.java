@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uk.ac.ox.cs.pdq.test.datasources.services;
+package uk.ac.ox.cs.pdq.test.datasources.services.legacy;
 
 import java.io.File;
 import java.io.FileInputStream;
