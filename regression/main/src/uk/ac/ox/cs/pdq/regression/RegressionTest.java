@@ -64,7 +64,7 @@ public abstract class RegressionTest {
 		File[] files = directory.listFiles();
 		Arrays.sort(files);
 		for (File f: files) {
-			if (!f.equals(directory) && f.isDirectory()) {
+			if (!f.equals(directory) && (f.isDirectory() && !"accesses".equalsIgnoreCase(f.getName()))) {
 				result &= this.recursiveRun(f);
 				isLeaf = false;
 			}

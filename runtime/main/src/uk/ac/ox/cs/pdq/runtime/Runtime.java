@@ -69,7 +69,6 @@ public class Runtime {
 	 *             the evaluation exception
 	 */
 	public Result evaluatePlan(RelationalTerm p) throws Exception {
-		System.out.println("evaluating plan " + p + " over " + schema + " using facts: " + facts + " and params: " + params);
 		AccessRepository repo = AccessRepository.getRepository();
 		try {
 			ExecutablePlan executable = new PlanDecorator(repo,schema).decorate(p);
@@ -95,4 +94,12 @@ public class Runtime {
 		throw new Exception("Query evaluation is not implemented yet.");
 	}
 
+	public RuntimeParameters getParams() {
+		return params;
+	}
+
+	public Collection<Atom> getFacts() {
+		return facts;
+	}
+	
 }

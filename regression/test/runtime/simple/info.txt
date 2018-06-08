@@ -1,0 +1,4 @@
+These tests can be executed using the bootstrap adding parameters: 
+   runtime -i test/runtime/simple/
+   
+ 
