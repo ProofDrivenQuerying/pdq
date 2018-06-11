@@ -426,9 +426,9 @@ public class RESTExecutableAccessMethod {
 		// Process the HTTP response and call response unmarshallers if appropriate
 		int status = response.getResponse().getStatus();
 		if (status == 200) {
-			if(mediaType.getType().equals("application"))
+			if(mediaType.getType().equals("application") || mediaType.getType().equals("text"))
 			{
-				if(mediaType.getSubtype().equals("xml")) return xmlResponseUnmarshaller.unmarshalXml(response.getResponse(), table);
+				if(mediaType.getSubtype().equals("xml") || mediaType.getSubtype().equals("plain")) return xmlResponseUnmarshaller.unmarshalXml(response.getResponse(), table);
 				else if(mediaType.getSubtype().equals("json")) return jsonResponseUnmarshaller.unmarshalJson(response.getResponse(), table); 
 			}
 		} else if ((status == 400) || (status == 404) || (status == 406)) {
