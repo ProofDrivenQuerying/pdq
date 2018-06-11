@@ -1,6 +1,6 @@
 <service
 		url="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/RESTfulWS/biopaxExporter" 
-		media-type="application/xml"
+		media-type="text/plain"
 		documentation="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/ReactomeRESTFulAPI.html">
 
 		<static-attribute name="Level2" type="String" value="Level2" attribute-encoding="doubleslash" attribute-encoding-index="1"/>
@@ -8,8 +8,7 @@
 
 	<access-method type="FREE" name="reactome_species_1" cost="1.0">
 
-		<attribute name="thing2" type="Integer" input="true" value="417260" encoding="url-param" relation-attribute="3"/>
-		<attribute name="displayName" type="String" output="true" relation-attribute="displayName"/>
+		<attribute name="bp:NAME" type="String" output="true" relation-attribute="displayName"/>
 		<attribute name="schemaClass" type="String" output="true" relation-attribute="schemaClass"/>
 	</access-method>
 </service>

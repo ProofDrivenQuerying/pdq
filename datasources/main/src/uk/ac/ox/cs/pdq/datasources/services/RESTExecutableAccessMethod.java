@@ -58,6 +58,7 @@ public class RESTExecutableAccessMethod {
 		this.mediaType = new MediaType("application", "json");
 		String mediaType = sr.getMediaType();
 		if((mediaType != null) && mediaType.equals("application/xml"))	this.mediaType = new MediaType("application", "xml");
+		if((mediaType != null) && mediaType.equals("text/plain"))	this.mediaType = new MediaType("text", "plain");
 		
 		// Setup the attributeEncodingMap by putting in all AttributeEncodings from the ServiceGroupsRoot object
 		for(AttributeEncoding ae: sgr.getAttributeEncoding()) attributeEncodingMap.put(ae.getName(), ae);
