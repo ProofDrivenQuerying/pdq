@@ -1,9 +1,40 @@
 package uk.ac.ox.cs.pdq.datasources.services;
 
-// This package represents the new implementation of processing to create a RESTExecutableAccessMethod and call it.
-// AccessEvent, AccessPreProcessor and AccessPostProcessor are used to encapsulate the behaviour of Usage Policies
-// from the policies package. JsonResponseUnmarshaller, ResponseUnmarshaller and XmlResponseUnmarshaller are used to
-// unmarshal the response from REST. RESTRequestEvent and RESTREsponseEvent represent the timing of events around the
-// call to REST. RESTExecutableAccessMethod is the main file that does most of the specification processing.
-//
-// Mark Ridler
+/**
+	@author Mark Ridler
+	
+	This package contains:
+	
+	- AccessEvent.java
+ 		* Event for single access to an online service.
+ 	- AccessPostProcessor
+ 		* An interface that is implemented by sub-classes of UsagePolicy to process a
+ 		* RESTResponseEvent
+ 	- AccessPreProcessor
+ 		* An interface that is implemented by sub-classes of UsagePolicy to process a
+ 		* RESTRequestEvent
+ 	- JsonResponseUmarshaller
+ 		* Derived from ResponseUnmarshaller, this is the Json version that does the
+ 		* bulk of the work during unmarshalling.
+ 	- RequestEvent.java
+ 		* The interface which is implemented by RESTRequestEvent
+ 	- ResponseEvent.java
+ 		* The interface which is implemented by RESTRequestEvent
+ 	- RESTExecutableAccessMethod
+ 		* The main class which implements the bulk of the work for parsing XML objects
+ 		* and setting up for a REST access with associated RESTRequest and RESTResponse
+ 		* events.
+ 	- RESTRequestEvent.java
+ 	 	* The main event class representing a REST request, which occurs immediately
+ 	 	* before a REST access event
+ 	- RESTResponseEvent.java
+ 	 	* The main event class representing a REST response, which occurs immediately
+ 	 	* after a REST access event
+ 	- ServiceManager.java
+ 		* ServiceManager calls JAXB and ServiceGroup or Service to marshal or unmarshal
+ 		* a file
+ 	- XmlResponseUmarshaller
+ 		* Derived from ResponseUnmarshaller, this is the Xml version that does the
+ 		* bulk of the work during unmarshalling.
+
+**/

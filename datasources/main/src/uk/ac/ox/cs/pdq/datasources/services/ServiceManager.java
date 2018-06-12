@@ -11,7 +11,7 @@ import javax.xml.bind.Unmarshaller;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
 
-// AccessMethodManager calls JAXB and AccessMethodRoot to marshal or unmarshal a file
+// ServiceManager calls JAXB and ServiceGroup or Service to marshal or unmarshal a file
 public class ServiceManager {
 
 	public static ServiceGroup importServiceGroups(File schema) throws JAXBException, FileNotFoundException, ClassNotFoundException, InstantiationException, IllegalAccessException {
