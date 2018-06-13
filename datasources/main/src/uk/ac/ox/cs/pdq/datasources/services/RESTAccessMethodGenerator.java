@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.datasources.services;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -103,13 +104,14 @@ public class RESTAccessMethodGenerator {
 		{
 			RESTExecutableAccessMethodSpecification reams = reamss[i];
 			RESTExecutableAccessMethodAttributeSpecification[] attrspecs = reams.getAttributes();
-			Attribute[] attributes = new Attribute[attrspecs.length];
+			Attribute[] accessMethodAttributes = new Attribute[attrspecs.length];
+			List<Attribute> relationAttributes = new ArrayList<>();
 			Integer[] integerinputs = new Integer[attrspecs.length];
 			Map<Attribute, Attribute> map = new HashMap<Attribute, Attribute>();
-			for(int j = 0; j < attributes.length; j++)
+			for(int j = 0; j < accessMethodAttributes.length; j++)
 			{
 				RESTExecutableAccessMethodAttributeSpecification attrspec = attrspecs[j];
-				attributes[j] = Attribute.create(typeType(attrspec.getType()), attrspec.getName());
+				accessMethodAttributes[j] = Attribute.create(typeType(attrspec.getType()), attrspec.getName());
 				if((attrspec.getInput() != null) && (attrspec.getInput().equals("true")))
 				{
 					integerinputs[j] = new Integer(j);
@@ -118,11 +120,14 @@ public class RESTAccessMethodGenerator {
 				{
 					integerinputs[j] = new Integer(-1);
 				}
-				Attribute.create(typeType(attrspec.getType()), (attrspec.getRelationAttribute() == null) ? "" : attrspec.getRelationAttribute());
-				map.put(attributes[j], attributes[j]);
+				if (attrspec.getRelationAttribute()!=null) {
+					Attribute a = Attribute.create(typeType(attrspec.getType()), (attrspec.getRelationAttribute() == null) ? "" : attrspec.getRelationAttribute());
+					relationAttributes.add(a);
+					map.put(accessMethodAttributes[j], a);
+				}
 			}
-			Relation relation = Relation.create(reams.getName(), attributes);
-			restAccessMethods[i] = new RESTAccessMethod(attributes, eliminateMinus1(integerinputs), relation, map, this.target, this.mediaType, sr.getResultDelimiter(), this.usagePolicyMap);
+			Relation relation = Relation.create(reams.getName(), relationAttributes.toArray(new Attribute[relationAttributes.size()]));
+			restAccessMethods[i] = new RESTAccessMethod(accessMethodAttributes, eliminateMinus1(integerinputs), relation, map, this.target, this.mediaType, sr.getResultDelimiter(), this.usagePolicyMap);
 		}
 	}
 	

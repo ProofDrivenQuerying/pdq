@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Access access-type="IN_MEMORY_ACCESS_METHOD" name="mt_63" relation-name="lineitem">
+    <attribute name="L_ORDERKEY" 	type="java.lang.Integer"	 	mapsToRelationAttribute="l_orderkey"	input="false" />
+    <attribute name="L_PARTKEY" 	type="java.lang.Integer"	 	mapsToRelationAttribute="l_partkey"	input="false" />
+    <attribute name="L_SUPPKEY" 	type="java.lang.Integer"	 	mapsToRelationAttribute="l_suppkey"	input="false" />
+    <attribute name="L_LINENUMBER" 	type="java.lang.Integer"	 	mapsToRelationAttribute="l_linenumber" 	input="false"/>
+    <attribute name="L_QUANTITY" 	type="java.math.BigDecimal"	 	mapsToRelationAttribute="l_quantity"	input="false" />
+    <attribute name="L_EXTENDEDPRICE" 	type="java.math.BigDecimal"		mapsToRelationAttribute="l_extendedprice" input="false" />
+    <attribute name="L_DISCOUNT" 	type="java.math.BigDecimal"		mapsToRelationAttribute="l_discount" 	input="false"/>
+    <attribute name="L_TAX" 		type="java.math.BigDecimal"		mapsToRelationAttribute="l_tax"		input="false"/>
+    <attribute name="L_RETURNFLAG" 	type="java.lang.String"			mapsToRelationAttribute="l_returnflag"	input="false"/>
+    <attribute name="L_LINESTATUS" 	type="java.lang.String"			mapsToRelationAttribute="l_linestatus" 	input="false"/>
+    <attribute name="L_SHIPDATE" 	type="java.sql.Date"			mapsToRelationAttribute="l_shipdate" 	input="false"/>
+    <attribute name="L_COMMITDATE" 	type="java.sql.Date"			mapsToRelationAttribute="l_commitdate"	input="false"/>
+    <attribute name="L_RECEIPTDATE" 	type="java.sql.Date"			mapsToRelationAttribute="l_receiptdate" 	input="false"/>
+    <attribute name="L_SHIPINSTRUCT" 	type="java.lang.String"			mapsToRelationAttribute="l_shipinstruct" 	input="false"/>
+    <attribute name="L_SHIPMODE" 	type="java.lang.String"			mapsToRelationAttribute="l_shipmode"	input="false"/>
+    <attribute name="L_COMMENT" 	type="java.lang.String"			mapsToRelationAttribute="l_comment" 	input="false"/>
+    
+    
+    <data-scv-file>test/schemas/accesses/data/lineitem.csv</data-scv-file>
+</Access>

@@ -12,10 +12,10 @@
 		<static-attribute name="fields_protein" 	attribute-encoding="fields_protein.1"/>
 
 		<access-method type="LIMITED" name="ebeye_uniprot_protein_3"  cost="1000.0">
-		<attribute name="id"     	input="true" output="true"	type="String"     path="fields/id" 							attribute-encoding="id.1" attribute-encoding-index="1"/>
-		<attribute name="name"     	input="true" output="true"	type="String"     path="fields/descRecName"/>
-		<attribute name="description" 	input="true" output="true"	type="String" 	path="fields/organism_scientific_name"		attribute-encoding="organism_scientific_name.2"  attribute-encoding-index="1" />
-		<attribute name="status" 		  	input="true" output="true"	type="String" 	path="fields/status"						attribute-encoding="status.3" attribute-encoding-index="1"/>
+		<attribute name="id"     	input="true" output="true"	type="String"   relation-attribute="01"  path="fields/id" 							attribute-encoding="id.1" attribute-encoding-index="1"/>
+		<attribute name="name"     	input="true" output="true"	type="String"     relation-attribute="02" path="fields/descRecName"/>
+		<attribute name="description" 	input="true" output="true"	type="String" 	relation-attribute="03" path="fields/organism_scientific_name"		attribute-encoding="organism_scientific_name.2"  attribute-encoding-index="1" />
+		<attribute name="status" 		  	input="true" output="true"	type="String" 	relation-attribute="04" path="fields/status"						attribute-encoding="status.3" attribute-encoding-index="1"/>
 		
 		</access-method>
 	</service>

@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.test.datasources.services;
 
 import java.io.File;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.datasources.services.RESTAccessMethodGenerator;
@@ -42,6 +43,7 @@ public class ServiceXmlTest {
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 	@Test
@@ -70,6 +72,7 @@ public class ServiceXmlTest {
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 	@Test
@@ -101,6 +104,7 @@ public class ServiceXmlTest {
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 	@Test
@@ -129,6 +133,7 @@ public class ServiceXmlTest {
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 	@Test
@@ -162,6 +167,7 @@ public class ServiceXmlTest {
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 }
