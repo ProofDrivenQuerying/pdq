@@ -9,35 +9,35 @@
 		<policy name="1000_items_per_page" />
 
 		<access-method type="FREE" 						name="chembl_activity_free" cost="1000.0">
-		<attribute name="activity_comment"    			output="true" type="String"    	path="activity_comment"/>
-		<attribute name="activity_id"     				output="true" type="String"   	path="activity_id"/>
-		<attribute name="assay_chembl_id"     			output="true" type="String"    	path="assay_chembl_id"/>
-		<attribute name="assay_description" 			output="true" type="String" 	path="assay_description"/>
-		<attribute name="assay_type"    				output="true" type="String" 	path="assay_type"/>
-		<attribute name="bao_endpoint"        			output="true" type="String" 	path="bao_endpoint"/> 
-		<attribute name="bao_format"        			output="true" type="String" 	path="bao_format"/> 
-		<attribute name="canonical_smiles"        		output="true" type="String" 	path="canonical_smiles"/>
-		<attribute name="data_validity_comment"        	output="true" type="String" 	path="data_validity_comment"/>
-		<attribute name="document_chembl_id"     		output="true" type="String" 	path="document_chembl_id"/>
-		<attribute name="document_journal"     			output="true" type="String" 	path="document_journal"/>
-		<attribute name="document_year"     			output="true" type="String" 	path="document_year"/> 
-		<attribute name="molecule_chembl_id"        	output="true" type="String" 	path="molecule_chembl_id"/>
-		<attribute name="pchembl_value"  				output="true" type="Double" 	path="pchembl_value"/>
-		<attribute name="potential_duplicate"  			output="true" type="String" 	path="potential_duplicate"/>
-		<attribute name="published_relation"  			output="true" type="String" 	path="published_relation"/>
-		<attribute name="published_type"  				output="true" type="String" 	path="published_type"/>
-		<attribute name="published_units"  				output="true" type="String" 	path="published_units"/>
-		<attribute name="published_value"  				output="true" type="String" 	path="published_value"/>
-		<attribute name="qudt_units"  					output="true" type="String" 	path="qudt_units"/>
-		<attribute name="record_id"  					output="true" type="String" 	path="record_id"/>
-		<attribute name="standard_flag"  				output="true" type="Boolean" 	path="standard_flag"/>
-		<attribute name="standard_relation"  			output="true" type="String" 	path="standard_relation"/>
-		<attribute name="standard_type"  				output="true" type="String" 	path="standard_type"/>
-		<attribute name="standard_units"  				output="true" type="String" 	path="standard_units"/>
-		<attribute name="standard_value"  				output="true" type="Double" 	path="standard_value"/>
-		<attribute name="target_chembl_id"  			output="true" type="String" 	path="target_chembl_id"/>
-		<attribute name="target_organism"  				output="true" type="String" 	path="target_organism"/>
-		<attribute name="target_pref_name"  			output="true" type="String" 	path="target_pref_name"/>
-		<attribute name="uo_units"  					output="true" type="String" 	path="uo_units"/>
+		<attribute name="activity_comment"    			output="true" type="String"    	relation-attribute="01" path="activity_comment"/>
+ 		<attribute name="activity_id"     				output="true" type="String"   	relation-attribute="02" path="activity_id"/>
+		<attribute name="assay_chembl_id"     			output="true" type="String"    	relation-attribute="03" path="assay_chembl_id"/>
+		<attribute name="assay_description" 			output="true" type="String" 	relation-attribute="04" path="assay_description"/>
+		<attribute name="assay_type"    				output="true" type="String" 	relation-attribute="05" path="assay_type"/>
+		<attribute name="bao_endpoint"        			output="true" type="String" 	relation-attribute="06" path="bao_endpoint"/> 
+		<attribute name="bao_format"        			output="true" type="String" 	relation-attribute="07" path="bao_format"/> 
+		<attribute name="canonical_smiles"        		output="true" type="String" 	relation-attribute="08" path="canonical_smiles"/>
+		<attribute name="data_validity_comment"        	output="true" type="String" 	relation-attribute="09" path="data_validity_comment"/>
+		<attribute name="document_chembl_id"     		output="true" type="String" 	relation-attribute="10" path="document_chembl_id"/>
+		<attribute name="document_journal"     			output="true" type="String" 	relation-attribute="11" path="document_journal"/>
+		<attribute name="document_year"     			output="true" type="String" 	relation-attribute="12" path="document_year"/> 
+		<attribute name="molecule_chembl_id"        	output="true" type="String" 	relation-attribute="13" path="molecule_chembl_id"/>
+		<attribute name="pchembl_value"  				output="true" type="Double" 	relation-attribute="14" path="pchembl_value"/>
+		<attribute name="potential_duplicate"  			output="true" type="String" 	relation-attribute="15" path="potential_duplicate"/>
+		<attribute name="published_relation"  			output="true" type="String" 	relation-attribute="16" path="published_relation"/>
+		<attribute name="published_type"  				output="true" type="String" 	relation-attribute="17" path="published_type"/>
+		<attribute name="published_units"  				output="true" type="String" 	relation-attribute="18" path="published_units"/>
+		<attribute name="published_value"  				output="true" type="String" 	relation-attribute="19" path="published_value"/>
+		<attribute name="qudt_units"  					output="true" type="String" 	relation-attribute="20" path="qudt_units"/>
+		<attribute name="record_id"  					output="true" type="String" 	relation-attribute="21" path="record_id"/>
+		<attribute name="standard_flag"  				output="true" type="Boolean" 	relation-attribute="22" path="standard_flag"/>
+		<attribute name="standard_relation"  			output="true" type="String" 	relation-attribute="23" path="standard_relation"/>
+		<attribute name="standard_type"  				output="true" type="String" 	relation-attribute="24" path="standard_type"/>
+		<attribute name="standard_units"  				output="true" type="String" 	relation-attribute="25" path="standard_units"/>
+		<attribute name="standard_value"  				output="true" type="Double" 	relation-attribute="26" path="standard_value"/>
+		<attribute name="target_chembl_id"  			output="true" type="String" 	relation-attribute="27" path="target_chembl_id"/>
+		<attribute name="target_organism"  				output="true" type="String" 	relation-attribute="28" path="target_organism"/>
+		<attribute name="target_pref_name"  			output="true" type="String" 	relation-attribute="29" path="target_pref_name"/>
+		<attribute name="uo_units"  					output="true" type="String" 	relation-attribute="30" path="uo_units"/>
 		</access-method>
 	</service>

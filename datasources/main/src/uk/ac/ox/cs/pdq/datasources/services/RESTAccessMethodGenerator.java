@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.datasources.services;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -14,11 +15,13 @@ import javax.ws.rs.core.MediaType;
 import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
+import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.services.RESTAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.services.policies.PolicyFactory;
 import uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
-import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
 import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodAttributeSpecification;
+import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.datasources.services.service.ServiceUsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.service.StaticAttribute;
@@ -27,6 +30,7 @@ import uk.ac.ox.cs.pdq.datasources.services.servicegroup.GroupUsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
@@ -37,7 +41,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 // RESTExecutableAccessMethod is the implementation which calls REST for a defined access method
 // It provides functionality to support the constructor, which does much of the processing, followed
 // by the access method, where the REST call and associated events take place.
-public class RESTExecutableAccessMethod {
+public class RESTAccessMethodGenerator {
 	
 	private String url;
 	private WebTarget target;
@@ -45,13 +49,12 @@ public class RESTExecutableAccessMethod {
 	private String template;
 	private Attribute[] inputattributes;
 	private Attribute[] outputattributes;
-	private JsonResponseUnmarshaller jsonResponseUnmarshaller;
-	private XmlResponseUnmarshaller xmlResponseUnmarshaller;
 	private TreeMap<String, AttributeEncoding> attributeEncodingMap = new TreeMap<String, AttributeEncoding>();
 	private TreeMap<String, UsagePolicy> usagePolicyMap = new TreeMap<String, UsagePolicy>();
+	private RESTAccessMethod[] restAccessMethods;
 
 	// Constructor takes XML-derived objects and builds a structure ready to run
-	public RESTExecutableAccessMethod(ServiceGroup sgr, Service sr, RESTExecutableAccessMethodSpecification am, Tuple tuple)
+	public RESTAccessMethodGenerator(ServiceGroup sgr, Service sr, RESTExecutableAccessMethodSpecification am, Tuple tuple)
 	{
 		// Get the url and mediatype from the ServiceRoot object
 		this.url = sr.getUrl();
@@ -93,9 +96,53 @@ public class RESTExecutableAccessMethod {
 		outputattributes = new Attribute[outputs.size()];
 		for(int i = 0; i < outputs.size(); i++) outputattributes[i] = outputs.get(i);
 		
-		// Setup response unmarshallers
-		jsonResponseUnmarshaller = new JsonResponseUnmarshaller(outputattributes, sr.getResultDelimiter());
-		xmlResponseUnmarshaller = new XmlResponseUnmarshaller(outputattributes, sr.getResultDelimiter());
+		// Setup executable access method
+		RESTExecutableAccessMethodSpecification[] reamss = sr.getAccessMethod();
+		restAccessMethods = new RESTAccessMethod[reamss.length];
+		for(int i = 0; i < reamss.length; i++)
+		{
+			RESTExecutableAccessMethodSpecification reams = reamss[i];
+			RESTExecutableAccessMethodAttributeSpecification[] attrspecs = reams.getAttributes();
+			Attribute[] attributes = new Attribute[attrspecs.length];
+			Integer[] integerinputs = new Integer[attrspecs.length];
+			Map<Attribute, Attribute> map = new HashMap<Attribute, Attribute>();
+			for(int j = 0; j < attributes.length; j++)
+			{
+				RESTExecutableAccessMethodAttributeSpecification attrspec = attrspecs[j];
+				attributes[j] = Attribute.create(typeType(attrspec.getType()), attrspec.getName());
+				if((attrspec.getInput() != null) && (attrspec.getInput().equals("true")))
+				{
+					integerinputs[j] = new Integer(j);
+				}
+				else
+				{
+					integerinputs[j] = new Integer(-1);
+				}
+				Attribute.create(typeType(attrspec.getType()), (attrspec.getRelationAttribute() == null) ? "" : attrspec.getRelationAttribute());
+				map.put(attributes[j], attributes[j]);
+			}
+			Relation relation = Relation.create(reams.getName(), attributes);
+			restAccessMethods[i] = new RESTAccessMethod(attributes, eliminateMinus1(integerinputs), relation, map, this.target, this.mediaType, sr.getResultDelimiter(), this.usagePolicyMap);
+		}
+	}
+	
+	// Reformat the list of integers so it doesn't contain -1
+	private Integer[] eliminateMinus1(Integer[] integerinputs)
+	{
+		LinkedList<Integer> list = new LinkedList<>();
+		for(int i = 0; i < integerinputs.length; i++)
+		{
+			if(integerinputs[i] != null)
+			{
+				if(integerinputs[i].intValue() >= 0) list.add(integerinputs[i]);
+			}
+		}
+		Integer[] result = new Integer[list.size()];
+		for(int j = 0; j < list.size(); j++)
+		{
+			result[j] = list.get(j);
+		}
+		return result;
 	}
 	
 	// Conversion from string to type ... there may be a better way of doing this
@@ -387,57 +434,9 @@ public class RESTExecutableAccessMethod {
 			}
 		}
 	}
-
-	// Perform the main access to the REST protocol and parse the results
-	public Table access()
+	
+	public RESTAccessMethod[] getRestAccessMethods()
 	{
-		// Setup a RESTRequestEvent from web target and mediaType
-		RESTRequestEvent request = new RESTRequestEvent(target, mediaType);
-		
-		// For all AccessPreProcessors call the processAccessRequest method with the RESTRequestEvent
-		Collection<UsagePolicy> cup = usagePolicyMap.values();
-		for(UsagePolicy up : cup)
-		{
-			if(up instanceof AccessPreProcessor)
-			{
-				@SuppressWarnings("unchecked")
-				AccessPreProcessor<RESTRequestEvent> apep = (AccessPreProcessor<RESTRequestEvent>) up;
-				apep.processAccessRequest(request);
-			}
-		}
-		
-		// Process the RESTRequestEvent to generate a RESTResponseEvent
-		RESTResponseEvent response = request.processRequest();
-		
-		// For all AccessPostProcessors call the processAccessResponse method with the RESTResponse event
-		for(UsagePolicy up : cup)
-		{
-			if(up instanceof AccessPostProcessor)
-			{
-				@SuppressWarnings("unchecked")
-				AccessPostProcessor<RESTResponseEvent> apop = (AccessPostProcessor<RESTResponseEvent>) up;
-				apop.processAccessResponse(response);
-			}
-		}
-
-		// Create a new table as input for the unmarshallers
-		Table table = new Table();
-				
-		// Process the HTTP response and call response unmarshallers if appropriate
-		int status = response.getResponse().getStatus();
-		if (status == 200) {
-			if(mediaType.getType().equals("application") || mediaType.getType().equals("text"))
-			{
-				if(mediaType.getSubtype().equals("xml") || mediaType.getSubtype().equals("plain")) return xmlResponseUnmarshaller.unmarshalXml(response.getResponse(), table);
-				else if(mediaType.getSubtype().equals("json")) return jsonResponseUnmarshaller.unmarshalJson(response.getResponse(), table); 
-			}
-		} else if ((status == 400) || (status == 404) || (status == 406)) {
-			System.out.println(response.getResponse().getStatusInfo().getReasonPhrase());
-		} else {
-			throw new AccessException(status
-					+ " - " + response.getResponse().getStatusInfo().getReasonPhrase()
-					+ "\n" + response.getResponse().readEntity(String.class));
-		}
-		return new Table();		
+		return restAccessMethods;
 	}
 }

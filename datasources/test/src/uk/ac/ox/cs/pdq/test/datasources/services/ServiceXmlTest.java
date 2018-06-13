@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.datasources.services.RESTExecutableAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.services.RESTAccessMethodGenerator;
 import uk.ac.ox.cs.pdq.datasources.services.ServiceManager;
 import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
@@ -31,9 +31,12 @@ public class ServiceXmlTest {
 				RESTExecutableAccessMethodSpecification am = sr.getAccessMethod()[i];
 				TupleType tupleType = TupleType.DefaultFactory.createFromTyped();
 				Tuple input = tupleType.createTuple();
-				RESTExecutableAccessMethod ream = new RESTExecutableAccessMethod(sgr, sr, am, input);
-				Table t = ream.access();
-				System.out.println(t);
+				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am, input);
+				for(int j = 0; j < ream.getRestAccessMethods().length; j++)
+				{
+					Table t = ream.getRestAccessMethods()[j].access();
+					System.out.println(t);
+				}
 			}
 		}
 		catch (Exception e)
@@ -56,9 +59,12 @@ public class ServiceXmlTest {
 				RESTExecutableAccessMethodSpecification am = sr.getAccessMethod()[i];
 				TupleType tupleType = TupleType.DefaultFactory.createFromTyped();
 				Tuple input = tupleType.createTuple();
-				RESTExecutableAccessMethod ream = new RESTExecutableAccessMethod(sgr, sr, am, input);
-				Table t = ream.access();
-				System.out.println(t);
+				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am, input);
+				for(int j = 0; j < ream.getRestAccessMethods().length; j++)
+				{
+					Table t = ream.getRestAccessMethods()[j].access();
+					System.out.println(t);
+				}
 			}
 		}
 		catch (Exception e)
@@ -84,9 +90,12 @@ public class ServiceXmlTest {
 																			   Attribute.create(String.class, "temp3"),
 																			   Attribute.create(String.class, "temp4"));
 				Tuple input = tupleType.createTuple("1", "2", "3", "4");
-				RESTExecutableAccessMethod ream = new RESTExecutableAccessMethod(sgr, sr, am, input);
-				Table t = ream.access();
-				System.out.println(t);
+				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am, input);
+				for(int j = 0; j < ream.getRestAccessMethods().length; j++)
+				{
+					Table t = ream.getRestAccessMethods()[j].access();
+					System.out.println(t);
+				}
 			}
 		}
 		catch (Exception e)
@@ -109,9 +118,12 @@ public class ServiceXmlTest {
 				RESTExecutableAccessMethodSpecification am = sr.getAccessMethod()[i];
 				TupleType tupleType = TupleType.DefaultFactory.createFromTyped(Attribute.create(String.class, "temp1"));
 				Tuple input = tupleType.createTuple("1");
-				RESTExecutableAccessMethod ream = new RESTExecutableAccessMethod(sgr, sr, am, input);
-				Table t = ream.access();
-				System.out.println(t);
+				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am, input);
+				for(int j = 0; j < ream.getRestAccessMethods().length; j++)
+				{
+					Table t = ream.getRestAccessMethods()[j].access();
+					System.out.println(t);
+				}
 			}
 		}
 		catch (Exception e)
@@ -139,9 +151,12 @@ public class ServiceXmlTest {
 																			   Attribute.create(String.class, "temp5"),
 				   															   Attribute.create(String.class, "temp6"));
 				Tuple input = tupleType.createTuple("1", "2", "3", "4", "5", "6");
-				RESTExecutableAccessMethod ream = new RESTExecutableAccessMethod(sgr, sr, am, input);
-				Table t = ream.access();
-				System.out.println(t);
+				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am, input);
+				for(int j = 0; j < ream.getRestAccessMethods().length; j++)
+				{
+					Table t = ream.getRestAccessMethods()[j].access();
+					System.out.println(t);
+				}
 			}
 		}
 		catch (Exception e)
