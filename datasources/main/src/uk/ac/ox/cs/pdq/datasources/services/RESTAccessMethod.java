@@ -110,9 +110,11 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 	{
 		this.url = sr.getUrl();
 		this.template = "";
-		
+		this.attributeEncodingMap = new TreeMap<String, AttributeEncoding>();
+		this.usagePolicyMap = new TreeMap<String, UsagePolicy>();
+
 		// Setup the attributeEncodingMap by putting in all AttributeEncodings from the ServiceGroupsRoot object
-		for(AttributeEncoding ae: sgr.getAttributeEncoding()) attributeEncodingMap.put(ae.getName(), ae);
+		for(AttributeEncoding ae: sgr.getAttributeEncoding()) if(ae.getName() != null) attributeEncodingMap.put(ae.getName(), ae);
 
 		// Parse the usage policies from the ServiceGroupsRoot object
 		compileUsagePolicies(sgr);
@@ -149,7 +151,6 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 	@SuppressWarnings("unchecked")
 	public void compileUsagePolicies(ServiceGroup sgr)
 	{
-		usagePolicyMap = new TreeMap<String, UsagePolicy>();
 		for(GroupUsagePolicy gup : sgr.getUsagePolicy())
 		{
 			if(gup.getName() != null)
@@ -189,7 +190,6 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 	// Format a list of templates as presented by the AttributeEncodings
 	private void formatTemplate(ServiceGroup sgr, Service sr, RESTExecutableAccessMethodSpecification am)
 	{
-		attributeEncodingMap = new TreeMap<String, AttributeEncoding>();
 		String result = "";
 		TreeMap<AttributeEncoding, String> attributeEncodingMap2 = new TreeMap<AttributeEncoding, String>();
 		if(sr.getServiceUsagePolicy() != null)
