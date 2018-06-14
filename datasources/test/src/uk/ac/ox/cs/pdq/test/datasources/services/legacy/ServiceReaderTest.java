@@ -27,45 +27,6 @@ import uk.ac.ox.cs.pdq.util.TupleType;
  *
  */
 public class ServiceReaderTest {
-
-	//@Test
-	// The yahoo places / geo etc services are now maintained under the BOSS brand and they aren't free anymore.
-	public void testParsingYahooWeather() throws FileNotFoundException {
-		Attribute NAME = Attribute.create(String.class, "name");
-		FileInputStream fis = new FileInputStream(new File("services/yahoo-services.xml"));
-		ServiceReader reader = new ServiceReader();
-		ServiceRepository repo = reader.read(fis);
-		System.out.println(repo.getServices());
-		Service sPlaces = repo.getService("YahooPlaces");
-		TupleType tupleType = TupleType.DefaultFactory.createFromTyped(NAME);
-		final Tuple oxford = tupleType.createTuple("Oxford");
-		
-		ResetableIterator<Tuple> inputTuples = new ResetableIterator<Tuple>() {
-			int index = 0;
-			Tuple tuples[] = new Tuple[] { oxford };
-			
-			@Override
-			public boolean hasNext() {
-				return index<tuples.length;
-			}
-
-			@Override
-			public Tuple next() {
-				return tuples[index++];
-			}
-
-			@Override
-			public void open() {
-			}
-
-			@Override
-			public void reset() {
-				index=0;
-			}
-		};
-		Table result = sPlaces.access(new Attribute[] {NAME}, inputTuples);
-		System.out.println(result);
-	}
 	
 	@Test
 	public void testParsingReactomeService() throws FileNotFoundException {
