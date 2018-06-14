@@ -26,7 +26,6 @@ import uk.ac.ox.cs.pdq.util.TupleType;
  * @author gabor
  *
  */
-@Ignore
 public class ServiceReaderTest {
 
 	//@Test

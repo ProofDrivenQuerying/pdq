@@ -112,6 +112,6 @@ public class RESTRequestEvent implements RequestEvent {
 		MediaType mediaType = new MediaType("application", "json");
 		if(relation != null) mediaType = relation.getMediaType();
 		Response response = target.request(mediaType).get();
-		return new RESTResponseEvent(this, response);
+		return new RESTResponseEvent(relation, this, response);
 	}
 }
