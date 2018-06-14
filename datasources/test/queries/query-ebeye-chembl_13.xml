@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query name="Example 1" description="" type="conjunctive">
+	<body>
+
+
+		<atom name="EBEYETargetComponent">
+			<constant value="Q05586" />
+			<variable name="component_id" />
+			<variable name="component_type" />
+			<variable name="description" />
+		</atom>
+
+
+	</body>
+	<head name="Q">
+
+		<variable name="component_id" />
+		<variable name="component_type" />
+		<variable name="description" />
+	</head>
+
+</query>

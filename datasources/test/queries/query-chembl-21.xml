@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query name="Example 1" description="" type="conjunctive">
+	<body>
+		<atom name="ProteinClassLimited">
+			<variable name="l1" />
+			<variable name="l2" />
+			<variable name="l3" />
+			<variable name="l4" />
+			<variable name="l5" />
+			<variable name="l6" />
+			<variable name="l7" />
+			<variable name="l8" />
+			<constant value="722" />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="l1" />
+		<variable name="l2" />
+		<variable name="l3" />
+		<variable name="l4" />
+		<variable name="l5" />
+		<variable name="l6" />
+		<variable name="l7" />
+		<variable name="l8" />
+	</head>
+
+</query>

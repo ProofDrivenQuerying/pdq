@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query name="Example 1" description="" type="conjunctive">
+	<body>
+		<atom name="MoleculeFormLimited">
+			<constant value="CHEMBL360684" />
+			<variable name="molecule_chembl_id" />
+			<variable name="parent" />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="molecule_chembl_id" />
+		<variable name="parent" />
+	</head>
+
+</query>

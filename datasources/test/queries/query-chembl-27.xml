@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query name="Example 1" description="" type="conjunctive">
+	<body>
+		<atom name="TargetComponentLimited">
+			<variable name="accession" />
+			<constant value="8359" />
+			<variable name="component_type" />
+			<variable name="description" />
+			<variable name="organism" />
+			<variable name="protein_classification_id" />
+			<variable name="sequence" />
+			<variable name="tax_id" />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="accession" />
+		<variable name="component_type" />
+		<variable name="description" />
+		<variable name="organism" />
+		<variable name="protein_classification_id" />
+		<variable name="sequence" />
+		<variable name="tax_id" />
+	</head>
+
+</query>

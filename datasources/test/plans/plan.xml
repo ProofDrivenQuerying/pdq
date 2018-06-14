@@ -1,0 +1,922 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan cost="152.0">
+<command type="access" relation="GNCountryInfo" access-method="gn_cinfo">
+<relation name="T">
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.String"/>
+<attribute name="c4" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="c10" type="java.lang.Double"/>
+<attribute name="c11" type="java.lang.Double"/>
+<attribute name="c12" type="java.lang.Double"/>
+<attribute name="c13" type="java.lang.Double"/>
+<attribute name="c14" type="java.lang.String"/>
+<attribute name="c15" type="java.lang.String"/>
+<attribute name="c16" type="java.lang.Double"/>
+</relation>
+<input source="id" target="c1"/>
+<input source="countryCode" target="c2"/>
+<input source="countryName" target="c3"/>
+<input source="continentCode" target="c4"/>
+<input source="continentName" target="Asia"/>
+<input source="iso3Alpha" target="c5"/>
+<input source="isoNumeric" target="c6"/>
+<input source="fipsCode" target="c7"/>
+<input source="capital" target="c8"/>
+<input source="population" target="c9"/>
+<input source="bbNorth" target="c10"/>
+<input source="bbSouth" target="c11"/>
+<input source="bbEast" target="c12"/>
+<input source="bbWest" target="c13"/>
+<input source="languages" target="c14"/>
+<input source="currencyCode" target="c15"/>
+<input source="areaInSqKm" target="c16"/>
+</command>
+<command type="rename">
+<relation name="T">
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.String"/>
+<attribute name="c4" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="c10" type="java.lang.Double"/>
+<attribute name="c11" type="java.lang.Double"/>
+<attribute name="c12" type="java.lang.Double"/>
+<attribute name="c13" type="java.lang.Double"/>
+<attribute name="c14" type="java.lang.String"/>
+<attribute name="c15" type="java.lang.String"/>
+<attribute name="c16" type="java.lang.Double"/>
+</relation>
+<attribute name="c1"/>
+<attribute name="c2"/>
+<attribute name="c3"/>
+<attribute name="c4"/>
+<attribute name="Asia"/>
+<attribute name="c5"/>
+<attribute name="c6"/>
+<attribute name="c7"/>
+<attribute name="c8"/>
+<attribute name="c9"/>
+<attribute name="c10"/>
+<attribute name="c11"/>
+<attribute name="c12"/>
+<attribute name="c13"/>
+<attribute name="c14"/>
+<attribute name="c15"/>
+<attribute name="c16"/>
+</command>
+<command type="select">
+<relation name="T">
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.String"/>
+<attribute name="c4" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="c10" type="java.lang.Double"/>
+<attribute name="c11" type="java.lang.Double"/>
+<attribute name="c12" type="java.lang.Double"/>
+<attribute name="c13" type="java.lang.Double"/>
+<attribute name="c14" type="java.lang.String"/>
+<attribute name="c15" type="java.lang.String"/>
+<attribute name="c16" type="java.lang.Double"/>
+</relation>
+<predicate type="equality" left="4" value="Asia"/>
+</command>
+<command type="assign">
+<relation name="T">
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.String"/>
+<attribute name="c4" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="c10" type="java.lang.Double"/>
+<attribute name="c11" type="java.lang.Double"/>
+<attribute name="c12" type="java.lang.Double"/>
+<attribute name="c13" type="java.lang.Double"/>
+<attribute name="c14" type="java.lang.String"/>
+<attribute name="c15" type="java.lang.String"/>
+<attribute name="c16" type="java.lang.Double"/>
+</relation>
+<relation name="target">
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.String"/>
+<attribute name="c4" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="c10" type="java.lang.Double"/>
+<attribute name="c11" type="java.lang.Double"/>
+<attribute name="c12" type="java.lang.Double"/>
+<attribute name="c13" type="java.lang.Double"/>
+<attribute name="c14" type="java.lang.String"/>
+<attribute name="c15" type="java.lang.String"/>
+<attribute name="c16" type="java.lang.Double"/>
+</relation>
+</command>
+<command type="project">
+<relation name="T">
+<attribute name="c8" type="java.lang.String"/>
+</relation>
+<attribute name="c8"/>
+</command>
+<command type="access" relation="YahooPlaces" access-method="yh_geo_name">
+<relation name="T">
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c18" type="java.lang.Integer"/>
+<attribute name="c19" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.String"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.String"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.lang.Double"/>
+<attribute name="c28" type="java.lang.Double"/>
+<attribute name="c29" type="java.lang.Double"/>
+<attribute name="c30" type="java.lang.Double"/>
+<attribute name="c31" type="java.lang.Double"/>
+<attribute name="c32" type="java.lang.Double"/>
+<attribute name="c33" type="java.lang.String"/>
+</relation>
+<input source="woeid" target="c17"/>
+<input source="name" target="c8"/>
+<input source="type" target="c18"/>
+<input source="placeTypeName" target="c19"/>
+<input source="country" target="c20"/>
+<input source="admin1" target="c21"/>
+<input source="admin2" target="c22"/>
+<input source="admin3" target="c23"/>
+<input source="locality1" target="c24"/>
+<input source="locality2" target="c25"/>
+<input source="postal" target="c26"/>
+<input source="centroid_lat" target="c27"/>
+<input source="centroid_lng" target="c28"/>
+<input source="bboxNorth" target="c29"/>
+<input source="bboxSouth" target="c30"/>
+<input source="bboxEast" target="c31"/>
+<input source="bboxWest" target="c32"/>
+<input source="timezone" target="c33"/>
+</command>
+<command type="rename">
+<relation name="T">
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c18" type="java.lang.Integer"/>
+<attribute name="c19" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.String"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.String"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.lang.Double"/>
+<attribute name="c28" type="java.lang.Double"/>
+<attribute name="c29" type="java.lang.Double"/>
+<attribute name="c30" type="java.lang.Double"/>
+<attribute name="c31" type="java.lang.Double"/>
+<attribute name="c32" type="java.lang.Double"/>
+<attribute name="c33" type="java.lang.String"/>
+</relation>
+<attribute name="c17"/>
+<attribute name="c8"/>
+<attribute name="c18"/>
+<attribute name="c19"/>
+<attribute name="c20"/>
+<attribute name="c21"/>
+<attribute name="c22"/>
+<attribute name="c23"/>
+<attribute name="c24"/>
+<attribute name="c25"/>
+<attribute name="c26"/>
+<attribute name="c27"/>
+<attribute name="c28"/>
+<attribute name="c29"/>
+<attribute name="c30"/>
+<attribute name="c31"/>
+<attribute name="c32"/>
+<attribute name="c33"/>
+</command>
+<command type="join">
+<relation name="T">
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.String"/>
+<attribute name="c4" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="c10" type="java.lang.Double"/>
+<attribute name="c11" type="java.lang.Double"/>
+<attribute name="c12" type="java.lang.Double"/>
+<attribute name="c13" type="java.lang.Double"/>
+<attribute name="c14" type="java.lang.String"/>
+<attribute name="c15" type="java.lang.String"/>
+<attribute name="c16" type="java.lang.Double"/>
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c18" type="java.lang.Integer"/>
+<attribute name="c19" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.String"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.String"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.lang.Double"/>
+<attribute name="c28" type="java.lang.Double"/>
+<attribute name="c29" type="java.lang.Double"/>
+<attribute name="c30" type="java.lang.Double"/>
+<attribute name="c31" type="java.lang.Double"/>
+<attribute name="c32" type="java.lang.Double"/>
+<attribute name="c33" type="java.lang.String"/>
+</relation>
+<relation name="left">
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.String"/>
+<attribute name="c4" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="c10" type="java.lang.Double"/>
+<attribute name="c11" type="java.lang.Double"/>
+<attribute name="c12" type="java.lang.Double"/>
+<attribute name="c13" type="java.lang.Double"/>
+<attribute name="c14" type="java.lang.String"/>
+<attribute name="c15" type="java.lang.String"/>
+<attribute name="c16" type="java.lang.Double"/>
+</relation>
+<relation name="right">
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c18" type="java.lang.Integer"/>
+<attribute name="c19" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.String"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.String"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.lang.Double"/>
+<attribute name="c28" type="java.lang.Double"/>
+<attribute name="c29" type="java.lang.Double"/>
+<attribute name="c30" type="java.lang.Double"/>
+<attribute name="c31" type="java.lang.Double"/>
+<attribute name="c32" type="java.lang.Double"/>
+<attribute name="c33" type="java.lang.String"/>
+</relation>
+<predicate type="equality" left="8" right="18"/>
+</command>
+<command type="rename">
+<relation name="T">
+<attribute name="k53" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="k54" type="java.lang.Integer"/>
+<attribute name="k55" type="java.lang.String"/>
+<attribute name="k56" type="java.lang.String"/>
+<attribute name="k57" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.String"/>
+<attribute name="k59" type="java.lang.String"/>
+<attribute name="k60" type="java.lang.String"/>
+<attribute name="k61" type="java.lang.String"/>
+<attribute name="k62" type="java.lang.String"/>
+<attribute name="k63" type="java.lang.Double"/>
+<attribute name="k64" type="java.lang.Double"/>
+<attribute name="k65" type="java.lang.Double"/>
+<attribute name="k66" type="java.lang.Double"/>
+<attribute name="k67" type="java.lang.Double"/>
+<attribute name="k68" type="java.lang.Double"/>
+<attribute name="k69" type="java.lang.String"/>
+</relation>
+<attribute name="k53"/>
+<attribute name="c8"/>
+<attribute name="k54"/>
+<attribute name="k55"/>
+<attribute name="k56"/>
+<attribute name="k57"/>
+<attribute name="k58"/>
+<attribute name="k59"/>
+<attribute name="k60"/>
+<attribute name="k61"/>
+<attribute name="k62"/>
+<attribute name="k63"/>
+<attribute name="k64"/>
+<attribute name="k65"/>
+<attribute name="k66"/>
+<attribute name="k67"/>
+<attribute name="k68"/>
+<attribute name="k69"/>
+</command>
+<command type="join">
+<relation name="T">
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.String"/>
+<attribute name="c4" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="c10" type="java.lang.Double"/>
+<attribute name="c11" type="java.lang.Double"/>
+<attribute name="c12" type="java.lang.Double"/>
+<attribute name="c13" type="java.lang.Double"/>
+<attribute name="c14" type="java.lang.String"/>
+<attribute name="c15" type="java.lang.String"/>
+<attribute name="c16" type="java.lang.Double"/>
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c18" type="java.lang.Integer"/>
+<attribute name="c19" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.String"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.String"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.lang.Double"/>
+<attribute name="c28" type="java.lang.Double"/>
+<attribute name="c29" type="java.lang.Double"/>
+<attribute name="c30" type="java.lang.Double"/>
+<attribute name="c31" type="java.lang.Double"/>
+<attribute name="c32" type="java.lang.Double"/>
+<attribute name="c33" type="java.lang.String"/>
+<attribute name="k53" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="k54" type="java.lang.Integer"/>
+<attribute name="k55" type="java.lang.String"/>
+<attribute name="k56" type="java.lang.String"/>
+<attribute name="k57" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.String"/>
+<attribute name="k59" type="java.lang.String"/>
+<attribute name="k60" type="java.lang.String"/>
+<attribute name="k61" type="java.lang.String"/>
+<attribute name="k62" type="java.lang.String"/>
+<attribute name="k63" type="java.lang.Double"/>
+<attribute name="k64" type="java.lang.Double"/>
+<attribute name="k65" type="java.lang.Double"/>
+<attribute name="k66" type="java.lang.Double"/>
+<attribute name="k67" type="java.lang.Double"/>
+<attribute name="k68" type="java.lang.Double"/>
+<attribute name="k69" type="java.lang.String"/>
+</relation>
+<relation name="left">
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.String"/>
+<attribute name="c4" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="c10" type="java.lang.Double"/>
+<attribute name="c11" type="java.lang.Double"/>
+<attribute name="c12" type="java.lang.Double"/>
+<attribute name="c13" type="java.lang.Double"/>
+<attribute name="c14" type="java.lang.String"/>
+<attribute name="c15" type="java.lang.String"/>
+<attribute name="c16" type="java.lang.Double"/>
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c18" type="java.lang.Integer"/>
+<attribute name="c19" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.String"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.String"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.lang.Double"/>
+<attribute name="c28" type="java.lang.Double"/>
+<attribute name="c29" type="java.lang.Double"/>
+<attribute name="c30" type="java.lang.Double"/>
+<attribute name="c31" type="java.lang.Double"/>
+<attribute name="c32" type="java.lang.Double"/>
+<attribute name="c33" type="java.lang.String"/>
+</relation>
+<relation name="right">
+<attribute name="k53" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="k54" type="java.lang.Integer"/>
+<attribute name="k55" type="java.lang.String"/>
+<attribute name="k56" type="java.lang.String"/>
+<attribute name="k57" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.String"/>
+<attribute name="k59" type="java.lang.String"/>
+<attribute name="k60" type="java.lang.String"/>
+<attribute name="k61" type="java.lang.String"/>
+<attribute name="k62" type="java.lang.String"/>
+<attribute name="k63" type="java.lang.Double"/>
+<attribute name="k64" type="java.lang.Double"/>
+<attribute name="k65" type="java.lang.Double"/>
+<attribute name="k66" type="java.lang.Double"/>
+<attribute name="k67" type="java.lang.Double"/>
+<attribute name="k68" type="java.lang.Double"/>
+<attribute name="k69" type="java.lang.String"/>
+</relation>
+<predicate type="equality" left="8" right="36"/>
+<predicate type="equality" left="18" right="36"/>
+</command>
+<command type="project">
+<relation name="T">
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c17" type="java.lang.Integer"/>
+</relation>
+<constant value="belongtos"/>
+<attribute name="c17"/>
+</command>
+<command type="access" relation="YahooPlaceRelationship" access-method="yh_geo_rel">
+<relation name="T">
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c34" type="java.lang.Integer"/>
+<attribute name="c50" type="java.lang.String"/>
+<attribute name="c51" type="java.lang.String"/>
+<attribute name="c52" type="java.lang.String"/>
+</relation>
+<input source="relation" target="belongtos"/>
+<input source="of" target="c17"/>
+<input source="woeid" target="c34"/>
+<input source="placeTypeName" target="c50"/>
+<input source="name" target="c51"/>
+<input source="uri" target="c52"/>
+</command>
+<command type="rename">
+<relation name="T">
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c34" type="java.lang.Integer"/>
+<attribute name="c50" type="java.lang.String"/>
+<attribute name="c51" type="java.lang.String"/>
+<attribute name="c52" type="java.lang.String"/>
+</relation>
+<attribute name="belongtos"/>
+<attribute name="c17"/>
+<attribute name="c34"/>
+<attribute name="c50"/>
+<attribute name="c51"/>
+<attribute name="c52"/>
+</command>
+<command type="select">
+<relation name="T">
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c34" type="java.lang.Integer"/>
+<attribute name="c50" type="java.lang.String"/>
+<attribute name="c51" type="java.lang.String"/>
+<attribute name="c52" type="java.lang.String"/>
+</relation>
+<predicate type="equality" left="0" value="belongtos"/>
+</command>
+<command type="join">
+<relation name="T">
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.String"/>
+<attribute name="c4" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="c10" type="java.lang.Double"/>
+<attribute name="c11" type="java.lang.Double"/>
+<attribute name="c12" type="java.lang.Double"/>
+<attribute name="c13" type="java.lang.Double"/>
+<attribute name="c14" type="java.lang.String"/>
+<attribute name="c15" type="java.lang.String"/>
+<attribute name="c16" type="java.lang.Double"/>
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c18" type="java.lang.Integer"/>
+<attribute name="c19" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.String"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.String"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.lang.Double"/>
+<attribute name="c28" type="java.lang.Double"/>
+<attribute name="c29" type="java.lang.Double"/>
+<attribute name="c30" type="java.lang.Double"/>
+<attribute name="c31" type="java.lang.Double"/>
+<attribute name="c32" type="java.lang.Double"/>
+<attribute name="c33" type="java.lang.String"/>
+<attribute name="k53" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="k54" type="java.lang.Integer"/>
+<attribute name="k55" type="java.lang.String"/>
+<attribute name="k56" type="java.lang.String"/>
+<attribute name="k57" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.String"/>
+<attribute name="k59" type="java.lang.String"/>
+<attribute name="k60" type="java.lang.String"/>
+<attribute name="k61" type="java.lang.String"/>
+<attribute name="k62" type="java.lang.String"/>
+<attribute name="k63" type="java.lang.Double"/>
+<attribute name="k64" type="java.lang.Double"/>
+<attribute name="k65" type="java.lang.Double"/>
+<attribute name="k66" type="java.lang.Double"/>
+<attribute name="k67" type="java.lang.Double"/>
+<attribute name="k68" type="java.lang.Double"/>
+<attribute name="k69" type="java.lang.String"/>
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c34" type="java.lang.Integer"/>
+<attribute name="c50" type="java.lang.String"/>
+<attribute name="c51" type="java.lang.String"/>
+<attribute name="c52" type="java.lang.String"/>
+</relation>
+<relation name="left">
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.String"/>
+<attribute name="c4" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="c10" type="java.lang.Double"/>
+<attribute name="c11" type="java.lang.Double"/>
+<attribute name="c12" type="java.lang.Double"/>
+<attribute name="c13" type="java.lang.Double"/>
+<attribute name="c14" type="java.lang.String"/>
+<attribute name="c15" type="java.lang.String"/>
+<attribute name="c16" type="java.lang.Double"/>
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c18" type="java.lang.Integer"/>
+<attribute name="c19" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.String"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.String"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.lang.Double"/>
+<attribute name="c28" type="java.lang.Double"/>
+<attribute name="c29" type="java.lang.Double"/>
+<attribute name="c30" type="java.lang.Double"/>
+<attribute name="c31" type="java.lang.Double"/>
+<attribute name="c32" type="java.lang.Double"/>
+<attribute name="c33" type="java.lang.String"/>
+<attribute name="k53" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="k54" type="java.lang.Integer"/>
+<attribute name="k55" type="java.lang.String"/>
+<attribute name="k56" type="java.lang.String"/>
+<attribute name="k57" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.String"/>
+<attribute name="k59" type="java.lang.String"/>
+<attribute name="k60" type="java.lang.String"/>
+<attribute name="k61" type="java.lang.String"/>
+<attribute name="k62" type="java.lang.String"/>
+<attribute name="k63" type="java.lang.Double"/>
+<attribute name="k64" type="java.lang.Double"/>
+<attribute name="k65" type="java.lang.Double"/>
+<attribute name="k66" type="java.lang.Double"/>
+<attribute name="k67" type="java.lang.Double"/>
+<attribute name="k68" type="java.lang.Double"/>
+<attribute name="k69" type="java.lang.String"/>
+</relation>
+<relation name="right">
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c34" type="java.lang.Integer"/>
+<attribute name="c50" type="java.lang.String"/>
+<attribute name="c51" type="java.lang.String"/>
+<attribute name="c52" type="java.lang.String"/>
+</relation>
+<predicate type="equality" left="17" right="54"/>
+</command>
+<command type="project">
+<relation name="T">
+<attribute name="c34" type="java.lang.Integer"/>
+</relation>
+<attribute name="c34"/>
+</command>
+<command type="access" relation="YahooPlaces" access-method="yh_geo_woeid">
+<relation name="T">
+<attribute name="c34" type="java.lang.Integer"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c35" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="c36" type="java.lang.String"/>
+<attribute name="c37" type="java.lang.String"/>
+<attribute name="c38" type="java.lang.String"/>
+<attribute name="c39" type="java.lang.String"/>
+<attribute name="c40" type="java.lang.String"/>
+<attribute name="c41" type="java.lang.String"/>
+<attribute name="c42" type="java.lang.String"/>
+<attribute name="c43" type="java.lang.Double"/>
+<attribute name="c44" type="java.lang.Double"/>
+<attribute name="c45" type="java.lang.Double"/>
+<attribute name="c46" type="java.lang.Double"/>
+<attribute name="c47" type="java.lang.Double"/>
+<attribute name="c48" type="java.lang.Double"/>
+<attribute name="c49" type="java.lang.String"/>
+</relation>
+<input source="woeid" target="c34"/>
+<input source="name" target="Asia"/>
+<input source="type" target="c35"/>
+<input source="placeTypeName" target="Continent"/>
+<input source="country" target="c36"/>
+<input source="admin1" target="c37"/>
+<input source="admin2" target="c38"/>
+<input source="admin3" target="c39"/>
+<input source="locality1" target="c40"/>
+<input source="locality2" target="c41"/>
+<input source="postal" target="c42"/>
+<input source="centroid_lat" target="c43"/>
+<input source="centroid_lng" target="c44"/>
+<input source="bboxNorth" target="c45"/>
+<input source="bboxSouth" target="c46"/>
+<input source="bboxEast" target="c47"/>
+<input source="bboxWest" target="c48"/>
+<input source="timezone" target="c49"/>
+</command>
+<command type="rename">
+<relation name="T">
+<attribute name="c34" type="java.lang.Integer"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c35" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="c36" type="java.lang.String"/>
+<attribute name="c37" type="java.lang.String"/>
+<attribute name="c38" type="java.lang.String"/>
+<attribute name="c39" type="java.lang.String"/>
+<attribute name="c40" type="java.lang.String"/>
+<attribute name="c41" type="java.lang.String"/>
+<attribute name="c42" type="java.lang.String"/>
+<attribute name="c43" type="java.lang.Double"/>
+<attribute name="c44" type="java.lang.Double"/>
+<attribute name="c45" type="java.lang.Double"/>
+<attribute name="c46" type="java.lang.Double"/>
+<attribute name="c47" type="java.lang.Double"/>
+<attribute name="c48" type="java.lang.Double"/>
+<attribute name="c49" type="java.lang.String"/>
+</relation>
+<attribute name="c34"/>
+<attribute name="Asia"/>
+<attribute name="c35"/>
+<attribute name="Continent"/>
+<attribute name="c36"/>
+<attribute name="c37"/>
+<attribute name="c38"/>
+<attribute name="c39"/>
+<attribute name="c40"/>
+<attribute name="c41"/>
+<attribute name="c42"/>
+<attribute name="c43"/>
+<attribute name="c44"/>
+<attribute name="c45"/>
+<attribute name="c46"/>
+<attribute name="c47"/>
+<attribute name="c48"/>
+<attribute name="c49"/>
+</command>
+<command type="select">
+<relation name="T">
+<attribute name="c34" type="java.lang.Integer"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c35" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="c36" type="java.lang.String"/>
+<attribute name="c37" type="java.lang.String"/>
+<attribute name="c38" type="java.lang.String"/>
+<attribute name="c39" type="java.lang.String"/>
+<attribute name="c40" type="java.lang.String"/>
+<attribute name="c41" type="java.lang.String"/>
+<attribute name="c42" type="java.lang.String"/>
+<attribute name="c43" type="java.lang.Double"/>
+<attribute name="c44" type="java.lang.Double"/>
+<attribute name="c45" type="java.lang.Double"/>
+<attribute name="c46" type="java.lang.Double"/>
+<attribute name="c47" type="java.lang.Double"/>
+<attribute name="c48" type="java.lang.Double"/>
+<attribute name="c49" type="java.lang.String"/>
+</relation>
+<predicate type="equality" left="1" value="Asia"/>
+<predicate type="equality" left="3" value="Continent"/>
+</command>
+<command type="join">
+<relation name="T">
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.String"/>
+<attribute name="c4" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="c10" type="java.lang.Double"/>
+<attribute name="c11" type="java.lang.Double"/>
+<attribute name="c12" type="java.lang.Double"/>
+<attribute name="c13" type="java.lang.Double"/>
+<attribute name="c14" type="java.lang.String"/>
+<attribute name="c15" type="java.lang.String"/>
+<attribute name="c16" type="java.lang.Double"/>
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c18" type="java.lang.Integer"/>
+<attribute name="c19" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.String"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.String"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.lang.Double"/>
+<attribute name="c28" type="java.lang.Double"/>
+<attribute name="c29" type="java.lang.Double"/>
+<attribute name="c30" type="java.lang.Double"/>
+<attribute name="c31" type="java.lang.Double"/>
+<attribute name="c32" type="java.lang.Double"/>
+<attribute name="c33" type="java.lang.String"/>
+<attribute name="k53" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="k54" type="java.lang.Integer"/>
+<attribute name="k55" type="java.lang.String"/>
+<attribute name="k56" type="java.lang.String"/>
+<attribute name="k57" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.String"/>
+<attribute name="k59" type="java.lang.String"/>
+<attribute name="k60" type="java.lang.String"/>
+<attribute name="k61" type="java.lang.String"/>
+<attribute name="k62" type="java.lang.String"/>
+<attribute name="k63" type="java.lang.Double"/>
+<attribute name="k64" type="java.lang.Double"/>
+<attribute name="k65" type="java.lang.Double"/>
+<attribute name="k66" type="java.lang.Double"/>
+<attribute name="k67" type="java.lang.Double"/>
+<attribute name="k68" type="java.lang.Double"/>
+<attribute name="k69" type="java.lang.String"/>
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c34" type="java.lang.Integer"/>
+<attribute name="c50" type="java.lang.String"/>
+<attribute name="c51" type="java.lang.String"/>
+<attribute name="c52" type="java.lang.String"/>
+<attribute name="c34" type="java.lang.Integer"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c35" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="c36" type="java.lang.String"/>
+<attribute name="c37" type="java.lang.String"/>
+<attribute name="c38" type="java.lang.String"/>
+<attribute name="c39" type="java.lang.String"/>
+<attribute name="c40" type="java.lang.String"/>
+<attribute name="c41" type="java.lang.String"/>
+<attribute name="c42" type="java.lang.String"/>
+<attribute name="c43" type="java.lang.Double"/>
+<attribute name="c44" type="java.lang.Double"/>
+<attribute name="c45" type="java.lang.Double"/>
+<attribute name="c46" type="java.lang.Double"/>
+<attribute name="c47" type="java.lang.Double"/>
+<attribute name="c48" type="java.lang.Double"/>
+<attribute name="c49" type="java.lang.String"/>
+</relation>
+<relation name="left">
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.String"/>
+<attribute name="c4" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="c10" type="java.lang.Double"/>
+<attribute name="c11" type="java.lang.Double"/>
+<attribute name="c12" type="java.lang.Double"/>
+<attribute name="c13" type="java.lang.Double"/>
+<attribute name="c14" type="java.lang.String"/>
+<attribute name="c15" type="java.lang.String"/>
+<attribute name="c16" type="java.lang.Double"/>
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c18" type="java.lang.Integer"/>
+<attribute name="c19" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.String"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.String"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.lang.Double"/>
+<attribute name="c28" type="java.lang.Double"/>
+<attribute name="c29" type="java.lang.Double"/>
+<attribute name="c30" type="java.lang.Double"/>
+<attribute name="c31" type="java.lang.Double"/>
+<attribute name="c32" type="java.lang.Double"/>
+<attribute name="c33" type="java.lang.String"/>
+<attribute name="k53" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="k54" type="java.lang.Integer"/>
+<attribute name="k55" type="java.lang.String"/>
+<attribute name="k56" type="java.lang.String"/>
+<attribute name="k57" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.String"/>
+<attribute name="k59" type="java.lang.String"/>
+<attribute name="k60" type="java.lang.String"/>
+<attribute name="k61" type="java.lang.String"/>
+<attribute name="k62" type="java.lang.String"/>
+<attribute name="k63" type="java.lang.Double"/>
+<attribute name="k64" type="java.lang.Double"/>
+<attribute name="k65" type="java.lang.Double"/>
+<attribute name="k66" type="java.lang.Double"/>
+<attribute name="k67" type="java.lang.Double"/>
+<attribute name="k68" type="java.lang.Double"/>
+<attribute name="k69" type="java.lang.String"/>
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c17" type="java.lang.Integer"/>
+<attribute name="c34" type="java.lang.Integer"/>
+<attribute name="c50" type="java.lang.String"/>
+<attribute name="c51" type="java.lang.String"/>
+<attribute name="c52" type="java.lang.String"/>
+</relation>
+<relation name="right">
+<attribute name="c34" type="java.lang.Integer"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="c35" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="c36" type="java.lang.String"/>
+<attribute name="c37" type="java.lang.String"/>
+<attribute name="c38" type="java.lang.String"/>
+<attribute name="c39" type="java.lang.String"/>
+<attribute name="c40" type="java.lang.String"/>
+<attribute name="c41" type="java.lang.String"/>
+<attribute name="c42" type="java.lang.String"/>
+<attribute name="c43" type="java.lang.Double"/>
+<attribute name="c44" type="java.lang.Double"/>
+<attribute name="c45" type="java.lang.Double"/>
+<attribute name="c46" type="java.lang.Double"/>
+<attribute name="c47" type="java.lang.Double"/>
+<attribute name="c48" type="java.lang.Double"/>
+<attribute name="c49" type="java.lang.String"/>
+</relation>
+<predicate type="equality" left="4" right="60"/>
+<predicate type="equality" left="55" right="59"/>
+</command>
+<command type="project">
+<relation name="T">
+<attribute name="c8" type="java.lang.String"/>
+<attribute name="c17" type="java.lang.Integer"/>
+</relation>
+<attribute name="c8"/>
+<attribute name="c17"/>
+</command>
+</plan>

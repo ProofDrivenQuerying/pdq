@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query name="Example 1" description="" type="conjunctive">
+	<body>
+
+
+		<atom name="EBEYEMolecule">
+			<constant value="CHEMBL7097"/>
+			<variable name="alogp" />
+			<variable name="full_mwt"/>
+			<variable name="canonical_smiles"/>
+		</atom>
+
+
+	</body>
+	<head name="Q">
+
+			<variable name="alogp" />
+			<variable name="full_mwt"/>
+			<variable name="canonical_smiles"/>
+	</head>
+
+</query>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+	<sources>
+		<source name="eyechembl" file="services/ebeye-chembl-services.xml"
+			discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" />
+			
+		<source name="eyeuniprot" file="services/ebeye-uniprot-services.xml"
+			discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" />
+	</sources>
+	<relations>
+		<relation name="EBEYEActivity" source="eyechembl" size="200000">
+			<access-method name="ebeye_chembl_activity_limited" />
+			<access-method name="ebeye_chembl_activity_limited_1" />
+			<access-method name="ebeye_chembl_activity_limited_2" />
+			<access-method name="ebeye_chembl_activity_limited_3" />
+		</relation>
+
+		<relation name="EBEYEAssay" source="eyechembl" size="25000">
+			<access-method name="ebeye_chembl_assay_limited" />
+			<access-method name="ebeye_chembl_assay_limited_1" />
+		</relation>
+
+		<relation name="EBEYEDocument" source="eyechembl" size="1">
+			<access-method name="ebeye_chembl_document_limited" />
+			<access-method name="ebeye_chembl_document_limited_1" />
+		</relation>
+
+		<relation name="EBEYEMolecule" source="eyechembl" size="1">
+			<access-method name="ebeye_chembl_molecule_limited" />
+		</relation>
+
+		<relation name="EBEYETarget" source="eyechembl" size="1000">
+			<access-method name="ebeye_chembl_target_limited" />
+			<access-method name="ebeye_chembl_target_limited_1" />
+			<access-method name="ebeye_chembl_target_limited_2" />
+		</relation>
+
+		<relation name="EBEYETargetComponent" source="eyechembl" size="1000">
+			<access-method name="ebeye_chembl_target_component_limited" />
+			<access-method name="ebeye_chembl_target_component_limited_1" />
+			<access-method name="ebeye_chembl_target_component_limited_2" />
+		</relation>
+		
+		<relation name="EBEYEProtein" source="eyeuniprot" size="1000000">
+			<access-method name="ebeye_uniprot_protein_1" />
+			<access-method name="ebeye_uniprot_protein_2" />
+			<access-method name="ebeye_uniprot_protein_3" />
+		</relation>
+	</relations>
+</schema>
