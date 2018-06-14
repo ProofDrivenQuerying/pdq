@@ -84,15 +84,15 @@ public class TestAccessRepository extends PdqTest {
 		}
 		Assert.assertEquals(25, counter);
 		try {
-			DbIOManager.exportAccessMethod(target, new File("test/schemas/accesses/dbAccessMethodOut.xml"));
+			DbIOManager.exportAccessMethod(target, new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml"));
 		} catch (Throwable t) {
 			t.printStackTrace();
 			t.printStackTrace();
 		}
-		Assert.assertEquals(new File("test/schemas/accesses/dbAccessMethodOut.xml").length(),
-				new File("test/schemas/accesses/dbAccessMethod.xml").length());
+		Assert.assertEquals(new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml").length(),
+				new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethod.xml").length());
 		target.close();
-		new File("test/schemas/accesses/dbAccessMethodOut.xml").delete();
+		new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml").delete();
 	}
 
 	@Test
@@ -126,24 +126,24 @@ public class TestAccessRepository extends PdqTest {
 		}
 		Assert.assertEquals(25, counter);
 		try {
-			DbIOManager.exportAccessMethod(target, new File("test/schemas/accesses/InMemoryAccessMethodOut.xml"));
+			DbIOManager.exportAccessMethod(target, new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml"));
 		} catch (Throwable t) {
 			t.printStackTrace();
 			t.printStackTrace();
 		}
-		Assert.assertEquals(new File("test/schemas/accesses/InMemoryAccessMethodOut.xml").length(),
-				new File("test/schemas/accesses/InMemoryAccessMethod.xml").length());
+		Assert.assertEquals(new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml").length(),
+				new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethod.xml").length());
 		target.close();
-		new File("test/schemas/accesses/InMemoryAccessMethodOut.xml").delete();
+		new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml").delete();
 	}
 
 	@Test
 	public void testAccessImport() throws JAXBException {
-
+		
 		SqlAccessMethod target = null;
 		try {
 			target = (SqlAccessMethod) DbIOManager
-					.importAccess(new File("test/schemas/accesses/dbAccessMethod.xml"));
+					.importAccess(new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethod.xml"));
 		} catch (Throwable t) {
 			t.printStackTrace();
 			t.printStackTrace();
@@ -168,7 +168,7 @@ public class TestAccessRepository extends PdqTest {
 		InMemoryAccessMethod target = null;
 		try {
 			target = (InMemoryAccessMethod) DbIOManager
-					.importAccess(new File("test/schemas/accesses/InMemoryAccessMethod.xml"));
+					.importAccess(new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethod.xml"));
 		} catch (Throwable t) {
 			t.printStackTrace();
 			t.printStackTrace();
@@ -189,7 +189,7 @@ public class TestAccessRepository extends PdqTest {
 
 	@Test
 	public void testAccessRepositorty() throws Exception {
-		AccessRepository repo = AccessRepository.getRepository("test/schemas/accesses");
+		AccessRepository repo = AccessRepository.getRepository("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses");
 		ExecutableAccessMethod accessMethod = repo.getAccess("NATION");
 		testReadingData(accessMethod);
 		ExecutableAccessMethod accessMethod2 = repo.getAccess("NATION_MEM");

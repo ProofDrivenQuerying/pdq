@@ -74,8 +74,9 @@ public class SqlAccessMethodTest {
 
 		relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(this.attrs_nation.clone());
-
 		String name = "NATION";
+		when(relation.getName()).thenReturn(name);
+
 		inputs = new Integer[0];
 		target = new SqlAccessMethod(name, this.attrs_N, inputs, relation, this.attrMap_nation, this.getProperties());
 
@@ -114,6 +115,7 @@ public class SqlAccessMethodTest {
 		 * BUGFIX 12/01/2018
 		 */
 		relation = Mockito.mock(Relation.class);
+		when(relation.getName()).thenReturn(name);
 		when(relation.getAttributes()).thenReturn(this.attrs_nation.clone());
 
 		// Specify input attributes in the access method constructor. 
@@ -177,6 +179,7 @@ public class SqlAccessMethodTest {
 		when(relation.getAttributes()).thenReturn(this.attrs_nation.clone());
 
 		String name = "NATION";
+		when(relation.getName()).thenReturn(name);
 
 		/*
 		 * Free access.
@@ -220,6 +223,7 @@ public class SqlAccessMethodTest {
 		when(relation.getAttributes()).thenReturn(this.attrs_nation.clone());
 
 		String name = "NATION";
+		when(relation.getName()).thenReturn(name);
 
 		/*
 		 * Access with inputs on position 1 (N_NAME).
