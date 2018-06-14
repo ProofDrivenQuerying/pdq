@@ -22,6 +22,12 @@ import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.adapted.AdaptedDbSchema;
+import uk.ac.ox.cs.pdq.datasources.services.RESTAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.services.RESTAccessMethodGenerator;
+import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
+import uk.ac.ox.cs.pdq.datasources.services.service.Service;
+import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
+import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -166,8 +172,27 @@ public class DbIOManager extends IOManager {
 			XmlExecutableAccessMethod xmlAccessMethod = (XmlExecutableAccessMethod) jaxbUnmarshaller.unmarshal(xmlFile);
 			return xmlAccessMethod.toExecutableAccessMethod(null);
 		} catch (Throwable t) {
-			throw new JAXBException("Error while parsing file: " + xmlFile.getAbsolutePath(), t);
+			// the xml was not a SqlAccessMethod or a InMemoryAccessMethod, so assume it is a RESTAccessMethod.
+			JAXBContext jaxbContext = JAXBContext.newInstance(Service.class);
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			Service sr = (Service) jaxbUnmarshaller.unmarshal(xmlFile);
+			if(sr.getServiceGroup() == null)
+				throw new JAXBException("No service group attribute: " + xmlFile.getAbsolutePath(), t);
+			String filepath = xmlFile.getParent() + "/" + sr.getServiceGroup();
+			File sgrFile = new File(filepath);
+			if (!sgrFile.exists())
+				throw new JAXBException("File not found: " + sgrFile.getAbsolutePath(), t);
+			jaxbContext = JAXBContext.newInstance(ServiceGroup.class);
+			jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			ServiceGroup sgr = (ServiceGroup) jaxbUnmarshaller.unmarshal(sgrFile);
+			for(int i = 0; i < sr.getAccessMethod().length; /*i++*/) // Only returns first one
+			{
+				RESTExecutableAccessMethodSpecification am = sr.getAccessMethod()[i];
+				RESTAccessMethodGenerator ramg = new RESTAccessMethodGenerator(sgr, sr, am);
+				return ramg.getRestAccessMethod();
+			}	
 		}
+		return null;
 	}
 
 	/**
