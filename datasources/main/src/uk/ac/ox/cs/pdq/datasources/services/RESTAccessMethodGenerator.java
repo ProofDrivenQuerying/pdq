@@ -28,7 +28,7 @@ public class RESTAccessMethodGenerator {
 	
 	private WebTarget target;
 	private MediaType mediaType;
-	private RESTAccessMethod[] restAccessMethods;
+	private RESTAccessMethod restAccessMethod;
 
 	// Constructor takes XML-derived objects and builds a structure ready to run
 	public RESTAccessMethodGenerator(ServiceGroup sgr, Service sr, RESTExecutableAccessMethodSpecification am)
@@ -41,37 +41,31 @@ public class RESTAccessMethodGenerator {
 		
 		
 		// Setup executable access method
-		RESTExecutableAccessMethodSpecification[] reamss = sr.getAccessMethod();
-		restAccessMethods = new RESTAccessMethod[reamss.length];
-		for(int i = 0; i < reamss.length; i++)
+		RESTExecutableAccessMethodAttributeSpecification[] attrspecs = am.getAttributes();
+		Attribute[] accessMethodAttributes = new Attribute[attrspecs.length];
+		List<Attribute> relationAttributes = new ArrayList<>();
+		Integer[] integerinputs = new Integer[attrspecs.length];
+		Map<Attribute, Attribute> map = new HashMap<Attribute, Attribute>();
+		for(int j = 0; j < accessMethodAttributes.length; j++)
 		{
-			RESTExecutableAccessMethodSpecification reams = reamss[i];
-			RESTExecutableAccessMethodAttributeSpecification[] attrspecs = reams.getAttributes();
-			Attribute[] accessMethodAttributes = new Attribute[attrspecs.length];
-			List<Attribute> relationAttributes = new ArrayList<>();
-			Integer[] integerinputs = new Integer[attrspecs.length];
-			Map<Attribute, Attribute> map = new HashMap<Attribute, Attribute>();
-			for(int j = 0; j < accessMethodAttributes.length; j++)
+			RESTExecutableAccessMethodAttributeSpecification attrspec = attrspecs[j];
+			accessMethodAttributes[j] = Attribute.create(typeType(attrspec.getType()), attrspec.getName());
+			if((attrspec.getInput() != null) && (attrspec.getInput().equals("true")))
 			{
-				RESTExecutableAccessMethodAttributeSpecification attrspec = attrspecs[j];
-				accessMethodAttributes[j] = Attribute.create(typeType(attrspec.getType()), attrspec.getName());
-				if((attrspec.getInput() != null) && (attrspec.getInput().equals("true")))
-				{
-					integerinputs[j] = new Integer(j);
-				}
-				else
-				{
-					integerinputs[j] = new Integer(-1);
-				}
-				if (attrspec.getRelationAttribute()!=null) {
-					Attribute a = Attribute.create(typeType(attrspec.getType()), (attrspec.getRelationAttribute() == null) ? "" : attrspec.getRelationAttribute());
-					relationAttributes.add(a);
-					map.put(accessMethodAttributes[j], a);
-				}
+				integerinputs[j] = new Integer(j);
 			}
-			Relation relation = Relation.create(reams.getName(), relationAttributes.toArray(new Attribute[relationAttributes.size()]));
-			restAccessMethods[i] = new RESTAccessMethod(accessMethodAttributes, eliminateMinus1(integerinputs), relation, map, this.target, this.mediaType, sgr, sr, am);
+			else
+			{
+				integerinputs[j] = new Integer(-1);
+			}
+			if (attrspec.getRelationAttribute()!=null) {
+				Attribute a = Attribute.create(typeType(attrspec.getType()), (attrspec.getRelationAttribute() == null) ? "" : attrspec.getRelationAttribute());
+				relationAttributes.add(a);
+				map.put(accessMethodAttributes[j], a);
+			}
 		}
+		Relation relation = Relation.create(am.getName(), relationAttributes.toArray(new Attribute[relationAttributes.size()]));
+		restAccessMethod = new RESTAccessMethod(accessMethodAttributes, eliminateMinus1(integerinputs), relation, map, this.target, this.mediaType, sgr, sr, am);
 	}
 	
 	// Conversion from string to type ... there may be a better way of doing this
@@ -115,8 +109,8 @@ public class RESTAccessMethodGenerator {
 		return result;
 	}
 	
-	public RESTAccessMethod[] getRestAccessMethods()
+	public RESTAccessMethod getRestAccessMethod()
 	{
-		return restAccessMethods;
+		return restAccessMethod;
 	}
 }
