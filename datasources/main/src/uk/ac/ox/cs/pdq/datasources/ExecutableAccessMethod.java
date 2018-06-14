@@ -199,9 +199,7 @@ public abstract class ExecutableAccessMethod extends AccessMethodDescriptor {
 	 *            inputs.
 	 * @return A {@code Stream} over {@code Tuple}s.
 	 */
-	protected Stream<Tuple> fetchTuples(Iterator<Tuple> inputTuples) {
-		return null;
-	}
+	protected abstract Stream<Tuple> fetchTuples(Iterator<Tuple> inputTuples);
 
 	public Iterable<Tuple> access(boolean relationSchema) {
 
@@ -283,11 +281,6 @@ public abstract class ExecutableAccessMethod extends AccessMethodDescriptor {
 		if (!relationSchema)
 			return super.getInputs();  
 		return this.getInputs();
-//		Map<Attribute, Attribute> attrMap = this.getAttributeMapping(false);
-//		List<Attribute> outputAttrs = Arrays.asList(this.outputAttributes(relationSchema));
-//
-//		return Arrays.stream(this.getInputs()).mapToInt(i -> outputAttrs.indexOf(attrMap.get(this.attributes[i])))
-//				.sorted().boxed().toArray(Integer[]::new);
 	}
 
 	/**
@@ -402,18 +395,6 @@ public abstract class ExecutableAccessMethod extends AccessMethodDescriptor {
 			attributeMapping.put(relation.getAttribute(0), relation.getAttribute(0));
 		return attributeMapping;
 	}
-
-//	/**
-//	 * Returns properties associated with this relation, these may be SQL connection
-//	 * parameters, web service settings, etc. depending on the underlying
-//	 * implementation. If no properties are defined, an empty {@code Properties}
-//	 * instance (not null) is returned.
-//	 * 
-//	 * @return The properties associated with this relation.
-//	 */
-//	public Properties getProperties() {
-//		return this.properties;
-//	}
 
 	/**
 	 * Converts the set of input attributes to an array of input indexes.
