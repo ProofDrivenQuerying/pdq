@@ -33,11 +33,8 @@ public class ServiceXmlTest {
 				TupleType tupleType = TupleType.DefaultFactory.createFromTyped();
 				Tuple input = tupleType.createTuple();
 				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am);
-				for(int j = 0; j < ream.getRestAccessMethods().length; j++)
-				{
-					Table t = ream.getRestAccessMethods()[j].access(input);
-					System.out.println(t);
-				}
+				Table t = ream.getRestAccessMethod().access(input);
+				System.out.println(t);
 			}
 		}
 		catch (Exception e)
@@ -62,11 +59,8 @@ public class ServiceXmlTest {
 				TupleType tupleType = TupleType.DefaultFactory.createFromTyped();
 				Tuple input = tupleType.createTuple();
 				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am);
-				for(int j = 0; j < ream.getRestAccessMethods().length; j++)
-				{
-					Table t = ream.getRestAccessMethods()[j].access(input);
-					System.out.println(t);
-				}
+				Table t = ream.getRestAccessMethod().access(input);
+				System.out.println(t);
 			}
 		}
 		catch (Exception e)
@@ -94,11 +88,8 @@ public class ServiceXmlTest {
 																			   Attribute.create(String.class, "temp4"));
 				Tuple input = tupleType.createTuple("1", "2", "3", "4");
 				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am);
-				for(int j = 0; j < ream.getRestAccessMethods().length; j++)
-				{
-					Table t = ream.getRestAccessMethods()[j].access(input);
-					System.out.println(t);
-				}
+				Table t = ream.getRestAccessMethod().access(input);
+				System.out.println(t);
 			}
 		}
 		catch (Exception e)
@@ -123,11 +114,8 @@ public class ServiceXmlTest {
 				TupleType tupleType = TupleType.DefaultFactory.createFromTyped(Attribute.create(String.class, "temp1"));
 				Tuple input = tupleType.createTuple("1");
 				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am);
-				for(int j = 0; j < ream.getRestAccessMethods().length; j++)
-				{
-					Table t = ream.getRestAccessMethods()[j].access(input);
-					System.out.println(t);
-				}
+				Table t = ream.getRestAccessMethod().access(input);
+				System.out.println(t);
 			}
 		}
 		catch (Exception e)
@@ -157,11 +145,8 @@ public class ServiceXmlTest {
 				   															   Attribute.create(String.class, "temp6"));
 				Tuple input = tupleType.createTuple("1", "2", "3", "4", "5", "6");
 				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am);
-				for(int j = 0; j < ream.getRestAccessMethods().length; j++)
-				{
-					Table t = ream.getRestAccessMethods()[j].access(input);
-					System.out.println(t);
-				}
+				Table t = ream.getRestAccessMethod().access(input);
+				System.out.println(t);
 			}
 		}
 		catch (Exception e)
