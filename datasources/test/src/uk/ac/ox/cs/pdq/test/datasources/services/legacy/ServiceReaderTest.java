@@ -8,17 +8,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.Service;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceReader;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceRepository;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
 
 /**
  * 
