@@ -22,12 +22,10 @@ import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.adapted.AdaptedDbSchema;
-import uk.ac.ox.cs.pdq.datasources.services.RESTAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.services.RESTAccessMethodGenerator;
 import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
-import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
