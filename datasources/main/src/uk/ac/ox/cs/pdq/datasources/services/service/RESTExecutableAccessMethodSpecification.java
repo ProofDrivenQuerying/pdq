@@ -11,12 +11,13 @@ import javax.xml.bind.annotation.XmlType;
 // AccessMethod is the XML element which corresponds to the <access-method> tag.
 // It represents the results of parsing the XML as an in-memory object.
 // It contains AccessMethodAttributes and has name, type and cost attributes.
-@XmlType (propOrder= {"name", "type", "cost", "attributes"})
+@XmlType (propOrder= {"name", "type", "cost", "relationName", "attributes"})
 public class RESTExecutableAccessMethodSpecification {
 	
 	private String name;
 	private String type;
 	private String cost;
+	private String relationName;
 	private RESTExecutableAccessMethodAttributeSpecification[] attributes;
 	
 	@XmlAttribute (required=true)
@@ -44,6 +45,15 @@ public class RESTExecutableAccessMethodSpecification {
 
 	public void setCost(String cost) {
 		this.cost = cost;
+	}
+
+	@XmlAttribute (name="relation-name", required=true)
+	public String getRelationName() {
+		return relationName;
+	}
+
+	public void setRelationName(String relationName) {
+		this.relationName = relationName;
 	}
 
 	@XmlElement (name="attribute", required=true)

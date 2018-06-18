@@ -64,8 +64,8 @@ public class RESTAccessMethodGenerator {
 				map.put(accessMethodAttributes[j], a);
 			}
 		}
-		Relation relation = Relation.create(am.getName(), relationAttributes.toArray(new Attribute[relationAttributes.size()]));
-		restAccessMethod = new RESTAccessMethod(accessMethodAttributes, eliminateMinus1(integerinputs), relation, map, this.target, this.mediaType, sgr, sr, am);
+		Relation relation = Relation.create((am.getRelationName() == null) ? "<name>" : am.getRelationName(), relationAttributes.toArray(new Attribute[relationAttributes.size()]));
+		restAccessMethod = new RESTAccessMethod(am.getName(), accessMethodAttributes, eliminateMinus1(integerinputs), relation, map, this.target, this.mediaType, sgr, sr, am);
 	}
 	
 	// Conversion from string to type ... there may be a better way of doing this

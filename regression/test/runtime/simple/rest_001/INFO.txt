@@ -1,1 +1,1 @@
-This test case is a clone of the regression/test/linear/fast/benchmark/mysql/std_006 test. The generated expected_plan.xml was manually updated with the correct types. The provided example data should contain 2 matching records.
+This test case is a clone of std_006 followed by extensive editing to make it a rest method. It retrieves 20 results from the Jersey Web Target URL.
