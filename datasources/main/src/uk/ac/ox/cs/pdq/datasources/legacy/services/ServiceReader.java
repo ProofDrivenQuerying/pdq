@@ -24,8 +24,8 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer;
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLReader;
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
+import uk.ac.ox.cs.pdq.datasources.io.xml.AbstractXMLReader;
+import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.policies.PolicyFactory;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.InputMethod;
