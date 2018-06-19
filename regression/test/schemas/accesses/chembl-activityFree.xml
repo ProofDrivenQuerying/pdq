@@ -1,0 +1,44 @@
+	<service
+		name="ActivityFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/activity.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="activities"
+		service-group="service-group-1">
+
+		<policy name="1000_items_per_page" />
+
+		<access-method type="FREE" 						name="chembl-activityFree" cost="1000.0" relation-name="activityFree">
+		<attribute name="activity_comment"    			output="true" type="String"    	relation-attribute="activity_comment" path="activity_comment"/>
+ 		<attribute name="activity_id"     				output="true" type="String"   	relation-attribute="activity_id" path="activity_id"/>
+		<attribute name="assay_chembl_id"     			output="true" type="String"    	relation-attribute="assay_chembl_id" path="assay_chembl_id"/>
+		<attribute name="assay_description" 			output="true" type="String" 	relation-attribute="assay_description" path="assay_description"/>
+		<attribute name="assay_type"    				output="true" type="String" 	relation-attribute="assay_type" path="assay_type"/>
+		<attribute name="bao_endpoint"        			output="true" type="String" 	relation-attribute="bao_endpoint" path="bao_endpoint"/> 
+		<attribute name="bao_format"        			output="true" type="String" 	relation-attribute="bao_format" path="bao_format"/> 
+		<attribute name="canonical_smiles"        		output="true" type="String" 	relation-attribute="canonical_smiles" path="canonical_smiles"/>
+		<attribute name="data_validity_comment"        	output="true" type="String" 	relation-attribute="data_validity_comment" path="data_validity_comment"/>
+		<attribute name="document_chembl_id"     		output="true" type="String" 	relation-attribute="document_chembl_id" path="document_chembl_id"/>
+		<attribute name="document_journal"     			output="true" type="String" 	relation-attribute="document_journal" path="document_journal"/>
+		<attribute name="document_year"     			output="true" type="String" 	relation-attribute="document_year" path="document_year"/> 
+		<attribute name="molecule_chembl_id"        	output="true" type="String" 	relation-attribute="molecule_chembl_id" path="molecule_chembl_id"/>
+		<attribute name="pchembl_value"  				output="true" type="Double" 	relation-attribute="pchembl_value" path="pchembl_value"/>
+		<attribute name="potential_duplicate"  			output="true" type="String" 	relation-attribute="potential_duplicate" path="potential_duplicate"/>
+		<attribute name="published_relation"  			output="true" type="String" 	relation-attribute="published_relation" path="published_relation"/>
+		<attribute name="published_type"  				output="true" type="String" 	relation-attribute="published_type" path="published_type"/>
+		<attribute name="published_units"  				output="true" type="String" 	relation-attribute="published_units" path="published_units"/>
+		<attribute name="published_value"  				output="true" type="String" 	relation-attribute="published_value" path="published_value"/>
+		<attribute name="qudt_units"  					output="true" type="String" 	relation-attribute="qudt_units" path="qudt_units"/>
+		<attribute name="record_id"  					output="true" type="String" 	relation-attribute="record_id" path="record_id"/>
+		<attribute name="standard_flag"  				output="true" type="Boolean" 	relation-attribute="standard_flag" path="standard_flag"/>
+		<attribute name="standard_relation"  			output="true" type="String" 	relation-attribute="standard_relation" path="standard_relation"/>
+		<attribute name="standard_type"  				output="true" type="String" 	relation-attribute="standard_type" path="standard_type"/>
+		<attribute name="standard_units"  				output="true" type="String" 	relation-attribute="standard_units" path="standard_units"/>
+		<attribute name="standard_value"  				output="true" type="Double" 	relation-attribute="standard_value" path="standard_value"/>
+		<attribute name="target_chembl_id"  			output="true" type="String" 	relation-attribute="target_chembl_id" path="target_chembl_id"/>
+		<attribute name="target_organism"  				output="true" type="String" 	relation-attribute="target_organism" path="target_organism"/>
+		<attribute name="target_pref_name"  			output="true" type="String" 	relation-attribute="target_pref_name" path="target_pref_name"/>
+		<attribute name="uo_units"  					output="true" type="String" 	relation-attribute="uo_units" path="uo_units"/>
+		</access-method>
+	</service>

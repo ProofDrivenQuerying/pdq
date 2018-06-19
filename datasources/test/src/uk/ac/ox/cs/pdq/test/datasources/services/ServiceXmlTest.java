@@ -33,7 +33,7 @@ public class ServiceXmlTest {
 				TupleType tupleType = TupleType.DefaultFactory.createFromTyped();
 				Tuple input = tupleType.createTuple();
 				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am);
-				Table t = ream.getRestAccessMethod().access(input);
+				Table t = ream.getRestAccessMethod().accessTable(input);
 				System.out.println(t);
 			}
 		}
@@ -59,7 +59,7 @@ public class ServiceXmlTest {
 				TupleType tupleType = TupleType.DefaultFactory.createFromTyped();
 				Tuple input = tupleType.createTuple();
 				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am);
-				Table t = ream.getRestAccessMethod().access(input);
+				Table t = ream.getRestAccessMethod().accessTable(input);
 				System.out.println(t);
 			}
 		}
@@ -88,7 +88,7 @@ public class ServiceXmlTest {
 																			   Attribute.create(String.class, "temp4"));
 				Tuple input = tupleType.createTuple("1", "2", "3", "4");
 				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am);
-				Table t = ream.getRestAccessMethod().access(input);
+				Table t = ream.getRestAccessMethod().accessTable(input);
 				System.out.println(t);
 			}
 		}
@@ -114,7 +114,7 @@ public class ServiceXmlTest {
 				TupleType tupleType = TupleType.DefaultFactory.createFromTyped(Attribute.create(String.class, "temp1"));
 				Tuple input = tupleType.createTuple("1");
 				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am);
-				Table t = ream.getRestAccessMethod().access(input);
+				Table t = ream.getRestAccessMethod().accessTable(input);
 				System.out.println(t);
 			}
 		}
@@ -145,7 +145,7 @@ public class ServiceXmlTest {
 				   															   Attribute.create(String.class, "temp6"));
 				Tuple input = tupleType.createTuple("1", "2", "3", "4", "5", "6");
 				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am);
-				Table t = ream.getRestAccessMethod().access(input);
+				Table t = ream.getRestAccessMethod().accessTable(input);
 				System.out.println(t);
 			}
 		}

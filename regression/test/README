@@ -37,12 +37,14 @@ II. Planner regression
 		plan will be displayed.
 	
 	b. Requirements before running.
-	You currently need to have MySQL installed with the appropriate user/right
-	for the chase to work. By default, the planner regression tests are run on
-	a database called "chase_planner_runner" with login/password "root/root"
-	You may also need Postgresql installed if you are testing psql-related cases,
-	such as Postgres black box cost estimation. The current default test folder
-	contains such tests.
+	You don't currently need to have MySQL installed. This is because the
+	default behaviour is to use the Internal Database which contains all the
+	tables it needs by default. if you do want to run with an External Database,
+	set the useInternalDatabaseManager setting to false in DatabaseParameters.java. 
+	By default, the planner regression tests are run on	a database called
+ 	"chase_planner_runner" with login/password "root/root" You may also need
+ 	Postgresql installed if you are testing psql-related cases, such as Postgres
+ 	black box cost estimation. The current default test folder contains such tests.
 	
 	c. Run
 	To run a batch of test cases, execute the following command:
@@ -82,9 +84,12 @@ III. Runtime regression
 		for individual tests sequentially.
 	
 	b. Requirements before running.
-	You currently need to have MySQL installed with the appropriate user/right
-	for the chase to work. By default, the runtime regression tests are run on
-	a database called "chase_regression_runner" with login/password "root/root".
+		You don't currently need to have MySQL installed. This is because the
+	default behaviour is to use the Internal Database which contains all the
+	tables it needs by default. if you do want to run with an External Database,
+	set the useInternalDatabaseManager setting to false in DatabaseParameters.java. 
+	By default, the planner regression tests are run on	a database called
+ 	"chase_regression_runner" with login/password "root/root"
 	You may also need the proper specific database installed if the cases you 
 	want to test are not backed by simple in-memory examples.
 	The current default test location has postgresql- and mysql-backed cases.
@@ -165,9 +170,14 @@ V. Proof regression
 		with a boolean value,
 	
 	b. Requirements before running.
-	You currently need to have MySQL installed with the appropriate user/right
-	for the chase to work. By default, the runtime regression tests are run on
-	a database called "chase_proof_runner" with login/password "root/root"
+	You don't currently need to have MySQL installed. This is because the
+	default behaviour is to use the Internal Database which contains all the
+	tables it needs by default. if you do want to run with an External Database,
+	set the useInternalDatabaseManager setting to false in DatabaseParameters.java. 
+	If you're going to use MySQL, you currently need to have MySQL installed with
+	the appropriate user/right for the chase to work. By default, the runtime
+	regression tests are run on a database called "chase_proof_runner" with
+	login/password "root/root"
 	
 	c. Run
 	To run a batch of test cases, execute the following command:

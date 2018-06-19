@@ -58,10 +58,10 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 	private TreeMap<String, AttributeEncoding> attributeEncodingMap;
 	private TreeMap<String, UsagePolicy> usagePolicyMap;
 	
-	public RESTAccessMethod(Attribute[] attributes, Integer[] inputs, Relation relation,
+	public RESTAccessMethod(String name, Attribute[] attributes, Integer[] inputs, Relation relation,
 			Map<Attribute, Attribute> attributeMapping, WebTarget target, MediaType mediaType,
 			ServiceGroup sgr, Service sr, RESTExecutableAccessMethodSpecification am) {
-		super(attributes, inputs, relation, attributeMapping);
+		super(name, attributes, inputs, relation, attributeMapping);
 		this.target = target;
 		this.mediaType = mediaType;
 		this.sgr = sgr;
@@ -417,7 +417,7 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 	
 
 	// Perform the main access to the REST protocol and parse the results
-	public Table access()
+	public Table accessTable()
 	{
 		// Setup a RESTRequestEvent from web target and mediaType
 		RESTRequestEvent request = new RESTRequestEvent(target, mediaType);
@@ -474,12 +474,21 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 	protected Stream<Tuple> fetchTuples(Iterator<Tuple> inputTuples) {
 		LinkedList<Stream<Tuple>> list = new LinkedList<Stream<Tuple>>();
 		Stream<Tuple> result = Stream.empty();
-		while(inputTuples.hasNext());
+		if(inputTuples == null)
 		{
-			Tuple tuple = inputTuples.next();
-			processInput(tuple);
-			Table t = access();
+			processInput(null);
+			Table t = accessTable();
 			list.add(StreamSupport.stream(t.spliterator(), false));
+		}
+		else
+		{
+			while(inputTuples.hasNext())
+			{
+				Tuple tuple = inputTuples.next();
+				processInput(tuple);
+				Table t = accessTable();
+				list.add(StreamSupport.stream(t.spliterator(), false));
+			}
 		}
 		for(int i = 0; i < list.size(); i++)
 		{
@@ -489,9 +498,9 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 	}
 	
 	// This is specifically not an override
-	public Table access(Tuple tuple)
+	public Table accessTable(Tuple tuple)
 	{
 		processInput(tuple);
-		return access();
+		return accessTable();
 	}
 }

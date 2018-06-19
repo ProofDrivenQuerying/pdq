@@ -1,1 +1,0 @@
-This test case is a clone of the regression/test/linear/fast/benchmark/mysql/std_006 test. The generated expected_plan.xml was manually updated with the correct types. The provided example data should contain 2 matching records.
