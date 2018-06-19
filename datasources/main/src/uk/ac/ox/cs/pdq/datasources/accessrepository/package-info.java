@@ -7,6 +7,6 @@ package uk.ac.ox.cs.pdq.datasources.accessrepository;
 	
 	- AccessRepository.java
  		 * AccessRepository is the main class of the datasources project. 
- 		 * It maintains a cache of executable accesses. The accesses are defined in xml descriptors in a folder. 
+ 		 * It maintains a repository executable access methods. The access methods are defined in xml descriptors in a folder. 
 
 **/
