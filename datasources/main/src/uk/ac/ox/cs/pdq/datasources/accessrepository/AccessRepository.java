@@ -21,8 +21,8 @@ public class AccessRepository {
 	// There can be multiple repositories. This static field maps between locations and repositories.		
 	public static Map<String,AccessRepository> cachedRepositories = new HashMap<>();
 	
-	// In each repository there can be multiple accesses. This field maps the name of each access with the actual access.		
-	private Map<String, ExecutableAccessMethod> accesses = new HashMap<>();
+	// In each repository there can be multiple access methods. This field maps the name of each access with the actual access.		
+	private Map<String, ExecutableAccessMethod> accessMethods = new HashMap<>();
 	private String repositoryFolderName;
 	
 	/** Creates or retrieves the repository pointing to the default repository location. 
@@ -57,7 +57,7 @@ public class AccessRepository {
 			if (f.getName().toLowerCase().endsWith(".xml")) addAccessFromXml(f);
 	}
 	
-	/** Import a single access and adds it to the repository
+	/** Import a single access method and adds it to the repository
 	 * @param xmlFile
 	 * @return
 	 * @throws JAXBException 
@@ -66,24 +66,24 @@ public class AccessRepository {
 		ExecutableAccessMethod eam = DbIOManager.importAccess(xmlFile);
 		if (eam == null)
 			throw new RuntimeException("Failed to import file: " + xmlFile);
-		accesses.put(eam.getName(),eam);
+		accessMethods.put(eam.getName(),eam);
 		return eam;
 	}
 	
-	/** Retrieves an access identified by its name.
+	/** Retrieves an access method identified by its name.
 	 * 
 	 * @param name
 	 * @return
 	 */
 	public ExecutableAccessMethod getAccess(String name) {
-		return accesses.get(name);
+		return accessMethods.get(name);
 	}
 	
 	/**
-	 * Loops over all accesses in this repository and closes all accesses.
+	 * Loops over all access methods in this repository and closes all accesses.
 	 */
 	public void closeAllAccesses() {
-		for (ExecutableAccessMethod am:accesses.values()) {
+		for (ExecutableAccessMethod am:accessMethods.values()) {
 			am.close();
 		}
 	}
