@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="JoinTerm">
     <RelationalTerm type="RenameTerm">
-        <renamings name="c0" type="java.lang.String"/>
+        <renamings name="c0" type="java.lang.Integer"/>
         <renamings name="c3" type="java.lang.String"/>
         <renamings name="c4" type="java.lang.String"/>
         <RelationalTerm type="AccessTerm">
             <accessMethod name="m12"/>
             <relation name="region">
-                <attribute name="r_regionkey" type="java.lang.String"/>
+                <attribute name="r_regionkey" type="java.lang.Integer"/>
                 <attribute name="r_name" type="java.lang.String"/>
                 <attribute name="r_comment" type="java.lang.String"/>
                 <access-method name="m12"/>
@@ -19,16 +19,16 @@
             <predicates other="2" position="0" type="AttributeEqualityCondition"/>
         </predicate>
         <RelationalTerm type="RenameTerm">
-            <renamings name="c0" type="java.lang.String"/>
+            <renamings name="c0" type="java.lang.Integer"/>
             <renamings name="c1" type="java.lang.String"/>
-            <renamings name="c0" type="java.lang.String"/>
+            <renamings name="c0" type="java.lang.Integer"/>
             <renamings name="c2" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
                 <accessMethod name="m10"/>
                 <relation name="nation">
-                    <attribute name="n_nationkey" type="java.lang.String"/>
+                    <attribute name="n_nationkey" type="java.lang.Integer"/>
                     <attribute name="n_name" type="java.lang.String"/>
-                    <attribute name="n_regionkey" type="java.lang.String"/>
+                    <attribute name="n_regionkey" type="java.lang.Integer"/>
                     <attribute name="n_comment" type="java.lang.String"/>
                     <access-method name="m10"/>
                 </relation>

@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.datasources.AccessException;
+import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -227,6 +228,10 @@ public class RuntimeTest extends RegressionTest {
 
 		RegressionParameters regParams = new RegressionParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		if (!regParams.getSkipRuntime()) {
+			File accesses = new File(directory,"accesses"); 
+			if (accesses.exists() && accesses.isDirectory() && accesses.list().length>0) {
+				runtime.setAccessRepository(AccessRepository.getRepository(accesses.getAbsolutePath()));
+			}
 			AcceptanceResult result = new ExpectedCardinalityAcceptanceCheck()
 					.check(regParams.getExpectedCardinality(), runtime.evaluatePlan(p));
 			result.report(this.out);

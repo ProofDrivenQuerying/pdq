@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RelationalTermWithCost type="DependentJoinTerm">
+<RelationalTermWithCost type="JoinTerm">
     <RelationalTerm type="JoinTerm">
         <RelationalTerm type="SelectionTerm">
             <predicate type="ConjunctiveCondition">
@@ -8,16 +8,16 @@
                 </predicates>
             </predicate>
             <RelationalTerm type="RenameTerm">
-                <renamings name="c26" type="java.lang.String"/>
+                <renamings name="c26" type="java.lang.Integer"/>
                 <renamings name="c31" type="java.lang.String"/>
-                <renamings name="c32" type="java.lang.String"/>
+                <renamings name="c32" type="java.lang.Integer"/>
                 <renamings name="AMERICA" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
                     <accessMethod name="m0"/>
                     <relation name="region_nation">
-                        <attribute name="nation_key" type="java.lang.String"/>
+                        <attribute name="nation_key" type="java.lang.Integer"/>
                         <attribute name="nation_name" type="java.lang.String"/>
-                        <attribute name="region_key" type="java.lang.String"/>
+                        <attribute name="region_key" type="java.lang.Integer"/>
                         <attribute name="region_name" type="java.lang.String"/>
                         <access-method name="m0"/>
                     </relation>
@@ -25,16 +25,16 @@
             </RelationalTerm>
         </RelationalTerm>
         <RelationalTerm type="RenameTerm">
-            <renamings name="k40" type="java.lang.String"/>
+            <renamings name="k40" type="java.lang.Integer"/>
             <renamings name="k52" type="java.lang.String"/>
-            <renamings name="k53" type="java.lang.String"/>
+            <renamings name="k53" type="java.lang.Integer"/>
             <renamings name="k55" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
                 <accessMethod name="m0"/>
                 <relation name="region_nation">
-                    <attribute name="nation_key" type="java.lang.String"/>
+                    <attribute name="nation_key" type="java.lang.Integer"/>
                     <attribute name="nation_name" type="java.lang.String"/>
-                    <attribute name="region_key" type="java.lang.String"/>
+                    <attribute name="region_key" type="java.lang.Integer"/>
                     <attribute name="region_name" type="java.lang.String"/>
                     <access-method name="m0"/>
                 </relation>
@@ -44,32 +44,32 @@
     <RelationalTerm type="RenameTerm">
         <renamings name="c24" type="java.lang.String"/>
         <renamings name="c25" type="java.lang.String"/>
-        <renamings name="c26" type="java.lang.String"/>
-        <renamings name="c28" type="java.lang.String"/>
+        <renamings name="c26" type="java.lang.Integer"/>
+        <renamings name="c28" type="java.math.BigDecimal"/>
         <renamings name="c5" type="java.lang.String"/>
         <renamings name="c6" type="java.lang.String"/>
         <renamings name="k44" type="java.lang.String"/>
         <renamings name="k46" type="java.lang.String"/>
         <renamings name="k47" type="java.lang.String"/>
-        <renamings name="c13" type="java.lang.String"/>
-        <renamings name="c14" type="java.lang.String"/>
-        <renamings name="c15" type="java.lang.String"/>
+        <renamings name="c13" type="java.math.BigDecimal"/>
+        <renamings name="c14" type="java.math.BigDecimal"/>
+        <renamings name="c15" type="java.math.BigDecimal"/>
         <renamings name="c16" type="java.lang.String"/>
         <RelationalTerm type="AccessTerm">
             <accessMethod name="m1" inputs="2"/>
             <relation name="order_customer">
                 <attribute name="cname" type="java.lang.String"/>
                 <attribute name="caddress" type="java.lang.String"/>
-                <attribute name="cnation" type="java.lang.String"/>
-                <attribute name="cactbal" type="java.lang.String"/>
+                <attribute name="cnation" type="java.lang.Integer"/>
+                <attribute name="cactbal" type="java.math.BigDecimal"/>
                 <attribute name="opriority" type="java.lang.String"/>
                 <attribute name="oclerk" type="java.lang.String"/>
                 <attribute name="pname" type="java.lang.String"/>
                 <attribute name="pbrand" type="java.lang.String"/>
                 <attribute name="ptype" type="java.lang.String"/>
-                <attribute name="lextendedprice" type="java.lang.String"/>
-                <attribute name="ldiscount" type="java.lang.String"/>
-                <attribute name="ltax" type="java.lang.String"/>
+                <attribute name="lextendedprice" type="java.math.BigDecimal"/>
+                <attribute name="ldiscount" type="java.math.BigDecimal"/>
+                <attribute name="ltax" type="java.math.BigDecimal"/>
                 <attribute name="lflag" type="java.lang.String"/>
                 <access-method name="m1" inputs="2"/>
                 <access-method name="m2" inputs="0,2,4,7"/>

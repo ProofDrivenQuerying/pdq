@@ -384,8 +384,13 @@ public class ExplorationSetUp {
 			SimpleCondition[] sp = ((ConjunctiveCondition)st.getSelectionCondition()).getSimpleConditions();
 			SimpleCondition[] spNew = new SimpleCondition[sp.length];
 			for (int index = 0; index < sp.length; index++) {
-				ConstantEqualityCondition old = (ConstantEqualityCondition) sp[index];
-				spNew[index] = ConstantEqualityCondition.create(old.getPosition(), convertConstant(old.getConstant(),child0.getOutputAttributes()[old.getPosition()].getType()));
+				
+				if (sp[index] instanceof ConstantEqualityCondition) {
+					ConstantEqualityCondition old = (ConstantEqualityCondition) sp[index];
+					spNew[index] = ConstantEqualityCondition.create(old.getPosition(), convertConstant(old.getConstant(),child0.getOutputAttributes()[old.getPosition()].getType()));
+				} else {
+					spNew[index] = sp[index];
+				}
 			}
 			Condition predicate = ConjunctiveCondition.create(spNew);
 			return SelectionTerm.create(predicate  , child0);
