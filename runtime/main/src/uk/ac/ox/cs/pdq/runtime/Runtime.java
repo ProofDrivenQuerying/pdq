@@ -28,6 +28,8 @@ public class Runtime {
 	/** In-memory facts. */
 	private Collection<Atom> facts;
 
+	private AccessRepository repository;
+
 	/**
 	 * Constructor for Runtime.
 	 * 
@@ -69,10 +71,14 @@ public class Runtime {
 	 *             the evaluation exception
 	 */
 	public Result evaluatePlan(RelationalTerm p) throws Exception {
-		AccessRepository repo = AccessRepository.getRepository();
+		AccessRepository repo = this.repository;
+		if (repo == null)
+				repo = AccessRepository.getRepository();
 		try {
 			ExecutablePlan executable = new PlanDecorator(repo,schema).decorate(p);
+			System.out.println("Executing plan " + p.hashCode());
 			Table res = executable.execute();
+			System.out.println("plan " + p.hashCode() + " finished.");
 			return res;
 		}catch(Throwable t) {
 			t.printStackTrace();
@@ -99,6 +105,11 @@ public class Runtime {
 
 	public Collection<Atom> getFacts() {
 		return facts;
+	}
+
+	public void setAccessRepository(AccessRepository repository) {
+		this.repository = repository;
+		
 	}
 	
 }
