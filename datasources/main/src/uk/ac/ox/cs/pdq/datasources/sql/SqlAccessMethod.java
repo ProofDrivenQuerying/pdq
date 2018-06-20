@@ -202,7 +202,8 @@ public class SqlAccessMethod extends ExecutableAccessMethod {
 			}
 		} catch (SQLException | ReflectiveOperationException e) {
 			log.warn(queryString, e);
-			throw new AccessException(this.getName() + "\n" + queryString, e);
+			throw new AccessException(this.getName() + "\n" + 
+					queryString + "\n connection:" + this.properties.getProperty("url") + ", database: "+ this.properties.getProperty("database"), e);
 		}
 		return result;
 	}
