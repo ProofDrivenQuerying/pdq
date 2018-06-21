@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.datasources.io.jaxb;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,11 +58,20 @@ public class XmlExecutableAccessMethod {
 
 	/* Database AccessMethod */
 	private Properties dbProperties;
+	private File datafolder;
 
 	public XmlExecutableAccessMethod() {
 	}
 
 	public XmlExecutableAccessMethod(ExecutableAccessMethod eam) {
+		this(eam,null);
+	}
+	public XmlExecutableAccessMethod(ExecutableAccessMethod eam,File datafolder) {
+		if (datafolder==null) 
+			this.datafolder = DbIOManager.CSV_FOLDER;
+		else
+			this.datafolder = datafolder;
+		this.datafolder.mkdirs();
 		accessMethodName = eam.getName();
 		relationName = eam.getRelation().getName();
 		attributes = Arrays.asList(eam.outputAttributes(false));
@@ -183,7 +193,7 @@ public class XmlExecutableAccessMethod {
 	@XmlElement(name = "data-scv-file")
 	public String getData() throws IOException {
 		if (accessType == ACCESS_TYPE.IN_MEMORY_ACCESS_METHOD) {
-			return DbIOManager.exportTuples(relationName, DbIOManager.CSV_FOLDER, data).getAbsolutePath();
+			return DbIOManager.exportTuples(relationName+"_"+this.getAccessMethodName(), this.datafolder, data).getAbsolutePath();
 		}
 		return null;
 	}

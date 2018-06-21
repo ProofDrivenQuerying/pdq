@@ -27,7 +27,8 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	/** The tuples limit. */
 	@Parameter(description="The maximum number of output tuples")
 	protected Integer tuplesLimit;
-
+	@Parameter(description="Relative or absolute location of the access directory")
+	private String accessDirectory;
 	/**
 	 * Gets the version.
 	 *
@@ -98,6 +99,16 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	 */
 	public void setTuplesLimit(Number tuples) {
 		this.tuplesLimit = tuples != null ? tuples.intValue() : null;
+	}
+
+	public String getAccessDirectory() {
+		if (accessDirectory==null || accessDirectory.isEmpty())
+			return "accesses";
+		return accessDirectory;
+	}
+
+	public void setAccessDirectory(String accessDirectory) {
+		this.accessDirectory = accessDirectory;
 	}
 
 }
