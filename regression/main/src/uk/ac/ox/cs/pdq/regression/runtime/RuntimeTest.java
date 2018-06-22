@@ -228,7 +228,10 @@ public class RuntimeTest extends RegressionTest {
 
 		RegressionParameters regParams = new RegressionParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		if (!regParams.getSkipRuntime()) {
-			File accesses = new File(directory,"accesses"); 
+			File accesses = new File(directory,params.getAccessDirectory());
+			if (!accesses.exists()) {
+				accesses = new File(params.getAccessDirectory());
+			}
 			if (accesses.exists() && accesses.isDirectory() && accesses.list().length>0) {
 				runtime.setAccessRepository(AccessRepository.getRepository(accesses.getAbsolutePath()));
 			}

@@ -204,7 +204,7 @@ public class DbIOManager extends IOManager {
 		JAXBContext jaxbContext = JAXBContext.newInstance(XmlExecutableAccessMethod.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		jaxbMarshaller.marshal(new XmlExecutableAccessMethod(m), out);
+		jaxbMarshaller.marshal(new XmlExecutableAccessMethod(m,new File(out.getParentFile(),"data")), out);
 	}
 
 	/**
@@ -254,14 +254,14 @@ public class DbIOManager extends IOManager {
 	 * Creates a file called relationName.csv in the given folder containing all
 	 * tuples line by line like: "alpha","beta","gamma"
 	 * 
-	 * @param relationName
+	 * @param datafileName
 	 * @param folder
 	 * @param tuples
 	 * @return the created csv file.
 	 * @throws IOException
 	 */
-	public static File exportTuples(String relationName, File folder, Collection<Tuple> tuples) throws IOException {
-		File target = new File(folder, relationName + ".csv");
+	public static File exportTuples(String datafileName, File folder, Collection<Tuple> tuples) throws IOException {
+		File target = new File(folder, datafileName + ".csv");
 		try (FileWriter fw = new FileWriter(target)) {
 			for (Tuple t : tuples) {
 				StringBuilder builder = null;
@@ -271,9 +271,7 @@ public class DbIOManager extends IOManager {
 					} else {
 						builder.append(",");
 					}
-					builder.append("\"");
-					builder.append(value);
-					builder.append("\"");
+					builder.append(encodeValue(value));
 				}
 				builder.append("\r\n");
 				fw.write(builder.toString());
@@ -281,6 +279,22 @@ public class DbIOManager extends IOManager {
 			fw.close();
 		}
 		return target;
+	}
+
+	private static String encodeValue(Object value) {
+		if (value==null)
+			return null;
+		if (value instanceof String) {
+			String s = ((String)value).replaceAll("/", "//");
+			return s.replaceAll(",", "/c");
+		}
+		return value.toString();
+	}
+	private static String decodeValue(String value) {
+		if (value==null)
+			return null;
+		String s = value.replaceAll("/c", ",");
+		return s.replaceAll("//", "/");
 	}
 
 	public static Collection<Tuple> importTuples(Attribute[] attributes, String csvFile) {
@@ -298,7 +312,7 @@ public class DbIOManager extends IOManager {
 					if (i>=attributes.length) {
 						System.out.println("Warning this tuple has more attributes then expected: " + tuple);
 					} else {
-						constants[i] = (TypedConstant.convertStringToType(tuple[i].replace("\"", ""),
+						constants[i] = (TypedConstant.convertStringToType(decodeValue(tuple[i]),
 							attributes[i].getType()));
 					}
 				}
