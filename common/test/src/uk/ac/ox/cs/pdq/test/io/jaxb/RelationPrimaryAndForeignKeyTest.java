@@ -13,12 +13,14 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 
+// @author Mark Ridler
+
 public class RelationPrimaryAndForeignKeyTest {
 	
-	// Calls IOManager.importSchema then asserts everything associated with it
 	@Test
 	public void testReadingSchema() {
 		try {
+			// Calls IOManager.importSchema then asserts everything associated with it
 			Schema s = IOManager.importSchema(new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "schemaWithKeys.xml"));
 			Assert.assertNotNull(s);
 			Assert.assertNotNull(s.getRelations());
@@ -36,10 +38,10 @@ public class RelationPrimaryAndForeignKeyTest {
 		}
 	}
 	
-	// Creates attributes, primary key, relations with foreign key then calls IOManager.exportSchemaToXml
 	@Test
 	public void testWritingSchema() {
 		try {
+			// Creates 2 foreign keys, 5 attributes, primary key
 			ForeignKey fk1 = new ForeignKey("ForeignKey1");
 			ForeignKey fk2 = new ForeignKey("ForeignKey2");
 			Attribute attr1 = Attribute.create(Integer.class, "r1_1");
@@ -50,6 +52,7 @@ public class RelationPrimaryAndForeignKeyTest {
 			
 			Attribute attrF = Attribute.create(Integer.class, "r1_F");
 			
+			// Creates relations with foreign key then calls IOManager.exportSchemaToXml
 			Relation r2 = Relation.create("r2", new Attribute[] { attrF});
 			fk1.addReference(new Reference(attr1,attrF));
 			fk1.setForeignRelation(r2);
@@ -66,10 +69,10 @@ public class RelationPrimaryAndForeignKeyTest {
 		}
 	}
 	
-	// Calls IOManager.exportSchemaToXml using importSchema as a starting point then checks file lengths
 	@Test
 	public void ImportExportTest() {
 		try {
+			// Calls IOManager.exportSchemaToXml using importSchema as a starting point then checks file lengths
 			File in = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "schemaWithKeys.xml");
 			File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "schemaWithKeys2.xml");
 			Schema s = IOManager.importSchema(in);
