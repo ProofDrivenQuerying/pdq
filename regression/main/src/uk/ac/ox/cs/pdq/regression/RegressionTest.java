@@ -17,35 +17,6 @@ import uk.ac.ox.cs.pdq.Parameters;
  */
 public abstract class RegressionTest {
 
-	/**
-	 * The Enum Types.
-	 */
-	enum Types {
-
-		/** The planner. */
-		planner, 
-		/** The kstepblocking. */
-		kstepblocking, 
-		/** The runtime. */
-		runtime, 
-		/** The proof. */
-		proof, 
-		/** The plangen. */
-		plangen, 
-		/** The user_driven. */
-		user_driven,
-
-		/** The optimizations. */
-		optimizations, 
-		/** The cost. */
-		cost, 
-		/** The jungvis. */
-		jungvis, 
-		/** The prefusevis. */
-		prefusevis, 
-		/** The dag_explorers. */
-		dag_explorers}
-
 	/** The out. */
 	protected PrintStream out = System.out;
 
