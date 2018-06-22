@@ -1,7 +1,0 @@
-partsupp(c26,c27,10,c28,c29)
-part(c26,c30,c31,c32,c33,c34,c35,c36,c37)
-Access(10)
-supplier(c27,k38,k39,k40,k41,k42,k43)
-nation(k40,k52,k53,k54)
-region(k53,k55,k56)
-region_nation(k40,k52,k53,k55)

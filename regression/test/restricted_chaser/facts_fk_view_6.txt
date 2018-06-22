@@ -1,7 +1,0 @@
-part(c179,c180,c181,c182,c183,c184,c185,c186,c187)
-partsupp(c179,c188,c189,c190,c191)
-supplier(c188,c192,c193,c194,c195,c196,c197)
-customer(c198,c199,c200,c194,c201,c202,c203,c204)
-nation(c194,c205,c206,c207)
-region(c206,k228,k229)
-region_nation(c194,c205,c206,k228)

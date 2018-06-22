@@ -1,8 +1,0 @@
-orders(c273,c274,c275,c276,c277,1-URGENT,c278,c279,c280)
-customer(c274,c281,c282,c283,c284,c285,c286,c287)
-orders(c288,c289,c290,c291,c292,1-URGENT,c293,c294,c295)
-customer(c289,c296,c297,c283,c298,c299,c300,c301)
-Access(1-URGENT)
-nation(c283,k302,k303,k304)
-region(k303,k322,k323)
-region_nation(c283,k302,k303,k322)

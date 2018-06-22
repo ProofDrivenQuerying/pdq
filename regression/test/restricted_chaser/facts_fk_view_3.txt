@@ -1,7 +1,0 @@
-partsupp(c59,c60,c61,c62,c63)
-supplier(c60,c64,c65,c66,c67,c68,c69)
-nation(c66,UNITED STATES,c70,c71)
-Access(UNITED STATES)
-part(c59,k81,k82,k83,k84,k85,k86,k87,k88)
-region(c70,k89,k90)
-region_nation(c66,UNITED STATES,c70,k89)
