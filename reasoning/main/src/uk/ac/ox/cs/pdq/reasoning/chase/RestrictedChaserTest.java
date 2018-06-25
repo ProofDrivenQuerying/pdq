@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.regression.reasoning.chase;
+package uk.ac.ox.cs.pdq.reasoning.chase;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,7 +30,6 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
-import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 /**
