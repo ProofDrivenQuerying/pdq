@@ -29,9 +29,8 @@ import uk.ac.ox.cs.pdq.regression.planner.PlannerTestUtilities;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 /**
- * Creates a new test case from scratch or converts an existing regression test
- * to runtime-compatible test with auto generated access methods using
- * templates.
+ * Contains utility methods to create a new test case from scratch or convert an existing regression test
+ * to runtime-compatible test with auto generated access methods using templates.
  * 
  * @author gabor
  *
@@ -41,7 +40,9 @@ public class CaseGenerator {
 	public CaseGenerator() {
 	}
 	
-
+	/**
+	 * Main function. No parameter processing, input and output directory is hardcoded.
+	 */
 	public static void main(String[] args) {
 		try {
 			File root = new File("test/linear/fast/tpch/mysql/simple/");
@@ -50,22 +51,17 @@ public class CaseGenerator {
 				generator.convert(f, f);
 			}
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-//	private DatabaseParameters getTcphProperties() {
-//		DatabaseParameters dp = new DatabaseParameters(null);
-//		dp.setUseInternalDatabaseManager(false);
-//		dp.setDatabaseDriver("org.postgresql.Driver");
-//		dp.setConnectionUrl("jdbc:postgresql://localhost/");
-//		dp.setDatabaseName("tpch_0001");
-//		dp.setDatabaseUser("root");
-//		dp.setDatabasePassword("root");
-//		return dp;
-//	}
-
+	/**
+	 *  Converts a test case from normal regression test to runtime test by adding executable access methods.
+	 * @param in
+	 * @param out
+	 * @throws DatabaseException
+	 * @throws JAXBException
+	 * @throws IOException
+	 */
 	private boolean memory = true;
 	private void convert(File in, File out) throws DatabaseException, JAXBException, IOException {
 		System.out.println("Converting " + in.getAbsolutePath()); 
@@ -108,21 +104,18 @@ public class CaseGenerator {
 	}
 
 
-//	private void createInMemoryAccess(File mem, AccessMethodDescriptor amd, Relation r) {
-//		// TODO Auto-generated method stub
-//		
-//	} 
 	private void createSqlAccess(File sqlOut, AccessMethodDescriptor amd, Relation r) throws JAXBException {
 		Map<Attribute, Attribute> mapping = ExecutableAccessMethod.getDefaultMapping(r);
 		SqlAccessMethod sam = new SqlAccessMethod(amd.getName(),r.getAttributes(), amd.getInputs(),r,mapping , getProperties());
 		DbIOManager.exportAccessMethod(sam, new File(sqlOut,amd.getName()+".xml"));
 	} 
+	/** DB properties for the tpch database.
+	 * @return
+	 */
 	public static Properties getProperties() {
 		Properties properties = new Properties();
 		properties.setProperty("url", "jdbc:postgresql://localhost:5432/");
 		properties.setProperty("database", "tpch");
-//		properties.setProperty("username", "admin");
-//		properties.setProperty("password", "admin");
 		properties.setProperty("username", "postgres");
 		properties.setProperty("password", "root");
 		return(properties);
