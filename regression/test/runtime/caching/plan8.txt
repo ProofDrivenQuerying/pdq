@@ -1,5 +1,0 @@
-RE:TargetFree BI:chembl_target_free
-RE:TargetComponentLimited BI:chembl_target_component_limited_2
-RE:ActivityLimited BI:chembl_activity_limited_3
-RE:DocumentLimited BI:chembl_document_limited
-RE:Citation BI:pubmed_citation_1
