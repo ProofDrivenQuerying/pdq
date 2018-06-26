@@ -69,25 +69,24 @@ only (i.e. static attributes are ignored).
 
 Attribute Encodings
 
-Many Attribute Encodings feature a ``template''
-attribute, with values of the form ``.type('{1')'', such as (in the
-google file)
+Many Attribute Encodings feature a `template'
+attribute, with values of the form '{1}'
 
 
-    <attribute-encoding name="locations" type="url-param" template="{1,{2"  />
+    <attribute-encoding name="locations" type="url-param" template="{1},{2}"  />
 
 
-When an attribute or static input is associated with such an input
-method, it must specify where in the template its value will be
-placed. For instance, 
+When an attribute or static input is associated with such an Attribute
+Encoding, it must specify where in the template its value will be placed.
+For instance: 
 
 
     <attribute name="latitude"  attribute-encoding="locations" attribute-encoding-index="1" />
     <attribute name="longitude" attribute-encoding="locations" attribute-encoding-index="2" /> 
 
 
-An access with input tuple (``33.5'', ``-142.1'') will form a URL
-param ``locations=33.5,-142.1''.
+An access with input tuple (`33.5', `-142.1') will form a URL
+param `locations=33.5,-142.1'.
 
 
 Usage policies
