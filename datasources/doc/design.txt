@@ -1,0 +1,135 @@
+Service Descriptions
+--------------------
+
+The attached files named `chembl-activityFree.xml',`reactome-speciesList.xml' 
+are examples of our Service descriptions. Then 'service-groups.xml' is an
+example of our Service Group description.
+
+Definitions
+ 
+In the following, capitalized names correspond to actual classes in the
+code:
+
+   - a  Service contains one or more access methods that perform an access
+      with input and output tuples, hiding all the details about how
+      it is actually done.
+   - a  ServiceGroup contains metadata (in particular UsagePolicy and
+      AttributeEncoding that apply to one or more Services)
+   - a  UsagePolicy, is a rule that a service vendor imposes on
+      users (e.g. max per-day request, max per-day results, paging,
+      monetary cost, `backoff' policy, etc.)
+   - an  AttributeEncoding is a scheme imposed on the user to provide
+      input value (e.g. URL params, URL path element, batch inputs, etc.)
+
+
+Service descriptions structure
+
+
+Then follows a Service, which is structured as follows:
+
+   - a Service has a name (the relation name), a protocol, some
+      base URI, link to the online documentation, and a path fragment
+      defining how sequential results are delimited.
+   - finally, comes a list of access methods, with the usual
+      name, type, inputs positions, and (currently fixed) cost.
+   - then comes a list of static attributes and attributes. These may
+      be interleaved, but the order is important.
+   
+
+A ServiceGroup is in a separate file. common to many Services:
+
+   - a ServiceGroup may define specific usage policies and attribute encodings.
+   - Then follows a list of named Services
+ 
+The Service
+
+
+Inputs and attributes
+
+Static attributes are typical inputs that are required for the service
+to function, but have little (or nothing) to do with the results
+content. They are specified at the level of a single Access Method as
+they may be different from one Access Method to another in a single
+Service or ServiceGroup. They are used during an access to form the
+request, but they do not appear as part of the relation's attribute.
+Each static input is associated with an AttributeEncoding, and
+possibly a static value.
+
+Attributes are the actual attributes of the Service/Relation.
+In addition to the usual type, that are associated with an
+InputMethod (if they can be used as inputs), and an output path.
+Some attributes may be used as both inputs and outputs, in which case,
+they required both input and output methods.
+However, sometimes an attribute can only be used as an input, in which
+case, it is not always possible to get a value for it from the service
+response.
+
+The limited access method's input flags correspond to attributes
+only (i.e. static attributes are ignored).
+
+Attribute Encodings
+
+Many Attribute Encodings feature a ``template''
+attribute, with values of the form ``.type('{1')'', such as (in the
+google file)
+
+
+    <attribute-encoding name="locations" type="url-param" template="{1,{2"  />
+
+
+When an attribute or static input is associated with such an input
+method, it must specify where in the template its value will be
+placed. For instance, 
+
+
+    <attribute name="latitude"  attribute-encoding="locations" attribute-encoding-index="1" />
+    <attribute name="longitude" attribute-encoding="locations" attribute-encoding-index="2" /> 
+
+
+An access with input tuple (``33.5'', ``-142.1'') will form a URL
+param ``locations=33.5,-142.1''.
+
+
+Usage policies
+
+One can define usage policies for various kind of cases. Usage
+policies are class than implement either or both of the
+PreAccessUsagePolicy and PostAccessUsagePolicy.
+
+The actual behaviour of this method is proper to each implementation.
+A usage policy may for instance:
+
+  - put the current thread to sleep for a given period of time if
+     the service requires the client to wait before sending a request,
+  - throw a UsagePolicyViolationException if the policy
+     prevent the access completely (eg a quote was reached),
+  - modify the service request building process (eg if paging is
+     required to obtain complete results for a single access),
+
+etc.
+
+The UsagePolicy classes follow an event based architecture.
+Pre- and post-access events are generate for each access. A policy may
+have to pre- and/or post-process access, which explains why they may
+implement the processAccessRequest(RESTRequestEvent event) and
+processAccessResponse(RESTResponseEvent event) methods. The
+RESTRequestEvent and RESTResponseEvent events given as
+parameters to these method, contains the information about the access,
+its inputs and outputs. The policy may use that information to
+determine whether there is a violation, or even modify them, eg a
+paging policy will adapt the request to add page select information.
+
+Each Service may be initialized with a collection of
+UsagePolicys or register/unregister policies at runtime.
+Policies register at the Service Group level are shared by all
+Services in the Group, ie any limit enforced by the policies
+must be globally satisified by all services. For instance, a shared
+policies of $n$ requests per day, will generate an
+AccessException if the limit is reached through any
+combinations of accesses.
+
+A service may or may not adhere to shared policy. For a service to adhere to a
+policy, the service definition must refer to the policy by its name
+only. If a policy is fully defined in a single service definition, the scope
+of that policy will be that service exclusively.
+
