@@ -89,8 +89,8 @@ public abstract class LinearExplorer extends Explorer {
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
 	 */
-	public LinearExplorer(EventBus eventBus, 
-			boolean collectStats,
+	public LinearExplorer(
+			EventBus eventBus, 
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
@@ -100,7 +100,7 @@ public abstract class LinearExplorer extends Explorer {
 			NodeFactory nodeFactory,
 			int depth
 			) throws PlannerException, SQLException {
-		super(eventBus, collectStats);
+		super(eventBus);
 		Assert.assertNotNull(eventBus);
 		Assert.assertNotNull(nodeFactory);
 		Assert.assertNotNull(query);

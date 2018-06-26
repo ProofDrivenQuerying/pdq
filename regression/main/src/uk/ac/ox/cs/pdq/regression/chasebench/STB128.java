@@ -11,8 +11,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.google.common.eventbus.EventBus;
-
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
@@ -21,7 +19,6 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
@@ -49,7 +46,7 @@ public class STB128 {
 		Collection<Atom> res = state.getFacts();
 		System.out.println("INITIAL STATE contains " + res.size() + " facts.");
 		printStats(res);
-		RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
+		RestrictedChaser chaser = new RestrictedChaser();
 		long start = System.currentTimeMillis();
 		chaser.reasonUntilTermination(state, s.getAllDependencies());
 		long duration = System.currentTimeMillis() - start;

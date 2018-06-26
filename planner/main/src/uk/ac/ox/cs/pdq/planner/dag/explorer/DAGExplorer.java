@@ -66,7 +66,6 @@ public abstract class DAGExplorer extends Explorer {
 	 * @param reasoningParameters 
 	 */
 	public DAGExplorer(EventBus eventBus, 
-			boolean collectStats, 
 			PlannerParameters parameters,
 			ConjunctiveQuery query, 
 			ConjunctiveQuery accessibleQuery,
@@ -74,7 +73,7 @@ public abstract class DAGExplorer extends Explorer {
 			Chaser chaser, 
 			DatabaseManager connection,
 			CostEstimator costEstimator) {
-		super(eventBus, collectStats);
+		super(eventBus);
 		Preconditions.checkArgument(parameters != null);
 		Preconditions.checkArgument(query != null);
 		Preconditions.checkArgument(accessibleQuery != null);
@@ -85,23 +84,12 @@ public abstract class DAGExplorer extends Explorer {
 		
 		this.parameters = parameters;
 		this.query = query;
-//		checkQueryForPredicatesInsteadOfRelations(accessibleQuery);
 		this.accessibleQuery = accessibleQuery;
 		this.accessibleSchema = accessibleSchema;
 		this.chaser = chaser;
 		this.connection = connection;
 		this.costEstimator = costEstimator;
 	}
-	
-//	/** Uses Preconditions to throw exception in case the query contains predicates instead of Relations.
-//	 * @param query
-//	 */
-//	private static void checkQueryForPredicatesInsteadOfRelations(ConjunctiveQuery query) {
-//		Atom[] atoms = query.getAtoms();
-////		for (Atom atom:atoms) {
-////			Preconditions.checkArgument(atom.getPredicate() instanceof Relation,"" + atom.getPredicate() + " should be an instance of Relation.");
-////		}
-//	}
 
 	/**
 	 * Updates the minimum cost configuration/plan.

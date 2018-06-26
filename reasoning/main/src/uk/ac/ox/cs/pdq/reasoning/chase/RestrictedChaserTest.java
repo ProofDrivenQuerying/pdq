@@ -12,8 +12,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.google.common.eventbus.EventBus;
-
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
@@ -29,7 +27,6 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 /**
@@ -201,7 +198,7 @@ public class RestrictedChaserTest {
 				if (schema == null || query == null) {
 					throw new IllegalStateException("Schema and query must be provided.");
 				}
-				RestrictedChaser reasoner = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
+				RestrictedChaser reasoner = new RestrictedChaser();
 
 				DatabaseManager dbcon = createConnection(DatabaseParameters.Postgres,schema);
 				DatabaseChaseInstance state = new DatabaseChaseInstance(query, dbcon);				

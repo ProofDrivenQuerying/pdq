@@ -79,7 +79,7 @@ public class TestDAGExplorerUtilities extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 
 		// Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);

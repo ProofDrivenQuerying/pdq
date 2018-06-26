@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.reasoning.chase;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 /**
@@ -17,18 +16,6 @@ public abstract class Chaser {
 
 	/** The log. */
 	protected static Logger log = Logger.getLogger(Chaser.class);
-
-	/**  Collects statistics related to chasing *. */
-	protected final StatisticsCollector statistics;
-
-	/**
-	 * Constructor for Chaser.
-	 *
-	 * @param statistics the statistics
-	 */
-	public Chaser(StatisticsCollector statistics) {
-		this.statistics = statistics;
-	}
 	
 
 	/**

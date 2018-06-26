@@ -38,7 +38,6 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.regression.RegressionTest;
 import uk.ac.ox.cs.pdq.regression.RegressionTestException;
@@ -199,10 +198,6 @@ public class PlannerTest extends RegressionTest {
 				Entry<RelationalTerm, Cost> observedPlan = null;
 				try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 					ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, dbParams, schema);
-					planner.registerEventHandler(
-							new IntervalEventDrivenLogger(
-									pLog, plannerParams.getLogIntervals(),
-									plannerParams.getShortLogIntervals()));
 					observedPlan = planner.search(query);
 				} catch (LimitReachedException lre) {
 					log.warn(lre);
@@ -235,7 +230,6 @@ public class PlannerTest extends RegressionTest {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-//				e.printStackTrace();
 				return handleException(e, directory);
 			}
 			return true;
@@ -247,7 +241,6 @@ public class PlannerTest extends RegressionTest {
 			dep.addAll(Arrays.asList(schema.getKeyDependencies()));
 			List<Relation> rel = new ArrayList<>(); 
 			rel.addAll(Arrays.asList(schema.getRelations()));
-//			rel.add(Relation.create("Accessible", new Attribute[] {Attribute.create(String.class, "name"),Attribute.create(Integer.class, "InstanceID")}));
 			rel.add(AccessibleSchema.accessibleRelation);
 			return new Schema(rel.toArray(new Relation[rel.size()]),dep.toArray(new Dependency[dep.size()]));
 		}
@@ -408,7 +401,6 @@ public class PlannerTest extends RegressionTest {
 				Entry<RelationalTerm, Cost> plan = null;
 				try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 					ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, dbParams, schema);
-					planner.registerEventHandler(new IntervalEventDrivenLogger(pLog, plannerParams.getLogIntervals(), plannerParams.getShortLogIntervals()));
 					plan = planner.search(query);
 				} catch (LimitReachedException lre) {
 					log.warn(lre);
@@ -418,7 +410,6 @@ public class PlannerTest extends RegressionTest {
 					CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + PLAN_FILE),  plan.getKey(), plan.getValue());
 				} else {
 					this.out.print("\tno plan found.");
-					//				new File(directory.getAbsolutePath() + '/' + PLAN_FILE).delete();
 				}
 			} catch (FileNotFoundException e) {
 				log.debug(e);

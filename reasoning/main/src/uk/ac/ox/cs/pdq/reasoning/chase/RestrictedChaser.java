@@ -6,9 +6,6 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.logging.SimpleStatisticsCollector;
-import uk.ac.ox.cs.pdq.logging.SimpleStatisticsCollector.StatisticsRecord;
-import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultTGDDependencyAssessor;
@@ -34,16 +31,6 @@ import uk.ac.ox.cs.pdq.reasoning.utility.TGDDependencyAssessor;
 public class RestrictedChaser extends Chaser {
 
 	/**
-	 * Constructor for RestrictedChaser.
-	 *
-	 * @param statistics the statistics
-	 */
-	public RestrictedChaser(StatisticsCollector statistics) {
-		super(statistics);
-	}
-
-
-	/**
 	 * Chases the input state until termination.
 	 *
 	 * @param <S> the generic type
@@ -59,21 +46,9 @@ public class RestrictedChaser extends Chaser {
 		do {
 			appliedStep = false;
 			for(Dependency dependency:d) {
-				StatisticsRecord r = (statistics instanceof SimpleStatisticsCollector) ?((SimpleStatisticsCollector)statistics).addNewRecord("getTriggers"):null;
-				List<Match> matches = null;
-				try {
-					matches = instance.getTriggers(new Dependency[]{dependency}, TriggerProperty.ACTIVE);
-				} finally {
-					if (r!=null) r.setEndTime();
-				}
+				List<Match> matches = instance.getTriggers(new Dependency[]{dependency}, TriggerProperty.ACTIVE);
 				if(!matches.isEmpty()) {
 					appliedStep = true;
-					StatisticsRecord r1 = (statistics instanceof SimpleStatisticsCollector) ?((SimpleStatisticsCollector)statistics).addNewRecord("chaseStep"):null;
-					try {
-						instance.chaseStep(matches);
-					} finally {
-						if (r1!=null) r1.setEndTime();
-					}
 				}
 			}
 			d = accessor.getDependencies(instance);	
@@ -86,6 +61,6 @@ public class RestrictedChaser extends Chaser {
 	 */
 	@Override
 	public RestrictedChaser clone() {
-		return new RestrictedChaser(this.statistics);
+		return new RestrictedChaser();
 	}
 }

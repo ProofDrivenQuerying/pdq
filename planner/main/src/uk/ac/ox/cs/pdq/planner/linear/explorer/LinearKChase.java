@@ -1,13 +1,5 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.DOMINANCE_PRUNING;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.EQUIVALENCE_PRUNING;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.HIGHER_COST_PRUNING;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_CLOSE;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_DOMINANCE;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_EQUIVALENCE;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_QUERY_MATCH;
-
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -79,7 +71,6 @@ public class LinearKChase extends LinearExplorer {
 	@SuppressWarnings("rawtypes")
 	public LinearKChase(
 			EventBus eventBus, 
-			boolean collectStats,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
@@ -90,7 +81,7 @@ public class LinearKChase extends LinearExplorer {
 			NodeFactory nodeFactory,
 			int depth,
 			int chaseInterval) throws PlannerException, SQLException {
-		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, nodeFactory, depth);
+		super(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, nodeFactory, depth);
 		Preconditions.checkNotNull(costPropagator);
 		Preconditions.checkArgument(costPropagator instanceof OrderIndependentCostPropagator && costEstimator instanceof OrderIndependentCostEstimator
 				|| costPropagator instanceof OrderDependentCostPropagator && costEstimator instanceof OrderDependentCostEstimator);
@@ -131,18 +122,14 @@ public class LinearKChase extends LinearExplorer {
 	private void _performeSingleExplorationStepWithChasing() throws PlannerException, LimitReachedException {
 		Collection<SearchNode> leaves = ExplorerUtility.getLeafNodesThatAreNotFullyChased(this.planTree);
 		log.debug("Number of partially generated leaves " + leaves.size());
-		this.stats.start(MILLI_CLOSE);
 		for(SearchNode leaf:leaves) {
 			leaf.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
 			log.debug("Close leaf: " + leaf);
 		}	
-		this.stats.stop(MILLI_CLOSE);
 
 		// Perform global equivalence checks
 		for(SearchNode leaf: leaves) {
-			this.stats.start(MILLI_EQUIVALENCE);
 			SearchNode parentEquivalent = ExplorerUtility.isEquivalent(leaves, leaf);
-			this.stats.stop(MILLI_EQUIVALENCE);
 
 			/*
 			 * If such a node exists then
@@ -157,16 +144,13 @@ public class LinearKChase extends LinearExplorer {
 				SearchNode parentNode = this.planTree.getParent(leaf);
 				this.updateBestPlan(parentNode, leaf);
 				log.debug("Node " + parentEquivalent.toString() + " is equivalent to " + leaf.toString());
-				this.stats.increase(EQUIVALENCE_PRUNING, 1);
 			}
 		}
 
 		// Check for query match
 		for (SearchNode leaf:leaves) {
 			if((leaf.getStatus() == NodeStatus.TERMINAL || leaf.getStatus() == NodeStatus.ONGOING) && leaf.getEquivalentNode() == null) {
-				this.stats.start(MILLI_QUERY_MATCH);
 				List<Match> matches = leaf.matchesQuery(this.accessibleQuery);
-				this.stats.stop(MILLI_QUERY_MATCH);
 
 				// If there exists at least one query match
 				if (!matches.isEmpty()) {
@@ -227,21 +211,17 @@ public class LinearKChase extends LinearExplorer {
 				domination = true;
 				freshNode.setDominatingPlan(this.bestPlan);
 				freshNode.setCostOfDominatingPlan(this.bestCost);
-				this.stats.increase(HIGHER_COST_PRUNING, 1);
 				log.debug(freshNode.getConfiguration().getPlan() + " has higher cost than plan " + this.bestPlan + " Costs " + freshNode.getConfiguration().getCost() + ">=" + this.bestCost);
 			}
 		}
 
 		/* If at least one node in the plan tree dominates the newly created node, then kill the newly created node   */
 		if (!domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
-			this.stats.start(MILLI_DOMINANCE);
 			SearchNode dominatingNode = ExplorerUtility.isCostAndFactDominated(ExplorerUtility.getNodesThatAreFullyChased(this.planTree), freshNode);
-			this.stats.stop(MILLI_DOMINANCE);
 			if(dominatingNode != null) {
 				domination = true;
 				freshNode.setDominatingPlan(dominatingNode.getConfiguration().getPlan());
 				freshNode.setCostOfDominatingPlan(dominatingNode.getConfiguration().getCost());
-				this.stats.increase(DOMINANCE_PRUNING, 1);
 				log.debug(dominatingNode.getConfiguration().getPlan() + " dominates " + freshNode.getConfiguration().getPlan() + dominatingNode.getConfiguration().getCost() + "<" + freshNode.getConfiguration().getCost());
 			}
 		}

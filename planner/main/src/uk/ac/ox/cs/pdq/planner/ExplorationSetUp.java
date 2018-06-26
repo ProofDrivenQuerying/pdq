@@ -31,7 +31,6 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.cost.logging.CostStatKeys;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
@@ -54,19 +53,12 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.logging.ChainedStatistics;
-import uk.ac.ox.cs.pdq.logging.DynamicStatistics;
-import uk.ac.ox.cs.pdq.logging.StatKey;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.logging.performance.ConstantsStatistics;
-import uk.ac.ox.cs.pdq.planner.logging.performance.EventDrivenExplorerStatistics;
-import uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.ChaseConstantGenerator;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.util.EventHandler;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
@@ -101,12 +93,8 @@ public class ExplorationSetUp {
 
 	/**  */
 	private DatabaseParameters databaseParams;
-
-	/**   */
+	
 	private EventBus eventBus = new EventBus();
-
-	/** Statistics collector. */
-	private ChainedStatistics statsLogger;
 
 	/** The input schema with the original attribute types.  */
 	private Schema originalSchema;
@@ -122,27 +110,8 @@ public class ExplorationSetUp {
 	 */
 	private static Map<ConjunctiveQuery, Map<Variable, Constant>> canonicalSubstitutionOfFreeVariables = new HashMap<>();
 
-	/** The external cost estimator. */
-	private CostEstimator externalCostEstimator = null;
-
 	/** The auxiliary schema, including axioms capturing access methods */
 	private AccessibleSchema accessibleSchema;
-
-	/**
-	 * Instantiates a new exploration set up.
-	 *
-	 * @param planParams
-	 *            the plan params
-	 * @param costParams
-	 *            the cost params
-	 * @param reasoningParams
-	 *            the reasoning params
-	 * @param schema
-	 *            the schema
-	 */
-	public ExplorationSetUp(PlannerParameters planParams, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters dbParams, Schema schema) {
-		this(planParams, costParams, reasoningParams, dbParams, schema, null);
-	}
 
 	/**
 	 * Instantiates a new exploration set up.
@@ -158,8 +127,7 @@ public class ExplorationSetUp {
 	 * @param statsLogger
 	 *            the stats logger
 	 */
-	public ExplorationSetUp(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters databaseParams, Schema schema,
-			ChainedStatistics statsLogger) {
+	public ExplorationSetUp(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters databaseParams, Schema schema) {
 		this.plannerParams = params;
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
@@ -167,57 +135,7 @@ public class ExplorationSetUp {
 		this.schema = convertTypesToString(schema);
 		this.originalSchema = schema;
 		//this.schema = schema;
-		this.statsLogger = statsLogger;
 		this.accessibleSchema = new AccessibleSchema(this.schema);
-	}
-
-	/**
-	 * Register event handler.
-	 *
-	 * @param handler
-	 *            EventHandler
-	 */
-	public void registerEventHandler(EventHandler handler) {
-		this.eventBus.register(handler);
-	}
-
-	/**
-	 * Register the given event homoChecker.
-	 *
-	 * @param handler
-	 *            EventHandler
-	 */
-	public void unregisterEventHandler(EventHandler handler) {
-		this.eventBus.unregister(handler);
-	}
-
-	/**
-	 * Sets the cost estimator.
-	 *
-	 * @param estimator
-	 *            CostEstimator<?>
-	 */
-	public void setCostEstimator(CostEstimator estimator) {
-		this.externalCostEstimator = estimator;
-	}
-
-	/**
-	 * Search a best plan for the given schema and query.
-	 *
-	 * @param <P>
-	 *            the generic type
-	 * @param query
-	 *            the query
-	 * @return a pair whose first element is the best plan found if any, null
-	 *         otherwise, and the second is a mapping from the variables of the
-	 *         input query to the constant generated in the initial grounded
-	 *         operation.
-	 * @throws PlannerException
-	 *             the planner exception
-	 * @throws SQLException
-	 */
-	public Entry<RelationalTerm, Cost> search(ConjunctiveQuery query) throws PlannerException, SQLException {
-		return this.search(query, false);
 	}
 
 	/**
@@ -240,13 +158,8 @@ public class ExplorationSetUp {
 	 *             the planner exception
 	 * @throws SQLException
 	 */
-	public Entry<RelationalTerm, Cost> search(ConjunctiveQuery query, boolean noDep) throws PlannerException, SQLException {
+	public Entry<RelationalTerm, Cost> search(ConjunctiveQuery query) throws PlannerException, SQLException {
 		query = convertQueryConstantsToString(query);
-		boolean collectStats = this.statsLogger != null;
-		if (noDep) {
-			this.schema = new Schema(this.schema.getRelations());
-			this.accessibleSchema = new AccessibleSchema(this.schema);
-		}
 		ConjunctiveQuery accessibleQuery = generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(query);
 
 		Explorer explorer = null;
@@ -273,38 +186,19 @@ public class ExplorationSetUp {
 
 		try {
 			// Top-level initialisations
-			CostEstimator costEstimator = this.externalCostEstimator;
-			if (costEstimator == null)
-				costEstimator = CostEstimatorFactory.getEstimator(this.costParams, this.schema);
+			CostEstimator costEstimator = CostEstimatorFactory.getEstimator(this.costParams, this.schema);
 
-			Chaser reasoner = new ReasonerFactory(this.eventBus, collectStats, this.reasoningParams).getInstance();
+			Chaser reasoner = new ReasonerFactory(this.reasoningParams).getInstance();
 
 			explorer = ExplorerFactory.createExplorer(
-					this.eventBus, collectStats, this.schema, this.accessibleSchema, query, accessibleQuery, 
+					this.eventBus, this.schema, this.accessibleSchema, query, accessibleQuery, 
 					reasoner, databaseConnection,
 					costEstimator, this.plannerParams, this.reasoningParams);
 
-			// Chain all statistics collectors
-			if (collectStats) {
-				// Explorer statistics
-				EventDrivenExplorerStatistics es = new EventDrivenExplorerStatistics();
-				this.registerEventHandler(es);
-				this.statsLogger.addStatistics(es);
-
-				// Constant statistics
-				ConstantsStatistics cs = new ConstantsStatistics();
-				this.registerEventHandler(cs);
-				this.statsLogger.addStatistics(cs);
-
-				// Append dynamic statistics to logs
-				DynamicStatistics ds = new DynamicStatistics(ExplorationSetUp.displayColumns());
-				this.registerEventHandler(ds);
-				this.statsLogger.addStatistics(ds);
-			}
 			explorer.setExceptionOnLimit(this.plannerParams.getExceptionOnLimit());
 			explorer.setMaxRounds(this.plannerParams.getMaxIterations().doubleValue());
 			explorer.setMaxElapsedTime(120l*1000l);
-		//explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
+		    //explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
 			if (explorer.getBestPlan() != null && explorer.getBestCost() != null)
 				return new AbstractMap.SimpleEntry<RelationalTerm, Cost>(convertTypesBack(explorer.getBestPlan()), explorer.getBestCost());
@@ -485,20 +379,6 @@ public class ExplorationSetUp {
 			attributes[index] = Attribute.create(String.class, attribute.getName());
 		}
 		return Relation.create(relation.getName(), attributes, relation.getAccessMethods(), relation.isEquality());
-	}
-
-	/**
-	 * Display columns.
-	 *
-	 * @return StatKeys[]
-	 */
-	private static StatKey[] displayColumns() {
-		return new StatKey[] { CostStatKeys.COST_ESTIMATION_COUNT, CostStatKeys.COST_ESTIMATION_TIME, PlannerStatKeys.GENERATED_FACTS, PlannerStatKeys.CANDIDATES,
-				PlannerStatKeys.CUMULATED_CANDIDATES, PlannerStatKeys.EQUIVALENCE_CLASSES, PlannerStatKeys.AVG_EQUIVALENCE_CLASSES, PlannerStatKeys.MED_EQUIVALENCE_CLASSES,
-				PlannerStatKeys.FILTERED, PlannerStatKeys.MILLI_REASONING, PlannerStatKeys.MILLI_UPDATE, PlannerStatKeys.MILLI_UPDATE_QUERY_DEPENDENCIES,
-				PlannerStatKeys.MILLI_BLOCKING_CHECK, PlannerStatKeys.MILLI_SELECT_IC, PlannerStatKeys.MILLI_DETECT_CANDIDATES, PlannerStatKeys.MILLI_CLOSE,
-				PlannerStatKeys.MILLI_QUERY_MATCH, PlannerStatKeys.MILLI_DOMINANCE, PlannerStatKeys.DOMINANCE_PRUNING, PlannerStatKeys.MILLI_EQUIVALENCE,
-				PlannerStatKeys.EQUIVALENCE_PRUNING, PlannerStatKeys.HIGHER_COST_PRUNING };
 	}
 
 	/**

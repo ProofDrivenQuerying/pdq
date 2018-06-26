@@ -49,7 +49,7 @@ public class OrderIndependentCostEstimatorTest extends PdqTest {
 		JoinTerm jt2 = JoinTerm.create(jt1, at3);
 		
 		// cost
-		CountNumberOfAccessedRelationsCostEstimator estimator = new CountNumberOfAccessedRelationsCostEstimator(null);
+		CountNumberOfAccessedRelationsCostEstimator estimator = new CountNumberOfAccessedRelationsCostEstimator();
 		Assert.assertEquals(3.0, estimator.cost(jt2).getCost(), 0.0001);
 	}
 
@@ -73,7 +73,7 @@ public class OrderIndependentCostEstimatorTest extends PdqTest {
 		when(catalog.getCost(T, method0)).thenReturn(101.0);
 		
 		// cost calculation
-		FixedCostPerAccessCostEstimator estimator = new FixedCostPerAccessCostEstimator(null, catalog);
+		FixedCostPerAccessCostEstimator estimator = new FixedCostPerAccessCostEstimator(catalog);
 		Assert.assertEquals(311.0, estimator.cost(jt2).getCost(), 0.0001);
 
 	}
@@ -97,7 +97,7 @@ public class OrderIndependentCostEstimatorTest extends PdqTest {
 		when(catalog.getTotalNumberOfOutputTuplesPerInputTuple(T, method0)).thenReturn(101);
 
 		// cost calculation
-		TotalNumberOfOutputTuplesPerAccessCostEstimator estimator = new TotalNumberOfOutputTuplesPerAccessCostEstimator(null, catalog);
+		TotalNumberOfOutputTuplesPerAccessCostEstimator estimator = new TotalNumberOfOutputTuplesPerAccessCostEstimator(catalog);
 		Assert.assertEquals(311.0, estimator.cost(jt2).getCost(), 0.0001);
 	}
 }

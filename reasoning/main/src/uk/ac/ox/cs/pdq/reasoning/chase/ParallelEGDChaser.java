@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultParallelEGDChaseDependencyAssessor;
@@ -36,16 +35,6 @@ import uk.ac.ox.cs.pdq.reasoning.utility.ParallelEGDChaseDependencyAssessor.EGDR
  *
  */
 public class ParallelEGDChaser extends Chaser {
-
-
-	/**
-	 * Constructor for EGDChaser.
-	 * @param statistics StatisticsCollector
-	 */
-	public ParallelEGDChaser(
-			StatisticsCollector statistics) {
-		super(statistics);
-	}
 
 	/**
 	 * Chases the input state until termination.
@@ -103,7 +92,7 @@ public class ParallelEGDChaser extends Chaser {
 	 */
 	@Override
 	public ParallelEGDChaser clone() {
-		return new ParallelEGDChaser(this.statistics);
+		return new ParallelEGDChaser();
 	}
 
 }

@@ -128,7 +128,7 @@ public class RegressionTestLinearFastDemoCase002 extends PdqTest {
 		DependentJoinTerm plan1 = DependentJoinTerm.create(rename1, rename2);
 		DependentJoinTerm plan2 = DependentJoinTerm.create(plan1, rename3);
 
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, new NaiveCardinalityEstimator(this.catalog));
+		TextBookCostEstimator estimator = new TextBookCostEstimator(new NaiveCardinalityEstimator(this.catalog));
 		Cost cost = estimator.cost(plan2);
 		Assert.assertEquals(1.196321951304603E12, (double)cost.getValue(),0.0001);
 	}
@@ -145,7 +145,7 @@ public class RegressionTestLinearFastDemoCase002 extends PdqTest {
 		Map<Integer, TypedConstant> inputConstants1 = new HashMap<>();
 		inputConstants1.put(1, TypedConstant.create("Eiffel Tower"));
 		AccessTerm access1 = AccessTerm.create(this.YahooPlaces, this.yh_geo_name, inputConstants1);
-		FixedCostPerAccessCostEstimator est = new FixedCostPerAccessCostEstimator(null, catalog);
+		FixedCostPerAccessCostEstimator est = new FixedCostPerAccessCostEstimator(this.catalog);
 		Cost cost = est.cost(access1);
 		Assert.assertEquals(100, (double)cost.getValue(),0.0001);
 	}

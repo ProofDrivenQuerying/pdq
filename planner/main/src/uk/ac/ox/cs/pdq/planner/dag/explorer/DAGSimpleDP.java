@@ -65,7 +65,6 @@ public class DAGSimpleDP extends DAGGeneric {
 	 */
 	public DAGSimpleDP(
 			EventBus eventBus, 
-			boolean collectStats,
 			PlannerParameters parameters,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
@@ -78,7 +77,7 @@ public class DAGSimpleDP extends DAGGeneric {
 			Filter filter, 
 			List<Validator> validators,
 			int maxDepth) throws PlannerException, SQLException {
-		super(eventBus, collectStats, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance, filter, validators, maxDepth);
+		super(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance, filter, validators, maxDepth);
 		Preconditions.checkNotNull(dominance);
 		this.dominance = dominance;
 	}

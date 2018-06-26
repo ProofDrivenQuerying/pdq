@@ -51,7 +51,7 @@ public class SimpleCatalogTest extends PdqTest {
 			AccessTerm at = AccessTerm.create(relation1, am1);
 			AccessTerm at1 = AccessTerm.create(relation2, am2);
 
-			FixedCostPerAccessCostEstimator est = new FixedCostPerAccessCostEstimator(null, catalog);
+			FixedCostPerAccessCostEstimator est = new FixedCostPerAccessCostEstimator(catalog);
 			Assert.assertTrue(13.0 == est.cost(at).getCost());
 			Assert.assertTrue(15.0 == est.cost(at1).getCost());
 		} catch (Exception e) {

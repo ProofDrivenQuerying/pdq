@@ -117,7 +117,7 @@ public class TestDAGGeneric extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 
 		// Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
@@ -139,7 +139,7 @@ public class TestDAGGeneric extends PdqTest {
 		validators.add(new DefaultValidator());
 
 		try {
-			DAGGeneric explorer = new DAGGeneric(new EventBus(), false, parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, connection, costEstimator,
+			DAGGeneric explorer = new DAGGeneric(new EventBus(), parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, connection, costEstimator,
 					successDominance, null, validators, 4);
 			explorer.explore();
 			explorer.getExploredPlans();
@@ -227,7 +227,7 @@ public class TestDAGGeneric extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
@@ -252,7 +252,7 @@ public class TestDAGGeneric extends PdqTest {
 			List<Validator> validators = new ArrayList<>();
 			validators.add(new DefaultValidator());
 
-			explorer = new DAGGeneric(new EventBus(), false, parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator,
+			explorer = new DAGGeneric(new EventBus(), parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator,
 					successDominance, null, validators, 3);
 
 			explorer.explore();
@@ -368,7 +368,7 @@ public class TestDAGGeneric extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 
 		// Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
@@ -390,7 +390,7 @@ public class TestDAGGeneric extends PdqTest {
 		validators.add(new ClosedValidator());
 
 		try {
-			DAGGeneric explorer = new DAGGeneric(new EventBus(), false, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance,
+			DAGGeneric explorer = new DAGGeneric(new EventBus(), parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance,
 					null, validators, relations.length);
 			explorer.explore();
 			explorer.getExploredPlans();
@@ -496,7 +496,7 @@ public class TestDAGGeneric extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
@@ -521,7 +521,7 @@ public class TestDAGGeneric extends PdqTest {
 			List<Validator> validators = new ArrayList<>();
 			validators.add(new DefaultValidator());
 
-			explorer = new DAGGeneric(new EventBus(), false, parameters, query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, successDominance,
+			explorer = new DAGGeneric(new EventBus(), parameters, query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, successDominance,
 					null, validators, 3);
 
 			explorer.explore();

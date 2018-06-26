@@ -147,7 +147,7 @@ public class TestLinearKchase extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 
 		// Mock the cost estimator
 		when(this.catalog.getCardinality(ts.getSchema().getRelations()[0])).thenReturn(10);
@@ -161,7 +161,7 @@ public class TestLinearKchase extends PdqTest {
 
 		CardinalityEstimator card = new NaiveCardinalityEstimator(this.catalog);
 		// TextBookCostEstimator costEstimator = null;
-		TextBookCostEstimator costEstimator = new TextBookCostEstimator(null, card);
+		TextBookCostEstimator costEstimator = new TextBookCostEstimator(card);
 
 		// Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
@@ -178,7 +178,7 @@ public class TestLinearKchase extends PdqTest {
 			// OrderDependentCostEstimator sad = ;
 			OrderDependentCostPropagator costPropagator = new OrderDependentCostPropagator(costEstimator);
 
-			explorer = new LinearKChase(new EventBus(), false, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, costPropagator,
+			explorer = new LinearKChase(new EventBus(), ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, costPropagator,
 					nodeFactory, parameters.getMaxDepth(), chaseInterval);
 
 			explorer.explore();

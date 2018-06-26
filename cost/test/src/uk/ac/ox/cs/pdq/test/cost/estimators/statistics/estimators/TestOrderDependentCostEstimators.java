@@ -91,8 +91,8 @@ public class TestOrderDependentCostEstimators {
 		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(this.U, this.method2)).thenReturn(10);
 		
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
-		TotalNumberOfOutputTuplesPerAccessCostEstimator estimator2 = new TotalNumberOfOutputTuplesPerAccessCostEstimator(null, this.catalog);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(cardinalityEstimator);
+		TotalNumberOfOutputTuplesPerAccessCostEstimator estimator2 = new TotalNumberOfOutputTuplesPerAccessCostEstimator(this.catalog);
 		
 		double output = cardinalityEstimator.getCardinalityMetadata(bushy).getOutputCardinality();
 		DependentJoinTerm leftdeep = DependentJoinTerm.create(JoinTerm.create(join0, access2), access3);
@@ -142,8 +142,8 @@ public class TestOrderDependentCostEstimators {
 		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(this.U, this.method1,inputs)).thenReturn(1);
 		
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
-		TotalNumberOfOutputTuplesPerAccessCostEstimator estimator2 = new TotalNumberOfOutputTuplesPerAccessCostEstimator(null, this.catalog);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(cardinalityEstimator);
+		TotalNumberOfOutputTuplesPerAccessCostEstimator estimator2 = new TotalNumberOfOutputTuplesPerAccessCostEstimator(this.catalog);
 		
 		Cost cost1 = estimator.cost(bushy); 
 		Cost cost2 = estimator2.cost(bushy);
@@ -191,8 +191,8 @@ public class TestOrderDependentCostEstimators {
 		when(this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(this.U, this.method0)).thenReturn(10000);
 		
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
-		TotalNumberOfOutputTuplesPerAccessCostEstimator estimator2 = new TotalNumberOfOutputTuplesPerAccessCostEstimator(null, this.catalog);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(cardinalityEstimator);
+		TotalNumberOfOutputTuplesPerAccessCostEstimator estimator2 = new TotalNumberOfOutputTuplesPerAccessCostEstimator(this.catalog);
 		
 		Cost cost1 = estimator.cost(bushy); 
 		Cost cost2 = estimator2.cost(bushy);

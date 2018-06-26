@@ -1,13 +1,5 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.DOMINANCE_PRUNING;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.EQUIVALENCE_PRUNING;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.HIGHER_COST_PRUNING;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_CLOSE;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_DOMINANCE;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_EQUIVALENCE;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_QUERY_MATCH;
-
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -117,8 +109,7 @@ public class LinearOptimized extends LinearExplorer {
 	 */
 	@SuppressWarnings("rawtypes")
 	public LinearOptimized(
-			EventBus eventBus, 
-			boolean collectStats,
+			EventBus eventBus,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
@@ -131,7 +122,7 @@ public class LinearOptimized extends LinearExplorer {
 			int queryMatchInterval, 
 			PostPruning postPruning,
 			boolean zombification) throws PlannerException, SQLException {
-		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, nodeFactory, depth);
+		super(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, nodeFactory, depth);
 		Preconditions.checkNotNull(costPropagator);
 		Preconditions.checkArgument(queryMatchInterval >= 0);
 		Preconditions.checkArgument(costPropagator instanceof OrderIndependentCostPropagator && costEstimator instanceof OrderIndependentCostEstimator
@@ -231,29 +222,23 @@ public class LinearOptimized extends LinearExplorer {
 				domination = true;
 				freshNode.setDominatingPlan(this.bestPlan);
 				freshNode.setCostOfDominatingPlan(this.bestCost);
-				this.stats.increase(HIGHER_COST_PRUNING, 1);
 				log.debug(freshNode.getBestPlanFromRoot() + " has higher cost than plan " + this.bestPlan + " Costs " +  freshNode.getCostOfBestPlanFromRoot() + ">=" + this.bestCost);
 			}
 		}
 
 		// If at least one node in the plan tree dominates the newly created node, then zombify the newly created node
 		if (!domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
-			this.stats.start(MILLI_DOMINANCE);
 			SearchNode dominatingNode = ExplorerUtility.isCostAndFactDominated(this.planTree.vertexSet(), freshNode);
-			this.stats.stop(MILLI_DOMINANCE);
 			if(dominatingNode != null) {
 				domination = true;
 				freshNode.setDominatingPlan(dominatingNode.getConfiguration().getPlan());
 				freshNode.setCostOfDominatingPlan(dominatingNode.getConfiguration().getCost());
-				this.stats.increase(DOMINANCE_PRUNING, 1);
 				log.debug(dominatingNode.getConfiguration().getPlan() + " dominates " + freshNode.getCostOfBestPlanFromRoot() + dominatingNode.getConfiguration().getCost() + "<" + freshNode.getCostOfBestPlanFromRoot());
 			}
 		}
 
 		// Close the newly created node using the inferred accessible dependencies of the accessible schema
-		this.stats.start(MILLI_CLOSE);
 		freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
-		this.stats.stop(MILLI_CLOSE);
 
 		if (domination) {
 			freshNode.setStatus(NodeStatus.TERMINAL);
@@ -261,9 +246,7 @@ public class LinearOptimized extends LinearExplorer {
 
 		} else {
 			// Find a node that is globally equivalent to the newly created node.
-			this.stats.start(MILLI_EQUIVALENCE);
 			SearchNode parentEquivalent = ExplorerUtility.isEquivalent(ExplorerUtility.allButAncestorsOf(this.planTree, freshNode), freshNode);
-			this.stats.stop(MILLI_EQUIVALENCE);
 
 			/*
 			 * If such a node exists then
@@ -282,7 +265,6 @@ public class LinearOptimized extends LinearExplorer {
 				freshNode.setStatus(NodeStatus.TERMINAL);
 				//Cannot do postpruning here
 				this.updateBestPlan(selectedNode, freshNode);
-				this.stats.increase(EQUIVALENCE_PRUNING, 1);
 			}
 
 			//If the newly created node is not equivalent to any node in the plan tree then create a new equivalence class
@@ -290,9 +272,7 @@ public class LinearOptimized extends LinearExplorer {
 				this.equivalenceClasses.addEntry(freshNode);
 				/* Check for query match */
 				if (this.rounds % this.queryMatchInterval == 0) {
-					this.stats.start(MILLI_QUERY_MATCH);
 					List<Match> matches = freshNode.matchesQuery(this.accessibleQuery);
-					this.stats.stop(MILLI_QUERY_MATCH);
 
 					// If there exists at least one query match
 					if (!matches.isEmpty()) {
@@ -413,9 +393,7 @@ public class LinearOptimized extends LinearExplorer {
 			if(this.bestPlan == null && costOfEquivalencePlan.lessThan(deadDescendant.getCostOfDominatingPlan()) ||
 					this.bestPlan != null && costOfEquivalencePlan.lessThan(this.bestCost)	) {
 
-				this.stats.start(MILLI_QUERY_MATCH);
 				List<Match> matches = deadDescendant.matchesQuery(this.accessibleQuery);
-				this.stats.stop(MILLI_QUERY_MATCH);
 
 				SearchNode parent = this.planTree.getParent(deadDescendant);
 				if (!matches.isEmpty()) {

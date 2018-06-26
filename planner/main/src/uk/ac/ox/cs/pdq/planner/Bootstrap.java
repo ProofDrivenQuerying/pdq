@@ -8,11 +8,11 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 
 import com.beust.jcommander.DynamicParameter;
-import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 
+import uk.ac.ox.cs.pdq.FileValidator;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
@@ -20,9 +20,6 @@ import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.logging.ProgressLogger;
-import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
-import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 
 /**
@@ -162,19 +159,10 @@ public class Bootstrap {
 			Schema schema = IOManager.importSchema(new File(this.getSchemaPath()));
 			ConjunctiveQuery query = IOManager.importQuery(new File(this.getQueryPath()));
 
-//			RelationalTerm plan = null;
-//			Cost cost = null;
 			Entry<RelationalTerm, Cost> entry = null;
-			try(ProgressLogger pLog = new SimpleProgressLogger(System.out)) {
 				ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
-				if (verbose) {
-					planner.registerEventHandler(
-							new IntervalEventDrivenLogger(
-									pLog, planParams.getLogIntervals(),
-									planParams.getShortLogIntervals()));
-				}
 				entry = planner.search(query);
-			}
+
 			if (entry != null) {
 				System.out.println(entry.getKey());
 				return;
@@ -184,28 +172,6 @@ public class Bootstrap {
 			log.error("Planning aborted: " + e.getMessage(), e);
 			e.printStackTrace();
 			System.exit(-1);
-		}
-	}
-
-	/**
-	 * Filters out files that do not exist or are directories.
-	 * @author Julien LEBLAY
-	 */
-	public static class FileValidator implements IParameterValidator {
-		
-		/* (non-Javadoc)
-		 * @see com.beust.jcommander.IParameterValidator#validate(java.lang.String, java.lang.String)
-		 */
-		@Override
-		public void validate(String name, String value) throws ParameterException {
-			try {
-				File f = new File(value);
-				if (!f.exists() || f.isDirectory()) {
-					throw new ParameterException(name + " must be a valid configuration file.");
-				}
-			} catch (Exception e) {
-				throw new ParameterException(name + " must be a valid configuration file.");
-			}
 		}
 	}
 

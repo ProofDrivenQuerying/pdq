@@ -534,7 +534,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		DatabaseManager connection = null;
 		
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 		
 		try {
 			connection = createConnection(DatabaseParameters.Postgres, accessibleSchema);

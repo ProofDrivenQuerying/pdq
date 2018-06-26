@@ -8,7 +8,6 @@ import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
 
@@ -52,13 +51,9 @@ public abstract class Explorer {
 	/**  Event bus shared across explorer elements. */
 	protected final EventBus eventBus;
 
-	/**  Event bus shared across explorer elements. */
-	protected final StatisticsCollector stats;
-
-	public Explorer(EventBus eventBus, boolean collectStats) {
+	public Explorer(EventBus eventBus) {
 		Assert.assertNotNull(eventBus);
 		this.eventBus = eventBus;
-		this.stats = new StatisticsCollector(collectStats, eventBus);
 	}
 
 	/**

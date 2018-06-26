@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer;
 
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CANDIDATES;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CONFIGURATIONS;
 
 import java.sql.SQLException;
 import java.util.AbstractMap;
@@ -99,7 +97,6 @@ public class DAGGeneric extends DAGExplorer {
 	 */
 	public DAGGeneric(
 			EventBus eventBus, 
-			boolean collectStats,
 			PlannerParameters parameters,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
@@ -111,7 +108,7 @@ public class DAGGeneric extends DAGExplorer {
 			Filter filter,
 			List<Validator> validators,
 			int maxDepth) throws PlannerException, SQLException {
-		super(eventBus, collectStats, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
+		super(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
 		Preconditions.checkNotNull(successDominance);
 		Preconditions.checkArgument(validators != null);
 		Preconditions.checkArgument(!validators.isEmpty());
@@ -155,8 +152,6 @@ public class DAGGeneric extends DAGExplorer {
 					this.setBestPlan(configuration);
 				}
 			}
-			this.stats.set(CONFIGURATIONS, this.rightSideConfigurations.size());
-			this.stats.set(CANDIDATES, this.rightSideConfigurations.size());
 		} else if (this.depth > 1) {
 			//Create all binary configurations of depth up to this.depth
 			Collection<DAGChaseConfiguration> newlyCreatedConfigurations = this.exploreAllConfigurationsUpToCurrentDepth();
@@ -185,9 +180,6 @@ public class DAGGeneric extends DAGExplorer {
 				}
 			}
 			this.selector = new SelectorOfPairsOfConfigurationsToCombine<>(this.leftSideConfigurations, this.rightSideConfigurations, this.validators);
-
-			this.stats.set(CONFIGURATIONS, this.rightSideConfigurations.size());
-			this.stats.set(CANDIDATES, this.leftSideConfigurations.size());
 		} else {
 			throw new IllegalStateException("Search depth cannot be < 1");
 		}

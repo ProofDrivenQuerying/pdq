@@ -132,7 +132,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 		DependentJoinTerm plan2 = DependentJoinTerm.create(plan1, rename3);
 
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(cardinalityEstimator);
 		Cost cost = estimator.cost(plan2);
 		Assert.assertEquals(3.3958007884803287E18, (double) cost.getValue(), 0.0001);
 	}
@@ -152,7 +152,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 		AccessTerm access1 = AccessTerm.create(this.YahooPlaces, this.method3, inputConstants1);
 
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(cardinalityEstimator);
 		Cost cost = estimator.cost(access1);
 
 		Assert.assertEquals(2.4867919004335693E8, (double) cost.getValue(), 0.0001);
@@ -175,7 +175,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
 
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(cardinalityEstimator);
 		Cost cost = estimator.cost(plan1);
 
 		Assert.assertEquals(6186.72124178452, (double) cost.getValue(), 0.0001);
@@ -198,7 +198,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
 
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(cardinalityEstimator);
 		Cost cost = estimator.cost(plan1);
 
 		Assert.assertEquals(1781.5510557964276, (double) cost.getValue(), 0.0001);
@@ -223,7 +223,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 		DependentJoinTerm plan1 = DependentJoinTerm.create(selectionTerm, access2);
 
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(cardinalityEstimator);
 		Cost cost = estimator.cost(plan1);
 		Assert.assertEquals(1431.5510557964276, (double) cost.getValue(), 0.0001);
 	}
@@ -248,7 +248,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
 
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(cardinalityEstimator);
 		Cost cost = estimator.cost(plan1);
 
 		Assert.assertEquals(549.5945713886306, (double) cost.getValue(), 0.0001);
@@ -271,7 +271,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 		JoinTerm plan1 = JoinTerm.create(access1, access2);
 
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(cardinalityEstimator);
 		Cost cost = estimator.cost(plan1);
 
 		Assert.assertEquals(93684.95477555826, (double) cost.getValue(), 0.0001);

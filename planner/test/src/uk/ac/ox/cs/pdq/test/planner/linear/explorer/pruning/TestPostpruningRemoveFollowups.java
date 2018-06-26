@@ -220,7 +220,7 @@ public class TestPostpruningRemoveFollowups {
 		}
 
 		// Create the chaser 
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
@@ -237,7 +237,7 @@ public class TestPostpruningRemoveFollowups {
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), false, query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory, 4);
+			explorer = new LinearGeneric(new EventBus(), query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory, 4);
 			explorer.explore();
 		} catch (Throwable e) {
 			// exception expected after further exploration fails.

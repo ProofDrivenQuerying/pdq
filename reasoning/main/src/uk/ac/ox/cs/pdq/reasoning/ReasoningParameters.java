@@ -64,15 +64,6 @@ public class ReasoningParameters extends Parameters {
 		this(config, false, false);
 	}
 
-//	/**
-//	 * Constructor for PlannerParameters.
-//	 * @param config path to the configuration file to read
-//	 * @param verbose if true, param loading problem will be reported
-//	 */
-//	public ReasoningParameters(File config, boolean verbose) {
-//		this(config, false, verbose, false);
-//	}
-
 	/**
 	 * Constructor for PlannerParameters.
 	 * @param config path to the configuration file to read
@@ -323,18 +314,10 @@ public class ReasoningParameters extends Parameters {
 		/** The ktermination chase. */
 		@EnumParameterValue(description = "Restricted chase, where the number of rule firing rounds is bounded by a constant K")
 		KTERMINATION_CHASE, 
-//		
-//		/** The bounded chase. */
-//		@EnumParameterValue(description = "Restricted chase, where the number of rule firing rounds is bounded by a constant K")
-//		BOUNDED_CHASE,
 		
 		/** The parallel egd chase. */
 		@EnumParameterValue(description = "Runs the parallel EGD chase algorithm")
 		PARALLEL_EGD_CHASE,
-		
-//		/** The sequential egd chase. */
-//		@EnumParameterValue(description = "Runs a sequential version of the EGD chase algorithm")
-//		SEQUENTIAL_EGD_CHASE
 	}
 
 }

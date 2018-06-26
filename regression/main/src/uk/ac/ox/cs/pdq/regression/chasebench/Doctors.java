@@ -11,8 +11,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.google.common.eventbus.EventBus;
-
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
@@ -31,7 +29,6 @@ import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -80,7 +77,7 @@ public class Doctors {
 		Collection<Atom> res = state.getFacts();
 		System.out.println("INITIAL STATE contains " + res.size() + " facts.");
 		printStats(res);
-		RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
+		RestrictedChaser chaser = new RestrictedChaser();
 		long start = System.currentTimeMillis();
 		chaser.reasonUntilTermination(state, s.getAllDependencies());
 		long duration = System.currentTimeMillis() - start;

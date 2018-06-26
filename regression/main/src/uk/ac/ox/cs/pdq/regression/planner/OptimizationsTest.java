@@ -14,13 +14,10 @@ import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.logging.ProgressLogger;
-import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PostPruningTypes;
-import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.regression.RegressionTest;
 import uk.ac.ox.cs.pdq.regression.RegressionTestException;
@@ -107,19 +104,13 @@ public class OptimizationsTest extends RegressionTest {
 
 			Entry<RelationalTerm, Cost> plan1;
 			Entry<RelationalTerm, Cost> plan2;
-			try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 				planParams.setPlannerType(PlannerTypes.LINEAR_GENERIC);
 				ExplorationSetUp planner1 = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
-				planner1.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
 				plan1 = planner1.search(query);
-			}
-			try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 				planParams.setPlannerType(PlannerTypes.LINEAR_OPTIMIZED);
 				planParams.setPostPruningType(PostPruningTypes.REMOVE_ACCESSES);
 				ExplorationSetUp planner2 = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
-				planner2.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
 				plan2 = planner2.search(query);
-			}
 
 			if (plan1 == null && plan2 == null) {
 				this.out.println("PASS: " + directory.getAbsolutePath());
