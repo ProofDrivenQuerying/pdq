@@ -1,3 +1,0 @@
-RE:EBEYEProtein BI:ebeye_uniprot_protein_3
-RE:OrganismFree BI:reactome_species_1
-RE:TargetLimited BI:chembl_target_limited_1

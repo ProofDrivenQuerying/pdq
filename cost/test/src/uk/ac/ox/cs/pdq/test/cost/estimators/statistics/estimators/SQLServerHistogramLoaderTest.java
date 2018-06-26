@@ -19,7 +19,8 @@ public class SQLServerHistogramLoaderTest extends PdqTest {
 	 */
 	@Test
 	public void test1() {
-		SQLServerHistogram histogram = SQLServerHistogramLoader.load(Integer.class, "/test/input/V1Histogram.rpt");
+		SQLServerHistogram histogram = SQLServerHistogramLoader.load(Integer.class, "/test/src/" + 
+					"uk/ac/ox/cs/pdq/test/cost/estimators/statistics/estimators/input/V1Histogram.rpt");
 		Assert.assertEquals(histogram.getBuckets().size(), 162);
 	}
 
@@ -28,7 +29,7 @@ public class SQLServerHistogramLoaderTest extends PdqTest {
 	 */
 	@Test
 	public void test2() {
-		SQLServerHistogram histogram = SQLServerHistogramLoader.load(Integer.class, "/test/input/V2Histogram.rpt");
+		SQLServerHistogram histogram = SQLServerHistogramLoader.load(Integer.class, "/test/src/uk/ac/ox/cs/pdq/test/cost/estimators/statistics/estimators/input/V2Histogram.rpt");
 		Assert.assertEquals(histogram.getBuckets().size(), 26);
 	}
 }

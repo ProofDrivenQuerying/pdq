@@ -1,2 +1,0 @@
-RE:EBEYETarget BI:ebeye_chembl_target_limited
-RE:TargetComponentFree BI:chembl_target_component_free
