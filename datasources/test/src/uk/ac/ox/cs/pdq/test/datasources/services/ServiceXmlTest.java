@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 
 public class ServiceXmlTest {
 	
+	// chembl-activityFree test requires a null input tuple due to free status (no inputs)
 	@Test
 	public void test1() {
 		
@@ -43,6 +44,8 @@ public class ServiceXmlTest {
 			Assert.fail();
 		}
 	}
+	
+	// chembl-assayFree test requires a null input tuple due to free status (no inputs)
 	@Test
 	public void test2() {
 		
@@ -69,6 +72,8 @@ public class ServiceXmlTest {
 			Assert.fail();
 		}
 	}
+	
+	// ebeye-uniprot-protein test requires a 4-way input tuple due to defined input
 	@Test
 	public void test3() {
 		
@@ -98,6 +103,9 @@ public class ServiceXmlTest {
 			Assert.fail();
 		}
 	}
+	
+	// reactome-biopaxExporter test requires a 1-way input tuple due to defined input
+
 	@Test
 	public void test4() {
 		
@@ -124,6 +132,8 @@ public class ServiceXmlTest {
 			Assert.fail();
 		}
 	}
+
+	// reactome-speciesList test requires a 6-way input due to defined inputs
 	@Test
 	public void test5() {
 		
