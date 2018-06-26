@@ -26,8 +26,8 @@
             <renamings name="c25" type="java.lang.String"/>
             <renamings name="c26" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
-                <accessMethod name="chembl_target_limited"/>
-                <relation name="TargetLimited">
+                <accessMethod name="chembl_target_free"/>
+                <relation name="TargetFree">
                     <attribute name="organism" type="java.lang.String"/>
                     <attribute name="pref_name" type="java.lang.String"/>
                     <attribute name="species_group_flag" type="java.lang.String"/>
@@ -36,8 +36,7 @@
                     <attribute name="target_component_id" type="java.lang.String"/>
                     <attribute name="target_component_type" type="java.lang.String"/>
                     <attribute name="target_type" type="java.lang.String"/>
-                    <access-method name="chembl_target_limited"/>
-                    <access-method name="chembl_target_limited_1"/>
+                    <access-method name="chembl_target_free"/>
                 </relation>
             </RelationalTerm>
         </RelationalTerm>
@@ -71,7 +70,7 @@
                 <renamings name="c19" type="java.lang.String"/>
                 <renamings name="c20" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
-                    <accessMethod name="chembl_assay_limited_2"/>
+                    <accessMethod name="chembl_assay_limited"/>
                     <relation name="AssayLimited">
                         <attribute name="assay_category" type="java.lang.String"/>
                         <attribute name="assay_cell_type" type="java.lang.String"/>
@@ -104,5 +103,5 @@
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="1159716.0" type="DoubleCost"/>
+    <cost value="2000.0" type="DoubleCost"/>
 </RelationalTermWithCost>
