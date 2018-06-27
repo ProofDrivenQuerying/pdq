@@ -23,6 +23,7 @@ import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
@@ -30,6 +31,7 @@ import uk.ac.ox.cs.pdq.algebra.ConstantInequalityCondition;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
+import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
@@ -1065,6 +1067,58 @@ public class SymmetricMemoryHashJoinTest {
 		// select count(*) from CUSTOMER, SUPPLIER where CUSTOMER.C_NATIONKEY = 5 AND
 		// CUSTOMER.C_NATIONKEY=SUPPLIER.S_NATIONKEY;
 		Assert.assertEquals(2261760, result.size());
+		target.close();
+	}
+	
+	/*
+	Join{[(#7=#23)]
+		    Join{[(#1=#16&#5=#19)]
+		        Join{
+		            []Rename{[c0,c1,c2,c3,c4]Access{partsupp.m8[]}},
+		            Rename{[c7,c11,c12,c13]Access{nation.m10[]}}},
+		        Join{[(#1=#8)]
+		            Rename{[c16,c5,c17,c18,c19,c20,c21]Access{supplier.m6[]}},
+		            Rename{[c1,c5,c6,c7,c8,c9,c10]Access{supplier.m6[]}}}},
+		    Rename{[c12,c14,c15]Access{region.m12[]}}}
+	*/
+	
+	@Test
+	public void integrationTestSql9() throws Exception {
+
+		AccessRepository repo = AccessRepository.getRepository("../regression/test/planner/linear/fast/tpch/mysql/simple/case_005/accesses/");
+		PlanDecorator decor = new PlanDecorator(repo);
+
+		Relation relationPartsupp = Relation.create("Partsupp", TPCHelper.attrs_PS.clone());
+		Relation relationNation = Relation.create("Nation", TPCHelper.attrs_N.clone());
+		
+		CartesianProductTerm cartesianProductTerm1 = CartesianProductTerm.create(
+				AccessTerm.create(relationPartsupp, repo.getAccess("m8")), 
+				AccessTerm.create(relationNation, repo.getAccess("m10")));
+		
+		Relation relationSupplier = Relation.create("Supplier", TPCHelper.attrs_S.clone());
+	
+		Condition joinConditions1 = ConjunctiveCondition.create(new SimpleCondition[]{AttributeEqualityCondition.create(1, 8)});
+		JoinTerm joinTerm1 = JoinTerm.create(
+				AccessTerm.create(relationSupplier, repo.getAccess("m6")), 
+				AccessTerm.create(relationSupplier, repo.getAccess("m6")), joinConditions1);
+		
+		Condition joinConditions2 = ConjunctiveCondition.create(new SimpleCondition[]{AttributeEqualityCondition.create(1, 16),
+				AttributeEqualityCondition.create(5, 19)});
+		JoinTerm joinTerm2 = JoinTerm.create(cartesianProductTerm1, joinTerm1, joinConditions2);
+		
+		Relation relationRegion = Relation.create("Region", TPCHelper.attrs_R.clone());		
+		AccessTerm termRegion = AccessTerm.create(relationRegion, repo.getAccess("m12"));
+		
+		Condition joinConditions3 = ConjunctiveCondition.create(new SimpleCondition[]{AttributeEqualityCondition.create(7, 23)});
+		
+		JoinTerm joinTerm3 = JoinTerm.create(joinTerm2, termRegion, joinConditions3);
+		
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(joinTerm3, decor);
+
+		// Execute the plan.
+		List<Tuple> result = target.stream().collect(Collectors.toList());
+
+		Assert.assertEquals(30, result.size());
 		target.close();
 	}
 
