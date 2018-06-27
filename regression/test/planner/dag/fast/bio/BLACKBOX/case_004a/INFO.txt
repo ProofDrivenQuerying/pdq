@@ -1,0 +1,19 @@
+Comment:
+
+Select from Pathway join Protein join Publication 
+
+Query:
+
+SELECT publicationId, source, pmid, accession, entry_name, organism,
+  pathwayId, pathwayName, stableIdentifier, goBiologicalProcess,
+  isInferred, organismId, organism, pdoi, hasDiagram
+ FROM Pathway
+  JOIN Protein ON Protein.organism = Pathway.organism
+  JOIN Publication ON Protein.accession = Publication.accession
+ WHERE isInDisease = 'true'
+
+Schema:
+
+Pathway has 10 columns and 500 rows
+Protein has 4 columns and 1000000 rows
+Publication has 25 columns and 13520737 rows
