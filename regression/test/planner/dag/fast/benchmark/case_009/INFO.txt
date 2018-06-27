@@ -1,0 +1,19 @@
+Comment:
+
+Customers from the United-States, with URGENT order of the same status. Cannot exploit the order_customer view.
+
+Query:
+
+SELECT c_name, c_name
+ FROM orders
+  JOIN customer ON o_custkey = c_custkey
+  JOIN customer ON c_nationkey = c_nationkey
+  JOIN orders ON o_custkey = c_custkey
+  JOIN nation ON c_nationkey = n_nationkey
+ WHERE o_orderstatus = o_orderstatus AND o_orderpriority = '1 - URGENT'
+
+Schema:
+
+orders has 9 columns and 1500 rows
+customer has 8 columns and 150 rows
+nation has 4 columns and 25 rows

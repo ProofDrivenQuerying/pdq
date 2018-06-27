@@ -1,0 +1,18 @@
+Comment:
+
+Customers from the same country, with URGENT orders. Can exploit order_customer view.
+
+Query:
+
+SELECT c_name, c_name
+ FROM orders
+  JOIN customer ON o_custkey = c_custkey
+  JOIN customer ON c_nationkey = c_nationkey
+  JOIN orders ON o_custkey = c_custkey
+ WHERE o_orderpriority = '1 - URGENT'
+ 
+
+Schema:
+
+orders has 9 columns and 1500 rows
+customer has 8 columns and 150 rows

@@ -1,0 +1,15 @@
+Comment:
+
+Select from lineitem join part. Rejected confusing comment in query.xml
+
+Query:
+
+SELECT p_type, l_discount, l_extendedprice
+ FROM lineitem
+  JOIN part ON p_partkey = l_partkey
+ WHERE l_shipdate = '1998-01-01'
+
+Schema:
+
+lineitem has 16 columns and 6005 rows
+part has 9 columns and 200 rows

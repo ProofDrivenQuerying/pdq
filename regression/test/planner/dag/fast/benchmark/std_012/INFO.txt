@@ -1,0 +1,15 @@
+Comment:
+
+Select from lineitem join orders. Rejected confusing comment in query.xml
+
+Query:
+
+SELECT o_orderpriority
+ FROM lineitem
+  JOIN orders ON o_orderkey = l_orderkey
+ WHERE l_commitdate = '1995-01-01' AND l_shipmode = 'MAIL'
+
+Schema:
+
+lineitem has 16 columns and 6005 rows
+orders has 9 columns and 1500 rows
