@@ -1,0 +1,12 @@
+Comment:
+
+All parts available in quantity 10 
+
+Query:
+
+SELECT p_name FROM partsupp JOIN part ON ps_partkey = p_partkey WHERE ps_availqty = 10
+
+Schema:
+
+partsupp has 5 columns and 700 rows
+part has 9 columns and 200 rows
