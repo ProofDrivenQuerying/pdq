@@ -30,7 +30,9 @@ public class AccessRepository {
 	 * @throws JAXBException 
 	 */
 	public static AccessRepository getRepository() throws JAXBException {
-		return getRepository(DEFAULT_REPOSITORY_LOCATION);
+		if (new File(DEFAULT_REPOSITORY_LOCATION).exists())
+			return getRepository(DEFAULT_REPOSITORY_LOCATION);
+		else return new AccessRepository();
 	}
 	
 	/** Creates or retrieves the repository pointing to the given location. 
@@ -55,6 +57,9 @@ public class AccessRepository {
 			throw new RuntimeException("Datasource Repository: \"" + repo.getAbsolutePath() + "\" not found!");
 		for(File f:repo.listFiles())
 			if (f.getName().toLowerCase().endsWith(".xml")) addAccessFromXml(f);
+	}
+	private AccessRepository() throws JAXBException {
+		this.repositoryFolderName = "EmptyRepository";
 	}
 	
 	/** Import a single access method and adds it to the repository

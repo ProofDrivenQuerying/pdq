@@ -288,6 +288,7 @@ public class AccessTest {
 
 		Relation relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relation.getName()).thenReturn("NATION");
 
 		Integer[] inputs = new Integer[0];
 		ExecutableAccessMethod amFree = new SqlAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation,
@@ -572,7 +573,7 @@ public class AccessTest {
 		target.close();
 	}
 
-	@Test
+	//@Test
 	public void stressTestSql1() throws Exception {
 
 		// Specify input attributes by passing a set of attributes.
