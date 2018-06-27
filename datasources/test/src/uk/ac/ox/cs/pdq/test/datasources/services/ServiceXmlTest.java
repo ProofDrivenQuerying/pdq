@@ -15,6 +15,8 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
+// @author Mark Ridler
+
 public class ServiceXmlTest {
 	
 	// chembl-activityFree test requires a null input tuple due to free status (no inputs)
