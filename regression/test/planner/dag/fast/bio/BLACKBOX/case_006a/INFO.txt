@@ -1,0 +1,16 @@
+Comment:
+
+Select from Pathway join Target 
+
+Query:
+
+SELECT pathwayId, pathwayName, stableIdentifier, goBiologicalProcess,
+  isInferred, organismId, organism, pdoi, hasDiagram
+ FROM Pathway
+  JOIN Target ON Pathway.organism = Target.organism
+ WHERE isInDisease = 'false' AND target_type = 'SINGLE PROTEIN'
+
+Schema:
+
+Pathway has 10 columns and 500 rows
+Target has 8 columns and 0 rows
