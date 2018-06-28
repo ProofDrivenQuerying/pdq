@@ -121,13 +121,6 @@ public class ReasoningParameters extends Parameters {
 			defaultValue = "Integer.MAX_VALUE")
 	protected Integer terminationK = Integer.MAX_VALUE;
 
-	/** The full initialization. */
-	@Parameter(description = "In true, the initial configuration is full "
-			+ "initialized at the beginning of a planning algorithm.\n"
-			+ "Only applies to DAG planning algorithms",
-			defaultValue = "false")
-	protected Boolean fullInitialization = Boolean.FALSE;
-
 	/**
 	 * Gets the database driver.
 	 *
@@ -254,24 +247,6 @@ public class ReasoningParameters extends Parameters {
 			log.warn("Setting reasoning type to " + null, e);
 			this.reasoningType = null;
 		}
-	}
-	
-	/**
-	 * Gets the full initialization.
-	 *
-	 * @return Boolean
-	 */
-	public Boolean getFullInitialization() {
-		return this.fullInitialization;
-	}
-
-	/**
-	 * Sets the full initialization.
-	 *
-	 * @param b Boolean
-	 */
-	public void setFullInitialization(Boolean b) {
-		this.fullInitialization = b;
 	}
 	
 	/**

@@ -64,14 +64,6 @@ public class Relation implements Serializable {
 		return this.name;
 	}
 
-	/**
-	 * Gets the arity of the predicate.
-	 *
-	 * @return the arity of the predicate.
-	 */
-//	public int getArity() {
-//		return this.arity;
-//	}
 	//@Override
 	public int getArity() {
 		return this.attributes.length;
@@ -86,8 +78,6 @@ public class Relation implements Serializable {
 	public boolean isEquality() {
 		return this.isEquality;
 	}
-
-	
 
 	/** 
 	 * Properties associated with this relation; these may be SQL
@@ -119,9 +109,8 @@ public class Relation implements Serializable {
 		this(name, attributes, accessMethods, foreignKeys, isEquality,null);
 	}
 	protected Relation(String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality, String[] indexedAttributes) {
-		//super(name, attributes.length, isEquality);
 		this.name = name;
-		arity = attributes.length;
+		this.arity = attributes.length;
 		this.isEquality = isEquality;
 		this.attributes = attributes.clone();
 		Map<String, Integer> positions = new LinkedHashMap<>();

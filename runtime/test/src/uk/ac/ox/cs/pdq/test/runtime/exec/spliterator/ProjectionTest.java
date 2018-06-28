@@ -331,6 +331,7 @@ public class ProjectionTest {
 
 		Relation relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_customer.clone());
+		when(relation.getName()).thenReturn("CUSTOMER");
 
 		Integer[] inputs = new Integer[0];
 		ExecutableAccessMethod amFree = new SqlAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputs, relation,
@@ -375,6 +376,7 @@ public class ProjectionTest {
 
 		Relation relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_customer.clone());
+		when(relation.getName()).thenReturn("CUSTOMER");
 
 		Integer[] inputs = new Integer[] { 3 };
 		ExecutableAccessMethod am3 = new SqlAccessMethod("CUSTOMER", TPCHelper.attrs_C, inputs, relation,
