@@ -1,0 +1,18 @@
+Comment:
+
+Select from Citation join Publication join TargetComponent
+
+Query:
+
+SELECT id, source, pmid, cit_id, cit_source, cit_citationType, cit_title,
+  cit_authorString, accession, component_id, description
+ FROM Citation
+  JOIN Publication ON Citation.id = Publication.id
+  JOIN TargetComponent ON Publication.accession = TargetComponent.accession
+ WHERE component_type = 'PROTEIN' AND organism = 'Bos taurus' AND src = 'MED'
+ 
+Schema:
+
+Citation has 13 columns and 500 rows
+Publication has 25 columns and 0 rows
+TargetComponent has 8 columns and 0 rows

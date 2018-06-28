@@ -1,0 +1,16 @@
+Comment:
+
+Select from Publication join TargetComponent
+
+Query:
+
+SELECT id, source, pmid, accession, component_id, description, 
+  protein_classification_id, sequence, tax_id
+ FROM Publication
+  JOIN TargetComponent ON Publication.accession = TargetComponent.accession
+ WHERE component_type = 'PROTEIN' AND organism = 'Bos taurus'
+ 
+Schema:
+
+Publication has 25 columns and 0 rows
+TargetComponent has 8 columns and 0 rows
