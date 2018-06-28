@@ -1,0 +1,20 @@
+Comment:
+
+Select from Assay join Target
+
+Query:
+
+SELECT assay_category, assay_cell_type, assay_chembl_id,
+  assay_organism, assay_strain, assay_subcellular_fraction,
+  assay_tax_id,
+  target_organism, pref_name, species_group_flag, target_chembl_id,
+  target_component_accession, target_component_id, target_component_type,
+  target_type
+ FROM Assay
+  JOIN Target ON Assay.organism = Target.organism
+ WHERE assay_tissue = 'Liver'
+ 
+Schema:
+
+Assay has 22 columns and 0 rows
+Target has 8 columns and 0 rows
