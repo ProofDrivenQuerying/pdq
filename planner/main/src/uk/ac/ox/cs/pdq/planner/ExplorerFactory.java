@@ -83,8 +83,7 @@ public class ExplorerFactory {
 	 */
 	@SuppressWarnings("rawtypes")
 	public static Explorer createExplorer(
-			EventBus eventBus, 
-			boolean collectStats,
+			EventBus eventBus,
 			Schema schema,
 			AccessibleSchema accessibleSchema,
 			ConjunctiveQuery query,
@@ -148,7 +147,6 @@ public class ExplorerFactory {
 		case LINEAR_GENERIC:
 			return new LinearGeneric(
 					eventBus, 
-					collectStats,
 					query, 
 					accessibleQuery,
 					accessibleSchema, 
@@ -160,7 +158,6 @@ public class ExplorerFactory {
 		case LINEAR_KCHASE:
 			return  new LinearKChase(
 					eventBus, 
-					collectStats,
 					query, 
 					accessibleQuery,
 					accessibleSchema, 
@@ -174,7 +171,7 @@ public class ExplorerFactory {
 
 		case DAG_GENERIC:
 			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric(
-					eventBus, collectStats,
+					eventBus,
 					parameters,
 					query, 
 					accessibleQuery,
@@ -189,7 +186,7 @@ public class ExplorerFactory {
 
 		case DAG_SIMPLEDP:
 			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGSimpleDP(
-					eventBus, collectStats,
+					eventBus, 
 					parameters,
 					query, 
 					accessibleQuery,
@@ -205,7 +202,7 @@ public class ExplorerFactory {
 
 		case DAG_CHASEFRIENDLYDP:
 			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGChaseFriendlyDP(
-					eventBus, collectStats,
+					eventBus, 
 					parameters,
 					query, 
 					accessibleQuery,
@@ -221,7 +218,7 @@ public class ExplorerFactory {
 
 		case DAG_OPTIMIZED:
 			return new DAGOptimized(
-					eventBus, collectStats,
+					eventBus,
 					parameters,
 					query, 
 					accessibleQuery,
@@ -236,7 +233,6 @@ public class ExplorerFactory {
 		case LINEAR_OPTIMIZED:
 			return new LinearOptimized(
 					eventBus, 
-					collectStats,
 					query, 
 					accessibleQuery,
 					accessibleSchema, 

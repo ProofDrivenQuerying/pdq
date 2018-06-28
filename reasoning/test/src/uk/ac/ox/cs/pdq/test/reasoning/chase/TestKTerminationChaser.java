@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Sets;
-import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
@@ -37,7 +36,6 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.KTerminationChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
@@ -64,7 +62,7 @@ public class TestKTerminationChaser extends PdqTest {
 	public void setup() throws Exception {
 		super.setup();
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2 }, new Dependency[] { this.tgd });
-		this.chaser = new KTerminationChaser(new StatisticsCollector(true, new EventBus()),2);
+		this.chaser = new KTerminationChaser(2);
 	}
 
 	/**
@@ -543,7 +541,7 @@ public class TestKTerminationChaser extends PdqTest {
 	public void setup(DatabaseManager c) throws SQLException {
 
 		this.setConnection(c);
-		this.chaser = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
+		this.chaser = new RestrictedChaser();
 	}
 
 }

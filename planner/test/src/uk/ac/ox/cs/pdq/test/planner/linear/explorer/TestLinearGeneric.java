@@ -131,7 +131,7 @@ public class TestLinearGeneric extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
@@ -148,7 +148,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), false, scenario1.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
+			explorer = new LinearGeneric(new EventBus(), scenario1.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
 					parameters.getMaxDepth());
 
 			PlanTree<SearchNode> planTree = null;
@@ -249,7 +249,7 @@ public class TestLinearGeneric extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
@@ -266,7 +266,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), false, scenario2.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
+			explorer = new LinearGeneric(new EventBus(), scenario2.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
 					parameters.getMaxDepth());
 
 			PlanTree<SearchNode> planTree = null;
@@ -324,7 +324,7 @@ public class TestLinearGeneric extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
@@ -341,7 +341,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), false, scenario3.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
+			explorer = new LinearGeneric(new EventBus(), scenario3.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
 					parameters.getMaxDepth());
 
 			explorer.explore();
@@ -447,7 +447,7 @@ public class TestLinearGeneric extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
@@ -464,7 +464,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), false, query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
+			explorer = new LinearGeneric(new EventBus(), query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
 					parameters.getMaxDepth());
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -518,7 +518,7 @@ public class TestLinearGeneric extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
@@ -536,7 +536,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create Linear Generic
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), false, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
+			explorer = new LinearGeneric(new EventBus(), ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
 					parameters.getMaxDepth());
 			explorer.explore();
 			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();

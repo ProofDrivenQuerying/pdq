@@ -11,7 +11,6 @@ import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
-import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
@@ -161,10 +160,7 @@ public class Reason {
 			if (schema == null || query == null) {
 				throw new IllegalStateException("Schema and query must be provided.");
 			}
-			ReasonerFactory reasonerFactory = new ReasonerFactory(
-					new EventBus(),
-					true,
-					reasoningParams);
+			ReasonerFactory reasonerFactory = new ReasonerFactory(reasoningParams);
 								
 			Chaser reasoner = reasonerFactory.getInstance();
 //			//Creates a chase state that consists of the canonical database of the input query.

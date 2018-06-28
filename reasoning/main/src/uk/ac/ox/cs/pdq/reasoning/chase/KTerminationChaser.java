@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
@@ -32,10 +31,7 @@ public class KTerminationChaser extends RestrictedChaser {
 	 * @param statistics the statistics
 	 * @param k 		Factor of number of rounds to chase for before stop the chase.
 	 */
-	public KTerminationChaser(
-			StatisticsCollector statistics,
-			int k) {
-		super(statistics);
+	public KTerminationChaser(int k) {
 		Preconditions.checkArgument(k >= 0);
 		this.k = k;
 	}

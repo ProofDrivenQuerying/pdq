@@ -104,7 +104,7 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 
 		// Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
@@ -246,7 +246,7 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);

@@ -2,15 +2,11 @@ package uk.ac.ox.cs.pdq.reasoning;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.KTerminationChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.ParallelEGDChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
-
-import com.google.common.base.Preconditions;
-import com.google.common.eventbus.EventBus;
 
 /**
  * Creates reasoners based on the input arguments
@@ -53,12 +49,6 @@ public class ReasonerFactory {
 	/** The log. */
 	protected static Logger log = Logger.getLogger(ReasonerFactory.class);
 
-	/**  The event bus that will be shared by all instances create by this factory. */
-	private final EventBus eventBus;
-
-	/** If true, statistics are collected while the reasoner is used. */
-	private final boolean collectStatistics;
-
 	/**  Type of reasoner. */
 	private final ReasoningTypes type;
 
@@ -70,37 +60,13 @@ public class ReasonerFactory {
 	 *
 	 * @param eventBus the event bus
 	 * @param collectStats the collect stats
-	 * @param params the params
-	 */
-	public ReasonerFactory(
-			EventBus eventBus,
-			boolean collectStats,
-			ReasoningParameters params) {
-		this(eventBus, collectStats,
-				params.getReasoningType(), 
-				params.getTerminationK());
-	}
-
-	/**
-	 * Instantiates a new reasoner factory.
-	 *
-	 * @param eventBus the event bus
-	 * @param collectStats the collect stats
 	 * @param type the type
 	 * @param k the k
 	 * @param fullInitialization the full initialization
 	 */
-	protected ReasonerFactory(
-			EventBus eventBus,
-			boolean collectStats,
-			ReasoningTypes type,
-			Integer k) {
-		Preconditions.checkNotNull(eventBus);
-		this.eventBus = eventBus;
-		this.collectStatistics = collectStats;
-		this.type = type;
-		this.terminationK = k;
-//		this.fullInitialization = fullInitialization;
+	public ReasonerFactory(ReasoningParameters params) {
+		this.type = params.getReasoningType();
+		this.terminationK = params.getTerminationK();
 	}
 
 	/**
@@ -112,57 +78,13 @@ public class ReasonerFactory {
 	public Chaser getInstance() {
 		switch (this.type) {
 		case RESTRICTED_CHASE:
-			return new RestrictedChaser(
-					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null);
+			return new RestrictedChaser();
 		case PARALLEL_EGD_CHASE:
-			return new ParallelEGDChaser(
-					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null);
-			
-//		case SEQUENTIAL_EGD_CHASE:
-//			return new RestrictedChaser(
-//					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null);
-			
+			return new ParallelEGDChaser();			
 		case KTERMINATION_CHASE:
-			return new KTerminationChaser(
-					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null,
-					this.terminationK);
-//		case BOUNDED_CHASE:
-//			if (this.kSupplier == null) {
-//				this.kSupplier = new KSupplier(this.terminationK);
-//			}
-//			return new BoundedChaser(
-//					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null,
-//					this.kSupplier,
-//					this.fullInitialization);
+			return new KTerminationChaser(this.terminationK);
 		default:
 			return null;
 		}
-	}
-
-	/**
-	 * Gets the event bus.
-	 *
-	 * @return the event bus associated with this factory
-	 */
-	public EventBus getEventBus() {
-		return this.eventBus;
-	}
-	
-	/**
-	 * Gets the type.
-	 *
-	 * @return the type
-	 */
-	public ReasoningTypes getType() {
-		return this.type;
-	}
-	
-	/**
-	 * Gets the collect statistics.
-	 *
-	 * @return the collect statistics
-	 */
-	public boolean getCollectStatistics() {
-		return this.collectStatistics;
 	}
 }

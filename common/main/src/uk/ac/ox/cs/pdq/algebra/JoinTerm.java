@@ -19,8 +19,6 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 public class JoinTerm extends CartesianProductTerm {
 	protected static final long serialVersionUID = -2424275295263353630L;
 
-	//protected final RelationalTerm[] children = new RelationalTerm[2];
-
 	/** The join conditions. */
 	protected final Condition joinConditions;
 
@@ -29,13 +27,13 @@ public class JoinTerm extends CartesianProductTerm {
 	
 	protected JoinTerm(RelationalTerm child1, RelationalTerm child2) {
 		super(child1, child2);
-//		super(AlgebraUtilities.computeInputAttributes(child1, child2), 
-//				AlgebraUtilities.computeOutputAttributes(child1, child2));
-//		Assert.assertNotNull(child1);
-//		Assert.assertNotNull(child2);
-//		this.children[0] = child1;
-//		this.children[1] = child2;
 		this.joinConditions = AlgebraUtilities.computeJoinConditions(this.children);
+	}
+	
+	protected JoinTerm(RelationalTerm child1, RelationalTerm child2, Condition joinConditions) {
+		super(child1, child2);
+		AlgebraUtilities.assertJoinCondition(joinConditions, child1, child2);
+		this.joinConditions = joinConditions;
 	}
 
 	public Condition getJoinConditions() {
@@ -96,6 +94,10 @@ public class JoinTerm extends CartesianProductTerm {
     
     public static JoinTerm create(RelationalTerm child1, RelationalTerm child2) {
         return Cache.joinTerm.retrieve(new JoinTerm(child1, child2));
+    }
+    
+    public static JoinTerm create(RelationalTerm child1, RelationalTerm child2, Condition joinConditions) {
+        return Cache.joinTerm.retrieve(new JoinTerm(child1, child2, joinConditions));
     }
     
 	@Override

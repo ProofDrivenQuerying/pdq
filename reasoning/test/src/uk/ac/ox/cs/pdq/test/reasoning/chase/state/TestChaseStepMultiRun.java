@@ -13,13 +13,16 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
- * Runs the TestChaseStep test with a multiThreaded db connection.
+ * Runs the TestChaseStep test REPEAT times, using the default 10 connections in the database manager.
  * @author Gabor
  * 
  */
 public class TestChaseStepMultiRun extends PdqTest {
-	private static final int REPEAT = 35;
+	private static final int REPEAT = 10;
 
+	/** Executes the TestChaseSteps's test once.
+	 * @throws Exception
+	 */
 	@Test
 	public void testMultiThreadPostgres() throws Exception {
 		TestChaseSteps tcs = new TestChaseSteps();
@@ -29,6 +32,9 @@ public class TestChaseStepMultiRun extends PdqTest {
 		tcs.tearDown();
 	}
 
+	/** Executes the TestChaseSteps's test REPEAT times, In each loop it adds and deletes facts REPEAT times. 
+	 * @throws Exception
+	 */
 	@Test
 	public void testLongRunningMultiThreadPostgres() throws Exception {
 		for (int i = 0; i < REPEAT; i++) {
@@ -45,6 +51,11 @@ public class TestChaseStepMultiRun extends PdqTest {
 		}
 	}
 
+	/** Creates a default connection to the external database manager.
+	 * @param parameters
+	 * @param schema
+	 * @return
+	 */
 	private DatabaseManager createConnection(DatabaseParameters parameters, Schema schema) {
 		try {
 			ExternalDatabaseManager edm = new ExternalDatabaseManager(parameters);

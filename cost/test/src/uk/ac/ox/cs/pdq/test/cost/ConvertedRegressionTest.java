@@ -95,7 +95,7 @@ public class ConvertedRegressionTest extends PdqTest {
 		when(this.catalog.getCardinality(part)).thenReturn(200);
 		when(this.catalog.getCardinality(partsupp)).thenReturn(700);
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(cardinalityEstimator);
 		Cost cost = estimator.cost(pt);
 		Assert.assertEquals(322831.63820324163, (double) cost.getValue(), 0.0001);
 
@@ -189,7 +189,7 @@ public class ConvertedRegressionTest extends PdqTest {
 		when(this.catalog.getCardinality(region)).thenReturn(5);
 
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(cardinalityEstimator);
 		Cost cost = estimator.cost(pt);
 		Assert.assertEquals(7998.7450843781535, (double) cost.getValue(), 0.0001);
 

@@ -1,9 +1,5 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
-
-import static uk.ac.ox.cs.pdq.cost.logging.CostStatKeys.COST_ESTIMATION_COUNT;
-import static uk.ac.ox.cs.pdq.cost.logging.CostStatKeys.COST_ESTIMATION_TIME;
-
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
@@ -17,7 +13,6 @@ import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 
 
 /**
@@ -34,9 +29,6 @@ import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
  */
 public class TextBookCostEstimator implements OrderDependentCostEstimator {
 
-	/** The stats. */
-	protected final StatisticsCollector stats;
-
 	/** The card estimator. */
 	protected final CardinalityEstimator cardEstimator;
 
@@ -46,8 +38,7 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 	 * @param stats the stats
 	 * @param ce CardinalityEstimator
 	 */
-	public TextBookCostEstimator(StatisticsCollector stats, CardinalityEstimator ce) {
-		this.stats = stats;
+	public TextBookCostEstimator(CardinalityEstimator ce) {
 		this.cardEstimator = ce;
 	}
 
@@ -57,7 +48,7 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 	 */
 	@Override
 	public TextBookCostEstimator clone() {
-		return (TextBookCostEstimator) (this.stats == null ? new TextBookCostEstimator(null,  this.cardEstimator.clone()) : new TextBookCostEstimator(this.stats.clone(),  this.cardEstimator.clone()));
+		return (TextBookCostEstimator) new TextBookCostEstimator(this.cardEstimator.clone());
 	}
 
 	/**
@@ -167,12 +158,9 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 	 */
 	@Override
 	public Cost cost(RelationalTerm plan) {
-		if(this.stats != null){this.stats.start(COST_ESTIMATION_TIME);}
 		if (plan.isClosed())
 			this.cardEstimator.estimateCardinality(plan);
 		DoubleCost result = new DoubleCost(this.recursiveCost(plan));
-		if(this.stats != null){this.stats.stop(COST_ESTIMATION_TIME);}
-		if(this.stats != null){this.stats.increase(COST_ESTIMATION_COUNT, 1);}
 		return result;
 	}
 }

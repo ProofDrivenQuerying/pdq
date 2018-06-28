@@ -15,11 +15,8 @@ import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.logging.ProgressLogger;
-import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
-import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.regression.RegressionTest;
 import uk.ac.ox.cs.pdq.regression.RegressionTestException;
@@ -50,7 +47,7 @@ public class PlannerCostFunctionTest extends RegressionTest {
 	 * The Class CostCommand.
 	 */
 	public static class CostCommand extends Command {
-		
+
 		/**
 		 * Instantiates a new cost command.
 		 */
@@ -74,7 +71,7 @@ public class PlannerCostFunctionTest extends RegressionTest {
 	 */
 	@Override
 	protected boolean run(File directory) throws RegressionTestException,
-			IOException, ReflectiveOperationException {
+	IOException, ReflectiveOperationException {
 		return this.compare(directory);
 	}
 
@@ -95,7 +92,7 @@ public class PlannerCostFunctionTest extends RegressionTest {
 			CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-			
+
 			// Loading query
 			ConjunctiveQuery query = IOManager.importQuery(new File(directory.getAbsolutePath() + '/' + QUERY_FILE));
 			if (schema == null || query == null) {
@@ -105,18 +102,13 @@ public class PlannerCostFunctionTest extends RegressionTest {
 
 			Entry<RelationalTerm, Cost> plan1;
 			Entry<RelationalTerm, Cost> plan2;
-			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-				costParams.setCostType(CostTypes.FIXED_COST_PER_ACCESS);
-				ExplorationSetUp planner1 = new ExplorationSetUp(planParams, costParams, reasoningParams,dbParams, schema);
-				planner1.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
-				plan1 = planner1.search(query);
-			}
-			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-				costParams.setCostType(CostTypes.TEXTBOOK);
-				ExplorationSetUp planner2 = new ExplorationSetUp(planParams, costParams, reasoningParams,dbParams, schema);
-				planner2.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
-				plan2 = planner2.search(query);
-			}
+			costParams.setCostType(CostTypes.FIXED_COST_PER_ACCESS);
+			ExplorationSetUp planner1 = new ExplorationSetUp(planParams, costParams, reasoningParams,dbParams, schema);
+			plan1 = planner1.search(query);
+
+			costParams.setCostType(CostTypes.TEXTBOOK);
+			ExplorationSetUp planner2 = new ExplorationSetUp(planParams, costParams, reasoningParams,dbParams, schema);
+			plan2 = planner2.search(query);
 
 			if (plan1 == null && plan2 == null) {
 				this.out.println("PASS: " + directory.getAbsolutePath());

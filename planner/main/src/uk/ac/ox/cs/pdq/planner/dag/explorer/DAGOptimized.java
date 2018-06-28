@@ -1,8 +1,5 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer;
 
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CANDIDATES;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CONFIGURATIONS;
-
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -86,7 +83,6 @@ public class DAGOptimized extends DAGExplorer {
 	 */
 	public DAGOptimized(
 			EventBus eventBus, 
-			boolean collectStats, 
 			PlannerParameters parameters,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
@@ -98,7 +94,7 @@ public class DAGOptimized extends DAGExplorer {
 			IterativeExecutor binaryConfigurationCreationThreads,
 			IterativeExecutor configurationSpaceExplorationThreads,
 			int maxDepth) throws PlannerException, SQLException {
-		super(eventBus, collectStats, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
+		super(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
 		Preconditions.checkNotNull(binaryConfigurationCreationThreads);
 		Preconditions.checkNotNull(configurationSpaceExplorationThreads);
 		this.filter = filter;
@@ -142,7 +138,6 @@ public class DAGOptimized extends DAGExplorer {
 					}
 				}
 			}
-			this.stats.set(CONFIGURATIONS, this.leftSideConfigurations.size());
 		} else if (this.depth > 1) {
 			this.checkLimitReached();
 			//Perform parallel chasing
@@ -197,9 +192,6 @@ public class DAGOptimized extends DAGExplorer {
 				this.equivalenceClasses.removeAll(toDelete);
 				this.leftSideConfigurations.removeAll(toDelete);
 			}
-
- 			this.stats.set(CONFIGURATIONS, this.equivalenceClasses.size());
-			this.stats.set(CANDIDATES, this.leftSideConfigurations.size());
 		}
 		this.depth++;
 	}

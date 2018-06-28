@@ -1,8 +1,5 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_CLOSE;
-import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_QUERY_MATCH;
-
 import java.sql.SQLException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -58,7 +55,6 @@ public class LinearGeneric extends LinearExplorer {
 	 */
 	public LinearGeneric(
 			EventBus eventBus, 
-			boolean collectStats,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
@@ -67,7 +63,7 @@ public class LinearGeneric extends LinearExplorer {
 			CostEstimator costEstimator,
 			NodeFactory nodeFactory,
 			int depth) throws PlannerException, SQLException {
-		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, nodeFactory, depth);
+		super(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, nodeFactory, depth);
 	}
 
 	/**
@@ -112,17 +108,13 @@ public class LinearGeneric extends LinearExplorer {
 		Cost cost = this.costEstimator.cost(freshNode.getConfiguration().getPlan());
 		freshNode.getConfiguration().setCost(cost);
 		
-		this.stats.start(MILLI_CLOSE);
 		freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
-		this.stats.stop(MILLI_CLOSE);
 		
 		this.planTree.addVertex(freshNode);
 		this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
 
 		// Check for query match
-		this.stats.start(MILLI_QUERY_MATCH);
 		List<Match> matches = freshNode.matchesQuery(this.accessibleQuery);
-		this.stats.stop(MILLI_QUERY_MATCH);
 
 		// If there exists at least one query match
 		if (!matches.isEmpty()) {

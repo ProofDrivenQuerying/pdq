@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.algebra;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,6 +42,34 @@ public class AlgebraUtilities {
 		} else
 			return assertSelectionCondition((SimpleCondition) selectionCondition, outputAttributes);
 	}
+	
+	public static boolean assertJoinCondition(Condition joinConditions, RelationalTerm left, RelationalTerm right) {
+		if (joinConditions instanceof ConjunctiveCondition) {
+			for (SimpleCondition conjunct : ((ConjunctiveCondition) joinConditions).getSimpleConditions()) {
+				if (conjunct instanceof AttributeEqualityCondition && 
+						!assertJoinCondition((AttributeEqualityCondition)conjunct,left,right))
+					return false;
+			}
+			return true;
+		} else
+			if(joinConditions instanceof AttributeEqualityCondition)
+				return assertJoinCondition((AttributeEqualityCondition)joinConditions,left,right);
+			else 
+				return false;
+	}
+	
+	public static boolean assertJoinCondition(AttributeEqualityCondition joinCondition, RelationalTerm left, RelationalTerm right) {
+		int numberOfAttributesLeftChild = left.getNumberOfOutputAttributes();
+		if(joinCondition.getPosition() >= left.getNumberOfOutputAttributes() || 
+				joinCondition.getOther() - numberOfAttributesLeftChild >= right.getNumberOfOutputAttributes())
+			return false;
+		Type typeOfLeftAttribute = left.getOutputAttribute(joinCondition.getPosition()).getType();
+		Type typeOfRightAttribute = right.getOutputAttribute(joinCondition.getOther() - numberOfAttributesLeftChild).getType();
+		if(!typeOfLeftAttribute.equals(typeOfRightAttribute))
+			return false;
+		return true;
+	}
+	
 
 	public static boolean assertSelectionCondition(SimpleCondition selectionCondition, Attribute[] outputAttributes) {
 		if (selectionCondition instanceof ConstantInequalityCondition) {

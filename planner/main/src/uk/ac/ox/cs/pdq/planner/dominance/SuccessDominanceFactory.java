@@ -15,7 +15,7 @@ public class SuccessDominanceFactory {
 
 	//private final SuccessDominanceTypes type;
 	/** The estimator. */
-	private final OrderIndependentCostEstimator costEstimatorForOpenPlans = new CountNumberOfAccessedRelationsCostEstimator(null);
+	private final OrderIndependentCostEstimator costEstimatorForOpenPlans = new CountNumberOfAccessedRelationsCostEstimator();
 
 	/**
 	 * Constructor for DominanceFactory.

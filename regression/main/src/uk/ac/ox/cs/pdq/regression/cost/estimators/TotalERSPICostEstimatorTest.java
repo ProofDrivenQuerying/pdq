@@ -8,8 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.eventbus.EventBus;
-
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.TotalNumberOfOutputTuplesPerAccessCostEstimator;
@@ -17,7 +15,6 @@ import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.regression.planner.PlannerTestUtilities;
 
 /**
@@ -26,9 +23,6 @@ import uk.ac.ox.cs.pdq.regression.planner.PlannerTestUtilities;
  * @author Efthymia Tsamoura
  */
 public class TotalERSPICostEstimatorTest{
-
-	/** The event bus. */
-	private EventBus eventBus = new EventBus();
 	
 	/** The shema path. */
 	private static String SHEMA_PATH = "test/cost/";
@@ -108,7 +102,7 @@ public class TotalERSPICostEstimatorTest{
 				Entry<RelationalTerm, Cost> plan = PlannerTestUtilities.obtainPlan(PLAN_PATH + f, schema);
 				Catalog catalog = new SimpleCatalog(schema, CATALOG);
 				TotalNumberOfOutputTuplesPerAccessCostEstimator costEstimator = null;
-				costEstimator = new TotalNumberOfOutputTuplesPerAccessCostEstimator(new StatisticsCollector(false, this.eventBus), catalog);
+				costEstimator = new TotalNumberOfOutputTuplesPerAccessCostEstimator(catalog);
 				Assert.assertEquals(plan.getValue(), costEstimator.cost(plan.getKey()));
 
 			} catch (FileNotFoundException e) {

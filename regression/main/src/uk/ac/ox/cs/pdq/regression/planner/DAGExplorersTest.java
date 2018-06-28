@@ -14,12 +14,9 @@ import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.logging.ProgressLogger;
-import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
-import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.regression.RegressionTest;
 import uk.ac.ox.cs.pdq.regression.RegressionTestException;
@@ -109,10 +106,8 @@ public class DAGExplorersTest extends RegressionTest {
 			PlannerTypes masterType = null;
 			for (PlannerTypes type: PlannerTypes.values()) {
 				if (type.toString().startsWith("DAG")) {
-					try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 						plannerParams.setPlannerType(type);
 						ExplorationSetUp planner1 = new ExplorationSetUp(plannerParams, costParams, reasoningParams, databaseParams, schema);
-						planner1.registerEventHandler(new IntervalEventDrivenLogger(pLog, plannerParams.getLogIntervals(), plannerParams.getShortLogIntervals()));
 						Entry<RelationalTerm, Cost> entry = planner1.search(query);
 						if (plan == null) {
 							masterType = type;
@@ -136,7 +131,7 @@ public class DAGExplorersTest extends RegressionTest {
 								return false;
 							}
 						}
-					}
+					
 				}
 			}
 			return true;

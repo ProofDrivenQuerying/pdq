@@ -106,23 +106,6 @@ public class PlannerParameters extends Parameters {
 			defaultValue = "Integer.MAX_VALUE")
 	protected Integer maxIterations = Integer.MAX_VALUE;
 
-	/** The log intervals. */
-	@Parameter(description="Interval (in number of iterations) between "
-			+ "which detailed executions informations are logged.",
-			defaultValue = "10")
-	protected Integer logIntervals = 10;
-
-	/** The short log intervals. */
-	@Parameter(description="Interval (in number of iterations) between "
-			+ "which succint executions informations are logged.",
-			defaultValue = "1")
-	protected Integer shortLogIntervals = 1;
-
-	/** The output log path. */
-	@Parameter(description="Path of the output file where to store the logs "
-			+ "(optional). If missing, logs are printed to STDOUT")
-	protected String outputLogPath;
-
 	/** The planner type. */
 	@Parameter(description="Type of planning algorithm to use.")
 	protected PlannerTypes plannerType;
@@ -217,35 +200,12 @@ public class PlannerParameters extends Parameters {
 	private Boolean useInternalDatabase = false;
 
 	/**
-	 * @return Integer
-	 */
-	public Integer getLogIntervals() {
-		return this.logIntervals;
-	}
-
-	/**
 	 * Gets the max iterations.
 	 *
 	 * @return Integer
 	 */
 	public Integer getMaxIterations() {
 		return this.maxIterations;
-	}
-
-	/**
-	 * Gets the short log intervals.
-	 *
-	 * @return Integer
-	 */
-	public Integer getShortLogIntervals() {
-		return this.shortLogIntervals;
-	}
-
-	/**
-	 * @param logIntervals Number
-	 */
-	public void setLogIntervals(Number logIntervals) {
-		this.logIntervals = logIntervals != null ? logIntervals.intValue() : null;
 	}
 
 	/**
@@ -268,15 +228,6 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the short log intervals.
-	 *
-	 * @param shortLogIntervals Number
-	 */
-	public void setShortLogIntervals(Number shortLogIntervals) {
-		this.shortLogIntervals = shortLogIntervals != null ? shortLogIntervals.intValue() : null;
-	}
-
-	/**
 	 * Sets the timeout.
 	 *
 	 * @param s String
@@ -284,24 +235,6 @@ public class PlannerParameters extends Parameters {
 	public void setTimeout(String s) {
 		log.debug("Setting timeout to infinity");
 		this.timeout = Double.POSITIVE_INFINITY;
-	}
-
-	/**
-	 * Gets the output log path.
-	 *
-	 * @return String
-	 */
-	public String getOutputLogPath() {
-		return this.outputLogPath;
-	}
-
-	/**
-	 * Sets the output log path.
-	 *
-	 * @param outputLogPath String
-	 */
-	public void setOutputLogPath(String outputLogPath) {
-		this.outputLogPath = outputLogPath;
 	}
 
 	/**

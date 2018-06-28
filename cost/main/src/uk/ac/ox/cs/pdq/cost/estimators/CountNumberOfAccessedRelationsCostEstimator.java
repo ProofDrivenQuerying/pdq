@@ -1,15 +1,11 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
-import static uk.ac.ox.cs.pdq.cost.logging.CostStatKeys.COST_ESTIMATION_COUNT;
-import static uk.ac.ox.cs.pdq.cost.logging.CostStatKeys.COST_ESTIMATION_TIME;
-
 import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 
 
 /**
@@ -20,18 +16,6 @@ import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
  */
 public class CountNumberOfAccessedRelationsCostEstimator implements OrderIndependentCostEstimator {
 
-	/** The stats. */
-	protected final StatisticsCollector stats;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param stats the stats
-	 */
-	public CountNumberOfAccessedRelationsCostEstimator(StatisticsCollector stats) {
-		this.stats = stats;
-	}
-
 	/**
 	 * Clone.
 	 *
@@ -40,7 +24,7 @@ public class CountNumberOfAccessedRelationsCostEstimator implements OrderIndepen
 	 */
 	@Override
 	public CountNumberOfAccessedRelationsCostEstimator clone() {
-		return (CountNumberOfAccessedRelationsCostEstimator) (this.stats == null ? new CountNumberOfAccessedRelationsCostEstimator(null) : new CountNumberOfAccessedRelationsCostEstimator(this.stats.clone()));
+		return (CountNumberOfAccessedRelationsCostEstimator) new CountNumberOfAccessedRelationsCostEstimator();
 	}
 
 	/**
@@ -65,10 +49,7 @@ public class CountNumberOfAccessedRelationsCostEstimator implements OrderIndepen
 	 */
 	@Override
 	public DoubleCost cost(Collection<AccessTerm> accesses) {
-		if(this.stats != null){this.stats.start(COST_ESTIMATION_TIME);}
 		DoubleCost result = new DoubleCost(accesses.size());
-		if(this.stats != null){this.stats.stop(COST_ESTIMATION_TIME);}
-		if(this.stats != null){this.stats.increase(COST_ESTIMATION_COUNT, 1);}
 		return result;
 	}
 }

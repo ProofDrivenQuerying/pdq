@@ -25,7 +25,7 @@ public class DominanceFactory {
 	private final DominanceTypes type;
 	
 	/** The cost estimator. */
-	private final OrderIndependentCostEstimator costEstimator = new CountNumberOfAccessedRelationsCostEstimator(null);
+	private final OrderIndependentCostEstimator costEstimator = new CountNumberOfAccessedRelationsCostEstimator();
 	
 	private final FactDominance factDominance = new FastFactDominance(false);
 

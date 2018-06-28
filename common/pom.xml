@@ -64,8 +64,11 @@ FOL formulas, relation algebra, etc.
 		<url>http://www.cs.ox.ac.uk</url>
 	</organization>
 	<dependencies>
-	
-	
+		<dependency>
+			<groupId>com.beust</groupId>
+			<artifactId>jcommander</artifactId>
+			<version>1.35</version>
+		</dependency>
 		<!-- database dependencies are needed for unit testing database utilities -->
 		<dependency>
 			<groupId>mysql</groupId>

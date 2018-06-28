@@ -5,8 +5,6 @@ import java.sql.SQLException;
 
 import org.junit.Assert;
 
-import com.google.common.eventbus.EventBus;
-
 import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
@@ -23,7 +21,6 @@ import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 
 /**
  * A factory of cost estimation objects.
@@ -53,7 +50,7 @@ public class CostEstimatorFactory {
 	 * @throws SQLException the SQL exception
 	 */
 	public static CostEstimator getEstimator(CostParameters costParams, Schema schema) {
-		return getInstance(null, false, costParams, schema);
+		return getInstance(costParams, schema);
 	}
 
 	/**
@@ -68,8 +65,6 @@ public class CostEstimatorFactory {
 	 * @throws SQLException the SQL exception
 	 */
 	public static CostEstimator getInstance(
-			EventBus eventBus, 
-			boolean collectStats,
 			CostParameters costParams, 
 			Schema schema) {
 		Assert.assertNotNull("Cost type parameter is not defined.", costParams.getCostType());
@@ -89,7 +84,7 @@ public class CostEstimatorFactory {
 			default:
 				throw new IllegalArgumentException("Cardinality estimation " + costParams.getCardinalityEstimationType() + "  not yet supported.");
 			}
-			result = new TextBookCostEstimator(new StatisticsCollector(collectStats, eventBus), card);
+			result = new TextBookCostEstimator(card);
 			break;
 		case BLACKBOX_DB:
 			try {
@@ -110,17 +105,17 @@ public class CostEstimatorFactory {
 			break;
 		case NUMBER_OF_OUTPUT_TUPLES_PER_ACCESS:
 			Assert.assertNotNull(costParams.getCatalog());
-			result = new TotalNumberOfOutputTuplesPerAccessCostEstimator(new StatisticsCollector(collectStats, eventBus), catalog);
+			result = new TotalNumberOfOutputTuplesPerAccessCostEstimator(catalog);
 			break;
 		case FIXED_COST_PER_ACCESS:
 			Assert.assertNotNull(costParams.getCatalog());
-			result =  new FixedCostPerAccessCostEstimator(new StatisticsCollector(collectStats, eventBus), catalog);
+			result =  new FixedCostPerAccessCostEstimator(catalog);
 			break;
 		case INVERSE_LENGTH:
-			result =  new LengthBasedCostEstimator(new StatisticsCollector(collectStats, eventBus));
+			result =  new LengthBasedCostEstimator();
 			break;
 		default:
-			result =  new CountNumberOfAccessedRelationsCostEstimator(new StatisticsCollector(collectStats, eventBus));
+			result =  new CountNumberOfAccessedRelationsCostEstimator();
 			break;
 		}
 		return result;

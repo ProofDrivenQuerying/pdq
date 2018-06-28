@@ -116,10 +116,10 @@ public class TestLinearOptimized extends PdqTest {
 		}
 		
 		//Create the chaser 
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 		
 		//Create the cost estimator 
-		OrderIndependentCostEstimator costEstimator = new CountNumberOfAccessedRelationsCostEstimator(null);
+		OrderIndependentCostEstimator costEstimator = new CountNumberOfAccessedRelationsCostEstimator();
 		
 		//Create the cost propagator
 		CostPropagator costPropagatpor = new OrderIndependentCostPropagator(costEstimator);
@@ -137,7 +137,6 @@ public class TestLinearOptimized extends PdqTest {
 		try {
 				explorer = new LinearOptimized(
 					new EventBus(), 
-					false,
 					ts.getQuery(), 
 					accessibleQuery,
 					accessibleSchema, 
@@ -246,10 +245,10 @@ public class TestLinearOptimized extends PdqTest {
 		}
 		
 		//Create the chaser 
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 		
 		//Create the cost estimator 
-		OrderIndependentCostEstimator costEstimator = new CountNumberOfAccessedRelationsCostEstimator(null);
+		OrderIndependentCostEstimator costEstimator = new CountNumberOfAccessedRelationsCostEstimator();
 		
 		//Create the cost propagator
 		CostPropagator costPropagatpor = new OrderIndependentCostPropagator(costEstimator);
@@ -267,7 +266,6 @@ public class TestLinearOptimized extends PdqTest {
 		try {
 			explorer = new LinearOptimized(
 					new EventBus(), 
-					false,
 					ts.getQuery(), 
 					accessibleQuery,
 					accessibleSchema, 
@@ -345,10 +343,10 @@ public class TestLinearOptimized extends PdqTest {
 		}
 		
 		//Create the chaser 
-		RestrictedChaser chaser = new RestrictedChaser(null);
+		RestrictedChaser chaser = new RestrictedChaser();
 		
 		//Create the cost estimator 
-		OrderIndependentCostEstimator costEstimator = new CountNumberOfAccessedRelationsCostEstimator(null);
+		OrderIndependentCostEstimator costEstimator = new CountNumberOfAccessedRelationsCostEstimator();
 		
 		//Create the cost propagator
 		CostPropagator costPropagatpor = new OrderIndependentCostPropagator(costEstimator);
@@ -367,7 +365,6 @@ public class TestLinearOptimized extends PdqTest {
 		try {
 			explorer = new LinearOptimized(
 					new EventBus(), 
-					false,
 					ts.getQuery(), 
 					accessibleQuery,
 					accessibleSchema, 
