@@ -66,14 +66,6 @@ public abstract class ExecutableAccessMethod extends AccessMethodDescriptor {
 	protected TupleType inputTupleTypeInternal;
 	protected TupleType inputTupleTypeExternal;
 
-//	/**
-//	 * Properties associated with this access method; these may be SQL connection
-//	 * parameters, web service settings, etc. depending on the underlying
-//	 * implementation. If no properties are defined, then this an an empty
-//	 * Properties instance.
-//	 */
-//	protected Properties properties;
-
 	/** String representation of the object. */
 	protected String toString = null;
 

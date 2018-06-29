@@ -286,7 +286,7 @@ public class ServiceBuilder implements Builder<Service> {
 					this.accessMethods.toArray(new AccessMethodDescriptor[this.accessMethods.size()]),
 					allAttributes.toArray(new RESTAttribute[allAttributes.size()]),
 					this.url, this.mediaType, this.resultDelimiter, this.policies);
-			result.setKey(this.primaryKey);
+			result.setPrimaryKey(this.primaryKey);
 			return (Service) result;
 		default:
 			throw new UnsupportedOperationException(this.protocol + " is not a supported protocol.");

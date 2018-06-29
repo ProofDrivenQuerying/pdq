@@ -58,6 +58,7 @@ public class AccessRepository {
 		for(File f:repo.listFiles())
 			if (f.getName().toLowerCase().endsWith(".xml")) addAccessFromXml(f);
 	}
+	
 	private AccessRepository() throws JAXBException {
 		this.repositoryFolderName = "EmptyRepository";
 	}
@@ -74,6 +75,17 @@ public class AccessRepository {
 		accessMethods.put(eam.getName(),eam);
 		return eam;
 	}
+	
+	/**
+	 * Adds an access method that has already been created externally  
+	 * @param eam
+	 * @return
+	 */
+	public ExecutableAccessMethod addAccess(ExecutableAccessMethod eam) {
+		accessMethods.put(eam.getName(),eam);
+		return eam;
+	}
+	
 	
 	/** Retrieves an access method identified by its name.
 	 * 

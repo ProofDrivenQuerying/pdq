@@ -111,7 +111,7 @@ public class CreateTable extends Command {
 		
 		// set primary keys if it was configured in the relation.
 		String keyAttributes = null;
-		PrimaryKey pk = relation.getKey();
+		PrimaryKey pk = relation.getPrimaryKey();
 		if (pk != null) {
 			for (Attribute a : pk.getAttributes()) {
 				if (keyAttributes == null) {

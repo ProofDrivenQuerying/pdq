@@ -67,12 +67,6 @@ public class SqlAccessMethod extends ExecutableAccessMethod {
 		this.properties = properties;
 	}
 
-	public SqlAccessMethod(Attribute[] attributes, Set<Attribute> inputAttributes,
-			Relation relation, Map<Attribute, Attribute> attributeMapping, Properties properties) {
-		super(attributes, inputAttributes, relation, attributeMapping);
-		this.properties = properties;
-	}
-
 	public SqlAccessMethod(String name, Attribute[] attributes, Set<Attribute> inputAttributes,
 			Relation relation, Map<Attribute, Attribute> attributeMapping, Properties properties) {
 		super(name, attributes, inputAttributes, relation, attributeMapping);
@@ -221,7 +215,6 @@ public class SqlAccessMethod extends ExecutableAccessMethod {
 			String username = this.properties.getProperty("username");
 			String password = this.properties.getProperty("password");
 			this.connection = DriverManager.getConnection(url + database, username, password);
-			//			this.prepareStatements(this.connection);
 		}
 		return this.connection;
 	}

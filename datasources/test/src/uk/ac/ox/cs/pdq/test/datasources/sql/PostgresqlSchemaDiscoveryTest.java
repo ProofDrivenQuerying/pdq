@@ -131,10 +131,6 @@ public class PostgresqlSchemaDiscoveryTest extends PdqTest {
 		map.put("part", Relation.create("part", this.makeAttributes(this.attributesNames[4])));
 		PostgresqlSchemaDiscoverer disco = new PostgresqlSchemaDiscoverer();
 		disco.setProperties(properties);
-//		disco.parseViewDefinition(
-//				"order_supplier",
-//				"SELECT c.c_name AS cname, c.c_address AS caddress, c.c_nationkey AS cnation, c.c_acctbal AS cactbal, o.o_orderpriority AS opriority, o.o_clerk AS oclerk, p.p_name AS pname, p.p_brand AS pbrand, p.p_type AS ptype, l.l_extendedprice AS lextendedprice, l.l_discount AS ldiscount, l.l_tax AS ltax, l.l_returnflag AS lflag FROM customer c, orders o, lineitem l, part p WHERE (((o.o_orderkey = l.l_orderkey) AND (o.o_custkey = c.c_custkey)) AND (l.l_partkey = p.p_partkey))",
-//				map);
 		disco.parseViewDefinition(
 				"order_supplier",
 				"SELECT \n" +

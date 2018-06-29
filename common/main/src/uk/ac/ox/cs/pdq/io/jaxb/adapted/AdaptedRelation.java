@@ -48,13 +48,12 @@ public class AdaptedRelation implements Serializable {
 		this.attributes = r.getAttributes();
 		this.accessMethods = r.getAccessMethods();
 		this.primaryKey = new String[r.getForeignKeys().length];
-		if (r.getKey()!=null) {
-			for (int i = 0; i < r.getKey().getNumberOfAttributes(); i++) {
-				this.primaryKey[i] = r.getKey().getAttributes()[i].getName();
+		if (r.getPrimaryKey()!=null) {
+			for (int i = 0; i < r.getPrimaryKey().getNumberOfAttributes(); i++) {
+				this.primaryKey[i] = r.getPrimaryKey().getAttributes()[i].getName();
 			}
 		}
 		this.foreignKeys = r.getForeignKeys();
-		this.properties = r.getProperties();
 		this.setName(r.getName());
 		this.setEquality(r.isEquality());
 		this.setIndexedAttributes(r.getIndexedAttributes());
@@ -160,7 +159,7 @@ public class AdaptedRelation implements Serializable {
 			for (int i = 0; i < keyAttributes.length; i++) {
 				keyAttributes[i] = allAttributesMap.get(getPrimaryKey()[i]); 
 			}
-			r.setKey(PrimaryKey.create(keyAttributes));
+			r.setPrimaryKey(PrimaryKey.create(keyAttributes));
 		}
 		return r;
 	}

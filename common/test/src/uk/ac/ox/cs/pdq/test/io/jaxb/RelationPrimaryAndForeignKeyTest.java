@@ -30,7 +30,7 @@ public class RelationPrimaryAndForeignKeyTest {
 			Assert.assertNotNull(s.getNonEgdDependencies());
 			Assert.assertNotNull(s.getRelation(0).getForeignKeys());
 			Assert.assertEquals(2,s.getRelation(0).getForeignKeys().length);
-			Assert.assertEquals("r1_1",s.getRelation(0).getKey().getAttributes()[0].getName());
+			Assert.assertEquals("r1_1",s.getRelation(0).getPrimaryKey().getAttributes()[0].getName());
 			Assert.assertTrue(s.getNonEgdDependencies().length == 0);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -59,7 +59,7 @@ public class RelationPrimaryAndForeignKeyTest {
 			Relation r = Relation.create("r1", new Attribute[] { attr1, attr2, attr3, attr4 });
 			r.addForeignKey(fk1);
 			r.addForeignKey(fk2);
-			r.setKey(pk);
+			r.setPrimaryKey(pk);
 			Schema schema = new Schema(new Relation[] {r});
 			File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "schemaWithKeys.xml");
 			IOManager.exportSchemaToXml(schema, out);

@@ -42,9 +42,9 @@ public class UtilityTest {
 		this.R = Relation.create("R", new Attribute[] { a, b, c }, new AccessMethodDescriptor[] { this.method0, this.method2 });
 		this.S = Relation.create("S", new Attribute[] { a, c }, new AccessMethodDescriptor[] { this.method0, this.method1, this.method2 });
 		this.T = Relation.create("T", new Attribute[] { a, b, c, d }, new AccessMethodDescriptor[] { this.method0, this.method1, this.method2 });
-		this.R.setKey(PrimaryKey.create(new Attribute[] { this.a, this.b }));
-		this.S.setKey(PrimaryKey.create(new Attribute[] { this.a, this.c }));
-		this.T.setKey(PrimaryKey.create(new Attribute[] { this.a, this.b, this.c }));
+		this.R.setPrimaryKey(PrimaryKey.create(new Attribute[] { this.a, this.b }));
+		this.S.setPrimaryKey(PrimaryKey.create(new Attribute[] { this.a, this.c }));
+		this.T.setPrimaryKey(PrimaryKey.create(new Attribute[] { this.a, this.b, this.c }));
 		ForeignKey fk = new ForeignKey();
 		fk.addReference(new Reference(this.a, this.a));
 		fk.addReference(new Reference(this.b, this.b));
@@ -55,7 +55,7 @@ public class UtilityTest {
 	// Create EGD then test atoms
 	@Test
 	public void testGetEGDs1() {
-		EGD egds = Utility.getEGD(this.R, this.R.getKey().getAttributes());
+		EGD egds = Utility.getEGD(this.R, this.R.getPrimaryKey().getAttributes());
 		Assert.assertNotNull(egds);
 		Assert.assertNotNull(egds.getAtoms());
 		Assert.assertEquals(3, egds.getAtoms().length);
@@ -72,13 +72,13 @@ public class UtilityTest {
 	// Create EGD to fail
 	@Test(expected = RuntimeException.class)
 	public void testGetEGDs2() {
-		Utility.getEGD(this.S, this.S.getKey().getAttributes());
+		Utility.getEGD(this.S, this.S.getPrimaryKey().getAttributes());
 	}
 
 	// Create EGD then test atoms
 	@Test
 	public void testGetEGDs3() {
-		EGD egds = Utility.getEGD(this.T, this.T.getKey().getAttributes());
+		EGD egds = Utility.getEGD(this.T, this.T.getPrimaryKey().getAttributes());
 		Assert.assertNotNull(egds);
 		Assert.assertNotNull(egds.getAtoms());
 		Assert.assertEquals(3, egds.getAtoms().length);
