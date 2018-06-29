@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<schema>
+    <relations>
+        <relation name="R">
+            <attribute name="a" type="java.lang.Integer"/>
+            <attribute name="b" type="java.lang.Integer"/>
+            <attribute name="c" type="java.lang.Integer"/>
+            <access-method name="m1"/>
+        </relation>
+        <relation name="S">
+            <attribute name="b" type="java.lang.Integer"/>
+            <attribute name="c" type="java.lang.Integer"/>
+            <access-method name="m2" inputs="0"/>
+        </relation>
+    </relations>
+    <dependencies/>
+</schema>
