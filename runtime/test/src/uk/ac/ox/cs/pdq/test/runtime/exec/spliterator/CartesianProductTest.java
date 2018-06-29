@@ -52,9 +52,11 @@ public class CartesianProductTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		Integer[] inputs = new Integer[0];
 		AccessMethodDescriptor amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, inputs,
@@ -90,9 +92,11 @@ public class CartesianProductTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		Integer[] inputs = new Integer[0];
 		AccessMethodDescriptor amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, inputs,
@@ -145,10 +149,12 @@ public class CartesianProductTest {
 		// Relation relationNation = Mockito.mock(Relation.class);
 		// when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
 		Relation relationNation = Relation.create("Nation", TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		// Relation relationRegion = Mockito.mock(Relation.class);
 		// when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 		Relation relationRegion = Relation.create("Region", TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		Set<Attribute> inputAttributes;
 
@@ -228,9 +234,11 @@ public class CartesianProductTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
-
+		when(relationNation.getName()).thenReturn("NATION");
+	
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		AccessMethodDescriptor amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0],
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());

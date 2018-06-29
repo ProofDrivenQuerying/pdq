@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import com.google.common.base.Strings;
 
 import uk.ac.ox.cs.pdq.Parameters;
-import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 
 /**
@@ -84,21 +83,6 @@ public class DatabaseParameters extends Parameters {
 		dbParam.setDatabaseUser("root");
 		dbParam.setDatabasePassword("root");
 		dbParam.setNumberOfThreads(DEFAULT_NUMBER_OF_THREADS);
-		return dbParam; 
-	}
-	
-	/** 
-	 * This is not supported since 2018 feb 14.
-	 */
-	public static DatabaseParameters getDefaultForDerby() {
-		DatabaseParameters dbParam = new DatabaseParameters();
-		dbParam.setConnectionUrl("jdbc:derby:memory:{1};create=true");
-		dbParam.setDatabaseDriver("org.apache.derby.jdbc.EmbeddedDriver");
-		dbParam.setDatabaseName("pdq");
-		dbParam.setDatabaseUser("APP_" + GlobalCounterProvider.getNext("DatabaseConnectionName"));
-		dbParam.setDatabasePassword("");
-		dbParam.setNumberOfThreads(DEFAULT_NUMBER_OF_THREADS);
-		
 		return dbParam; 
 	}
 	

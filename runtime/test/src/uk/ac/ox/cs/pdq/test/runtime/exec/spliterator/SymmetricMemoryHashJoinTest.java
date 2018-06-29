@@ -600,9 +600,11 @@ public class SymmetricMemoryHashJoinTest {
 		 */
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		Integer[] inputs = new Integer[0];
 		ExecutableAccessMethod amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, inputs,
@@ -702,9 +704,11 @@ public class SymmetricMemoryHashJoinTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		ExecutableAccessMethod amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0],
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
@@ -765,9 +769,11 @@ public class SymmetricMemoryHashJoinTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_NATIONKEY"));
 		ExecutableAccessMethod am0Nation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes,
@@ -831,9 +837,11 @@ public class SymmetricMemoryHashJoinTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		Set<Attribute> inputAttributes;
 
@@ -906,9 +914,11 @@ public class SymmetricMemoryHashJoinTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		ExecutableAccessMethod amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0],
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
@@ -949,9 +959,11 @@ public class SymmetricMemoryHashJoinTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		ExecutableAccessMethod amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0],
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
@@ -992,15 +1004,19 @@ public class SymmetricMemoryHashJoinTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		Relation relationCustomer = Mockito.mock(Relation.class);
 		when(relationCustomer.getAttributes()).thenReturn(TPCHelper.attrs_customer.clone());
+		when(relationCustomer.getName()).thenReturn("CUSTOMER");
 
 		Relation relationSupplier = Mockito.mock(Relation.class);
 		when(relationSupplier.getAttributes()).thenReturn(TPCHelper.attrs_supplier.clone());
+		when(relationSupplier.getName()).thenReturn("SUPPLIER");
 
 		ExecutableAccessMethod amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0],
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
@@ -1121,5 +1137,47 @@ public class SymmetricMemoryHashJoinTest {
 		Assert.assertEquals(30, result.size());
 		target.close();
 	}
+	
+	@Test
+	public void integrationTestSql10() throws Exception {
 
+		Relation relationRegion1 = Relation.create("REGION", TPCHelper.attrs_region);
+		ExecutableAccessMethod amFreeRegion = new SqlAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0],
+				relationRegion1, TPCHelper.attrMap_region, TPCHelper.getProperties());
+
+		Condition condition = AttributeEqualityCondition.create(0, 3);
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(amFreeRegion.getRelation(), amFreeRegion),
+				AccessTerm.create(amFreeRegion.getRelation(), amFreeRegion), condition), decor);
+
+		// Execute the plan.
+		List<Tuple> result = target.stream().collect(Collectors.toList());
+
+		Assert.assertEquals(5, result.size());
+		target.close();
+	}
+
+	@Test
+	public void integrationTestSql11() throws Exception {
+
+		Relation relationRegion1 = Relation.create("REGION", TPCHelper.attrs_region);
+		ExecutableAccessMethod amFreeRegion1 = new SqlAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0],
+				relationRegion1, TPCHelper.attrMap_region, TPCHelper.getProperties());
+		
+		ExecutableAccessMethod amFreeRegion2 = new SqlAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0],
+				relationRegion1, TPCHelper.attrMap_region, TPCHelper.getProperties());
+		
+
+		Condition condition = AttributeEqualityCondition.create(0, 3);
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(amFreeRegion1.getRelation(), amFreeRegion1),
+				AccessTerm.create(amFreeRegion2.getRelation(), amFreeRegion2), condition), decor);
+
+		// Execute the plan.
+		List<Tuple> result = target.stream().collect(Collectors.toList());
+
+		Assert.assertEquals(5, result.size());
+		target.close();
+	}
+	
 }

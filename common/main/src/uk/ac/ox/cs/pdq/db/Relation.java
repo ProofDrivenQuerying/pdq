@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -34,7 +33,7 @@ public class Relation implements Serializable {
 	 * The relation's access methods, i.e. the positions of the inputAttributes
 	 * which require input values.
 	 */
-	protected Map<String, AccessMethodDescriptor> accessMethodsMaps;
+	protected Map<String, AccessMethodDescriptor> accessMethodsMap;
 
 	protected AccessMethodDescriptor[] accessMethods;
 
@@ -55,46 +54,6 @@ public class Relation implements Serializable {
 	protected final Boolean isEquality;
 
 	protected final String[] indexedAttributes;
-	/**
-	 * Gets the name of the predicate.
-	 *
-	 * @return the name of the predicate.
-	 */
-	public String getName() {
-		return this.name;
-	}
-
-	/**
-	 * Gets the arity of the predicate.
-	 *
-	 * @return the arity of the predicate.
-	 */
-//	public int getArity() {
-//		return this.arity;
-//	}
-	//@Override
-	public int getArity() {
-		return this.attributes.length;
-	}
-
-	/**
-	 * Checks if this is an equality predicate.
-	 *
-	 * @return true if the signature is of an equality predicate,
-	 * false otherwise
-	 */
-	public boolean isEquality() {
-		return this.isEquality;
-	}
-
-	
-
-	/** 
-	 * Properties associated with this relation; these may be SQL
-	 * connection parameters, web service settings, etc. depending on the
-	 * underlying implementation.
-	 * If no properties are defined, then this an an empty Properties instance. */
-	protected final Properties properties = new Properties();
 	
 	protected Relation(String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods, ForeignKey[] foreignKeys) {
 		this(name, attributes, accessMethods, foreignKeys, false);
@@ -115,13 +74,14 @@ public class Relation implements Serializable {
 	protected Relation(String name, Attribute[] attributes) {
 		this(name, attributes, new AccessMethodDescriptor[]{}, false);
 	}
+	
 	protected Relation(String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality) {
 		this(name, attributes, accessMethods, foreignKeys, isEquality,null);
 	}
+	
 	protected Relation(String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality, String[] indexedAttributes) {
-		//super(name, attributes.length, isEquality);
 		this.name = name;
-		arity = attributes.length;
+		this.arity = attributes.length;
 		this.isEquality = isEquality;
 		this.attributes = attributes.clone();
 		Map<String, Integer> positions = new LinkedHashMap<>();
@@ -134,9 +94,9 @@ public class Relation implements Serializable {
 		} else {
 			this.accessMethods = accessMethods.clone();
 		}
-		this.accessMethodsMaps = new LinkedHashMap<>();
+		this.accessMethodsMap = new LinkedHashMap<>();
 		for(AccessMethodDescriptor accessMethod:this.accessMethods) 
-			this.accessMethodsMaps.put(accessMethod.getName(), accessMethod);
+			this.accessMethodsMap.put(accessMethod.getName(), accessMethod);
 		this.foreignKeys = foreignKeys.clone();
 		if (indexedAttributes!=null) {
 			this.indexedAttributes = indexedAttributes;
@@ -145,6 +105,28 @@ public class Relation implements Serializable {
 		}
 	}
 
+	/**
+	 * Gets the name of the predicate.
+	 *
+	 * @return the name of the predicate.
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	public int getArity() {
+		return this.attributes.length;
+	}
+
+	/**
+	 * Checks if this is an equality predicate.
+	 *
+	 * @return true if the signature is of an equality predicate,
+	 * false otherwise
+	 */
+	public boolean isEquality() {
+		return this.isEquality;
+	}
 
 	public Attribute[] getAttributes() {
 		return this.attributes.clone();
@@ -171,13 +153,13 @@ public class Relation implements Serializable {
 			return this.attributes[position];
 		return null;
 	}
-
+	
 	public AccessMethodDescriptor[] getAccessMethods() {
 		return this.accessMethods.clone();
 	}
 	
 	public AccessMethodDescriptor getAccessMethod(String acceessMethodName) {
-		return this.accessMethodsMaps.get(acceessMethodName);
+		return this.accessMethodsMap.get(acceessMethodName);
 	}
 
 	public void addForeignKey(ForeignKey foreingKey) {
@@ -195,11 +177,11 @@ public class Relation implements Serializable {
 		return this.foreignKeys.clone();
 	}
 
-	public PrimaryKey getKey() {
+	public PrimaryKey getPrimaryKey() {
 		return this.primaryKey;
 	}
 
-	public void setKey(PrimaryKey key) {
+	public void setPrimaryKey(PrimaryKey key) {
 		this.primaryKey = key;
 	}
 
@@ -209,15 +191,9 @@ public class Relation implements Serializable {
 			keyPositions[attributeIndex] = Arrays.asList(this.attributes).indexOf(this.primaryKey.getAttributes()[attributeIndex]);
 		return keyPositions;
 	}
-
-	/**
-	 * Extend the relation's schema by adding an extra attribute
-	 */
-	public static Relation appendAttribute(Relation r, Attribute attribute) {
-		Attribute[] destination = new Attribute[r.attributes.length + 1];
-		System.arraycopy(r.attributes, 0, destination, 0, r.attributes.length);
-		destination[r.attributes.length] = attribute;
-		return Relation.create(r.name, destination, r.accessMethods, r.foreignKeys, r.isEquality());
+	
+	public String[] getIndexedAttributes() {
+		return indexedAttributes;
 	}
 
 	@Override
@@ -243,18 +219,6 @@ public class Relation implements Serializable {
 			result.append('}');
 		}
 		return result.toString();
-	}
-
-	/**
-	 * Returns properties associated with this relation, these may be SQL
-	 * connection parameters, web service settings, etc. depending on the
-	 * underlying implementation.
-	 * If no properties are defined, this return an empty Properties instance
-	 * (not null).
-	 * @return the properties associated with this relation.
-	 */
-	public Properties getProperties() {
-		return this.properties;
 	}
 	
 	public static Relation create(String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods, ForeignKey[] foreignKeys) {
@@ -289,10 +253,6 @@ public class Relation implements Serializable {
 	public static  Relation create (String name, Attribute[] attributes, AccessMethodDescriptor[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality,String[] indexedAttributes) {
 		return Cache.relation.retrieve(new Relation(name, attributes, accessMethods, foreignKeys, isEquality,indexedAttributes){
 			private static final long serialVersionUID = -8215821247702132205L;});
-	}
-
-	public String[] getIndexedAttributes() {
-		return indexedAttributes;
 	}
 
 }

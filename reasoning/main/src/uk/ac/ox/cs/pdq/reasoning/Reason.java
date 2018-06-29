@@ -7,11 +7,11 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.beust.jcommander.DynamicParameter;
-import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 
+import uk.ac.ox.cs.pdq.FileValidator;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
@@ -174,28 +174,6 @@ public class Reason {
 		} catch (Throwable e) {
 			log.error("Planning aborted: " + e.getMessage(), e);
 			System.exit(-1);
-		}
-	}
-
-	/**
-	 * Filters out files that do not exist or are directories.
-	 * @author Julien LEBLAY
-	 */
-	public static class FileValidator implements IParameterValidator {
-		
-		/* (non-Javadoc)
-		 * @see com.beust.jcommander.IParameterValidator#validate(java.lang.String, java.lang.String)
-		 */
-		@Override
-		public void validate(String name, String value) throws ParameterException {
-			try {
-				File f = new File(value);
-				if (!f.exists() || f.isDirectory()) {
-					throw new ParameterException(name + " must be a valid configuration file.");
-				}
-			} catch (Exception e) {
-				throw new ParameterException(name + " must be a valid configuration file.");
-			}
 		}
 	}
 

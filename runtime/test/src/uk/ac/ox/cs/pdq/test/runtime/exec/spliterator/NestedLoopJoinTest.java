@@ -462,9 +462,11 @@ public class NestedLoopJoinTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		Integer[] inputs = new Integer[0];
 		ExecutableAccessMethod amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, inputs,
@@ -564,9 +566,11 @@ public class NestedLoopJoinTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		ExecutableAccessMethod amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0],
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
@@ -627,9 +631,11 @@ public class NestedLoopJoinTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_NATIONKEY"));
 		ExecutableAccessMethod am0Nation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, inputAttributes,
@@ -693,9 +699,11 @@ public class NestedLoopJoinTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		Set<Attribute> inputAttributes;
 
@@ -768,9 +776,11 @@ public class NestedLoopJoinTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		ExecutableAccessMethod amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0],
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());
@@ -811,9 +821,11 @@ public class NestedLoopJoinTest {
 
 		Relation relationNation = Mockito.mock(Relation.class);
 		when(relationNation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relationNation.getName()).thenReturn("NATION");
 
 		Relation relationRegion = Mockito.mock(Relation.class);
 		when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
+		when(relationRegion.getName()).thenReturn("REGION");
 
 		ExecutableAccessMethod amFreeNation = new SqlAccessMethod("NATION", TPCHelper.attrs_N, new Integer[0],
 				relationNation, TPCHelper.attrMap_nation, TPCHelper.getProperties());

@@ -220,7 +220,7 @@ public class RuntimeTest extends RegressionTest {
 	private boolean run(File directory, Schema s, ConjunctiveQuery q, RelationalTerm p, Collection<Atom> f)
 			throws Exception {
 		RuntimeParameters params = new RuntimeParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-		Runtime runtime = new Runtime(params, s, f);
+		Runtime runtime = new Runtime(params, s);
 
 		RegressionParameters regParams = new RegressionParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		if (!regParams.getSkipRuntime()) {

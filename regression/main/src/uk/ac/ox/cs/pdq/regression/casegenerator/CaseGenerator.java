@@ -45,7 +45,7 @@ public class CaseGenerator {
 	 */
 	public static void main(String[] args) {
 		try {
-			File root = new File("test/linear/fast/tpch/mysql/simple/");
+			File root = new File("test/planner/linear/fast/tpch/mysql/simple/");
 			CaseGenerator generator = new CaseGenerator();
 			for (File f: root.listFiles()) {
 				generator.convert(f, f);

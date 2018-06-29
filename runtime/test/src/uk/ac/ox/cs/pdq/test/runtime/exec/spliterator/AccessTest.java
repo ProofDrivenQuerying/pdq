@@ -63,8 +63,7 @@ public class AccessTest {
 		attributeMapping.put(Attribute.create(Integer.class, "Y"), Attribute.create(Integer.class, "b"));
 		attributeMapping.put(Attribute.create(String.class, "W"), Attribute.create(String.class, "c"));
 
-		InMemoryAccessMethod amFree = new InMemoryAccessMethod(amAttributes, new Integer[0], relation,
-				attributeMapping);
+		InMemoryAccessMethod amFree = new InMemoryAccessMethod(amAttributes, new Integer[0], relation, attributeMapping);
 
 		// Create some tuples
 		List<Tuple> tuples = new ArrayList<Tuple>();
@@ -314,6 +313,7 @@ public class AccessTest {
 
 		Relation relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relation.getName()).thenReturn("NATION");
 
 		// Specify input attributes by passing an array of indices.
 		Integer[] inputs = new Integer[] { 2 };
@@ -347,6 +347,7 @@ public class AccessTest {
 
 		Relation relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relation.getName()).thenReturn("NATION");
 
 		// Specify input attributes by passing a set of attributes.
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_REGIONKEY"));
@@ -379,6 +380,7 @@ public class AccessTest {
 
 		Relation relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relation.getName()).thenReturn("NATION");
 
 		// Specify input attributes by passing a set of attributes.
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "N_REGIONKEY"));
@@ -443,6 +445,7 @@ public class AccessTest {
 
 		Relation relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relation.getName()).thenReturn("NATION");
 
 		// Specify input attributes by passing a set of attributes.
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(String.class, "N_NAME"),
@@ -498,6 +501,7 @@ public class AccessTest {
 
 		Relation relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_lineItem.clone());
+		when(relation.getName()).thenReturn("LINEITEM");
 
 		// Specify input attributes by passing a set of attributes.
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "L_SUPPKEY"));
@@ -530,6 +534,7 @@ public class AccessTest {
 
 		Relation relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_lineItem.clone());
+		when(relation.getName()).thenReturn("LINEITEM");
 
 		// Specify input attributes by passing a set of attributes.
 		Set<Attribute> inputAttributes = Sets.newHashSet(Attribute.create(Integer.class, "L_SUPPKEY"),

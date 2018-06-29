@@ -1,14 +1,10 @@
 package uk.ac.ox.cs.pdq.runtime;
 
-import java.util.Collection;
-
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.utility.Result;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
 
@@ -25,27 +21,7 @@ public class Runtime {
 	/** Runtime's internal schema. */
 	private Schema schema;
 
-	/** In-memory facts. */
-	private Collection<Atom> facts;
-
 	private AccessRepository repository;
-
-	/**
-	 * Constructor for Runtime.
-	 * 
-	 * @param params
-	 *            RuntimeParameters
-	 * @param schema
-	 *            Schema
-	 * @param facts
-	 *            List<PredicateFormula>
-	 */
-	public Runtime(RuntimeParameters params, Schema schema, Collection<Atom> facts) {
-		super();
-		this.params = params;
-		this.schema = schema;
-		this.facts = facts;
-	}
 
 	/**
 	 * Constructor for Runtime.
@@ -56,7 +32,9 @@ public class Runtime {
 	 *            Schema
 	 */
 	public Runtime(RuntimeParameters params, Schema schema) {
-		this(params, schema, null);
+		super();
+		this.params = params;
+		this.schema = schema;
 	}
 
 	/**
@@ -86,30 +64,12 @@ public class Runtime {
 		}
 	}
 
-	/**
-	 * Evaluates the given query, and returns its result.
-	 *
-	 * @param query
-	 *            the query
-	 * @return the result of the query evaluation.
-	 * @throws EvaluationException
-	 *             the evaluation exception
-	 */
-	public Result evaluateQuery(ConjunctiveQuery query) throws Exception {
-		throw new Exception("Query evaluation is not implemented yet.");
-	}
-
 	public RuntimeParameters getParams() {
 		return params;
-	}
-
-	public Collection<Atom> getFacts() {
-		return facts;
 	}
 
 	public void setAccessRepository(AccessRepository repository) {
 		this.repository = repository;
 		
 	}
-	
 }

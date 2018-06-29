@@ -23,11 +23,6 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(CostParameters.class);
 	
-	/** The black box query type. */
-	@Parameter(description="Type of query translator to use in the BLACKBOX_DB"
-			+ "cost estimator (required if the cost_type=BLACKBOX_DB)")
-	protected BlackBoxQueryTypes blackBoxQueryType;
-	
 	/** The black box connection url. */
 	@Parameter(description="Connection URL for the database used by "
 			+ "the BLACKBOX_DB cost estimator (required if the cost_type=BLACKBOX_DB)")
@@ -58,7 +53,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 			+ "influence on the requirements of other planner parameters.\n"
 			+ "If such requirements are violated, a PlannerException will be "
 			+ "thrown upon initialization of the Planner.",
-			defaultValue = "BLACKBOX")
+			defaultValue = "TEXTBOOK")
 	protected CostTypes costType = CostTypes.TEXTBOOK;
 	
 	/** The cardinality estimation type. */
@@ -142,41 +137,6 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 		super(config, verbose, strict);
 		if (!delay) {
 			this.load(config, verbose, strict);
-		}
-	}
-	
-	/**
-	 * Gets the black box query type.
-	 *
-	 * @return BlackBoxQueryTypes
-	 */
-	public BlackBoxQueryTypes getBlackBoxQueryType() {
-		if (this.blackBoxQueryType == null) {
-			return BlackBoxQueryTypes.DEFAULT;
-		}
-		return this.blackBoxQueryType;
-	}
-
-	/**
-	 * Sets the black box query type.
-	 *
-	 * @param sqlQueryType BlackBoxQueryTypes
-	 */
-	public void setBlackBoxQueryType(BlackBoxQueryTypes sqlQueryType) {
-		this.blackBoxQueryType = sqlQueryType;
-	}
-
-	/**
-	 * Sets the black box query type.
-	 *
-	 * @param queryType String
-	 */
-	public void setBlackBoxQueryType(String queryType) {
-		try {
-			this.blackBoxQueryType = BlackBoxQueryTypes.valueOf(queryType);
-		} catch (IllegalArgumentException e) {
-			log.warn("Setting SQL black box query type to " + BlackBoxQueryTypes.DEFAULT, e);
-			this.blackBoxQueryType = BlackBoxQueryTypes.DEFAULT;
 		}
 	}
 	
@@ -350,18 +310,6 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	 */
 	public void setCardinalityEstimationType(CardinalityEstimationTypes cardEstType) {
 		this.cardinalityEstimationType = cardEstType;
-	}
-	
-	/** The types of SQL queries the SQL estimator can use. */
-	public static enum BlackBoxQueryTypes {
-		
-		/** The default. */
-		@EnumParameterValue(description = "Default translator from DAG plan to SQL for blackbox cost estimation")
-		DEFAULT,
-
-		/** The sql with. */
-		@EnumParameterValue(description = "Translator from DAG plan to SQL WITH query for blackbox cost estimation")
-		SQL_WITH
 	}
 	
 	/**

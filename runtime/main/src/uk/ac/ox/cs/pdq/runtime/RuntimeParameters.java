@@ -73,33 +73,6 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	public RuntimeParameters(File config, boolean verbose) {
 		super(config, verbose, false);
 	}
-	
-	/**
-	 *
-	 * @return the tuples limit
-	 */
-	public Integer getTuplesLimit() {
-		if (this.tuplesLimit == null) {
-			return Integer.MAX_VALUE;
-		}
-		return this.tuplesLimit;
-	}
-	
-	/**
-	 *
-	 * @param tuples the new tuples limit
-	 */
-	public void setTuplesLimit(Integer tuples) {
-		this.tuplesLimit = tuples;
-	}
-	
-	/**
-	 *
-	 * @param tuples the new tuples limit
-	 */
-	public void setTuplesLimit(Number tuples) {
-		this.tuplesLimit = tuples != null ? tuples.intValue() : null;
-	}
 
 	public String getAccessDirectory() {
 		if (accessDirectory==null || accessDirectory.isEmpty())

@@ -214,4 +214,8 @@ public class Atom extends Formula {
 	public int getNumberOfTerms() {
 		return this.terms.length;
 	}
+	
+	public int getTermPosition(Term term) {
+		return Arrays.asList(this.terms).indexOf(term);
+	}
 }

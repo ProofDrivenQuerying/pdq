@@ -201,6 +201,7 @@ public class SelectionTest {
 
 		Relation relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relation.getName()).thenReturn("NATION");
 
 		Map<Attribute, Attribute> attributeMapping = new HashMap<Attribute, Attribute>();
 		attributeMapping.put(Attribute.create(Integer.class, "N_NATIONKEY"),
@@ -237,6 +238,7 @@ public class SelectionTest {
 
 		Relation relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_nation.clone());
+		when(relation.getName()).thenReturn("NATION");
 
 		Integer[] inputs = new Integer[0];
 		ExecutableAccessMethod amFree = new SqlAccessMethod("NATION", TPCHelper.attrs_N, inputs, relation,
@@ -264,6 +266,7 @@ public class SelectionTest {
 
 		Relation relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_customer.clone());
+		when(relation.getName()).thenReturn("CUSTOMER");
 
 		Set<Attribute> inputAttributes = new HashSet<Attribute>();
 		inputAttributes.add(Attribute.create(Integer.class, "C_NATIONKEY"));
@@ -313,6 +316,7 @@ public class SelectionTest {
 
 		Relation relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(TPCHelper.attrs_customer.clone());
+		when(relation.getName()).thenReturn("CUSTOMER");
 
 		Set<Attribute> inputAttributes = new HashSet<Attribute>();
 		inputAttributes.add(Attribute.create(Integer.class, "C_NATIONKEY"));
