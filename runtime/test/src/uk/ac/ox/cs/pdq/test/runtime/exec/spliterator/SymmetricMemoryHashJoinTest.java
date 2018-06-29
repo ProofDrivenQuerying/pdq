@@ -1137,5 +1137,47 @@ public class SymmetricMemoryHashJoinTest {
 		Assert.assertEquals(30, result.size());
 		target.close();
 	}
+	
+	@Test
+	public void integrationTestSql10() throws Exception {
 
+		Relation relationRegion1 = Relation.create("REGION", TPCHelper.attrs_region);
+		ExecutableAccessMethod amFreeRegion = new SqlAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0],
+				relationRegion1, TPCHelper.attrMap_region, TPCHelper.getProperties());
+
+		Condition condition = AttributeEqualityCondition.create(0, 3);
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(amFreeRegion.getRelation(), amFreeRegion),
+				AccessTerm.create(amFreeRegion.getRelation(), amFreeRegion), condition), decor);
+
+		// Execute the plan.
+		List<Tuple> result = target.stream().collect(Collectors.toList());
+
+		Assert.assertEquals(5, result.size());
+		target.close();
+	}
+
+	@Test
+	public void integrationTestSql11() throws Exception {
+
+		Relation relationRegion1 = Relation.create("REGION", TPCHelper.attrs_region);
+		ExecutableAccessMethod amFreeRegion1 = new SqlAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0],
+				relationRegion1, TPCHelper.attrMap_region, TPCHelper.getProperties());
+		
+		ExecutableAccessMethod amFreeRegion2 = new SqlAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0],
+				relationRegion1, TPCHelper.attrMap_region, TPCHelper.getProperties());
+		
+
+		Condition condition = AttributeEqualityCondition.create(0, 3);
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(amFreeRegion1.getRelation(), amFreeRegion1),
+				AccessTerm.create(amFreeRegion2.getRelation(), amFreeRegion2), condition), decor);
+
+		// Execute the plan.
+		List<Tuple> result = target.stream().collect(Collectors.toList());
+
+		Assert.assertEquals(5, result.size());
+		target.close();
+	}
+	
 }
