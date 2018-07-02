@@ -1,0 +1,18 @@
+Comment:
+
+Select from r1 join r2 join r3 join r3
+
+Query:
+
+SELECT *
+ FROM r1
+  JOIN r2 ON r1.z = r2.z
+  JOIN r3 ON r2.z = r3.z
+  JOIN r3 ON r3.y = r3.y 
+ 
+Schema:
+
+r1 has 2 columns and 0 rows
+r2 has 1 columns and 0 rows
+r3 has 3 columns and 0 rows
+
