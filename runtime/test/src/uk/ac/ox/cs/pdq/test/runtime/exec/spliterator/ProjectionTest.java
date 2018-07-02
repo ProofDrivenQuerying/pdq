@@ -468,7 +468,7 @@ public class ProjectionTest {
 	 * Plan: Projection(Join(Join(NATION_LESS, SUPPLIER_LESS), Join(PART_LESS,
 	 * PARTSUPP_LESS)))
 	 */
-	@Test
+	// @Test nation_less is not part of the default tcph database
 	public void stressTestSql1a() throws Exception {
 
 		// Construct the target plan.

@@ -1000,7 +1000,7 @@ public class NestedLoopJoinTest {
 	/*
 	 * Plan: Join(NATION_LESS, SUPPLIER_LESS)
 	 */
-	@Test
+	// @Test - switched off since the nation_less table is not part of the default tpch database.
 	public void stressTestSql1a() throws Exception {
 
 		NestedLoopJoin target = new NestedLoopJoin(

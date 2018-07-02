@@ -7,6 +7,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
+import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
@@ -330,8 +331,7 @@ public class TestPlanCreationUtility extends PdqTest {
 		facts.add(fact1);
 		facts.add(fact2);
 		RelationalTerm plan2 = PlanCreationUtility.createSingleAccessPlan(customer, method0, facts);
-
-		Assert.assertEquals(2, plan2.getInputAttributes().length);
+		Assert.assertEquals(1, plan2.getInputAttributes().length);
 		Assert.assertEquals(Attribute.create(String.class, "c40"), plan2.getInputAttributes()[0]);
 		Assert.assertEquals(16, plan2.getOutputAttributes().length);
 		Assert.assertTrue(Arrays.asList(plan2.getOutputAttributes()).toString().contains("c31, c38, c39, c40, c41, c42, c43, c44"));
@@ -339,6 +339,40 @@ public class TestPlanCreationUtility extends PdqTest {
 		Assert.assertNotNull(plan2.getChild(0));
 		Assert.assertTrue(plan2.getChild(0) instanceof RenameTerm);
 		Assert.assertEquals(1, plan2.getAccesses().size());
+	}
+	@Test
+	public void test8() {
+		AccessMethodDescriptor method0 = AccessMethodDescriptor.create(new Integer[] { 3 });
+		Attribute a = Attribute.create(String.class, "a");
+		Attribute b = Attribute.create(String.class, "b");
+		Attribute c = Attribute.create(String.class, "c");
+		Attribute d = Attribute.create(String.class, "d");
+		Attribute d2 = Attribute.create(String.class, "d2");
+		Attribute e = Attribute.create(String.class, "e");
+		Attribute f = Attribute.create(String.class, "f");
+		Attribute g = Attribute.create(String.class, "g");
+		Attribute h = Attribute.create(String.class, "h");
+
+		Relation customer = Relation.create("customer", new Attribute[] { a, b, c, d, e, f, g, h }, new AccessMethodDescriptor[] { method0 });
+		Relation customer2 = Relation.create("customer2", new Attribute[] { a, b, c, d2, e, f, g, h }, new AccessMethodDescriptor[] { method0 });
+		Atom fact1 = Atom.create(customer, new UntypedConstant[] { UntypedConstant.create("c46"), UntypedConstant.create("c52"), UntypedConstant.create("c53"),
+				UntypedConstant.create("c40"), UntypedConstant.create("c54"), UntypedConstant.create("c55"), UntypedConstant.create("c56"), UntypedConstant.create("c57") });
+
+		Atom fact2 = Atom.create(customer, new UntypedConstant[] { UntypedConstant.create("c31"), UntypedConstant.create("c38"), UntypedConstant.create("c39"),
+				UntypedConstant.create("c40"), UntypedConstant.create("c41"), UntypedConstant.create("c42"), UntypedConstant.create("c43"), UntypedConstant.create("c44") });
+
+		Set<Atom> facts = new LinkedHashSet<>();
+		facts.add(fact1);
+		facts.add(fact2);
+		RelationalTerm plan2 = JoinTerm.create(AccessTerm.create(customer, method0), AccessTerm.create(customer2, method0));
+		Assert.assertEquals(2, plan2.getInputAttributes().length);
+		Assert.assertEquals(Attribute.create(String.class, "d"), plan2.getInputAttributes()[0]);
+		Assert.assertEquals(16, plan2.getOutputAttributes().length);
+		Assert.assertTrue(Arrays.asList(plan2.getOutputAttributes()).toString().contains("a, b, c, d, e, f, g, h, a, b, c, d2, e, f, g, h"));
+		Assert.assertEquals(2, plan2.getChildren().length);
+		Assert.assertNotNull(plan2.getChild(0));
+		Assert.assertTrue(plan2.getChild(0) instanceof AccessTerm);
+		Assert.assertEquals(2, plan2.getAccesses().size());
 	}
 
 }
