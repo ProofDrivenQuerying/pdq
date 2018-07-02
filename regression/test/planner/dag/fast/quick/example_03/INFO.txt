@@ -1,0 +1,15 @@
+Comment:
+
+Select from R join S
+
+Query:
+
+SELECT b
+ FROM R JOIN S ON R.b = S.b AND R.c = S.c
+ WHERE R.a = 1
+ 
+Schema:
+
+R has 3 columns and 100 rows
+S has 2 columns and 100 rows
+
