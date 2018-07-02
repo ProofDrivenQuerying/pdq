@@ -125,9 +125,9 @@ public class TestQueryExplainCostEstimator extends PdqTest {
 
 	@Test
 	public void getCostOfPlanTest2() throws DatabaseException, JAXBException, FileNotFoundException {
-		File planFile = new File("..//regression//test//dag//fast//benchmark//mysql//case_001//expected-plan.xml");
+		File planFile = new File("..//regression//test//planner//dag//fast//benchmark//case_001//expected-plan.xml");
 		Schema s = IOManager
-				.importSchema(new File("..//regression//test//dag//fast//benchmark//mysql//case_001//schema.xml"));
+				.importSchema(new File("..//regression//test//planner//dag//fast//benchmark//case_001//schema.xml"));
 		Schema sc = convertTypesToString(s);
 		DatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 		dm.initialiseDatabaseForSchema(sc);
