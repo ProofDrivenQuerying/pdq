@@ -1,0 +1,17 @@
+Comment:
+
+Select from r2 join r1 join r1 join r1 join r1
+
+Query:
+
+SELECT *
+ FROM r2
+  JOIN r1 ON ? = ?
+  JOIN r1 ON ? = ?
+  JOIN r1 ON r1.x27 = r1.x27 
+  JOIN r1 ON r1.x27 = r1.x27 
+ 
+Schema:
+
+r1 has 2 columns and 0 rows
+r2 has 1 columns and 0 rows

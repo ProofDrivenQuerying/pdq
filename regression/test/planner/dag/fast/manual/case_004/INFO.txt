@@ -1,0 +1,15 @@
+Comment:
+
+Select from R1 join R2
+
+Query:
+
+SELECT *
+ FROM R1
+  JOIN R2 ON R1.x0 = R2.x0 
+ 
+Schema:
+
+R1 has 2 columns and 0 rows
+R2 has 4 columns and 0 rows
+

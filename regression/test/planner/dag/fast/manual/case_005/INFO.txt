@@ -1,0 +1,17 @@
+Comment:
+
+Select from R10 join R2 join R17
+
+Query:
+
+SELECT *
+ FROM R10
+  JOIN R2 ON R10.x0 = R2.x0 AND R10.x4 = R2.x4
+  JOIN R17 ON R2.x2 = R17.x2 AND R2.x3 = R17.x3 AND R2.x4 = R17.x4 
+ 
+Schema:
+
+R10 has 2 columns and 0 rows
+R2 has 5 columns and 0 rows
+R17 has 4 columns and 0 rows
+

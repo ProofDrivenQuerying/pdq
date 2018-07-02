@@ -1,0 +1,20 @@
+Comment:
+
+Select from R join S join R join T join W join W
+
+Query:
+
+SELECT *
+ FROM R
+  JOIN S ON R.x1 = S.x1
+  JOIN R ON ? = ?
+  JOIN T ON R.x2 = T.x2
+  JOIN W ON R.x1 = W.x1
+  JOIN W ON T.x2 = W.x2
+ 
+Schema:
+
+R has 1 columns and 0 rows
+S has 1 columns and 0 rows
+T has 1 columns and 0 rows
+W has 2 columns and 0 rows
