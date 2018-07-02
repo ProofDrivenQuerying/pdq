@@ -1,0 +1,13 @@
+Comment:
+
+Select from Profinfo
+
+Query:
+
+SELECT lastname
+ FROM Profinfo 
+ 
+Schema:
+
+Profinfo has 3 columns and 0 rows
+

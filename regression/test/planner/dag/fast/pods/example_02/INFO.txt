@@ -1,0 +1,13 @@
+Comment:
+
+Select from Direct2
+
+Query:
+
+SELECT phone
+ FROM Direct2 
+ 
+Schema:
+
+Direct2 has 3 columns and 0 rows
+

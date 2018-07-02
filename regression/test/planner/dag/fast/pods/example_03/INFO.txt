@@ -1,0 +1,13 @@
+Comment:
+
+Select from Profinfo
+
+Query:
+
+SELECT employeeid
+ FROM Profinfo WHERE lastname = 'Smith' 
+ 
+Schema:
+
+Profinfo has 3 columns and 0 rows
+
