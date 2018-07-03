@@ -1,0 +1,13 @@
+Comment:
+
+Select from partsupp
+
+Query:
+
+SELECT ps_parthey
+ FROM partsupp
+ WHERE ps_suppkey = 5
+ 
+Schema:
+
+partsupp has 5 columns and 700 rows
