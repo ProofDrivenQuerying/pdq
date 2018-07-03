@@ -1,0 +1,21 @@
+Comment:
+
+Select from orders join lineitem join customer join nation join region
+
+Query:
+
+SELECT c_name, c_address, n_name
+ FROM orders
+  JOIN limeitem ON o_orderkey = l_orderkey
+  JOIN customer ON o_custkey = c_custkey
+  JOIN nation ON c_nationkey = n_nationkey
+  JOIN region ON n_regionkey = r_regionkey
+ WHERE r_name = 'AMERICA'
+ 
+Schema:
+
+orders has 9 columns and 1500 rows
+lineitem has 16 columns and 6005 rows
+customer has 8 columns and 150 rows
+nation has 4 columns and 25 rows
+region has 3 columns and 5 rows
