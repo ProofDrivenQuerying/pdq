@@ -89,11 +89,11 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 
 			// For Scan, Access, Distinct, Union, Selection and Join
 			// The estimation is delegated to specialised estimators.
-			if (term instanceof JoinTerm) {
-				output = this.estimateOutputCardinality((JoinTerm) term);
-			} 
-			else if (term instanceof DependentJoinTerm) {
+			if (term instanceof DependentJoinTerm) {
 				output = this.estimateOutputCardinality((DependentJoinTerm) term);
+			} 
+			else if (term instanceof JoinTerm) {
+					output = this.estimateOutputCardinality((JoinTerm) term);
 			} 
 			else if (term instanceof AccessTerm) {
 				output = this.estimateOutputCardinality((AccessTerm) term);

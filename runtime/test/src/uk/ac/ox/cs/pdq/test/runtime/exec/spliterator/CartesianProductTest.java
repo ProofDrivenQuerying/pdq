@@ -154,7 +154,6 @@ public class CartesianProductTest {
 		// Relation relationRegion = Mockito.mock(Relation.class);
 		// when(relationRegion.getAttributes()).thenReturn(TPCHelper.attrs_region.clone());
 		Relation relationRegion = Relation.create("Region", TPCHelper.attrs_region.clone());
-		when(relationRegion.getName()).thenReturn("REGION");
 
 		Set<Attribute> inputAttributes;
 
@@ -441,7 +440,7 @@ public class CartesianProductTest {
 	/*
 	 * Plan: CartesianProduct(NATION_LESS, SUPPLIER_LESS)
 	 */
-	@Test
+	// @Test nation_less is not part of the default tcph database
 	public void stressTestSql1a() throws Exception {
 
 		CartesianProduct target = new CartesianProduct(CartesianProductTerm.create(
@@ -484,7 +483,7 @@ public class CartesianProductTest {
 	/*
 	 * Plan: CartesianProduct(NATION_LESS, PARTSUPP_LESS)
 	 */
-	@Test
+	// @Test nation_less is not part of the default tcph database
 	public void stressTestSql2a() throws Exception {
 
 		CartesianProduct target = new CartesianProduct(CartesianProductTerm.create(
