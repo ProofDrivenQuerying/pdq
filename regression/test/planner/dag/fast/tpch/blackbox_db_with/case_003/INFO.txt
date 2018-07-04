@@ -1,0 +1,16 @@
+Comment:
+
+Select from partsupp join supplier join nation
+
+Query:
+
+SELECT s_acctbal, s_name, ps_supplycost, n_regionkey
+ FROM partsupp
+  JOIN supplier ON ps_suppkey = s_suppkey
+  JOIN nation ON s_nationkey = n_nationkey
+ 
+Schema:
+
+partsupp has 5 columns and 700 rows
+supplier has 7 columns and 10 rows
+nation has 4 columns and 25 rows
