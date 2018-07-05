@@ -139,8 +139,8 @@ public class TestAccessRepository extends PdqTest {
 		long goodLengh = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethod.xml").length();
 		long newLengh = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml").length();
 		// the path in the xml can change from user to user, so we can only check approximation.
-		Assert.assertTrue(goodLengh + 30 > newLengh);
-		Assert.assertTrue(goodLengh - 30 < newLengh);
+		Assert.assertTrue(goodLengh + 60 > newLengh);
+		Assert.assertTrue(goodLengh - 60 < newLengh);
 		target.close();
 		new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml").delete();
 	}

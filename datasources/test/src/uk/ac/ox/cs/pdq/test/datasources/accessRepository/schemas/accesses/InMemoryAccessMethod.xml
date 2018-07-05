@@ -4,5 +4,5 @@
     <attribute name="N_NAME" type="java.lang.String" input="false" mapsToRelationAttribute="name"/>
     <attribute name="N_REGIONKEY" type="java.lang.Integer" input="false" mapsToRelationAttribute="regionKey"/>
     <attribute name="N_COMMENT" type="java.lang.String" input="false"/>
-    <data-scv-file>/home/gabor/git/pdq/datasources/test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/data/NATION_NATION_MEM.csv</data-scv-file>
+    <data-scv-file>test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/data/NATION_NATION_MEM.csv</data-scv-file>
 </Access>
