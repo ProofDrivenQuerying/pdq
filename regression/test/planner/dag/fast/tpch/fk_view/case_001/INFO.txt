@@ -1,0 +1,13 @@
+Comment:
+
+Select from partsupp
+
+Query:
+
+SELECT ps_supplycost
+ FROM partsupp
+ WHERE ps_availqty = 10
+ 
+Schema:
+
+partsupp has 5 columns and 700 rows

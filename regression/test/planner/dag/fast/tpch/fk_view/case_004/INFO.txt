@@ -1,0 +1,19 @@
+Comment:
+
+Select from part join partsupp join supplier join nation
+
+Query:
+
+SELECT p_name, ps_availqty
+ FROM part
+  JOIN partsupp ON p_partkey = ps_partkey
+  JOIN supplier ON ps_suppkey = s_suppkey
+  JOIN nation ON s_nationkey = n_nationkey
+ WHERE n_name = 'UNITED STATES'
+ 
+Schema:
+
+part has 9 columns and 200 rows
+partsupp has 5 columns and 700 rows
+supplier has 9 columns and 10 rows
+nation has 5 columns and 25 rows
