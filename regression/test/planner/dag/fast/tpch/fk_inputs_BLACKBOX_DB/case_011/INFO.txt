@@ -1,0 +1,14 @@
+Comment:
+
+Select from nation join region
+
+Query:
+
+SELECT n_nationkey, n_name, n_regionkey, r_name
+ FROM nation
+  JOIN region ON n_regionkey = r_regionkey
+ 
+Schema:
+
+nation has 4 columns and 25 rows
+region has 3 columns and 5 rows
