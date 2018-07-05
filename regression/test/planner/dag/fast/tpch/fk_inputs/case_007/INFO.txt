@@ -1,0 +1,12 @@
+Comment:
+
+Select from partsupp
+
+Query:
+
+SELECT ps_partkey
+ FROM partsupp
+ 
+Schema:
+
+partsupp has 5 columns and 700 rows
