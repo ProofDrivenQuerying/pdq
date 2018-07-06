@@ -1,0 +1,13 @@
+Comment:
+
+Select from orders join orders
+
+Query:
+
+SELECT o_orderkey, o_orderkey2
+ FROM orders
+  JOIN orders ON o_orderstatus = o_orderstatus AND o_totalprice = o_totalprice AND o_shippriority = o_shippriority
+ 
+Schema:
+
+orders has 9 columns and 1500 rows

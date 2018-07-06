@@ -1,0 +1,20 @@
+Comment:
+
+Select from part join partsupp join supplier join customer join nation
+
+Query:
+
+SELECT c_name, c_address, p_name, p_brand, p_type, p_retailprice, ps_availqty
+ FROM part
+  JOIN partsupp ON p_partkey = ps_partkey
+  JOIN supplier ON ps_suppkey = s_suppkey
+  JOIN customer ON c_nationkey = n_nationkey
+  JOIN nation ON s_nationkey = n_nationkey
+ 
+Schema:
+
+part has 9 columns and 200 rows
+partsupp has 5 columns and 700 rows
+supplier has 9 columns and 10 rows
+customer has 8 columns and 150 rows
+nation has 5 columns and 25 rows
