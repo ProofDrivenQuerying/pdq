@@ -1,0 +1,14 @@
+Comment:
+
+Select from partsupp join part
+
+Query:
+
+SELECT p_brand, p_size, p_comment
+ FROM partsupp
+  JOIN part ON ps_partkey = p_partkey
+  
+Schema:
+
+partsupp has 5 columns and 700 rows
+part has 9 columns and 200 rows

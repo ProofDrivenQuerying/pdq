@@ -1,0 +1,12 @@
+Comment:
+
+Select from part
+
+Query:
+
+SELECT p_partkey
+ FROM part
+  
+Schema:
+
+part has 9 columns and 200 rows
