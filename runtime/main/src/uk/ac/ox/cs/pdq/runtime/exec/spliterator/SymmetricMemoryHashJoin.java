@@ -160,6 +160,7 @@ public class SymmetricMemoryHashJoin extends BinaryExecutablePlan {
 
 		@Override
 		public Spliterator<Tuple> trySplit() {
+			
 			// TODO: Implement this method for parallelism benefit.
 			return null;
 		}

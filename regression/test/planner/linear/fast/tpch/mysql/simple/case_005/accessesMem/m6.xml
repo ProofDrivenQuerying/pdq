@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Access access-type="IN_MEMORY_ACCESS_METHOD" name="m6" relation-name="supplier">
+    <attribute name="s_address" type="java.lang.String" input="false" mapsToRelationAttribute="s_address"/>
+    <attribute name="s_comment" type="java.lang.String" input="false" mapsToRelationAttribute="s_comment"/>
+    <attribute name="s_name" type="java.lang.String" input="false" mapsToRelationAttribute="s_name"/>
+    <attribute name="s_nationkey" type="java.lang.Integer" input="false" mapsToRelationAttribute="s_nationkey"/>
+    <attribute name="s_phone" type="java.lang.String" input="false" mapsToRelationAttribute="s_phone"/>
+    <attribute name="s_acctbal" type="java.math.BigDecimal" input="false" mapsToRelationAttribute="s_acctbal"/>
+    <attribute name="s_suppkey" type="java.lang.Integer" input="false" mapsToRelationAttribute="s_suppkey"/>
+    <data-scv-file>/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/mysql/simple/case_005/accessesMem/data/supplier_m6.csv</data-scv-file>
+</Access>

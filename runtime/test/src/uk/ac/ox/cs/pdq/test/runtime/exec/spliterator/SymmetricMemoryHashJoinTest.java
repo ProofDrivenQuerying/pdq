@@ -39,8 +39,11 @@ import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
+import uk.ac.ox.cs.pdq.runtime.exec.spliterator.Access;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.BinaryExecutablePlan;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.SymmetricMemoryHashJoin;
 import uk.ac.ox.cs.pdq.util.Tuple;
@@ -1100,18 +1103,19 @@ public class SymmetricMemoryHashJoinTest {
 	
 	@Test
 	public void integrationTestSql9() throws Exception {
+		String testPath = "../regression/test/planner/linear/fast/tpch/mysql/simple/case_005/";
+		Schema s = IOManager.importSchema(new File(testPath + "schema.xml"));
+		AccessRepository repo = AccessRepository.getRepository(testPath + "accessesMem/");
+		PlanDecorator decor = new PlanDecorator(repo,s);
 
-		AccessRepository repo = AccessRepository.getRepository("../regression/test/planner/linear/fast/tpch/mysql/simple/case_005/accesses/");
-		PlanDecorator decor = new PlanDecorator(repo);
-
-		Relation relationPartsupp = Relation.create("Partsupp", TPCHelper.attrs_PS.clone());
-		Relation relationNation = Relation.create("Nation", TPCHelper.attrs_N.clone());
+		Relation relationPartsupp = s.getRelation("partsupp");
+		Relation relationNation = s.getRelation("nation");
 		
 		CartesianProductTerm cartesianProductTerm1 = CartesianProductTerm.create(
 				AccessTerm.create(relationPartsupp, repo.getAccess("m8")), 
 				AccessTerm.create(relationNation, repo.getAccess("m10")));
 		
-		Relation relationSupplier = Relation.create("Supplier", TPCHelper.attrs_S.clone());
+		Relation relationSupplier = s.getRelation("supplier");
 	
 		Condition joinConditions1 = ConjunctiveCondition.create(new SimpleCondition[]{AttributeEqualityCondition.create(1, 8)});
 		JoinTerm joinTerm1 = JoinTerm.create(
@@ -1122,19 +1126,17 @@ public class SymmetricMemoryHashJoinTest {
 				AttributeEqualityCondition.create(5, 19)});
 		JoinTerm joinTerm2 = JoinTerm.create(cartesianProductTerm1, joinTerm1, joinConditions2);
 		
-		Relation relationRegion = Relation.create("Region", TPCHelper.attrs_R.clone());		
+		Relation relationRegion = s.getRelation("region");		
 		AccessTerm termRegion = AccessTerm.create(relationRegion, repo.getAccess("m12"));
 		
 		Condition joinConditions3 = ConjunctiveCondition.create(new SimpleCondition[]{AttributeEqualityCondition.create(7, 23)});
 		
 		JoinTerm joinTerm3 = JoinTerm.create(joinTerm2, termRegion, joinConditions3);
-		
 		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(joinTerm3, decor);
-
 		// Execute the plan.
 		List<Tuple> result = target.stream().collect(Collectors.toList());
 
-		Assert.assertEquals(30, result.size());
+		Assert.assertEquals(0, result.size()); 
 		target.close();
 	}
 	
@@ -1149,7 +1151,14 @@ public class SymmetricMemoryHashJoinTest {
 		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
 				AccessTerm.create(amFreeRegion.getRelation(), amFreeRegion),
 				AccessTerm.create(amFreeRegion.getRelation(), amFreeRegion), condition), decor);
-
+		
+		AccessRepository repository = AccessRepository.getRepository();
+		repository .addAccess(amFreeRegion);
+		PlanDecorator pd = new PlanDecorator(repository);
+		Access access = new Access(AccessTerm.create(amFreeRegion.getRelation(), amFreeRegion), pd);
+		uk.ac.ox.cs.pdq.datasources.utility.Table t = access.execute();
+		access.close();
+		System.out.println(t);
 		// Execute the plan.
 		List<Tuple> result = target.stream().collect(Collectors.toList());
 
@@ -1179,5 +1188,57 @@ public class SymmetricMemoryHashJoinTest {
 		Assert.assertEquals(5, result.size());
 		target.close();
 	}
+	
+	@Test
+	public void integrationTestSql10b() throws Exception {
+
+//		Relation relationRegion1 = Relation.create("REGION", TPCHelper.attrs_region);
+//		ExecutableAccessMethod amFreeRegion = new SqlAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0],
+//				relationRegion1, TPCHelper.attrMap_region, TPCHelper.getProperties());
+//
+//		Condition condition = AttributeEqualityCondition.create(0, 3);
+//		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+//				AccessTerm.create(amFreeRegion.getRelation(), amFreeRegion),
+//				AccessTerm.create(amFreeRegion.getRelation(), amFreeRegion), condition), decor);
+
+		/*
+		 * Plan: self-join on the REGION relation.
+		 */
+		Condition condition = AttributeEqualityCondition.create(0, 3);
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(TPCHelper.relationRegion, TPCHelper.amFreeRegion),
+				AccessTerm.create(TPCHelper.relationRegion, TPCHelper.amFreeRegion), condition), decor);
+
+		// Execute the plan.
+		List<Tuple> result = target.stream().collect(Collectors.toList());
+
+		// SELECT count(*) FROM region as r1, region as r2 WHERE r1.r_regionkey=r2.r_regionkey;
+		Assert.assertEquals(5, result.size());
+		target.close();
+	}
+
+	@Test
+	public void integrationTestSql11b() throws Exception {
+
+		Relation relationRegion1 = Relation.create("REGION", TPCHelper.attrs_region);
+		ExecutableAccessMethod amFreeRegion1 = new SqlAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0],
+				relationRegion1, TPCHelper.attrMap_region, TPCHelper.getProperties());
+
+		ExecutableAccessMethod amFreeRegion2 = new SqlAccessMethod("REGION", TPCHelper.attrs_R, new Integer[0],
+				relationRegion1, TPCHelper.attrMap_region, TPCHelper.getProperties());
+
+
+		Condition condition = AttributeEqualityCondition.create(0, 3);
+		SymmetricMemoryHashJoin target = new SymmetricMemoryHashJoin(JoinTerm.create(
+				AccessTerm.create(amFreeRegion1.getRelation(), amFreeRegion1),
+				AccessTerm.create(amFreeRegion2.getRelation(), amFreeRegion2), condition), decor);
+
+		// Execute the plan.
+		List<Tuple> result = target.stream().collect(Collectors.toList());
+
+		Assert.assertEquals(5, result.size());
+		target.close();
+	}
+	
 	
 }

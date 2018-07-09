@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.runtime.exec.spliterator.Access;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.CartesianProduct;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.DependentJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
+import uk.ac.ox.cs.pdq.runtime.exec.spliterator.NestedLoopJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.Projection;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.Selection;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.SymmetricMemoryHashJoin;
@@ -90,9 +91,15 @@ public class PlanDecorator {
 			return new Projection(plan, this);
 		else if (plan instanceof DependentJoinTerm)
 			return new DependentJoin(plan, this);
-		else if (plan instanceof JoinTerm)
-			return new SymmetricMemoryHashJoin(plan, this); // IMP TODO: support other join implementations - how?
-		else if (plan instanceof CartesianProductTerm)
+		else if (plan instanceof JoinTerm) {
+			// there are multiple implementations of joins. NestedLoop is slow but generic, hashJoin can only work when there are no special conditions in the join such as constantEquality conditions)
+			SymmetricMemoryHashJoin hashJoin = new SymmetricMemoryHashJoin(plan, this);
+			NestedLoopJoin normalJoin = new NestedLoopJoin(plan, this);
+			if (normalJoin.getJoinCondition().equals(hashJoin.getJoinCondition())) {
+				return hashJoin;
+			}
+			return normalJoin;
+		} else if (plan instanceof CartesianProductTerm)
 			return new CartesianProduct(plan, this);
 		else
 			throw new IllegalArgumentException("Unsupported logical plan: " + plan);
@@ -114,6 +121,7 @@ public class PlanDecorator {
 		AccessMethodDescriptor amDesc = plan.getAccessMethod();
 		if (amDesc instanceof ExecutableAccessMethod) {
 			// plan is already executable.
+			((ExecutableAccessMethod)amDesc).updateRelation(plan.getRelation());
 			return plan;
 		}
 		ExecutableAccessMethod newAccess = repository.getAccess(amDesc.getName());
