@@ -48,7 +48,15 @@ import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
- * Replaces the old bootstrap, runs regression tests or other test folders with schema and query xml files.
+ * Main entry point to use PDQ. Runs regression tests or other folders with schema and query xml files.<br>
+ * Usage: <br>
+ * PDQ -m [mode] -i [folder]
+ * <br>Folder: either a folder with a schema.xml and query.xml file in it, or a root directory containing many of such sub folders.<br>
+ * Available modes: <br>
+ *  - planner: creates the expected plan xml file. If it is already exists compares the result with it.<br>
+ *  - runtime: executes the expected plan xml file.<br>
+ *  - full: first two in sequence.<br>
+ *  
  * @author gabor
  *
  */
@@ -98,6 +106,9 @@ public class PDQ {
 			description = "Dynamic parameters. Override values defined in the configuration files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 
+	/**
+	 * Main functionality of this class. 
+	 */
 	public void runRegression() {				
 		Set<File> testDirectories = getTestDirectories(new File(this.input));
 
@@ -213,6 +224,10 @@ public class PDQ {
 		}
 	}
 
+	/** Checks the content of each sub directory and selects the ones that look like a test folder.
+	 * @param directory
+	 * @return
+	 */
 	private Set<File> getTestDirectories(File directory) {
 		Set<File> subdirectories = new LinkedHashSet<>();
 		File[] files = directory.listFiles();
@@ -226,6 +241,10 @@ public class PDQ {
 		return subdirectories;
 	}
 
+	/** It is a leaf if it has no sub-directories.
+	 * @param directory
+	 * @return
+	 */
 	private boolean isLeaf(File directory) {
 		File[] files = directory.listFiles();
 		for (File f:files) {
@@ -238,6 +257,11 @@ public class PDQ {
 	}
 
 
+	/** Checks results
+	 * @param params
+	 * @param cost
+	 * @return
+	 */
 	private AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance(PlannerParameters params, CostParameters cost) {
 		switch (params.getPlannerType()) {
 		case DAG_GENERIC:
@@ -273,7 +297,7 @@ public class PDQ {
 	}
 
 	/**
-	 * Initialize the Bootstrap by reading command line parameters, and running
+	 * Initialise the Bootstrap by reading command line parameters, and running
 	 * the planner on them.
 	 * @param args String[]
 	 */
