@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.xml.bind.JAXBException;
 
 import com.beust.jcommander.DynamicParameter;
+import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
@@ -37,7 +38,6 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
-import uk.ac.ox.cs.pdq.regression.Bootstrap.DirectoryValidator;
 import uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion;
 import uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion.AcceptanceResult;
 import uk.ac.ox.cs.pdq.regression.acceptance.ApproximateCostAcceptanceCheck;
@@ -77,8 +77,6 @@ public class PDQ {
 
 	/**  File name where the expected plan must be stored in a test case directory. */
 	private static final String EXPECTED_PLAN_FILE = "expected-plan.xml";
-
-	private static final String ACCESS_REPO = "accesses";
 
 	private static final String CATALOG_FILE = "catalog.properties";
 
@@ -184,9 +182,9 @@ public class PDQ {
 
 					// Create a runtime object with an empty list of facts (data will be loaded from a third party database)
 					Runtime runtime = new Runtime(runtimeParams, schema);
-
+					
 					// Specify the directory where the access methods are described 
-					File accesses = new File(directory, ACCESS_REPO);
+					File accesses = new File(directory, runtimeParams.getAccessDirectory());
 					runtime.setAccessRepository(AccessRepository.getRepository(accesses.getAbsolutePath()));
 
 					Result results = null;
@@ -238,6 +236,9 @@ public class PDQ {
 			else if(!f.equals(directory) && f.isDirectory())
 				subdirectories.addAll(this.getTestDirectories(f));
 		}
+		if (isLeaf(directory)) {
+			subdirectories.add(directory);
+		}
 		return subdirectories;
 	}
 
@@ -247,13 +248,17 @@ public class PDQ {
 	 */
 	private boolean isLeaf(File directory) {
 		File[] files = directory.listFiles();
+		String caseProperties = "case.properties";
+		boolean found = false;
 		for (File f:files) {
+			if (f.getName().equals(caseProperties))
+				found = true;
 			if(!f.equals(directory)) {
 				if(f.isDirectory() && !"accesses".equalsIgnoreCase(f.getName()) && !"accessesMem".equalsIgnoreCase(f.getName()))  
 					return false;
 			}
 		}
-		return true;
+		return found;
 	}
 
 
@@ -317,4 +322,26 @@ public class PDQ {
 		}
 		runRegression();
 	}
+	
+	/**
+	 * The Class DirectoryValidator.
+	 */
+	public static class DirectoryValidator implements IParameterValidator {
+		
+		/* (non-Javadoc)
+		 * @see com.beust.jcommander.IParameterValidator#validate(java.lang.String, java.lang.String)
+		 */
+		@Override
+		public void validate(String name, String value) throws ParameterException {
+			try {
+				File f = new File(value);
+				if (!(f.exists() && f.isDirectory())) {
+					throw new ParameterException(name + " must be a valid directory.");
+				}
+			} catch (Exception e) {
+				throw new ParameterException(name + " must be a valid directory.");
+			}
+		}
+		
+	}	
 }

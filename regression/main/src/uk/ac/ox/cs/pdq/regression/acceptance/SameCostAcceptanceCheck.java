@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.regression.planner.PlannerTestUtilities;
+import uk.ac.ox.cs.pdq.regression.utils.PlannerTestUtilities;
 
 /**
  * Acceptance test request the expected and observed plans to have the same cost

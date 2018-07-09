@@ -1,12 +1,9 @@
-package uk.ac.ox.cs.pdq.regression.chasebench;
+package uk.ac.ox.cs.pdq.regression.junit.chasebanch;
 
 /**
 	@author Mark Ridler
 
 	This package contains tests for the Chase:
-	- CommonToPDQTranslator.java 
-		* Parses tables, headers, footers, atoms, equality, dependency and query
-		* Imports facts from a csv file
 	- Deep.java
 		* Opens a doctors internal db, creates a schema, gets test facts
 		* Gets test queries

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.regression.chasebench;
+package uk.ac.ox.cs.pdq.regression.junit.chasebanch;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,19 +21,26 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
 
 /**
- * The test case called "Ontology-256" from the chasebench project.
+ * The test case called "Deep" from the chasebench project.
  * <pre>
  * Current test result (on a laptop):
- *   - case : Can't parse input files.  
+ *   - case 100:  27 seconds.
+ *   - case 200:  timeout
+ *   - case 300:  timeout
  * Old PDQ results were: 
- *   - case :  timeout
+ *   - case 100:  118 seconds (on test hardware).
+ *   - case 200:  timeout
+ *   - case 300:  timeout
  * </pre>
  * @author Gabor
  *
  */
-public class Ontology256 {
+public class Deep {
+	String TEST_DATA[] = {"100","200","300"}; // test data folders;
+	String testDataFolder = TEST_DATA[0];
 	private Schema s = null;
 	Map<String, Relation> relations = new HashMap<>();
 	
@@ -48,7 +55,7 @@ public class Ontology256 {
 		printStats(res);
 		RestrictedChaser chaser = new RestrictedChaser();
 		long start = System.currentTimeMillis();
-		chaser.reasonUntilTermination(state, s.getAllDependencies());
+		chaser.reasonUntilTermination(state, s.getNonEgdDependencies());
 		long duration = System.currentTimeMillis() - start;
 		System.out.println("reasonUntilTermination took " + (duration/1000.0) + " seconds.");
 		res = state.getFacts();
@@ -83,20 +90,19 @@ public class Ontology256 {
 		}
 	}
 	private Schema createSchema() {
-		File schemaDir = new File("test//chaseBench//Ontology-256//schema");
-		File dependencyDir = new File("test//chaseBench//Ontology-256//dependencies");
-		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//Ontology-256.s-schema.txt");
-		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//Ontology-256.t-schema.txt");
+		File schemaDir = new File("test//chaseBench//deep//"+testDataFolder+"//schema");
+		File dependencyDir = new File("test//chaseBench//deep//"+testDataFolder+"//dependencies");
+		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//deep.s-schema.txt");
+		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//deep.t-schema.txt");
 		relations.putAll(tables);
 		relations.putAll(tables1);
-		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//Ontology-256.st-tgds.txt");
-		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//Ontology-256.t-tgds.txt"));
-		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//Ontology-256.t-egds.txt"));
+		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//deep.st-tgds.txt");
+		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//deep.t-tgds.txt"));
 		return new Schema(relations.values().toArray(new Relation[relations.size()]), dependencies.toArray(new Dependency[dependencies.size()]));
 		
 	}
 	private Collection<Atom> getTestFacts() {
-		File dataDir = new File("test//chaseBench//Ontology-256//data");
+		File dataDir = new File("test//chaseBench//deep//" + testDataFolder + "//data");
 		Collection<Atom> facts = new ArrayList<>();
 		for (File f: dataDir.listFiles()) {
 			if (f.getName().endsWith(".csv")) {
@@ -111,7 +117,7 @@ public class Ontology256 {
 		return facts;
 	}
 	private Collection<ConjunctiveQuery> getTestQueries() throws IOException {
-		File dataDir = new File("test//chaseBench//Ontology-256//queries");
+		File dataDir = new File("test//chaseBench//deep//"+testDataFolder+"//queries");
 		Collection<ConjunctiveQuery> facts = new ArrayList<>();
 		Map<String, Relation> relations = new HashMap<>();
 		for (Relation r: s.getRelations()) {
