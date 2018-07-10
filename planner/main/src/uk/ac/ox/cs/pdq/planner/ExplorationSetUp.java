@@ -378,7 +378,13 @@ public class ExplorationSetUp {
 			Attribute attribute = relation.getAttribute(index);
 			attributes[index] = Attribute.create(String.class, attribute.getName());
 		}
-		return Relation.create(relation.getName(), attributes, relation.getAccessMethods(), relation.isEquality());
+		Relation r = null;
+		if (relation.getForeignKeys() == null || relation.getForeignKeys().length==0)
+			r = Relation.create(relation.getName(), attributes, relation.getAccessMethods(), relation.isEquality());
+		else
+			r = Relation.create(relation.getName(), attributes, relation.getAccessMethods(), relation.getForeignKeys(), relation.isEquality());
+		r.setPrimaryKey(relation.getPrimaryKey());
+		return r;
 	}
 
 	/**
