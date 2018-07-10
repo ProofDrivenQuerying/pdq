@@ -15,6 +15,24 @@ package uk.ac.ox.cs.pdq.regression;
 		* Runs regression tests.
 	- RegressionTestException.java
  		* Exception that occurred during a regression test.
+ 	
+ 	This also contains the following packages:
+ 	
+ 	- regression.acceptance
+		* This package runs regression tests with a theme of acceptance criteria.
+ 	- regression.casegenerator
+ 		* Contains utility methods to create a new test case from scratch or convert an existing regression test
+ 		* to runtime-compatible test with auto generated access methods using templates.
+ 	- regression.chasebench
+		* This package contains tests for the Chase:
+ 	- regression.cost.estimators
+ 		* This package contains classes that provide tests for Cost Estimation functions.
+	- regression.planner
+	 	* Runs regression tests for the optimised explorer. Runs a search with and
+	 	* without optimisation (global equivalence, global dominance) and compares the
+	 	* resulting plans. An exception is thrown when the plans are different.
+ 	- regression.runtime
+		* This package is commented out pending resolution of the runtime changes.
 
 	This package is the entry point for running regression tests.
 	There are different types of regression tests:
