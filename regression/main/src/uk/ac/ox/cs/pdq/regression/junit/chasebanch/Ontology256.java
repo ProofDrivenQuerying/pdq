@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
@@ -34,6 +35,7 @@ import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
  * @author Gabor
  *
  */
+@Ignore //- this test requires the chasebanch project checked out , uses files from there
 public class Ontology256 {
 	private Schema s = null;
 	Map<String, Relation> relations = new HashMap<>();

@@ -42,13 +42,13 @@ public class TestMainPostgres {
 		System.out.println("TestMain.testChaseBench_tgds()");
 		Schema schema = null;
 		try {
-			schema = IOManager.importSchema(new File("test\\chaseBench\\tgds\\schema.xml"));
+			schema = IOManager.importSchema(new File("test/chaseBench/tgds/schema.xml"));
 		} catch (JAXBException | FileNotFoundException e1) {
 			e1.printStackTrace();
 			Assert.fail();
 		}
 
-		Collection<Atom> facts = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgds\\data\\s.csv");
+		Collection<Atom> facts = CommonToPDQTranslator.importFacts(schema, "s", "test/chaseBench/tgds/data/s.csv");
 
 		try {
 			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
@@ -95,14 +95,14 @@ public class TestMainPostgres {
 		System.out.println("TestMain.testChaseBench_tgds5()");
 		Schema schema = null;
 		try {
-			schema = IOManager.importSchema(new File("test\\chaseBench\\tgds5\\schema.xml"));
+			schema = IOManager.importSchema(new File("test/chaseBench/tgds5/schema.xml"));
 		} catch (JAXBException | FileNotFoundException e1) {
 			e1.printStackTrace();
 			Assert.fail();
 		}
 
-		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s0", "test\\chaseBench\\tgds5\\data\\s0.csv");
-		Collection<Atom> facts1 = CommonToPDQTranslator.importFacts(schema, "s1", "test\\chaseBench\\tgds5\\data\\s1.csv");
+		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s0", "test/chaseBench/tgds5/data/s0.csv");
+		Collection<Atom> facts1 = CommonToPDQTranslator.importFacts(schema, "s1", "test/chaseBench/tgds5/data/s1.csv");
 		facts0.addAll(facts1);
 		try {
 			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
@@ -139,13 +139,13 @@ public class TestMainPostgres {
 		System.out.println("TestMain.testChaseBench_tgdsEgds()");
 		Schema schema = null;
 		try {
-			schema = IOManager.importSchema(new File("test\\chaseBench\\tgdsEgds\\schema.xml"));
+			schema = IOManager.importSchema(new File("test/chaseBench/tgdsEgds/schema.xml"));
 		} catch (JAXBException | FileNotFoundException e1) {
 			e1.printStackTrace();
 			Assert.fail();
 		}
 
-		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgds\\data\\s.csv");
+		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test/chaseBench/tgdsEgds/data/s.csv");
 		try {
 			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
@@ -199,13 +199,13 @@ public class TestMainPostgres {
 		System.out.println("TestMain.testChaseBench_tgdsEgdsLarge()");
 		Schema schema = null;
 		try {
-			schema = IOManager.importSchema(new File("test\\chaseBench\\tgdsEgdsLarge\\schema.xml"));
+			schema = IOManager.importSchema(new File("test/chaseBench/tgdsEgdsLarge/schema.xml"));
 		} catch (JAXBException | FileNotFoundException e1) {
 			e1.printStackTrace();
 			Assert.fail();
 		}
 
-		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgdsLarge\\data\\s.csv");
+		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test/chaseBench/tgdsEgdsLarge/data/s.csv");
 		try {
 			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
@@ -259,13 +259,13 @@ public class TestMainPostgres {
 		System.out.println("TestMain.testChaseBench_vldb2010()");
 		Schema schema = null;
 		try {
-			schema = IOManager.importSchema(new File("test\\chaseBench\\vldb2010\\schema.xml"));
+			schema = IOManager.importSchema(new File("test/chaseBench/vldb2010/schema.xml"));
 		} catch (JAXBException | FileNotFoundException e1) {
 			e1.printStackTrace();
 			Assert.fail();
 		}
 
-		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "A", "test\\chaseBench\\vldb2010\\data\\A.csv");
+		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "A", "test/chaseBench/vldb2010/data/A.csv");
 		try {
 			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
@@ -301,13 +301,13 @@ public class TestMainPostgres {
 		System.out.println("TestMain.testChaseBench_weak()");
 		Schema schema = null;
 		try {
-			schema = IOManager.importSchema(new File("test\\chaseBench\\weak\\schema.xml"));
+			schema = IOManager.importSchema(new File("test/chaseBench/weak/schema.xml"));
 		} catch (JAXBException | FileNotFoundException e1) {
 			e1.printStackTrace();
 			Assert.fail();
 		}
 
-		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "deptemp", "test\\chaseBench\\weak\\data\\deptemp.csv");
+		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "deptemp", "test/chaseBench/weak/data/deptemp.csv");
 		try {
 			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
