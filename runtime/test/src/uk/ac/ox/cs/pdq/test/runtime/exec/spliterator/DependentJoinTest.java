@@ -43,8 +43,6 @@ import uk.ac.ox.cs.pdq.runtime.exec.spliterator.DependentJoin;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
-// this test case is very slow, so disabling it for now. Last time I run it one failed, the rest run successfully.
-@Ignore
 public class DependentJoinTest {
 	PlanDecorator decor = null;
 
@@ -542,6 +540,7 @@ public class DependentJoinTest {
 	 * (C_CUSTKEY) and 3 (C_NATIONKEY)
 	 */
 	@Test
+	@Ignore //this test is very slow 
 	public void integrationTestSql2b() throws Exception {
 
 		AccessTerm leftChild = AccessTerm.create(TPCHelper.amFreeNation.getRelation(), TPCHelper.amFreeNation);
@@ -682,6 +681,7 @@ public class DependentJoinTest {
 	 * Plan: DependentJoin{nationKey}(NATION_LESS, Selection(SUPPLIER_LESS))
 	 */
 	@Test
+	@Ignore //this test requires the part_less table in the tpch database that is not installed by default 
 	public void integrationTestSql6() throws Exception {
 
 		// Select suppliers whose account balance is negative.
@@ -705,6 +705,7 @@ public class DependentJoinTest {
 	 * Plan: DependentJoin{partKey}(Selection(PART_LESS), PARTSUPP_LESS)
 	 */
 	@Test
+	@Ignore //this test requires the part_less table in the tpch database that is not installed by default 
 	public void integrationTestSql7() throws Exception {
 
 		// Select parts whose size is greater than 40.
@@ -728,7 +729,7 @@ public class DependentJoinTest {
 	/*
 	 * Plan: DependentJoin{partKey}(Selection(PART_LESS), PARTSUPP_LESS)
 	 */
-	@Test
+	@Ignore //this test requires the part_less table in the tpch database that is not installed by default 
 	public void integrationTestSql7a() throws Exception {
 
 		// Select parts whose size is greater than 40.
@@ -894,6 +895,7 @@ public class DependentJoinTest {
 	 * DependentJoin{e}(AccessR5, dependentJoinR3R4).
 	 */
 	@Test
+	@Ignore //this test is very slow. 
 	public void stressTestInMemory2() throws Exception {
 
 		// Scale parameter (number of tuples in each relation):
@@ -992,7 +994,7 @@ public class DependentJoinTest {
 	/*
 	 * Plan: DependentJoin(NATION_LESS, SUPPLIER_LESS)
 	 */
-	@Test
+	@Ignore //this test requires the part_less table in the tpch database that is not installed by default 
 	public void stressTestSql1a() throws Exception {
 
 		DependentJoin target = new DependentJoin(
@@ -1017,6 +1019,7 @@ public class DependentJoinTest {
 	 * Plan: DependentJoin(PART, PARTSUPP)
 	 */
 	@Test
+	@Ignore //this test takes a minute to run. 
 	public void stressTestSql2() throws Exception {
 
 		DependentJoin target = new DependentJoin(
@@ -1039,6 +1042,7 @@ public class DependentJoinTest {
 	 * Plan: DependentJoin(PART_LESS, PARTSUPP_LESS)
 	 */
 	@Test
+	@Ignore //this test requires the part_less table in the tpch database that is not installed by default 
 	public void stressTestSql2a() throws Exception {
 
 		DependentJoin target = new DependentJoin(
@@ -1063,6 +1067,7 @@ public class DependentJoinTest {
 	 * DependentJoin(Selection(PART), PARTSUPP) )
 	 */
 	@Test
+	@Ignore //this test is very slow. 
 	public void stressTestSql6() throws Exception {
 
 		// Select suppliers whose account balance is negative.
@@ -1092,69 +1097,4 @@ public class DependentJoinTest {
 		Assert.assertEquals(56648, result.size());
 		target.close();
 	}
-
-	/*
-	 * Plan: DependentJoin{PARTKEY, SUPPKEY}( DependentJoin{SUPPKEY}(
-	 * Join[NATIONKEY]( DependentJoin{REGIONKEY}(REGION, NATION), SUPPLIER),
-	 * Join[PARTKEY](PART, PARTSUPP)) Join[ORDERKEY](
-	 * DependentJoin{CUSTKEY}(Selection(CUSTOMER), ORDERS), Selection(LINEITEM))
-	 */
-	@Test
-	public void stressTestSql7() throws Exception {
-
-		// Construct the target plan in stages.
-
-		// 1. Join[NATIONKEY](DependentJoin{REGIONKEY}(REGION, NATION), SUPPLIER)
-		JoinTerm joinRNS = JoinTerm.create(
-				DependentJoinTerm.create(
-						AccessTerm.create(TPCHelper.amFreeRegion.getRelation(), TPCHelper.amFreeRegion),
-						AccessTerm.create(TPCHelper.am2Nation.getRelation(), TPCHelper.am2Nation)),
-				AccessTerm.create(TPCHelper.amFreeSupplier.getRelation(), TPCHelper.amFreeSupplier));
-
-		// 2. Join[PARTKEY](PART, PARTSUPP)
-		JoinTerm joinPPS = JoinTerm.create(AccessTerm.create(TPCHelper.amFreePart.getRelation(), TPCHelper.amFreePart),
-				AccessTerm.create(TPCHelper.am1PartSupp.getRelation(), TPCHelper.am1PartSupp));
-
-		// 3. DependentJoin{SUPPKEY}(Join[NATIONKEY](DependentJoin{REGIONKEY}(REGION,
-		// NATION), SUPPLIER), Join[PARTKEY](PART, PARTSUPP))
-		DependentJoinTerm leftChild = DependentJoinTerm.create(joinRNS, joinPPS);
-
-		// 4. DependentJoin{CUSTKEY}(Selection(CUSTOMER), ORDERS)
-		// Select customers whose account balance is negative.
-		Condition customerCondition = ConstantInequalityCondition.create(2, TypedConstant.create(0.0f));
-		DependentJoinTerm depJoinCO = DependentJoinTerm.create(
-				SelectionTerm.create(customerCondition,
-						AccessTerm.create(TPCHelper.amFreeCustomer.getRelation(), TPCHelper.amFreeCustomer)),
-				AccessTerm.create(TPCHelper.am1Orders.getRelation(), TPCHelper.am1Orders));
-
-		// 5. Join[ORDERKEY](DependentJoin{CUSTKEY}(Selection(CUSTOMER), ORDERS),
-		// Selection(LINEITEM))
-		// Select lineItems whose quantity is less that 20.
-		Condition lineItemCondition = ConstantInequalityCondition.create(3, TypedConstant.create(20));
-		JoinTerm rightChild = JoinTerm.create(depJoinCO, SelectionTerm.create(lineItemCondition,
-				AccessTerm.create(TPCHelper.am012LineItem.getRelation(), TPCHelper.am012LineItem)));
-
-		DependentJoin target = new DependentJoin(DependentJoinTerm.create(leftChild, rightChild), decor);
-
-		// Execute the plan.
-		List<Tuple> result = target.stream().collect(Collectors.toList());
-
-		// WITH left_child AS (WITH leftleft_child AS (WITH leftleftleft_child AS
-		// (SELECT * FROM REGION, NATION WHERE REGION.R_REGIONKEY = NATION.N_REGIONKEY)
-		// SELECT * FROM leftleftleft_child, SUPPLIER WHERE
-		// leftleftleft_child.N_NATIONKEY = SUPPLIER.S_NATIONKEY), leftright_child AS
-		// (SELECT * FROM PART, PARTSUPP WHERE PART.P_PARTKEY = PARTSUPP.PS_PARTKEY)
-		// SELECT * FROM leftleft_child, leftright_child WHERE leftleft_child.S_SUPPKEY
-		// = leftright_child.PS_SUPPKEY), right_child AS (WITH rightleft_child AS
-		// (SELECT * FROM CUSTOMER, ORDERS WHERE CUSTOMER.C_ACCTBAL < 0 AND
-		// CUSTOMER.C_CUSTKEY = ORDERS.O_CUSTKEY), rightright_child AS (SELECT * FROM
-		// LINEITEM WHERE L_QUANTITY < 20) SELECT * FROM rightleft_child,
-		// rightright_child WHERE rightleft_child.O_ORDERKEY =
-		// rightright_child.L_ORDERKEY) SELECT COUNT(*) FROM left_child, right_child
-		// WHERE left_child.P_PARTKEY = right_child.L_PARTKEY AND left_child.PS_SUPPKEY
-		// = right_child.L_SUPPKEY;
-		Assert.assertEquals(207602, result.size());
-		target.close();
-	}
-
 }

@@ -16,10 +16,7 @@ import org.junit.Test;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -85,7 +82,7 @@ public class TestParallelEGDChaser extends PdqTest {
 		Atom f24 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k5"), UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 
 		try {
-			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20, f21, f22, f23, f24), createConnection(DatabaseParameters.Postgres, this.schema));
+			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20, f21, f22, f23, f24), createConnection(this.schema));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -179,7 +176,7 @@ public class TestParallelEGDChaser extends PdqTest {
 			constants.add(TypedConstant.create("a_" + i));
 		}
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Postgres, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -278,7 +275,7 @@ public class TestParallelEGDChaser extends PdqTest {
 		for (int i = 1; i <= 10; i++)
 			facts.add(Atom.create(R, new Term[] { TypedConstant.create("a_" + (i - 1)), TypedConstant.create("a_" + i) }));
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Postgres, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(s));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -317,11 +314,6 @@ public class TestParallelEGDChaser extends PdqTest {
 		Assert.assertEquals(1, qFacts);
 	}
 
-	@Test
-	public void testA1Postgres() throws SQLException {
-		testA1(DatabaseParameters.Postgres);
-	}
-
 	/**
 	 * Create the following unit tests for getMatches c. conjunctive query is
 	 * 
@@ -341,7 +333,8 @@ public class TestParallelEGDChaser extends PdqTest {
 	 * 
 	 * @param dbParam
 	 */
-	public void testA1(DatabaseParameters dbParam) {
+	@Test
+	public void testA1() {
 
 		Relation A = Relation.create("A",
 				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1") });
@@ -388,7 +381,7 @@ public class TestParallelEGDChaser extends PdqTest {
 			facts.add(Atom.create(D, new Term[] { TypedConstant.create("z" + i), TypedConstant.create("z" + i) }));
 
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(dbParam, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -401,11 +394,6 @@ public class TestParallelEGDChaser extends PdqTest {
 
 		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 		Assert.assertEquals(5, matches.size());
-	}
-
-	@Test
-	public void testB1Postgres() throws SQLException {
-		testB1(DatabaseParameters.Postgres);
 	}
 
 	/**
@@ -427,7 +415,8 @@ public class TestParallelEGDChaser extends PdqTest {
 	 * 
 	 * @param dbParam
 	 */
-	public void testB1(DatabaseParameters dbParam) {
+	@Test
+	public void testB1() {
 		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
 				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3") });
 		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
@@ -467,7 +456,7 @@ public class TestParallelEGDChaser extends PdqTest {
 			facts.add(Atom.create(E, new Term[] { TypedConstant.create("x" + i), TypedConstant.create("y" + i), TypedConstant.create("TC1") }));
 
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(dbParam, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -541,7 +530,7 @@ public class TestParallelEGDChaser extends PdqTest {
 			facts.add(Atom.create(E, new Term[] { TypedConstant.create("TC2"), TypedConstant.create("y" + i), TypedConstant.create("y" + i) }));
 
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Postgres, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -558,18 +547,17 @@ public class TestParallelEGDChaser extends PdqTest {
 		Assert.assertEquals(5, matches.size());
 	}
 
-	private DatabaseManager createConnection(DatabaseParameters params, Schema s) {
+	private DatabaseManager createConnection(Schema s) {
 		try {
 			if (connection!=null) {
 				connection.dropDatabase();
 				connection.shutdown();
 				connection = null;
 			}
-			ExternalDatabaseManager dm = new ExternalDatabaseManager(params);
-			LogicalDatabaseInstance conn = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
-			conn.initialiseDatabaseForSchema(s);
-			this.connection = conn;
-			return conn;
+			InternalDatabaseManager idm = new InternalDatabaseManager();
+			idm.initialiseDatabaseForSchema(s);
+			this.connection = idm;
+			return this.connection;
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
@@ -597,7 +585,7 @@ public class TestParallelEGDChaser extends PdqTest {
 
 	public DatabaseManager getConnection() {
 		if (connection == null)
-			connection = createConnection(DatabaseParameters.Postgres, this.schema);
+			connection = createConnection(this.schema);
 		return connection;
 	}
 

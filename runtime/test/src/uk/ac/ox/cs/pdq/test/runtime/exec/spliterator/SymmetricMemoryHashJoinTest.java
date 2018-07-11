@@ -39,7 +39,9 @@ import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.BinaryExecutablePlan;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.SymmetricMemoryHashJoin;
@@ -1101,29 +1103,44 @@ public class SymmetricMemoryHashJoinTest {
 	@Test
 	public void integrationTestSql9() throws Exception {
 
-		AccessRepository repo = AccessRepository.getRepository("../regression/test/planner/linear/fast/tpch/mysql/simple/case_005/accesses/");
+		String path = "../regression/test/planner/linear/fast/tpch/mysql/simple/case_005/";
+		AccessRepository repo = AccessRepository.getRepository(path + "accessesMem/");
+		Schema s = IOManager.importSchema(new File(path + "schema.xml"));
 		PlanDecorator decor = new PlanDecorator(repo);
 
-		Relation relationPartsupp = Relation.create("Partsupp", TPCHelper.attrs_PS.clone());
-		Relation relationNation = Relation.create("Nation", TPCHelper.attrs_N.clone());
+//		Relation relationPartsupp = Relation.create("Partsupp", TPCHelper.attrs_PS.clone());
+//		Relation relationNation = Relation.create("Nation", TPCHelper.attrs_N.clone());
+//		Relation relationSupplier = Relation.create("Supplier", TPCHelper.attrs_S.clone());
+//		Relation relationRegion = Relation.create("Region", TPCHelper.attrs_R.clone());		
+		Relation relationPartsupp = s.getRelation("partsupp");
+		Relation relationNation = s.getRelation("nation");
+		Relation relationSupplier = s.getRelation("supplier");
+		Relation relationRegion = s.getRelation("region");		
+
+		ExecutableAccessMethod m6 = repo.getAccess("m6");
+		m6.updateRelation(relationSupplier);
+		ExecutableAccessMethod m8 = repo.getAccess("m8");
+		m8.updateRelation(relationPartsupp);
+		ExecutableAccessMethod m10 = repo.getAccess("m10");
+		m10.updateRelation(relationNation);
+		ExecutableAccessMethod m12 = repo.getAccess("m12");
+		m12.updateRelation(relationRegion);
 		
 		CartesianProductTerm cartesianProductTerm1 = CartesianProductTerm.create(
-				AccessTerm.create(relationPartsupp, repo.getAccess("m8")), 
-				AccessTerm.create(relationNation, repo.getAccess("m10")));
+				AccessTerm.create(relationPartsupp, m8), 
+				AccessTerm.create(relationNation, m10));
 		
-		Relation relationSupplier = Relation.create("Supplier", TPCHelper.attrs_S.clone());
 	
 		Condition joinConditions1 = ConjunctiveCondition.create(new SimpleCondition[]{AttributeEqualityCondition.create(1, 8)});
 		JoinTerm joinTerm1 = JoinTerm.create(
-				AccessTerm.create(relationSupplier, repo.getAccess("m6")), 
-				AccessTerm.create(relationSupplier, repo.getAccess("m6")), joinConditions1);
+				AccessTerm.create(relationSupplier, m6), 
+				AccessTerm.create(relationSupplier, m6), joinConditions1);
 		
 		Condition joinConditions2 = ConjunctiveCondition.create(new SimpleCondition[]{AttributeEqualityCondition.create(1, 16),
 				AttributeEqualityCondition.create(5, 19)});
 		JoinTerm joinTerm2 = JoinTerm.create(cartesianProductTerm1, joinTerm1, joinConditions2);
 		
-		Relation relationRegion = Relation.create("Region", TPCHelper.attrs_R.clone());		
-		AccessTerm termRegion = AccessTerm.create(relationRegion, repo.getAccess("m12"));
+		AccessTerm termRegion = AccessTerm.create(relationRegion, m12);
 		
 		Condition joinConditions3 = ConjunctiveCondition.create(new SimpleCondition[]{AttributeEqualityCondition.create(7, 23)});
 		
@@ -1134,7 +1151,7 @@ public class SymmetricMemoryHashJoinTest {
 		// Execute the plan.
 		List<Tuple> result = target.stream().collect(Collectors.toList());
 
-		Assert.assertEquals(30, result.size());
+		Assert.assertEquals(0, result.size());
 		target.close();
 	}
 	

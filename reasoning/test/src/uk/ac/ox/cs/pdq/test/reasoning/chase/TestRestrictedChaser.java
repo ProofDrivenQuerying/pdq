@@ -11,16 +11,12 @@ import java.util.Set;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -50,7 +46,6 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * @author Efthymia Tsamoura
  * @author Gabor
  */
-@Ignore
 public class TestRestrictedChaser extends PdqTest {
 
 	public DatabaseChaseInstance state;
@@ -70,7 +65,7 @@ public class TestRestrictedChaser extends PdqTest {
 	
 	private void setupConnection() {
 		if (connection == null)
-			this.setConnection(createConnection(DatabaseParameters.Postgres, this.schema));
+			this.setConnection(createConnection(this.schema));
 	}
 
 	/**
@@ -189,7 +184,7 @@ public class TestRestrictedChaser extends PdqTest {
 			constants.add(TypedConstant.create("a_" + i));
 		}
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Postgres, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -288,7 +283,7 @@ public class TestRestrictedChaser extends PdqTest {
 		for (int i = 1; i <= 10; i++)
 			facts.add(Atom.create(R, new Term[] { TypedConstant.create("a_" + (i - 1)), TypedConstant.create("a_" + i) }));
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Postgres, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(s));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -327,11 +322,6 @@ public class TestRestrictedChaser extends PdqTest {
 		Assert.assertEquals(1, qFacts);
 	}
 
-	@Test
-	public void testA1Postgres() throws SQLException {
-		testA1(DatabaseParameters.Postgres);
-	}
-
 	/**
 	 * Create the following unit tests for getMatches c. conjunctive query is
 	 * 
@@ -351,7 +341,8 @@ public class TestRestrictedChaser extends PdqTest {
 	 * 
 	 * @param dbParam
 	 */
-	public void testA1(DatabaseParameters dbParam) {
+	@Test
+	public void testA1() {
 
 		Relation A = Relation.create("A",
 				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1")});
@@ -398,7 +389,7 @@ public class TestRestrictedChaser extends PdqTest {
 			facts.add(Atom.create(D, new Term[] { TypedConstant.create("z" + i), TypedConstant.create("z" + i) }));
 
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(dbParam, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -411,11 +402,6 @@ public class TestRestrictedChaser extends PdqTest {
 
 		List<Match> matches = this.state.getMatches(query1, new HashMap<Variable, Constant>());
 		Assert.assertEquals(5, matches.size());
-	}
-
-	@Test
-	public void testB1Postgres() throws SQLException {
-		testB1(DatabaseParameters.Postgres);
 	}
 
 	/**
@@ -437,7 +423,8 @@ public class TestRestrictedChaser extends PdqTest {
 	 * 
 	 * @param dbParam
 	 */
-	public void testB1(DatabaseParameters dbParam) {
+	@Test
+	public void testB1() {
 		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
 				Attribute.create(String.class, "attribute2"), Attribute.create(String.class, "attribute3")});
 		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),
@@ -477,7 +464,7 @@ public class TestRestrictedChaser extends PdqTest {
 			facts.add(Atom.create(E, new Term[] { TypedConstant.create("x" + i), TypedConstant.create("y" + i), TypedConstant.create("TC1") }));
 
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(dbParam, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(s));
 			ConjunctiveQuery query1; // Q(x,y,z) = A('TypedConstant2',y,z,w), B(x,y,z,w), C(y,z,'TypedConstant1')
 			// D(x,y), E(x,y,'TypedConstant1')
 			query1 = ConjunctiveQuery.create(new Variable[] { Variable.create("x"), Variable.create("y"), Variable.create("z") },
@@ -557,7 +544,7 @@ public class TestRestrictedChaser extends PdqTest {
 			facts.add(Atom.create(E, new Term[] { TypedConstant.create("TC2"), TypedConstant.create("y" + i), TypedConstant.create("y" + i) }));
 
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(DatabaseParameters.Postgres, s));
+			this.state = new DatabaseChaseInstance(facts, createConnection(s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -574,9 +561,9 @@ public class TestRestrictedChaser extends PdqTest {
 		Assert.assertEquals(5, matches.size()); 
 	}
 
-	private DatabaseManager createConnection(DatabaseParameters params, Schema s) {
+	private DatabaseManager createConnection(Schema s) {
 		try {
-			LogicalDatabaseInstance dm = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(params),1);
+			InternalDatabaseManager dm = new InternalDatabaseManager();
 			dm.initialiseDatabaseForSchema(s);
 			return dm;
 		} catch (DatabaseException e) {
