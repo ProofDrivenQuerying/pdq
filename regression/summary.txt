@@ -1,0 +1,1 @@
+/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/mysql/simple/case_014 Cost = 20.0 plan: Join{[(#0=#10)]Join{[]Select{[(#3=AMERICA)]Rename{[c26,c31,c32,AMERICA]Access{region_nation.m0[]}}},Rename{[k40,k52,k53,k55]Access{region_nation.m0[]}}},Rename{[c24,c25,c26,c28,c5,c6,k44,k46,k47,c13,c14,c15,c16]Access{order_customer.m1[#2=cnation]}}} Duration: 0.42sec. 

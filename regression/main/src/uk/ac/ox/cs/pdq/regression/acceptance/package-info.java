@@ -2,8 +2,9 @@ package uk.ac.ox.cs.pdq.regression.acceptance;
 
 /**
 	@author Mark Ridler
-	
-	This package contains:
+	@author gabor
+	 
+	This package contains different algorithms to check the result of a plan creation or plan execution.
 	
 	- AcceptanceCriterion.java
  		* High-level acceptance criterion.
@@ -20,5 +21,4 @@ package uk.ac.ox.cs.pdq.regression.acceptance;
  		* Acceptance test request the expected and observed results to be equivalent
  		* under set semantics.
 
-	This package runs regression tests with a theme of acceptance criteria.
 **/

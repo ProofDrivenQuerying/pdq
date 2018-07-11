@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.regression.cost.estimators;
+package uk.ac.ox.cs.pdq.regression.junit;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.regression.planner.PlannerTestUtilities;
+import uk.ac.ox.cs.pdq.regression.utils.PlannerTestUtilities;
 
 /**
  * Tests the WhiteBox cost estimator.
