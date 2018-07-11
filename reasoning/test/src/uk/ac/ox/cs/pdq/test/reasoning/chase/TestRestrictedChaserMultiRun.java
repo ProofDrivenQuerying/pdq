@@ -1,13 +1,9 @@
 package uk.ac.ox.cs.pdq.test.reasoning.chase;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
@@ -20,7 +16,6 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * @author Gabor
  *
  */
-@Ignore
 public class TestRestrictedChaserMultiRun extends PdqTest {
 	private static final int REPEAT = 50;
 
@@ -37,7 +32,7 @@ public class TestRestrictedChaserMultiRun extends PdqTest {
 
 		TestRestrictedChaser trc = new TestRestrictedChaser();
 		trc.createSchema();
-		trc.setup(createConnection(DatabaseParameters.Postgres, trc.schema));
+		trc.setup(createConnection(trc.schema));
 		trc.test_reasonUntilTermination1();
 		trc.tearDown();
 	}
@@ -48,16 +43,16 @@ public class TestRestrictedChaserMultiRun extends PdqTest {
 		for (int i = 0; i < REPEAT; i++) {
 			TestRestrictedChaser trc = new TestRestrictedChaser();
 			trc.createSchema();
-			trc.setup(createConnection(DatabaseParameters.Postgres, trc.schema));
+			trc.setup(createConnection(trc.schema));
 			trc.test_reasonUntilTermination1();
 			trc.tearDown();
 
 		}
 	}
 
-	private DatabaseManager createConnection(DatabaseParameters params, Schema s) {
+	private DatabaseManager createConnection(Schema s) {
 		try {
-			LogicalDatabaseInstance dm = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(params), 1);
+			InternalDatabaseManager dm = new InternalDatabaseManager();
 			dm.initialiseDatabaseForSchema(s);
 			return dm;
 		} catch (DatabaseException e) {

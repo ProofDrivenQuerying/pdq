@@ -12,10 +12,7 @@ import org.junit.Test;
 import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -49,10 +46,9 @@ public class TestGetTriggers extends PdqTest {
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		ExternalDatabaseManager edm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
-		LogicalDatabaseInstance connection =  new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm ,0);
-		connection.initialiseDatabaseForSchema(this.testSchema1);
-		this.chaseState[POSTGRES] = new DatabaseChaseInstance(new ArrayList<Atom>(), connection);
+		InternalDatabaseManager idm = new InternalDatabaseManager();
+		idm.initialiseDatabaseForSchema(this.testSchema1);
+		this.chaseState[POSTGRES] = new DatabaseChaseInstance(new ArrayList<Atom>(), idm);
 	}
 
 
@@ -231,13 +227,12 @@ public class TestGetTriggers extends PdqTest {
 	}
 
 	@Test
-	public void testScanario2Postgres() throws SQLException, DatabaseException {
-		ExternalDatabaseManager edm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
-		LogicalDatabaseInstance connection =  new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm ,0);
-		connection.initialiseDatabaseForSchema(createSchemaScanario2());
-		testScanario2(connection);
-		connection.dropDatabase();
-		connection.shutdown();
+	public void testScanario2() throws SQLException, DatabaseException {
+		InternalDatabaseManager idm = new InternalDatabaseManager();
+		idm.initialiseDatabaseForSchema(createSchemaScanario2());
+		testScanario2(idm);
+		idm.dropDatabase();
+		idm.shutdown();
 	}
 
 	private Schema createSchemaScanario2() {
