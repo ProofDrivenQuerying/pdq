@@ -34,10 +34,14 @@ public class SymmetricMemoryHashJoin extends BinaryExecutablePlan {
 	private Map<Tuple, Set<Tuple>> rightMap = new HashMap<Tuple, Set<Tuple>>();
 
 	private Tuple activeTuple;
+	private boolean activeTupleFlag;
 	private Spliterator<Tuple> probedTuples = null;  
 
 	// Consumer to assign tuples from the active child to the activeTuple field.
-	private Consumer<? super Tuple> activeTupleConsumer = tuple -> this.activeTuple = tuple;
+	private Consumer<? super Tuple> activeTupleConsumer = tuple -> {
+		this.activeTupleFlag = !this.activeTupleFlag;
+		this.activeTuple = tuple;
+	};
 
 	// Functions to project onto the left or right join attributes.
 	private final Function<Tuple, Tuple> leftProjector;
@@ -108,7 +112,7 @@ public class SymmetricMemoryHashJoin extends BinaryExecutablePlan {
 				Map<Tuple, Set<Tuple>> probeMap = leftChildIsActive ? rightMap : leftMap;
 				Function<Tuple, Tuple> projector = leftChildIsActive ? leftProjector : rightProjector;
 
-				Tuple lastActiveTuple = activeTuple;
+				boolean lastActiveTupleFlag = activeTupleFlag;
 				
 				currentIsExhausted = !activeSpliterator.tryAdvance(activeTupleConsumer);
 
@@ -116,9 +120,9 @@ public class SymmetricMemoryHashJoin extends BinaryExecutablePlan {
 					return false;
 
 				// If the activeTuple did not change, return true to continue.
-				if (!currentIsExhausted && activeTuple.equals(lastActiveTuple))
+				if (!currentIsExhausted && activeTupleFlag == lastActiveTupleFlag)
 					return true;
-				
+
 				if (!currentIsExhausted) {
 					// Project the activeTuple onto the join attributes.
 					Tuple projectedTuple = projector.apply(activeTuple);
