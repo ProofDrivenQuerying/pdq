@@ -1,5 +1,0 @@
-Udirectory(1, mbenedikt)
-Udirectory(2, ggottlob)
-Udirectory(3, imanolescu)
-Profinfo(1, 356, mbenedikt)
-Profinfo(2, 358, ggottlob)
