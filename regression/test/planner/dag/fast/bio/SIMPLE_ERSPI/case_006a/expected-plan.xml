@@ -12,41 +12,6 @@
     <RelationalTerm type="JoinTerm">
         <RelationalTerm type="SelectionTerm">
             <predicate type="ConjunctiveCondition">
-                <predicates position="4" type="ConstantEqualityCondition">
-                    <constant type="java.lang.Boolean" value="false"/>
-                </predicates>
-            </predicate>
-            <RelationalTerm type="RenameTerm">
-                <renamings name="c0" type="java.lang.Integer"/>
-                <renamings name="c1" type="java.lang.String"/>
-                <renamings name="c2" type="java.lang.String"/>
-                <renamings name="c3" type="java.lang.String"/>
-                <renamings name="false" type="java.lang.Boolean"/>
-                <renamings name="c4" type="java.lang.Boolean"/>
-                <renamings name="c5" type="java.lang.String"/>
-                <renamings name="c6" type="java.lang.String"/>
-                <renamings name="c7" type="java.lang.String"/>
-                <renamings name="c8" type="java.lang.Boolean"/>
-                <RelationalTerm type="AccessTerm">
-                    <accessMethod name="reactome_pathway_1"/>
-                    <relation name="PathwayBySpecies">
-                        <attribute name="pathwayId" type="java.lang.Integer"/>
-                        <attribute name="pathwayName" type="java.lang.String"/>
-                        <attribute name="stableIdentifier" type="java.lang.String"/>
-                        <attribute name="goBiologicalProcess" type="java.lang.String"/>
-                        <attribute name="isInDisease" type="java.lang.Boolean"/>
-                        <attribute name="isInferred" type="java.lang.Boolean"/>
-                        <attribute name="organismId" type="java.lang.String"/>
-                        <attribute name="organism" type="java.lang.String"/>
-                        <attribute name="doi" type="java.lang.String"/>
-                        <attribute name="hasDiagram" type="java.lang.Boolean"/>
-                        <access-method name="reactome_pathway_1"/>
-                    </relation>
-                </RelationalTerm>
-            </RelationalTerm>
-        </RelationalTerm>
-        <RelationalTerm type="SelectionTerm">
-            <predicate type="ConjunctiveCondition">
                 <predicates position="7" type="ConstantEqualityCondition">
                     <constant value="SINGLE PROTEIN"/>
                 </predicates>
@@ -61,7 +26,7 @@
                 <renamings name="c14" type="java.lang.String"/>
                 <renamings name="SINGLE PROTEIN" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
-                    <accessMethod name="chembl_target_limited"/>
+                    <accessMethod name="chembl_target_limited_1"/>
                     <relation name="TargetLimited">
                         <attribute name="organism" type="java.lang.String"/>
                         <attribute name="pref_name" type="java.lang.String"/>
@@ -77,6 +42,41 @@
                 </RelationalTerm>
             </RelationalTerm>
         </RelationalTerm>
+        <RelationalTerm type="SelectionTerm">
+            <predicate type="ConjunctiveCondition">
+                <predicates position="4" type="ConstantEqualityCondition">
+                    <constant type="java.lang.Boolean" value="false"/>
+                </predicates>
+            </predicate>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c0" type="java.lang.Integer"/>
+                <renamings name="c1" type="java.lang.String"/>
+                <renamings name="c2" type="java.lang.String"/>
+                <renamings name="c3" type="java.lang.String"/>
+                <renamings name="False" type="java.lang.Boolean"/>
+                <renamings name="c4" type="java.lang.Boolean"/>
+                <renamings name="c5" type="java.lang.String"/>
+                <renamings name="c6" type="java.lang.String"/>
+                <renamings name="c7" type="java.lang.String"/>
+                <renamings name="c8" type="java.lang.Boolean"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="reactome_pathway_2"/>
+                    <relation name="PathwayById">
+                        <attribute name="pathwayId" type="java.lang.Integer"/>
+                        <attribute name="pathwayName" type="java.lang.String"/>
+                        <attribute name="stableIdentifier" type="java.lang.String"/>
+                        <attribute name="goBiologicalProcess" type="java.lang.String"/>
+                        <attribute name="isInDisease" type="java.lang.Boolean"/>
+                        <attribute name="isInferred" type="java.lang.Boolean"/>
+                        <attribute name="organismId" type="java.lang.String"/>
+                        <attribute name="organism" type="java.lang.String"/>
+                        <attribute name="doi" type="java.lang.String"/>
+                        <attribute name="hasDiagram" type="java.lang.Boolean"/>
+                        <access-method name="reactome_pathway_2"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
     </RelationalTerm>
-    <cost value="2000.0" type="DoubleCost"/>
+    <cost value="1001.0" type="DoubleCost"/>
 </RelationalTermWithCost>

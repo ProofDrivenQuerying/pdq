@@ -41,6 +41,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion;
+import uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion.AcceptanceLevels;
 import uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion.AcceptanceResult;
 import uk.ac.ox.cs.pdq.regression.acceptance.ApproximateCostAcceptanceCheck;
 import uk.ac.ox.cs.pdq.regression.acceptance.ExpectedCardinalityAcceptanceCheck;
@@ -112,8 +113,9 @@ public class PDQ {
 	 */
 	public void runRegression() {				
 		Set<File> testDirectories = getTestDirectories(new File(this.input));
-
+		
 		for(File directory:testDirectories) {
+			boolean isFailed = false;
 			String stats = directory.getAbsolutePath() + " : ";
 			try {
 				GlobalCounterProvider.resetCounters();
@@ -169,6 +171,7 @@ public class PDQ {
 							results = acceptance.check(new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation);
 							results.report(this.out);
 							stats+=results.report();
+							isFailed = results.getLevel() == AcceptanceLevels.FAIL;
 						} catch(Throwable t) {
 							t.printStackTrace();
 							stats+="Failed to read previous plan: " + t.getMessage() ;
@@ -186,7 +189,10 @@ public class PDQ {
 						stats+= "Cost: " + observation.getValue();
 					this.out.println("\n " + duration_s);
 					stats+= "Finished, " + duration_s;
-					stats = "SUCC" + stats;
+					if (isFailed)
+						stats = "NOT ACCEPTED" + stats;
+					else
+						stats = "SUCC" + stats;
 				}
 
 
