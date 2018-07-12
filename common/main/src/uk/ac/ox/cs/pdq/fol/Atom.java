@@ -38,7 +38,8 @@ public class Atom extends Formula {
 
 	
 	private Atom(Predicate predicate, Term[] terms) {
-		Preconditions.checkArgument(predicate != null && terms != null,"Predicate and terms list cannot be null. (predicate: " + predicate + ", terms:" + terms + ")");
+		if (predicate == null || terms == null) // this if is needed to avoid building strings in the next line when we don't have any error.
+			Preconditions.checkArgument(predicate != null && terms != null,"Predicate and terms list cannot be null. (predicate: " + predicate + ", terms:" + terms + ")");
 		Preconditions.checkArgument(predicate.getArity() == terms.length,"Predicate arity not equal to number of terms");
 		this.predicate = predicate;
 		this.terms = terms.clone();

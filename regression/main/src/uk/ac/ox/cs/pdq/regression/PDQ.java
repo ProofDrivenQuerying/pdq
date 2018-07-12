@@ -2,6 +2,8 @@ package uk.ac.ox.cs.pdq.regression;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -104,6 +106,7 @@ public class PDQ {
 			description = "Dynamic parameters. Override values defined in the configuration files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 
+	private FileWriter stats = null;
 	/**
 	 * Main functionality of this class. 
 	 */
@@ -111,7 +114,7 @@ public class PDQ {
 		Set<File> testDirectories = getTestDirectories(new File(this.input));
 
 		for(File directory:testDirectories) {
-
+			String stats = directory.getAbsolutePath() + " : ";
 			try {
 				GlobalCounterProvider.resetCounters();
 				uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
@@ -153,19 +156,37 @@ public class PDQ {
 					String duration_s = " Duration: " + myFormatter.format(duration) + "s.";				
 
 					// Load expected plan and cost
-					File expectedPlanFile = new File(directory, EXPECTED_PLAN_FILE);
-					RelationalTerm expectedPlan = CostIOManager.readRelationalTermFromRelationaltermWithCost(expectedPlanFile, schema);
-					Cost expectedCost = CostIOManager.readRelationalTermCost(expectedPlanFile, schema);
-
 					AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance = acceptance(plParams, costParams);
 					this.out.print("Using " + acceptance.getClass().getSimpleName() + ": ");
-					acceptance.check(new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation).report(this.out);
-
+					File expectedPlanFile = new File(directory, EXPECTED_PLAN_FILE);
+					RelationalTerm expectedPlan = null;
+					Cost expectedCost = null;
+					AcceptanceResult results = null;
+					if (expectedPlanFile.exists()) {
+						try {
+							expectedPlan = CostIOManager.readRelationalTermFromRelationaltermWithCost(expectedPlanFile, schema);
+							expectedCost = CostIOManager.readRelationalTermCost(expectedPlanFile, schema);
+							results = acceptance.check(new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation);
+							results.report(this.out);
+							stats+=results.report();
+						} catch(Throwable t) {
+							t.printStackTrace();
+							stats+="Failed to read previous plan: " + t.getMessage() ;
+						}
+					} else {
+						System.out.println("No previous plan found.");
+						stats+="No previous plan found.";
+					}
 					if (observation != null && (expectedPlan == null || expectedCost.greaterThan(observation.getValue())) ) {
 						this.out.print("\tWriting plan: " + observation + " " + observation.getValue());
 						CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + EXPECTED_PLAN_FILE),  observation.getKey(), observation.getValue());
+						stats+= "New Plan written.";
 					}
+					if (observation!=null && observation.getValue()!= null)
+						stats+= "Cost: " + observation.getValue();
 					this.out.println("\n " + duration_s);
+					stats+= "Finished, " + duration_s;
+					stats = "SUCC" + stats;
 				}
 
 
@@ -212,13 +233,23 @@ public class PDQ {
 
 			} catch (FileNotFoundException | JAXBException e) {
 				e.printStackTrace();
+				stats+= "Failed: " + e.getMessage();
+				stats = "FAIL" + stats;
 			} catch (PlannerException e) {
 				e.printStackTrace();
+				stats+= "Failed: " + e.getMessage();				
+				stats = "FAIL" + stats;
 			} catch (SQLException e) {
 				e.printStackTrace();
+				stats+= "Failed: " + e.getMessage();				
+				stats = "FAIL" + stats;
 			} catch (Exception e) {
 				e.printStackTrace();
+				stats+= "Failed: " + e.getMessage();				
+				stats = "FAIL" + stats;
 			}
+			printStats(stats + "\n");				
+			
 		}
 	}
 
@@ -301,6 +332,16 @@ public class PDQ {
 		new PDQ(args);
 	}
 
+	private void printStats(String message) {
+		if (stats!=null) {
+			try {
+				stats.write(message);
+				stats.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	/**
 	 * Initialise the Bootstrap by reading command line parameters, and running
 	 * the planner on them.
@@ -320,7 +361,34 @@ public class PDQ {
 			jc.usage();
 			return;
 		}
-		runRegression();
+		File folder = new File("TestResults");
+		folder.mkdirs();
+		File statsFile = new File(folder,"summary"+System.currentTimeMillis() + ".txt");
+		System.out.println("Creating log file: " + statsFile.getAbsolutePath());
+		//statsFile.getParentFile().mkdir();
+		statsFile.delete();
+		try {
+			stats = new FileWriter(statsFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		printStats("Start running regression test: " + mode.toString() + " in folder: " + input);
+		try {
+			runRegression();
+			printStats("regression test finished successfully");
+		} catch(Throwable t) {
+			printStats("regression test failed " + t.getMessage());
+			t.printStackTrace();
+		}
+		try {
+			if (stats!=null)
+				stats.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

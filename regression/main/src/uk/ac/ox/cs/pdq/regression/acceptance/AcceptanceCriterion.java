@@ -60,6 +60,13 @@ public interface AcceptanceCriterion<Expected, Observed> {
 				out.println("\t" + reason);
 			}
 		}
+		
+		/** PASS or Fail message as a string.
+		 * @return
+		 */
+		public String report() {
+			return this.level + " ";
+		}
 
 		/**
 		 * Gets the level.
