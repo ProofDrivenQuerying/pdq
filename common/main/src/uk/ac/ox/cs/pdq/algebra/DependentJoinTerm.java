@@ -31,8 +31,7 @@ public class DependentJoinTerm extends JoinTerm {
 	protected String toString = null;
 
 	private DependentJoinTerm(RelationalTerm child1, RelationalTerm child2) {
-		super(child1,child2);
-		//super(AlgebraUtilities.computeInputAttributesForDependentJoinTerm(child1, child2), AlgebraUtilities.computeOutputAttributes(child1, child2));
+		super(child1,child2,AlgebraUtilities.computeJoinConditions(new RelationalTerm[] {child1,child2}), true);
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		// The first child most have at least one output that can be used as an input for the second.

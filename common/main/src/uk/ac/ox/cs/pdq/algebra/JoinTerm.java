@@ -26,12 +26,15 @@ public class JoinTerm extends CartesianProductTerm {
 	protected String toString = null;
 	
 	protected JoinTerm(RelationalTerm child1, RelationalTerm child2) {
-		super(child1, child2);
-		this.joinConditions = AlgebraUtilities.computeJoinConditions(this.children);
+		this(child1, child2,AlgebraUtilities.computeJoinConditions(new RelationalTerm[] {child1,child2}));
 	}
 	
 	protected JoinTerm(RelationalTerm child1, RelationalTerm child2, Condition joinConditions) {
-		super(child1, child2);
+		this(child1, child2, joinConditions, false);
+	}
+	
+	protected JoinTerm(RelationalTerm child1, RelationalTerm child2, Condition joinConditions, boolean isDependentJoin) {
+		super(child1, child2, isDependentJoin);
 		AlgebraUtilities.assertJoinCondition(joinConditions, child1, child2);
 		this.joinConditions = joinConditions;
 	}
