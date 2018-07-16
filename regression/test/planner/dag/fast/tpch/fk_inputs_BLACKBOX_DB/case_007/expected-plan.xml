@@ -1,99 +1,53 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plan type="dag" cost="42.13">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c8533306" type="java.lang.Integer"/>
-</outputs>
-<project>
-<attribute name="c8533306" type="java.lang.Integer"/>
-</project>
-<child>
-<operator type="DEPENDENT_JOIN" param="0">
-<outputs>
-<attribute name="c8533306" type="java.lang.Integer"/>
-<attribute name="k8533317" type="java.lang.String"/>
-<attribute name="k8533318" type="java.lang.String"/>
-<attribute name="k8533319" type="java.lang.String"/>
-<attribute name="k8533320" type="java.lang.String"/>
-<attribute name="k8533321" type="java.lang.Integer"/>
-<attribute name="k8533322" type="java.lang.String"/>
-<attribute name="k8533323" type="java.math.BigDecimal"/>
-<attribute name="k8533324" type="java.lang.String"/>
-<attribute name="c8533306" type="java.lang.Integer"/>
-<attribute name="c8533307" type="java.lang.Integer"/>
-<attribute name="c8533308" type="java.lang.Integer"/>
-<attribute name="c8533309" type="java.math.BigDecimal"/>
-<attribute name="c8533310" type="java.lang.String"/>
-</outputs>
-<children>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c8533306" type="java.lang.Integer"/>
-<attribute name="k8533317" type="java.lang.String"/>
-<attribute name="k8533318" type="java.lang.String"/>
-<attribute name="k8533319" type="java.lang.String"/>
-<attribute name="k8533320" type="java.lang.String"/>
-<attribute name="k8533321" type="java.lang.Integer"/>
-<attribute name="k8533322" type="java.lang.String"/>
-<attribute name="k8533323" type="java.math.BigDecimal"/>
-<attribute name="k8533324" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="p_partkey" type="java.lang.Integer"/>
-<attribute name="p_name" type="java.lang.String"/>
-<attribute name="p_mfgr" type="java.lang.String"/>
-<attribute name="p_brand" type="java.lang.String"/>
-<attribute name="p_type" type="java.lang.String"/>
-<attribute name="p_size" type="java.lang.Integer"/>
-<attribute name="p_container" type="java.lang.String"/>
-<attribute name="p_retailprice" type="java.math.BigDecimal"/>
-<attribute name="p_comment" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="part" access-method="m2">
-<outputs>
-<attribute name="p_partkey" type="java.lang.Integer"/>
-<attribute name="p_name" type="java.lang.String"/>
-<attribute name="p_mfgr" type="java.lang.String"/>
-<attribute name="p_brand" type="java.lang.String"/>
-<attribute name="p_type" type="java.lang.String"/>
-<attribute name="p_size" type="java.lang.Integer"/>
-<attribute name="p_container" type="java.lang.String"/>
-<attribute name="p_retailprice" type="java.math.BigDecimal"/>
-<attribute name="p_comment" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c8533306" type="java.lang.Integer"/>
-<attribute name="c8533307" type="java.lang.Integer"/>
-<attribute name="c8533308" type="java.lang.Integer"/>
-<attribute name="c8533309" type="java.math.BigDecimal"/>
-<attribute name="c8533310" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="ps_partkey" type="java.lang.Integer"/>
-<attribute name="ps_suppkey" type="java.lang.Integer"/>
-<attribute name="ps_availqty" type="java.lang.Integer"/>
-<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
-<attribute name="ps_comment" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="partsupp" access-method="m4">
-<outputs>
-<attribute name="ps_partkey" type="java.lang.Integer"/>
-<attribute name="ps_suppkey" type="java.lang.Integer"/>
-<attribute name="ps_availqty" type="java.lang.Integer"/>
-<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
-<attribute name="ps_comment" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-</child>
-</operator>
-</plan>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="ProjectionTerm">
+    <projections name="c0" type="java.lang.Integer"/>
+    <RelationalTerm type="DependentJoinTerm">
+        <RelationalTerm type="RenameTerm">
+            <renamings name="c0" type="java.lang.Integer"/>
+            <renamings name="k11" type="java.lang.String"/>
+            <renamings name="k12" type="java.lang.String"/>
+            <renamings name="k13" type="java.lang.String"/>
+            <renamings name="k14" type="java.lang.String"/>
+            <renamings name="k15" type="java.lang.Integer"/>
+            <renamings name="k16" type="java.lang.String"/>
+            <renamings name="k17" type="java.math.BigDecimal"/>
+            <renamings name="k18" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="m2"/>
+                <relation name="part">
+                    <attribute name="p_partkey" type="java.lang.Integer"/>
+                    <attribute name="p_name" type="java.lang.String"/>
+                    <attribute name="p_mfgr" type="java.lang.String"/>
+                    <attribute name="p_brand" type="java.lang.String"/>
+                    <attribute name="p_type" type="java.lang.String"/>
+                    <attribute name="p_size" type="java.lang.Integer"/>
+                    <attribute name="p_container" type="java.lang.String"/>
+                    <attribute name="p_retailprice" type="java.math.BigDecimal"/>
+                    <attribute name="p_comment" type="java.lang.String"/>
+                    <access-method name="m2"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="RenameTerm">
+            <renamings name="c0" type="java.lang.Integer"/>
+            <renamings name="c1" type="java.lang.Integer"/>
+            <renamings name="c2" type="java.lang.Integer"/>
+            <renamings name="c3" type="java.math.BigDecimal"/>
+            <renamings name="c4" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="m4" inputs="0"/>
+                <relation name="partsupp">
+                    <attribute name="ps_partkey" type="java.lang.Integer"/>
+                    <attribute name="ps_suppkey" type="java.lang.Integer"/>
+                    <attribute name="ps_availqty" type="java.lang.Integer"/>
+                    <attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+                    <attribute name="ps_comment" type="java.lang.String"/>
+                    <access-method name="m4" inputs="0"/>
+                    <access-method name="m5" inputs="1"/>
+                    <access-method name="m6" inputs="0,1"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="20.74" type="DoubleCost"/>
+</RelationalTermWithCost>
