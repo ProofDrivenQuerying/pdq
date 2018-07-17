@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.builder;
+package uk.ac.ox.cs.pdq.datasources.schemabuilder;
 
 /**
  * Exception that occurrs during a building operation.

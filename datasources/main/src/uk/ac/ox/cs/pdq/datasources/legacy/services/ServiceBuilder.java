@@ -13,13 +13,13 @@ import org.junit.Assert;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
-import uk.ac.ox.cs.pdq.datasources.builder.Builder;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.InputMethod;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.OutputMethod;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTAttribute;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTRelation;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTStaticInput;
+import uk.ac.ox.cs.pdq.datasources.schemabuilder.Builder;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;

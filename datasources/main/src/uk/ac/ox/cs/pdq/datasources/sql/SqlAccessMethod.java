@@ -22,8 +22,8 @@ import com.google.common.base.Preconditions;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
-import uk.ac.ox.cs.pdq.datasources.AccessException;
-import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.resultstable.AccessException;
+import uk.ac.ox.cs.pdq.datasources.resultstable.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.util.DistinctIterator;
@@ -170,7 +170,7 @@ public class SqlAccessMethod extends ExecutableAccessMethod {
 	 *
 	 * @param queryString the query string
 	 * @return Table
-	 * @see uk.ac.ox.cs.pdq.datasources.memory.RelationAccessWrapper#access(Table)
+	 * @see uk.uk.ac.ox.cs.pdq.datasources.legacy.RelationAccessWrapper#access(Table)
 	 */
 	private Table fetchTuples(String queryString) {
 		Table result = new Table(this.outputAttributes(false));

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.sql;
+package uk.ac.ox.cs.pdq.datasources.schemabuilder;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,8 +18,6 @@ import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
-import uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Reference;
@@ -44,7 +42,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	/**
 	 *
 	 * @param p Properties
-	 * @see uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer#setProperties(Properties)
+	 * @see uk.ac.ox.cs.pdq.datasources.schemabuilder.SchemaDiscoverer#setProperties(Properties)
 	 */
 	@Override
 	public void setProperties(Properties p) {
@@ -54,7 +52,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	/**
 	 *
 	 * @return Properties
-	 * @see uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer#getProperties()
+	 * @see uk.ac.ox.cs.pdq.datasources.schemabuilder.SchemaDiscoverer#getProperties()
 	 */
 	@Override
 	public Properties getProperties() {
@@ -65,7 +63,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	 *
 	 * @return the schema discovered from the given properties
 	 * @throws BuilderException the builder exception
-	 * @see uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer#discover()
+	 * @see uk.ac.ox.cs.pdq.datasources.schemabuilder.SchemaDiscoverer#discover()
 	 */
 	@Override
 	public Schema discover() throws BuilderException {

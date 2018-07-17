@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.regression.acceptance;
 import static uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion.AcceptanceLevels.FAIL;
 import static uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion.AcceptanceLevels.PASS;
 
-import uk.ac.ox.cs.pdq.datasources.utility.Result;
+import uk.ac.ox.cs.pdq.datasources.resultstable.Result;
 
 /**
  * Acceptance test request the expected and observed results to be equivalent

@@ -1,6 +1,6 @@
-package uk.ac.ox.cs.pdq.datasources;
+package uk.ac.ox.cs.pdq.datasources.legacy;
 
-import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.resultstable.Table;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.util.Tuple;

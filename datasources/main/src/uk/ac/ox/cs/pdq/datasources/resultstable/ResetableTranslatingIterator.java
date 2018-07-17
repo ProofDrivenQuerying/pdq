@@ -1,5 +1,7 @@
-package uk.ac.ox.cs.pdq.datasources;
+package uk.ac.ox.cs.pdq.datasources.resultstable;
 
+import uk.ac.ox.cs.pdq.datasources.legacy.ResetableIterator;
+import uk.ac.ox.cs.pdq.datasources.legacy.TranslatingIterator;
 
 /**
  * An iterator that can be reset, i.e. the cursor can be placed back to the
@@ -12,13 +14,13 @@ package uk.ac.ox.cs.pdq.datasources;
 public interface ResetableTranslatingIterator<I, O> extends TranslatingIterator<I, O>, ResetableIterator<O> {
 
 	/** Opens the iterator to its initial position.
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
+	 * @see uk.ac.ox.cs.pdq.datasources.legacy.ResetableIterator#open()
 	 */
 	@Override
 	void open();
 
 	/** Resets the iterator to its initial position.
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
+	 * @see uk.ac.ox.cs.pdq.datasources.legacy.ResetableIterator#reset()
 	 */
 	@Override
 	void reset();
@@ -27,7 +29,7 @@ public interface ResetableTranslatingIterator<I, O> extends TranslatingIterator<
 	 * Deep copy.
 	 *
 	 * @return a copy of the iterator.
-	 * @see uk.ac.ox.cs.pdq.datasources.TranslatingIterator#deepCopy()
+	 * @see uk.ac.ox.cs.pdq.datasources.legacy.TranslatingIterator#deepCopy()
 	 */
 	@Override
 	ResetableTranslatingIterator<I, O> deepCopy();

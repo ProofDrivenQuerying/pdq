@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.utility;
+package uk.ac.ox.cs.pdq.datasources.resultstable;
 
 /**
  * Common interface to things that can be differentiated, i.e. tell whether two

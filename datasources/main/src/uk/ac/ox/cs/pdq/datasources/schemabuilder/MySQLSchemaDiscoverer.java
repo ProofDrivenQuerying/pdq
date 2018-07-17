@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.sql;
+package uk.ac.ox.cs.pdq.datasources.schemabuilder;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -21,7 +21,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 
-import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
+import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.utility.Utility;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -35,12 +35,12 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.util.Triple;
 
 /**
- * PostgresqlTranslator-specific class for automatically discovering a schema.
+ * MySQL-specific class for automatically discover a schema.
  *  
  * @author Julien Leblay
  *
  */
-public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
+public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 
 	private Map<String, Relation> relationMap;
 
@@ -51,10 +51,10 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	@Override
 	protected String getRelationsDiscoveryStatement(String databaseName) {
 		return "SELECT table_name "
-				+ "FROM information_schema.tables "
-				+ "WHERE table_schema = 'public' "
-				+ "AND table_catalog = '" + databaseName + "' "
-				+ "ORDER BY table_name";
+				+ " FROM information_schema.tables"
+				+ " WHERE table_type LIKE 'BASE TABLE'"
+				+ " AND table_schema = '" + databaseName + "'"
+				+ " ORDER BY table_name";
 	}
 
 	/*
@@ -63,18 +63,11 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 */
 	@Override
 	protected String getForeignKeyDiscoveryStatement(String relationName) {
-		return "select c.constraint_name "
-				+ "    , x.column_name "
-				+ "    , y.table_name as REFERENCED_TABLE_NAME "
-				+ "    , y.column_name as REFERENCED_COLUMN_NAME "
-				+ "from information_schema.referential_constraints c "
-				+ "join information_schema.key_column_usage x "
-				+ "    on x.constraint_name = c.constraint_name "
-				+ "join information_schema.key_column_usage y "
-				+ "    on y.ordinal_position = x.position_in_unique_constraint "
-				+ "    and y.constraint_name = c.unique_constraint_name "
-				+ "where x.table_name = '" + relationName + "'"
-				+ "order by c.constraint_name, x.ordinal_position";
+		return "select CONSTRAINT_NAME, COLUMN_NAME, "
+				+ "REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME"
+				+ " from information_schema.KEY_COLUMN_USAGE "
+				+ " where TABLE_NAME = '" + relationName + "' "
+				+ "AND REFERENCED_TABLE_NAME IS NOT NULL";
 	}
 
 	/*
@@ -83,13 +76,11 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 */
 	@Override
 	protected String getViewsDiscoveryStatement(String databaseName) {
-		return "SELECT viewname "
-		+ "FROM pg_views "
-		+ "WHERE schemaname = 'public' "
-		+ "UNION SELECT matviewname "
-		+ "FROM pg_matviews "
-		+ "WHERE schemaname = 'public' "
-		;
+		return "SELECT table_name "
+				+ " FROM information_schema.tables"
+				+ " WHERE table_type LIKE 'VIEW'"
+				+ " AND table_schema = '" + databaseName + "'"
+				+ " ORDER BY table_name";
 	}
 
 	/*
@@ -113,7 +104,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	@Override
 	protected View getViewInstance(Properties props, String viewName, Map<String, Relation> relationMap) {
 		String definition = this.getViewDefinition(viewName);
-		LinearGuarded viewToRelationDependency = this.parseViewDefinition(viewName, definition, relationMap);		
+		LinearGuarded viewToRelationDependency = this.parseViewDefinition(viewName, definition, relationMap);
 		// view without access method
 		View view = new View(viewName, relationMap.get(viewName).getAttributes());
 		view.setViewToRelationDependency(viewToRelationDependency);
@@ -131,18 +122,13 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 */
 	@Override
 	protected String getViewDefinition(String viewName) {
-		try(Connection connection = getConnection(this.properties);
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT definition "
-					+ "FROM pg_views "
-					+ "WHERE schemaname = 'public' "
-					+ "AND viewname = '" + viewName + "' "
-					+ "UNION SELECT definition "
-					+ "FROM pg_matviews "
-					+ "WHERE schemaname = 'public' "
-					+ "AND matviewname = '" + viewName + "' ")) {
+		try (
+				Connection connection = getConnection(this.properties);
+				Statement stmt = connection.createStatement();
+				ResultSet rs = stmt.executeQuery("SHOW CREATE VIEW " + viewName);
+				) {
 			if (rs.next()) {
-				return rs.getString(1);
+				return rs.getString(2);
 			}
 		} catch (SQLException e) {
 			log.error(e);
@@ -150,16 +136,29 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		}
 		return null;
 	}
-	
+
+	/**
+	 * Parse a SQL statement featuring a conjunctive view definition and returns
+	 * the corresponding linear guarded dependency.
+	 *
+	 * @param viewDef the view def
+	 * @param relationMap Map<String,Relation>
+	 * @return the corresponding linear guarded dependency representation of the
+	 * given SQL view definition.
+	 */
+	protected LinearGuarded parseViewDefinition(String viewDef, Map<String, Relation> relationMap) {
+		throw new UnsupportedOperationException();
+	}
+
 	/** The Constant TOP_PATTERN. */
 	private static final String TOP_PATTERN = "select (?<select>.*) from (?<from>.*) where (?<where>.*)";
-	
+
 	/** The Constant ALIAS_PATTERN. */
 	private static final String ALIAS_PATTERN = "((?<alias>\\w*)\\.)?(?<attribute>\\w*)(\\s*as\\s*(?<renamed>\\w*))?";
-	
+
 	/** The Constant NESTED_CONJUNCTION_PATTERN. */
 	private static final String NESTED_CONJUNCTION_PATTERN = "\\((?<condition>.*)(\\s*and\\s*(?<rest>.*))+?\\)";
-	
+
 	/** The Constant CONDITION_PATTERN. */
 	private static final String CONDITION_PATTERN = "\\((?<condition>.*)\\)";
 
@@ -173,10 +172,10 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * @return the corresponding linear guarded dependency representation of the
 	 * given SQL view definition.
 	 */
-	public LinearGuarded parseViewDefinition(String viewName, String viewDef, Map<String, Relation> relationMap) {
+	protected LinearGuarded parseViewDefinition(String viewName, String viewDef, Map<String, Relation> relationMap) {
 		Preconditions.checkArgument(viewDef != null && !viewDef.isEmpty());
-		String crFreeViewDef = viewDef.replace("\n", " ");
-		Matcher m = Pattern.compile(TOP_PATTERN, Pattern.CASE_INSENSITIVE).matcher(crFreeViewDef);
+		this.relationMap = relationMap;
+		Matcher m = Pattern.compile(TOP_PATTERN, Pattern.CASE_INSENSITIVE).matcher(viewDef);
 		String select = null;
 		String from = null;
 		String where = null;
@@ -188,7 +187,6 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		if (Strings.isNullOrEmpty(select) || Strings.isNullOrEmpty(from) || Strings.isNullOrEmpty(where)) {
 			throw new IllegalArgumentException("Not a valid view definition " + viewDef);
 		}
-		this.relationMap= relationMap;
 		BiMap<String, Atom> atoms = this.makePredicate(from, relationMap);
 		this.makeJoins(where, atoms);
 		Pair<List<Term>, List<Attribute>> freeTermsAndAttributes = this.makeFreeTerms(select, atoms);
@@ -197,7 +195,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		Atom[] right = atoms.values().toArray(new Atom[atoms.values().size()]);
 		return LinearGuarded.create(Atom.create(Relation.create(viewName, attributes.toArray(new Attribute[attributes.size()])), freeTerms.toArray(new Term[freeTerms.size()])), right);
 	}
-	
+
 	/**
 	 * Parse a SQL from clause and returns a map from relation aliases to 
 	 * predicates featuring fresh variables.
@@ -208,8 +206,12 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 */
 	private BiMap<String, Atom> makePredicate(String fromClause, Map<String, Relation> relationMap) {
 		BiMap<String, Atom> result = HashBiMap.create();
-		for (String token: fromClause.trim().split(",")) {
-			String[] aliased = token.trim().split("(AS|\\s)");
+		String from = fromClause.trim();
+		if (from.startsWith("(") && from.endsWith("")) {
+			from = from.substring(1, from.length() - 1);
+		}
+		for (String token: from.trim().split("(,|join)")) {
+			String[] aliased = token.trim().replace("`", "").split("(AS|\\s)");
 			Relation r = relationMap.get(aliased[0].trim());
 			Atom pred = Atom.create(r, Utility.createVariables(r));
 			if (aliased.length == 1) {
@@ -220,7 +222,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Parse a SQL where clause and returns a map from relation aliases to 
 	 * predicates featuring fresh variables.
@@ -237,9 +239,6 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 				nested = m.group("condition");
 				rest = m.group("rest");
 				if (rest != null) {
-					if (rest.startsWith("(") && !rest.endsWith(")")) {
-						rest +=  ")";
-					}
 					this.makeJoins(rest.trim(), predMap);
 				}
 				this.makeJoins(nested.trim(), predMap);
@@ -252,7 +251,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 			} else {
 				clause = whereClause;
 			}
-			String[] operands = clause.split("=");
+			String[] operands = clause.replace("`", "").split("=");
 			if (operands != null && operands.length == 2) {
 				Triple<Atom, Integer, Attribute> t1 = this.parseAlias(operands[0], predMap);
 				if (t1 == null) {
@@ -283,7 +282,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		List<Term> terms = new ArrayList<>();
 		List<Attribute> attributes = new ArrayList<>();
 		for (String token: selectClause.trim().split(",")) {
-			Triple<Atom, Integer, Attribute> triple = this.parseAlias(token.trim(), predMap);
+			Triple<Atom, Integer, Attribute> triple = this.parseAlias(token.trim().replace("`", ""), predMap);
 			if (triple == null) {
 				Pair<Term, Attribute> pair = this.parseConstant(token, predMap.values());
 				terms.add(pair.getLeft());
@@ -295,7 +294,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		}
 		return Pair.of(terms, attributes);
 	}
-	
+
 	/**
 	 * Parses the alias.
 	 *
@@ -319,7 +318,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		if (Strings.isNullOrEmpty(attribute)) {
 			throw new IllegalArgumentException("Not a valid alias clause in view definition " + token);
 		}
-		
+
 		Atom pred = null;
 		Integer index = null;
 		Attribute att = null;
@@ -338,11 +337,12 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 				index = relationMap.get(pred.getPredicate().getName()).getAttributePosition(attribute);
 			}
 		}
-		if (renamed != null && !renamed.isEmpty())
+		if (renamed != null && !renamed.isEmpty()){
 			att = Attribute.create(relationMap.get(pred.getPredicate().getName()).getAttribute(index).getType(), renamed);
+		}
 		return new Triple<>(pred, index, att);
 	}
-	
+
 	/**
 	 * Parses the constant.
 	 *
@@ -352,24 +352,22 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * given attribute and its position.
 	 */
 	private Pair<Term, Attribute> parseConstant(String token, Collection<Atom> atoms) {
-//		String alias = null;
 		String attribute = null;
 		String renamed = null;
 		Matcher m = Pattern.compile(ALIAS_PATTERN, Pattern.CASE_INSENSITIVE).matcher(token);
 		if (m.find()) {
-//			alias = m.group("alias").trim();
 			attribute = m.group("attribute").trim();
 			renamed = m.group("renamed").trim();
 		}
 		if (Strings.isNullOrEmpty(attribute)) {
 			throw new IllegalArgumentException("Not a valid select clause in view definition " + token);
 		}
-		
+
 		Term term = null;
 		Attribute att = null;
 		if (attribute != null
 				&& ((attribute.startsWith("\"") && attribute.endsWith("\""))
-				|| (attribute.startsWith("'") && attribute.endsWith("'")))) {
+						|| (attribute.startsWith("'") && attribute.endsWith("'")))) {
 			term = TypedConstant.create(attribute.substring(1, attribute.length() - 1));
 		}
 		if (renamed != null && !renamed.isEmpty()) 
