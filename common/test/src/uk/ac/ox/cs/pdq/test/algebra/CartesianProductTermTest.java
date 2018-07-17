@@ -80,11 +80,11 @@ public class CartesianProductTermTest extends PdqTest {
 
 		// array returned from CartesianProductTerm.getInputAttributes has zero length
 		Attribute[] aaa = cpt.getInputAttributes();
-		Assert.assertTrue(aaa.length == 1);
+		Assert.assertTrue(aaa.length == 2);
 
 		// CartesianProductTerm.getNumberOfInputAttributes
 		int nia = cpt.getNumberOfInputAttributes();
-		Assert.assertTrue(nia <= 1);
+		Assert.assertTrue(nia <= 2);
 
 		// CartesianProductTerm.getNumberOfOutputAttributes
 		int noa = cpt.getNumberOfOutputAttributes();
