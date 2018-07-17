@@ -3,14 +3,13 @@ package uk.ac.ox.cs.pdq.runtime;
 /**
 	@author Mark Ridler
 	
-	This package contains:
+	This package implements the whole Runtime concept of PDQ. As one of the 7 main projects it is concerned with 
+	running queries and returning their results. Runtime has been redesigned since its original implementation.
 	
-	- Runtime.java
- 		*  Decorates a plan, and executes queries or the plan itself. 
-	- RuntimeParameters.java
- 		* Hold the configuration of a runtime execution.
+	Prominent files include:
+	-Runtime.java which is the main entry point for the Runtime package
 
-	This also contains the following packages:
+	This also contains the following sub packages:
 	
 	- runtime.exec
 		* The decorator converts RelationalTerm objects to ExecutablePlan objects. The
