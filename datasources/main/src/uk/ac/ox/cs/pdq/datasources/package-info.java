@@ -4,7 +4,10 @@ package uk.ac.ox.cs.pdq.datasources;
 	@author Mark Ridler
 	
 	This package represents the whole concept of Datasources in PDQ as one of the 6 main projects. Everything which includes access
-	to the outside world is part of Datasources,
+	to the outside world is part of Datasources, Ways of interacting with the outside world include XML, REST services and SQL. JAXB
+	is a particular method of parsing XML. REST services include legacy (which are maintained purely for information) and live, which
+    are fully operational now. Live REST services include service and servicegroup which represent the 2 XML config files that describe
+    the service.
 	
 	Subpackages include the access repository, the builder (with schema discovery),
   	io.jaxb (and adapted) (with dbIOManager and XMLExecutableAccessMethod), io.xml, legacy services, policies and rest, memory,
