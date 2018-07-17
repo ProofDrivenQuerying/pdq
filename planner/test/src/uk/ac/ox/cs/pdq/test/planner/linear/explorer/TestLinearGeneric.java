@@ -30,9 +30,8 @@ import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -124,7 +123,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = createConnection(DatabaseParameters.Postgres, accessibleSchema);
+			databaseConnection = createConnection(accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -242,7 +241,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = createConnection(DatabaseParameters.Postgres, accessibleSchema);
+			databaseConnection = createConnection(accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -317,7 +316,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = createConnection(DatabaseParameters.Postgres, accessibleSchema);
+			databaseConnection = createConnection(accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -440,7 +439,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = createConnection(dbParams, accessibleSchema);
+			databaseConnection = createConnection(accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -511,7 +510,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			databaseConnection = createConnection(DatabaseParameters.Postgres, accessibleSchema);
+			databaseConnection = createConnection(accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -604,9 +603,9 @@ public class TestLinearGeneric extends PdqTest {
 		}
 	}
 	
-	private DatabaseManager createConnection(DatabaseParameters params, Schema s) {
+	private DatabaseManager createConnection(Schema s) {
 		try {
-			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(params),1);
+			connection = new InternalDatabaseManager();
 			connection.initialiseDatabaseForSchema(s);
 			return connection;
 		} catch (DatabaseException e) {

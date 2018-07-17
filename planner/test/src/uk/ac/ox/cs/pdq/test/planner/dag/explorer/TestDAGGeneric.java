@@ -21,10 +21,7 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -108,8 +105,7 @@ public class TestDAGGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager connection = null;
 		try {
-			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
-			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			connection = new InternalDatabaseManager();
 			connection.initialiseDatabaseForSchema(accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -218,8 +214,7 @@ public class TestDAGGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
-			databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			databaseConnection = new InternalDatabaseManager();
 			databaseConnection.initialiseDatabaseForSchema(accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -359,8 +354,7 @@ public class TestDAGGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager connection = null;
 		try {
-			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
-			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			connection = new InternalDatabaseManager();
 			connection.initialiseDatabaseForSchema(accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -487,8 +481,7 @@ public class TestDAGGeneric extends PdqTest {
 		// Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
-			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
-			databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			databaseConnection = new InternalDatabaseManager();
 			databaseConnection.initialiseDatabaseForSchema(accessibleSchema);
 		} catch (Exception e) {
 			e.printStackTrace();
