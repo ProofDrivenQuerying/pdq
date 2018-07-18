@@ -10,20 +10,23 @@ import org.junit.Assert;
  */
 public class CartesianProductTerm extends RelationalTerm {
 	protected static final long serialVersionUID = -8806125496554968085L;
-
 	protected final RelationalTerm[] children = new RelationalTerm[2];
 
 	/**  Cached string representation. */
 	protected String toString = null;
 
-	protected CartesianProductTerm(RelationalTerm child1, RelationalTerm child2) {
-		super(AlgebraUtilities.computeInputAttributes(child1, child2), AlgebraUtilities.computeOutputAttributes(child1, child2));
+	
+	protected CartesianProductTerm(RelationalTerm child1, RelationalTerm child2, boolean isDependentJoin) {
+		super(AlgebraUtilities.computeInputAttributes(child1, child2,isDependentJoin), AlgebraUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		this.children[0] = child1;
 		this.children[1] = child2;
 	}
 
+	protected CartesianProductTerm(RelationalTerm child1, RelationalTerm child2) {
+		this(child1, child2,false);
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

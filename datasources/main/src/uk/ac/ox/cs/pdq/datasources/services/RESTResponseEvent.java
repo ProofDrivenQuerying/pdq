@@ -3,9 +3,9 @@ package uk.ac.ox.cs.pdq.datasources.services;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.Response;
 
-import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.RequestEvent;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.ResponseEvent;
+import uk.ac.ox.cs.pdq.datasources.resultstable.AccessException;
 
 
 // RESTResponseEvent occurs immediately after a REST access event

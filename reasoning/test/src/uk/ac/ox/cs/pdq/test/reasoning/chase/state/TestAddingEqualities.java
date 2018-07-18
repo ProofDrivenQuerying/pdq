@@ -10,10 +10,8 @@ import org.junit.Test;
 
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -49,7 +47,7 @@ public class TestAddingEqualities extends PdqTest {
 		try {
 			
 			
-			LogicalDatabaseInstance connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(DatabaseParameters.Postgres), 0);
+			LogicalDatabaseInstance connection = new InternalDatabaseManager();
 			connection.initialiseDatabaseForSchema(testSchema1);
 			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20, f21, f22, f23, f24), connection ); 
 					

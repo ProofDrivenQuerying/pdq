@@ -12,8 +12,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
-import uk.ac.ox.cs.pdq.datasources.sql.MySQLSchemaDiscoverer;
+import uk.ac.ox.cs.pdq.datasources.schemabuilder.BuilderException;
+import uk.ac.ox.cs.pdq.datasources.schemabuilder.MySQLSchemaDiscoverer;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Schema;

@@ -60,6 +60,10 @@ public interface AcceptanceCriterion<Expected, Observed> {
 				out.println("\t" + reason);
 			}
 		}
+		
+		public String report() {
+			return this.level.name();
+		}
 
 		/**
 		 * Gets the level.

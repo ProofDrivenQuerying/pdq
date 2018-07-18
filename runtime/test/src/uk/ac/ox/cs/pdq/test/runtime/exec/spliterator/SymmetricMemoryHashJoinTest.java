@@ -1103,15 +1103,11 @@ public class SymmetricMemoryHashJoinTest {
 	@Test
 	public void integrationTestSql9() throws Exception {
 
-		String path = "../regression/test/planner/linear/fast/tpch/mysql/simple/case_005/";
+		String path = "../regression/test/planner/linear/fast/tpch/simple/case_005/";
 		AccessRepository repo = AccessRepository.getRepository(path + "accessesMem/");
 		Schema s = IOManager.importSchema(new File(path + "schema.xml"));
 		PlanDecorator decor = new PlanDecorator(repo);
 
-//		Relation relationPartsupp = Relation.create("Partsupp", TPCHelper.attrs_PS.clone());
-//		Relation relationNation = Relation.create("Nation", TPCHelper.attrs_N.clone());
-//		Relation relationSupplier = Relation.create("Supplier", TPCHelper.attrs_S.clone());
-//		Relation relationRegion = Relation.create("Region", TPCHelper.attrs_R.clone());		
 		Relation relationPartsupp = s.getRelation("partsupp");
 		Relation relationNation = s.getRelation("nation");
 		Relation relationSupplier = s.getRelation("supplier");

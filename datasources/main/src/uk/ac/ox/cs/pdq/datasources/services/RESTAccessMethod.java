@@ -16,8 +16,9 @@ import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
 
-import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.resultstable.AccessException;
+import uk.ac.ox.cs.pdq.datasources.resultstable.Table;
 import uk.ac.ox.cs.pdq.datasources.services.policies.PolicyFactory;
 import uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
@@ -29,7 +30,6 @@ import uk.ac.ox.cs.pdq.datasources.services.service.StaticAttribute;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.AttributeEncoding;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.GroupUsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
-import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.io.ReaderException;

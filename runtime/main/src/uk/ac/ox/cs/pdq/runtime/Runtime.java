@@ -2,8 +2,8 @@ package uk.ac.ox.cs.pdq.runtime;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
-import uk.ac.ox.cs.pdq.datasources.utility.Result;
-import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.resultstable.Result;
+import uk.ac.ox.cs.pdq.datasources.resultstable.Table;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;

@@ -172,7 +172,7 @@ public class Reason {
 			reasoner.reasonUntilTermination(state, schema.getAllDependencies());
 			
 		} catch (Throwable e) {
-			log.error("Planning aborted: " + e.getMessage(), e);
+			log.error("Reasoning aborted: " + e.getMessage(), e);
 			System.exit(-1);
 		}
 	}

@@ -3,8 +3,8 @@ package uk.ac.ox.cs.pdq.datasources.services.policies;
 import com.google.common.eventbus.SubscriberExceptionContext;
 import com.google.common.eventbus.SubscriberExceptionHandler;
 
-import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.AccessEvent;
+import uk.ac.ox.cs.pdq.datasources.resultstable.AccessException;
 
 /**
  * This handler is required by the EventBus class which does not allow

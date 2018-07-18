@@ -109,19 +109,6 @@ public class AlgebraUtilities {
 		return result;
 	}
 
-	protected static Attribute[] computeInputAttributesForDependentJoinTerm(RelationalTerm left, RelationalTerm right) {
-		Attribute[] leftInputs = left.getInputAttributes();
-		Attribute[] leftOutputs = left.getOutputAttributes();
-		Attribute[] rightInputs = right.getInputAttributes();
-		List<Attribute> result = Lists.newArrayList(leftInputs);
-		for (int attributeIndex = 0; attributeIndex < right.getNumberOfInputAttributes(); attributeIndex++) {
-			Attribute inputAttribute = right.getInputAttribute(attributeIndex);
-			if (!Arrays.asList(leftOutputs).contains(inputAttribute))
-				result.add(rightInputs[attributeIndex]);
-		}
-		return result.toArray(new Attribute[result.size()]);
-	}
-
 	// TOCOMMENT: WHAT DOES THE NEXT FUNCITON DO?
 
 	protected static ConjunctiveCondition computeJoinConditions(RelationalTerm[] children) {
@@ -196,7 +183,7 @@ public class AlgebraUtilities {
 		return inputs.toArray(new Attribute[inputs.size()]);
 	}
 
-	public static Attribute[] computeInputAttributes(RelationalTerm left, RelationalTerm right) {
+	public static Attribute[] computeInputAttributes(RelationalTerm left, RelationalTerm right, boolean isDependentJoinTerm) {
 		Assert.assertNotNull(left);
 		Assert.assertNotNull(right);
 		Attribute[] leftInputs = left.getInputAttributes();
@@ -205,8 +192,11 @@ public class AlgebraUtilities {
 		List<Attribute> result = Lists.newArrayList(leftInputs);
 		for (int attributeIndex = 0; attributeIndex < right.getNumberOfInputAttributes(); attributeIndex++) {
 			Attribute inputAttribute = right.getInputAttribute(attributeIndex);
-			if (!Arrays.asList(leftOutputs).contains(inputAttribute))
+			
+			if (!isDependentJoinTerm || !Arrays.asList(leftOutputs).contains(inputAttribute)) {
+				// only dependent join maps attribute from left to right.
 				result.add(rightInputs[attributeIndex]);
+			}
 		}
 		return result.toArray(new Attribute[result.size()]);
 		

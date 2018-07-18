@@ -289,13 +289,11 @@ public class ExplorationSetUp {
 			Condition predicate = ConjunctiveCondition.create(spNew);
 			return SelectionTerm.create(predicate  , child0);
 		}
-		if (term instanceof JoinTerm) {
-			return JoinTerm.create(child0, child1);
-		}
 		if (term instanceof DependentJoinTerm) {
-			return JoinTerm.create(child0, child1);
-		}
-		if (term instanceof CartesianProductTerm) {
+			return DependentJoinTerm.create(child0, child1);
+		} else if (term instanceof JoinTerm) {
+			return JoinTerm.create(child0, child1, ((JoinTerm) term).getJoinConditions());
+		} else if (term instanceof CartesianProductTerm) {
 			return CartesianProductTerm.create(child0, child1);
 		}
 		if (term instanceof ProjectionTerm) {

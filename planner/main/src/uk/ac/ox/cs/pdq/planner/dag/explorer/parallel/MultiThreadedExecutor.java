@@ -160,6 +160,10 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 			executorService.shutdownNow();
 			handleExceptions(e);
 			return null;
+		} catch (Throwable e) {
+			executorService.shutdownNow();
+			e.printStackTrace();
+			return null;
 		}
 	}
 

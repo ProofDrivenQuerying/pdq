@@ -4,7 +4,7 @@ package uk.ac.ox.cs.pdq.test.reasoning.utility;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
+import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
