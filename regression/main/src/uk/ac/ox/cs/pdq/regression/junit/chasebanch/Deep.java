@@ -21,6 +21,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
 
 /**
  * The test case called "Deep" from the chasebench project.

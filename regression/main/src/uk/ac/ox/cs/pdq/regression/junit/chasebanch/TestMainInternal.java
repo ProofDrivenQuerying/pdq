@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.regression.chasebench;
+package uk.ac.ox.cs.pdq.regression.junit.chasebanch;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,9 +16,8 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -27,12 +26,13 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
 
 /**
  * @author Gabor
- *
+ * Runs the chaseBanch test cases using the internal memory database.
  */
-public class TestMainPostgres {
+public class TestMainInternal {
 
 	private LogicalDatabaseInstance dm;
 
@@ -50,7 +50,7 @@ public class TestMainPostgres {
 		Collection<Atom> facts = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgds\\data\\s.csv");
 
 		try {
-			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -104,7 +104,7 @@ public class TestMainPostgres {
 		Collection<Atom> facts1 = CommonToPDQTranslator.importFacts(schema, "s1", "test\\chaseBench\\tgds5\\data\\s1.csv");
 		facts0.addAll(facts1);
 		try {
-			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -146,7 +146,7 @@ public class TestMainPostgres {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgds\\data\\s.csv");
 		try {
-			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -206,7 +206,7 @@ public class TestMainPostgres {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgdsLarge\\data\\s.csv");
 		try {
-			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -266,7 +266,7 @@ public class TestMainPostgres {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "A", "test\\chaseBench\\vldb2010\\data\\A.csv");
 		try {
-			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -308,7 +308,7 @@ public class TestMainPostgres {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "deptemp", "test\\chaseBench\\weak\\data\\deptemp.csv");
 		try {
-			DatabaseManager dc = createConnection(DatabaseParameters.Postgres, schema, 10);
+			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -358,7 +358,8 @@ public class TestMainPostgres {
 
 	private DatabaseManager createConnection(DatabaseParameters params, Schema s, int i) {
 		try {
-			dm = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(params),1);
+			
+			dm = new InternalDatabaseManager();
 			dm.initialiseDatabaseForSchema(s);
 			return dm;
 		} catch (DatabaseException e) {

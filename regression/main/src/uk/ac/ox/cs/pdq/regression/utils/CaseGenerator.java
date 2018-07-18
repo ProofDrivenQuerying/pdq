@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.regression.casegenerator;
+package uk.ac.ox.cs.pdq.regression.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,6 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.regression.planner.PlannerTestUtilities;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 /**

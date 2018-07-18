@@ -31,6 +31,7 @@ import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
 import uk.ac.ox.cs.pdq.util.Utility;
 /**
  * The test case called "Doctors" from the chasebench project.

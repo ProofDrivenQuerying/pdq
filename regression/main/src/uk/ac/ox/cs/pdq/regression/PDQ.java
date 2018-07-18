@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.xml.bind.JAXBException;
 
 import com.beust.jcommander.DynamicParameter;
+import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
@@ -37,7 +38,6 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
-import uk.ac.ox.cs.pdq.regression.Bootstrap.DirectoryValidator;
 import uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion;
 import uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion.AcceptanceResult;
 import uk.ac.ox.cs.pdq.regression.acceptance.ApproximateCostAcceptanceCheck;
@@ -145,13 +145,19 @@ public class PDQ {
 
 					// Load expected plan and cost
 					File expectedPlanFile = new File(directory, EXPECTED_PLAN_FILE);
-					RelationalTerm expectedPlan = CostIOManager.readRelationalTermFromRelationaltermWithCost(expectedPlanFile, schema);
-					Cost expectedCost = CostIOManager.readRelationalTermCost(expectedPlanFile, schema);
-
-					AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance = acceptance(plParams, costParams);
-					this.out.print("Using " + acceptance.getClass().getSimpleName() + ": ");
-					acceptance.check(new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation).report(this.out);
-
+					RelationalTerm expectedPlan = null;
+					Cost expectedCost = null;
+					try {
+						expectedPlan = CostIOManager.readRelationalTermFromRelationaltermWithCost(expectedPlanFile, schema);
+						expectedCost = CostIOManager.readRelationalTermCost(expectedPlanFile, schema);
+	
+						AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance = acceptance(plParams, costParams);
+						this.out.print("Using " + acceptance.getClass().getSimpleName() + ": ");
+						acceptance.check(new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation).report(this.out);
+					} catch(Exception e) {
+						this.out.println("Expected plan not found.");
+						e.printStackTrace();
+					}
 					if (observation != null && (expectedPlan == null || expectedCost.greaterThan(observation.getValue())) ) {
 						this.out.print("\tWriting plan: " + observation + " " + observation.getValue());
 						CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + EXPECTED_PLAN_FILE),  observation.getKey(), observation.getValue());
@@ -293,4 +299,25 @@ public class PDQ {
 		}
 		runRegression();
 	}
+	/**
+	 * The Class DirectoryValidator.
+	 */
+	public static class DirectoryValidator implements IParameterValidator {
+		
+		/* (non-Javadoc)
+		 * @see com.beust.jcommander.IParameterValidator#validate(java.lang.String, java.lang.String)
+		 */
+		@Override
+		public void validate(String name, String value) throws ParameterException {
+			try {
+				File f = new File(value);
+				if (!(f.exists() && f.isDirectory())) {
+					throw new ParameterException(name + " must be a valid directory.");
+				}
+			} catch (Exception e) {
+				throw new ParameterException(name + " must be a valid directory.");
+			}
+		}
+		
+	}	
 }

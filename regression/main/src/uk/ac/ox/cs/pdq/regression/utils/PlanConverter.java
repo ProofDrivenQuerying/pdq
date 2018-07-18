@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.regression;
+package uk.ac.ox.cs.pdq.regression.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
