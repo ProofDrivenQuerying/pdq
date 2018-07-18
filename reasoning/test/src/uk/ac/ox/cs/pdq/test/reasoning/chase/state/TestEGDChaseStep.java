@@ -16,10 +16,8 @@ import org.junit.Test;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -55,15 +53,6 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  */
 public class TestEGDChaseStep extends PdqTest {
 
-	@Test
-	public void testA_postgres() throws SQLException, DatabaseException{
-		testA("postgres");
-	}
-
-	@Test
-	public void testB_postgres() throws SQLException, DatabaseException{
-		testB("postgres");
-	}
 
 	/**
 	 * 
@@ -78,7 +67,8 @@ public class TestEGDChaseStep extends PdqTest {
 	 * @throws SQLException 
 	 * @throws SQLException, DatabaseException
 	 */
-	public void testA(String sqlType) throws SQLException, DatabaseException {
+	@Test
+	public void testA() throws SQLException, DatabaseException {
 		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
 		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
 		Relation r[] = new Relation[] { A,B };
@@ -86,7 +76,7 @@ public class TestEGDChaseStep extends PdqTest {
 		List<Atom> facts = new ArrayList<>();
 		for (int i=2; i <= 1000; i++) facts.add(Atom.create(A, new Term[]{UntypedConstant.create("c_"+(i-1)),UntypedConstant.create("c_"+i)}));
 		
-		DatabaseChaseInstance state = new DatabaseChaseInstance(facts, getDatabaseConnection(sqlType,s));
+		DatabaseChaseInstance state = new DatabaseChaseInstance(facts, getDatabaseConnection(s));
 		Dependency d[] = new Dependency[] {
 				EGD.create(new Atom[]{ Atom.create(B, Variable.create("x"),Variable.create("y1")),
 										Atom.create(B, Variable.create("x"), Variable.create("y2"))}, 
@@ -101,7 +91,7 @@ public class TestEGDChaseStep extends PdqTest {
 			matches.add(Match.create(d[0], mapping));
 		}
 		state.EGDchaseStep(matches );
-		System.out.println("1000 equalities processed in : "+ (System.currentTimeMillis()-start)/1000.0 +" sec. Using: "+ sqlType);
+		System.out.println("1000 equalities processed in : "+ (System.currentTimeMillis()-start)/1000.0 +" sec. Using: Inmemory");
 		Set<Atom> facts2 = Sets.newHashSet(state.getFacts());
 		Iterator<Atom> iterator2 = facts2.iterator();
 		while(iterator2.hasNext()) {
@@ -119,13 +109,8 @@ public class TestEGDChaseStep extends PdqTest {
 		}
 	}
 
-	private DatabaseManager getDatabaseConnection(String sqlType, Schema s) throws SQLException, DatabaseException{
-		ExternalDatabaseManager edm = null;
-		if ("postgres".equals(sqlType)) {
-			edm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
-		} else
-			throw new IllegalArgumentException("SqlType " + sqlType + " is not valid.");
-		LogicalDatabaseInstance connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm, 0);
+	private DatabaseManager getDatabaseConnection(Schema s) throws SQLException, DatabaseException{
+		LogicalDatabaseInstance connection = new InternalDatabaseManager();
 		connection.initialiseDatabaseForSchema(s);
 		return connection;
 	}
@@ -143,7 +128,8 @@ public class TestEGDChaseStep extends PdqTest {
 	 * @throws SQLException 
 	 * @throws SQLException, DatabaseException
 	 */
-	public void testB(String sqlType) throws SQLException, DatabaseException {
+	@Test
+	public void testB() throws SQLException, DatabaseException {
 		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
 		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
 		Relation r[] = new Relation[] { A,B };
@@ -151,7 +137,7 @@ public class TestEGDChaseStep extends PdqTest {
 		List<Atom> facts = new ArrayList<>();
 		for (int i=2; i <= 1000; i++) facts.add(Atom.create(A, new Term[]{UntypedConstant.create("c_"+(i-1)),UntypedConstant.create("c_"+i)}));
 		
-		DatabaseChaseInstance state = new DatabaseChaseInstance(facts, getDatabaseConnection(sqlType,s));
+		DatabaseChaseInstance state = new DatabaseChaseInstance(facts, getDatabaseConnection(s));
 		Dependency d[] = new Dependency[] {
 				EGD.create(new Atom[]{ Atom.create(B, Variable.create("x"),Variable.create("y1")),
 										Atom.create(B, Variable.create("x"), Variable.create("y2"))}, 
@@ -167,7 +153,7 @@ public class TestEGDChaseStep extends PdqTest {
 			matches.add(Match.create(d[0], mapping));
 		}
 		state.EGDchaseStep(matches );
-		System.out.println("500 equalities processed in : "+ (System.currentTimeMillis()-start)/1000.0 +" sec. Using: "+ sqlType);
+		System.out.println("500 equalities processed in : "+ (System.currentTimeMillis()-start)/1000.0 +" sec. Using: InMemory");
 		Set<Atom> facts2 = Sets.newHashSet(state.getFacts());
 		Iterator<Atom> iterator2 = facts2.iterator();
 		while(iterator2.hasNext()) {
