@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.utility;
+package uk.ac.ox.cs.pdq.datasources.resultstable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +16,7 @@ import com.google.common.collect.Interners;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
+import uk.ac.ox.cs.pdq.datasources.legacy.ResetableIterator;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;

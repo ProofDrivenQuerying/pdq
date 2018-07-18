@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.io.xml;
+package uk.ac.ox.cs.pdq.datasources.legacy.io.xml;
 
 import java.io.PrintStream;
 import java.util.Map;

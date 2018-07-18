@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources;
+package uk.ac.ox.cs.pdq.datasources.resultstable;
 
 /**
  * Access exception implementation .

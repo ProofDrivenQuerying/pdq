@@ -6,9 +6,9 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.ResponseEvent;
-import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.resultstable.AccessException;
+import uk.ac.ox.cs.pdq.datasources.resultstable.Table;
 
 /**
  * The event of a RESTAccess response. Holds the requestEvent itself, 

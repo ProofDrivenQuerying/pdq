@@ -22,10 +22,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -94,8 +91,7 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 		// Create database connection
 		DatabaseManager connection = null;
 		try {
-			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
-			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			connection = new InternalDatabaseManager();
 			connection.initialiseDatabaseForSchema(accessibleSchema);
 			
 		} catch (Exception e) {
@@ -236,8 +232,7 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 		// Create database connection
 		DatabaseManager connection = null;
 		try {
-			ExternalDatabaseManager dm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
-			connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), dm, 1);
+			connection = new InternalDatabaseManager();
 			connection.initialiseDatabaseForSchema(accessibleSchema);
 			
 		} catch (Exception e) {

@@ -16,7 +16,7 @@ import com.fasterxml.jackson.jaxrs.json.annotation.JacksonFeatures;
  * @author Julien Leblay
  */
 @SuppressWarnings("deprecation")
-public class RESTAccess implements uk.ac.ox.cs.pdq.datasources.builder.Builder<WebTarget> {
+public class RESTAccess implements uk.ac.ox.cs.pdq.datasources.schemabuilder.Builder<WebTarget> {
 
 	/** The access's URL. */
 	private final String baseUrl;
@@ -57,7 +57,7 @@ public class RESTAccess implements uk.ac.ox.cs.pdq.datasources.builder.Builder<W
 	 *
 	 * @return a WebTarget forms by append the input params respecting
 	 * input parameters and methods.
-	 * @see uk.ac.ox.cs.pdq.datasources.builder.Builder#build()
+	 * @see uk.ac.ox.cs.pdq.datasources.schemabuilder.Builder#build()
 	 */
 	@Override 
 	public WebTarget build() {

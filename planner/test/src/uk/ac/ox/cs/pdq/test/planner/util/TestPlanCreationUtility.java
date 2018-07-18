@@ -331,7 +331,7 @@ public class TestPlanCreationUtility extends PdqTest {
 		facts.add(fact1);
 		facts.add(fact2);
 		RelationalTerm plan2 = PlanCreationUtility.createSingleAccessPlan(customer, method0, facts);
-		Assert.assertEquals(1, plan2.getInputAttributes().length);
+		Assert.assertEquals(2, plan2.getInputAttributes().length);
 		Assert.assertEquals(Attribute.create(String.class, "c40"), plan2.getInputAttributes()[0]);
 		Assert.assertEquals(16, plan2.getOutputAttributes().length);
 		Assert.assertTrue(Arrays.asList(plan2.getOutputAttributes()).toString().contains("c31, c38, c39, c40, c41, c42, c43, c44"));

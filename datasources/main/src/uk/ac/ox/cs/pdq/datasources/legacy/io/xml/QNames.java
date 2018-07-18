@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.io.xml;
+package uk.ac.ox.cs.pdq.datasources.legacy.io.xml;
 
 import javax.xml.namespace.QName;
 

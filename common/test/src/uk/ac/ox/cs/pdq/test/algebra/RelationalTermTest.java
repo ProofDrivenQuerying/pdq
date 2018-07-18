@@ -128,7 +128,7 @@ public class RelationalTermTest extends PdqTest {
 			Attribute[] out = join.getOutputAttributes();
 			Assert.assertNotNull(in);
 			Assert.assertNotNull(out);
-			Assert.assertEquals(2, in.length);
+			Assert.assertEquals(4, in.length);
 			Assert.assertEquals(4, out.length);
 			Assert.assertEquals("r1.1", in[0].getName());
 			Assert.assertEquals("r1.2", in[1].getName());
@@ -215,7 +215,7 @@ public class RelationalTermTest extends PdqTest {
 			Attribute[] out = jt.getOutputAttributes();
 			Assert.assertNotNull(in);
 			Assert.assertNotNull(out);
-			Assert.assertEquals(2, in.length);
+			Assert.assertEquals(4, in.length);
 			Assert.assertEquals(4, out.length);
 			Assert.assertEquals("r1.1", in[0].getName());
 			Assert.assertEquals("r1.2", in[1].getName());

@@ -55,7 +55,7 @@ public class AdaptedRelationalTerm implements Serializable {
 	/** Input positions for the right hand child **/
 	protected Integer[] sidewaysInput;
 
-	protected Attribute[] projections;
+	protected Attribute[] projections=new Attribute[0];
 	/** The access method to use. */
 	protected AccessMethodDescriptor accessMethod;
 
