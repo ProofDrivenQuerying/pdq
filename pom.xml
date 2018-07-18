@@ -22,6 +22,7 @@
   	<module>datasources</module>
   	
   	<module>regression</module>
+ 	<module>example-webapp</module>
     <!--
 	// the server depends on proprietary libraries (logicblox), so comment it out if you cannot build.-->
 	
