@@ -25,4 +25,10 @@ package uk.ac.ox.cs.pdq;
     
 	-- Util, which defines several utility classes including tuples and tables.
 	
+
+	The main top-level files include ClassManager, FileValidator and Parameters:
+	- ClassManager is a a cache for immutable objects. This makes sure that two instances with the same values cannot be used.
+	- FileValidator is a filters on files that do not exist or are directories.
+	- Parameters is a general parameters utility class, which allows getting and setting typed properties, either through the loose properties
+	   methods, or stricter CamelCase getter and setter methods
 **/
