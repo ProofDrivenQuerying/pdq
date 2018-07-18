@@ -2,6 +2,8 @@ package uk.ac.ox.cs.pdq.regression;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -39,6 +41,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion;
+import uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion.AcceptanceLevels;
 import uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion.AcceptanceResult;
 import uk.ac.ox.cs.pdq.regression.acceptance.ApproximateCostAcceptanceCheck;
 import uk.ac.ox.cs.pdq.regression.acceptance.ExpectedCardinalityAcceptanceCheck;
@@ -48,7 +51,15 @@ import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
- * Replaces the old bootstrap, runs regression tests or other test folders with schema and query xml files.
+ * Main entry point to use PDQ. Runs regression tests or other folders with schema and query xml files.<br>
+ * Usage: <br>
+ * PDQ -m [mode] -i [folder]
+ * <br>Folder: either a folder with a schema.xml and query.xml file in it, or a root directory containing many of such sub folders.<br>
+ * Available modes: <br>
+ *  - planner: creates the expected plan xml file. If it is already exists compares the result with it.<br>
+ *  - runtime: executes the expected plan xml file.<br>
+ *  - full: first two in sequence.<br>
+ *  
  * @author gabor
  *
  */
@@ -69,8 +80,6 @@ public class PDQ {
 
 	/**  File name where the expected plan must be stored in a test case directory. */
 	private static final String EXPECTED_PLAN_FILE = "expected-plan.xml";
-
-	private static final String ACCESS_REPO = "accesses";
 
 	private static final String CATALOG_FILE = "catalog.properties";
 
@@ -98,11 +107,16 @@ public class PDQ {
 			description = "Dynamic parameters. Override values defined in the configuration files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 
+	private FileWriter stats = null;
+	/**
+	 * Main functionality of this class. 
+	 */
 	public void runRegression() {				
 		Set<File> testDirectories = getTestDirectories(new File(this.input));
-
+		
 		for(File directory:testDirectories) {
-
+			boolean isFailed = false;
+			String stats = directory.getAbsolutePath() + " : ";
 			try {
 				GlobalCounterProvider.resetCounters();
 				uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
@@ -144,25 +158,41 @@ public class PDQ {
 					String duration_s = " Duration: " + myFormatter.format(duration) + "s.";				
 
 					// Load expected plan and cost
+					AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance = acceptance(plParams, costParams);
+					this.out.print("Using " + acceptance.getClass().getSimpleName() + ": ");
 					File expectedPlanFile = new File(directory, EXPECTED_PLAN_FILE);
 					RelationalTerm expectedPlan = null;
 					Cost expectedCost = null;
-					try {
-						expectedPlan = CostIOManager.readRelationalTermFromRelationaltermWithCost(expectedPlanFile, schema);
-						expectedCost = CostIOManager.readRelationalTermCost(expectedPlanFile, schema);
-	
-						AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance = acceptance(plParams, costParams);
-						this.out.print("Using " + acceptance.getClass().getSimpleName() + ": ");
-						acceptance.check(new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation).report(this.out);
-					} catch(Exception e) {
-						this.out.println("Expected plan not found.");
-						e.printStackTrace();
+					AcceptanceResult results = null;
+					if (expectedPlanFile.exists()) {
+						try {
+							expectedPlan = CostIOManager.readRelationalTermFromRelationaltermWithCost(expectedPlanFile, schema);
+							expectedCost = CostIOManager.readRelationalTermCost(expectedPlanFile, schema);
+							results = acceptance.check(new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation);
+							results.report(this.out);
+							stats+=results.report();
+							isFailed = results.getLevel() == AcceptanceLevels.FAIL;
+						} catch(Throwable t) {
+							t.printStackTrace();
+							stats+="Failed to read previous plan: " + t.getMessage() ;
+						}
+					} else {
+						System.out.println("No previous plan found.");
+						stats+="No previous plan found.";
 					}
 					if (observation != null && (expectedPlan == null || expectedCost.greaterThan(observation.getValue())) ) {
 						this.out.print("\tWriting plan: " + observation + " " + observation.getValue());
 						CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + EXPECTED_PLAN_FILE),  observation.getKey(), observation.getValue());
+						stats+= "New Plan written.";
 					}
+					if (observation!=null && observation.getValue()!= null)
+						stats+= "Cost: " + observation.getValue();
 					this.out.println("\n " + duration_s);
+					stats+= "Finished, " + duration_s;
+					if (isFailed)
+						stats = "NOT ACCEPTED" + stats;
+					else
+						stats = "SUCC" + stats;
 				}
 
 
@@ -179,9 +209,9 @@ public class PDQ {
 
 					// Create a runtime object with an empty list of facts (data will be loaded from a third party database)
 					Runtime runtime = new Runtime(runtimeParams, schema);
-
+					
 					// Specify the directory where the access methods are described 
-					File accesses = new File(directory, ACCESS_REPO);
+					File accesses = new File(directory, runtimeParams.getAccessDirectory());
 					runtime.setAccessRepository(AccessRepository.getRepository(accesses.getAbsolutePath()));
 
 					Result results = null;
@@ -209,16 +239,30 @@ public class PDQ {
 
 			} catch (FileNotFoundException | JAXBException e) {
 				e.printStackTrace();
+				stats+= "Failed: " + e.getMessage();
+				stats = "FAIL" + stats;
 			} catch (PlannerException e) {
 				e.printStackTrace();
+				stats+= "Failed: " + e.getMessage();				
+				stats = "FAIL" + stats;
 			} catch (SQLException e) {
 				e.printStackTrace();
+				stats+= "Failed: " + e.getMessage();				
+				stats = "FAIL" + stats;
 			} catch (Exception e) {
 				e.printStackTrace();
+				stats+= "Failed: " + e.getMessage();				
+				stats = "FAIL" + stats;
 			}
+			printStats(stats + "\n");				
+			
 		}
 	}
 
+	/** Checks the content of each sub directory and selects the ones that look like a test folder.
+	 * @param directory
+	 * @return
+	 */
 	private Set<File> getTestDirectories(File directory) {
 		Set<File> subdirectories = new LinkedHashSet<>();
 		File[] files = directory.listFiles();
@@ -229,21 +273,37 @@ public class PDQ {
 			else if(!f.equals(directory) && f.isDirectory())
 				subdirectories.addAll(this.getTestDirectories(f));
 		}
+		if (isLeaf(directory)) {
+			subdirectories.add(directory);
+		}
 		return subdirectories;
 	}
 
+	/** It is a leaf if it has no sub-directories.
+	 * @param directory
+	 * @return
+	 */
 	private boolean isLeaf(File directory) {
 		File[] files = directory.listFiles();
+		String caseProperties = "case.properties";
+		boolean found = false;
 		for (File f:files) {
+			if (f.getName().equals(caseProperties))
+				found = true;
 			if(!f.equals(directory)) {
 				if(f.isDirectory() && !"accesses".equalsIgnoreCase(f.getName()) && !"accessesMem".equalsIgnoreCase(f.getName()))  
 					return false;
 			}
 		}
-		return true;
+		return found;
 	}
 
 
+	/** Checks results
+	 * @param params
+	 * @param cost
+	 * @return
+	 */
 	private AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance(PlannerParameters params, CostParameters cost) {
 		switch (params.getPlannerType()) {
 		case DAG_GENERIC:
@@ -278,8 +338,18 @@ public class PDQ {
 		new PDQ(args);
 	}
 
+	private void printStats(String message) {
+		if (stats!=null) {
+			try {
+				stats.write(message);
+				stats.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	/**
-	 * Initialize the Bootstrap by reading command line parameters, and running
+	 * Initialise the Bootstrap by reading command line parameters, and running
 	 * the planner on them.
 	 * @param args String[]
 	 */
@@ -297,8 +367,36 @@ public class PDQ {
 			jc.usage();
 			return;
 		}
-		runRegression();
+		File folder = new File("TestResults");
+		folder.mkdirs();
+		File statsFile = new File(folder,"summary"+System.currentTimeMillis() + ".txt");
+		System.out.println("Creating log file: " + statsFile.getAbsolutePath());
+		//statsFile.getParentFile().mkdir();
+		statsFile.delete();
+		try {
+			stats = new FileWriter(statsFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		printStats("Start running regression test: " + mode.toString() + " in folder: " + input);
+		try {
+			runRegression();
+			printStats("regression test finished successfully");
+		} catch(Throwable t) {
+			printStats("regression test failed " + t.getMessage());
+			t.printStackTrace();
+		}
+		try {
+			if (stats!=null)
+				stats.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
+	
 	/**
 	 * The Class DirectoryValidator.
 	 */
