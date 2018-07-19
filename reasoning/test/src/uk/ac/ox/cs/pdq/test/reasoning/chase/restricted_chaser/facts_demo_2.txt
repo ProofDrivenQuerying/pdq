@@ -1,0 +1,4 @@
+YahooPlaces(c44,Eiffel Tower,c45,c46,c47,c48,c49,c50,c51,c52,c53,c54,c55,c56,c57,c58,c59,c60)
+Access(Eiffel Tower)
+Access(descendants)
+YahooPlaceType(c46,c45,k61)

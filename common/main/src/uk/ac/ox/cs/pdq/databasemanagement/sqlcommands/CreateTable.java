@@ -1,5 +1,8 @@
 package uk.ac.ox.cs.pdq.databasemanagement.sqlcommands;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
@@ -98,9 +101,15 @@ public class CreateTable extends Command {
 			} else if (Integer.class.isAssignableFrom((Class<?>) attribute.getType()))
 				result.append(" INT");
 			else if (Double.class.isAssignableFrom((Class<?>) attribute.getType()))
-				result.append(" DOUBLE");
+				result.append(" NUMERIC");
+			else if (Long.class.isAssignableFrom((Class<?>) attribute.getType()))
+				result.append(" NUMERIC");
 			else if (Float.class.isAssignableFrom((Class<?>) attribute.getType()))
 				result.append(" FLOAT");
+			else if (BigDecimal.class.isAssignableFrom((Class<?>) attribute.getType()))
+				result.append(" NUMERIC");
+			else if (Date.class.isAssignableFrom((Class<?>) attribute.getType()))
+				result.append(" DATE");
 			else
 				throw new RuntimeException("Unsupported type: " + attribute.getType() + " in Relation " + relation);
 			

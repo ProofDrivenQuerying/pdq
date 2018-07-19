@@ -92,12 +92,12 @@ public class AdaptedDbSchema {
 					propertiesClone = (Properties) properties.clone();
 				String discoverer = s.getDiscoverer();
 				if ("uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer".equals(discoverer)) {
-					discoverer = "uk.ac.ox.cs.pdq.datasources.sql.PostgresqlSchemaDiscoverer";
+					discoverer = "uk.ac.ox.cs.pdq.datasources.schemabuilder.PostgresqlSchemaDiscoverer";
 				} else if ("uk.ac.ox.cs.pdq.sql.MySQLSchemaDiscoverer".equals(discoverer)) {
-					discoverer = "uk.ac.ox.cs.pdq.datasources.sql.MySQLSchemaDiscoverer";
+					discoverer = "uk.ac.ox.cs.pdq.datasources.schemabuilder.MySQLSchemaDiscoverer";
 				}
 				else if ("uk.ac.ox.cs.pdq.services.ServiceReader".equals(discoverer)) {
-					discoverer = "uk.ac.ox.cs.pdq.datasources.services.ServiceReader";
+					discoverer = "uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceReader";
 				}
 				
 				if (s.getDriver()!=null) propertiesClone.setProperty("driver", s.getDriver());
@@ -135,6 +135,13 @@ public class AdaptedDbSchema {
 						}
 					}
 				}
+				
+				for (int i = 0; i < relations.length; i++) { 
+					if (discoveredRelations.containsKey(relations[i].getName())) {
+						relations[i] = discoveredRelations.get(relations[i].getName());
+					}
+				}
+				
 				for (Relation r:discoveredRelations.values()) {
 					if (!(r instanceof View)) {
 						ensureForeignKeyDefinition(r,discoveredDependencies);
@@ -354,7 +361,11 @@ public class AdaptedDbSchema {
 	}
 
 	public void setDependencies(Dependency[] dependencies) {
-		this.dependencies = convertDependenciesToPointToActualRelations(dependencies);
+		try {
+			this.dependencies = convertDependenciesToPointToActualRelations(dependencies);
+		}catch(Exception e) {
+			this.dependencies = dependencies;
+		}
 	}
 
 	protected Dependency[] convertDependenciesToPointToActualRelations(Dependency[] dependencies2) {

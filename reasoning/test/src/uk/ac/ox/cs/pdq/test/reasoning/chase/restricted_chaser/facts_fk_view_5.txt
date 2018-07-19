@@ -1,0 +1,7 @@
+part(c135,c136,c137,c138,c139,c140,c141,c142,c143)
+partsupp(c135,c144,c145,c146,c147)
+supplier(c144,c148,c149,c150,c151,c152,c153)
+nation(c150,c154,c155,c156)
+region(c155,AMERICA,c157)
+Access(AMERICA)
+region_nation(c150,c154,c155,AMERICA)
