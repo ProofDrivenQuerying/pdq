@@ -15,27 +15,25 @@ package uk.ac.ox.cs.pdq.regression;
 	- query.xml: the input query
 	- [optional] expected-plan.xml: When exists the generated plan will be compared against it, otherwise PDQ in planner mode creates it.
 
-	Prominent files include:
-	
+ 	This also contains the following sub packages:
+ 	
+ 	-- acceptance, which runs regression tests with a theme of acceptance criteria.
+ 
+ 	-- casegenerator, which contains utility methods to create a new test case from scratch or convert an existing regression test
+ 		 to runtime-compatible test with auto generated access methods using templates.
+ 
+ 	-- chasebench, which contains tests for the Chase:
+ 
+ 	-- cost.estimators, which contains classes that provide tests for Cost Estimation functions.
+
+	-- planner, which runs regression tests for the optimised explorer. Runs a search with and
+	 	 without optimisation (global equivalence, global dominance) and compares the
+	 	 resulting plans. An exception is thrown when the plans are different.
+ 
+ 	-- runtime, which is commented out pending resolution of the runtime changes.
+
+	Top-level files include:
 	- PDQ.java which is the entry point for the regression package.
 	- RegressionTest.java which runs regression tests.
  	
- 	This also contains the following sub packages:
- 	
- 	- regression.acceptance
-		* This package runs regression tests with a theme of acceptance criteria.
- 	- regression.casegenerator
- 		* Contains utility methods to create a new test case from scratch or convert an existing regression test
- 		* to runtime-compatible test with auto generated access methods using templates.
- 	- regression.chasebench
-		* This package contains tests for the Chase:
- 	- regression.cost.estimators
- 		* This package contains classes that provide tests for Cost Estimation functions.
-	- regression.planner
-	 	* Runs regression tests for the optimised explorer. Runs a search with and
-	 	* without optimisation (global equivalence, global dominance) and compares the
-	 	* resulting plans. An exception is thrown when the plans are different.
- 	- regression.runtime
-		* This package is commented out pending resolution of the runtime changes.
-
 */
