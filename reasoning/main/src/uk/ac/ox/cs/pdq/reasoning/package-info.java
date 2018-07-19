@@ -1,19 +1,20 @@
 package uk.ac.ox.cs.pdq.reasoning;
 
 /**
-	@author Efthymia Tsamoura
+	@author Efthymia Tsamoura and Mark Ridler
 
 	This package contains classes that initiate and start the reasoning process.
-	The initiation process consists of the following steps:
 	
+	The initiation process consists of the following steps:
 		-selection of the appropriate reasoning mechanism. The only reasoning mechanism that is supported is the chase.
 		-selection of the appropriate mechanism to detect homomorphisms during chasing or to detect query matches. 
 		Homomorphism detection works as follows: the chase facts are stored in a database. 
 		Every time we check if there is an homomorphism of a formula F to the facts of a chase instance, 
 		we create an SQL query from F's atoms and submit it to a database engine. The database engine returns all the facts that 
-		are homomorphic to F. The database engine that are supported are MySQL and Postgres.
+		are homomorphic to F. The database engine that are supported are Internal and Postgres.
 		
-		The following chase algorithms are supported:
+	The following chase algorithms are supported:
+	
 		-Restricted chase: Runs the chase algorithm applying only active triggers. 
  		Consider an instance I, a set Base of values, and a TGD
 		\delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
@@ -23,7 +24,7 @@ package uk.ac.ox.cs.pdq.reasoning;
 		A chase step appends to I additional facts that were produced during grounding \delta. 
 		The output of the chase step is a new instance in which h is no longer an active trigger.
 		The facts that are generated during chasing are stored in a list.
-	
+		
 		-Parallel EGD chase: Runs EGD chase using parallel chase steps.
 	 	(From modern dependency theory notes)
  	 	A trigger for and EGD \delta = \sigma --> x_i = x_j in I is again a homomorphism h in
@@ -41,5 +42,10 @@ package uk.ac.ox.cs.pdq.reasoning;
 	 	The facts that are generated during chasing are stored in a list.
 	 
 	 	-Bounded chase and KTermination chase: Run the chase for k rounds.
+	 	
+	 The top-level classes are as follows:
+	 - Reason, which is the main entry point for the reasoning package
+	 - ReasonerFactory, which creates reasoners based on the input arguments
+	 - ReasoningParameters, which hold the parameters of a reasoning session
 	
 **/
