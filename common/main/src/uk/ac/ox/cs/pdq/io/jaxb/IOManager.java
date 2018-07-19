@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -19,9 +20,14 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
@@ -281,6 +287,73 @@ public class IOManager {
 			}
 		} else {
 			throw new Exception("Constructor for " + type.getTypeName() + " not found!");
+		}
+	}
+	
+	/** Converts the types in the given schema to String. 
+	 * @param schema
+	 * @return
+	 */
+	public static  Schema convertTypesToString(Schema schema) {
+		List<Dependency> dep = new ArrayList<>();
+		dep.addAll(Arrays.asList(schema.getNonEgdDependencies()));
+		dep.addAll(Arrays.asList(schema.getKeyDependencies()));
+		Relation[] rels = schema.getRelations();
+		for (int i = 0; i < rels.length; i++) {
+			rels[i] = createDatabaseRelation(rels[i]);
+		}
+		return new Schema(rels,dep.toArray(new Dependency[dep.size()]));
+	}
+	
+	/**
+	 * Creates the db relation. Currently codes in the position numbers into the
+	 * names, but this should change
+	 *
+	 * @param relation
+	 *            the relation
+	 * @return a new database relation with attributes x0,x1,...,x_{N-1}, Fact where
+	 *         x_i maps to the i-th relation's attribute
+	 */
+	private static Relation createDatabaseRelation(Relation relation) {
+		Attribute[] attributes = new Attribute[relation.getArity()];
+		for (int index = 0; index < relation.getArity(); index++) {
+			Attribute attribute = relation.getAttribute(index);
+			attributes[index] = Attribute.create(String.class, attribute.getName());
+		}
+		return Relation.create(relation.getName(), attributes, relation.getAccessMethods(), relation.isEquality());
+	}
+	
+	/** Converts all constants of the query to strings
+	 * @param query
+	 * @return
+	 */
+	public static ConjunctiveQuery convertQueryConstantsToString(ConjunctiveQuery query) {
+		
+		Formula newAtom = convertQueryAtomConstantToString(query.getBody());
+		if (newAtom instanceof Atom) {
+			return ConjunctiveQuery.create(query.getFreeVariables(), new Atom[] {(Atom)newAtom});
+		} else {
+			return ConjunctiveQuery.create(query.getFreeVariables(), ((Conjunction)newAtom).getAtoms());
+		}
+	}
+
+	/** converts all constants to strings.
+	 * @param body
+	 * @return
+	 */
+	private static Formula convertQueryAtomConstantToString(Formula body) {
+		if (body instanceof Atom) { 
+			Term terms[] = body.getTerms();
+			for (int i = 0; i < terms.length; i++) {
+				if (terms[i] instanceof TypedConstant) {
+					terms[i] = TypedConstant.create("" + ((TypedConstant)terms[i]).value);
+				}
+			}
+			return Atom.create(((Atom) body).getPredicate(), terms);
+		} else {
+			Formula left = ((Conjunction)body).getChildren()[0];
+			Formula right = ((Conjunction)body).getChildren()[1];
+			return Conjunction.create(convertQueryAtomConstantToString(left),convertQueryAtomConstantToString(right));
 		}
 	}
 

@@ -150,6 +150,10 @@ public class Command {
 				termInSqlString += term;
 			else if (Float.class.isAssignableFrom((Class<?>) a.getType()))
 				termInSqlString += term;
+			else if (Long.class.isAssignableFrom((Class<?>) a.getType()))
+				termInSqlString += term;
+			else
+				termInSqlString += term;
 		} else
 			throw new DatabaseException("Unsupported type");
 		return termInSqlString;
