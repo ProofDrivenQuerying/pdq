@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.planner;
 
 /**
-	@author Efthymia Tsamoura
+	@author Efthymia Tsamoura and Mark Ridler
 
 	This package contains classes that initiate and start the plan exploration process.  
 	The initiation process consists of the following steps:
@@ -35,16 +35,25 @@ package uk.ac.ox.cs.pdq.planner;
 	A configuration c is cost dominated by c' if it is fact dominated by c and maps to a plan with cost >= the cost of the plan of c'.
 	-The DAGOptimized employs further techniques to speed up the planning process like reasoning in parallel and re-use of reasoning results. 
 	
-	Explorer is the top-level explorer class.
-	Explorer are created using the ExplorerFactory class.
 	
-	The PlannerParameters class holds the parameters or a planning session.
-	The package structure is the following one:
-	The linear.* packages contain classes related to creating and exploring linear proofs
-	The dag.* packages contain classes related to creating and exploring dag proofs
-	The reasoning.* packages contain proof related classes, e.g., classes that represent the state of a chase configuration.  
-	The util package contains utility classes and methods.
-	The logging.* packages contain classes that monitor certain characteristics, like the number of rounds, 
+	The following sub-packages are included:
+	
+	-- linear.* packages contain classes related to creating and exploring linear proofs
+	
+	-- dag.* packages contain classes related to creating and exploring dag proofs
+	
+	-- reasoning.* packages contain proof related classes, e.g., classes that represent the state of a chase configuration.  
+	
+	-- util package contains utility classes and methods.
+	
+	-- logging.* packages contain classes that monitor certain characteristics, like the number of rounds, 
 	the planning time. 
 	
+	The top-level classes are as follows:
+	- Explorer, which is created using the ExplorerFactory class.
+	- Bootstrap, which is the main entry point for the planner package
+	- ExplorationSetup, where all properties are gathered and used to
+  	   create various objects like explorer,reasoner,cost estimator, etc
+   	- PlannerParameters, which holds the parameters of a planning session.
+   	
 **/

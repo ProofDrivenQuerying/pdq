@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query>
+	<body>
+		<atom name="pdqWebappNationFree">
+		<variable name="n_nationkey"  />
+		<variable name="n_name"       />
+		<variable name="n_regionkey" 	 />
+		<variable name="n_comment"  />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="n_comment" />
+	</head>
+</query>
