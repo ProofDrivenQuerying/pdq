@@ -13,10 +13,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -39,7 +37,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 public class RestrictedChaserTest {
 
 	/** The path. */
-	private static String PATH = "test/restricted_chaser/";
+	private static String PATH = "test/src/uk/ac/ox/cs/pdq/test/reasoning/chase/restricted_chaser/";
 
 	/** The schemata1. */
 	String[] schemata1 = {
@@ -50,7 +48,7 @@ public class RestrictedChaserTest {
 			"schema_fk_view.xml",
 			"schema_fk_view.xml",
 			"schema_fk_view.xml",
-			"schema_fk_view.xml",
+		/*	"schema_fk_view.xml",*/
 			"schema_fk_view.xml",
 			"schema_fk_view.xml"
 	};
@@ -85,7 +83,7 @@ public class RestrictedChaserTest {
 			"query_fk_view_5.xml",
 			"query_fk_view_6.xml",
 			"query_fk_view_7.xml",
-			"query_fk_view_8.xml",
+			/*"query_fk_view_8.xml",*/
 			"query_fk_view_9.xml",
 			"query_fk_view_10.xml"
 	};
@@ -120,7 +118,7 @@ public class RestrictedChaserTest {
 			"facts_fk_view_5.txt",
 			"facts_fk_view_6.txt",
 			"facts_fk_view_7.txt",
-			"facts_fk_view_8.txt",
+			/*"facts_fk_view_8.txt",*/
 			"facts_fk_view_9.txt",
 			"facts_fk_view_10.txt"
 	};
@@ -195,13 +193,16 @@ public class RestrictedChaserTest {
 			String f = facts[i];
 			try {
 				Schema schema = DbIOManager.importSchema(new File(PATH + s));
-				ConjunctiveQuery query = IOManager.importQuery(new File(PATH + s));
+				ConjunctiveQuery query = IOManager.importQuery(new File(PATH + queries[i]));
+				schema = IOManager.convertTypesToString(schema);
+				query = IOManager.convertQueryConstantsToString(query);
+				
 				if (schema == null || query == null) {
 					throw new IllegalStateException("Schema and query must be provided.");
 				}
 				RestrictedChaser reasoner = new RestrictedChaser();
 
-				DatabaseManager dbcon = createConnection(DatabaseParameters.Postgres,schema);
+				DatabaseManager dbcon = createConnection(schema);
 				DatabaseChaseInstance state = new DatabaseChaseInstance(query, dbcon);				
 				
 				reasoner.reasonUntilTermination(state, schema.getAllDependencies());
@@ -209,13 +210,15 @@ public class RestrictedChaserTest {
 				Assert.assertEquals(expected.size(), state.getFacts().size());
 			} catch (FileNotFoundException e) {
 				System.out.println("Cannot find input files");
+				Assert.fail(e.getMessage());
 			} catch (Exception e) {
 				System.out.println("EXCEPTION: " + e.getClass().getSimpleName() + " " + e.getMessage());
 				e.printStackTrace();
+				Assert.fail(e.getMessage());
 			} catch (Error e) {
 				System.out.println("ERROR: " + e.getClass().getSimpleName() + " " + e.getMessage());
 				e.printStackTrace();
-				System.exit(-1);
+				Assert.fail(e.getMessage());
 			}
 		}
 	}
@@ -244,9 +247,11 @@ public class RestrictedChaserTest {
 		}
 		catch(FileNotFoundException ex) {      
 			ex.printStackTrace(System.out);
+			Assert.fail(ex.getMessage());
 		}
 		catch(IOException ex) {
 			ex.printStackTrace(System.out);
+			Assert.fail(ex.getMessage());
 		}
 		return null;
 	}
@@ -290,13 +295,14 @@ public class RestrictedChaserTest {
 		}
 	}
 
-	private DatabaseManager createConnection(DatabaseParameters params, Schema s) {
+	private DatabaseManager createConnection(Schema s) {
 		try {
-			dm = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(params),1);
+			dm = new InternalDatabaseManager();
 			dm.initialiseDatabaseForSchema(s);
 			return dm;
 		} catch (DatabaseException e) {
 			e.printStackTrace();
+			Assert.fail(e.getMessage());
 		}
 		return null;
 	}

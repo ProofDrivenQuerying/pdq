@@ -1,0 +1,80 @@
+<services name="Reactome services">
+	<input-methods>		
+		<input-method name="species"	type="path-element" template="/{1}"/>
+		<input-method name="id"  		type="path-element" template="/{1}"/>
+	</input-methods>
+	
+	<service
+		name="PathwayBySpecies"
+		protocol="REST"
+		url="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/RESTfulWS/frontPageItems" 
+		media-type="application/xml"
+		documentation="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/ReactomeRESTFulAPI.html"
+		result-delimiter="Pathways/pathway">
+
+		<attribute name="pathwayId"    			type="java.lang.Integer"    path="dbId"/>
+		<attribute name="pathwayName"     		type="java.lang.String"     path="displayName"/>
+		<attribute name="stableIdentifier"     	type="java.lang.String" 	path="stableIdentifier/displayName"/>
+		<attribute name="goBiologicalProcess" 	type="java.lang.String" 	path="goBiologicalProcess/displayName"/>
+		<attribute name="isInDisease"       	type="java.lang.Boolean" 	path="isInDisease"/>
+		<attribute name="isInferred"        	type="java.lang.Boolean" 	path="isInferred"/>
+		<attribute name="organismId"        	type="java.lang.String" 	path="species/dbId"/>
+		<attribute name="organism"     			type="java.lang.String"     path="species/displayName"	input-method="species.1"/>
+		<attribute name="doi"     				type="java.lang.String" 	path="doi"/>
+		<attribute name="hasDiagram"        	type="java.lang.Boolean" 	path="hasDiagram"/>
+
+		<access-method type="LIMITED" name="reactome_pathway_1" inputs="8"   cost="1.0" />
+	</service>
+	
+	
+	<service
+		name="PathwayById"
+		protocol="REST"
+		url="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/RESTfulWS/queryById/Pathway" 
+		media-type="application/xml"
+		documentation="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/ReactomeRESTFulAPI.html"
+		result-delimiter="pathway">
+
+		<attribute name="pathwayId"    			type="java.lang.Integer"    path="dbId"	input-method="id.1"/>
+		<attribute name="pathwayName"     		type="java.lang.String"     path="displayName"/>
+		<attribute name="stableIdentifier"     	type="java.lang.String" 	path="stableIdentifier/displayName"/>
+		<attribute name="goBiologicalProcess" 	type="java.lang.String" 	path="goBiologicalProcess/displayName"/>
+		<attribute name="isInDisease"       	type="java.lang.Boolean" 	path="isInDisease"/>
+		<attribute name="isInferred"        	type="java.lang.Boolean" 	path="isInferred"/>
+		<attribute name="organismId"        	type="java.lang.String" 	path="species/dbId"/>
+		<attribute name="organism"     			type="java.lang.String"     path="species/displayName"/>
+		<attribute name="doi"     				type="java.lang.String" 	path="doi"/>
+		<attribute name="hasDiagram"        	type="java.lang.Boolean" 	path="hasDiagram"/>
+
+		<access-method type="LIMITED" name="reactome_pathway_2" inputs="1"   cost="1.0" />
+	</service>
+	
+	<service
+		name="OrganismById"
+		protocol="REST"
+		url="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/RESTfulWS/queryById/Species" 
+		media-type="application/xml"
+		documentation="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/ReactomeRESTFulAPI.html"
+		result-delimiter="species">
+
+		<attribute name="organismId"    	type="java.lang.String"    	path="dbId"	input-method="id.1"/>
+		<attribute name="organism"     		type="java.lang.String"     path="displayName"/>
+		
+		<access-method type="LIMITED" name="reactome_organism_1" inputs="1"   cost="1.0" />
+	</service>
+	
+	<service
+		name="OrganismFree"
+		protocol="REST"
+		url="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/RESTfulWS/speciesList" 
+		media-type="application/xml"
+		documentation="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/ReactomeRESTFulAPI.html"
+		result-delimiter="Speciess/species">
+
+		<attribute name="organismId"    		type="java.lang.String"    	path="dbId"/>
+		<attribute name="organism"     			type="java.lang.String"     path="displayName"/>
+
+		<access-method type="FREE" name="reactome_species_1" cost="1.0" />	
+	</service>
+	
+</services>

@@ -1,0 +1,7 @@
+part(c93,c94,c95,c96,c97,c98,c99,c100,c101)
+partsupp(c93,c102,c103,c104,c105)
+supplier(c102,c106,c107,c108,c109,c110,c111)
+nation(c108,UNITED STATES,c112,c113)
+Access(UNITED STATES)
+region(c112,k131,k132)
+region_nation(c108,UNITED STATES,c112,k131)

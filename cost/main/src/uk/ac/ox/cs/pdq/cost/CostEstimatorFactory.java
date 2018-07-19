@@ -71,8 +71,13 @@ public class CostEstimatorFactory {
 		CostEstimator result = null;
 		
 		Catalog catalog = null;
-		if(costParams.getCatalog() != null)
-			catalog = new SimpleCatalog(schema, costParams.getCatalog());
+		if(costParams.getCatalog() != null) {
+			try {
+				catalog = new SimpleCatalog(schema, costParams.getCatalog());
+			}catch(Exception e) {
+				System.out.println("Error with "+costParams.getCatalog() + " : " + e.getMessage());
+			}
+		}
 		
 		switch (costParams.getCostType()) {
 		case TEXTBOOK:
