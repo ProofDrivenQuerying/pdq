@@ -29,12 +29,15 @@ package uk.ac.ox.cs.pdq.fol;
  *  -- Conjunction, which is a formula connected by AND 
  *  -- ConjunctiveQuery, which is a first order formula of the form \exists x_1, \ldots, x_n \Wedge A_i,
  *      where A_i are atoms with arguments that are either variables or constants.
- *  -- Constant, which is a constant term
+ *  -- Constant, which is a constant Term
  *  -- Dependency, which is a universally quantified implication where the body is a quantifier-free formula and 
  *      the head is an existentially-quantified or quantifier-free formula.
  *  -- Disjunction, which is a formula connected by OR
  *  -- Formula, which is the base class for formulae in this package
  *  -- Implication, which is a subclass of Formula
  *  -- Literal, which is a positive or negative atom
+ *  -- Predicate, whose signature, associates a symbol with an arity
+ *  -- Term, which is the base class for terms in this package
+ *  -- Variable, which is a variable Term
  *  
  **/
