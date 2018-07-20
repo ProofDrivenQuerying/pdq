@@ -177,7 +177,10 @@ public class PDQ {
 							stats+="Failed to read previous plan: " + t.getMessage() ;
 						}
 					} else {
-						System.out.println("No previous plan found.");
+						if (observation==null)
+							System.out.println("No previous or current plan result.");
+						else
+							System.out.println("No previous plan found, but there is a new plan");
 						stats+="No previous plan found.";
 					}
 					if (observation != null && (expectedPlan == null || expectedCost.greaterThan(observation.getValue())) ) {
