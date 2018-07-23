@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.regression.junit.chasebanch;
+package uk.ac.ox.cs.pdq.regression.junit.chasebench;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,17 +24,25 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
 
 /**
- * The test case called "STB-128" from the chasebench project.
+ * The test case called "LUBM" from the chasebench project.
  * <pre>
  * Current test result (on a laptop):
- *   - case : Can't parse input files.  
+ *   - case 001:  timeout
+ *   - case 010:  timeout
+ *   - case 100:  timeout
+ *   - case 01k:  timeout
  * Old PDQ results were: 
- *   - case :  timeout
+ *   - case 001:  timeout
+ *   - case 010:  timeout
+ *   - case 100:  timeout
+ *   - case 01k:  timeout
  * </pre>
  * @author Gabor
  *
  */
-public class STB128 {
+public class LUBM {
+	String TEST_DATA[] = {"001","010","100", "01k"}; // test data folders;
+	String testDataFolder = TEST_DATA[0];
 	private Schema s = null;
 	Map<String, Relation> relations = new HashMap<>();
 	
@@ -84,20 +92,19 @@ public class STB128 {
 		}
 	}
 	private Schema createSchema() {
-		File schemaDir = new File("test//chaseBench//STB-128//schema");
-		File dependencyDir = new File("test//chaseBench//STB-128//dependencies");
-		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//STB-128.s-schema.txt");
-		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//STB-128.t-schema.txt");
+		File schemaDir = new File("test//chaseBench//LUBM//schema");
+		File dependencyDir = new File("test//chaseBench//LUBM//dependencies");
+		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//LUBM.s-schema.txt");
+		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//LUBM.t-schema.txt");
 		relations.putAll(tables);
 		relations.putAll(tables1);
-		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//STB-128.st-tgds.txt");
-		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//STB-128.t-tgds.txt"));
-		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//STB-128.t-egds.txt"));
+		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//LUBM.st-tgds.txt");
+		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//LUBM.t-tgds.txt"));
 		return new Schema(relations.values().toArray(new Relation[relations.size()]), dependencies.toArray(new Dependency[dependencies.size()]));
 		
 	}
 	private Collection<Atom> getTestFacts() {
-		File dataDir = new File("test//chaseBench//STB-128//data");
+		File dataDir = new File("test//chaseBench//LUBM//data", testDataFolder);
 		Collection<Atom> facts = new ArrayList<>();
 		for (File f: dataDir.listFiles()) {
 			if (f.getName().endsWith(".csv")) {
@@ -112,7 +119,7 @@ public class STB128 {
 		return facts;
 	}
 	private Collection<ConjunctiveQuery> getTestQueries() throws IOException {
-		File dataDir = new File("test//chaseBench//STB-128//queries");
+		File dataDir = new File("test//chaseBench//LUBM//queries");
 		Collection<ConjunctiveQuery> facts = new ArrayList<>();
 		Map<String, Relation> relations = new HashMap<>();
 		for (Relation r: s.getRelations()) {
