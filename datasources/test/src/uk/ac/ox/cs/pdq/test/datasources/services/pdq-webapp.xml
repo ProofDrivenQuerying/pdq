@@ -1,0 +1,21 @@
+<service name="pdgWebappNationFree"
+			protocol="REST"
+			url="http://localhost:8080/webapp/servlets/servlet/RequestInfo" 
+			media-type="application/xml"
+			documentation=""
+			result-delimiter="places/place">
+			
+	<policy name="url_auth"/>
+	<policy name="2000_request_per_day"/>
+	<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+			limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
+			
+	<static-attribute name="format" type="String" attribute-encoding="format2" value="weather.forecast"/>
+	
+	<access-method name="pdqWebappNationFree" type="FREE" cost="1.0" relation-name="pdqWebappNationFree">
+		<attribute name="n_nationkey"    			output="true" type="Integer"    	relation-attribute="n_nationkey" path="n_nationkey"/>
+		<attribute name="n_name"    			    output="true" type="String"    	relation-attribute="n_name" path="n_name"/>
+		<attribute name="n_regionkey"    			output="true" type="Integer"    	relation-attribute="n_regionkey" path="n_regionkey"/>
+		<attribute name="n_comment"    			    output="true" type="String"    	relation-attribute="n_comment" path="n_comment"/>
+	</access-method>
+</service>
