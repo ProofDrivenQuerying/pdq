@@ -370,7 +370,7 @@ public class PDQ {
 			jc.usage();
 			return;
 		}
-		File folder = new File("TestResults");
+		File folder = new File("TestResults/current");
 		folder.mkdirs();
 		File statsFile = new File(folder,"summary"+System.currentTimeMillis() + ".txt");
 		System.out.println("Creating log file: " + statsFile.getAbsolutePath());
