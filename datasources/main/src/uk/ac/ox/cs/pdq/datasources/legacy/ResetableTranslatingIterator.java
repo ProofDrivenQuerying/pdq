@@ -1,7 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.resultstable;
-
-import uk.ac.ox.cs.pdq.datasources.legacy.ResetableIterator;
-import uk.ac.ox.cs.pdq.datasources.legacy.TranslatingIterator;
+package uk.ac.ox.cs.pdq.datasources.legacy;
 
 /**
  * An iterator that can be reset, i.e. the cursor can be placed back to the

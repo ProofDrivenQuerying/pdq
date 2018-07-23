@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.regression.acceptance;
 import static uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion.AcceptanceLevels.FAIL;
 import static uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion.AcceptanceLevels.PASS;
 
-import uk.ac.ox.cs.pdq.datasources.resultstable.Result;
+import uk.ac.ox.cs.pdq.util.Table;
 
 /**
  * Acceptance test request the expected and observed results to be equivalent
@@ -11,7 +11,7 @@ import uk.ac.ox.cs.pdq.datasources.resultstable.Result;
  * 
  * @author Julien Leblay
  */
-public class ExpectedCardinalityAcceptanceCheck implements AcceptanceCriterion<Integer, Result> {
+public class ExpectedCardinalityAcceptanceCheck implements AcceptanceCriterion<Integer, Table> {
 
 	/**
 	 * Check.
@@ -21,7 +21,7 @@ public class ExpectedCardinalityAcceptanceCheck implements AcceptanceCriterion<I
 	 * @return AcceptanceResult
 	 */
 	@Override
-	public AcceptanceResult check(Integer expected, Result observed) {
+	public AcceptanceResult check(Integer expected, Table observed) {
 		if (observed == null || observed.isEmpty()) {
 				return new AcceptanceResult(PASS, "No result sets found");
 		}

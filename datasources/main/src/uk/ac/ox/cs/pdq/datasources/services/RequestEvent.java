@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.datasources.services;
 
-import uk.ac.ox.cs.pdq.datasources.resultstable.AccessException;
+import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.services.AccessEvent;
 
 

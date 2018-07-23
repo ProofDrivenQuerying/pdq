@@ -30,7 +30,6 @@ import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
-import uk.ac.ox.cs.pdq.datasources.resultstable.Result;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
@@ -49,6 +48,7 @@ import uk.ac.ox.cs.pdq.regression.acceptance.SameCostAcceptanceCheck;
 import uk.ac.ox.cs.pdq.runtime.Runtime;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
+import uk.ac.ox.cs.pdq.util.Table;
 
 /**
  * Main entry point to use PDQ. Runs regression tests or other folders with schema and query xml files.<br>
@@ -168,7 +168,8 @@ public class PDQ {
 						try {
 							expectedPlan = CostIOManager.readRelationalTermFromRelationaltermWithCost(expectedPlanFile, schema);
 							expectedCost = CostIOManager.readRelationalTermCost(expectedPlanFile, schema);
-							results = acceptance.check(new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation);
+							results = acceptance.check(
+									new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation);
 							results.report(this.out);
 							stats+=results.report();
 							isFailed = results.getLevel() == AcceptanceLevels.FAIL;
@@ -217,7 +218,7 @@ public class PDQ {
 					File accesses = new File(directory, runtimeParams.getAccessDirectory());
 					runtime.setAccessRepository(AccessRepository.getRepository(accesses.getAbsolutePath()));
 
-					Result results = null;
+					Table results = null;
 
 					if(mode.equals(Modes.full)) {
 						if (observation.getKey() == null) 

@@ -1,7 +1,6 @@
-package uk.ac.ox.cs.pdq.datasources.resultstable;
+package uk.ac.ox.cs.pdq.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterator;
@@ -16,11 +15,7 @@ import com.google.common.collect.Interners;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.datasources.legacy.ResetableIterator;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
-import uk.ac.ox.cs.pdq.util.Typed;
 
 /**
  * Implementation of a database table, whose tuples are fully loaded in memory.
@@ -28,7 +23,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
-public class Table implements Result, Iterable<Tuple> {
+public class Table implements Iterable<Tuple> {
 
 	/**  The table's header. */
 	private Typed[] header;
@@ -110,7 +105,6 @@ public class Table implements Result, Iterable<Tuple> {
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.structures.Result#isEmpty()
 	 */
-	@Override
 	public boolean isEmpty() {
 		return this.data.isEmpty() || this.type == TupleType.EmptyTupleType;
 	}
@@ -151,56 +145,8 @@ public class Table implements Result, Iterable<Tuple> {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.structures.Result#howDifferent(uk.ac.ox.cs.pdq.structures.Result)
-	 */
-	@Override
-	public Levels howDifferent(Result o) {
-		if (this == o) {
-			return Levels.IDENTICAL;
-		}
-		if (Table.class.isInstance(o)) {
-			Table small = this;
-			Table large = (Table) o;
-			boolean same = true;
-			Iterator<Tuple> i, j;
-			if (small.size() > large.size()) {
-				Table tmp = large;
-				large = small;
-				small = tmp;
-			}
-			i = large.data.iterator();
-			j = small.data.iterator();
-			while (j.hasNext()) {
-				Tuple l = i.next();
-				Tuple s = j.next();
-				if (!s.equals(l)) {
-					same = false;
-					if (!small.contains(l) || !large.contains(s)) {
-						return Levels.DIFFERENT;
-					}
-				}
-			}
-			while (i.hasNext()) {
-				Tuple t1 = i.next();
-				if (!small.contains(t1)) {
-					return Levels.DIFFERENT;
-				}
-			}
-			if (same && small.size() == large.size()) {
-				return Levels.IDENTICAL;
-			}
-			if (!large.isEmpty() && !small.isEmpty()) {
-				return Levels.EQUIVALENT;
-			}
-		}
-		return Levels.DIFFERENT;
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.structures.Result#size()
 	 */
-	@Override
 	public int size() {
 		return this.data.size();
 	}
@@ -214,6 +160,15 @@ public class Table implements Result, Iterable<Tuple> {
 		return this.type.size();
 	}
 
+	/** An iterator that can be set back to the beginning.
+	 * @author gabor
+	 *
+	 */
+	public interface ResetableIterator<T> extends Iterator<T> {
+		public void open();
+		public void reset();
+	}
+	
 	/**
 	 * Iterator.
 	 *
@@ -321,50 +276,6 @@ public class Table implements Result, Iterable<Tuple> {
 	 */
 	public List<Tuple> getData() {
 		return this.data;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.structures.Result#diff(uk.ac.ox.cs.pdq.structures.Result)
-	 */
-	@Override
-	public String diff(Result o) {
-		if (!this.getClass().isInstance(o)) {
-			return "Results are not of the same types.";
-		}
-		Table that = (Table) o;
-		Collection<Tuple> large, small;
-		if (this.size() > that.size()) {
-			large = this.data;
-			small = that.data;
-		} else {
-			large = that.data;
-			small = this.data;
-		}
-		StringBuilder result = new StringBuilder();
-		int intersection = small.size();
-		boolean containedSmall = true;
-		boolean containedLarge = true;
-		Iterator<Tuple> j = large.iterator();
-		for (Iterator<Tuple> i = small.iterator(); i.hasNext();) {
-			Tuple t = i.next();
-			j.next();
-			if (!large.contains(t)) {
-				intersection--;
-				containedSmall = false;
-			}
-		}
-		while (j.hasNext()) {
-			if (!small.contains(j.next())) {
-				containedLarge = false;
-			}
-		}
-		if (containedSmall && containedLarge && this.size() != that.size()) {
-			result.append("duplicates found");
-		} else if (!containedSmall || !containedLarge) {
-			result.append("results not contained in one another |result1|=" + this.size() + ", |result2|=" + that.size() + " |intersection|=" + intersection);
-		}
-		return result.toString();
 	}
 
 	/*
