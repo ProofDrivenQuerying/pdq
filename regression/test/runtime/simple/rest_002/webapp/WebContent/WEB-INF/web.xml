@@ -59,15 +59,23 @@
  
     <!-- Define servlets that are included in the example application -->
 
-      <servlet>
-        <servlet-name>RequestInfo</servlet-name>
-        <servlet-class>RequestInfo</servlet-class>
+     <servlet>
+        <servlet-name>NationInput</servlet-name>
+        <servlet-class>NationInput</servlet-class>
     </servlet>
      <servlet-mapping>
-        <servlet-name>RequestInfo</servlet-name>
-        <url-pattern>/servlets/servlet/RequestInfo/*</url-pattern>
+        <servlet-name>NationInput</servlet-name>
+        <url-pattern>/servlets/servlet/NationInput/*</url-pattern>
     </servlet-mapping>
 
+      <servlet>
+        <servlet-name>CountryFree</servlet-name>
+        <servlet-class>CountryFree</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>CountryFree</servlet-name>
+        <url-pattern>/servlets/servlet/CountryFree/*</url-pattern>
+    </servlet-mapping>
  
     <security-constraint>
       <display-name>Example Security Constraint - part 1</display-name>
