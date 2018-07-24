@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.runtime;
 /**
 	@author Mark Ridler and Michael Benedikt
 	
-	This project concerned with running plans and returning their results. 
+	This project is concerned with running plans and returning their results. 
 	
 	Prominent files include:
 	-Runtime.java which is the main entry point for the Runtime package

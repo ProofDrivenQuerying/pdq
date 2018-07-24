@@ -9,6 +9,6 @@ package uk.ac.ox.cs.pdq.runtime.exec;
 	 	* The decorator converts RelationalTerm objects to ExecutablePlan objects,
 	 	* which are analogous to physical plans.
 
-	The pcackage contains the ing package runtime.exec.spliterator, which 
-        does the actual execution of the Executable plans, 
+	Most of the work of executation is done in the contained package 
+        runtime.exec.spliterator, which does the actual execution of the Executable plans, 
 **/

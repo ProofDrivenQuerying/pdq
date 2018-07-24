@@ -4,7 +4,7 @@ package uk.ac.ox.cs.pdq.runtime.exec.spliterator;
 	@author Mark Ridler and Michael Benedikt
 	
 	This package contains the classes that execute physical plans of different types.
-        Execution is done recurively on the structure of the plan object
+        Execution is done recursively on the structure of the plan object
 	
 	- Access.java
  		* This is a basic plan object representing an access. Its execution
