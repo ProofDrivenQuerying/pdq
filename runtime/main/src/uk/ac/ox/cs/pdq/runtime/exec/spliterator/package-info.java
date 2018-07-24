@@ -1,12 +1,17 @@
 package uk.ac.ox.cs.pdq.runtime.exec.spliterator;
 
 /**
-	@author Mark Ridler
+	@author Mark Ridler and Michael Benedikt
 	
-	This package contains:
+	This package contains the classes that execute physical plans of different types.
+        Execution is done recurively on the structure of the plan object
 	
 	- Access.java
- 		* An executable access plan. 
+ 		* This is a basic plan object representing an access. Its execution
+ 		* is done by using the ExecutableAccessMethod associated with
+ 		* this access method.  ExecutableAccessMethod is in the datasources
+ 		* package.
+ 		*
  		* 
  		* Note that the child field in an {@code Access} instance is not used, but 
  		* instead has an underlying {@code AccessMethod}. 

@@ -1,10 +1,9 @@
 package uk.ac.ox.cs.pdq.runtime;
 
 /**
-	@author Mark Ridler
+	@author Mark Ridler and Michael Benedikt
 	
-	This package implements the whole Runtime concept of PDQ. As one of the 7 main projects it is concerned with 
-	running queries and returning their results. Runtime has been redesigned since its original implementation.
+	This project concerned with running plans and returning their results. 
 	
 	Prominent files include:
 	-Runtime.java which is the main entry point for the Runtime package
@@ -12,11 +11,15 @@ package uk.ac.ox.cs.pdq.runtime;
 	This also contains the following sub packages:
 	
 	- runtime.exec
-		* The decorator converts RelationalTerm objects to ExecutablePlan objects. The
-	 	* decoration is done recursively by passing the decorator to the constructor of
+		* The decorator converts RelationalTerm objects to ExecutablePlan objects,
+		* which are analogs of physical plans in a traditional  DBMS.
+	 	* The decoration is done recursively by passing the decorator to the constructor of
 	 	* the executablePlan to make sure it will use the same parameters/access
 	 	* repository to decorate the children as well.
 	- runtime.exec.spliterator
+	        * The root class here is ExecutablePlan.java, which has an execute method
+	        * for getting results. Execution is done by recursively executing children.
+	        *
 		* Algorithm:
 		* - advance to the next right tuple; if the right child is exhausted:
 		* 		- update the cache of matching tuples from the right child

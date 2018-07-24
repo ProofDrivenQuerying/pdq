@@ -1,13 +1,17 @@
 package uk.ac.ox.cs.pdq.reasoning;
 
 /**
-	@author Efthymia Tsamoura and Mark Ridler
+	@author Efthymia Tsamoura and Mark Ridler and Michael Benedikt
 
-	This package contains classes that initiate and start the reasoning process.
+	This package contains classes for doing inference on sets of facts.
+        The reasoning process can be used stand-alone -- e.g. for seeing whether
+        a query follows from a set of facts and constraints. It can also be used
+        as a component of planning.
 	
 	The initiation process consists of the following steps:
-		-selection of the appropriate reasoning mechanism. The only reasoning mechanism that is supported is the chase.
-		-selection of the appropriate mechanism to detect homomorphisms during chasing or to detect query matches. 
+		-selection of the appropriate reasoning mechanism. The only reasoning mechanism that is supported currently is the chase.
+		-selection of the appropriate mechanism to store facts inferred
+                during reasoning and to detect homomorphisms during chasing or to detect query matches. 
 		Homomorphism detection works as follows: the chase facts are stored in a database. 
 		Every time we check if there is an homomorphism of a formula F to the facts of a chase instance, 
 		we create an SQL query from F's atoms and submit it to a database engine. The database engine returns all the facts that 
