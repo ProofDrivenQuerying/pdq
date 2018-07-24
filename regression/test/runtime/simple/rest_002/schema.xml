@@ -6,30 +6,30 @@
             <attribute name="n_name" type="java.lang.String"/>
             <attribute name="n_regionkey" type="java.lang.Integer"/>
             <attribute name="n_comment" type="java.lang.String"/>
-            <access-method name="pdqWebappNationInput"/>
+            <access-method name="pdqWebappNationInput" inputs="0"/>
         </relation>
         <relation name="Country">
             <attribute name="c_nationkey" type="java.lang.Integer"/>
-            <attribute name="c_name" type="java.lang.String"/>
+            <attribute name="c_area" type="java.lang.String"/>
             <access-method name="pdqWebappCountryFree"/>
         </relation>
     </relations>
      <dependencies>
           <dependency type="TGD">
             <body>
-                <atom name="Countries">
-                    <variable name="_1"/>
-                    <variable name="_2"/>
-                </atom>
-            </body>
-            <head>
-                <atom name="Nation">
+               <atom name="Nation">
                     <variable name="_1"/>
                     <variable name="_4"/>
  	                <variable name="_5"/>
      	            <variable name="_6"/>
                 </atom>           	
-            </head>
+              </body>
+            <head>
+               <atom name="Countries">
+                    <variable name="_1"/>
+                    <variable name="_2"/>
+                </atom>
+             </head>
         </dependency>
     </dependencies>
 </schema>
