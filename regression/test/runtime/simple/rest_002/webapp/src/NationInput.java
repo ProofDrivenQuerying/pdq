@@ -57,7 +57,7 @@ public class NationInput extends HttpServlet {
         out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
          try
         {
-        	String s = request.getParameter("n_name");
+        	String s = request.getParameter("n_nationkey");
         	String query;
         	if((s == null) || (s.equals("")))
         	{
@@ -65,7 +65,7 @@ public class NationInput extends HttpServlet {
         	}
         	else
         	{
-        		query = "SELECT * FROM public.nation WHERE n_name = '" + s + "'";
+        		query = "SELECT * FROM public.nation WHERE n_nationkey = '" + s + "'";
         	}
         	Class.forName("org.postgresql.Driver");
         	Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/tpch?user=postgres&password=root");
