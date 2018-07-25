@@ -1,7 +1,7 @@
 	<service
-		name="pdqWebappNationsInput"
+		name="pdqWebappNationInput"
 		protocol="REST"
-		url="http://localhost:8080/webapp/servlets/servlet/NationsInput" 
+		url="http://localhost:8080/webapp/servlets/servlet/NationInput" 
 		media-type="application/xml"
 		documentation=""
 		result-delimiter="nation"
@@ -9,7 +9,7 @@
 
 		<policy name="1000_items_per_page" />
 
-		<access-method 						name="pdqWebappNationsInput" cost="1000.0" relation-name="Nation">
+		<access-method 						name="pdqWebappNationInput" cost="1000.0" relation-name="Nation">
 			<attribute name="n_nationkey"  input="true"	output="true" type="Integer"    	relation-attribute="n_nationkey" path="n_nationkey"/>
 			<attribute name="n_name"    			    output="true" type="String"    	relation-attribute="n_name" path="n_name"/>
 			<attribute name="n_regionkey"    			output="true" type="Integer"    	relation-attribute="n_regionkey" path="n_regionkey"/>
