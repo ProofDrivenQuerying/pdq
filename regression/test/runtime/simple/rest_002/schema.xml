@@ -10,7 +10,7 @@
         </relation>
         <relation name="Country">
             <attribute name="c_nationkey" type="java.lang.Integer"/>
-            <attribute name="c_area" type="java.lang.String"/>
+            <attribute name="c_area" type="java.lang.Integer"/>
             <access-method name="pdqWebappCountryFree"/>
         </relation>
     </relations>
