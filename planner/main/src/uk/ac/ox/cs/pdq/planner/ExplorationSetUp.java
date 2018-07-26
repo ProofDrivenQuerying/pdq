@@ -62,7 +62,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
- * Main entry point for chasing, where all properties are gathered and used to
+ * Main entry point for plannng, where all properties are gathered and used to
  * create various objects like explorer,reasoner,cost estimator, etc...
  * <li>- implements an easy to use search function that has a query as input and
  * returns plans with costs for the given query over the previously configured
@@ -141,10 +141,6 @@ public class ExplorationSetUp {
 	/**
 	 * Search for a best plan for the given schema and query.
 	 *
-	 * @param <S>
-	 *            the generic type
-	 * @param <P>
-	 *            the generic type
 	 * @param query
 	 *            the query
 	 * @param noDep

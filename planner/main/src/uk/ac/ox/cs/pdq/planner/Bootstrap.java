@@ -40,9 +40,9 @@ public class Bootstrap {
 	private boolean help;
 	
 	/**
-	 * Checks if is help.
+	 * Checks if this is called with help as an argument.
 	 *
-	 * @return true, if is help
+	 * @return true, if it is called with help
 	 */
 	public boolean isHelp() {
 		return this.help;
@@ -93,13 +93,13 @@ public class Bootstrap {
 		return this.configFile;
 	}
 	
-	/** The verbose. */
+	/**  */
 	@Parameter(names = { "-v", "--verbose" }, required = false,
 		description ="Path to the input query definition file.")
 	private boolean verbose = false;
 	
 	/**
-	 * Checks if is verbose.
+	 * Checks if  verbose is set.
 	 *
 	 * @return true, if is verbose
 	 */
@@ -107,7 +107,7 @@ public class Bootstrap {
 		return this.verbose;
 	}
 
-	/** The dynamic params. */
+	/** TOCOMMENT: WHAT ARE THESE? . */
 	@DynamicParameter(names = "-D", description = "Dynamic parameters. Override values defined in the configuration files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 
