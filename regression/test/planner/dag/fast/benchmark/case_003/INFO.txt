@@ -18,7 +18,7 @@ There are constraints:
 - from partsupp to part
 - from nation to region
 - from supplier to nation
-- from region_nation to region and nation
+- from region and nation to region_nation
 
 There is an expected-plan.xml file. It has 2 dependent join terms and the following access terms:
 - partsupp (access method m5)
