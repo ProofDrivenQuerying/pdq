@@ -1,12 +1,11 @@
-Comment:
-
-All parts available in quantity 10 
-
-Query:
+This test performs s query:
 
 SELECT p_name FROM partsupp JOIN part ON ps_partkey = p_partkey WHERE ps_availqty = 10
 
-Schema:
+This query runs on a schema where:
 
-partsupp has 5 columns and 700 rows
-part has 9 columns and 200 rows
+- there are multiple relations including partsupp and part
+- partsupp has 5 columns and 700 rows
+- part has 9 columns and 200 rows
+
+There is a constraint from partsupp to part

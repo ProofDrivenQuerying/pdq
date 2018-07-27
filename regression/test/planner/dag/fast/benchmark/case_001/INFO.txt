@@ -1,11 +1,10 @@
-Comment:
-
-Supply cost of parts available in quantity 10 
-
-Query:
+This test performs a query:
 
 SELECT ps_supplycost FROM partsupp WHERE ps_availqty = 10
 
-Schema:
+This query runs on a schema where:
 
-partsupp has 5 columns and 700 rows
+- there are multiple relations including partsupp
+- partsupp has 5 columns and 700 rows
+
+There are no constraints from partsupp to itself. 
