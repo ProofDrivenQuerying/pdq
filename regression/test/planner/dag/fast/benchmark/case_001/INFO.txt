@@ -1,4 +1,4 @@
-This test performs a query:
+This test has as input the following query:
 
 SELECT ps_supplycost FROM partsupp WHERE ps_availqty = 10
 
@@ -7,4 +7,10 @@ This query runs on a schema where:
 - there are multiple relations including partsupp
 - partsupp has 5 columns and 700 rows
 
-There are no constraints from partsupp to itself. 
+There are no constraints from partsupp to itself.
+
+There is an expected-plan.xml file. It shows 3 dependent join terms with access terms:
+- partsupp (access method m5)
+- region (access method m8)
+- nation (access method m7)
+- supplier (access method m3)
