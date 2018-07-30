@@ -168,11 +168,18 @@ public class PDQ {
 						try {
 							expectedPlan = CostIOManager.readRelationalTermFromRelationaltermWithCost(expectedPlanFile, schema);
 							expectedCost = CostIOManager.readRelationalTermCost(expectedPlanFile, schema);
-							results = acceptance.check(
-									new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation);
-							results.report(this.out);
-							stats+=results.report();
-							isFailed = results.getLevel() == AcceptanceLevels.FAIL;
+							if (observation==null) {
+								String msg = "FAIL: No new plan, while old exists."; 
+								System.out.println(msg);
+								stats+=msg;
+								isFailed = true;
+							} else {
+								results = acceptance.check(
+										new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation);
+								results.report(this.out);
+								stats+=results.report();
+								isFailed = results.getLevel() == AcceptanceLevels.FAIL;
+							}
 						} catch(Throwable t) {
 							t.printStackTrace();
 							stats+="Failed to read previous plan: " + t.getMessage() ;
