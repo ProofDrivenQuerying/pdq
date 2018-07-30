@@ -16,6 +16,8 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
  */
 public class DefaultValidator implements Validator{
 
+	private boolean ignoreDepth;
+
 	/**
 	 * Instantiates a new default validator.
 	 */
@@ -46,9 +48,13 @@ public class DefaultValidator implements Validator{
 	 */
 	@Override
 	public boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right, int depth) {
+		if (ignoreDepth)
+			return this.validate(left, right);
 		return left.getHeight() + right.getHeight() == depth && this.validate(left, right);
 	}
-
+	public void setIgnoreDepth(boolean ignore) {
+		this.ignoreDepth = ignore;
+	}
 	/**
 	 * Clone.
 	 *
