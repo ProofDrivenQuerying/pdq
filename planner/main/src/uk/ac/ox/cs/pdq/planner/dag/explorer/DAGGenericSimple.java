@@ -22,8 +22,12 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ApplyRuleValidator;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ClosedValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DepthValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.LinearValidator;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.RightDepthValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
@@ -34,6 +38,11 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
  * Simple dag explorer. It searches the space of binary configurations
  * exhaustively
  *
+ * The main difference from DAGGeneric is that when generating configuration
+ * pairs to combine it will not limit the new configurations to a certain depth,
+ * therefore it will provide more combinations in each round, however when there
+ * is no new configuration we do not need to run the system further.
+ * 
  * @author Efthymia Tsamoura
  * @author Gabor
  */
@@ -58,6 +67,7 @@ public class DAGGenericSimple extends DAGExplorer {
 	protected final SuccessDominance successDominance;
 
 	protected List<Entry<RelationalTerm, Cost>> exploredPlans = new ArrayList<>();
+
 	/**
 	 * Instantiates a new DAG generic.
 	 *
@@ -102,16 +112,28 @@ public class DAGGenericSimple extends DAGExplorer {
 			List<Validator> validators, int maxDepth) throws PlannerException, SQLException {
 		super(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
 		this.validators = validators;
-//		this.validators.clear();
-		for (Validator validator:validators) {
+		for (Validator validator : validators) {
 			if (validator instanceof LinearValidator)
 				((LinearValidator) validator).setIgnoreDepth(true);
 			if (validator instanceof DefaultValidator)
 				((DefaultValidator) validator).setIgnoreDepth(true);
+			if (validator instanceof ApplyRuleValidator)
+				((ApplyRuleValidator) validator).setIgnoreDepth(true);
+
+			if (validator instanceof ClosedValidator)
+				((ClosedValidator) validator).setIgnoreDepth(true);
+			if (validator instanceof DepthValidator)
+				((DepthValidator) validator).setIgnoreDepth(true);
+			if (validator instanceof RightDepthValidator)
+				((RightDepthValidator) validator).setIgnoreDepth(true);
+			if (validator instanceof ApplyRuleValidator)
+				((ApplyRuleValidator) validator).setIgnoreDepth(true);
+			if (validator instanceof ApplyRuleValidator)
+				((ApplyRuleValidator) validator).setIgnoreDepth(true);
 		}
 		Preconditions.checkNotNull(successDominance);
 		Preconditions.checkArgument(validators != null);
-		//Preconditions.checkArgument(!validators.isEmpty());
+		// Preconditions.checkArgument(!validators.isEmpty());
 		this.successDominance = successDominance;
 		List<DAGChaseConfiguration> initialConfigurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(
 				this.parameters, this.query, this.accessibleQuery, this.accessibleSchema, this.chaser, this.connection);
@@ -155,7 +177,7 @@ public class DAGGenericSimple extends DAGExplorer {
 						this.setBestPlan(configuration);
 					}
 					leftSideConfigurations.add(configuration);
-					//rightSideConfigurations.add(configuration);
+					// rightSideConfigurations.add(configuration);
 					changed = true;
 				}
 			}
@@ -164,7 +186,6 @@ public class DAGGenericSimple extends DAGExplorer {
 				break;
 			}
 		}
-
 		// Stop if we cannot create any new configuration
 		if (!changed) {
 			this.forcedTermination = true;
