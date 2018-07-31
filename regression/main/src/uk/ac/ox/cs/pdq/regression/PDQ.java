@@ -260,7 +260,7 @@ public class PDQ {
 				e.printStackTrace();
 				stats+= "Failed: " + e.getMessage();				
 				stats = "FAIL" + stats;
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				e.printStackTrace();
 				stats+= "Failed: " + e.getMessage();				
 				stats = "FAIL" + stats;
