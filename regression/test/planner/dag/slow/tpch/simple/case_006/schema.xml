@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <schema>
     <sources>
-        <source database="tpch_0001" discoverer="uk.ac.ox.cs.pdq.sql.MySQLSchemaDiscoverer" driver="com.mysql.jdbc.Driver" name="tpch" password="root" url="jdbc:mysql://localhost/" username="root"/>
+        <source database="tpch_0001" discoverer="uk.ac.ox.cs.pdq.sql.MySQLSchemaDiscoverer" driver="com.mysql.jdbc.Driver" name="tpch" password="root" url="jdbc:mysql://localhost/" username="postgres"/>
     </sources>
     <relations>
         <relation name="part" source="tpch">
