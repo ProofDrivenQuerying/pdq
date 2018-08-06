@@ -137,6 +137,19 @@ public class DAGGenericSimple extends DAGExplorer {
 		this.successDominance = successDominance;
 		List<DAGChaseConfiguration> initialConfigurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(
 				this.parameters, this.query, this.accessibleQuery, this.accessibleSchema, this.chaser, this.connection);
+		
+		// check initial configurations for success
+		for (DAGChaseConfiguration configuration:initialConfigurations) {
+			Cost cost = this.costEstimator.cost(configuration.getPlan());
+			configuration.setCost(cost);
+			if (configuration.isClosed()
+					&& (this.bestPlan == null
+					|| configuration.getCost().lessThan(this.bestCost))
+					&& configuration.isSuccessful(this.accessibleQuery)) {
+				this.setBestPlan(configuration);
+			}
+		}
+		
 		this.leftSideConfigurations = new ArrayList<>();
 		this.rightSideConfigurations = new ArrayList<>();
 		this.leftSideConfigurations.addAll(initialConfigurations);
