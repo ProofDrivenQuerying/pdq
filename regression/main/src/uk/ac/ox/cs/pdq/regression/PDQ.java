@@ -32,6 +32,7 @@ import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -108,6 +109,11 @@ public class PDQ {
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 
 	private FileWriter stats = null;
+
+	/**
+	 * Prints the first created plan as a png image and opens it in a new window.
+	 */
+	private boolean printPlan=false;
 	/**
 	 * Main functionality of this class. 
 	 */
@@ -153,7 +159,10 @@ public class PDQ {
 					ExplorationSetUp planner = new ExplorationSetUp(plParams, costParams, reasoningParams, databaseParams, schema);
 					observation = planner.search(query);
 					double duration = (System.currentTimeMillis() - start) / 1000.0;
-
+					if (printPlan && observation!=null) {
+						printPlan = false;
+						PlanPrinter.openPngPlan(observation.getKey());
+					}
 					DecimalFormat myFormatter = new DecimalFormat("####.##");
 					String duration_s = " Duration: " + myFormatter.format(duration) + "s.";				
 
