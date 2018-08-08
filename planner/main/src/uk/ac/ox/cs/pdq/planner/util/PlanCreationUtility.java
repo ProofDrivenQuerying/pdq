@@ -48,6 +48,21 @@ import uk.ac.ox.cs.pdq.util.Utility;
  */
 public class PlanCreationUtility {
 	
+	/**
+	 * Methods to create a linear plan by appending the access and middleware commands of the input configuration to the input parent plan.
+	 * 
+	 * The newly created access and middleware command are created as follows:
+	 * For an exposed fact f, If f has been exposed by an input-free accessibility axiom (access method), 
+	 * then create an input-free access else create a dependent access operator.
+	 * If f has schema constants in output positions or repeated constants, then these schema constants map to filtering predicates.
+	 * Finally, project the variables that correspond to output chase constants. 
+	 * */
+
+
+/**
+ * TOCOMMENT: IS THIS FIRST METHOD EVER USED? IF SO, NEED SOME EXPLANATION HOW IT FITS
+ * THE DISCUSSION ABOVE
+ */
 	public static RelationalTerm createPlan(RelationalTerm left, RelationalTerm right) {
 		Preconditions.checkNotNull(left);
 		Preconditions.checkNotNull(right);
@@ -59,33 +74,27 @@ public class PlanCreationUtility {
 			return JoinTerm.create(left, right);
 	}
 
-	/**
-	 * Creates a linear plan by appending the access and middlewares commands of the input configuration to the input parent plan.
-	 * The top level operator is a projection that projects the terms toProject.
-	 * 
-	 * The newly created access and middleware command are created as follows:
-	 * For an exposed fact f, If f has been exposed by an input-free accessibility axiom (access method), 
-	 * then create an input-free access else create a dependent access operator.
-	 * If f has schema constants in output positions or repeated constants, then these schema constants map to filtering predicates.
-	 * Finally, project the variables that correspond to output chase constants. 
-	 *
-	 * @param configuration the c
-	 * @param parent 		The input parent plan. This is the plan of the parent configuration of c, i.e., the configuration that is augmented with the exposed facts of c.
-	 * @param toProject 		Terms to project in the resulting plan
-	 * @return the left deep plan
+	 *Creates a single access plans
+	 * @param relation: the relation being accessed the c
+	 * @param accessMethod the access being used
+	 * @exposedFacts: the facts being exposed by the access: used in order to name the attributes in the output
+	 * @return the term representing the output  plan
 	 */
 	public static RelationalTerm createSingleAccessPlan(Relation relation, AccessMethodDescriptor accessMethod, Collection<Atom> exposedFacts) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(accessMethod);
 		Preconditions.checkArgument(exposedFacts != null && exposedFacts.size() > 0);
 		Preconditions.checkArgument(Arrays.asList(relation.getAccessMethods()).contains(accessMethod));
+                //op1 will accumulate terms as more and more renamings are added
 		RelationalTerm op1 = null;
+                //access will store the term prior to any renamings
 		AccessTerm access = null;
-		//planRelation is a copy of the relation without the extra attribute in the schema, needed for chasing
+		//planRelation is a copy of the relation 
 		Relation planRelation = null;
 		//Iterate over each exposed fact
 		for (Atom exposedFact: exposedFacts) {
 			Preconditions.checkArgument(exposedFact.getPredicate().getName().equals(relation.getName()));
+              //TOCOMENT: WHY NOT PULL THIS OUT BEFORE THE LOOP?
 			if (access == null) {
 				Attribute[] attributes = new Attribute[relation.getArity()];
 				System.arraycopy(relation.getAttributes(), 0, attributes, 0, attributes.length); 
@@ -95,9 +104,10 @@ public class PlanCreationUtility {
 				//Create an access operator
 				access = AccessTerm.create(planRelation, accessMethod, inputConstants);
 			}
-			//Rename the output attributes
+
+			//Rename the output attributes in the output according to the exposed facts
 			Attribute[] renamings = computeRenamedAttributes(planRelation.getAttributes(), exposedFact.getTerms());
-			//Add a rename operator 
+			//Add a rename operator; and put the result in op1
 			if (op1 == null) {
 				op1 = RenameTerm.create(renamings, access); 		
 				//Find if this fact has schema constants in output positions or repeated constants
@@ -138,6 +148,9 @@ public class PlanCreationUtility {
 		return false;
 	}
 
+/**
+ *Look for constants in the input positions
+ */
 	private static Map<Integer, TypedConstant> computeInputConstants(AccessMethodDescriptor method, Term[] terms) {
 		Map<Integer, TypedConstant> ret = new HashMap<>();
 		for(Integer i: method.getInputs()) {
@@ -147,6 +160,9 @@ public class PlanCreationUtility {
 		return ret;
 	}
 	
+/**
+ * renames tha attributes in the first list based on the names of terms in the second lists
+ */
 	private static Attribute[] computeRenamedAttributes(Attribute[] attributes, Term[] terms) {
 		Preconditions.checkArgument(attributes.length == terms.length);
 		Attribute[] renamings = new Attribute[terms.length];
@@ -158,9 +174,9 @@ public class PlanCreationUtility {
 	 * Creates the select predicates.
 	 *
 	 * @param terms List<Term>
-	 * @return 	 	a conjunction of select conditions that the output values of a source must satisfy
+	 * @return 	 	a conjunction of selectioin conditions that the output values of a source must satisfy
 	 * 		based on the exposed fact's terms.
-	 * 		The select conditions enforce value equality when two terms are equal
+	 * 		The selection conditions enforce value equality when two terms are equal
 	 * 		and equality to a constant when an exposed fact's term is mapped to a schema constant.
 	 * 		The returned list is null if there does not exist any select condition
 	 */
@@ -188,13 +204,14 @@ public class PlanCreationUtility {
 	}
 	
 	/**
-	 * Gets the tuple type.
+	 * Gets the types of a query's free variables
 	 *
 	 * @param query the q
-	 * @return the tuple type of the input query
+	 * @return a list of types for each free variable of the query
 	 */
 	private static Type[] computeVariableTypes(ConjunctiveQuery query,Schema schema) {
 		Variable[] freeVariables = query.getFreeVariables();
+ //TOCOMMENT: Class</>?
 		Type[] types = new Class<?>[query.getFreeVariables().length];
 		boolean assigned = false;
 		for (int i = 0, l = types.length; i < l; i++) {
@@ -217,10 +234,10 @@ public class PlanCreationUtility {
 	}
 
 	/**
-	 * Creates the final projection.
+	 * Creates the final projection, based on the free variables of the query
 	 *
 	 * @param query Query
-	 * @param plan LogicalOperator
+	 * @param plan partial plan wihtout the final projection
 	 * @return Projection
 	 */
 	public static ProjectionTerm createFinalProjection(ConjunctiveQuery query, RelationalTerm plan, Schema schema) {
@@ -231,7 +248,7 @@ public class PlanCreationUtility {
 			Constant constant = ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().get(query).get(freeVariables[index]);
 			Attribute attribute = Attribute.create(variableTypes[index], ((UntypedConstant)constant).getSymbol());
 			if (! Arrays.asList(plan.getOutputAttributes()).contains(attribute)) {
-				//PlanPrinter.openPngPlan(plan);
+//TOCOMENT: SYSTEM.OUT.PRINTLIN???
 				System.out.println("Invalid plan!" + plan.getOutputAttributes() + " should contain " + attribute +" but it doesn't.");
 				Preconditions.checkArgument(Arrays.asList(plan.getOutputAttributes()).contains(attribute));
 			}
