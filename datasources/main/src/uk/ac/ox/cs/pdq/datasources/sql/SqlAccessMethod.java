@@ -21,12 +21,12 @@ import com.google.common.base.Preconditions;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
-import uk.ac.ox.cs.pdq.datasources.resultstable.AccessException;
-import uk.ac.ox.cs.pdq.datasources.resultstable.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.util.DistinctIterator;
+import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Utility;
 

@@ -1,0 +1,68 @@
+Start running regression test: planner in folder: test/planner/linear
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/benchmark/std_006 : PASSCost: 1.0Finished,  Duration: 0.64s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/benchmark/std_006_minimal : PASSCost: 1.0Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/demo/case_001 : PASSCost: 3.3958007884803287E18Finished,  Duration: 0.11s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/demo/case_002 : PASSCost: 2.4967919004335693E8Finished,  Duration: 0.03s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/demo/case_003a : PASSCost: 6.244500173709283E15Finished,  Duration: 0.13s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/demo/case_003b : PASSCost: 6.244500173709283E15Finished,  Duration: 0.11s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/demo/vldb-demo-example1 : PASSCost: 6.244500173709283E15Finished,  Duration: 0.1s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/generated/BLACKBOX_rel_5x3_1_bindings+0.5_freeacc_dep_3x3_query_GUARDED_3 : No previous plan found.Finished,  Duration: 0.02s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/generated/BLACKBOX_rel_5x3_1_bindings+1.0_freeacc_dep_3x3_query_GUARDED_3 : No previous plan found.Finished,  Duration: 0.02s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/generated/SIMPLE_CONSTANT_rel_5x3_1_bindings+0.5_freeacc_dep_3x3_query_GUARDED_3 : PASSCost: 5.0Finished,  Duration: 0.02s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/generated/SIMPLE_CONSTANT_rel_5x3_1_bindings+1.0_freeacc_dep_3x3_query_GUARDED_3 : PASSCost: 5.0Finished,  Duration: 0.01s.
+FAIL/home/gabor/git/pdq/regression/test/planner/linear/fast/generated/VIEW/mysql/BLACKBOX_rel_5x3_1_bindings+0.5_freeacc_dep_3x3_query_GUARDED_3 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/linear/fast/generated/VIEW/mysql/BLACKBOX_rel_5x3_1_bindings+0.5_freeacc_dep_3x3_query_GUARDED_3/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/linear/fast/generated/VIEW/mysql/BLACKBOX_rel_5x3_1_bindings+1.0_freeacc_dep_3x3_query_GUARDED_3 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/linear/fast/generated/VIEW/mysql/BLACKBOX_rel_5x3_1_bindings+1.0_freeacc_dep_3x3_query_GUARDED_3/schema.xml
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/manual/case_000 : No previous plan found.Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/manual/case_001 : PASSCost: 15.0Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/manual/case_002 : No previous plan found.Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/manual/case_003 : PASSCost: 15.0Finished,  Duration: 0.03s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/manual/case_004 : PASSCost: 5.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/manual/case_005 : No previous plan found.Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/profinfo/example_01 : PASSCost: 10.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/profinfo/example_01b : PASSCost: 10.0Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/profinfo/example_02 : PASSCost: 20.0Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/profinfo/example_03 : PASSCost: 10.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/profinfo/example_03b : PASSCost: 10.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/quick/example_01 : PASSCost: 7286.72124178452Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/quick/example_02 : PASSCost: 1981.5510557964276Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/quick/example_03 : PASSCost: 1541.5510557964276Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/quick/example_04 : PASSCost: 11901.89142777261Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/quick/example_05 : PASSCost: 103784.95477555826Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/quick/example_06 : PASSCost: 649.5945713886307Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox/case_001 : PASSCost: 9736.971259786465Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox/case_002 : PASSCost: 4749493.20579017Finished,  Duration: 0.36s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox/case_003 : PASSCost: 388726.7584701342Finished,  Duration: 0.15s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox/case_004 : PASSCost: 441474.50367152935Finished,  Duration: 0.15s.
+NOT ACCEPTED/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox/case_005 : FAILCost: 7334700.981529176Finished,  Duration: 0.13s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox_db/case_001 : PASSCost: 10.1Finished,  Duration: 0.8s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox_db/case_002 : PASSCost: 20.74Finished,  Duration: 0.84s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox_db/case_003 : PASSCost: 31.92Finished,  Duration: 0.45s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox_db/case_004 : PASSCost: 43.06Finished,  Duration: 1.32s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox_db/case_005 : PASSCost: 75.79Finished,  Duration: 0.77s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox_db/case_006 : PASSCost: 85.85Finished,  Duration: 1.01s.
+NOT ACCEPTED/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox_db/case_010 : FAILCost: 63.08Finished,  Duration: 3.91s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox_db_with/case_001 : PASSCost: 10.1Finished,  Duration: 0.61s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox_db_with/case_002 : PASSCost: 20.74Finished,  Duration: 0.69s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox_db_with/case_003 : PASSCost: 31.92Finished,  Duration: 0.75s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox_db_with/case_004 : PASSCost: 43.06Finished,  Duration: 0.97s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox_db_with/case_005 : PASSCost: 75.79Finished,  Duration: 0.87s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/blackbox_db_with/case_006 : PASSCost: 85.85Finished,  Duration: 1.3s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_001 : PASSCost: 10.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_002 : PASSCost: 25.0Finished,  Duration: 0.05s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_003 : PASSCost: 40.0Finished,  Duration: 0.11s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_004 : PASSCost: 45.0Finished,  Duration: 0.1s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_005 : PASSCost: 45.0Finished,  Duration: 0.13s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_006 : PASSCost: 45.0Finished,  Duration: 0.14s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_007 : PASSCost: 15.0Finished,  Duration: 0.02s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_008 : PASSCost: 15.0Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_009 : No previous plan found.Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_010 : PASSCost: 45.0Finished,  Duration: 1.07s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_011 : PASSCost: 10.0Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_012 : PASSCost: 45.0Finished,  Duration: 0.31s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_013 : PASSCost: 5.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_014 : PASSCost: 20.0Finished,  Duration: 0.03s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_015 : PASSCost: 45.0Finished,  Duration: 0.2s.
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_016 : PASSCost: 10.0Finished,  Duration: 0s.
+FAIL/home/gabor/git/pdq/regression/test/planner/linear/slow/demo/vldb-demo-example2 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120000.129042>120000.0
+SUCC/home/gabor/git/pdq/regression/test/planner/linear/slow/tpch/blackbox_db_with/case_010 : PASSCost: 52.55Finished,  Duration: 2.77s.
+regression test finished successfully

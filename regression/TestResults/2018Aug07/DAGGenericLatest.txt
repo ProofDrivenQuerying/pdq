@@ -1,0 +1,158 @@
+Start running regression test: planner in folder: test/planner/dagSUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/benchmark/case_001 : PASSCost: 7956.00824227289Finished,  Duration: 1.98s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/benchmark/case_002 : PASSCost: 113390.62690154699Finished,  Duration: 1.55s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/benchmark/case_003 : PASSCost: 4334.32091928001Finished,  Duration: 1.32s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/benchmark/case_004 : PASSCost: 58399.25771052774Finished,  Duration: 8.13s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/benchmark/case_005 : PASSCost: 29188.483871860168Finished,  Duration: 11.24s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/benchmark/case_008 : PASSCost: 200.0Finished,  Duration: 59.94s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/benchmark/case_009 : PASSCost: 403938.1461932118Finished,  Duration: 0.63s.
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/benchmark/std_006 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120003.750732>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/benchmark/std_012 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 129164.513249>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/benchmark/std_014 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 139395.47861>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/benchmark/std_020 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 124453.751323>120000.0
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/BLACKBOX/case_001a : PASSCost: 3.0735280411129147E10Finished,  Duration: 9.38s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/BLACKBOX/case_003a : PASSCost: 3.0829910882086916E9Finished,  Duration: 11.66s.
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/BLACKBOX/case_004a : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 144086.760529>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/BLACKBOX/case_004b : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120968.096808>120000.0
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/BLACKBOX/case_006a : PASSCost: 56474.04223185709Finished,  Duration: 1.22s.
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/BLACKBOX/case_008a : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120001.927194>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/BLACKBOX/case_008b : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120001.51045>120000.0
+NOT ACCEPTED/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/SIMPLE_ERSPI/case_001a : FAILCost: 1.0521737E7Finished,  Duration: 16.93s.
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/SIMPLE_ERSPI/case_002a : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120000.882361>120000.0
+NOT ACCEPTED/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/SIMPLE_ERSPI/case_003a : FAILCost: 1.0520738E7Finished,  Duration: 18.66s.
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/SIMPLE_ERSPI/case_004a : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120510.978115>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/SIMPLE_ERSPI/case_004b : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 161562.468257>120000.0
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/SIMPLE_ERSPI/case_006a : PASSCost: 1001.0Finished,  Duration: 1.33s.
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/SIMPLE_ERSPI/case_008a : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120006.678433>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/SIMPLE_ERSPI/case_008b : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120000.833122>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/SIMPLE_ERSPI/case_008c : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120000.662477>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/SIMPLE_ERSPI/case_018 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 233198.343793>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/SIMPLE_ERSPI/case_018a : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 128524.151204>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/SIMPLE_ERSPI/case_018b : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 219878.286626>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/bio/SIMPLE_ERSPI/case_018c : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 137999.592737>120000.0
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/generated/BLACKBOX_rel_5x3_1_bindings+0.5_freeacc_dep_3x3_query_GUARDED_3 : No previous plan found.Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/generated/BLACKBOX_rel_5x3_1_bindings+1.0_freeacc_dep_3x3_query_GUARDED_3 : No previous plan found.Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/generated/SIMPLE_CONSTANT_rel_5x3_1_bindings+0.5_freeacc_dep_3x3_query_GUARDED_3 : PASSCost: 5.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/generated/SIMPLE_CONSTANT_rel_5x3_1_bindings+1.0_freeacc_dep_3x3_query_GUARDED_3 : PASSCost: 5.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/manual/case_000 : No previous plan found.Finished,  Duration: 0.04s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/manual/case_001 : PASSCost: 3.0Finished,  Duration: 0.73s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/manual/case_002 : No previous plan found.Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/manual/case_003 : PASSCost: 3.0Finished,  Duration: 112.58s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/manual/case_004 : PASSCost: 1.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/manual/case_005 : PASSCost: 1.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/profinfo/example_01 : PASSCost: 2.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/profinfo/example_01b : PASSCost: 2.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/profinfo/example_02 : PASSCost: 4.0Finished,  Duration: 0.05s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/profinfo/example_03 : PASSCost: 2.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/profinfo/example_03b : PASSCost: 2.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/quick/example_01 : PASSCost: 7286.72124178452Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/quick/example_02 : PASSCost: 1981.5510557964276Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/quick/example_03 : PASSCost: 1541.5510557964276Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/quick/example_04 : PASSCost: 11901.89142777261Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/quick/example_05 : PASSCost: 103784.95477555826Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/quick/example_06 : PASSCost: 649.5945713886307Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox/case_001 : PASSCost: 10.1Finished,  Duration: 0.75s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox/case_002 : PASSCost: 4749493.20579017Finished,  Duration: 1.52s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox/case_003 : PASSCost: 388726.7584701342Finished,  Duration: 0.31s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox/case_004 : PASSCost: 441474.50367152935Finished,  Duration: 2.07s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox/case_007 : PASSCost: 23628.781172651914Finished,  Duration: 0.07s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox/case_008 : PASSCost: 23698.781172651914Finished,  Duration: 0.06s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox/case_009 : No previous plan found.Finished,  Duration: 0.05s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox/case_010 : PASSCost: 681718.5152100059Finished,  Duration: 9.11s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox/case_011 : PASSCost: 9736.971259786465Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox/case_014 : PASSCost: 127189.51585920167Finished,  Duration: 0.08s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox/case_016 : PASSCost: 412.6707198598431Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox_db_with/case_001 : PASSCost: 10.1Finished,  Duration: 0.63s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox_db_with/case_002 : PASSCost: 20.74Finished,  Duration: 0.74s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox_db_with/case_003 : PASSCost: 31.92Finished,  Duration: 1.07s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox_db_with/case_004 : PASSCost: 43.06Finished,  Duration: 3.59s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox_db_with/case_005 : PASSCost: 43.06Finished,  Duration: 114.94s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/blackbox_db_with/case_006 : PASSCost: 58.25Finished,  Duration: 8.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs/case_002 : PASSCost: 112672.14021402474Finished,  Duration: 0.1s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs/case_003 : PASSCost: 7984.00824227289Finished,  Duration: 0.1s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs/case_004 : PASSCost: 7984.00824227289Finished,  Duration: 0.17s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs/case_005 : PASSCost: 7984.00824227289Finished,  Duration: 2.22s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs/case_006 : PASSCost: 1160.383688203749Finished,  Duration: 10.16s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs/case_007 : PASSCost: 7984.00824227289Finished,  Duration: 0.08s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs/case_008 : PASSCost: 1556.9733347172757Finished,  Duration: 0.04s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs/case_009 : PASSCost: 7989.00824227289Finished,  Duration: 0.12s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs/case_010 : PASSCost: 4169.079218926643Finished,  Duration: 23.1s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs/case_011 : PASSCost: 84.1415686865115Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs_BLACKBOX_DB/case_001 : PASSCost: 10.1Finished,  Duration: 0.62s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs_BLACKBOX_DB/case_002 : PASSCost: 20.74Finished,  Duration: 0.64s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs_BLACKBOX_DB/case_003 : PASSCost: 43.06Finished,  Duration: 0.81s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs_BLACKBOX_DB/case_004 : PASSCost: 43.06Finished,  Duration: 0.81s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs_BLACKBOX_DB/case_005 : PASSCost: 43.06Finished,  Duration: 1.25s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs_BLACKBOX_DB/case_006 : PASSCost: 58.25Finished,  Duration: 7.15s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs_BLACKBOX_DB/case_007 : PASSCost: 20.74Finished,  Duration: 0.65s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs_BLACKBOX_DB/case_008 : PASSCost: 10.38Finished,  Duration: 0.61s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs_BLACKBOX_DB/case_009 : PASSCost: 42.62Finished,  Duration: 0.87s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs_BLACKBOX_DB/case_010 : PASSCost: 73.55Finished,  Duration: 40.27s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs_BLACKBOX_DB/case_011 : PASSCost: 10.3Finished,  Duration: 0.71s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_inputs_BLACKBOX_DB/case_012 : PASSCost: 20.6Finished,  Duration: 3.07s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_view/case_001 : PASSCost: 7956.00824227289Finished,  Duration: 0.89s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_view/case_002 : PASSCost: 76314.80706077814Finished,  Duration: 5.98s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_view/case_003 : PASSCost: 4334.32091928001Finished,  Duration: 1.29s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_view/case_004 : PASSCost: 58399.25771052774Finished,  Duration: 12.09s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_view/case_005 : PASSCost: 29188.483871860168Finished,  Duration: 16.89s.
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_view/case_006 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 137883.218101>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_view/case_007 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 172713.796338>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_view/case_008 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 121454.328345>120000.0
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_view/case_009 : PASSCost: 346827.2234785033Finished,  Duration: 4.24s.
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_view/std_002 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120010.464627>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_view/std_006 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120016.793986>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/fk_view/std_014 : Failed: GC overhead limit exceeded
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/simple/case_001 : PASSCost: 1.0Finished,  Duration: 0.01s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/simple/case_002 : PASSCost: 25.0Finished,  Duration: 3.73s.
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/simple/case_003 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 123025.035973>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/simple/case_004 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 434502.167128>120000.0
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/simple/case_007 : PASSCost: 1.0Finished,  Duration: 0.02s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/simple/case_008 : PASSCost: 15.0Finished,  Duration: 0.03s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/simple/case_009 : No previous plan found.Finished,  Duration: 0.04s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/simple/case_010 : PASSCost: 4.0Finished,  Duration: 0.37s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/simple/case_011 : PASSCost: 10.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/simple/case_012 : PASSCost: 5.0Finished,  Duration: 0.25s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/simple/case_013 : PASSCost: 1.0Finished,  Duration: 0s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/simple/case_014 : PASSCost: 20.0Finished,  Duration: 0.07s.
+SUCC/home/gabor/git/pdq/regression/test/planner/dag/fast/tpch/simple/case_016 : PASSCost: 2.0Finished,  Duration: 0s.
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/benchmark/case_007 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 215830.455074>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/benchmark/case_010 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 144086.025694>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/benchmark/case_011 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120870.655236>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/benchmark/case_012 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120000.176413>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/benchmark/case_013 : Failed: uk.ac.ox.cs.pdq.util.LimitReachedException: Planning timeout reached: 120021.030924>120000.0
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/benchmark/std_002 : Failed: java.lang.IllegalArgumentException
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/benchmark/std_005 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/benchmark/std_005/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/benchmark/std_008 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/benchmark/std_008/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_002a : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_002a/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_009a : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_009a/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_009b : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_009b/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_010a : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_010a/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_010b : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_010b/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_010c : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_010c/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_015a : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_015a/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_019a : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/BLACKBOX/case_019a/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_009a : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_009a/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_009b : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_009b/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_010a : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_010a/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_010b : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_010b/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_010c : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_010c/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_012a : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_012a/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_015a : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_015a/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_019a : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/case_019a/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/site : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/bio/SIMPLE_ERSPI/site/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/blackbox/case_005 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/blackbox/case_005/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/blackbox/case_006 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/blackbox/case_006/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/blackbox/case_012 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/blackbox/case_012/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/blackbox/case_013 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/blackbox/case_013/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/blackbox/case_015 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/blackbox/case_015/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/blackbox_db_with/case_010 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/blackbox_db_with/case_010/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/fk_inputs/case_001 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/fk_inputs/case_001/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/fk_inputs/case_010 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/fk_inputs/case_010/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/fk_inputs/case_012 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/fk_inputs/case_012/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/fk_view/case_010 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/fk_view/case_010/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/fk_view/std_005 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/fk_view/std_005/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/fk_view/std_012 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/fk_view/std_012/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/fk_view/std_020 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/fk_view/std_020/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/simple/case_005 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/simple/case_005/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/simple/case_006 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/simple/case_006/schema.xml
+FAIL/home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/simple/case_015 : Failed: Error while parsing file: /home/gabor/git/pdq/regression/test/planner/dag/slow/tpch/simple/case_015/schema.xml
+regression test finished successfully

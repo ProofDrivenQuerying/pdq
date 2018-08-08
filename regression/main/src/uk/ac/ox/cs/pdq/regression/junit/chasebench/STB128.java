@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.regression.junit.chasebanch;
+package uk.ac.ox.cs.pdq.regression.junit.chasebench;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +24,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
 
 /**
- * The test case called "Ontology-256" from the chasebench project.
+ * The test case called "STB-128" from the chasebench project.
  * <pre>
  * Current test result (on a laptop):
  *   - case : Can't parse input files.  
@@ -34,7 +34,7 @@ import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
  * @author Gabor
  *
  */
-public class Ontology256 {
+public class STB128 {
 	private Schema s = null;
 	Map<String, Relation> relations = new HashMap<>();
 	
@@ -84,20 +84,20 @@ public class Ontology256 {
 		}
 	}
 	private Schema createSchema() {
-		File schemaDir = new File("test//chaseBench//Ontology-256//schema");
-		File dependencyDir = new File("test//chaseBench//Ontology-256//dependencies");
-		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//Ontology-256.s-schema.txt");
-		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//Ontology-256.t-schema.txt");
+		File schemaDir = new File("test//chaseBench//STB-128//schema");
+		File dependencyDir = new File("test//chaseBench//STB-128//dependencies");
+		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//STB-128.s-schema.txt");
+		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//STB-128.t-schema.txt");
 		relations.putAll(tables);
 		relations.putAll(tables1);
-		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//Ontology-256.st-tgds.txt");
-		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//Ontology-256.t-tgds.txt"));
-		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//Ontology-256.t-egds.txt"));
+		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//STB-128.st-tgds.txt");
+		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//STB-128.t-tgds.txt"));
+		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//STB-128.t-egds.txt"));
 		return new Schema(relations.values().toArray(new Relation[relations.size()]), dependencies.toArray(new Dependency[dependencies.size()]));
 		
 	}
 	private Collection<Atom> getTestFacts() {
-		File dataDir = new File("test//chaseBench//Ontology-256//data");
+		File dataDir = new File("test//chaseBench//STB-128//data");
 		Collection<Atom> facts = new ArrayList<>();
 		for (File f: dataDir.listFiles()) {
 			if (f.getName().endsWith(".csv")) {
@@ -112,7 +112,7 @@ public class Ontology256 {
 		return facts;
 	}
 	private Collection<ConjunctiveQuery> getTestQueries() throws IOException {
-		File dataDir = new File("test//chaseBench//Ontology-256//queries");
+		File dataDir = new File("test//chaseBench//STB-128//queries");
 		Collection<ConjunctiveQuery> facts = new ArrayList<>();
 		Map<String, Relation> relations = new HashMap<>();
 		for (Relation r: s.getRelations()) {

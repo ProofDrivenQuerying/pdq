@@ -345,13 +345,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 			Iterator<Atom> iterator = pair.getRight().iterator();
 			while (iterator.hasNext()) {
 				Atom fact = iterator.next();
-				Predicate predicate = null;
-//				if(fact.getPredicate() instanceof Relation) {
-//					Relation relation = (Relation) fact.getPredicate();
-//					predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality());
-//				}
-//				else 
-					predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getPredicate().getArity());
+				Predicate predicate =  Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getPredicate().getArity());
 				Atom accessedFact = Atom.create(predicate, fact.getTerms());
 				Collection<Term> inputTerms = uk.ac.ox.cs.pdq.util.Utility.getTerms(accessedFact,axiom.getAccessMethod().getInputs());
 				if(!facts.contains(accessedFact) && accessibleTerms.keySet().containsAll(inputTerms)) {

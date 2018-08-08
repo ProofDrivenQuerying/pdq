@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.regression.junit.chasebanch;
+package uk.ac.ox.cs.pdq.regression.junit.chasebench;
 
 import java.io.File;
 import java.io.FileNotFoundException;

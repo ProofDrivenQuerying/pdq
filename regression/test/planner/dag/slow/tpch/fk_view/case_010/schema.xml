@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <schema>
     <sources>
-        <source database="tpch_0001" discoverer="uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer" driver="org.postgresql.Driver" name="tpch" password="root" url="jdbc:postgresql://localhost/" username="root"/>
+        <source database="tpch" discoverer="uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer" driver="org.postgresql.Driver" name="tpch" password="root" url="jdbc:postgresql://localhost/" username="postgres"/>
     </sources>
     <relations>
         <relation name="nation" source="tpch">

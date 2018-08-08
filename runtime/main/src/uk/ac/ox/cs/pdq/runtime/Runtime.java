@@ -2,11 +2,10 @@ package uk.ac.ox.cs.pdq.runtime;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
-import uk.ac.ox.cs.pdq.datasources.resultstable.Result;
-import uk.ac.ox.cs.pdq.datasources.resultstable.Table;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
+import uk.ac.ox.cs.pdq.util.Table;
 
 /**
  *  Decorates a plan, and executes queries or the plan itself. 
@@ -48,7 +47,7 @@ public class Runtime {
 	 * @throws EvaluationException
 	 *             the evaluation exception
 	 */
-	public Result evaluatePlan(RelationalTerm p) throws Exception {
+	public Table evaluatePlan(RelationalTerm p) throws Exception {
 		AccessRepository repo = this.repository;
 		if (repo == null)
 				repo = AccessRepository.getRepository();

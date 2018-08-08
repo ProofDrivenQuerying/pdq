@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
+
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
@@ -109,7 +110,7 @@ public class PlanCreationUtility {
 				RelationalTerm op2 = RenameTerm.create(renamings, access); 		
 				Condition filteringConditions = PlanCreationUtility.createFilteringConditions(exposedFact.getTerms());
 				if (filteringConditions != null && ! checkEquality(filteringConditions, access.getInputConstants())) {
-					op2 = SelectionTerm.create(filteringConditions, op1);
+					op2 = SelectionTerm.create(filteringConditions, op2);
 				}
 				op1 = JoinTerm.create(op1, op2);
 			}
@@ -229,7 +230,11 @@ public class PlanCreationUtility {
 		for (int index = 0; index < freeVariables.length; ++index)  {
 			Constant constant = ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().get(query).get(freeVariables[index]);
 			Attribute attribute = Attribute.create(variableTypes[index], ((UntypedConstant)constant).getSymbol());
-			Preconditions.checkArgument(Arrays.asList(plan.getOutputAttributes()).contains(attribute));
+			if (! Arrays.asList(plan.getOutputAttributes()).contains(attribute)) {
+				//PlanPrinter.openPngPlan(plan);
+				System.out.println("Invalid plan!" + plan.getOutputAttributes() + " should contain " + attribute +" but it doesn't.");
+				Preconditions.checkArgument(Arrays.asList(plan.getOutputAttributes()).contains(attribute));
+			}
 			projections.add(attribute);
 		}
 		return ProjectionTerm.create(projections.toArray(new Attribute[projections.size()]), plan);

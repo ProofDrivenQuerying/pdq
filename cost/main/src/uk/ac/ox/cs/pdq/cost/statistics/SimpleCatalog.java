@@ -124,8 +124,8 @@ public class SimpleCatalog implements Catalog{
 			}
 			bufferedReader.close();            
 		}
-		catch(FileNotFoundException ex) {      
-			ex.printStackTrace(System.out);
+		catch(FileNotFoundException ex) {
+			System.out.println("Warning, no catalog.properties found in " + fileName);
 		}
 		catch(IOException ex) {
 			ex.printStackTrace(System.out);

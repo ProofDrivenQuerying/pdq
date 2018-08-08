@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.resultstable;
+package uk.ac.ox.cs.pdq.runtime;
 
 /**
  * Common interface to things that can be differentiated, i.e. tell whether two

@@ -30,9 +30,9 @@ import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
-import uk.ac.ox.cs.pdq.datasources.resultstable.Result;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -49,6 +49,7 @@ import uk.ac.ox.cs.pdq.regression.acceptance.SameCostAcceptanceCheck;
 import uk.ac.ox.cs.pdq.runtime.Runtime;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
+import uk.ac.ox.cs.pdq.util.Table;
 
 /**
  * Main entry point to use PDQ. Runs regression tests or other folders with schema and query xml files.<br>
@@ -108,6 +109,11 @@ public class PDQ {
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 
 	private FileWriter stats = null;
+
+	/**
+	 * Prints the first created plan as a png image and opens it in a new window.
+	 */
+	private boolean printPlan=false;
 	/**
 	 * Main functionality of this class. 
 	 */
@@ -153,7 +159,10 @@ public class PDQ {
 					ExplorationSetUp planner = new ExplorationSetUp(plParams, costParams, reasoningParams, databaseParams, schema);
 					observation = planner.search(query);
 					double duration = (System.currentTimeMillis() - start) / 1000.0;
-
+					if (printPlan && observation!=null) {
+						printPlan = false;
+						PlanPrinter.openPngPlan(observation.getKey());
+					}
 					DecimalFormat myFormatter = new DecimalFormat("####.##");
 					String duration_s = " Duration: " + myFormatter.format(duration) + "s.";				
 
@@ -168,16 +177,27 @@ public class PDQ {
 						try {
 							expectedPlan = CostIOManager.readRelationalTermFromRelationaltermWithCost(expectedPlanFile, schema);
 							expectedCost = CostIOManager.readRelationalTermCost(expectedPlanFile, schema);
-							results = acceptance.check(new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation);
-							results.report(this.out);
-							stats+=results.report();
-							isFailed = results.getLevel() == AcceptanceLevels.FAIL;
+							if (observation==null) {
+								String msg = "FAIL: No new plan, while old exists."; 
+								System.out.println(msg);
+								stats+=msg;
+								isFailed = true;
+							} else {
+								results = acceptance.check(
+										new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation);
+								results.report(this.out);
+								stats+=results.report();
+								isFailed = results.getLevel() == AcceptanceLevels.FAIL;
+							}
 						} catch(Throwable t) {
 							t.printStackTrace();
 							stats+="Failed to read previous plan: " + t.getMessage() ;
 						}
 					} else {
-						System.out.println("No previous plan found.");
+						if (observation==null)
+							System.out.println("No previous or current plan result.");
+						else
+							System.out.println("No previous plan found, but there is a new plan");
 						stats+="No previous plan found.";
 					}
 					if (observation != null && (expectedPlan == null || expectedCost.greaterThan(observation.getValue())) ) {
@@ -214,7 +234,7 @@ public class PDQ {
 					File accesses = new File(directory, runtimeParams.getAccessDirectory());
 					runtime.setAccessRepository(AccessRepository.getRepository(accesses.getAbsolutePath()));
 
-					Result results = null;
+					Table results = null;
 
 					if(mode.equals(Modes.full)) {
 						if (observation.getKey() == null) 
@@ -249,7 +269,7 @@ public class PDQ {
 				e.printStackTrace();
 				stats+= "Failed: " + e.getMessage();				
 				stats = "FAIL" + stats;
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				e.printStackTrace();
 				stats+= "Failed: " + e.getMessage();				
 				stats = "FAIL" + stats;
@@ -367,7 +387,7 @@ public class PDQ {
 			jc.usage();
 			return;
 		}
-		File folder = new File("TestResults");
+		File folder = new File("TestResults/current");
 		folder.mkdirs();
 		File statsFile = new File(folder,"summary"+System.currentTimeMillis() + ".txt");
 		System.out.println("Creating log file: " + statsFile.getAbsolutePath());

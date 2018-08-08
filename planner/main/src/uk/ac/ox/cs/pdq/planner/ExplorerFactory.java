@@ -179,6 +179,20 @@ public class ExplorerFactory {
 					chaser,
 					connection,
 					costEstimator,
+					successDominance, 
+					filter,
+					validators,
+					parameters.getMaxDepth());
+		case DAG_GENERIC_SIMPLE:
+			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGenericSimple(
+					eventBus,
+					parameters,
+					query, 
+					accessibleQuery,
+					accessibleSchema, 
+					chaser,
+					connection,
+					costEstimator,
 					successDominance,
 					filter,
 					validators,
