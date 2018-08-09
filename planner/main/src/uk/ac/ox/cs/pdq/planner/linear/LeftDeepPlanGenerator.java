@@ -25,7 +25,7 @@ public class LeftDeepPlanGenerator {
 		for (T node: nodes) {
 			RelationalTerm op1 = PlanCreationUtility.createSingleAccessPlan(node.getConfiguration().getRule().getBaseRelation(), node.getConfiguration().getRule().getAccessMethod(), node.getConfiguration().getFacts());
 			if(parentPlan != null)
-				parentPlan = PlanCreationUtility.createPlan(parentPlan,op1);
+				parentPlan = PlanCreationUtility.createJoinPlan(parentPlan,op1);
 			else 
 				parentPlan = op1;
 		}

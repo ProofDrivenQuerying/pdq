@@ -54,7 +54,7 @@ public class TestPlanCreationUtility extends PdqTest {
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
 		exposedFacts2.add(fact2);
 		RelationalTerm plan11 = PlanCreationUtility.createSingleAccessPlan(this.Si, this.method1, exposedFacts2);
-		RelationalTerm plan2 = PlanCreationUtility.createPlan(plan1, plan11);
+		RelationalTerm plan2 = PlanCreationUtility.createJoinPlan(plan1, plan11);
 		Assert.assertEquals(0, plan2.getInputAttributes().length);
 		Assert.assertEquals(5, plan2.getOutputAttributes().length);
 
@@ -83,12 +83,12 @@ public class TestPlanCreationUtility extends PdqTest {
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
 		exposedFacts2.add(fact2);
 		RelationalTerm plan11 = PlanCreationUtility.createSingleAccessPlan(this.Si, this.method1, exposedFacts2);
-		RelationalTerm plan2 = PlanCreationUtility.createPlan(plan1, plan11);
+		RelationalTerm plan2 = PlanCreationUtility.createJoinPlan(plan1, plan11);
 
 		Set<Atom> exposedFacts3 = new LinkedHashSet<>();
 		exposedFacts3.add(fact3);
 		RelationalTerm plan21 = PlanCreationUtility.createSingleAccessPlan(this.Ti, this.method2, exposedFacts3);
-		RelationalTerm plan3 = PlanCreationUtility.createPlan(plan2, plan21);
+		RelationalTerm plan3 = PlanCreationUtility.createJoinPlan(plan2, plan21);
 
 		Assert.assertEquals(0, plan3.getInputAttributes().length);
 		Assert.assertEquals(8, plan3.getOutputAttributes().length);
@@ -120,7 +120,7 @@ public class TestPlanCreationUtility extends PdqTest {
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
 		exposedFacts2.add(fact2);
 		RelationalTerm plan11 = PlanCreationUtility.createSingleAccessPlan(this.Si, this.method0, exposedFacts2);
-		RelationalTerm plan2 = PlanCreationUtility.createPlan(plan1, plan11);
+		RelationalTerm plan2 = PlanCreationUtility.createJoinPlan(plan1, plan11);
 
 		Assert.assertEquals(0, plan2.getInputAttributes().length);
 		Assert.assertEquals(5, plan2.getOutputAttributes().length);
@@ -153,12 +153,12 @@ public class TestPlanCreationUtility extends PdqTest {
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
 		exposedFacts2.add(fact2);
 		RelationalTerm plan11 = PlanCreationUtility.createSingleAccessPlan(this.Si, this.method0, exposedFacts2);
-		RelationalTerm plan2 = PlanCreationUtility.createPlan(plan1, plan11);
+		RelationalTerm plan2 = PlanCreationUtility.createJoinPlan(plan1, plan11);
 
 		Set<Atom> exposedFacts3 = new LinkedHashSet<>();
 		exposedFacts3.add(fact3);
 		RelationalTerm plan21 = PlanCreationUtility.createSingleAccessPlan(this.Ti, this.method0, exposedFacts3);
-		RelationalTerm plan3 = PlanCreationUtility.createPlan(plan2, plan21);
+		RelationalTerm plan3 = PlanCreationUtility.createJoinPlan(plan2, plan21);
 
 		Assert.assertEquals(0, plan3.getInputAttributes().length);
 		Assert.assertEquals(8, plan3.getOutputAttributes().length);
@@ -190,7 +190,7 @@ public class TestPlanCreationUtility extends PdqTest {
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
 		exposedFacts2.add(fact2);
 		RelationalTerm plan11 = PlanCreationUtility.createSingleAccessPlan(this.Si, this.method1, exposedFacts2);
-		RelationalTerm plan2 = PlanCreationUtility.createPlan(plan1, plan11);
+		RelationalTerm plan2 = PlanCreationUtility.createJoinPlan(plan1, plan11);
 
 		Assert.assertEquals(0, plan2.getInputAttributes().length);
 		Assert.assertEquals(5, plan2.getOutputAttributes().length);
@@ -222,7 +222,7 @@ public class TestPlanCreationUtility extends PdqTest {
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
 		exposedFacts2.add(fact2);
 		RelationalTerm plan11 = PlanCreationUtility.createSingleAccessPlan(this.Si, this.method1, exposedFacts2);
-		RelationalTerm plan2 = PlanCreationUtility.createPlan(plan1, plan11);
+		RelationalTerm plan2 = PlanCreationUtility.createJoinPlan(plan1, plan11);
 
 		Assert.assertEquals(0, plan2.getInputAttributes().length);
 		Assert.assertEquals(5, plan2.getOutputAttributes().length);
@@ -255,7 +255,7 @@ public class TestPlanCreationUtility extends PdqTest {
 		exposedFacts2.add(fact2);
 		RelationalTerm plan11 = PlanCreationUtility.createSingleAccessPlan(this.Si, this.method1, exposedFacts2);
 
-		RelationalTerm plan2 = PlanCreationUtility.createPlan(plan1, plan11);
+		RelationalTerm plan2 = PlanCreationUtility.createJoinPlan(plan1, plan11);
 		Assert.assertEquals(0, plan2.getInputAttributes().length);
 		Assert.assertEquals(5, plan2.getOutputAttributes().length);
 		Assert.assertTrue(Arrays.asList(plan2.getOutputAttributes()).toString().contains("c1, c2, 21, 22, c2"));
@@ -287,7 +287,7 @@ public class TestPlanCreationUtility extends PdqTest {
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
 		exposedFacts2.add(fact2);
 		RelationalTerm plan11 = PlanCreationUtility.createSingleAccessPlan(this.Si, this.method2, exposedFacts2);
-		RelationalTerm plan2 = PlanCreationUtility.createPlan(plan11, plan1);
+		RelationalTerm plan2 = PlanCreationUtility.createJoinPlan(plan11, plan1);
 
 		Assert.assertEquals(1, plan2.getInputAttributes().length);
 		Assert.assertEquals(Attribute.create(Integer.class, "c2"), plan2.getInputAttributes()[0]);

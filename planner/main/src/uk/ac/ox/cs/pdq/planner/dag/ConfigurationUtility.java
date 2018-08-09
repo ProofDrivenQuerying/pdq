@@ -219,7 +219,7 @@ public class ConfigurationUtility {
 		if (isNonTrivial(left, right)) {
 			if(bestPlan == null) 
 				return true;
-			RelationalTerm plan = PlanCreationUtility.createPlan(left.getPlan(), right.getPlan());
+			RelationalTerm plan = PlanCreationUtility.createJoinPlan(left.getPlan(), right.getPlan());
 			Cost cost = costEstimator.cost(plan);
 			return !successDominance.isDominated(plan, cost, bestPlan, costOfBestPlan);
 		}
