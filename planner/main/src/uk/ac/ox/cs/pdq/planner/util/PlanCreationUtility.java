@@ -216,8 +216,7 @@ public class PlanCreationUtility {
 	 */
 	private static Type[] computeVariableTypes(ConjunctiveQuery query,Schema schema) {
 		Variable[] freeVariables = query.getFreeVariables();
- //TOCOMMENT: Class</>?
-		Type[] types = new Class<?>[query.getFreeVariables().length];
+		Type[] types = new Type[query.getFreeVariables().length];
 		boolean assigned = false;
 		for (int i = 0, l = types.length; i < l; i++) {
 			assigned = false;
