@@ -9,8 +9,8 @@ import com.google.common.eventbus.Subscribe;
 import uk.ac.ox.cs.pdq.util.EventHandler;
 
 /**
- * A dynamic statistics logger allows logging data point as key-value pair,
- * i.e. without prior knowledge of what is to be logged.
+ * A logger that allows logging data point as key-value pair,
+ * Dynamice in the sense that it is ithout prior knowledge of what is to be logged.
  * The class also offers some facilities to increment value that are numeric.
  *
  * @author Julien Leblay
