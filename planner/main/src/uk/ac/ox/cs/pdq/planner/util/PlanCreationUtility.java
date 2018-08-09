@@ -74,7 +74,7 @@ public class PlanCreationUtility {
 			return JoinTerm.create(left, right);
 	}
 
-	 *Creates a single access plans
+	 /*Creates a single access plans
 	 * @param relation: the relation being accessed the c
 	 * @param accessMethod the access being used
 	 * @exposedFacts: the facts being exposed by the access: used in order to name the attributes in the output
