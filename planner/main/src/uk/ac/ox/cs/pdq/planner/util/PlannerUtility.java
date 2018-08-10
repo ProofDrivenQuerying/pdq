@@ -25,11 +25,16 @@ import uk.ac.ox.cs.pdq.util.Utility;
 public class PlannerUtility {
 
 	/**
-	 * Gets the input constants.
+	 * Given a set of facts F=F1.... on the same relation R,
+	 * and an accessibility axiom on R, corresponding to performing a particular access method mt
+	 * on R; find the constants that lie within the input positions of each Fi for mt 
 	 *
-	 * @param rule the rule
+	 * TOCOMMENT: It seems like we only get untyped constants. Why?
+	 * TOCOMMENT: should we have an assert that checks that all facts use the correct relation
+	 *  
+	 * @param rule the accessibility axiom for some method being fired
 	 * @param facts the facts
-	 * @return the constants of the input facts that correspond to the input positions of the rule
+	 * @return the constants of the input facts that correspond to the input positions of the method
 	 */
 	public static Collection<Constant> getInputConstants(AccessibilityAxiom rule, Set<Atom> facts) {
 		Collection<Constant> inputs = new LinkedHashSet<>();
@@ -45,9 +50,9 @@ public class PlannerUtility {
 	}
 
 	/**
-	 * Gets the input constants.
+	 * Gets the constants lying in input positions of a given metho from a single fact
 	 *
-	 * @param accessMethod the binding
+	 * @param accessMethod a method on the relations of a fact
 	 * @param fact the fact
 	 * @return the constants in the input positions of the given fact
 	 */
@@ -60,8 +65,9 @@ public class PlannerUtility {
 	 * Gets the constants lying at the input positions.
 	 *
 	 * @throws IllegalArgumentException if there is a non-constant at one of the input positions
-	 * @param positions List<Integer>
-	 * @return the List<Constant> at the given positions.
+	 * @param atom the atom where we want some values
+	 * @param positions  the positions we are interested in
+	 * @return the constnats at the given positions.
 	 */
 	public static List<Constant> getTypedAndUntypedConstants(Atom atom, Integer[] positions) {
 		List<Constant> result = new ArrayList<>();
@@ -75,9 +81,9 @@ public class PlannerUtility {
 	}
 
 	/**
-	 * Accessible.
+	 * Change a conjunctive query Q to its "accessible version" infaccQ
 	 *
-	 * @param <Q> the generic type
+	 * 
 	 * @param query the query
 	 * @return the accessible query
 	 * @see uk.ac.ox.cs.pdq.fol.Query#createAccessibleQuery(AccessibleSchema)
@@ -87,11 +93,6 @@ public class PlannerUtility {
 		for (int atomIndex = 0; atomIndex < query.getNumberOfAtoms(); ++atomIndex) {
 			Atom queryAtom = query.getAtom(atomIndex);
 			Predicate predicate = null;
-//			if(queryAtom.getPredicate() instanceof Relation) {
-//				Relation relation = schema.getRelation(queryAtom.getPredicate().getName());
-//				predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality());
-//			}
-//			else 
 				predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + queryAtom.getPredicate().getName(), queryAtom.getPredicate().getArity());
 			atoms[atomIndex] = Atom.create(predicate, queryAtom.getTerms());
 		}
