@@ -50,7 +50,7 @@ public class PlannerUtility {
 	}
 
 	/**
-	 * Gets the constants lying in input positions of a given metho from a single fact
+	 * Gets the constants lying in input positions of a given method from a single fact
 	 *
 	 * @param accessMethod a method on the relations of a fact
 	 * @param fact the fact
@@ -67,7 +67,7 @@ public class PlannerUtility {
 	 * @throws IllegalArgumentException if there is a non-constant at one of the input positions
 	 * @param atom the atom where we want some values
 	 * @param positions  the positions we are interested in
-	 * @return the constnats at the given positions.
+	 * @return the constants at the given positions.
 	 */
 	public static List<Constant> getTypedAndUntypedConstants(Atom atom, Integer[] positions) {
 		List<Constant> result = new ArrayList<>();
