@@ -19,15 +19,15 @@ public class ExplorerUtils {
 	 * @param dominance 		A list of objects that perform dominance checks
 	 * @param targets the targets
 	 * @param source the source
-	 * @return 		the target configuration that dominates the source
+	 * @return 		true if there is a target configuration that dominates the source
 	 */
-	public static DAGChaseConfiguration isDominated(Dominance[] dominance, Collection<DAGChaseConfiguration> targets, DAGChaseConfiguration source) {
+	public static Boolean isDominated(Dominance[] dominance, Collection<DAGChaseConfiguration> targets, DAGChaseConfiguration source) {
 		for(DAGChaseConfiguration target:targets) {
 			if(ConfigurationUtility.isDominatedBy(dominance, target, source)) {
-				return target;
+				return true;
 			}
 		}
-		return null;
+		return false;
 	}
 
 }
