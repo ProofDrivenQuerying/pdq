@@ -71,7 +71,7 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
-	 * Put.
+	 * Insert into the graph
 	 *
 	 * @param dependency IC
 	 * @param sources Collection<PredicateFormula>
@@ -91,12 +91,12 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
-	 * Put.
+	 * Variation of put for singleton inputs rather than collections
 	 *
 	 * @param dependency IC
 	 * @param source PredicateFormula
 	 * @param target PredicateFormula
-	 * @see uk.ac.ox.cs.pdq.planner.util.FiringGraph#put(Dependency, Atom, Atom, boolean)
+	 * @see uk.ac.ox.cs.pdq.planner.util.FiringGraph#put(Dependency, Atom, Atom)
 	 */
 	@Override
 	public void put(Dependency dependency, Atom source, Atom target) {
@@ -192,7 +192,7 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
-	 * Gets the fact provenance.
+	 * Gets the fact's provenance.
 	 *
 	 * @param fact PredicateFormula
 	 * @return Pair<IC,Collection<PredicateFormula>>
@@ -247,7 +247,7 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
-	 * Gets the fact provenance.
+	 * Gets the fact's provenance.
 	 *
 	 * @return Map<PredicateFormula,Pair<IC,Collection<PredicateFormula>>>
 	 * @see uk.ac.ox.cs.pdq.planner.util.FiringGraph#getFactProvenance()
