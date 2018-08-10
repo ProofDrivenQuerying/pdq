@@ -45,7 +45,7 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * Gets the apply rules.
+	 * Gets the apply rule configurations that lie within a given configuration.
 	 *
 	 * @param configuration the configuration
 	 * @return 		the ApplyRule sub-configurations of the input configuration
@@ -62,7 +62,7 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * TOCOMMENT: WHAT IS THIS
+	 * 
 	 *
 	 * @param configuration the configuration
 	 * @return 		the subconfigurations of the input configuration
@@ -80,7 +80,7 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * TOCOMMENT: WHAT DOES IT MEAN
+	 * TOCOMMENT: THE COMMENT AND THE CODE DO NOT MATCH, SO SOMETHING HAS TO CHANGE
 	 *
 	 * @param left the left
 	 * @param right the right
@@ -94,7 +94,7 @@ public class ConfigurationUtility {
 		if (left.equals(right))
 			return false;
 		
-		// Julien: Commented out -> not part of the definition of non-trivial
+		
 		Collection<ApplyRule> leftApplyRules = left.getApplyRules();
 		Collection<ApplyRule> rightApplyRules = right.getApplyRules();
 		for (ApplyRule leftApplyRule:leftApplyRules) {
@@ -174,7 +174,8 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * Gets the potential.
+	 * Tells whether the plan is a potential new best plan.
+	 * TOCOMMENT: IS THAT WHY THE NAME IS WHAT IT IS?
 	 *
 	 * @param configuration the configuration
 	 * @param bestPlan Best plan found so far
@@ -187,10 +188,10 @@ public class ConfigurationUtility {
 	
 	/**
 	 *
-	 * @param dominance the dominance
+	 * @param dominance the detector of dominance
 	 * @param target the target
 	 * @param source the source
-	 * @return true if this configuration is dominated by the input one
+	 * @return true if the source configuration is dominated by the target one
 	 */
 	public static boolean isDominatedBy(Dominance[] dominance, DAGChaseConfiguration target, DAGChaseConfiguration source) {
 		for(Dominance detector:dominance) {
