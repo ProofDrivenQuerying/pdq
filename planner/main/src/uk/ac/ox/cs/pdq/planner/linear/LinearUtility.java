@@ -24,21 +24,11 @@ import uk.ac.ox.cs.pdq.util.Utility;
  */
 public class LinearUtility {
 
-	/**
-	 *
-	 * @param exposed the exposed
-	 * @return 		the input constants of the input candidate facts
-	 */
-	public static Collection<Constant> getInputConstants(Set<Candidate> exposed) {
-		Preconditions.checkNotNull(exposed);
-		Preconditions.checkArgument(exposed.size() > 0);
-		Candidate candidate = exposed.iterator().next();
-		return PlannerUtility.getInputConstants(candidate.getRule(), Sets.newHashSet(candidate.getFact()));
-	}
+	
 	
 	/**
 	 *
-	 * @param candidates the candidates
+	 * @param candidates a set of Candidates (facts whose input constants are accessible)
 	 * @return 		the output constants of the input candidate facts
 	 */
 	public static Collection<Constant> getOutputConstants(Set<Candidate> candidates) {
@@ -53,7 +43,7 @@ public class LinearUtility {
 	 *
 	 * @param <T> the generic type
 	 * @param tree 		the input node tree
-	 * @param ids the ids
+	 * @param ids a set of numbers that should be ids of nodes in the tree
 	 * @return 		a sequence of nodes having the input node ids
 	 */
 	public static <T extends SearchNode> List<T> createPath(IndexedDirectedGraph<T> tree, List<Integer> ids){
