@@ -182,8 +182,8 @@ public class ServiceXmlTest {
 			for(int i = 0; i < sr.getAccessMethod().length; i++)
 			{
 				RESTExecutableAccessMethodSpecification am = sr.getAccessMethod()[i];
-				TupleType tupleType = TupleType.DefaultFactory.createFromTyped();
-				Tuple input = tupleType.createTuple();
+				TupleType tupleType = TupleType.DefaultFactory.createFromTyped(Attribute.create(String.class, "temp1"));
+				Tuple input = tupleType.createTuple("1");
 				RESTAccessMethodGenerator ream = new RESTAccessMethodGenerator(sgr, sr, am);
 				Table t = ream.getRestAccessMethod().accessTable(input);
 				System.out.println(t);
