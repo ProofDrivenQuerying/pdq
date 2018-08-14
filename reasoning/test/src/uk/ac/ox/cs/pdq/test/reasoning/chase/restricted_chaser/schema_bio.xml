@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema>
 	<sources>
-		<source name="chembl" file="test/reasoning/chase/restricted_chaser/chembl-services.xml"
+		<source name="chembl" file="test/src/uk/ac/ox/cs/pdq/test/reasoning/chase/restricted_chaser/chembl-services.xml"
 			discoverer="uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceReader" />
 			
-		<source name="pubmed" file="test/reasoning/chase/restricted_chaser/pubmed-services.xml"
+		<source name="pubmed" file="test/src/uk/ac/ox/cs/pdq/test/reasoning/chase/restricted_chaser/pubmed-services.xml"
 			discoverer="uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceReader" />
 			
-		<source name="uniprot" file="test/reasoning/chase/restricted_chaser/uniprot-services.xml"
+		<source name="uniprot" file="test/src/uk/ac/ox/cs/pdq/test/reasoning/chase/restricted_chaser/uniprot-services.xml"
 			discoverer="uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceReader" />
 			
-		<source name="reactome" file="test/reasoning/chase/restricted_chaser/reactome-services.xml"
+		<source name="reactome" file="test/src/uk/ac/ox/cs/pdq/test/reasoning/chase/restricted_chaser/reactome-services.xml"
 			discoverer="uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceReader" />
 	</sources>
 	

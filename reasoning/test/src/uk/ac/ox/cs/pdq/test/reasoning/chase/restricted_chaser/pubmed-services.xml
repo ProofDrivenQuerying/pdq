@@ -29,14 +29,14 @@
 	
 	<usage_policies>
 	  <policy name="25_items_per_page"
-	    type="uk.ac.ox.cs.pdq.services.policies.PagingLimit"
+	    type="uk.ac.ox.cs.pdq.datasources.legacy.services.policies.PagingLimit"
 	    limit="25" start-index="1" page-size="s" page-index="i.1" total-items="hitCount"/>
 	</usage_policies>
 	
 	
 	<usage_policies>
 	  <policy name="25_items_per_page_2"
-	    type="uk.ac.ox.cs.pdq.services.policies.PagingLimit"
+	    type="uk.ac.ox.cs.pdq.datasources.legacy.services.policies.PagingLimit"
 	    limit="25" start-index="1" page-size="s" page-index="i2.1" total-items="hitCount"/>
 	</usage_policies>
 	
