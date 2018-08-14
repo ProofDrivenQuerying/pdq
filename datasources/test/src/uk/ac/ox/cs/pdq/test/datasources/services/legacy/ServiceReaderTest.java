@@ -11,7 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.datasources.legacy.services.Service;
-import uk.ac.ox.cs.pdq.datasources.legacy.datasources.legacy.services.ServiceReader;
+import uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceReader;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceRepository;
 import uk.ac.ox.cs.pdq.datasources.resultstable.Table;
 
