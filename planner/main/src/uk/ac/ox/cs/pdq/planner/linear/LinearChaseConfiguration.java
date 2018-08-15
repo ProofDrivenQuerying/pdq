@@ -41,8 +41,8 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	private List<Candidate> candidates;
 	
 	/**  The candidate facts exposed in this configuration. */
-/** TOCOMMENT: WHY WOULD A CANDIDATE BE EXPOSED ALREADY? */
-	private final Set<Candidate> exposedCandidates;
+
+	private final Set<Candidate> newlyExposedCandidates;
 	
 	/** Random engine. Used when selecting candidate facts to expose*/
 	protected final Random random;
@@ -69,7 +69,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		this.random = random;
 		this.rule = candidatesToExpose.iterator().next().getRule();
 		this.facts = new LinkedHashSet<>();
-		this.exposedCandidates = candidatesToExpose;
+		this.newlyExposedCandidates = candidatesToExpose;
 		for (Candidate candidate:candidatesToExpose) {
 			Assert.assertTrue(this.rule.equals(candidate.getRule()));
 			this.facts.add(candidate.getFact());
@@ -99,7 +99,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		this.rule = null;
 		this.facts = null;
 		this.plan = null;
-		this.exposedCandidates = null;
+		this.newlyExposedCandidates = null;
 	}
 
 	/**
@@ -233,6 +233,6 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	}
 
 	public Set<Candidate> getExposedCandidates() {
-		return this.exposedCandidates;
+		return this.newlyExposedCandidates;
 	} 
 }
