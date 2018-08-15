@@ -1,8 +1,4 @@
-Comment:
-
-Available quantities of parts supplied in the America
-
-Query:
+This test has as input the following query:
 
 SELECT p_name, ps_availqty
  FROM part
@@ -12,10 +8,24 @@ SELECT p_name, ps_availqty
   JOIN region ON n_regionkey = r_regionkey
  WHERE r_name = 'AMERICA'
 
-Schema:
+The query runs on a schema where:
 
-part has 9 columns and 200 rows
-partsupp has 5 columns and 700 rows
-supplier has 7 columns and 100 rows
-nation has 4 columns and 25 rows
-region has 3 columns and 5 rows
+- multiple relations include partsupp, supplier, nation and region
+- part has 9 columns and 200 rows
+- partsupp has 5 columns and 700 rows
+- supplier has 7 columns and 100 rows
+- nation has 4 columns and 25 rows
+- region has 3 columns and 5 rows
+
+There are constraints:
+- from partsupp to supplier
+- from partsupp to part
+- from nation to region
+- from supplier to nation
+- from region and nation to region_nation
+
+There is an expected-plan.xml. It has 2 dependent join terms and a join term and the following access terms:
+- partsupp (access method m6)
+- supplier (access method m3)
+- part (access method m2)
+- region_nation (access method m13)

@@ -1,8 +1,4 @@
-Comment:
-
-Customers from the same country, with URGENT orders. Can exploit order_customer view.
-
-Query:
+This test has as input the following query:
 
 SELECT c_name, c_name
  FROM orders
@@ -11,8 +7,16 @@ SELECT c_name, c_name
   JOIN orders ON o_custkey = c_custkey
  WHERE o_orderpriority = '1 - URGENT'
  
+The query runs on the following schema:
+- multiple relations including orders and customer
+- orders has 9 columns and 1500 rows
+- customer has 8 columns and 150 rows
 
-Schema:
+There are constraints:
+- from order to customer
+- from nation and region to region_nation
 
-orders has 9 columns and 1500 rows
-customer has 8 columns and 150 rows
+There is an expected-plan.xml. It has 2 dependent join terms and the following access terms:
+- orders (access method m9)
+- customer (access method m1)
+- region_nation (access method m13)

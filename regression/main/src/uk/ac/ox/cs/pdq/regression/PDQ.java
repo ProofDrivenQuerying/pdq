@@ -306,16 +306,11 @@ public class PDQ {
 	private boolean isLeaf(File directory) {
 		File[] files = directory.listFiles();
 		String caseProperties = "case.properties";
-		boolean found = false;
 		for (File f:files) {
 			if (f.getName().equals(caseProperties))
-				found = true;
-			if(!f.equals(directory)) {
-				if(f.isDirectory() && !"accesses".equalsIgnoreCase(f.getName()) && !"accessesMem".equalsIgnoreCase(f.getName()))  
-					return false;
-			}
+				return true;
 		}
-		return found;
+		return false;
 	}
 
 

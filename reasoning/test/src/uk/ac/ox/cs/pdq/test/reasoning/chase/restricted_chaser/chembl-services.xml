@@ -27,7 +27,7 @@
 	
 	 <usage-policies>
 	  <policy name="1000_items_per_page"
-	    type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+	    type="uk.ac.ox.cs.pdq.datasources.legacy.services.policies.ItemsLimit"
 	    limit="100" start-index="0" page-size="limit" page-index="offset" total-items="total_count"/>
 	 </usage-policies>
 	

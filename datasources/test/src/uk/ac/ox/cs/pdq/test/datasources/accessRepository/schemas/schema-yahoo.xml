@@ -2,7 +2,7 @@
 <schema>
 	<sources>
 		<source name="yahoo" file="test/services/yahoo-services.xml" 
-				discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" />
+				discoverer="uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceReader" />
 	</sources>
 	<relations>
 		<!-- Yahoo Relations -->

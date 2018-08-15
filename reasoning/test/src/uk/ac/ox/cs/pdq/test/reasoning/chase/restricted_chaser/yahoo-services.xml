@@ -15,13 +15,13 @@
 	</input-methods>
 	<usage-policies>
 		<policy name="url_auth"
-				type="uk.ac.ox.cs.pdq.services.policies.URLAuthentication"
+				type="uk.ac.ox.cs.pdq.datasources.legacy.services.policies.URLAuthentication"
 				input-method="appid"/>
 		<policy name="2000_request_per_day"
-				type="uk.ac.ox.cs.pdq.services.policies.RequestAllowance"
+				type="uk.ac.ox.cs.pdq.datasources.legacy.services.policies.RequestAllowance"
 				limit="2000" period="24h"/>
 		<policy name="10_request_per_second"
-				type="uk.ac.ox.cs.pdq.services.policies.RequestAllowance"
+				type="uk.ac.ox.cs.pdq.datasources.legacy.services.policies.RequestAllowance"
 				limit="10" period="1s"/>
 	</usage-policies>
 	<service
@@ -33,7 +33,7 @@
 
 		<policy name="url_auth"/>
 		<policy name="2000_request_per_day"/>
-		<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+		<policy type="uk.ac.ox.cs.pdq.datasources.legacy.services.policies.ItemsLimit"
 				limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
 
 		<static-input name="format" input-method="format"/>
@@ -71,7 +71,7 @@
 
 		<policy name="url_auth"/>
 		<policy name="2000_request_per_day"/>
-		<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+		<policy type="uk.ac.ox.cs.pdq.datasources.legacy.services.policies.ItemsLimit"
 				limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
 
 		<static-input name="format"     input-method="format"/>
@@ -94,7 +94,7 @@
 
 		<policy name="url_auth"/>
 		<policy name="2000_request_per_day"/>
-		<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+		<policy type="uk.ac.ox.cs.pdq.datasources.legacy.services.policies.ItemsLimit"
 				limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
 
 		<static-input name="format"     input-method="format"/>
@@ -175,7 +175,7 @@
 
 		<policy name="url_auth"/>
 		<policy name="2000_request_per_day"/>
-		<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+		<policy type="uk.ac.ox.cs.pdq.datasources.legacy.services.policies.ItemsLimit"
 				limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
 
 		<static-input name="format"     input-method="format"/>
@@ -196,7 +196,7 @@
 
 		<policy name="url_auth"/>
 		<policy name="2000_request_per_day"/>
-		<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+		<policy type="uk.ac.ox.cs.pdq.datasources.legacy.services.policies.ItemsLimit"
 				limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
 
 		<static-input name="format"     input-method="format"/>
@@ -217,7 +217,7 @@
 
 		<policy name="url_auth"/>
 		<policy name="2000_request_per_day"/>
-		<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+		<policy type="uk.ac.ox.cs.pdq.datasources.legacy.services.policies.ItemsLimit"
 				limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
 
 		<static-input name="format"     input-method="format"/>
@@ -238,7 +238,7 @@
 
 		<policy name="url_auth"/>
 		<policy name="2000_request_per_day"/>
-		<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+		<policy type="uk.ac.ox.cs.pdq.datasources.legacy.services.policies.ItemsLimit"
 				limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
 
 		<static-input name="format"     input-method="format"/>

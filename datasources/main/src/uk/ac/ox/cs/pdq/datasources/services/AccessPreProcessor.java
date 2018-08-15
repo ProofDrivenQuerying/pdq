@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.datasources.services;
 
-import com.google.common.eventbus.Subscribe;
-
 
 /**
  * AccessPreProcessor event handler, that is triggered after an access was performed.
@@ -16,6 +14,5 @@ public interface AccessPreProcessor<T> {
 	 *
 	 * @param event the event
 	 */
-	@Subscribe
 	void processAccessRequest(T event) ;
 }
