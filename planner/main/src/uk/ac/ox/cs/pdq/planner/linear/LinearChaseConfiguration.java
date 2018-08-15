@@ -78,7 +78,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		for (Candidate candidate:candidatesToExpose) 
 			matches.add(candidate.getMatch());
 		this.chaseStep(matches);
-		//this.plan = LeftDeepPlanGenerator.createLeftDeepPlan(this.rule.getBaseRelation(), this.rule.getAccessMethod(), this.facts, parent.getPlan());
+		
 		RelationalTerm op1 = PlanCreationUtility.createSingleAccessPlan(this.rule.getBaseRelation(), this.rule.getAccessMethod(), this.facts);
 		if(parent.getPlan() != null)
 			this.plan = PlanCreationUtility.createJoinPlan(parent.getPlan(),op1);
@@ -215,33 +215,6 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		return null;
 	}
 
-//	/**
-//	 * 
-//	 *
-//	 * @param o Object
-//	 * @return boolean
-//	 */
-//	@Override
-//	public boolean equals(Object o) {
-//		if (this == o) {
-//			return true;
-//		}
-//		if (o == null) {
-//			return false;
-//		}
-//		return this.getClass().isInstance(o)
-//				&& this.getState().equals(((LinearChaseConfiguration) o).getState());
-//	}
-//
-//	/**
-//	 * Hash code.
-//	 *
-//	 * @return int
-//	 */
-//	@Override
-//	public int hashCode() {
-//		return Objects.hash(this.getState());
-//	}
 
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#compareTo(uk.ac.ox.cs.pdq.planner.reasoning.Configuration)
