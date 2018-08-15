@@ -2,7 +2,7 @@
 <schema name="Geonames API" description="">
 	<sources>
 		<source name="geonames" file="services/geonames-services.xml"
-			discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" />
+			discoverer="uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceReader" />
 	</sources>
 	<relations>
 		<relation name="GNChildren" source="geonames" size="10000000">

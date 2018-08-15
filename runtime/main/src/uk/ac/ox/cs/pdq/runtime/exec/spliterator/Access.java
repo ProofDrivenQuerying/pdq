@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+
 import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
@@ -35,13 +37,19 @@ public class Access extends UnaryExecutablePlan {
 	public Access(Plan plan, PlanDecorator decorator) {
 		super(plan,decorator);
 		// Check compatibility with the given Plan instance.
-		Preconditions.checkArgument(plan instanceof AccessTerm);
+	//	Preconditions.checkArgument(plan instanceof AccessTerm);
 	}
 
+	private AccessTerm getDecoratedAccess() {
+		if (super.getDecoratedPlan() instanceof AccessTerm) {
+			return (AccessTerm) this.getDecoratedPlan();
+		} 
+		return (AccessTerm) this.getDecoratedPlan().getChild(0);
+	}
+	
 	@Override
 	public UnaryPlanSpliterator spliterator() {
-
-		AccessTerm accessTerm = (AccessTerm) this.getDecoratedPlan();
+		AccessTerm accessTerm = (AccessTerm) this.getDecoratedAccess();
 
 		Spliterator<Tuple> underlying = null;
 		ExecutableAccessMethod aam = (ExecutableAccessMethod) accessTerm.getAccessMethod(); 
@@ -58,7 +66,7 @@ public class Access extends UnaryExecutablePlan {
 		// Case 3: the AccessTerm has inputs.
 		if (accessTerm.getInputAttributes().length != 0) {
 			Preconditions.checkState(this.inputTuples != null && this.inputTuples.hasNext(), 
-					"Missing dynamic input accessing relation: " + ((AccessTerm) this.getDecoratedPlan()).getRelation().getName());
+					"Missing dynamic input accessing relation: " + ((AccessTerm) this.getDecoratedAccess()).getRelation().getName());
 			underlying = aam.access(this.combineInputs()).spliterator();
 		}
 		
@@ -71,7 +79,7 @@ public class Access extends UnaryExecutablePlan {
 	}
 
 	Relation getRelation() {
-		return ((AccessTerm) this.getDecoratedPlan()).getRelation();
+		return ((AccessTerm) this.getDecoratedAccess()).getRelation();
 	}
 
 	@Override
@@ -85,7 +93,7 @@ public class Access extends UnaryExecutablePlan {
 	 * for use in the case where there is no dynamic input.
 	 */
 	private Iterator<Tuple> constantInput() {
-		AccessTerm accessTerm = (AccessTerm) this.getDecoratedPlan();
+		AccessTerm accessTerm = (AccessTerm) this.getDecoratedAccess();
 		Preconditions.checkState(accessTerm.getInputAttributes().length == 0);
 		Preconditions.checkState(accessTerm.getInputConstants().size() != 0);
 
@@ -107,16 +115,16 @@ public class Access extends UnaryExecutablePlan {
 	 */
 	private Iterator<Tuple> combineInputs() {
 
-		AccessTerm accessTerm = (AccessTerm) this.getDecoratedPlan();
+		AccessTerm accessTerm = (AccessTerm) this.getDecoratedAccess();
 		if (accessTerm.getInputConstants().size() == 0)
 			return this.inputTuples;
 		return new CombinedInputsIterator();
 	}
 
 	private class CombinedInputsIterator implements Iterator<Tuple> {
-		AccessMethodDescriptor am = ((AccessTerm) getDecoratedPlan()).getAccessMethod();
+		AccessMethodDescriptor am = ((AccessTerm) getDecoratedAccess()).getAccessMethod();
 		Attribute[] allInputAttributes = ((ExecutableAccessMethod)am).inputAttributes(true);
-		Map<Attribute, TypedConstant> inputConstants = ((AccessTerm) getDecoratedPlan()).getInputConstantsAsAttributes();
+		Map<Attribute, TypedConstant> inputConstants = ((AccessTerm) getDecoratedAccess()).getInputConstantsAsAttributes();
 		TupleType tt = TupleType.createFromTyped(allInputAttributes);
 
 		@Override

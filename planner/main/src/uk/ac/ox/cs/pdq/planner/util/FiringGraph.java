@@ -12,7 +12,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 
 /**
- * Maintains information w.r.t. chasing plus answers proximity queries
+ * Maintains provenance information w.r.t. chasing plus answers queries based on that
  *
  * @author Efthymia Tsamoura
  *
@@ -23,7 +23,7 @@ public interface FiringGraph {
 	 * Updates the internal structures based given the input chasing information.
 	 *
 	 * @param dependency the dependency
-	 * @param sources 			the facts that where used to ground the input dependency
+	 * @param sources 			the facts that were used to ground the input dependency
 	 * @param targets 			the consequence facts
 	 */
 	void put(Dependency dependency, Collection<Atom> sources, Collection<Atom> targets);

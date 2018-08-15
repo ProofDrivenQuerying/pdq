@@ -1,0 +1,18 @@
+<service name="pdgWebappNatiosInput"
+			protocol="REST"
+			url="http://localhost:8080/webapp/servlets/servlet/NationInput" 
+			media-type="application/xml"
+			documentation=""
+			result-delimiter="places/place">
+			
+	<policy name="2000_request_per_day"/>
+	<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+			limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
+	
+	<access-method name="pdqWebappNationInput" cost="1.0" relation-name="Nation">
+		<attribute name="n_nationkey" input="true"	output="true" type="Integer"    	relation-attribute="n_nationkey" path="n_nationkey"/>
+		<attribute name="n_name"    			    output="true" type="String"    	relation-attribute="n_name" path="n_name"/>
+		<attribute name="n_regionkey"    			output="true" type="Integer"    	relation-attribute="n_regionkey" path="n_regionkey"/>
+		<attribute name="n_comment"    			    output="true" type="String"    	relation-attribute="n_comment" path="n_comment"/>
+	</access-method>
+</service>

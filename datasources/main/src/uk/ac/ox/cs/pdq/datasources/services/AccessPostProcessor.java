@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.datasources.services;
 
-import com.google.common.eventbus.Subscribe;
 
 
 /**
@@ -16,6 +15,5 @@ public interface AccessPostProcessor<T> {
 	 *
 	 * @param event the event
 	 */
-	@Subscribe
 	void processAccessResponse(T event) ;
 }

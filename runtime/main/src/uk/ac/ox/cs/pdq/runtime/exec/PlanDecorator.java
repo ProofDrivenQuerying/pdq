@@ -80,9 +80,11 @@ public class PlanDecorator {
 		// If the plan is already decorated, do nothing.
 		if (plan instanceof ExecutablePlan)
 			return (ExecutablePlan) plan;
-		if (plan instanceof RenameTerm)
-			return this.decorate(plan.getChild(0));
-		if (plan instanceof AccessTerm) {
+		if (plan instanceof RenameTerm) {
+			AccessTerm newAccess = replaceAccess((AccessTerm) plan.getChild(0));
+			RenameTerm newRename = RenameTerm.create(((RenameTerm) plan).getRenamings(),newAccess);
+			return new Access(newRename, this);
+		} if (plan instanceof AccessTerm) {
 			return new Access(replaceAccess((AccessTerm) plan), this);
 		} else if (plan instanceof SelectionTerm)
 			return new Selection(plan, this);

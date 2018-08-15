@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * Helper class for representation time intervals of various granularities.
+ * Helper class for representing timed intervals of various granularities.
  * 
  * @author Julien Leblay
  */

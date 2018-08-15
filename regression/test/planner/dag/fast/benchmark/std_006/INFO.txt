@@ -1,13 +1,17 @@
-Comment:
-
-Select from lineitem. Rejected confusing comment in query.xml
-
-Query:
+This test has as input the following query:
 
 SELECT l_extendedprice, l_discount
  FROM lineitem
  WHERE l_quantity == 10 and l_shipdate = '1995-01-01'
 
-Schema:
+The query runs on the following schema:
 
-lineitem has 16 columns and 6005 rows
+- multiple relations including lineitem
+- lineitem has 16 columns and 6005 rows
+
+There is a constraint:
+- from lineitem to part
+
+There is an expected-plan.xml file. It has a dependent join term and the following access terms:
+- lineitem (access method m10)
+- part (access method m2)

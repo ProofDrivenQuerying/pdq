@@ -45,26 +45,27 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * 
  * @author Efthymia Tsamoura
  *
+ *
+ *
+ *         Methods to create a linear plan by appending the access and
+ *         middleware commands of the input configuration to the input parent
+ *         plan.
+ * 
+ *         The newly created access and middleware command are created as
+ *         follows: For an exposed fact f, If f has been exposed by an
+ *         input-free accessibility axiom (access method), then create an
+ *         input-free access else create a dependent access operator. If f has
+ *         schema constants in output positions or repeated constants, then
+ *         these schema constants map to filtering predicates. Finally, project
+ *         the variables that correspond to output chase constants.
+ * 
  */
 public class PlanCreationUtility {
 
 	/**
-	 * Methods to create a linear plan by appending the access and middleware
-	 * commands of the input configuration to the input parent plan.
-	 * 
-	 * The newly created access and middleware command are created as follows: For
-	 * an exposed fact f, If f has been exposed by an input-free accessibility axiom
-	 * (access method), then create an input-free access else create a dependent
-	 * access operator. If f has schema constants in output positions or repeated
-	 * constants, then these schema constants map to filtering predicates. Finally,
-	 * project the variables that correspond to output chase constants.
+	 * Creates a join plan from two subplans
 	 */
-
-	/**
-	 * TOCOMMENT: IS THIS FIRST METHOD EVER USED? IF SO, NEED SOME EXPLANATION HOW
-	 * IT FITS THE DISCUSSION ABOVE
-	 */
-	public static RelationalTerm createPlan(RelationalTerm left, RelationalTerm right) {
+	public static RelationalTerm createJoinPlan(RelationalTerm left, RelationalTerm right) {
 		Preconditions.checkNotNull(left);
 		Preconditions.checkNotNull(right);
 		Set<Attribute> outputs = new HashSet<Attribute>(Arrays.asList(left.getOutputAttributes()));
@@ -226,8 +227,7 @@ public class PlanCreationUtility {
 	 */
 	private static Type[] computeVariableTypes(ConjunctiveQuery query, Schema schema) {
 		Variable[] freeVariables = query.getFreeVariables();
-		// TOCOMMENT: Class</>?
-		Type[] types = new Class<?>[query.getFreeVariables().length];
+		Type[] types = new Type[query.getFreeVariables().length];
 		boolean assigned = false;
 		for (int i = 0, l = types.length; i < l; i++) {
 			assigned = false;

@@ -96,8 +96,8 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 		do {
 			DAGChaseConfiguration l = this.leftSideConfigurations.get(this.indexOverConfigurationsInLeftList);
 			DAGChaseConfiguration r = this.rightSideConfigurations.get(this.indexOverConfigurationsInRightList);
-			RelationalTerm leftToRightPlan = PlanCreationUtility.createPlan(l.getPlan(), r.getPlan());
-			RelationalTerm rightToleftPlan = PlanCreationUtility.createPlan(r.getPlan(), l.getPlan());
+			RelationalTerm leftToRightPlan = PlanCreationUtility.createJoinPlan(l.getPlan(), r.getPlan());
+			RelationalTerm rightToleftPlan = PlanCreationUtility.createJoinPlan(r.getPlan(), l.getPlan());
 			if (!this.plansOfConfigurationPairsReturnedInThePast.contains(leftToRightPlan)
 					&& ConfigurationUtility.validate(l, r, this.validators, depth)) {
 				// check if we can return the inverse next time

@@ -81,7 +81,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		//this.plan = LeftDeepPlanGenerator.createLeftDeepPlan(this.rule.getBaseRelation(), this.rule.getAccessMethod(), this.facts, parent.getPlan());
 		RelationalTerm op1 = PlanCreationUtility.createSingleAccessPlan(this.rule.getBaseRelation(), this.rule.getAccessMethod(), this.facts);
 		if(parent.getPlan() != null)
-			this.plan = PlanCreationUtility.createPlan(parent.getPlan(),op1);
+			this.plan = PlanCreationUtility.createJoinPlan(parent.getPlan(),op1);
 		else 
 			this.plan = op1;
 	}

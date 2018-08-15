@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <schema>
     <sources>
-        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/dag/slow/bio/chembl-services.xml" name="chembl"/>
-        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/dag/slow/bio/pubmed-services.xml" name="pubmed"/>
-        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/dag/slow/bio/uniprot-services.xml" name="uniprot"/>
-        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/dag/slow/bio/reactome-services.xml" name="reactome"/>
+        <source discoverer="uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceReader" file="test/planner/dag/slow/bio/chembl-services.xml" name="chembl"/>
+        <source discoverer="uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceReader" file="test/planner/dag/slow/bio/pubmed-services.xml" name="pubmed"/>
+        <source discoverer="uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceReader" file="test/planner/dag/slow/bio/uniprot-services.xml" name="uniprot"/>
+        <source discoverer="uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceReader" file="test/planner/dag/slow/bio/reactome-services.xml" name="reactome"/>
     </sources>
     <relations>
         <relation name="MoleculeFree" source="chembl">

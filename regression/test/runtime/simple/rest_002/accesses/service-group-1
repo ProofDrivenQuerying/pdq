@@ -2,6 +2,7 @@
 	<attribute-encoding name="apikey" type="url-param" value="AIzaSyDN1I2acLKglH3vjzVXeKbXDoSs_oNw6Jc"/>
 	<attribute-encoding name="format" type="path-element" template="&#038;format=json"/>
 	<attribute-encoding name="doubleslash" type="path-element" template="/{1}/{2}"/>
+	<attribute-encoding name="n_nationkey" type="url-param"/>
 
 	<usage-policy name="2000_request_per_day"
 			type="uk.ac.ox.cs.pdq.datasources.services.policies.RequestAllowance"

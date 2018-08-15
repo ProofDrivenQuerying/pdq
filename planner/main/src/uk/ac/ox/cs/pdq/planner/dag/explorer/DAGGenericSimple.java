@@ -93,8 +93,8 @@ public class DAGGenericSimple extends DAGExplorer {
 	 *            The accessible counterpart of the input schema
 	 * @param chaser
 	 *            Saturates the newly created configurations
-	 * @param detector
-	 *            Detects homomorphisms during chasing
+	 * @param connection
+	 *            handle to database manager used to store facts during chasing and exploration
 	 * @param costEstimator
 	 *            Estimates the cost of a plan
 	 * @param successDominance
@@ -106,8 +106,6 @@ public class DAGGenericSimple extends DAGExplorer {
 	 *            configuration pair satisfies given shape restrictions.
 	 * @param maxDepth
 	 *            The maximum depth to explore
-	 * @param orderAware
-	 *            the order aware
 	 * @throws PlannerException
 	 *             the planner exception
 	 * @throws SQLException
@@ -118,6 +116,7 @@ public class DAGGenericSimple extends DAGExplorer {
 			List<Validator> validators, int maxDepth) throws PlannerException, SQLException {
 		super(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
 		Preconditions.checkNotNull(successDominance);
+		Preconditions.checkArgument(validators != null);
 		this.successDominance = successDominance;
 		List<DAGChaseConfiguration> initialConfigurations = createInitialApplyRuleConfigurations(
 				this.parameters, this.query, this.accessibleQuery, this.accessibleSchema, this.chaser, this.connection);
@@ -161,12 +160,12 @@ public class DAGGenericSimple extends DAGExplorer {
 		while (leftIndex < leftSideConfigurations.size()) {
 			DAGChaseConfiguration l = this.leftSideConfigurations.get(this.leftIndex);
 			DAGChaseConfiguration r = this.rightSideConfigurations.get(this.rightIndex);
-			RelationalTerm leftToRightPlan = PlanCreationUtility.createPlan(l.getPlan(),r.getPlan());
+			RelationalTerm leftToRightPlan = PlanCreationUtility.createJoinPlan(l.getPlan(),r.getPlan());
 			if (!allPlanCache.contains(leftToRightPlan)) {
 				allPlanCache.add(leftToRightPlan);
 				reasonAndSetBestPlan(newLeftSideConfigurations, l, r);
 			}
-			RelationalTerm rightToLeftPlan = PlanCreationUtility.createPlan(r.getPlan(),l.getPlan());
+			RelationalTerm rightToLeftPlan = PlanCreationUtility.createJoinPlan(r.getPlan(),l.getPlan());
 			if (!allPlanCache.contains(rightToLeftPlan)) {
 				allPlanCache.add(rightToLeftPlan);
 				reasonAndSetBestPlan(newLeftSideConfigurations, r, l);

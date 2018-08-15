@@ -96,7 +96,7 @@ public class AdaptedDbSchema {
 				} else if ("uk.ac.ox.cs.pdq.sql.MySQLSchemaDiscoverer".equals(discoverer)) {
 					discoverer = "uk.ac.ox.cs.pdq.datasources.schemabuilder.MySQLSchemaDiscoverer";
 				}
-				else if ("uk.ac.ox.cs.pdq.services.ServiceReader".equals(discoverer)) {
+				else if ("uk.ac.ox.cs.pdq.datasources.services.ServiceReader".equals(discoverer)) {
 					discoverer = "uk.ac.ox.cs.pdq.datasources.legacy.services.ServiceReader";
 				}
 				

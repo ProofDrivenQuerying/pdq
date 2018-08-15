@@ -9,7 +9,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
 /**
- * This class help collecting statics without prior knowledge of what is to be
+ * This class help collecting statistics without prior knowledge of what is to be
  * logged.
  * Logged items are identified by a key (String). Logging event can be time
  * interval, numeric increment or ad-hoc Object values.

@@ -53,7 +53,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 		Preconditions.checkNotNull(right);
 		this.left = left;
 		this.right = right;
-		this.plan = PlanCreationUtility.createPlan(left.getPlan(), right.getPlan());
+		this.plan = PlanCreationUtility.createJoinPlan(left.getPlan(), right.getPlan());
 		this.rules = ConfigurationUtility.getApplyRules(this);
 	}
 	
@@ -78,7 +78,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 		Preconditions.checkNotNull(right);
 		this.left = left;
 		this.right = right;
-		this.plan = PlanCreationUtility.createPlan(left.getPlan(), right.getPlan());
+		this.plan = PlanCreationUtility.createJoinPlan(left.getPlan(), right.getPlan());
 		this.rules = ConfigurationUtility.getApplyRules(this);
 	}
 
