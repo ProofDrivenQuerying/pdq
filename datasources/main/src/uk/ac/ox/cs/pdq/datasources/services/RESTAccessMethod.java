@@ -286,7 +286,7 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 			{
 				if((aa.getInput() != null) && aa.getInput().equals("true"))
 				{
-					mapAttributesPhase1ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getType(), aa.getValue(), inputs, uri, params, (tuple != null) ? tuple.getValue(a) : null);
+					mapAttributesPhase1ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getType(), aa.getValue(), inputs, uri, params, (tuple != null) ? (tuple.getValue(a)).toString() : null);
 					a++;
 				}
 				if((aa.getOutput() != null) && aa.getOutput().equals("true"))
@@ -364,7 +364,7 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 			{
 				if((aa.getInput() != null) && aa.getInput().equals("true"))
 				{
-					mapAttributesPhase2ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getValue(), tuple.getValue(a));
+					mapAttributesPhase2ProcessParams(aa.getAttributeEncoding(), aa.getName(), aa.getValue(), tuple.getValue(a).toString());
 				}
 			}
 		}

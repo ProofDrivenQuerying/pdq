@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.datasources.legacy.services;
 
-import com.google.common.eventbus.Subscribe;
-
 
 /**
  * AccessPostProcessor event handler, that is triggered after an access was performed.
@@ -16,6 +14,5 @@ public interface AccessPostProcessor<T extends ResponseEvent> {
 	 *
 	 * @param event the event
 	 */
-	@Subscribe
 	void processAccessResponse(T event) ;
 }

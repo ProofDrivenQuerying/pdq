@@ -1,8 +1,4 @@
-Comment:
-
-Customers from the United-States, with URGENT order of the same status. Cannot exploit the order_customer view.
-
-Query:
+This test has as input the following query:
 
 SELECT c_name, c_name
  FROM orders
@@ -12,8 +8,21 @@ SELECT c_name, c_name
   JOIN nation ON c_nationkey = n_nationkey
  WHERE o_orderstatus = o_orderstatus AND o_orderpriority = '1 - URGENT'
 
-Schema:
+The query runs on the following schema:
 
-orders has 9 columns and 1500 rows
-customer has 8 columns and 150 rows
-nation has 4 columns and 25 rows
+- multiple relations including orders, customer and nation
+- orders has 9 columns and 1500 rows
+- customer has 8 columns and 150 rows
+- nation has 4 columns and 25 rows
+
+There are the following constraints:
+- from orders to customer
+- from customer to nation
+- from region and nation to region_nation
+
+There is an expected-plan.xml file. It has 2 dependent join terms and the following access terms:
+- orders (access method m9)
+- orders (access method m9)
+- customer (access method m1)
+- customer (access method m1)
+- region_nation (access method m13)
