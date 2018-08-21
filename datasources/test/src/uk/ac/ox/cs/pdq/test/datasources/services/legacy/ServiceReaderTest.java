@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.util.Table;
 /**
  * 
  * Tests the service reader class by parsing some of the xml files in the services folder. Also
- * generates an access.
+ * generates an access and prints the results.
  * 
  * @author gabor
  *
