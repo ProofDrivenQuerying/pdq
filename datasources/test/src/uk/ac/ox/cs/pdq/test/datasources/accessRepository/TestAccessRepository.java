@@ -28,6 +28,10 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
+// Overall comments to be inserted by gabor
+//
+// @author: gabor
+
 public class TestAccessRepository extends PdqTest {
 	Properties properties;
 	boolean print = false;
@@ -58,6 +62,8 @@ public class TestAccessRepository extends PdqTest {
 			Attribute.create(String.class, "N_NAME"), Attribute.create(String.class, "name"),
 			Attribute.create(Integer.class, "N_REGIONKEY"), Attribute.create(Integer.class, "regionKey"));
 
+	// testDbAccessExport() creates an SqlAccessMethod, inputs and relation (mocked). Then it performs an access
+	// and iterates over the data returned. Then it tries to do an export and tests if the files are the same.
 	@Test
 	public void testDbAccessExport() throws JAXBException {
 
@@ -100,6 +106,8 @@ public class TestAccessRepository extends PdqTest {
 		new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml").delete();
 	}
 
+	// testInMemoryAccessExport() creates an InMemoryAccessMethod, inputs and relation (mocked). Then it performs an access
+	// and iterates over the data returned. Then it tries to do an export and tests if the files are the same.
 	@Test
 	public void testInMemoryAccessExport() throws JAXBException {
 		InMemoryAccessMethod target;
@@ -145,6 +153,8 @@ public class TestAccessRepository extends PdqTest {
 		new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml").delete();
 	}
 
+	// testAccessImport() tries to import an SqlAccessMethod. Then it performs an access
+	// and iterates over the data returned.
 	@Test
 	public void testAccessImport() throws JAXBException {
 		
@@ -170,6 +180,8 @@ public class TestAccessRepository extends PdqTest {
 		target.close();
 	}
 	
+	// testInMemoryAccessImport() tries to import an InMemoryAccessMethod. Then it performs an access
+	// and iterates over the data returned.
 	@Test
 	public void testInMemoryAccessImport() throws JAXBException {
 
@@ -195,8 +207,10 @@ public class TestAccessRepository extends PdqTest {
 		target.close();
 	}
 
+	// testAccessRepository() gets an AccessRepository then gets accesses "NATION" and "NATION_MEM", testing the reading of data from the 
+	// access method in between.
 	@Test
-	public void testAccessRepositorty() throws Exception {
+	public void testAccessRepository() throws Exception {
 		AccessRepository repo = AccessRepository.getRepository("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses");
 		ExecutableAccessMethod accessMethod = repo.getAccess("NATION");
 		testReadingData(accessMethod);
