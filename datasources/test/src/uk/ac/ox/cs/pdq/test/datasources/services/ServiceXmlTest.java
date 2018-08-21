@@ -20,6 +20,10 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 public class ServiceXmlTest {
 	
 	// chembl-activityFree test requires a null input tuple due to free status (no inputs)
+	// test1() gets 2 schema files, importing ServiceGroup from the first and Service from the second.
+	// For each access method, creates a RESTExecutableAccessMethodSpecification, sets up the input tuple
+	// and creates a RESTAccessMethodGenerator, which it uses to get and AccessMethod and perform an access
+	// printing the result.
 	@Test
 	public void test1() {
 		
@@ -48,6 +52,10 @@ public class ServiceXmlTest {
 	}
 	
 	// chembl-assayFree test requires a null input tuple due to free status (no inputs)
+	// test2() gets 2 schema files, importing ServiceGroup from the first and Service from the second.
+	// For each access method, creates a RESTExecutableAccessMethodSpecification, sets up the input tuple
+	// and creates a RESTAccessMethodGenerator, which it uses to get and AccessMethod and perform an access
+	// printing the result.
 	@Test
 	public void test2() {
 		
@@ -76,6 +84,10 @@ public class ServiceXmlTest {
 	}
 	
 	// ebeye-uniprot-protein test requires a 4-way input tuple due to defined input
+	// test3() gets 2 schema files, importing ServiceGroup from the first and Service from the second.
+	// For each access method, creates a RESTExecutableAccessMethodSpecification, sets up the input tuple
+	// and creates a RESTAccessMethodGenerator, which it uses to get and AccessMethod and perform an access
+	// printing the result.
 	@Test
 	public void test3() {
 		
@@ -107,7 +119,10 @@ public class ServiceXmlTest {
 	}
 	
 	// reactome-biopaxExporter test requires a 1-way input tuple due to defined input
-
+	// test4() gets 2 schema files, importing ServiceGroup from the first and Service from the second.
+	// For each access method, creates a RESTExecutableAccessMethodSpecification, sets up the input tuple
+	// and creates a RESTAccessMethodGenerator, which it uses to get and AccessMethod and perform an access
+	// printing the result.
 	@Test
 	public void test4() {
 		
@@ -136,6 +151,10 @@ public class ServiceXmlTest {
 	}
 
 	// reactome-speciesList test requires a 6-way input due to defined inputs
+	// test5() gets 2 schema files, importing ServiceGroup from the first and Service from the second.
+	// For each access method, creates a RESTExecutableAccessMethodSpecification, sets up the input tuple
+	// and creates a RESTAccessMethodGenerator, which it uses to get and AccessMethod and perform an access
+	// printing the result.
 	@Test
 	public void test5() {
 		
@@ -169,6 +188,10 @@ public class ServiceXmlTest {
 	}
 
 	// pdq webapp nation input
+	// test6() gets 2 schema files, importing ServiceGroup from the first and Service from the second.
+	// For each access method, creates a RESTExecutableAccessMethodSpecification, sets up the input tuple
+	// and creates a RESTAccessMethodGenerator, which it uses to get and AccessMethod and perform an access
+	// printing the result.
 	@Test
 	public void test6() {
 		
@@ -196,6 +219,10 @@ public class ServiceXmlTest {
 		}
 	}
 	// pdq webapp country free
+	// test7() gets 2 schema files, importing ServiceGroup from the first and Service from the second.
+	// For each access method, creates a RESTExecutableAccessMethodSpecification, sets up the input tuple
+	// and creates a RESTAccessMethodGenerator, which it uses to get and AccessMethod and perform an access
+	// printing the result.
 	@Test
 	public void test7() {
 		
