@@ -40,6 +40,11 @@ public class TestAccessRepository extends PdqTest {
 		properties.setProperty("password", "admin");
 	}
 
+	//TOCOMMENT: who is the author?
+	//TOCOMMENT: what is the overall goal of these tests?
+	
+	// TOCOMMENT: what is the schema?
+	// TOCOMMENT: (specifically below) what is external vs internal?
 	//
 	// NATION relation
 	//
@@ -58,6 +63,7 @@ public class TestAccessRepository extends PdqTest {
 			Attribute.create(String.class, "N_NAME"), Attribute.create(String.class, "name"),
 			Attribute.create(Integer.class, "N_REGIONKEY"), Attribute.create(Integer.class, "regionKey"));
 
+	//TOCOMMENT: what is this specific test doing
 	@Test
 	public void testDbAccessExport() throws JAXBException {
 
@@ -82,6 +88,7 @@ public class TestAccessRepository extends PdqTest {
 				System.out.println(t);
 			counter++;
 		}
+		//TOCOMMENT: what is this assertion about?
 		Assert.assertEquals(25, counter);
 		try {
 			DbIOManager.exportAccessMethod(target, new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml"));
@@ -89,17 +96,20 @@ public class TestAccessRepository extends PdqTest {
 			t.printStackTrace();
 			t.printStackTrace();
 		}
-		long goodLengh = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethod.xml").length();
-		long newLengh = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml").length();
+		long goodLength = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethod.xml").length();
+		long newLength = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml").length();
+		//TOCOMMENT: the comment below makes no sense without context; really explain this! 
 		// the path in the xml can change from user to user, so we can only check approximation.
-		Assert.assertTrue(goodLengh + 30 > newLengh);
-		Assert.assertTrue(goodLengh - 30 < newLengh);
+		Assert.assertTrue(goodLength + 30 > newLength);
+		Assert.assertTrue(goodLength - 30 < newLength);
 		
 		
 		target.close();
 		new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml").delete();
 	}
 
+	
+	//TOCOMMENT: What is this specific test doing?
 	@Test
 	public void testInMemoryAccessExport() throws JAXBException {
 		InMemoryAccessMethod target;
@@ -115,6 +125,7 @@ public class TestAccessRepository extends PdqTest {
 		target = new InMemoryAccessMethod("NATION_MEM", this.attrs_N, inputs, relation, this.attrMap_nation);
 		Collection<Tuple> tuples = new ArrayList<>();
 		TupleType tt = TupleType.DefaultFactory.createFromTyped(this.attrs_N);
+		//TOCOMMENT: what are we creating in this loop?
 		for (int index = 0; index < 25; index++) {
 			tuples.add(tt.createTuple(index, "Name" + index,1000 + index, "Comment" + index));
 		}
@@ -136,15 +147,17 @@ public class TestAccessRepository extends PdqTest {
 			t.printStackTrace();
 			t.printStackTrace();
 		}
-		long goodLengh = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethod.xml").length();
-		long newLengh = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml").length();
+		long goodLength = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethod.xml").length();
+		long newLength = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml").length();
+		//TOCOMMENT: cut and paste of cryptic comment above
 		// the path in the xml can change from user to user, so we can only check approximation.
-		Assert.assertTrue(goodLengh + 60 > newLengh);
-		Assert.assertTrue(goodLengh - 60 < newLengh);
+		Assert.assertTrue(goodLength + 60 > newLength);
+		Assert.assertTrue(goodLength - 60 < newLength);
 		target.close();
 		new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml").delete();
 	}
 
+	//TOCOMMENT: What is this specific test doing?
 	@Test
 	public void testAccessImport() throws JAXBException {
 		
@@ -195,8 +208,9 @@ public class TestAccessRepository extends PdqTest {
 		target.close();
 	}
 
+	//TOCOMMENT: WHAT IS THIS SPECIFIC TEST DOING?
 	@Test
-	public void testAccessRepositorty() throws Exception {
+	public void testAccessRepository() throws Exception {
 		AccessRepository repo = AccessRepository.getRepository("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses");
 		ExecutableAccessMethod accessMethod = repo.getAccess("NATION");
 		testReadingData(accessMethod);
