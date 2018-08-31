@@ -1,0 +1,16 @@
+Comment:
+
+Select from R1 join R4 join R2
+
+Query:
+
+SELECT *
+ FROM R1
+  JOIN R4 ON R1.x2 = R4.x2
+  JOIN R2 ON R2.x2 = R2.x2 
+ 
+Schema:
+
+R1 has 2 columns and 447 rows
+R2 has 3 columns and 53 rows
+R4 has 3 columns and 761 rows

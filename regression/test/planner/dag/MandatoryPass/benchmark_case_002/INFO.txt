@@ -1,0 +1,18 @@
+This test has as input the following query:
+
+SELECT p_name FROM partsupp JOIN part ON ps_partkey = p_partkey WHERE ps_availqty = 10
+
+This query runs on a schema where:
+
+- there are multiple relations including partsupp and part
+- partsupp has 5 columns and 700 rows
+- part has 9 columns and 200 rows
+
+There is a constraint from partsupp to part
+
+There is an expected-plan.xml file. It shows 4 join terms with access terms:
+- part (access method m2)
+- partsupp (access method m5)
+- region (access method m8)
+- nation (access method m7)
+- supplier (access method m3)

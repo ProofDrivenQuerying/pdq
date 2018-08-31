@@ -1,0 +1,26 @@
+This test has as input the following query:
+
+SELECT s_acctbal, s_name, ps_supplycost, n_regionkey
+ FROM partsupp
+  JOIN supplier ON ps_suppkey = s_suppkey
+  JOIN nation ON s_nationkey = n_nationkey
+ WHERE n_name = 'UNITED STATES'
+
+The query runs on a schema where:
+
+- multiple relations include partsupp, supplier and nation
+- partsupp has 5 columns and 700 rows
+- supplier has 7 columns and 100 rows
+- nation has 4 columns and 25 rows
+
+There are constraints:
+- from partsupp to supplier
+- from partsupp to part
+- from nation to region
+- from supplier to nation
+- from region and nation to region_nation
+
+There is an expected-plan.xml file. It has 2 dependent join terms and the following access terms:
+- partsupp (access method m5)
+- supplier (access method m3)
+- region_nation (access method m13)
