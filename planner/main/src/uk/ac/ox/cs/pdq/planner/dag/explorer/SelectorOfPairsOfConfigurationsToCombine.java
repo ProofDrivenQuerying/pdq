@@ -76,13 +76,7 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 	 *            the required depth, used only as input for validators.
 	 * @return the next pair of configurations of the given combined depth
 	 */
-	int depthPrint = 0;
 	public Pair<DAGChaseConfiguration, DAGChaseConfiguration> getNextPairOfConfigurationsToCompose(int depth) {
-		if (depth>depthPrint) {
-			System.out.println("getNextPairOfConfigurationsToCompose depth:" + depth + " number of r configs: "+this.rightSideConfigurations.size()
-			 + "number of left configs: " + this.leftSideConfigurations.size());
-			depthPrint = depth;
-		}
 		if (this.returnInverseBinaryConfiguration) {
 			
 			this.plansOfConfigurationPairsReturnedInThePast.add(this.inverseBinaryPlan);
