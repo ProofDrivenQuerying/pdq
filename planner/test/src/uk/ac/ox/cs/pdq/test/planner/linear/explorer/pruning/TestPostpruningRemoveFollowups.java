@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.test.planner.linear.explorer.pruning;
 
 import static org.mockito.Mockito.when;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,17 +45,22 @@ import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
+import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruningRemoveFollowUps;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
+import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 /**
  * Tests the postpruning class.
@@ -62,7 +68,7 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
  * @author Efthymia Tsamoura
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestPostpruningRemoveFollowups {
+public class TestPostpruningRemoveFollowups extends PdqTest {
 
 	protected Attribute a = Attribute.create(String.class, "a");
 	protected Attribute b = Attribute.create(String.class, "b");
@@ -79,50 +85,206 @@ public class TestPostpruningRemoveFollowups {
 		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 	}
-
+	
+	/**
+	 * Uses Scenario1 from the PdqTest as input, then attempts a couple of
+	 * exploration steps checking the partial results and eventually the found plan.
+	 * TestScenario1 should have a valid plan, that should look like this:
+	 * DependentJoin{[(#4=#7)]
+	 * 		DependentJoin{[(#0=#3)]
+	 * 			Rename{[c1,c2,c3]
+	 * 				Access{R0.mt_0[]}
+	 * 			},
+	 * 			Rename{[c1,c4,c5]
+	 * 				Access{R1.mt_1[#0=a]}
+	 * 			}
+	 * 		},
+	 * 		Rename{[c6,c4,c7]
+	 * 			Access{R2.mt_2[#1=b]}
+	 * 		}
+	 * 	}
+	 * </pre>
+	 * 
+	 */
 	@Test
-	public void notImplementedTestCases() {
-		// The query is Q(x,y) = R0(x,y) R1(y,z) R2(z,w)
-		// We have free access on R0
-		// dependent access on R1 on the first position
-		// and dependent access on R2 on the first position again.
-		// We also have a dependency R0(x,y) R1(y,z) -> R3(x,y,z)
-		// and a relation R3 with free access
-		// Suppose that we found the plan that performs accesses in the following order
-		// R0(x,y) R1(y,z) R3(x,y,z) R2(z,w)
-		// postpruning should trash the access on R3
+	public void testPruningNoChange() {
+		GlobalCounterProvider.getNext("CannonicalName");
+		TestScenario scenario1 = getScenario1();
+		ConjunctiveQuery query = scenario1.getQuery();
+		// Create accessible schema
+		AccessibleSchema accessibleSchema = new AccessibleSchema(scenario1.getSchema());
 
-		// The query is Q(x,y) = R0(x,y) R1(y,z) R2(z,w)
-		// We have free access on R0
-		// dependent access on R1 on the first position
-		// and dependent access on R2 on the first position again.
-		// We also have a dependency R0(x,y) R1(y,z) -> R3(x,y,z) R2(z,w)
-		// and a relation R3 with free access
-		// Suppose that we found the plan that performs accesses in the following order
-		// R0(x,y) R1(y,z) R3(x,y,z) R2(z,w)
-		// postpruning should trash the access on R3 and on R2
-		// @Test
-		/**
-		 * The query is Q(x,y) = R0(x,y) R1(y,z) We also have the dependencies R0(x,y)->
-		 * R2(x,y), R1(y,z) -> R3(y,z) Every relation has a free access. Suppose that we
-		 * found the plan that performs accesses in the following order R2(x,y) R3(y,z)
-		 * R0(x,y) R1(y,z) Postpruning should return R0(x,y) R1(y,z)
-		 */
-		//
-		// -------For post pruning-------
-		// The query is Q(x,y) = \exists y R0(x,y) R1(y,z)
-		// We also have the dependencies
-		// R0(x,y) -> R3(x,y)
-		// R1(y,z) -> R4(y,z)
-		// R3(x,y), R4(y,z) -> R0(x,w) R1(w,z)
-		// Every relation has a free access
-		// Suppose that we found the plan that performs accesses in the following order
-		// R3(x,y) R4(y,z) R0(x,y) R1(y,z)
-		// Postpruning should return
-		// R3(x,y) R4(y,z)
-		//Assert.fail("Missing test cases");
+		// Create accessible query
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(scenario1.getQuery());
+		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
+		substitutionFiltered.putAll(substitution);
+		for(Variable variable:query.getBoundVariables()) 
+			substitutionFiltered.remove(variable);
+		ExplorationSetUp.getCanonicalSubstitution().put(query,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+
+
+		// Create database connection
+		DatabaseManager databaseConnection = null;
+		try {
+			databaseConnection = createConnection(accessibleSchema);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+
+		// Create the chaser
+		RestrictedChaser chaser = new RestrictedChaser();
+
+		// Mock the cost estimator
+		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
+		when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new DoubleCost(1.0));
+
+		// Mock the planner parameters
+		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
+		when(parameters.getSeed()).thenReturn(1);
+		when(parameters.getMaxDepth()).thenReturn(3);
+
+		// Create nodeFactory
+		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+
+		// Create linear explorer
+		LinearGeneric explorer = null;
+		try {
+			explorer = new LinearGeneric(new EventBus(), scenario1.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
+					parameters.getMaxDepth());
+			PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(nodeFactory, accessibleSchema, chaser, query);
+		
+			
+			PlanTree<SearchNode> planTree = null;
+			planTree = explorer.getPlanTree();
+			SearchNode root = planTree.getRoot();
+			LinearChaseConfiguration configuration0 = root.getConfiguration();
+			Assert.assertEquals(1, configuration0.getCandidates().size());
+
+			// Call the explorer for first time
+			while (explorer.getBestPlan()==null)
+				explorer.performSingleExplorationStep();
+			SearchNode bestNode = explorer.getBestNode();
+			List<Match> matches = explorer.getPlanTree().getPath(bestNode.getBestPathFromRoot()).get(bestNode.getBestPathFromRoot().size() - 1).matchesQuery(accessibleQuery);
+			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
+					.applySubstitution(accessibleQuery, matches.get(0).getMapping())
+					.getAtoms();
+			
+			if (postpruning.pruneSearchNodePath(bestNode, explorer.getPlanTree().getPath(bestNode.getBestPathFromRoot()), factsInQueryMatch)) {
+				Assert.fail("Post pruning should have been un-successful, there is nothing to prune.");
+			}
+		} catch (PlannerException | SQLException e) {
+			e.printStackTrace();
+			Assert.fail();
+		} catch (LimitReachedException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
 	}
+	
 
+	/**
+	 * The query is Q(x,z) = \exists y R0(x,y) R1(y,z) R2(z,w) We also have the dependencies
+	 * R0(x,y) -> R2(x,y) R1(y,z) -> R3(y,z) R2(x,y), R3(y,z) -> R0(x,w) R1(w,z)
+	 * Every relation has a free access.
+	 * 
+	 */
+	@Test
+	public void testPruning() {
+		GlobalCounterProvider.getNext("CannonicalName");
+		TestScenario scenario1 = getStandardScenario2();
+		ConjunctiveQuery query = scenario1.getQuery();
+		// Create accessible schema
+		AccessibleSchema accessibleSchema = new AccessibleSchema(scenario1.getSchema());
+
+		// Create accessible query
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(scenario1.getQuery());
+		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
+		substitutionFiltered.putAll(substitution);
+		for(Variable variable:query.getBoundVariables()) 
+			substitutionFiltered.remove(variable);
+		ExplorationSetUp.getCanonicalSubstitution().put(query,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+
+
+		// Create database connection
+		DatabaseManager databaseConnection = null;
+		try {
+			databaseConnection = createConnection(accessibleSchema);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+
+		// Create the chaser
+		RestrictedChaser chaser = new RestrictedChaser();
+
+		// Mock the cost estimator
+		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
+		when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new DoubleCost(1.0));
+
+		// Mock the planner parameters
+		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
+		when(parameters.getSeed()).thenReturn(1);
+		when(parameters.getMaxDepth()).thenReturn(3);
+
+		// Create nodeFactory
+		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+
+		// Create linear explorer
+		LinearGeneric explorer = null;
+		try {
+			explorer = new LinearGeneric(new EventBus(), scenario1.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
+					parameters.getMaxDepth());
+			PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(nodeFactory, accessibleSchema, chaser, query);
+		
+			
+			PlanTree<SearchNode> planTree = null;
+			planTree = explorer.getPlanTree();
+			SearchNode root = planTree.getRoot();
+			LinearChaseConfiguration configuration0 = root.getConfiguration();
+			Assert.assertEquals(5, configuration0.getCandidates().size());
+
+			// Call the explorer for first time
+			List<SearchNode> nodes = new ArrayList<>(); 
+			while (explorer.getBestPlan()==null) {
+				nodes.add(explorer._performSingleExplorationStep());
+			}
+			nodes.add(explorer._performSingleExplorationStep());
+			SearchNode bestNode = explorer.getBestNode();
+			List<Match> matches = explorer.getPlanTree().getPath(bestNode.getBestPathFromRoot()).get(bestNode.getBestPathFromRoot().size() - 1).matchesQuery(accessibleQuery);
+			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
+					.applySubstitution(accessibleQuery, matches.get(0).getMapping())
+					.getAtoms();
+			if (postpruning.pruneSearchNodePath(explorer.getPlanTree().getRoot(), explorer.getPlanTree().getPath(bestNode.getBestPathFromRoot()), factsInQueryMatch)) {
+				Assert.fail("Post pruning should have been successful, there is nothing to prune.");
+			}
+			for (SearchNode node:nodes) {
+				if (node!=null && node.getStatus() == NodeStatus.SUCCESSFUL) {
+					if (postpruning.pruneSearchNodePath(explorer.getPlanTree().getRoot(), explorer.getPlanTree().getPath(node.getBestPathFromRoot()), factsInQueryMatch)) {
+						System.out.println("prune successful");
+					} else {
+						System.out.println("prune failed");
+					}
+				}
+			}
+		} catch (PlannerException | SQLException e) {
+			e.printStackTrace();
+			Assert.fail();
+		} catch (LimitReachedException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+	
+	
 	@Test
 	public void testPruningSamePlanReturning() {
 		// -------For post pruning-------

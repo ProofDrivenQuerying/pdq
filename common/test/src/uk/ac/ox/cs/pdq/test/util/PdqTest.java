@@ -456,6 +456,39 @@ public class PdqTest {
 		ts.setQuery(query);
 		return ts;
 	}
+	/**
+	 * The query is Q(x,z) = \exists y R0(x,y) R1(y,z) R2(z,w) We also have the dependencies
+	 * R0(x,y) -> R2(x,y) R1(y,z) -> R3(y,z) R2(x,y), R3(y,z) -> R0(x,w) R1(w,z)
+	 * Every relation has a free access.
+	 * 
+	 */
+	public TestScenario getStandardScenario2() {
+		// Create the relations
+		Relation[] relations = new Relation[5];
+		relations[0] = Relation.create("R0", new Attribute[] { this.a_s, this.b_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a_s, this.b_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a_s, this.b_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
+		relations[3] = Relation.create("R3", new Attribute[] { this.a_s, this.b_s }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
+		relations[4] = Relation.create("Accessible", new Attribute[] { this.a_s });
+		// Create query
+		Atom[] atoms = new Atom[3];
+		atoms[0] = Atom.create(relations[0], new Term[] { x, y });
+		atoms[1] = Atom.create(relations[1], new Term[] { y, z });
+		atoms[2] = Atom.create(relations[2], new Term[] { z, w });
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, z }, atoms);
+		Dependency dependency1 = TGD.create(new Atom[] { Atom.create(relations[0], new Term[] { x, y }) }, new Atom[] { Atom.create(relations[2], new Term[] { x, y }) });
+		Dependency dependency2 = TGD.create(new Atom[] { Atom.create(relations[1], new Term[] { y, z }) }, new Atom[] { Atom.create(relations[3], new Term[] { y, z }) });
+		// R2(x,y), R3(y,z) -> R0(x,w) R1(w,z)
+		Dependency dependency3 = TGD.create(new Atom[] { Atom.create(relations[2], new Term[] { y, z }), Atom.create(relations[3], new Term[] { y, z }) },
+				new Atom[] { Atom.create(relations[0], new Term[] { x, w }), Atom.create(relations[1], new Term[] { w, z }) });
+		// Create schema
+		Schema schema = new Schema(relations, new Dependency[] { dependency1, dependency2, dependency3 });
+
+		TestScenario ts = new TestScenario();
+		ts.setSchema(schema);
+		ts.setQuery(query);
+		return ts;
+	}
 
 	/**
 	 * Describes most of the necessary inputs for a test scenario.
