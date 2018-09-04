@@ -1,0 +1,29 @@
+<service>
+	<name>Google Elevation</name>
+	<documentation>https://developers.google.com/maps/documentation/elevation/</documentation>
+	<usage-limits>
+		<pricing>free</pricing>
+		<frequency max="2500" period="24h"/>
+		<page-size max="512"/>
+		<items-allowance max="25000" period="24h"/>
+		<api-key required="false"/>
+	</usage-limits>
+	<protocol type="REST" baseurl="http://maps.googleapis.com/maps/api/elevation/json?">
+		<input-params>
+			<param name="location" type="coords"    required="true"/>
+			<param name="sensor"    type="boolean"   required="true"/>
+		</input-params>
+		<input-params>
+			<param name="path" type="coords_array"    required="true"/>
+			<param name="samples" type="coords_array"    required="true"/>
+			<param name="sensor"    type="boolean"   required="true"/>
+		</input-params>
+		<output-params>
+			<param name="location"     type="coords"/>
+			<param name="elevation"    type="double"/>
+			<param name="resolution"   type="double"/>
+			<param name="status"        type="enum" values="OK|INVALID_REQUEST|OVER_QUERY_LIMIT|REQUEST_DENIED|UNKNOWN_ERROR|ZERO_RESULTS"/>
+			<param name="error_message" type="string"/>
+		</output-params>
+	</protocol>
+</service>

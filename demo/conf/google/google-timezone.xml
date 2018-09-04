@@ -1,0 +1,25 @@
+<service>
+	<name>Google Time Zone</name>
+	<documentation>https://developers.google.com/maps/documentation/timezone/</documentation>
+	<usage-limits>
+		<pricing>free</pricing>
+		<frequency max="2500" period="24h"/>
+		<api-key required="false"/>
+	</usage-limits>
+	<protocol type="REST" baseurl="https://maps.googleapis.com/maps/api/timezone/json?">
+		<input-params>
+			<param name="location"  type="coords"    required="true"/>
+			<param name="timestamp" type="timestamp" required="true"/>
+			<param name="sensor"    type="boolean"   required="true"/>
+			<param name="language"  type="string"    required="false"/>
+		</input-params>
+		<output-params>
+			<param name="dstOffset"     type="integer"/>
+			<param name="rawOffset"     type="integer"/>
+			<param name="timeZoneId"    type="string"/>
+			<param name="timeZoneName"  type="string"/>
+			<param name="status"        type="enum" values="OK|INVALID_REQUEST|OVER_QUERY_LIMIT|REQUEST_DENIED|UNKNOWN_ERROR|ZERO_RESULTS"/>
+			<param name="error_message" type="string"/>
+		</output-params>
+	</protocol>
+</service>

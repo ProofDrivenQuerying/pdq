@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query>
+	<!-- Population of Asian countries in 2000
+	 -->
+	<body>
+	<!-- 
+		<atom name="WBData">
+			<variable name="iso"/>
+			<variable name="indicator"/>
+			<constant value="2000"/>
+			<variable name="countryName"/>
+			<variable name="value"/>
+		</atom>
+		<atom name="WBIndicators">
+			<variable name="indicator" />
+			<variable name="topicId" />
+			<constant value="Population (Total)" />
+			<variable name="sourceId" />
+			<variable name="sourceNote" />
+		</atom>
+	 -->
+		<atom name="YahooPlaces">
+			<variable name="woeid" />
+			<variable name="countryName" />
+			<variable name="type" />
+			<constant value="Country" />
+			<variable name="name" />
+			<variable name="admin1" />
+			<variable name="admin2" />
+			<variable name="admin3" />
+			<variable name="locality1" />
+			<variable name="locality2" />
+			<variable name="postal" />
+			<variable name="latitude" />
+			<variable name="longitude" />
+			<variable name="timezone" />
+		</atom>
+		<atom name="YahooPlaces">
+			<variable name="woeid2" />
+			<constant value="Asia" />
+			<variable name="type2" />
+			<constant value="Continent" />
+			<variable name="countryName2" />
+			<variable name="admin12" />
+			<variable name="admin22" />
+			<variable name="admin32" />
+			<variable name="locality12" />
+			<variable name="locality22" />
+			<variable name="postal2" />
+			<variable name="latitude2" />
+			<variable name="longitude2" />
+			<variable name="timezone2" />
+		</atom>
+		<atom name="YahooPlaceRelationship">
+			<constant value="belongtos"/>
+			<variable name="woeid"/>
+			<variable name="woeid2"/>
+			<variable name="x9"/>
+			<variable name="x10"/>
+			<variable name="x11"/>
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="countryName" />
+		<variable name="type2" />
+	</head>
+</query>
