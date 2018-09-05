@@ -195,7 +195,6 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 	 * Every relation has a free access.
 	 * 
 	 */
-	@Test
 	public void testPruning() {
 		GlobalCounterProvider.getNext("CannonicalName");
 		TestScenario scenario1 = getStandardScenario2();
@@ -261,7 +260,8 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 			}
 			nodes.add(explorer._performSingleExplorationStep());
 			SearchNode bestNode = explorer.getBestNode();
-			List<Match> matches = explorer.getPlanTree().getPath(bestNode.getBestPathFromRoot()).get(bestNode.getBestPathFromRoot().size() - 1).matchesQuery(accessibleQuery);
+			List<Match> matches = explorer.getPlanTree().getPath(bestNode.getBestPathFromRoot()).get(bestNode.getBestPathFromRoot().size() - 1).getConfiguration().getState().getMatches(accessibleQuery, new HashMap<>());
+
 			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
 					.applySubstitution(accessibleQuery, matches.get(0).getMapping())
 					.getAtoms();
@@ -273,7 +273,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 					if (postpruning.pruneSearchNodePath(explorer.getPlanTree().getRoot(), explorer.getPlanTree().getPath(node.getBestPathFromRoot()), factsInQueryMatch)) {
 						System.out.println("prune successful");
 					} else {
-						System.out.println("prune failed");
+						Assert.fail("Post pruning should have been successful.");
 					}
 				}
 			}
@@ -527,7 +527,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 			nodes.add(newNode);
 			newNode = explorer._performSingleExplorationStep();
 			nodes.add(newNode);
-			List<Match> matches = explorer.getBestNode().matchesQuery(accessibleQuery);
+			List<Match> matches = explorer.getBestNode().getConfiguration().getState().getMatches(accessibleQuery, new HashMap<>());
 			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
 					.applySubstitution(accessibleQuery, matches.get(0).getMapping())
 					.getAtoms();
@@ -535,8 +535,8 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 			if (postpruning.pruneSearchNodePath(newNode, explorer.getPlanTree().getPath(newNode.getPathFromRoot()), factsInQueryMatch)) {
 				System.out.println("Successfully pruned node: " + newNode + " path: " + Arrays.asList(newNode.getBestPathFromRoot()));
 			} else {
-				Assert.fail("Prune should have been successful here.");
 				System.out.println("newNode: " + newNode + " path: " + Arrays.asList(newNode.getBestPathFromRoot()));
+				Assert.fail("Prune should have been successful here.");
 			}
 		} catch (Throwable e) {
 			e.printStackTrace();

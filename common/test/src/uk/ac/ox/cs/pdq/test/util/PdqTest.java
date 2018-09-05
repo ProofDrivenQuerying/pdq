@@ -472,9 +472,9 @@ public class PdqTest {
 		relations[4] = Relation.create("Accessible", new Attribute[] { this.a_s });
 		// Create query
 		Atom[] atoms = new Atom[3];
-		atoms[0] = Atom.create(relations[0], new Term[] { x, y });
+		atoms[2] = Atom.create(relations[0], new Term[] { x, y });
 		atoms[1] = Atom.create(relations[1], new Term[] { y, z });
-		atoms[2] = Atom.create(relations[2], new Term[] { z, w });
+		atoms[0] = Atom.create(relations[2], new Term[] { z, w });
 		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, z }, atoms);
 		Dependency dependency1 = TGD.create(new Atom[] { Atom.create(relations[0], new Term[] { x, y }) }, new Atom[] { Atom.create(relations[2], new Term[] { x, y }) });
 		Dependency dependency2 = TGD.create(new Atom[] { Atom.create(relations[1], new Term[] { y, z }) }, new Atom[] { Atom.create(relations[3], new Term[] { y, z }) });
