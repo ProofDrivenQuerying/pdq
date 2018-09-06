@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-//import uk.ac.ox.cs.pdq.SchemaReader;
+import uk.ac.ox.cs.pdq.SchemaReader;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLReader;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
@@ -37,13 +37,13 @@ public class ObservableSchemaReader extends AbstractXMLReader<ObservableSchema> 
 	private String description;
 	
 	/** A conventional schema reader. */
-// MR	private SchemaReader schemaReader;
+	private SchemaReader schemaReader;
 
 	/**
 	 * Default constructor.
 	 */
 	public ObservableSchemaReader() {
-// MR		this.schemaReader = new SchemaReader();
+		this.schemaReader = new SchemaReader();
 	}
 
 	/*
@@ -56,8 +56,7 @@ public class ObservableSchemaReader extends AbstractXMLReader<ObservableSchema> 
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser parser = factory.newSAXParser();
 			parser.parse(in, this);
-// MR			return new ObservableSchema(this.name, this.description, this.schemaReader.getSchema());
-			return null;
+			return new ObservableSchema(this.name, this.description, this.schemaReader.getSchema());
 		} catch (SAXException | ParserConfigurationException | IOException e) {
 			throw new ReaderException("Exception thrown while reading schema ", e);
 		}
@@ -74,7 +73,7 @@ public class ObservableSchemaReader extends AbstractXMLReader<ObservableSchema> 
 			this.name = this.getValue(atts, QNames.NAME);
 			this.description = this.getValue(atts, QNames.DEPENDENCIES);
 		}
-// MR		this.schemaReader.startElement(uri, localName, qName, atts);
+		this.schemaReader.startElement(uri, localName, qName, atts);
 	}
 
 	/*
@@ -83,7 +82,7 @@ public class ObservableSchemaReader extends AbstractXMLReader<ObservableSchema> 
 	 */
 	@Override
 	public void endElement(String uri, String localName, String qName) {
-// MR		this.schemaReader.endElement(uri, localName, qName);
+		this.schemaReader.endElement(uri, localName, qName);
 	}
 	
 	/**
