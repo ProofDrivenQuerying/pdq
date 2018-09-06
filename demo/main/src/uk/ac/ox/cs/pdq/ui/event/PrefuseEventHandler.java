@@ -19,10 +19,10 @@ import prefuse.data.Graph;
 import prefuse.visual.AggregateTable;
 import uk.ac.ox.cs.pdq.util.EventHandler;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.ui.prefuse.control.PathHighlightControl;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.PathTypes;
@@ -113,7 +113,7 @@ public class PrefuseEventHandler implements EventHandler {
 	@Subscribe
 	public void processNode(SearchNode node) {
 
-	/* MR	if (node == null || node.getMetadata() == null || (node.getMetadata() instanceof EquivalenceMetadata && node.getPointer() == null)) {
+		if (node == null || node.getMetadata() == null || (node.getMetadata() instanceof EquivalenceMetadata && node.getPointer() == null)) {
 			throw new java.lang.IllegalArgumentException();
 		}
 
@@ -144,7 +144,7 @@ public class PrefuseEventHandler implements EventHandler {
 		Utils.modifyNodeProperty(this.graph, node.getId(), "type", node.getStatus());
 		if (metadata.getParent() != null) {
 			Utils.modifyNodeProperty(this.graph, metadata.getParent().getId(), "type", metadata.getParent().getStatus());
-		}*/
+		}
 
 		this.visualization.run(this.colorAction);
 		this.visualization.run(this.layoutAction);
