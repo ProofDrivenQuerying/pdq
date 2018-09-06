@@ -151,8 +151,9 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 			SearchNode bestNode = explorer.getBestNode();
 
 			// find query matches
-			List<Match> matches = explorer.getPlanTree().getPath(bestNode.getBestPathFromRoot())
-					.get(bestNode.getBestPathFromRoot().size() - 1).matchesQuery(accessibleQuery);
+			List<Match> matches = explorer.getBestNode().getConfiguration().getState().getMatches(accessibleQuery,
+					new HashMap<>());
+			
 			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
 					.applySubstitution(accessibleQuery, matches.get(0).getMapping()).getAtoms();
 
