@@ -76,6 +76,10 @@ public class LinearGeneric extends LinearExplorer {
 	public void performSingleExplorationStep() throws PlannerException, LimitReachedException {
 		_performSingleExplorationStep();
 	}
+	
+	/**
+	 * @returns null or the fresh node that was created in this step
+	 */
 	public SearchNode _performSingleExplorationStep() throws PlannerException, LimitReachedException {
 		// Choose the next node to explore below it
 		SearchNode selectedNode = this.chooseNode();
