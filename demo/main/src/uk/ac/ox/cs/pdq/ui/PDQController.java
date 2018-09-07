@@ -348,21 +348,21 @@ public class PDQController {
      *
      * @param event the event
      */
-/* MR    @FXML void newQueryPressed(ActionEvent event) {
-    	Schema schema = this.currentSchema.get().getSchema();
+    @FXML void newQueryPressed(ActionEvent event) {
+/* MR    	Schema schema = this.currentSchema.get().getSchema();
     	ObservableQuery query = new ObservableQuery("New Query", "",
     			new QueryBuilder().setName("Q").addBodyAtom(
     					schema.getRelations().iterator().next().createAtoms()).build());
-		this.dataQueue.add(query);
-    }*/
+		this.dataQueue.add(query);*/
+    }
    
     /**
      * Duplicate selected query pressed.
      *
      * @param event the event
      */
-/* MR    @FXML void duplicateSelectedQueryPressed(ActionEvent event) {
-    	ObservableList<ObservableQuery> selected = this.queriesListView.getSelectionModel().getSelectedItems();
+    @FXML void duplicateSelectedQueryPressed(ActionEvent event) {
+/* MR    	ObservableList<ObservableQuery> selected = this.queriesListView.getSelectionModel().getSelectedItems();
     	
     	if( selected.size() == 1 ) {
     		ObservableQuery selectedQuery = selected.get(0);
@@ -370,8 +370,8 @@ public class PDQController {
     		ConjunctiveQuery cQuery = new ConjunctiveQuery(query.getHead(), query.getBody());
     		ObservableQuery obsQuery = new ObservableQuery(selectedQuery.getName() + " (copy)", "", cQuery);
     		this.dataQueue.add(obsQuery);
-    	}
-    }*/
+    	}*/
+    }
 
     /**
      * Delete selected plans.
@@ -1047,10 +1047,10 @@ public class PDQController {
 		File schemaDir = new File(this.workDirectory.getAbsolutePath() + '/' + SCHEMA_DIRECTORY);
 		for (File schemaFile : listFiles(schemaDir, "", SCHEMA_FILENAME_SUFFIX)) {
 			try (FileInputStream in = new FileInputStream(schemaFile.getAbsolutePath())) {
-				ObservableSchemaReader schemaReader = new ObservableSchemaReader();
+/* MR				ObservableSchemaReader schemaReader = new ObservableSchemaReader();
 				ObservableSchema s = schemaReader.read(in);
 				s.setFile(schemaFile);
-				this.schemas.put(s.getName(), s);
+				this.schemas.put(s.getName(), s);*/
 			} catch (IOException e) {
 				throw new UserInterfaceException(e.getMessage(), e);
 			}
