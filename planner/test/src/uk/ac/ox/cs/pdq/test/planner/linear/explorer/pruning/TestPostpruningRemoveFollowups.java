@@ -23,6 +23,8 @@ import com.google.common.eventbus.EventBus;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
@@ -44,7 +46,10 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearKChase;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimized;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
@@ -180,6 +185,8 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 	 * Suppose that we found the plan that performs accesses in the following order: 
 	 * 			R(x,y) S(x,y) 
 	 * postpruning should create a new plan: R(x,y)
+	 * 
+	 * Uses LinearGeneric explorer
 	 * </pre>
 	 */
 	@Test
@@ -250,18 +257,237 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 			// create explorer
 			explorer = new LinearGeneric(new EventBus(), query, accessibleQuery, accessibleSchema, chaser,
 					databaseConnection, costEstimator, nodeFactory, 4);
-			List<SearchNode> nodes = new ArrayList<>();
 
 			// first exploration step should create a plan: Rename{[c0,c1]Access{S.mt_1[]}}
 			SearchNode newNode = explorer._performSingleExplorationStep();
-			nodes.add(newNode);
 			// Second exploration step should create a plan with 2 accesses:
 			// Join{[(#0=#2&#1=#3)]Rename{[c0,c1]Access{S.mt_1[]}},Rename{[c0,c1]Access{R.mt_0[]}}}
 			newNode = explorer._performSingleExplorationStep();
-			nodes.add(newNode);
 
 			// get query matches
 			List<Match> matches = explorer.getBestNode().getConfiguration().getState().getMatches(accessibleQuery,
+					new HashMap<>());
+			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
+					.applySubstitution(accessibleQuery, matches.get(0).getMapping()).getAtoms();
+
+			// attempt pruning the plan with the two accesses.
+			if (postpruning.pruneSearchNodePath(newNode, explorer.getPlanTree().getPath(newNode.getPathFromRoot()),
+					factsInQueryMatch)) {
+				System.out.println("Successfully pruned node: " + newNode + " path: "
+						+ Arrays.asList(newNode.getBestPathFromRoot()));
+			} else {
+				System.out.println("newNode: " + newNode + " path: " + Arrays.asList(newNode.getBestPathFromRoot()));
+				Assert.fail("Prune should have been successful here.");
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	/**
+	 * 
+	 * The query is Q(x,y) = R(x,y) We also have the dependencies R(x,y) -> S(x,y).
+	 * 
+	 * <pre>
+	 * Relations R and S have free accesses. 
+	 * Suppose that we found the plan that performs accesses in the following order: 
+	 * 			R(x,y) S(x,y) 
+	 * postpruning should create a new plan: R(x,y)
+	 * 
+	 * uses linear optimised explorer
+	 * </pre>
+	 */
+	@Test
+	public void testPruningSimplestPruningLO() {
+
+		Relation R = Relation.create("R", new Attribute[] { this.a, this.b },
+				new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
+		Relation S = Relation.create("S", new Attribute[] { this.a, this.b },
+				new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
+
+		// Create a conjunctive query that joins all relations in the first three
+		// positions
+		Variable x = Variable.create("x");
+		Variable y = Variable.create("y");
+		Atom atom[] = new Atom[1];
+		atom[0] = Atom.create(R, new Term[] { x, y });
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, atom);
+
+		Dependency[] dependencies = new Dependency[] { TGD.create(new Atom[] { Atom.create(R, new Term[] { x, y }) },
+				new Atom[] { Atom.create(S, new Term[] { x, y }) }) };
+		// Create schema
+		Schema schema = new Schema(new Relation[] { R, S }, dependencies);
+
+		// Create accessible schema
+		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+
+		// Create accessible query
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
+		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
+		substitutionFiltered.putAll(substitution);
+		for (Variable variable : query.getBoundVariables())
+			substitutionFiltered.remove(variable);
+		ExplorationSetUp.getCanonicalSubstitution().put(query, substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(query, substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery, substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery, substitutionFiltered);
+		// Create database connection
+		DatabaseManager databaseConnection = null;
+		try {
+			databaseConnection = createConnection(accessibleSchema);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+
+		// Create the chaser
+		RestrictedChaser chaser = new RestrictedChaser();
+
+		// Mock the cost estimator
+		//Create the cost estimator 
+		OrderIndependentCostEstimator costEstimator = new CountNumberOfAccessedRelationsCostEstimator();
+
+		// Mock the planner parameters
+		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
+		when(parameters.getSeed()).thenReturn(1);
+		when(parameters.getMaxDepth()).thenReturn(2);
+
+		// Create nodeFactory
+		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+
+		// Create linear explorer
+		LinearOptimized explorer = null;
+		PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(nodeFactory, accessibleSchema, chaser,
+				query);
+
+		try {
+			//Create the cost Propagator
+			OrderIndependentCostPropagator costPropagator = new OrderIndependentCostPropagator(costEstimator);
+			// create explorer
+			explorer = new LinearOptimized(new EventBus(), query, accessibleQuery, accessibleSchema, chaser,
+					databaseConnection, costEstimator,costPropagator, nodeFactory,4,1, postpruning,false);
+
+			// first exploration step should create a plan: Rename{[c0,c1]Access{S.mt_1[]}}
+			SearchNode newNode = explorer._performSingleExplorationStep();
+			// Second exploration step should create a plan with 2 accesses:
+			// Join{[(#0=#2&#1=#3)]Rename{[c0,c1]Access{S.mt_1[]}},Rename{[c0,c1]Access{R.mt_0[]}}}
+			newNode = explorer._performSingleExplorationStep();
+
+			// get query matches
+			List<Match> matches = newNode.getConfiguration().getState().getMatches(accessibleQuery,
+					new HashMap<>());
+			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
+					.applySubstitution(accessibleQuery, matches.get(0).getMapping()).getAtoms();
+
+			// attempt pruning the plan with the two accesses.
+			if (postpruning.pruneSearchNodePath(newNode, explorer.getPlanTree().getPath(newNode.getPathFromRoot()),
+					factsInQueryMatch)) {
+				System.out.println("Successfully pruned node: " + newNode + " path: "
+						+ Arrays.asList(newNode.getBestPathFromRoot()));
+			} else {
+				System.out.println("newNode: " + newNode + " path: " + Arrays.asList(newNode.getBestPathFromRoot()));
+				Assert.fail("Prune should have been successful here.");
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	/**
+	 * 
+	 * The query is Q(x,y) = R(x,y) We also have the dependencies R(x,y) -> S(x,y).
+	 * 
+	 * <pre>
+	 * Relations R and S have free accesses. 
+	 * Suppose that we found the plan that performs accesses in the following order: 
+	 * 			R(x,y) S(x,y) 
+	 * postpruning should create a new plan: R(x,y)
+	 * 
+	 * uses linear KChase explorer
+	 * </pre>
+	 */
+	@Test
+	public void testPruningSimplestPruningKChase() {
+
+		Relation R = Relation.create("R", new Attribute[] { this.a, this.b },
+				new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
+		Relation S = Relation.create("S", new Attribute[] { this.a, this.b },
+				new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
+
+		// Create a conjunctive query that joins all relations in the first three
+		// positions
+		Variable x = Variable.create("x");
+		Variable y = Variable.create("y");
+		Atom atom[] = new Atom[1];
+		atom[0] = Atom.create(R, new Term[] { x, y });
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, atom);
+
+		Dependency[] dependencies = new Dependency[] { TGD.create(new Atom[] { Atom.create(R, new Term[] { x, y }) },
+				new Atom[] { Atom.create(S, new Term[] { x, y }) }) };
+		// Create schema
+		Schema schema = new Schema(new Relation[] { R, S }, dependencies);
+
+		// Create accessible schema
+		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+
+		// Create accessible query
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
+		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
+		substitutionFiltered.putAll(substitution);
+		for (Variable variable : query.getBoundVariables())
+			substitutionFiltered.remove(variable);
+		ExplorationSetUp.getCanonicalSubstitution().put(query, substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(query, substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery, substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery, substitutionFiltered);
+		// Create database connection
+		DatabaseManager databaseConnection = null;
+		try {
+			databaseConnection = createConnection(accessibleSchema);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+
+		// Create the chaser
+		RestrictedChaser chaser = new RestrictedChaser();
+
+		// Mock the cost estimator
+		//Create the cost estimator 
+		OrderIndependentCostEstimator costEstimator = new CountNumberOfAccessedRelationsCostEstimator();
+
+		// Mock the planner parameters
+		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
+		when(parameters.getSeed()).thenReturn(1);
+		when(parameters.getMaxDepth()).thenReturn(2);
+
+		// Create nodeFactory
+		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+
+		// Create linear explorer
+		LinearKChase explorer = null;
+		PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(nodeFactory, accessibleSchema, chaser,
+				query);
+
+		try {
+			//Create the cost Propagator
+			OrderIndependentCostPropagator costPropagator = new OrderIndependentCostPropagator(costEstimator);
+			// create explorer
+			explorer = new LinearKChase(new EventBus(), query, accessibleQuery, accessibleSchema, chaser,
+					databaseConnection, costEstimator,costPropagator, nodeFactory,4,1);
+
+			// first exploration step should create a plan: Rename{[c0,c1]Access{S.mt_1[]}}
+			SearchNode newNode = explorer._performSingleExplorationStep();
+			// Second exploration step should create a plan with 2 accesses:
+			// Join{[(#0=#2&#1=#3)]Rename{[c0,c1]Access{S.mt_1[]}},Rename{[c0,c1]Access{R.mt_0[]}}}
+			newNode = explorer._performSingleExplorationStep();
+
+			// get query matches
+			List<Match> matches = newNode.getConfiguration().getState().getMatches(accessibleQuery,
 					new HashMap<>());
 			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
 					.applySubstitution(accessibleQuery, matches.get(0).getMapping()).getAtoms();
@@ -385,9 +611,12 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 
 			// get query matches
 			SearchNode bestNode = explorer.getBestNode();
-			List<Match> matches = explorer.getPlanTree().getPath(bestNode.getBestPathFromRoot())
-					.get(bestNode.getBestPathFromRoot().size() - 1).getConfiguration().getState()
-					.getMatches(accessibleQuery, new HashMap<>());
+			List<Match> matches = explorer.getBestNode().getConfiguration().getState().getMatches(accessibleQuery,
+					new HashMap<>());
+//			
+//			List<Match> matches = explorer.getPlanTree().getPath(bestNode.getBestPathFromRoot())
+//					.get(bestNode.getBestPathFromRoot().size() - 1).getConfiguration().getState()
+//					.getMatches(accessibleQuery, new HashMap<>());
 
 			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
 					.applySubstitution(accessibleQuery, matches.get(0).getMapping()).getAtoms();

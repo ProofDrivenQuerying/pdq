@@ -99,9 +99,14 @@ public class LinearKChase extends LinearExplorer {
 	 */
 	@Override
 	public void performSingleExplorationStep() throws PlannerException, LimitReachedException {
+		_performSingleExplorationStep();
+	}
+	
+	public SearchNode _performSingleExplorationStep() throws PlannerException, LimitReachedException {
 		log.debug("Iteration: " + this.rounds);
+		SearchNode freshNode = null;
 		if(this.rounds % this.chaseInterval != 0  || chaseInterval==1) {
-			_performeSingleExplorationStepWithoutChasing();
+			freshNode = _performeSingleExplorationStepWithoutChasing();
 		}
 		if (this.terminates() || chaseInterval==1 || this.rounds % this.chaseInterval == 0 ) {
 			// we do cases when:
@@ -111,6 +116,7 @@ public class LinearKChase extends LinearExplorer {
 			_performeSingleExplorationStepWithChasing();
 		}
 		this.rounds++;
+		return freshNode;
 	}
 	
 	/** 
@@ -168,11 +174,11 @@ public class LinearKChase extends LinearExplorer {
 	 * @throws PlannerException
 	 * @throws LimitReachedException
 	 */
-	private void _performeSingleExplorationStepWithoutChasing() throws PlannerException {
+	private SearchNode _performeSingleExplorationStepWithoutChasing() throws PlannerException {
 		// Choose the next node to explore below it
 		SearchNode selectedNode = this.chooseNode();
 		if (selectedNode == null) 
-			return;
+			return null;
 		LinearConfiguration selectedConfig = selectedNode.getConfiguration();
 		/*
 		 * Choose a new candidate fact. A candidate fact F(c1,c2,...,cN) is one for which
@@ -182,7 +188,7 @@ public class LinearKChase extends LinearExplorer {
 		Candidate selectedCandidate = selectedConfig.chooseCandidate();
 		if(selectedCandidate == null) {
 			selectedNode.setStatus(NodeStatus.TERMINAL);
-			return;
+			return null;
 		}
 
 		// Search for other candidate facts that could be exposed along with the selected candidate. 
@@ -230,6 +236,7 @@ public class LinearKChase extends LinearExplorer {
 			this.eventBus.post(freshNode);
 			this.planTree.removeVertex(freshNode);
 		}
+		return freshNode;
 	}
 
 	/**

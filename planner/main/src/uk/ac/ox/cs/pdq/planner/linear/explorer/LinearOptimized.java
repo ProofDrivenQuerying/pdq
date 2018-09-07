@@ -141,23 +141,29 @@ public class LinearOptimized extends LinearExplorer {
 	 */
 	@Override
 	public void performSingleExplorationStep() throws PlannerException, LimitReachedException {
+		_performSingleExplorationStep();
+	}
+	
+	public SearchNode _performSingleExplorationStep() throws PlannerException, LimitReachedException {
+		SearchNode freshNode = null;
 		if(this.unexploredDescendants.isEmpty()) {
 			// Choose the next node to explore below it
 			SearchNode selectedNode = this.chooseNode();
 			if (selectedNode == null) 
-				return;
-			this.explorationStep(selectedNode);
+				return null;
+			freshNode = this.explorationStep(selectedNode);
 		}
 		else {
 			SearchNode selectedNode = this.unexploredDescendants.peek();
 			if (selectedNode == null) 
-				return;
-			SearchNode freshNode = this.explorationStep(selectedNode);
+				return null;
+			freshNode = this.explorationStep(selectedNode);
 			if(freshNode.getStatus().equals(NodeStatus.ONGOING)) 
 				this.unexploredDescendants.add(freshNode);
 			this.unexploredDescendants.remove(selectedNode);
 		}
 		this.rounds++;
+		return freshNode;
 	}
 
 	/**
@@ -472,4 +478,5 @@ public class LinearOptimized extends LinearExplorer {
 				this.getDeadDescendantsRecursive(planTree.getEdgeTarget(edge), planTree, deadDescendants);
 		}
 	}
+
 }
