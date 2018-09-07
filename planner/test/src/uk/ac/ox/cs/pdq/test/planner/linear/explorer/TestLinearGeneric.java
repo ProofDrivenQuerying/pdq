@@ -142,7 +142,7 @@ public class TestLinearGeneric extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(3);
 
 		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+		NodeFactory nodeFactory = new NodeFactory(costEstimator);
 
 		// Create linear explorer
 		LinearGeneric explorer = null;
@@ -260,7 +260,7 @@ public class TestLinearGeneric extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(3);
 
 		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+		NodeFactory nodeFactory = new NodeFactory(costEstimator);
 
 		// Create linear explorer
 		LinearGeneric explorer = null;
@@ -335,7 +335,7 @@ public class TestLinearGeneric extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(3);
 
 		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+		NodeFactory nodeFactory = new NodeFactory(costEstimator);
 
 		// Create linear explorer
 		LinearGeneric explorer = null;
@@ -458,7 +458,7 @@ public class TestLinearGeneric extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(numberOfRelations);
 
 		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+		NodeFactory nodeFactory = new NodeFactory(costEstimator);
 
 		// Create linear explorer
 		LinearGeneric explorer = null;
@@ -530,7 +530,7 @@ public class TestLinearGeneric extends PdqTest {
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
 		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+		NodeFactory nodeFactory = new NodeFactory(costEstimator);
 
 		// Create Linear Generic
 		LinearGeneric explorer = null;

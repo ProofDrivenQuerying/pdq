@@ -108,7 +108,7 @@ public class ExplorerFactory {
 		if (parameters.getPlannerType().equals(PlannerTypes.LINEAR_GENERIC)
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_KCHASE)
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_OPTIMIZED)) {
-			nodeFactory = new NodeFactory(parameters, costEstimator);
+			nodeFactory = new NodeFactory(costEstimator);
 			postPruning = new PostPruningFactory(parameters.getPostPruningType(), nodeFactory, chaser, query, accessibleSchema).getInstance();
 			if (costEstimator instanceof OrderDependentCostEstimator) 
 				costPropagator = new OrderDependentCostPropagator((OrderDependentCostEstimator) costEstimator);

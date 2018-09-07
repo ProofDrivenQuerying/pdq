@@ -134,7 +134,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(3);
 
 		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+		NodeFactory nodeFactory = new NodeFactory(costEstimator);
 
 		// Create linear explorer
 		LinearGeneric explorer = null;
@@ -246,7 +246,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(2);
 
 		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+		NodeFactory nodeFactory = new NodeFactory(costEstimator);
 
 		// Create linear explorer
 		LinearGeneric explorer = null;
@@ -355,7 +355,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(2);
 
 		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+		NodeFactory nodeFactory = new NodeFactory(costEstimator);
 
 		// Create linear explorer
 		LinearOptimized explorer = null;
@@ -466,7 +466,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(2);
 
 		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+		NodeFactory nodeFactory = new NodeFactory(costEstimator);
 
 		// Create linear explorer
 		LinearKChase explorer = null;
@@ -585,7 +585,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(3);
 
 		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+		NodeFactory nodeFactory = new NodeFactory(costEstimator);
 
 		// Create linear explorer
 		LinearGeneric explorer = null;

@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -44,9 +43,6 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 
 	private final Set<Candidate> newlyExposedCandidates;
 	
-	/** Random engine. Used when selecting candidate facts to expose*/
-	protected final Random random;
-	
 	/**  An accessibility axiom. */
 	private final AccessibilityAxiom rule;
 	
@@ -60,13 +56,12 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	 * @param candidatesToExpose 		The candidate facts exposed in this configuration
 	 * @param random the random
 	 */
-	public LinearChaseConfiguration(LinearChaseConfiguration parent, Set<Candidate> candidatesToExpose, Random random) {		
+	public LinearChaseConfiguration(LinearChaseConfiguration parent, Set<Candidate> candidatesToExpose) {		
 		super(parent.getState().clone(), new LinkedHashSet<Constant>(), LinearUtility.getOutputConstants(candidatesToExpose));
 		Assert.assertNotNull(parent);
 		Assert.assertTrue(candidatesToExpose!= null && !candidatesToExpose.isEmpty());
 		Assert.assertTrue(this.getInput() != null && this.getInput().isEmpty());
 		Assert.assertNotNull(this.getOutput());
-		this.random = random;
 		this.rule = candidatesToExpose.iterator().next().getRule();
 		this.facts = new LinkedHashSet<>();
 		this.newlyExposedCandidates = candidatesToExpose;
@@ -93,9 +88,8 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	 * @param state the state; i.e. the set of facts
 	 * @param random the random
 	 */
-	public LinearChaseConfiguration(AccessibleChaseInstance state, Random random) {
+	public LinearChaseConfiguration(AccessibleChaseInstance state) {
 		super(state, null, null);
-		this.random = random;
 		this.rule = null;
 		this.facts = null;
 		this.plan = null;
@@ -205,7 +199,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	@Override
 	public Candidate chooseCandidate() {
 		while(!this.candidates.isEmpty()) {
-			int selection = this.random.nextInt(this.candidates.size());
+			int selection = this.candidates.size()-1;
 			Candidate candidate = this.candidates.get(selection);
 			if(!this.isExposed(candidate)) 
 				return candidate;
