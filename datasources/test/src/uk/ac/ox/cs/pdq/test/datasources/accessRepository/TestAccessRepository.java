@@ -28,6 +28,12 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
+/**
+ * Tests the access repository
+ * 
+ * @author gabor
+ *
+ */
 public class TestAccessRepository extends PdqTest {
 	Properties properties;
 	boolean print = false;
@@ -40,12 +46,6 @@ public class TestAccessRepository extends PdqTest {
 		properties.setProperty("password", "admin");
 	}
 
-	//TOCOMMENT: who is the author?
-	//TOCOMMENT: what is the overall goal of these tests?
-	
-	// TOCOMMENT: what is the schema?
-	// TOCOMMENT: (specifically below) what is external vs internal?
-	//
 	// NATION relation
 	//
 	// Attributes in the external schema.
@@ -63,7 +63,11 @@ public class TestAccessRepository extends PdqTest {
 			Attribute.create(String.class, "N_NAME"), Attribute.create(String.class, "name"),
 			Attribute.create(Integer.class, "N_REGIONKEY"), Attribute.create(Integer.class, "regionKey"));
 
-	//TOCOMMENT: what is this specific test doing
+	/**
+	 * Creates an Sql access method and attempts to export it into an xml file.
+	 * 
+	 * @throws JAXBException
+	 */
 	@Test
 	public void testDbAccessExport() throws JAXBException {
 
@@ -88,28 +92,44 @@ public class TestAccessRepository extends PdqTest {
 				System.out.println(t);
 			counter++;
 		}
-		//TOCOMMENT: what is this assertion about?
+		// The NATION table in the tpch database should have 25 facts.
 		Assert.assertEquals(25, counter);
 		try {
-			DbIOManager.exportAccessMethod(target, new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml"));
+			DbIOManager.exportAccessMethod(target, new File(
+					"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml"));
 		} catch (Throwable t) {
 			t.printStackTrace();
 			t.printStackTrace();
 		}
-		long goodLength = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethod.xml").length();
-		long newLength = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml").length();
-		//TOCOMMENT: the comment below makes no sense without context; really explain this! 
-		// the path in the xml can change from user to user, so we can only check approximation.
+		long goodLength = new File(
+				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethod.xml")
+						.length();
+		long newLength = new File(
+				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml")
+						.length();
+		// TO COMMENT: the comment below makes no sense without context; really explain
+		// this! - Gabor: There is a file path in the exported xml file. That path
+		// depends on the user who runs the test. Therefore we cannot know how large the
+		// new file should be exactly, but it should be in a 30 character range to the
+		// saved copy.
+
+		// The data file's path in the xml can change from user to user, so we can only
+		// check that the new xml is approximately the same size as the reference
+		// version.
 		Assert.assertTrue(goodLength + 30 > newLength);
 		Assert.assertTrue(goodLength - 30 < newLength);
-		
-		
+
 		target.close();
-		new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml").delete();
+		new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml")
+				.delete();
 	}
 
-	
-	//TOCOMMENT: What is this specific test doing?
+	/**
+	 * Creates an InMemoryAccess object and attempts to export it to xml. The access
+	 * method will have 25 test facts.
+	 * 
+	 * @throws JAXBException
+	 */
 	@Test
 	public void testInMemoryAccessExport() throws JAXBException {
 		InMemoryAccessMethod target;
@@ -125,9 +145,9 @@ public class TestAccessRepository extends PdqTest {
 		target = new InMemoryAccessMethod("NATION_MEM", this.attrs_N, inputs, relation, this.attrMap_nation);
 		Collection<Tuple> tuples = new ArrayList<>();
 		TupleType tt = TupleType.DefaultFactory.createFromTyped(this.attrs_N);
-		//TOCOMMENT: what are we creating in this loop?
+		// Creating test facts.
 		for (int index = 0; index < 25; index++) {
-			tuples.add(tt.createTuple(index, "Name" + index,1000 + index, "Comment" + index));
+			tuples.add(tt.createTuple(index, "Name" + index, 1000 + index, "Comment" + index));
 		}
 		target.load(tuples);
 		Iterable<Tuple> data = target.access();
@@ -142,29 +162,41 @@ public class TestAccessRepository extends PdqTest {
 		}
 		Assert.assertEquals(25, counter);
 		try {
-			DbIOManager.exportAccessMethod(target, new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml"));
+			DbIOManager.exportAccessMethod(target, new File(
+					"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml"));
 		} catch (Throwable t) {
 			t.printStackTrace();
 			t.printStackTrace();
 		}
-		long goodLength = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethod.xml").length();
-		long newLength = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml").length();
-		//TOCOMMENT: cut and paste of cryptic comment above
-		// the path in the xml can change from user to user, so we can only check approximation.
+		long goodLength = new File(
+				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethod.xml")
+						.length();
+		long newLength = new File(
+				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml")
+						.length();
+		// The data file's path in the xml can change from user to user, so we can only
+		// check that the new xml is approximately the same size as the reference
+		// version.
 		Assert.assertTrue(goodLength + 60 > newLength);
 		Assert.assertTrue(goodLength - 60 < newLength);
 		target.close();
-		new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml").delete();
+		new File(
+				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml")
+						.delete();
 	}
 
-	//TOCOMMENT: What is this specific test doing?
+	/**
+	 * Tests the import from xml function of the SqlAccessMethod.
+	 * 
+	 * @throws JAXBException
+	 */
 	@Test
 	public void testAccessImport() throws JAXBException {
-		
+
 		SqlAccessMethod target = null;
 		try {
-			target = (SqlAccessMethod) DbIOManager
-					.importAccess(new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethod.xml"));
+			target = (SqlAccessMethod) DbIOManager.importAccess(new File(
+					"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethod.xml"));
 		} catch (Throwable t) {
 			t.printStackTrace();
 			t.printStackTrace();
@@ -182,14 +214,19 @@ public class TestAccessRepository extends PdqTest {
 		Assert.assertEquals(25, counter);
 		target.close();
 	}
-	
+
+	/**
+	 * Tests if we can import InMemoryAccessMethod from xml.
+	 * 
+	 * @throws JAXBException
+	 */
 	@Test
 	public void testInMemoryAccessImport() throws JAXBException {
 
 		InMemoryAccessMethod target = null;
 		try {
-			target = (InMemoryAccessMethod) DbIOManager
-					.importAccess(new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethod.xml"));
+			target = (InMemoryAccessMethod) DbIOManager.importAccess(new File(
+					"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethod.xml"));
 		} catch (Throwable t) {
 			t.printStackTrace();
 			t.printStackTrace();
@@ -208,10 +245,17 @@ public class TestAccessRepository extends PdqTest {
 		target.close();
 	}
 
-	//TOCOMMENT: WHAT IS THIS SPECIFIC TEST DOING?
+	/**
+	 * Full usage scenario of access repository. It will read all access methods
+	 * from the test folder, and then it will read data from two of those, and
+	 * finally it will attempt to close all readers.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testAccessRepository() throws Exception {
-		AccessRepository repo = AccessRepository.getRepository("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses");
+		AccessRepository repo = AccessRepository
+				.getRepository("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses");
 		ExecutableAccessMethod accessMethod = repo.getAccess("NATION");
 		testReadingData(accessMethod);
 		ExecutableAccessMethod accessMethod2 = repo.getAccess("NATION_MEM");
@@ -221,6 +265,11 @@ public class TestAccessRepository extends PdqTest {
 		Assert.assertTrue(accessMethod2.isClosed());
 	}
 
+	/**
+	 * Reads from the given access. Asserts if we got 25 facts.
+	 * 
+	 * @param accessMethod
+	 */
 	private void testReadingData(ExecutableAccessMethod accessMethod) {
 		Iterable<Tuple> data = accessMethod.access();
 		Assert.assertNotNull(data);

@@ -180,7 +180,7 @@ public abstract class PeriodicalAllowance
 	}
 
 	/**
-	 *TOCOMMENT:???
+	 * if wait is true it won't fire timeouts.
 	 * @return boolean
 	 */
 	public boolean isWait() {

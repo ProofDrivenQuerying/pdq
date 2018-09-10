@@ -105,8 +105,11 @@ public interface TupleType extends Serializable{
 	/** The empty tuple. */
 	static final TupleType EmptyTupleType = DefaultFactory.create();
 
-	// TODO: this is copied from uk.ac.ox.cs.pdq.datasources.utility;
-	// Either remove it from that class or from here. 
+	/**
+	 * Creates a TupleType object with the type of the given Attributes
+	 * @param typed
+	 * @return
+	 */
 	public static TupleType createFromTyped(Attribute[] typed) {
 		Type[] types = new Type[typed.length];
 		for(int attributeIndex = 0; attributeIndex < typed.length; ++attributeIndex) 

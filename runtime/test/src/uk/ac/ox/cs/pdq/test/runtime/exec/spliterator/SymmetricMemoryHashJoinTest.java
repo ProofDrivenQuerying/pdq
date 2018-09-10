@@ -627,12 +627,6 @@ public class SymmetricMemoryHashJoinTest {
 		// Check the inferred join condition. The common attribute "regionKey" is in
 		// position 2 in the nation relation and position 0 in the region relation
 		// (i.e. position 3 in the concatenated attributes).
-		// Assert.assertTrue(target.getJoinCondition() instanceof
-		// TypeEqualityCondition);
-		// TypeEqualityCondition condition = (TypeEqualityCondition)
-		// target.getJoinCondition();
-		// Assert.assertEquals(2, condition.getPosition());
-		// Assert.assertEquals(3, condition.getOther());
 		Assert.assertEquals(2, ((AttributeEqualityCondition) ((ConjunctiveCondition) target.getJoinCondition())
 				.getSimpleConditions()[0]).getPosition());
 		Assert.assertEquals(3, ((AttributeEqualityCondition) ((ConjunctiveCondition) target.getJoinCondition())
@@ -653,8 +647,7 @@ public class SymmetricMemoryHashJoinTest {
 		// (nationKey) and the 0th REGION attribute (regionKey).
 		Condition joinCondition = AttributeEqualityCondition.create(1, 3);
 
-		// TOCOMMENT extra join condition ?
-		target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild /* , joinCondition */), decor);
+		target = new SymmetricMemoryHashJoin(JoinTerm.create(leftChild, rightChild, joinCondition), decor);
 
 		// Construct some dummy tuples to test the tuple-dependent getJoinCondition
 		// method.
@@ -674,11 +667,6 @@ public class SymmetricMemoryHashJoinTest {
 		// join condition _and_ the tuple) is of type ConstantEqualityCondition.
 		Assert.assertNotEquals(joinCondition, actualJoinCondition);
 		Assert.assertTrue(joinCondition instanceof AttributeEqualityCondition);
-		// Assert.assertTrue(actualJoinCondition instanceof ConstantEqualityCondition);
-		// Assert.assertEquals(2, ((AttributeEqualityCondition)
-		// ((ConjunctiveCondition)result).getSimpleConditions()[0]).getPosition());
-		// Assert.assertEquals(3, ((AttributeEqualityCondition)
-		// ((ConjunctiveCondition)result).getSimpleConditions()[0]).getOther());
 
 		Assert.assertTrue(actualJoinCondition.isSatisfied(tupleN.appendTuple(tupleR1)));
 		Assert.assertFalse(actualJoinCondition.isSatisfied(tupleN.appendTuple(tupleR2)));

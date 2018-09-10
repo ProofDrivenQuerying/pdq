@@ -278,7 +278,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 
 	/**
-	 * TOCOMMENT:??? Gets the views discovery statement.
+	 * Gets the SQL command that will be used to discover views.
 	 *
 	 * @param databaseName the database name
 	 * @return a database-specific SQL statement to extract the views of
