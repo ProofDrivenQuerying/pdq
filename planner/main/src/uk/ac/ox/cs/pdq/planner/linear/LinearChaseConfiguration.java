@@ -54,7 +54,6 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	 *
 	 * @param parent 		The parent linear configuration
 	 * @param candidatesToExpose 		The candidate facts exposed in this configuration
-	 * @param random the random
 	 */
 	public LinearChaseConfiguration(LinearChaseConfiguration parent, Set<Candidate> candidatesToExpose) {		
 		super(parent.getState().clone(), new LinkedHashSet<Constant>(), LinearUtility.getOutputConstants(candidatesToExpose));
@@ -86,7 +85,6 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	 * Used when creating the root of the linear plan tree.
 	 *
 	 * @param state the state; i.e. the set of facts
-	 * @param random the random
 	 */
 	public LinearChaseConfiguration(AccessibleChaseInstance state) {
 		super(state, null, null);
