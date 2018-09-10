@@ -24,6 +24,8 @@ import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
  * This class factorises functionalities common to all SQLSchemaDiscovers.
@@ -359,4 +361,18 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 		String password = properties.getProperty("password");
 		return DriverManager.getConnection(url + database, username, password);
 	}
+	
+	/**
+	 * Generates a list of terms matching the attributes of the input relation.
+	 *
+	 * @param relation Relation
+	 * @return List<Term>
+	 */
+	public static Term[] createVariables(Relation relation) {
+		Term[] result = new Term[relation.getArity()];
+		for (int i = 0, l = relation.getArity(); i < l; i++) 
+			result[i] = Variable.getFreshVariable();
+		return result;
+	}
+	
 }
