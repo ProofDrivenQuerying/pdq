@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query>
+	<!-- Suppliers in the United-States and available quantities of their supplied parts -->
+	<body>
+		<atom name="partsupp">
+			<variable />
+			<variable name="x1" />
+			<variable />
+			<variable name="x3" />
+			<variable />
+		</atom>
+		<atom name="supplier">
+			<variable name="x1" />
+			<variable name="x6" />
+			<variable />
+			<variable name="x8" />
+			<variable />
+			<variable name="x10" />
+			<variable />
+		</atom>
+		<atom name="nation">
+			<variable name="x8" />
+			<constant value="UNITED STATES" />
+			<variable name="x14" />
+			<variable />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="x10" />
+		<variable name="x6" />
+		<variable name="x3" />
+		<variable name="x14" />
+	</head>
+</query>

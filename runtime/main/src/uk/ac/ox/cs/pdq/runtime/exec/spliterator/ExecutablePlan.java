@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.runtime.exec.spliterator;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -11,7 +10,6 @@ import java.util.stream.StreamSupport;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
@@ -161,11 +159,6 @@ public abstract class ExecutablePlan implements Plan, AutoCloseable {
 	@Override
 	public String toString() {
 		return decoratedPlan.toString();
-	}
-	
-	@Override
-	public Set<AccessTerm> accessPlans() {
-		return this.getDecoratedPlan().accessPlans();
 	}
 	
 	@Override

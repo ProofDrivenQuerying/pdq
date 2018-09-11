@@ -456,7 +456,7 @@ public class PdqTest {
 		ts.setQuery(query);
 		return ts;
 	}
-
+	
 	/**
 	 * Describes most of the necessary inputs for a test scenario.
 	 * 

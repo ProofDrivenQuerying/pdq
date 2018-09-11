@@ -59,6 +59,7 @@ public abstract class LinearExplorer extends Explorer {
 
 	/**  Creates new nodes. */
 	protected final NodeFactory nodeFactory;
+	protected SearchNode bestNode;
 
 	/**  Maximum exploration depth. */
 	protected final int depth;
@@ -183,4 +184,7 @@ public abstract class LinearExplorer extends Explorer {
 		return this.planTree;
 	}
 
+	public SearchNode getBestNode() {
+		return bestNode;
+	}
 }

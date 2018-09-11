@@ -23,7 +23,7 @@ public interface LinearConfiguration extends Configuration {
 
 	/**
 	 *
-	 * @return a randomly chosen candidate of this configuration
+	 * @return a candidate of this configuration
 	 */
 	Candidate chooseCandidate();
 
