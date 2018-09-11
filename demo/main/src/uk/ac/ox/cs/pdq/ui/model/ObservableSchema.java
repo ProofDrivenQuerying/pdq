@@ -11,7 +11,8 @@ import javafx.beans.value.ObservableValue;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.ui.UserInterfaceException;
 import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaWriter;
-
+import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
+import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 // TODO: Auto-generated Javadoc
 /**
  * The Class ObservableSchema.
@@ -27,9 +28,11 @@ public class ObservableSchema {
 	/** The file. */
 	private final SimpleObjectProperty<File> file =  new SimpleObjectProperty<>(this, "file");
 	
-	/** The schema. */
-	private final SimpleObjectProperty<Schema> schema = new SimpleObjectProperty<>(this, "schema");
+	/** The schema part 1. */
+	private ServiceGroup sgr;
 	
+	/** The schema part 2. */
+	private Service sr;
 	/**
 	 * Instantiates a new observable schema.
 	 *
@@ -37,8 +40,8 @@ public class ObservableSchema {
 	 * @param description the description
 	 * @param schema the schema
 	 */
-	public ObservableSchema(String name, String description, Schema schema) {
-		this(name, description, null, schema);
+	public ObservableSchema(String name, String description, ServiceGroup sgr, Service sr) {
+		this(name, description, null, sgr, sr);
 	}
 	
 	/**
@@ -49,11 +52,12 @@ public class ObservableSchema {
 	 * @param file the file
 	 * @param schema the schema
 	 */
-	public ObservableSchema(String name, String description, File file, Schema schema) {
+	public ObservableSchema(String name, String description, File file, ServiceGroup sgr, Service sr) {
 		this.name.set(name);
 		this.description.set(description);
 		this.file.set(file);
-		this.schema.set(schema);
+		this.sgr = sgr;
+		this.sr = sr;
 	}
 
 	/**
@@ -84,15 +88,6 @@ public class ObservableSchema {
 	}
 
 	/**
-	 * Schema property.
-	 *
-	 * @return the observable value
-	 */
-	public ObservableValue<Schema> schemaProperty() {
-		return this.schema;
-	}
-
-	/**
 	 * Gets the name.
 	 *
 	 * @return the name
@@ -120,15 +115,6 @@ public class ObservableSchema {
 	}
 
 	/**
-	 * Gets the schema.
-	 *
-	 * @return the schema
-	 */
-	public Schema getSchema() {
-		return this.schema.get();
-	}
-
-	/**
 	 * Sets the name.
 	 *
 	 * @param n the new name
@@ -153,15 +139,6 @@ public class ObservableSchema {
 	 */
 	public void setFile(File f) {
 		this.file.set(f);
-	}
-
-	/**
-	 * Sets the schema.
-	 *
-	 * @param s the new schema
-	 */
-	public void setSchema(Schema s) {
-		this.schema.set(s);
 	}
 
 	/**

@@ -12,6 +12,7 @@ import static uk.ac.ox.cs.pdq.ui.PDQApplication.SCHEMA_FILENAME_SUFFIX;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -243,12 +244,12 @@ public class PDQController {
             		log.warn("Unable to identify item to delete '" + item + "'");
         			continue;
         		}
-        		Relation relation = schema.getSchema().getRelation(item.getValue());
+ /* MR       		Relation relation = schema.getSchema().getRelation(item.getValue());
         		if (relation != null) {
         			this.deleteRelation(schema, relation);
         			this.reloadTreeItem(item.getParent(), schema);
         			continue;
-        		}
+        		}*/
 	       		int index = this.currentSchemaViewitems.getParent().getChildren().indexOf(this.currentSchemaViewitems);
 /* MR      		index -= this.currentSchema.get().getSchema().getRelations().size();
 	       		Dependency dependency = this.currentSchema.get().getSchema().getDependencies().get(index);
@@ -487,7 +488,7 @@ public class PDQController {
 
     	       	ObservableSchema schema = this.schemas.get(this.currentSchemaViewitems.getValue());
     	       	if (schema == null) {
-    	       		Relation relation = this.currentSchema.get().getSchema().getRelation(this.currentSchemaViewitems.getValue());
+    	       		Relation relation = null; // MR this.currentSchema.get().getSchema().getRelation(this.currentSchemaViewitems.getValue());
     	       		if (relation != null) {
 						try {
 							Stage dialog = new Stage();
@@ -1045,12 +1046,14 @@ public class PDQController {
 	 */
 	private void loadSchemas() {
 		File schemaDir = new File(this.workDirectory.getAbsolutePath() + '/' + SCHEMA_DIRECTORY);
+		File groupFile = new File(schemaDir.getAbsolutePath() + '/' + "service-groups");
 		for (File schemaFile : listFiles(schemaDir, "", SCHEMA_FILENAME_SUFFIX)) {
-			try (FileInputStream in = new FileInputStream(schemaFile.getAbsolutePath())) {
-/* MR				ObservableSchemaReader schemaReader = new ObservableSchemaReader();
-				ObservableSchema s = schemaReader.read(in);
+			try (FileInputStream in1 = new FileInputStream(groupFile.getAbsolutePath());
+				 FileInputStream in2 = new FileInputStream(schemaFile.getAbsolutePath())) {
+				ObservableSchemaReader schemaReader = new ObservableSchemaReader();
+				ObservableSchema s = schemaReader.read((InputStream) in1, (InputStream) in2);
 				s.setFile(schemaFile);
-				this.schemas.put(s.getName(), s);*/
+				this.schemas.put(s.getName(), s);
 			} catch (IOException e) {
 				throw new UserInterfaceException(e.getMessage(), e);
 			}
@@ -1136,8 +1139,8 @@ public class PDQController {
 			}
 			for (File queryFile: listFiles(queryDir, makePrefix(s), QUERY_FILENAME_SUFFIX)) {
 				try (FileInputStream in = new FileInputStream(queryFile.getAbsolutePath())) {
-					ObservableQueryReader queryReader = new ObservableQueryReader(s.getSchema());
-					ObservableQuery q = queryReader.read(in);
+					ObservableQueryReader queryReader = new ObservableQueryReader("hi");
+					ObservableQuery q = queryReader.read(queryFile);
 					q.setFile(queryFile);
 					qs.add(q);
 				} catch (IOException e) {
@@ -1262,7 +1265,7 @@ public class PDQController {
 		TreeItem<String> views = new TreeItem<>(bundle.getString("application.schema.schemas.views"), new ImageView(this.dbViewIcon));
 		TreeItem<String> dependencies = new TreeItem<>(bundle.getString("application.schema.schemas.dependencies"), new ImageView(this.dependencyIcon));
 		
-		for (Relation r : s.getSchema().getRelations()) {
+	/* MR	for (Relation r : s.getSchema().getRelations()) {
 			ImageView imageView = null;
 			if (r instanceof View) {
 				imageView = new ImageView(this.dbViewIcon);
@@ -1275,7 +1278,7 @@ public class PDQController {
 				relations.getChildren().add(new TreeItem<>(r.getName(), imageView));
 			}
 			//item.getChildren().add(new TreeItem<>(r.getName(), imageView));
-		}
+		}*/
 /* MR		for (Dependency ic : s.getSchema().getDependencies()) {
 			ImageView imageView = null;
 			if (ic instanceof LinearGuarded) {

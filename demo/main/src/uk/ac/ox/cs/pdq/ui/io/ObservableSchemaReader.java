@@ -1,9 +1,13 @@
 package uk.ac.ox.cs.pdq.ui.io;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -12,10 +16,12 @@ import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import uk.ac.ox.cs.pdq.SchemaReader;
+//import uk.ac.ox.cs.pdq.SchemaReader;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLReader;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
+import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
+import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
 // TODO: Auto-generated Javadoc
@@ -25,7 +31,7 @@ import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
  * @author Julien LEBLAY
  * 
  */
-public class ObservableSchemaReader extends AbstractXMLReader<ObservableSchema> {
+public class ObservableSchemaReader {
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(ObservableSchemaReader.class);
@@ -36,55 +42,38 @@ public class ObservableSchemaReader extends AbstractXMLReader<ObservableSchema> 
 	/** The description. */
 	private String description;
 	
-	/** A conventional schema reader. */
-	private SchemaReader schemaReader;
+	/** A conventional schema reader, service group. */
+	private ServiceGroup sgr;
+	
+	/** A conventional schema reader, service. */
+	private Service sr;
 
 	/**
 	 * Default constructor.
 	 */
 	public ObservableSchemaReader() {
-		this.schemaReader = new SchemaReader();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.benchmark.io.AbstractReader#load(java.io.InputStream)
 	 */
-	@Override
-	public ObservableSchema read(InputStream in) {
+	public ObservableSchema read(InputStream in1, InputStream in2) {
 		try {
-			SAXParserFactory factory = SAXParserFactory.newInstance();
-			SAXParser parser = factory.newSAXParser();
-			parser.parse(in, this);
-			return new ObservableSchema(this.name, this.description, this.schemaReader.getSchema());
-		} catch (SAXException | ParserConfigurationException | IOException e) {
+			JAXBContext jaxbContext1 = JAXBContext.newInstance(ServiceGroup.class);
+			Unmarshaller jaxbUnmarshaller1 = jaxbContext1.createUnmarshaller();
+			this.sgr = (ServiceGroup) jaxbUnmarshaller1.unmarshal(in1);
+			JAXBContext jaxbContext2 = JAXBContext.newInstance(Service.class);
+			Unmarshaller jaxbUnmarshaller2 = jaxbContext2.createUnmarshaller();
+			this.sr = (Service) jaxbUnmarshaller2.unmarshal(in2);
+			this.name = sr.getUrl();
+			this.description = sr.getDocumentation();
+			return new ObservableSchema(this.name, this.description, this.sgr, this.sr);
+		} catch (JAXBException e) {
 			throw new ReaderException("Exception thrown while reading schema ", e);
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
-	 */
-	@Override
-	public void startElement(String uri, String localName, String qName, Attributes atts) {
-		switch(QNames.parse(qName)) {
-		case SCHEMA:
-			this.name = this.getValue(atts, QNames.NAME);
-			this.description = this.getValue(atts, QNames.DEPENDENCIES);
-		}
-		this.schemaReader.startElement(uri, localName, qName, atts);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void endElement(String uri, String localName, String qName) {
-		this.schemaReader.endElement(uri, localName, qName);
-	}
-	
 	/**
 	 * For test purpose only.
 	 *
@@ -92,8 +81,8 @@ public class ObservableSchemaReader extends AbstractXMLReader<ObservableSchema> 
 	 */
 	public static void main(String... args) {
 		try (InputStream in = new FileInputStream("test/input/schema-mysql-tpch.xml")) {
-			ObservableSchema s = new ObservableSchemaReader().read(in);
-			new ObservableSchemaWriter().write(System.out, s);
+/* MR			ObservableSchema s = new ObservableSchemaReader().read(in);
+			new ObservableSchemaWriter().write(System.out, s); */
 		} catch (IOException e) {
 			log.error(e.getMessage(),e);
 		}

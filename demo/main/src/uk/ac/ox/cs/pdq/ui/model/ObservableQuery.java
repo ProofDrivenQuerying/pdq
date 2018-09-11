@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableStringValue;
 import javafx.beans.value.ObservableValue;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 //import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.ui.UserInterfaceException;
 import uk.ac.ox.cs.pdq.ui.io.ObservableQueryWriter;
@@ -31,7 +32,7 @@ public class ObservableQuery {
 	private final SimpleObjectProperty<File> file =  new SimpleObjectProperty<>(this, "file");
 	
 	/** The query. */
-// MR	private final SimpleObjectProperty<Query<?>> query = new SimpleObjectProperty<>(this, "query");
+	private final SimpleObjectProperty<ConjunctiveQuery> query = new SimpleObjectProperty<>(this, "query");
 	
 	/**
 	 * Instantiates a new observable query.
@@ -40,9 +41,9 @@ public class ObservableQuery {
 	 * @param description the description
 	 * @param query the query
 	 */
-/* MR	public ObservableQuery(String name, String description, Query<?> query) {
+	public ObservableQuery(String name, String description, ConjunctiveQuery query) {
 		this(name, description, null, query);
-	}*/
+	}
 
 	/**
 	 * Instantiates a new observable query.
@@ -52,12 +53,12 @@ public class ObservableQuery {
 	 * @param file the file
 	 * @param query the query
 	 */
-	/* MR public ObservableQuery(String name, String description, File file, Query<?> query) {
+	public ObservableQuery(String name, String description, File file, ConjunctiveQuery query) {
 		this.name.set(name);
 		this.description.set(description);
 		this.file.set(file);
 		this.query.set(query);
-	}*/
+	}
 
 	/**
 	 * Name property.

@@ -139,16 +139,16 @@ public class ImportController {
 		if (!event.isConsumed()) {
 			event.consume();
 			File f = new File(this.importFileField.getText());
-			try (FileInputStream in = new FileInputStream(f)) {
+			try  {
 				Object o = null;
 				if (this.schema == null) {
-					ObservableSchemaReader reader = new ObservableSchemaReader();
-					o = reader.read(in);
-					((ObservableSchema) o).setName(this.importNameField.getText());
+/* MR				ObservableSchemaReader reader = new ObservableSchemaReader();
+					o = reader.read(f);
+					((ObservableSchema) o).setName(this.importNameField.getText());*/
 				} else {
-					ObservableQueryReader reader = new ObservableQueryReader(this.schema.getSchema());
+/* MR					ObservableQueryReader reader = new ObservableQueryReader(this.schema.getSchema());
 					o = reader.read(in);
-					((ObservableQuery) o).setName(this.importNameField.getText());
+					((ObservableQuery) o).setName(this.importNameField.getText());*/
 				}
 				this.dataQueue.add(o);
 				ImportController.this.rootPane.getScene().getWindow().hide();

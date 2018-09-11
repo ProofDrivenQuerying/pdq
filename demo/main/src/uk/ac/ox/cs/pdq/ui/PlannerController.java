@@ -310,7 +310,7 @@ public class PlannerController {
 	 * @param schema the new schema
 	 */
 	void setSchema(ObservableSchema schema) {
-		this.schema = schema.getSchema();
+// MR		this.schema = schema.getSchema();
 		this.accSchema = new AccessibleSchema(this.schema);
 	}
 

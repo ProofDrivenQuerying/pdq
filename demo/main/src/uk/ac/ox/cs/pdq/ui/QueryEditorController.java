@@ -127,9 +127,9 @@ public class QueryEditorController {
 	 * @return true, if successful
 	 */
 	private boolean validateQuery() {
-		SQLLikeQueryReader queryReader = new SQLLikeQueryReader(this.schema.getSchema());
+/* MR		SQLLikeQueryReader queryReader = new SQLLikeQueryReader(this.schema.getSchema());
 		
-/* MR		Query<?> outputQuery = null;
+		Query<?> outputQuery = null;
 		try {
 			outputQuery = queryReader.fromString(this.queryEditArea.getText());
 		} catch (Exception e) {
