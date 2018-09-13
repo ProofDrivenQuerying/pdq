@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 //import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.ReaderException;
-//import uk.ac.ox.cs.pdq.io.xml.AbstractXMLReader;
+import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLReader;
 //import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
@@ -30,7 +30,7 @@ import uk.ac.ox.cs.pdq.ui.proof.Proof;
  * 
  * @author Julien Leblay
  */
-public class ProofReader /* MR extends AbstractXMLReader<Proof> */ {
+public class ProofReader extends AbstractXMLReader<Proof> {
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(ProofReader.class);
@@ -64,7 +64,7 @@ public class ProofReader /* MR extends AbstractXMLReader<Proof> */ {
 	 * @return Proof
 	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
 	 */
-/* MR	@Override
+	@Override
 	public Proof read(InputStream in) {
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -75,7 +75,7 @@ public class ProofReader /* MR extends AbstractXMLReader<Proof> */ {
 			log.error(e);
 		}
 		return null;
-	}*/
+	}
 
 	/*
 	 * (non-Javadoc)

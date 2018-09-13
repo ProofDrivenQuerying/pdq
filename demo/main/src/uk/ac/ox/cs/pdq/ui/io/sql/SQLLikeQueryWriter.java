@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
-//import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.io.Writer;
 //import uk.ac.ox.cs.pdq.io.pretty.PrettyWriter;
@@ -29,7 +29,7 @@ import com.google.common.collect.Multimap;
  *
  * @author Julien Leblay
  */
-public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> implements Writer<Query<?>>*/ {
+public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implements Writer<Formula> {
 
 	/** The Constant ALIAS_PREFIX. */
 	private static final String ALIAS_PREFIX = "a";
@@ -63,19 +63,19 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> implements 
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.builder.io.PrettyWriter#write(java.lang.Object)
 	 */
-/* MR	@Override
-	public void write(Query<?> q) {
-		this.write(this.out, q);
-	}*/
+// MR	@Override
+	public void write(Formula f) {
+		this.write(this.out, f);
+	}
 	
 	/*
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.provider.io.Writer#write(java.io.PrintStream, java.lang.Object)
 	 */
-/* MR	@Override
-	public void write(PrintStream out, Query<?> q) {
-		out.print(this.toString(q));
-	}*/
+// MR	@Override
+	public void write(PrintStream out, Formula f) {
+		out.print(this.toString(f));
+	}
 	
 	/**
 	 * To string.
@@ -86,24 +86,24 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> implements 
 	/*
 	 * 
 	 */
-/* MR	private String toString(Query<?> query) {
-		Preconditions.checkArgument(query instanceof ConjunctiveQuery, "Non conjunctive queries not yet supported.");
+	private String toString(Formula f) {
+		Preconditions.checkArgument(f instanceof ConjunctiveQuery, "Non conjunctive queries not yet supported.");
 		
-		ConjunctiveQuery q = (ConjunctiveQuery) query;
+		ConjunctiveQuery q = (ConjunctiveQuery) f;
 		StringBuilder result = new StringBuilder();
 		// Make predicate aliases and join clusters.
 		int counter = 0;
 		Map<Atom, String> aliases = new LinkedHashMap<>();
 		Multimap<Term, Atom> joins = LinkedHashMultimap.create();
-		for (Atom p: q.getBody()) {
+/* MR		for (Atom p: q.getBody()) {
 			aliases.put(p, ALIAS_PREFIX + (counter++));
 			for (Term t: p.getTerms()) {
 				joins.put(t, p);
 			}
-		}
+		}*/
 		// Make SELECT clause
 		result.append("SELECT ");
-		Collection<Term> head = q.getHead().getTerms();
+/* MR		Collection<Term> head = q.getHead().getTerms();
 		if (head.isEmpty()) {
 			result.append("*");
 		} else {
@@ -115,7 +115,7 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> implements 
 				result.append(sep).append(aliases.get(p)).append('.').append(a.getName());
 				sep = ", ";
 			}
-		}
+		}*/
 		
 		// Remove non-join clusters
 		for (Iterator<Term> i = joins.keySet().iterator(); i.hasNext(); ) {
@@ -140,10 +140,10 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> implements 
 					for (Atom other: joined) {
 						for (Term u : joins.keySet()) {
 							if (joins.get(u).contains(other) && joins.get(u).contains(curr)) {
-								result.append(sep2).append(aliases.get(curr)).append('.')
+/* MR								result.append(sep2).append(aliases.get(curr)).append('.')
 									.append(((Relation) curr.getPredicate()).getAttribute(curr.getTermPositions(u).get(0)))
 									.append("=").append(aliases.get(other)).append('.')
-									.append(((Relation) other.getPredicate()).getAttribute(other.getTermPositions(u).get(0)));
+									.append(((Relation) other.getPredicate()).getAttribute(other.getTermPositions(u).get(0)));*/
 								sep2 = " AND ";
 							}
 						}
@@ -166,7 +166,7 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> implements 
 		
 		// Make WHERE clause
 		sep = "\nWHERE ";
-		for (Atom p: q.getBody()) {
+/* MR		for (Atom p: q.getBody()) {
 			List<Term> terms = p.getTerms();
 			for (int i = 0, l = terms.size(); i < l; i++) {
 				if (!terms.get(i).isVariable() && !terms.get(i).isSkolem()) {
@@ -176,10 +176,10 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> implements 
 					sep = "\nAND ";
 				}
 			}
-		}
+		}*/
 		
 		return result.toString();
-	}*/
+	}
 	
 	/**
 	 * Returns a short String representation of the given dependency. This
@@ -188,12 +188,12 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> implements 
 	 * @param t the t
 	 * @return a short String representation of the dependency.
 	 */
-/* MR	public static String convert(Query<?> t) {
+	public static String convert(Formula f) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(baos);
-		SQLLikeQueryWriter.to(ps).write(t);
+		SQLLikeQueryWriter.to(ps).write(f);
 		return baos.toString();
-	}*/
+	}
 	
 //	public static void main(String... args) {
 //		System.setProperty("user.dir", "/auto/users/leblay/.pdq/");

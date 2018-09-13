@@ -28,6 +28,9 @@ public class ObservableSchema {
 	/** The file. */
 	private final SimpleObjectProperty<File> file =  new SimpleObjectProperty<>(this, "file");
 	
+	/** The schema */
+	private final SimpleObjectProperty<Schema> schema =  new SimpleObjectProperty<>(this, "schema");
+	
 	/** The schema part 1. */
 	private ServiceGroup sgr;
 	
@@ -40,8 +43,8 @@ public class ObservableSchema {
 	 * @param description the description
 	 * @param schema the schema
 	 */
-	public ObservableSchema(String name, String description, ServiceGroup sgr, Service sr) {
-		this(name, description, null, sgr, sr);
+	public ObservableSchema(String name, String description, Schema schema) {
+		this(name, description, null, schema);
 	}
 	
 	/**
@@ -52,12 +55,11 @@ public class ObservableSchema {
 	 * @param file the file
 	 * @param schema the schema
 	 */
-	public ObservableSchema(String name, String description, File file, ServiceGroup sgr, Service sr) {
+	public ObservableSchema(String name, String description, File file, Schema schema) {
 		this.name.set(name);
 		this.description.set(description);
 		this.file.set(file);
-		this.sgr = sgr;
-		this.sr = sr;
+		this.schema.set(schema);
 	}
 
 	/**
@@ -88,6 +90,15 @@ public class ObservableSchema {
 	}
 
 	/**
+	 * File property.
+	 *
+	 * @return the observable value
+	 */
+	public ObservableValue<Schema> schemaProperty() {
+		return this.schema;
+	}
+
+	/**
 	 * Gets the name.
 	 *
 	 * @return the name
@@ -112,6 +123,16 @@ public class ObservableSchema {
 	 */
 	public File getFile() {
 		return this.file.get();
+	}
+
+	/**
+	 * Gets the schema.
+	 *
+	 * @return the schema
+	 */
+	public Schema getSchema()
+	{
+		return this.schema.getValue();
 	}
 
 	/**
@@ -142,6 +163,15 @@ public class ObservableSchema {
 	}
 
 	/**
+	 * Gets the schema.
+	 *
+	 * @return the schema
+	 */
+	public void setSchema(Schema schema)
+	{
+		this.schema.set(schema);
+	}
+/**
 	 * Destroy.
 	 */
 	public void destroy() {

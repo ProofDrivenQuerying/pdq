@@ -71,6 +71,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
+import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 //import uk.ac.ox.cs.pdq.db.Dependency;
 //import uk.ac.ox.cs.pdq.db.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -84,6 +85,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 //import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 //import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -796,10 +798,10 @@ public class PDQController {
 		this.queriesListView.getSelectionModel().selectedItemProperty().addListener(this.querySelected);
 		this.queryPlanArea.visibleProperty().bind(Bindings.isNotNull(this.currentQuery));
 		this.queriesEditMenuButton.disableProperty().bind(Bindings.isNull(this.currentSchema));
-/*	MR	this.queryTextArea.textProperty().bind(Bindings.createStringBinding(() -> {
+		this.queryTextArea.textProperty().bind(Bindings.createStringBinding(() -> {
 				ObservableQuery q = PDQController.this.currentQuery.get();
-				return q != null ? SQLLikeQueryWriter.convert(q.getQuery()) : "";
-		}, this.currentQuery));*/
+				return q != null ? SQLLikeQueryWriter.convert(q.getFormula()) : "";
+		}, this.currentQuery));
 	}
 
 	/**
@@ -1051,7 +1053,7 @@ public class PDQController {
 			try (FileInputStream in1 = new FileInputStream(groupFile.getAbsolutePath());
 				 FileInputStream in2 = new FileInputStream(schemaFile.getAbsolutePath())) {
 				ObservableSchemaReader schemaReader = new ObservableSchemaReader();
-				ObservableSchema s = schemaReader.read((InputStream) in1, (InputStream) in2);
+				ObservableSchema s = schemaReader.read(schemaFile);
 				s.setFile(schemaFile);
 				this.schemas.put(s.getName(), s);
 			} catch (IOException e) {
@@ -1139,7 +1141,7 @@ public class PDQController {
 			}
 			for (File queryFile: listFiles(queryDir, makePrefix(s), QUERY_FILENAME_SUFFIX)) {
 				try (FileInputStream in = new FileInputStream(queryFile.getAbsolutePath())) {
-					ObservableQueryReader queryReader = new ObservableQueryReader("hi");
+					ObservableQueryReader queryReader = new ObservableQueryReader();
 					ObservableQuery q = queryReader.read(queryFile);
 					q.setFile(queryFile);
 					qs.add(q);
@@ -1179,7 +1181,8 @@ public class PDQController {
 							log.warn("Plan '" + planFile + "' has no associated parameters. Skipping.");
 							continue;
 						}
-/* MR					Plan p1 = new LeftDeepPlanReader(s.getSchema()).read(in);
+						Schema schema = s.getSchema();
+						RelationalTerm p1 = CostIOManager.readRelationalTermFromRelationaltermWithCost(planFile, schema);
 						PlannerParameters q1 = new PlannerParameters(settings);
 						CostParameters r1 = new CostParameters(settings);
 						ReasoningParameters s1 = new ReasoningParameters(settings);
@@ -1190,11 +1193,11 @@ public class PDQController {
 						if (proof.exists()) {
 							try (FileInputStream prIn = new FileInputStream(proof.getAbsolutePath())) {
 								p.setProofFile(proof);
-								ProofReader proofReader = new ProofReader(s.getSchema());
+								ProofReader proofReader = new ProofReader(schema);
 								p.setProof(proofReader.read(prIn));
 							}
 						}
-						ps.add(p);*/
+						ps.add(p);
 					} catch (Exception e) {
 						log.warn("IO exception caught file loading file '" + planFile + "'. " + e.getMessage());
 					}

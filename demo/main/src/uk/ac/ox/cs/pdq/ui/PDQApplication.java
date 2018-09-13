@@ -61,7 +61,7 @@ public class PDQApplication extends Application {
 	public static final String PLAN_FILENAME_PREFIX = "plan";
 	
 	/** The Constant SCHEMA_FILENAME_SUFFIX. */
-	public static final String SCHEMA_FILENAME_SUFFIX = ".xml";
+	public static final String SCHEMA_FILENAME_SUFFIX = ".s";
 	
 	/** The Constant QUERY_FILENAME_SUFFIX. */
 	public static final String QUERY_FILENAME_SUFFIX = ".q";

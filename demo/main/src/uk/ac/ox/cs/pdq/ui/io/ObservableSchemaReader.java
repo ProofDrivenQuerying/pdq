@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.ui.io;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,9 +19,11 @@ import org.xml.sax.SAXException;
 
 //import uk.ac.ox.cs.pdq.SchemaReader;
 import uk.ac.ox.cs.pdq.io.ReaderException;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLReader;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
@@ -42,6 +45,8 @@ public class ObservableSchemaReader {
 	/** The description. */
 	private String description;
 	
+	private Schema schema;
+	
 	/** A conventional schema reader, service group. */
 	private ServiceGroup sgr;
 	
@@ -58,18 +63,20 @@ public class ObservableSchemaReader {
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.benchmark.io.AbstractReader#load(java.io.InputStream)
 	 */
-	public ObservableSchema read(InputStream in1, InputStream in2) {
+	public ObservableSchema read(File file) {
 		try {
-			JAXBContext jaxbContext1 = JAXBContext.newInstance(ServiceGroup.class);
+/* MR		JAXBContext jaxbContext1 = JAXBContext.newInstance(ServiceGroup.class);
 			Unmarshaller jaxbUnmarshaller1 = jaxbContext1.createUnmarshaller();
 			this.sgr = (ServiceGroup) jaxbUnmarshaller1.unmarshal(in1);
 			JAXBContext jaxbContext2 = JAXBContext.newInstance(Service.class);
 			Unmarshaller jaxbUnmarshaller2 = jaxbContext2.createUnmarshaller();
 			this.sr = (Service) jaxbUnmarshaller2.unmarshal(in2);
 			this.name = sr.getUrl();
-			this.description = sr.getDocumentation();
-			return new ObservableSchema(this.name, this.description, this.sgr, this.sr);
-		} catch (JAXBException e) {
+			this.description = sr.getDocumentation();*/
+			this.schema = IOManager.importSchema(file);
+			this.name = file.getPath();
+			return new ObservableSchema(this.name, this.description, this.schema);
+		} catch (JAXBException | FileNotFoundException e) {
 			throw new ReaderException("Exception thrown while reading schema ", e);
 		}
 	}

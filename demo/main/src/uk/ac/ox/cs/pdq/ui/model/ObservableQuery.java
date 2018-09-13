@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableStringValue;
 import javafx.beans.value.ObservableValue;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Formula;
 //import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.ui.UserInterfaceException;
 import uk.ac.ox.cs.pdq.ui.io.ObservableQueryWriter;
@@ -32,17 +33,17 @@ public class ObservableQuery {
 	private final SimpleObjectProperty<File> file =  new SimpleObjectProperty<>(this, "file");
 	
 	/** The query. */
-	private final SimpleObjectProperty<ConjunctiveQuery> query = new SimpleObjectProperty<>(this, "query");
+	private final SimpleObjectProperty<Formula> formula = new SimpleObjectProperty<>(this, "formula");
 	
 	/**
 	 * Instantiates a new observable query.
 	 *
 	 * @param name the name
 	 * @param description the description
-	 * @param query the query
+	 * @param conjunctiveQuery the query
 	 */
-	public ObservableQuery(String name, String description, ConjunctiveQuery query) {
-		this(name, description, null, query);
+	public ObservableQuery(String name, String description, Formula formula) {
+		this(name, description, null, formula);
 	}
 
 	/**
@@ -53,11 +54,11 @@ public class ObservableQuery {
 	 * @param file the file
 	 * @param query the query
 	 */
-	public ObservableQuery(String name, String description, File file, ConjunctiveQuery query) {
+	public ObservableQuery(String name, String description, File file, Formula formula) {
 		this.name.set(name);
 		this.description.set(description);
 		this.file.set(file);
-		this.query.set(query);
+		this.formula.set(formula);
 	}
 
 	/**
@@ -92,9 +93,9 @@ public class ObservableQuery {
 	 *
 	 * @return the observable value
 	 */
-	/* MR public ObservableValue<Query<?>> queryProperty() {
-		return this.query;
-	}*/
+	public ObservableValue<Formula> formulaProperty() {
+		return this.formula;
+	}
 
 	/**
 	 * Gets the name.
@@ -128,9 +129,9 @@ public class ObservableQuery {
 	 *
 	 * @return the query
 	 */
-/* MR	public Query getQuery() {
-		return this.query.get();
-	}*/
+	public Formula getFormula() {
+		return this.formula.get();
+	}
 
 	/**
 	 * Sets the name.
@@ -164,9 +165,9 @@ public class ObservableQuery {
 	 *
 	 * @param q the new query
 	 */
-/* MR	public void setQuery(Query q) {
-		this.query.set(q);
-	}*/
+	public void setQuery(Formula f) {
+		this.formula.set(f);
+	}
 
 	/**
 	 * Destroy.

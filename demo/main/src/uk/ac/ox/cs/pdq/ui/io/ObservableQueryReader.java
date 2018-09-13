@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLReader;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
-//import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QueryReader;
+//import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
@@ -50,7 +50,7 @@ public class ObservableQueryReader {
 	 *
 	 * @param schema the schema
 	 */
-	public ObservableQueryReader(String schema) {
+	public ObservableQueryReader() {
 // MR		this.queryReader = new QueryReader(schema);
 	}
 	
@@ -60,42 +60,16 @@ public class ObservableQueryReader {
 	 * @param in the in
 	 * @return a conjunctive query read from the given input stream
 	 */
-// MR	@Override
-	public ObservableQuery read(File in) {
+// MR	@Override 
+	public ObservableQuery read(File query) {
 		try {
-		ConjunctiveQuery cq = IOManager.importQuery(in);
-/* MR			SAXParserFactory factory = SAXParserFactory.newInstance();
-			SAXParser parser = factory.newSAXParser();
-			parser.parse(in, this);*/
-			return new ObservableQuery(in.getPath(), this.description, cq);
+			ConjunctiveQuery cq = IOManager.importQuery(query);
+			return new ObservableQuery(query.getPath(), this.description, cq);
 		} catch (JAXBException | FileNotFoundException e) {
 			throw new ReaderException("Exception thrown while reading schema ", e);
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
-	 */
-/* MR	@Override
-	public void startElement(String uri, String localName, String qName, Attributes atts) {
-		switch(QNames.parse(qName)) {
-		case QUERY:
-			this.name = this.getValue(atts, QNames.NAME);
-			this.description = this.getValue(atts, QNames.DEPENDENCIES);
-			break;
-		}
-		this.queryReader.startElement(uri, localName, qName, atts);
-	}*/
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
-	 */
-/* MR	@Override
-	public void endElement(String uri, String localName, String qName) {
-		this.queryReader.endElement(uri, localName, qName);
-	}*/
 	
 	/**
 	 * For test purpose only.
