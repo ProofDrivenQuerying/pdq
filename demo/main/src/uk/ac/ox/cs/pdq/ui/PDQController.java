@@ -72,18 +72,17 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
-//import uk.ac.ox.cs.pdq.db.Dependency;
-//import uk.ac.ox.cs.pdq.db.LinearGuarded;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.db.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 //import uk.ac.ox.cs.pdq.db.builder.QueryBuilder;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 //import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
-//import uk.ac.ox.cs.pdq.io.pretty.VeryShortDependencyWriter;
+import uk.ac.ox.cs.pdq.io.pretty.VeryShortDependencyWriter;
 //import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
 //import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
-//import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
@@ -91,7 +90,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 //import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
-import uk.ac.ox.cs.pdq.datasources.legacy.services.Service;
+import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.ui.io.ObservableQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaReader;
 import uk.ac.ox.cs.pdq.ui.io.pretty.PrettyProofWriter;
@@ -207,7 +206,7 @@ public class PDQController {
 	@FXML TableView<ObservablePlan> plansTableView;
     
     /** The settings executor type list. */
-// MR   @FXML ComboBox<ExecutorTypes> settingsExecutorTypeList;
+// MR	@FXML ComboBox<ExecutorTypes> settingsExecutorTypeList;
     
     /** The run planner button. */
     @FXML Button runPlannerButton;
@@ -246,15 +245,15 @@ public class PDQController {
             		log.warn("Unable to identify item to delete '" + item + "'");
         			continue;
         		}
- /* MR       		Relation relation = schema.getSchema().getRelation(item.getValue());
+        		Relation relation = schema.getSchema().getRelation(item.getValue());
         		if (relation != null) {
         			this.deleteRelation(schema, relation);
         			this.reloadTreeItem(item.getParent(), schema);
         			continue;
-        		}*/
+        		}
 	       		int index = this.currentSchemaViewitems.getParent().getChildren().indexOf(this.currentSchemaViewitems);
-/* MR      		index -= this.currentSchema.get().getSchema().getRelations().size();
-	       		Dependency dependency = this.currentSchema.get().getSchema().getDependencies().get(index);
+	       		index -= this.currentSchema.get().getSchema().getRelations().length;
+/* MR	       		Dependency dependency = this.currentSchema.get().getSchema().getDependencies().get(index);
         		if (dependency != null) {
         			this.deleteDependency(schema, dependency);
         			this.reloadTreeItem(item.getParent(), schema);
@@ -352,8 +351,8 @@ public class PDQController {
      * @param event the event
      */
     @FXML void newQueryPressed(ActionEvent event) {
-/* MR    	Schema schema = this.currentSchema.get().getSchema();
-    	ObservableQuery query = new ObservableQuery("New Query", "",
+    	Schema schema = this.currentSchema.get().getSchema();
+/* MR    	ObservableQuery query = new ObservableQuery("New Query", "",
     			new QueryBuilder().setName("Q").addBodyAtom(
     					schema.getRelations().iterator().next().createAtoms()).build());
 		this.dataQueue.add(query);*/
@@ -365,15 +364,15 @@ public class PDQController {
      * @param event the event
      */
     @FXML void duplicateSelectedQueryPressed(ActionEvent event) {
-/* MR    	ObservableList<ObservableQuery> selected = this.queriesListView.getSelectionModel().getSelectedItems();
+    	ObservableList<ObservableQuery> selected = this.queriesListView.getSelectionModel().getSelectedItems();
     	
     	if( selected.size() == 1 ) {
     		ObservableQuery selectedQuery = selected.get(0);
-    		ConjunctiveQuery query = (ConjunctiveQuery) selectedQuery.getQuery();
-    		ConjunctiveQuery cQuery = new ConjunctiveQuery(query.getHead(), query.getBody());
+    		ConjunctiveQuery query = (ConjunctiveQuery) selectedQuery.getFormula();
+/* MR    		ConjunctiveQuery cQuery = new ConjunctiveQuery(query.getHead(), query.getBody());
     		ObservableQuery obsQuery = new ObservableQuery(selectedQuery.getName() + " (copy)", "", cQuery);
-    		this.dataQueue.add(obsQuery);
-    	}*/
+    		this.dataQueue.add(obsQuery);*/
+    	}
     }
 
     /**
@@ -490,7 +489,7 @@ public class PDQController {
 
     	       	ObservableSchema schema = this.schemas.get(this.currentSchemaViewitems.getValue());
     	       	if (schema == null) {
-    	       		Relation relation = null; // MR this.currentSchema.get().getSchema().getRelation(this.currentSchemaViewitems.getValue());
+    	       		Relation relation = this.currentSchema.get().getSchema().getRelation(this.currentSchemaViewitems.getValue());
     	       		if (relation != null) {
 						try {
 							Stage dialog = new Stage();
@@ -515,7 +514,7 @@ public class PDQController {
     	       		int index = this.currentSchemaViewitems.getParent().getChildren().indexOf(this.currentSchemaViewitems);
     	       		//index -= this.currentSchema.get().getSchema().getRelations().size();
     	       		
-/* MR    	       		Dependency dependency = this.currentSchema.get().getSchema().getDependencies().get(index);
+    	       		Dependency dependency = this.currentSchema.get().getSchema().getAllDependencies()[index];
     	       		if (dependency != null) {
 						try {
 							Stage dialog = new Stage();
@@ -544,7 +543,7 @@ public class PDQController {
 						} catch (IOException e) {
 							throw new UserInterfaceException(e.getMessage());
 						}
-    	       		}*/
+    	       		}
     	       	}
     		}
     	}
@@ -915,13 +914,13 @@ public class PDQController {
 			if (newValue != null) {
 		    	PDQController.this.savePlan(newValue);
 
-/*	MR			Plan plan = newValue.getPlan();
-				PDQController.this.settingsExecutorTypeList.setDisable(plan == null);
+		    	Plan plan = newValue.getPlan();
+// MR				PDQController.this.settingsExecutorTypeList.setDisable(plan == null);
 				PDQController.this.runRuntimeButton.setDisable(plan == null);
 				PDQController.this.setSettingsEditable(plan == null);
 				PDQController.this.displayPlan(plan);
 				PDQController.this.displayProof(newValue.getProof());
-				PDQController.this.displaySettings(newValue);*/
+				PDQController.this.displaySettings(newValue);
 			} else {
 	    		PDQController.this.plansTableView.getSelectionModel().clearSelection();
 			}
@@ -1048,17 +1047,13 @@ public class PDQController {
 	 */
 	private void loadSchemas() {
 		File schemaDir = new File(this.workDirectory.getAbsolutePath() + '/' + SCHEMA_DIRECTORY);
-		File groupFile = new File(schemaDir.getAbsolutePath() + '/' + "service-groups");
 		for (File schemaFile : listFiles(schemaDir, "", SCHEMA_FILENAME_SUFFIX)) {
-			try (FileInputStream in1 = new FileInputStream(groupFile.getAbsolutePath());
-				 FileInputStream in2 = new FileInputStream(schemaFile.getAbsolutePath())) {
-				ObservableSchemaReader schemaReader = new ObservableSchemaReader();
-				ObservableSchema s = schemaReader.read(schemaFile);
-				s.setFile(schemaFile);
-				this.schemas.put(s.getName(), s);
-			} catch (IOException e) {
-				throw new UserInterfaceException(e.getMessage(), e);
-			}
+			File serviceFile = new File(schemaFile.getAbsolutePath() + "r"); 
+			File groupFile = new File(schemaFile.getAbsolutePath() + "g"); 
+			ObservableSchemaReader schemaReader = new ObservableSchemaReader();
+			ObservableSchema s = schemaReader.read(schemaFile, groupFile, serviceFile);
+			s.setFile(schemaFile);
+			this.schemas.put(s.getName(), s);
 		}
 	}
 	
@@ -1141,7 +1136,7 @@ public class PDQController {
 			}
 			for (File queryFile: listFiles(queryDir, makePrefix(s), QUERY_FILENAME_SUFFIX)) {
 				try (FileInputStream in = new FileInputStream(queryFile.getAbsolutePath())) {
-					ObservableQueryReader queryReader = new ObservableQueryReader();
+					ObservableQueryReader queryReader = new ObservableQueryReader(s.getSchema());
 					ObservableQuery q = queryReader.read(queryFile);
 					q.setFile(queryFile);
 					qs.add(q);
@@ -1268,30 +1263,32 @@ public class PDQController {
 		TreeItem<String> views = new TreeItem<>(bundle.getString("application.schema.schemas.views"), new ImageView(this.dbViewIcon));
 		TreeItem<String> dependencies = new TreeItem<>(bundle.getString("application.schema.schemas.dependencies"), new ImageView(this.dependencyIcon));
 		
-	/* MR	for (Relation r : s.getSchema().getRelations()) {
+		for (Relation r : s.getSchema().getRelations()) {
 			ImageView imageView = null;
 			if (r instanceof View) {
 				imageView = new ImageView(this.dbViewIcon);
 				views.getChildren().add(new TreeItem<>(r.getName(), imageView));
-			} else if (r instanceof Service) {
-				imageView = new ImageView(this.webRelationIcon);
-				services.getChildren().add(new TreeItem<>(r.getName(), imageView));
 			} else {
 				imageView = new ImageView(this.dbRelationIcon);
 				relations.getChildren().add(new TreeItem<>(r.getName(), imageView));
 			}
 			//item.getChildren().add(new TreeItem<>(r.getName(), imageView));
-		}*/
-/* MR		for (Dependency ic : s.getSchema().getDependencies()) {
+		}
+		for(Service sr : s.getServices())
+		{
+			ImageView imageView = new ImageView(this.webRelationIcon);
+			services.getChildren().add(new TreeItem<>(s.getName(), imageView));
+		}
+		for (Dependency ic : s.getSchema().getAllDependencies()) {
 			ImageView imageView = null;
-			if (ic instanceof LinearGuarded) {
+/* MR			if (ic instanceof LinearGuarded) {
 				imageView = new ImageView(this.fkIcon);
-			} else {
+			} else*/ {
 				imageView = new ImageView(this.dependencyIcon);
 			}
 			//item.getChildren().add(new TreeItem<>(VeryShortDepencencyWriter.convert(ic), imageView));
 			dependencies.getChildren().add(new TreeItem<>(VeryShortDependencyWriter.convert(ic), imageView));
-		}*/
+		}
 		
 		if(!relations.getChildren().isEmpty()) {
 			item.getChildren().add(relations);

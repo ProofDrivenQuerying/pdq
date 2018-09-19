@@ -46,6 +46,8 @@ public class ObservableSchemaReader {
 	private String description;
 	
 	private Schema schema;
+
+	private Service[] services;
 	
 	/** A conventional schema reader, service group. */
 	private ServiceGroup sgr;
@@ -63,19 +65,20 @@ public class ObservableSchemaReader {
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.benchmark.io.AbstractReader#load(java.io.InputStream)
 	 */
-	public ObservableSchema read(File file) {
+	public ObservableSchema read(File file, File servicegroup, File service) {
 		try {
-/* MR		JAXBContext jaxbContext1 = JAXBContext.newInstance(ServiceGroup.class);
+			JAXBContext jaxbContext1 = JAXBContext.newInstance(ServiceGroup.class);
 			Unmarshaller jaxbUnmarshaller1 = jaxbContext1.createUnmarshaller();
-			this.sgr = (ServiceGroup) jaxbUnmarshaller1.unmarshal(in1);
+			this.sgr = (ServiceGroup) jaxbUnmarshaller1.unmarshal(servicegroup);
 			JAXBContext jaxbContext2 = JAXBContext.newInstance(Service.class);
 			Unmarshaller jaxbUnmarshaller2 = jaxbContext2.createUnmarshaller();
-			this.sr = (Service) jaxbUnmarshaller2.unmarshal(in2);
-			this.name = sr.getUrl();
-			this.description = sr.getDocumentation();*/
+			this.sr = (Service) jaxbUnmarshaller2.unmarshal(service);
+			this.description = sr.getDocumentation();
 			this.schema = IOManager.importSchema(file);
 			this.name = file.getPath();
-			return new ObservableSchema(this.name, this.description, this.schema);
+			this.services = new Service[1];
+			services[0] = sr;
+			return new ObservableSchema(this.name, this.description, this.schema, this.services);
 		} catch (JAXBException | FileNotFoundException e) {
 			throw new ReaderException("Exception thrown while reading schema ", e);
 		}

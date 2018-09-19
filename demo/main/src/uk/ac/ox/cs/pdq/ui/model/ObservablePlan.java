@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 //import uk.ac.ox.cs.pdq.io.xml.PlanWriter;
 import uk.ac.ox.cs.pdq.cost.Cost;
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
@@ -130,7 +131,7 @@ public class ObservablePlan {
 		this.timeout.set(settings.getTimeout() != null ? settings.getTimeout().doubleValue() : Double.POSITIVE_INFINITY);
 		this.maxIterations.set(settings.getMaxIterations() != null ? settings.getMaxIterations().doubleValue() : Double.POSITIVE_INFINITY);
 		this.queryMatchInterval.set(settings.getQueryMatchInterval());
-// MR		this.cost.set(pl == null || pl.isEmpty() ? null : pl.getCost());
+		this.cost.set(pl ==  null ? null : new DoubleCost()); // MR pl.getCost();
 		this.chaserType.set(reasoningParams.getReasoningType() != null ? reasoningParams.getReasoningType() : ReasoningTypes.RESTRICTED_CHASE);
 //		this.blockingInterval.set(reasoningParams.getBlockingInterval());
 	}

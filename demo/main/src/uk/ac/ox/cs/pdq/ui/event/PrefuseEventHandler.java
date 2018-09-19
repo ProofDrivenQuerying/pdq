@@ -113,7 +113,7 @@ public class PrefuseEventHandler implements EventHandler {
 	@Subscribe
 	public void processNode(SearchNode node) {
 
-/* MR		if (node == null || node.getMetadata() == null || (node.getMetadata() instanceof EquivalenceMetadata && node.getPointer() == null)) {
+/*		if (node == null || node.getMetadata() == null || (node.getMetadata() instanceof EquivalenceMetadata && node.getPointer() == null)) {
 			throw new java.lang.IllegalArgumentException();
 		}
 

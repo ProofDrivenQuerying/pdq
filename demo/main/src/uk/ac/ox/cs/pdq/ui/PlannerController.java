@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -50,6 +51,7 @@ import org.apache.log4j.Logger;
 import prefuse.controls.FocusControl;
 import prefuse.controls.WheelZoomControl;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 //import uk.ac.ox.cs.pdq.fol.Query;
@@ -58,9 +60,11 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 //import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 //import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
@@ -250,6 +254,9 @@ public class PlannerController {
 	/**  Keeps the reasoning parameters. */
 	private ReasoningParameters reasoningParams;
 
+	/**  Keeps the reasoning parameters. */
+	private DatabaseParameters databaseParams;
+
 	/**  The schema to be used during this planning session. */
 	private Schema schema;
 
@@ -299,9 +306,9 @@ public class PlannerController {
 	 * @param query the new query
 	 */
 	void setQuery(ObservableQuery query) {
-/*	MR	if(!(query.getQuery() instanceof ConjunctiveQuery))
+		if(!(query.getFormula() instanceof ConjunctiveQuery))
 			throw new RuntimeException("Only Conjunctive Queries Supported Currently");
-		this.query = (ConjunctiveQuery) query.getQuery();*/
+		this.query = (ConjunctiveQuery) query.getFormula();
 	}
 
 	/**
@@ -310,7 +317,7 @@ public class PlannerController {
 	 * @param schema the new schema
 	 */
 	void setSchema(ObservableSchema schema) {
-// MR		this.schema = schema.getSchema();
+		this.schema = schema.getSchema();
 		this.accSchema = new AccessibleSchema(this.schema);
 	}
 
@@ -404,28 +411,28 @@ public class PlannerController {
 		Preconditions.checkNotNull(this.query);
 		if (this.pauser == null) {
 
-// MR			final ExplorationSetUp planner = new ExplorationSetUp(this.params, this.costParams, this.reasoningParams, this.schema);
-// MR			this.setSearchSpaceVisualizer(planner);
+			final ExplorationSetUp planner = new ExplorationSetUp(this.params, this.costParams, this.reasoningParams, this.databaseParams, this.schema);
+			this.setSearchSpaceVisualizer(planner);
 
-// MR			planner.registerEventHandler(new PlanSearchVisualizer(this.dataQueue, this.params.getShortLogIntervals()));
+// MR			planner.registerEventHandler(new PlanSearchVisualizer(this.dataQueue, 5));
 			this.pauser = new Pauser(this.dataQueue, 99999);
 			ExecutorService executor = Executors.newFixedThreadPool(2);
 			executor.execute(this.pauser);
 			this.future = executor.submit(() -> {
-/* MR				try {
+// MR				try {
 					log.debug("Searching plan...");
-				Plan bestPlan = planner.search(this.query);
-					PlannerController.this.bestPlan = bestPlan;
+// MR				    Map.Entry<RelationalTerm, Cost> bestPlan = planner.search(this.query);
+// MR					PlannerController.this.bestPlan = bestPlan;
 					log.debug("Best plan: " + bestPlan);
 					ObservablePlan p = PlannerController.this.plan.copy();
 					p.setPlan(bestPlan);
 					p.setProof(PlannerController.this.bestProof);
 					if (bestPlan != null) {
-						p.setCost(bestPlan.getCost());
+// MR						p.setCost(bestPlan.getCost());
 					}
 					p.store();
 					PlannerController.this.planQueue.add(p);
-				} catch (PlannerException e) {
+/* MR				} catch (PlannerException e) {
 					log.error(e.getMessage(), e);
 					throw new IllegalStateException();
 				}*/

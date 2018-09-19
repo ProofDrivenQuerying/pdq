@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import uk.ac.ox.cs.pdq.db.Attribute;
-//import uk.ac.ox.cs.pdq.util.Types;
+import uk.ac.ox.cs.pdq.util.Types;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -33,7 +33,7 @@ public class ObservableAttribute {
 	public ObservableAttribute(Attribute att) {
 		this.name.set(att.getName());
 		this.type.set(att.getType());
-// MR		this.displayType.set(Types.simpleName(att.getType()));
+		this.displayType.set(Types.simpleName(att.getType()));
 		this.displayType.addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {

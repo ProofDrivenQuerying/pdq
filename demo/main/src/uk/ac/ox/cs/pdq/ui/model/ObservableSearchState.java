@@ -9,7 +9,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.beans.value.ObservableValue;
-//import uk.ac.ox.cs.pdq.plan.Plan;
+import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
@@ -32,7 +32,7 @@ public class ObservableSearchState {
 	private final SimpleObjectProperty<Number> cost = new SimpleObjectProperty<>(this, "cost");
 
 	/**  Best plan found so far. */
-// MR	private final SimpleObjectProperty<Plan> plan = new SimpleObjectProperty<>(this, "plan");
+	private final SimpleObjectProperty<Plan> plan = new SimpleObjectProperty<>(this, "plan");
 
 	/**  Best proof found so far. */
 	private final SimpleObjectProperty<Proof> proof = new SimpleObjectProperty<>(this, "proof");
@@ -45,13 +45,13 @@ public class ObservableSearchState {
 	 * @param pl the pl
 	 * @param bestConfigurationsList the best configurations list
 	 */
-/* MR	public ObservableSearchState(Double time, Integer rounds, Plan pl, List<LinearChaseConfiguration> bestConfigurationsList) {
+	public ObservableSearchState(Double time, Integer rounds, Plan pl, List<LinearChaseConfiguration> bestConfigurationsList) {
 		this.plan.set(pl);
 		this.proof.set(bestConfigurationsList == null ? null : Proof.toProof(bestConfigurationsList));
-		this.cost.set(pl == null || pl.isEmpty() ? null : pl.getCost().getValue());
+// MR		this.cost.set(pl == null || pl.isEmpty() ? null : pl.getCost().getValue());
 		this.time.set(time);
 		this.iterations.set(rounds);
-	}*/
+	}
 
 	/**
 	 * Time property.

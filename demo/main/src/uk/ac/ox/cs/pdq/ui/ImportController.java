@@ -142,13 +142,13 @@ public class ImportController {
 			try  {
 				Object o = null;
 				if (this.schema == null) {
-/* MR				ObservableSchemaReader reader = new ObservableSchemaReader();
-					o = reader.read(f);
-					((ObservableSchema) o).setName(this.importNameField.getText());*/
+					ObservableSchemaReader reader = new ObservableSchemaReader();
+// MR					o = reader.read(f);
+					((ObservableSchema) o).setName(this.importNameField.getText());
 				} else {
-/* MR					ObservableQueryReader reader = new ObservableQueryReader(this.schema.getSchema());
-					o = reader.read(in);
-					((ObservableQuery) o).setName(this.importNameField.getText());*/
+					ObservableQueryReader reader = new ObservableQueryReader(this.schema.getSchema());
+					o = reader.read(f);
+					((ObservableQuery) o).setName(this.importNameField.getText());
 				}
 				this.dataQueue.add(o);
 				ImportController.this.rootPane.getScene().getWindow().hide();

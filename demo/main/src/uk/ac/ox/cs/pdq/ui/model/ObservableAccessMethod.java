@@ -8,8 +8,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-//import uk.ac.ox.cs.pdq.db.AccessMethod;
-//import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
+import uk.ac.ox.cs.pdq.util.Types;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -21,7 +21,7 @@ public class ObservableAccessMethod {
 	private final SimpleStringProperty name =  new SimpleStringProperty(this, "name");
 	
 	/** The type. */
-// MR	private final SimpleObjectProperty<Types> type =  new SimpleObjectProperty<>(this, "type");
+	private final SimpleObjectProperty<Types> type =  new SimpleObjectProperty<>(this, "type");
 	
 	/** The inputs. */
 	private final SimpleListProperty<Integer> inputs =  new SimpleListProperty<>(this, "inputs");
@@ -31,11 +31,11 @@ public class ObservableAccessMethod {
 	 *
 	 * @param b the b
 	 */
-	/* MR public ObservableAccessMethod(AccessMethod b) {
+	public ObservableAccessMethod(AccessMethodDescriptor b) {
 		this.name.set(b.getName());
-		this.type.set(b.getType());
+// MR		this.type.set(b.getType());
 		this.inputs.set(FXCollections.observableArrayList(b.getInputs()));
-	}*/
+	}
 	
 	/**
 	 * Name property.
@@ -51,9 +51,9 @@ public class ObservableAccessMethod {
 	 *
 	 * @return the property
 	 */
-	/* MR public Property<Types> typeProperty() {
+	public Property<Types> typeProperty() {
 		return this.type;
-	} */
+	}
 	
 	/**
 	 * Inputs property.
@@ -78,9 +78,9 @@ public class ObservableAccessMethod {
 	 *
 	 * @return the type
 	 */
-	/* MR public Types getType() {
+	public Types getType() {
 		return this.type.get();
-	} */
+	}
 
 	/**
 	 * Gets the inputs.
@@ -94,8 +94,8 @@ public class ObservableAccessMethod {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
-	/* MR @Override
-	  public String toString() {
+	@Override
+	public String toString() {
 		return String.valueOf(this.getName() + ":" + this.getType() + "[" + this.getInputs() + "]");
-	} */
+	}
 }

@@ -50,7 +50,7 @@ public class ObservableQueryReader {
 	 *
 	 * @param schema the schema
 	 */
-	public ObservableQueryReader() {
+	public ObservableQueryReader(Schema schema) {
 // MR		this.queryReader = new QueryReader(schema);
 	}
 	

@@ -19,10 +19,10 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.db.Schema;
-//import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
+import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.io.ReaderException;
-//import uk.ac.ox.cs.pdq.io.pretty.PrettyDependencyReader;
-//import uk.ac.ox.cs.pdq.io.pretty.PrettyDependencyWriter;
+import uk.ac.ox.cs.pdq.io.pretty.PrettyDependencyReader;
+import uk.ac.ox.cs.pdq.io.pretty.PrettyDependencyWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
@@ -59,8 +59,8 @@ public class DependencyController {
 				DependencyController.this.dependencyEditorMessage.setText("");
 				if (DependencyController.this.schema != null) {
 					try {
-/* MR						PrettyDependencyReader reader = new PrettyDependencyReader(DependencyController.this.schema.getSchema());
-						DependencyController.this.newDependency = (Dependency) reader.read(new ByteArrayInputStream(newString.getBytes()));*/
+						PrettyDependencyReader reader = new PrettyDependencyReader(DependencyController.this.schema.getSchema());
+						DependencyController.this.newDependency = (Dependency) reader.read(new ByteArrayInputStream(newString.getBytes()));
 					} catch (ReaderException e) {
 						DependencyController.this.dependencyEditorMessage.setText(e.getMessage());
 						DependencyController.this.invalid.set(true);
@@ -139,7 +139,7 @@ public class DependencyController {
 	 */
 	private void refreshEditor() {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-// MR		PrettyDependencyWriter.to(new PrintStream(out)).indented().write(this.dependency);
+		PrettyDependencyWriter.to(new PrintStream(out)).indented().write(this.dependency);
 		this.dependencyTextArea.setText(out.toString());
 	}
 
@@ -153,12 +153,12 @@ public class DependencyController {
 	   	if (!event.isConsumed()) {
     		event.consume();
     		if (this.newDependency != null) {
-/* MR       		SchemaBuilder builder = Schema.builder(this.schema.getSchema());
+/* MR    			SchemaBuilder builder = Schema.builder(this.schema.getSchema());
         		builder.removeDependency(this.dependency);
         		builder.addDependency(this.newDependency);
         		Schema newSchema = builder.build();
-        		this.schema.setSchema(newSchema);
-        		this.dataQueue.add(this.schema);*/
+        		this.schema.setSchema(newSchema);*/
+        		this.dataQueue.add(this.schema);
     		}
     		Stage stage = (Stage) this.dependencyEditorButton.getScene().getWindow();
     		stage.close();

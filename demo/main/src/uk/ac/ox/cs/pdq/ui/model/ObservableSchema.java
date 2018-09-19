@@ -31,11 +31,8 @@ public class ObservableSchema {
 	/** The schema */
 	private final SimpleObjectProperty<Schema> schema =  new SimpleObjectProperty<>(this, "schema");
 	
-	/** The schema part 1. */
-	private ServiceGroup sgr;
+	private final SimpleObjectProperty<Service[]> services =  new SimpleObjectProperty<>(this, "services");
 	
-	/** The schema part 2. */
-	private Service sr;
 	/**
 	 * Instantiates a new observable schema.
 	 *
@@ -43,8 +40,8 @@ public class ObservableSchema {
 	 * @param description the description
 	 * @param schema the schema
 	 */
-	public ObservableSchema(String name, String description, Schema schema) {
-		this(name, description, null, schema);
+	public ObservableSchema(String name, String description, Schema schema, Service[] services) {
+		this(name, description, null, schema, services);
 	}
 	
 	/**
@@ -55,11 +52,12 @@ public class ObservableSchema {
 	 * @param file the file
 	 * @param schema the schema
 	 */
-	public ObservableSchema(String name, String description, File file, Schema schema) {
+	public ObservableSchema(String name, String description, File file, Schema schema, Service[] services) {
 		this.name.set(name);
 		this.description.set(description);
 		this.file.set(file);
 		this.schema.set(schema);
+		this.services.set(services);		
 	}
 
 	/**
@@ -133,6 +131,11 @@ public class ObservableSchema {
 	public Schema getSchema()
 	{
 		return this.schema.getValue();
+	}
+
+	public Service[] getServices()
+	{
+		return this.services.getValue();
 	}
 
 	/**

@@ -32,7 +32,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 //import uk.ac.ox.cs.pdq.fol.Query;
 //import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
 //import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
-//import uk.ac.ox.cs.pdq.plan.Plan;
+import uk.ac.ox.cs.pdq.algebra.Plan;
 //import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 //import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
@@ -188,7 +188,7 @@ public class RuntimeController {
 // MR	private Query query;
 
 	/**  The plan to run. */
-// MR	private Plan plan;
+	private Plan plan;
 
 	/**  The parameters to run the plan on. */
 	private RuntimeParameters params = new RuntimeParameters();
@@ -227,7 +227,7 @@ public class RuntimeController {
 	 * @param schema the new schema
 	 */
 	void setSchema(ObservableSchema schema) {
-// MR		this.schema = schema.getSchema();
+		this.schema = schema.getSchema();
 		Preconditions.checkNotNull(this.schema);
 	}
 

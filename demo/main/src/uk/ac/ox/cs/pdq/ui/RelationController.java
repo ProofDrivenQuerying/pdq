@@ -16,8 +16,8 @@ import javafx.scene.input.MouseEvent;
 
 import org.apache.log4j.Logger;
 
-//import uk.ac.ox.cs.pdq.db.AccessMethod;
-//import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
+import uk.ac.ox.cs.pdq.util.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.ui.model.ObservableAccessMethod;
@@ -44,7 +44,7 @@ public class RelationController {
     @FXML private TableColumn<ObservableAccessMethod, String> colAccessMethodName;
     
     /** The col access method type. */
-// MR    @FXML private TableColumn<ObservableAccessMethod, Types> colAccessMethodType;
+    @FXML private TableColumn<ObservableAccessMethod, Types> colAccessMethodType;
     
     /** The col attribute name. */
     @FXML private TableColumn<ObservableAttribute, String> colAttributeName;
@@ -143,8 +143,8 @@ public class RelationController {
 		}
 		ObservableList<ObservableAccessMethod> accessMethods = this.relationAccessMethods.getItems();
 		accessMethods.clear();
-/* MR		for (AccessMethod am: this.relation.getAccessMethods()) {
+		for (AccessMethodDescriptor am: this.relation.getAccessMethods()) {
 			accessMethods.add(new ObservableAccessMethod(am));
-		}*/
+		}
 	}
 }

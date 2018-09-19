@@ -44,13 +44,13 @@ public class HoverControl extends ControlAdapter {
 			jpub.add("Access: " + access);
 			jpub.add("Type: " + item.get("type"));
 			
-/* MR			if(((NodeStatus)item.get("type")).equals(NodeStatus.SUCCESSFUL)) {
-				Preconditions.checkNotNull(root.getMetadata());
+			if(((NodeStatus)item.get("type")).equals(NodeStatus.SUCCESSFUL)) {
+/* MR				Preconditions.checkNotNull(root.getMetadata());
 				if (root.getMetadata() instanceof BestPlanMetadata) {
 					String cost = ((BestPlanMetadata) root.getMetadata()).getPlan().getCost().toString();
 					jpub.add("Plan's cost: " + cost);
-				}
-			}*/
+				}*/
+			}
 			
 			//jpub.show(evt.getComponent(),(int)item.getX()+ frame.getX(), (int)item.getY()+ frame.getY());
 			jpub.show(evt.getComponent(), 0, 0);
