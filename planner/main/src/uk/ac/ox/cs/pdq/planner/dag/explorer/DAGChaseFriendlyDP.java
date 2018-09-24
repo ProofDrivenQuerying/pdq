@@ -37,7 +37,7 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
  * @author Efthymia Tsamoura
  *
  */
-public class DAGChaseFriendlyDP extends DAGGeneric {
+public class DAGChaseFriendlyDP extends DAGGenericLegacy {
 
 	/**  Removes dominated configurations *. */
 	private final Dominance[] dominance;

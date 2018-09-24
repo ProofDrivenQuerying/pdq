@@ -36,7 +36,7 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
  * @author Efthymia Tsamoura
  *
  */
-public class DAGSimpleDP extends DAGGeneric {
+public class DAGSimpleDP extends DAGGenericLegacy {
 
 	/**  Removes dominated configurations *. */
 	private final Dominance[] dominance;

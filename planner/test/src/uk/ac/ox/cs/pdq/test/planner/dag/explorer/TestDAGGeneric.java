@@ -40,7 +40,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGenericLegacy;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ClosedValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
@@ -135,7 +135,7 @@ public class TestDAGGeneric extends PdqTest {
 		validators.add(new DefaultValidator());
 
 		try {
-			DAGGeneric explorer = new DAGGeneric(new EventBus(), parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, connection, costEstimator,
+			DAGGenericLegacy explorer = new DAGGenericLegacy(new EventBus(), parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, connection, costEstimator,
 					successDominance, null, validators, 4);
 			explorer.explore();
 			explorer.getExploredPlans();
@@ -235,7 +235,7 @@ public class TestDAGGeneric extends PdqTest {
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
 		// Create DAGGeneric
-		DAGGeneric explorer = null;
+		DAGGenericLegacy explorer = null;
 		try {
 			// Mock success domination
 			SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
@@ -247,7 +247,7 @@ public class TestDAGGeneric extends PdqTest {
 			List<Validator> validators = new ArrayList<>();
 			validators.add(new DefaultValidator());
 
-			explorer = new DAGGeneric(new EventBus(), parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator,
+			explorer = new DAGGenericLegacy(new EventBus(), parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator,
 					successDominance, null, validators, 3);
 
 			explorer.explore();
@@ -384,7 +384,7 @@ public class TestDAGGeneric extends PdqTest {
 		validators.add(new ClosedValidator());
 
 		try {
-			DAGGeneric explorer = new DAGGeneric(new EventBus(), parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance,
+			DAGGenericLegacy explorer = new DAGGenericLegacy(new EventBus(), parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance,
 					null, validators, relations.length);
 			explorer.explore();
 			explorer.getExploredPlans();
@@ -502,7 +502,7 @@ public class TestDAGGeneric extends PdqTest {
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
 		// Create DAGGeneric
-		DAGGeneric explorer = null;
+		DAGGenericLegacy explorer = null;
 		try {
 			// Mock success domination
 			SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
@@ -514,7 +514,7 @@ public class TestDAGGeneric extends PdqTest {
 			List<Validator> validators = new ArrayList<>();
 			validators.add(new DefaultValidator());
 
-			explorer = new DAGGeneric(new EventBus(), parameters, query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, successDominance,
+			explorer = new DAGGenericLegacy(new EventBus(), parameters, query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, successDominance,
 					null, validators, 3);
 
 			explorer.explore();

@@ -147,7 +147,7 @@ public class ExplorerFactory {
 					parameters.getChaseInterval());
 
 		case DAG_GENERIC:
-			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric(eventBus, parameters, query, accessibleQuery,
+			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGenericLegacy(eventBus, parameters, query, accessibleQuery,
 					accessibleSchema, chaser, connection, costEstimator, successDominance, filter, validators,
 					parameters.getMaxDepth());
 		case DAG_GENERIC_SIMPLE:

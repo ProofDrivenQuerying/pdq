@@ -33,12 +33,14 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 /**
- * Simple dag explorer. It searches the space of binary configurations exhaustively
+ * Simple dag explorer. It searches the space of binary configurations exhaustively.
+ * Outdated, newer version is DAGGenericSimple. 
+ * This code is preserved for testing and comparing.
  *
  * @author Efthymia Tsamoura
  * @author Gabor
  */
-public class DAGGeneric extends DAGExplorer {
+public class DAGGenericLegacy extends DAGExplorer {
 
 	/**
 	 * The maximum depth we can explore. The exploration ends when
@@ -95,7 +97,7 @@ public class DAGGeneric extends DAGExplorer {
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
 	 */
-	public DAGGeneric(
+	public DAGGenericLegacy(
 			EventBus eventBus, 
 			PlannerParameters parameters,
 			ConjunctiveQuery query,
