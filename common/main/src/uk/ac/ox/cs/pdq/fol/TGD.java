@@ -25,7 +25,7 @@ public class TGD extends Dependency {
 		if(this.getExistential().length > 0) 
 			b = Arrays.asList(this.getExistential()).toString();
 		
-		return f + this.body + LogicalSymbols.IMPLIES + b + this.head;
+		return f + this.body + LogicalSymbols.IMPLIES + /* MR b +*/ this.head;
 	}
 	
 	public boolean isLinear() {

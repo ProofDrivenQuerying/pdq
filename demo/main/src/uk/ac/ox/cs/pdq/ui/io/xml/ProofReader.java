@@ -16,10 +16,13 @@ import org.xml.sax.SAXException;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 //import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLReader;
+import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 //import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
@@ -81,7 +84,7 @@ public class ProofReader extends AbstractXMLReader<Proof> {
 	 * (non-Javadoc)
 	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
-/* MR	@Override
+	@Override
 	public void startElement(String uri, String localName, String qName, Attributes atts) {
 		switch(QNames.parse(qName)) {
 		case PROOF:
@@ -98,28 +101,38 @@ public class ProofReader extends AbstractXMLReader<Proof> {
 
 		case ENTRY:
 			this.match.put(
-					new Variable(this.getValue(atts, QNames.KEY)),
-					new Skolem(this.getValue(atts, QNames.VALUE)));
+					Variable.create(this.getValue(atts, QNames.KEY)),
+					TypedConstant.create(this.getValue(atts, QNames.VALUE)));
 			break;
 
 		case AXIOM:
 			Relation r = this.schema.getRelation(this.getValue(atts, QNames.RELATION));
+			//Gabor
+			for (AccessibilityAxiom axiom:this.accSchema.getAccessibilityAxioms()) {
+				if (axiom.getAccessMethod().equals(r.getAccessMethod(
+									this.getValue(atts, QNames.ACCESS_METHOD)))) {
+					this.builder.addAxiom(axiom);
+				}
+			}
+			// end Gabor
+			/* M R - replaced with the code above.
 			this.builder.addAxiom(
 					this.accSchema.getAccessibilityAxiom(r,
 							r.getAccessMethod(
 									this.getValue(atts, QNames.ACCESS_METHOD))));
+									*/
 			break;
 
 		default:
 			throw new ReaderException("Illegal element " + qName);
 		}
-	}*/
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
 	 */
-/* MR	@Override
+	@Override
 	public void endElement(String uri, String localName, String qName) {
 		switch(QNames.parse(qName)) {
 		case CANDIDATE:
@@ -133,5 +146,5 @@ public class ProofReader extends AbstractXMLReader<Proof> {
 		default:
 			return;
 		}
-	}*/
+	}
 }

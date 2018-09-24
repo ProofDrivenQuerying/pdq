@@ -28,13 +28,16 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.fol.Atom;
 //import uk.ac.ox.cs.pdq.fol.Query;
 //import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
 //import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 //import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
+import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
 //import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
 //import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.Semantics;
 import uk.ac.ox.cs.pdq.ui.event.ResultVisualizer;
@@ -116,12 +119,12 @@ public class RuntimeController {
 	 * @param event the event
 	 */
     @FXML void startRunning(ActionEvent event) {
-/* MR		Preconditions.checkNotNull(this.plan);
+		Preconditions.checkNotNull(this.plan);
 		if (this.pauser == null) {
-			this.params.setSemantics(Semantics.SET);
+			//this.params.setSemantics(Semantics.SET);
 			final uk.ac.ox.cs.pdq.runtime.Runtime runtime =
 					new uk.ac.ox.cs.pdq.runtime.Runtime(this.params, this.schema);
-			runtime.registerEventHandler(new ResultVisualizer(this.dataQueue));
+			// MR runtime.registerEventHandler(new ResultVisualizer(this.dataQueue));
 			this.configureColumns();
 			
 			ExecutorService executor = Executors.newFixedThreadPool(2);
@@ -131,8 +134,13 @@ public class RuntimeController {
 			this.future = executor.submit(() -> {
 				RuntimeController.this.executionStart = System.nanoTime();
 				try {
-					runtime.evaluatePlan(RuntimeController.this.plan, RuntimeController.this.query);
-				} catch (EvaluationException e) {
+					RelationalTerm rt = null;
+					if (RuntimeController.this.plan instanceof RelationalTerm) 
+						rt = (RelationalTerm)RuntimeController.this.plan; 
+					else
+						rt = (RelationalTerm)((ExecutablePlan)RuntimeController.this.plan).getDecoratedPlan();
+					runtime.evaluatePlan(rt);
+				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 					throw new IllegalStateException();
 				}
@@ -142,7 +150,7 @@ public class RuntimeController {
 			this.pauser.resume();
 		}
 		this.runtimeStartButton.setDisable(true);
-		this.runtimePauseButton.setDisable(false)*/;
+		this.runtimePauseButton.setDisable(false);
     }
 
 	/**
@@ -160,13 +168,12 @@ public class RuntimeController {
      */
     private void configureColumns() {
     	ObservableList<TableColumn<Tuple, ?>> columns = this.runtimeResults.getColumns();
-/* MR   	Atom head = this.query.getHead();
-    	for (int i = 0, l = head.getPredicate().getArity(); i < l; i++) {
-    		TableColumn<Tuple, Object> column = new TableColumn<>(head.getTerm(i).toString());
+    	for (int i = 0, l = query.getFreeVariables().length; i < l; i++) {
+    		TableColumn<Tuple, Object> column = new TableColumn<>(query.getFreeVariables()[i].toString());
     		column.setCellValueFactory(new TupleCellFactoryCallback(i));
     		columns.add(column);
 
-    	}*/
+    	}
     }
     
 	/**
@@ -185,7 +192,7 @@ public class RuntimeController {
 	private Schema schema;
 	
 	/**  The query to be used during this runtime session. */
-// MR	private Query query;
+	private ConjunctiveQuery query;
 
 	/**  The plan to run. */
 	private Plan plan;
@@ -215,9 +222,9 @@ public class RuntimeController {
 	 * @param query the new query
 	 */
 	void setQuery(ObservableQuery query) {
-/* MR		this.query = query.getQuery();
+		this.query = ConjunctiveQuery.create(new Variable[] {}, query.getQuery().getAtoms());
 		Preconditions.checkNotNull(this.query);
-		Preconditions.checkState(this.query instanceof ConjunctiveQuery); */
+		Preconditions.checkState(this.query instanceof ConjunctiveQuery); 
 		this.runtimeResults.getColumns().clear();
 	}
 
@@ -238,17 +245,13 @@ public class RuntimeController {
 	 */
 	void setPlan(ObservablePlan p) {
 		Preconditions.checkArgument(p != null);
-/*	MR	this.plan = p.getPlan();
+	this.plan = p.getPlan();
 		Preconditions.checkNotNull(this.plan);
-		if (this.plan instanceof LeftDeepPlan) {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write((LeftDeepPlan) this.plan);
-			for (String c : bos.toString().split("\n")) {
-				this.runtimePlan.getItems().add(new Text(c));
-			}
-		} else {
-			this.runtimePlan.setVisible(false);
-		}*/
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		new PrintStream(bos).println(this.plan.toString());
+		for (String c : bos.toString().split("\n")) {
+			this.runtimePlan.getItems().add(new Text(c));
+		}
 	}
 
 	/**

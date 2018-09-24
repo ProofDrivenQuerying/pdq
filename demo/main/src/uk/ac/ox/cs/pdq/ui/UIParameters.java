@@ -48,26 +48,26 @@ public class UIParameters extends uk.ac.ox.cs.pdq.Parameters {
 	/**
 	 * Instantiates a new UI parameters.
 	 */
-	/* MR public UIParameters() {
+	 public UIParameters() {
 		this(new File(DEFAULT_CONFIG_FILE_PATH));
-	} */
+	} 
 
 	/**
 	 * Constructor for DemoParameters.
 	 * @param config path to the configuration file to read
 	 */
-	/* MR public UIParameters(File config) {
+	public UIParameters(File config) {
 		this(config, false, false);
-	}*/
+	}
 
 	/**
 	 * Constructor for DemoParameters.
 	 * @param config path to the configuration file to read
 	 * @param verbose if true, param loading problem will be reported
 	 */
-	/* MR public UIParameters(File config, boolean verbose) {
+	public UIParameters(File config, boolean verbose) {
 		this(config, false, verbose, false);
-	}*/
+	}
 
 	/**
 	 * Constructor for DemoParameters.
@@ -75,12 +75,12 @@ public class UIParameters extends uk.ac.ox.cs.pdq.Parameters {
 	 * @param delay true if the loading of the given config file should be delayed
 	 * @param verbose if true, param loading problem will be reported
 	 */
-	/* MR public UIParameters(File config, boolean delay, boolean verbose) {
-		super(config, true, verbose, false);
+	public UIParameters(File config, boolean delay, boolean verbose) {
+		super(config, verbose, false);
 		if (!delay) {
 			this.load(config, verbose, false);
 		}
-	}*/
+	}
 
 	/**
 	 * Constructor for DemoParameters.
@@ -89,10 +89,10 @@ public class UIParameters extends uk.ac.ox.cs.pdq.Parameters {
 	 * @param verbose if true, param loading problem will be reported
 	 * @param strict if true, param loading problem will throw an exception
 	 */
-/* MR	public UIParameters(File config, boolean delay, boolean verbose, boolean strict) {
-		super(config, true, verbose, strict);
+	public UIParameters(File config, boolean delay, boolean verbose, boolean strict) {
+		super(config, verbose, strict);
 		if (!delay) {
 			this.load(config, verbose, strict);
 		}
-	}*/
+	}
 }

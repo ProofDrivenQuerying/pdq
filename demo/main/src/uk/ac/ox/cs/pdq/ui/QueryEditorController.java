@@ -100,7 +100,7 @@ public class QueryEditorController {
 		}
 		this.query = query;
 		this.queryNameTextField.setText(query.getName());
-// MR		this.queryEditArea.setText(SQLLikeQueryWriter.convert(this.query.getQuery()));
+		this.queryEditArea.setText(SQLLikeQueryWriter.convert(this.query.getQuery()));
 	}
 	
 	/**

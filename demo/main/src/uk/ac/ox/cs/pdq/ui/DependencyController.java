@@ -1,9 +1,13 @@
 package uk.ac.ox.cs.pdq.ui;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.apache.log4j.Logger;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
@@ -14,15 +18,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
-
-import org.apache.log4j.Logger;
-
-import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.io.ReaderException;
-import uk.ac.ox.cs.pdq.io.pretty.PrettyDependencyReader;
-import uk.ac.ox.cs.pdq.io.pretty.PrettyDependencyWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
@@ -59,8 +57,8 @@ public class DependencyController {
 				DependencyController.this.dependencyEditorMessage.setText("");
 				if (DependencyController.this.schema != null) {
 					try {
-						PrettyDependencyReader reader = new PrettyDependencyReader(DependencyController.this.schema.getSchema());
-						DependencyController.this.newDependency = (Dependency) reader.read(new ByteArrayInputStream(newString.getBytes()));
+						/* MR PrettyDependencyReader reader = new PrettyDependencyReader(DependencyController.this.schema.getSchema());
+						DependencyController.this.newDependency = (Dependency) reader.read(new ByteArrayInputStream(newString.getBytes()));*/
 					} catch (ReaderException e) {
 						DependencyController.this.dependencyEditorMessage.setText(e.getMessage());
 						DependencyController.this.invalid.set(true);
@@ -139,7 +137,7 @@ public class DependencyController {
 	 */
 	private void refreshEditor() {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		PrettyDependencyWriter.to(new PrintStream(out)).indented().write(this.dependency);
+		new PrintStream(out).println(this.dependency.toString());
 		this.dependencyTextArea.setText(out.toString());
 	}
 
@@ -153,11 +151,11 @@ public class DependencyController {
 	   	if (!event.isConsumed()) {
     		event.consume();
     		if (this.newDependency != null) {
-/* MR    			SchemaBuilder builder = Schema.builder(this.schema.getSchema());
-        		builder.removeDependency(this.dependency);
-        		builder.addDependency(this.newDependency);
-        		Schema newSchema = builder.build();
-        		this.schema.setSchema(newSchema);*/
+    			List<Dependency> dep = new ArrayList<>();
+    			dep.addAll(Arrays.asList(this.schema.getSchema().getAllDependencies()));
+    			dep.add(newDependency);
+        		Schema newSchema = new Schema(this.schema.getSchema().getRelations(),dep.toArray(new Dependency[dep.size()]));
+        		this.schema.setSchema(newSchema);
         		this.dataQueue.add(this.schema);
     		}
     		Stage stage = (Stage) this.dependencyEditorButton.getScene().getWindow();

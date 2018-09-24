@@ -167,9 +167,9 @@ public class PrefuseEventHandler implements EventHandler {
 			else {
 				type = PathTypes.SUCCESSFULPATH;
 			}
-/* MR			Utils.modifyNodeProperty(this.graph,  path.getIntegerPath(), "pathToSuccess", type);
+			Utils.modifyNodeProperty(this.graph,  path.getIntegerPath(), "pathToSuccess", type);
 			path.setNodesPath(Utils.toNodeItem(this.visualization, this.nodeGroup, this.graph, path.getIntegerPath()));
-			paths.add(path); */
+			paths.add(path); 
 		}
 		this.pathHighlightControl.setPaths(paths);
 	}
@@ -197,7 +197,7 @@ public class PrefuseEventHandler implements EventHandler {
 	public void updateAggregateTable() {
 		List<List<Integer>> integerPaths = new ArrayList<>();
 		for(Path path:this.paths) {
-// MR			integerPaths.add(path.getIntegerPath());
+			integerPaths.add(path.getIntegerPath());
 		}
 		Utils.updateAggregateTable(this.visualization, this.nodeGroup, this.graph, this.aggregateTable, integerPaths, false);
 	}

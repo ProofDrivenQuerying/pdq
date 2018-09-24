@@ -71,7 +71,7 @@ public class DatabaseParameters extends Parameters {
 	/**
 	 * Constructor for DatabaseParameters using default configuration file path.
 	 */
-	private DatabaseParameters() {
+	public DatabaseParameters() {
 		super(new File(DEFAULT_CONFIG_FILE_PATH), false, false);
 	}
 

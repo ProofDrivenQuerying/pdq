@@ -80,7 +80,7 @@ public class NodePropertiesDialog extends JFrame {
 		titledBorders.setBorder(border);
 		titledBorders.setLayout(new BoxLayout(titledBorders, BoxLayout.Y_AXIS));
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-// MR		AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write(this.node.getConfiguration().getPlan());
+		new PrintStream(bos).println(this.node.getConfiguration().getPlan().toString());
 		PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Type"), this.node.getStatus().toString());
 		PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Access command"), bos.toString());
 		return titledBorders;

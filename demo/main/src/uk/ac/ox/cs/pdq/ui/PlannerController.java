@@ -54,11 +54,6 @@ import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-//import uk.ac.ox.cs.pdq.fol.Query;
-//import uk.ac.ox.cs.pdq.io.pretty.AccessOnlyPlanWriter;
-//import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
-//import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
-//import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
@@ -75,8 +70,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.ui.event.PlanSearchVisualizer;
 import uk.ac.ox.cs.pdq.ui.event.PrefuseEventHandler;
-import uk.ac.ox.cs.pdq.ui.io.pretty.ExtendedPrettyProofWriter;
-import uk.ac.ox.cs.pdq.ui.io.pretty.PrettyProofWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservablePlan;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
@@ -350,11 +343,13 @@ public class PlannerController {
 			this.params = new PlannerParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
 			this.costParams = new CostParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
 			this.reasoningParams = new ReasoningParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
+			this.databaseParams = new DatabaseParameters();
 		} else {
 			log.info("No default configuration file. Initializing demo environment...");
 			this.params = new PlannerParameters();
 			this.costParams = new CostParameters();
 			this.reasoningParams = new ReasoningParameters();
+			this.databaseParams = new DatabaseParameters();
 		}
 		this.plan = plan;
 		this.params.setSeed(1);
@@ -384,13 +379,13 @@ public class PlannerController {
 				visualizer.addControl(visualizer.getPathHighlightControl());
 				visualizer.addControl(new HoverControl());
 				visualizer.addControl(new ClickControl(PlannerController.this.dataQueue));
-		/* MR		planner.registerEventHandler(
+				planner.registerEventHandler(
 						new PrefuseEventHandler(visualizer.getGraph(),
 								visualizer.getAggregateTable(),  visualizer.getVisualization(), 
 								"aggregates", "graph.nodes", "color", "layout",
 								visualizer.getPathHighlightControl(),
 								visualizer.getPathsHighlightBox()));
-				swingNode.setContent(visualizer); */
+				swingNode.setContent(visualizer);
 			}
 		});
 		this.searchSpaceVizualizationArea.getChildren().add(swingNode);
@@ -414,28 +409,28 @@ public class PlannerController {
 			final ExplorationSetUp planner = new ExplorationSetUp(this.params, this.costParams, this.reasoningParams, this.databaseParams, this.schema);
 			this.setSearchSpaceVisualizer(planner);
 
-// MR			planner.registerEventHandler(new PlanSearchVisualizer(this.dataQueue, 5));
+			planner.registerEventHandler(new PlanSearchVisualizer(this.dataQueue, 5));
 			this.pauser = new Pauser(this.dataQueue, 99999);
 			ExecutorService executor = Executors.newFixedThreadPool(2);
 			executor.execute(this.pauser);
 			this.future = executor.submit(() -> {
-// MR				try {
+				try {
 					log.debug("Searching plan...");
-// MR				    Map.Entry<RelationalTerm, Cost> bestPlan = planner.search(this.query);
-// MR					PlannerController.this.bestPlan = bestPlan;
+					Map.Entry<RelationalTerm, Cost> bestPlan = planner.search(this.query);
+					PlannerController.this.bestPlan = bestPlan.getKey();
 					log.debug("Best plan: " + bestPlan);
 					ObservablePlan p = PlannerController.this.plan.copy();
-					p.setPlan(bestPlan);
+					p.setPlan(bestPlan.getKey());
 					p.setProof(PlannerController.this.bestProof);
 					if (bestPlan != null) {
-// MR						p.setCost(bestPlan.getCost());
+					p.setCost(bestPlan.getValue());
 					}
 					p.store();
 					PlannerController.this.planQueue.add(p);
-/* MR				} catch (PlannerException e) {
+				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 					throw new IllegalStateException();
-				}*/
+				}
 				PlannerController.this.dataQueue.add(Status.COMPLETE);
 			});
 		} else {
@@ -489,7 +484,7 @@ public class PlannerController {
 				// Update the table & chart
 				this.planStatisticsTable.getItems().add(state);
 				this.updateCostTab(state);
-// MR				this.updatePlanTab(state.getPlan());
+				this.updatePlanTab(state.getPlan());
 				this.updateProofTab(state.getProof());
 				this.updatePlansFound(state);
 			}
@@ -523,7 +518,7 @@ public class PlannerController {
 							++i;
 						}
 						ObservableSearchState p = iterator.next();	
-	// MR					this.displayPlan(this.selectedPlanViewArea, p.getPlan());
+						this.displayPlan(this.selectedPlanViewArea, p.getPlan());
 						this.displayProof(this.selectedProofViewArea, p.getProof());
 					};
 
@@ -534,9 +529,9 @@ public class PlannerController {
 					 */
 					private void updatePlanTab(Plan pplan) {
 						this.planViewArea.getItems().clear();
-		/*				if (pplan != null && pplan instanceof LeftDeepPlan) {
+						if (pplan != null && pplan instanceof Plan) {
 							ByteArrayOutputStream bos = new ByteArrayOutputStream();
-							AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write((LeftDeepPlan) pplan);
+							new PrintStream(bos).println(pplan.toString());
 							for (String line: bos.toString().split("\n")) {
 								Text t = new Text(line);
 								this.planViewArea.getItems().add(t);
@@ -546,7 +541,7 @@ public class PlannerController {
 							this.planViewArea.getItems().add(new Text("<Non linear plan selected>"));
 						} else {
 							this.planViewArea.getItems().add(new Text("<No plan>"));
-						}*/
+						}
 					}
 
 					/**
@@ -558,7 +553,7 @@ public class PlannerController {
 						this.proofViewArea.clear();
 						if (pr != null) {
 							ByteArrayOutputStream bos = new ByteArrayOutputStream();
-							PrettyProofWriter.to(new PrintStream(bos)).write(pr);
+							new PrintStream(bos).println(pr.toString());
 							this.proofViewArea.setText(bos.toString());
 							this.bestProof = pr;
 						}
@@ -624,7 +619,7 @@ public class PlannerController {
 						area.clear();
 						if (p != null) {
 							ByteArrayOutputStream bos = new ByteArrayOutputStream();
-							PrettyProofWriter.to(new PrintStream(bos)).write(p);
+							new PrintStream(bos).println(p.toString());
 							area.setText(bos.toString());
 						} 					
 					}
@@ -676,7 +671,7 @@ public class PlannerController {
 					public void updateGeneralMetadata(SearchNode node) {
 						ByteArrayOutputStream bos = new ByteArrayOutputStream();
 						//AccessOnlyPlanWriter.to(new PrintStream(bos)).write(node.getConfiguration().getPlan());
-// MR						AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write(node.getConfiguration().getPlan());
+						new PrintStream(bos).println(node.getConfiguration().getPlan().toString());
 						this.searchSpaceMetadataGeneral.setText(
 								"Type: " + node.getStatus() + "\n\n" + 
 										"Middleware query commands:\n" + bos);

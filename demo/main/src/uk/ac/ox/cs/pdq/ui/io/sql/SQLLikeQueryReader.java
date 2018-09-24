@@ -82,7 +82,7 @@ public class SQLLikeQueryReader {
         
         log.debug("query aliases: " + this.aliasToTables);
         
- // MR       ConjunctiveQueryBodyBuilder qBuilder = new ConjunctiveQueryBodyBuilder(this.schema, this.aliasToTables);
+      // MR ConjunctiveQueryBodyBuilder qBuilder = new ConjunctiveQueryBodyBuilder(this.schema, this.aliasToTables);
         
         List<String> joinConstraints = new ArrayList<String>();
         for( ParseTree p : listener.getJoinConstraints() ) {

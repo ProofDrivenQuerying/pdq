@@ -12,18 +12,24 @@ import static uk.ac.ox.cs.pdq.ui.PDQApplication.SCHEMA_FILENAME_SUFFIX;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.log4j.Logger;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.binding.Bindings;
@@ -65,44 +71,35 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Logger;
-
+import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
-import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.db.LinearGuarded;
+import uk.ac.ox.cs.pdq.datasources.services.RESTAccessMethodGenerator;
+import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodAttributeSpecification;
+//import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
+import uk.ac.ox.cs.pdq.datasources.services.service.Service;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
-//import uk.ac.ox.cs.pdq.db.builder.QueryBuilder;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-//import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
-import uk.ac.ox.cs.pdq.io.pretty.VeryShortDependencyWriter;
-//import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
-//import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
-import uk.ac.ox.cs.pdq.algebra.Plan;
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
-//import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
-import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.ui.io.ObservableQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaReader;
-import uk.ac.ox.cs.pdq.ui.io.pretty.PrettyProofWriter;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 import uk.ac.ox.cs.pdq.ui.io.xml.ProofReader;
 import uk.ac.ox.cs.pdq.ui.model.ObservablePlan;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -206,7 +203,7 @@ public class PDQController {
 	@FXML TableView<ObservablePlan> plansTableView;
     
     /** The settings executor type list. */
-// MR	@FXML ComboBox<ExecutorTypes> settingsExecutorTypeList;
+	@FXML ComboBox<String> settingsExecutorTypeList;
     
     /** The run planner button. */
     @FXML Button runPlannerButton;
@@ -253,11 +250,11 @@ public class PDQController {
         		}
 	       		int index = this.currentSchemaViewitems.getParent().getChildren().indexOf(this.currentSchemaViewitems);
 	       		index -= this.currentSchema.get().getSchema().getRelations().length;
-/* MR	       		Dependency dependency = this.currentSchema.get().getSchema().getDependencies().get(index);
+	       		Dependency dependency = this.currentSchema.get().getSchema().getAllDependencies()[index];
         		if (dependency != null) {
-        			this.deleteDependency(schema, dependency);
+        			//this.deleteDependency(schema, dependency);
         			this.reloadTreeItem(item.getParent(), schema);
-        		}*/
+        		}
         	}
     		this.schemasTreeView.getSelectionModel().clearSelection();
     	}
@@ -512,7 +509,40 @@ public class PDQController {
     	       		}
     	       		
     	       		int index = this.currentSchemaViewitems.getParent().getChildren().indexOf(this.currentSchemaViewitems);
-    	       		//index -= this.currentSchema.get().getSchema().getRelations().size();
+           	       	Service service = this.currentSchema.get().getServices()[index];
+           	       	if(service != null)
+           	       	{
+       					try {
+							Stage dialog = new Stage();
+							dialog.initModality(Modality.WINDOW_MODAL);
+							dialog.initStyle(StageStyle.UTILITY);
+							dialog.initOwner(this.getOriginatingWindow(event));
+							ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
+							FXMLLoader loader = new FXMLLoader(PDQApplication.class.getResource("/resources/layouts/relation-window.fxml"), bundle);
+							Parent parent = (Parent) loader.load();
+							Scene scene = new Scene(parent);
+							dialog.setScene(scene);
+							dialog.setTitle(bundle.getString("relation.dialog.title"));
+							RelationController relationController = loader.getController();
+							ArrayList<Attribute> list = new ArrayList<>();
+							for(RESTExecutableAccessMethodAttributeSpecification a: service.getAccessMethod()[0].getAttributes())
+							{
+								list.add(Attribute.create(RESTAccessMethodGenerator.typeType(a.getType()), a.getName()));
+							}
+							Attribute[] attributes = new Attribute[list.size()];
+							for(int i = 0; i < list.size(); i++) attributes[i] = list.get(i);
+							AccessMethodDescriptor[] accessmethods = new AccessMethodDescriptor[1];
+							accessmethods[0] = AccessMethodDescriptor.create(service.getAccessMethod()[0].getName(), new Integer[0]);
+							Relation relation2 = Relation.create("relation", attributes, accessmethods);
+							relationController.setRelation(relation2);
+							dialog.showAndWait();
+							return;
+						} catch (Exception e) {
+							throw new UserInterfaceException(e);
+						}
+           	       	}
+    	       		
+           	       	       		//index -= this.currentSchema.get().getSchema().getRelations().size();
     	       		
     	       		Dependency dependency = this.currentSchema.get().getSchema().getAllDependencies()[index];
     	       		if (dependency != null) {
@@ -616,7 +646,7 @@ public class PDQController {
     	        runtimeController.setPlan(this.currentPlan.get());
     	        runtimeController.setSchema(this.currentSchema.get());
     	        runtimeController.setQuery(this.currentQuery.get());
- // MR   	        runtimeController.setExecutorType(this.settingsExecutorTypeList.getValue());
+    	        //runtimeController.setExecutorType(this.settingsExecutorTypeList.getValue());
     	        runtimeController.setTuplesLimit(toInteger(this.settingsOutputTuplesTextField.getText()));
     	        dialog.setOnCloseRequest((WindowEvent arg0) ->	runtimeController.interruptRuntimeThreads());
     	        dialog.showAndWait();
@@ -957,7 +987,7 @@ public class PDQController {
 		PDQController.this.proofViewArea.clear();
 		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			PrettyProofWriter.to(new PrintStream(bos)).write(p);
+			new PrintStream(bos).println(p.toString());
 			PDQController.this.proofViewArea.setText(bos.toString());
 		} 					
     }
@@ -1048,10 +1078,8 @@ public class PDQController {
 	private void loadSchemas() {
 		File schemaDir = new File(this.workDirectory.getAbsolutePath() + '/' + SCHEMA_DIRECTORY);
 		for (File schemaFile : listFiles(schemaDir, "", SCHEMA_FILENAME_SUFFIX)) {
-			File serviceFile = new File(schemaFile.getAbsolutePath() + "r"); 
-			File groupFile = new File(schemaFile.getAbsolutePath() + "g"); 
 			ObservableSchemaReader schemaReader = new ObservableSchemaReader();
-			ObservableSchema s = schemaReader.read(schemaFile, groupFile, serviceFile);
+			ObservableSchema s = schemaReader.read(schemaFile);
 			s.setFile(schemaFile);
 			this.schemas.put(s.getName(), s);
 		}
@@ -1277,17 +1305,17 @@ public class PDQController {
 		for(Service sr : s.getServices())
 		{
 			ImageView imageView = new ImageView(this.webRelationIcon);
-			services.getChildren().add(new TreeItem<>(s.getName(), imageView));
+			services.getChildren().add(new TreeItem<>(sr.getName(), imageView));
 		}
 		for (Dependency ic : s.getSchema().getAllDependencies()) {
 			ImageView imageView = null;
-/* MR			if (ic instanceof LinearGuarded) {
+			if (ic instanceof TGD && ((TGD)ic).isGuarded()) {
 				imageView = new ImageView(this.fkIcon);
-			} else*/ {
+			} else {
 				imageView = new ImageView(this.dependencyIcon);
 			}
 			//item.getChildren().add(new TreeItem<>(VeryShortDepencencyWriter.convert(ic), imageView));
-			dependencies.getChildren().add(new TreeItem<>(VeryShortDependencyWriter.convert(ic), imageView));
+			dependencies.getChildren().add(new TreeItem<>(ic.toString(), imageView));
 		}
 		
 		if(!relations.getChildren().isEmpty()) {

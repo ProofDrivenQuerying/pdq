@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import com.google.common.eventbus.EventBus;
 
+import uk.ac.ox.cs.pdq.util.EventHandler;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.algebra.Condition;
@@ -136,6 +137,24 @@ public class ExplorationSetUp {
 		this.originalSchema = schema;
 		//this.schema = schema;
 		this.accessibleSchema = new AccessibleSchema(this.schema);
+	}
+
+	/**
+	 * Register event handler.
+	 *
+	 * @param handler EventHandler
+	 */
+	public void registerEventHandler(EventHandler handler) {
+		this.eventBus.register(handler);
+	}
+
+	/**
+	 * Register the given event homoChecker.
+	 *
+	 * @param handler EventHandler
+	 */
+	public void unregisterEventHandler(EventHandler handler) {
+		this.eventBus.unregister(handler);
 	}
 
 	/**

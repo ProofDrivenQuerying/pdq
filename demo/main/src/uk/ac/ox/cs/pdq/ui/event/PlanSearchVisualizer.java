@@ -1,11 +1,13 @@
 package uk.ac.ox.cs.pdq.ui.event;
 
+import java.util.Arrays;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.util.EventHandler;
 import uk.ac.ox.cs.pdq.planner.Explorer;
+import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearExplorer;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSearchState;
 import uk.ac.ox.cs.pdq.ui.util.LogarithmicAxis;
@@ -56,11 +58,11 @@ public class PlanSearchVisualizer implements EventHandler {
 		int rounds = explorer.getRounds();
 		if(explorer instanceof LinearExplorer) {
 			if (rounds % this.interval == 0 && explorer.getBestPlan() != null) {
-/* MR				this.dataQueue.add(new ObservableSearchState(
+				this.dataQueue.add(new ObservableSearchState(
 						explorer.getElapsedTime() / 1e6,
 						rounds,
 						explorer.getBestPlan(),
-						((LinearExplorer)explorer).getBestConfigurationsList())); */
+						Arrays.asList(new LinearChaseConfiguration[] {((LinearExplorer)explorer).getBestNode().getConfiguration()})));
 				synchronized (this.dataQueue) {
 					try {
 						this.dataQueue.wait();

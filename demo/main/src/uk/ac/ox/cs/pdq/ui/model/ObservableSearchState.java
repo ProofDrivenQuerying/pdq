@@ -103,9 +103,9 @@ public class ObservableSearchState {
 	 *
 	 * @return the plan
 	 */
-/* MR	public Plan getPlan() {
+	public Plan getPlan() {
 		return this.plan.get();
-	}*/
+	}
 	
 	/**
 	 * Gets the proof.

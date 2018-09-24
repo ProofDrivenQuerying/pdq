@@ -15,9 +15,10 @@ import javax.xml.bind.annotation.XmlType;
 // It contains policy, static-attribute and access-method elements
 // It also has attributes for url, documentation, media-type and ressult-delimiter
 @XmlRootElement (name="service")
-@XmlType (propOrder= {"url", "documentation", "mediaType", "resultDelimiter", "serviceGroup", "serviceUsagePolicy", "staticAttribute", "accessMethod"})
+@XmlType (propOrder= {"name", "url", "documentation", "mediaType", "resultDelimiter", "serviceGroup", "serviceUsagePolicy", "staticAttribute", "accessMethod"})
 public class Service {
 	
+	private String name;
 	private String url;
 	private String documentation;
 	private String mediaType;
@@ -27,6 +28,15 @@ public class Service {
 	private StaticAttribute[] staticAttribute;
 	private RESTExecutableAccessMethodSpecification[] accessMethod;
 	
+
+	@XmlAttribute (name = "name", required=true)
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@XmlAttribute (required=true)
 	public String getUrl() {
 		return url;

@@ -4,6 +4,8 @@ import java.util.List;
 
 import prefuse.visual.NodeItem;
 //import uk.ac.ox.cs.pdq.plan.Plan;
+import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.cost.Cost;
 
 import com.google.common.base.Joiner;
 
@@ -14,13 +16,15 @@ import com.google.common.base.Joiner;
 public class Path {
 	
 	/** The ipath. */
-// MR	private final List<Integer> ipath;
+	private final List<Integer> ipath;
 	
 	/** The npath. */
 	private List<NodeItem> npath;
 	
 	/** The plan. */
-// MR	private final Plan plan;
+   private final Plan plan;
+
+	private Cost cost = null;
 	
 	/**
 	 * Instantiates a new path.
@@ -28,10 +32,16 @@ public class Path {
 	 * @param ipath the ipath
 	 * @param plan the plan
 	 */
-/* MR	public Path(List<Integer> ipath,  Plan plan) {
+	public Path(List<Integer> ipath,  Plan plan, Cost cost) {
 		this.ipath = ipath;
 		this.plan = plan;
-	}*/
+		this.cost  = cost;
+	}
+	
+	public Path(List<Integer> ipath,  Plan plan) {
+		this.ipath = ipath;
+		this.plan = plan;
+	}
 	
 	/**
 	 * Contains.
@@ -49,9 +59,9 @@ public class Path {
 	 * @param node the node
 	 * @return true, if successful
 	 */
-/* MR	public boolean contains(Integer node) {
+	public boolean contains(Integer node) {
 		return this.ipath.contains(node);
-	}*/
+	}
 	
 	/**
 	 * Gets the nodes path.
@@ -67,18 +77,18 @@ public class Path {
 	 *
 	 * @return the integer path
 	 */
-/* MR	public List<Integer> getIntegerPath() {
+	public List<Integer> getIntegerPath() {
 		return this.ipath;
-	}*/
+	}
 	
 	/**
 	 * Gets the plan.
 	 *
 	 * @return the plan
 	 */
-/* MR	public Plan getPlan(){
+	public Plan getPlan(){
 		return this.plan;
-	}*/
+	}
 	
 	/**
 	 * Sets the nodes path.
@@ -89,11 +99,14 @@ public class Path {
 		this.npath = npath;
 	}
 	
+	public Cost getCost() {
+		return cost;
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
-/* MR	@Override
+	@Override
 	public String toString() {
-		return Joiner.on(",").join(this.ipath) + " " + plan.getCost().toString();
-	}*/
+		return Joiner.on(",").join(this.ipath) + " " + cost;
+	}
 }

@@ -207,4 +207,8 @@ public class ObservableQuery {
 		}
 		return result;
 	}
+
+	public Formula getQuery() {
+		return formula.get();
+	}
 }

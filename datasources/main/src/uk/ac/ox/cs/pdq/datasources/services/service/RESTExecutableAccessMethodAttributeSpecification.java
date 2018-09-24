@@ -38,7 +38,7 @@ public class RESTExecutableAccessMethodAttributeSpecification {
 	}
 	@XmlAttribute (required=false)
 	public String getValue() {
-		return value;
+		return (value == null) ? "" : value;
 	}
 	public void setValue(String value) {
 		this.value = value;

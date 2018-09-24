@@ -240,7 +240,7 @@ public class Proof {
 	 *
 	 * @author Julien Leblay
 	 */
-	public static class Builder /* MR implements uk.ac.ox.cs.pdq.builder.Builder<Proof> */ {
+	public static class Builder implements uk.ac.ox.cs.pdq.datasources.schemabuilder.Builder<Proof> {
 
 		/** The query match. */
 		private Map<Variable, Constant> queryMatch = null;
@@ -323,7 +323,7 @@ public class Proof {
 		 * @return Proof
 		 * @see uk.ac.ox.cs.pdq.builder.Builder#build()
 		 */
-// MR		@Override
+ 		@Override
 		public Proof build() {
 			this.addState();
 			return new Proof(this.states);
