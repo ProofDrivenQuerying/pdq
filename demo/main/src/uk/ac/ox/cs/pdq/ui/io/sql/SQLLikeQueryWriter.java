@@ -95,27 +95,27 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implemen
 		int counter = 0;
 		Map<Atom, String> aliases = new LinkedHashMap<>();
 		Multimap<Term, Atom> joins = LinkedHashMultimap.create();
-/* MR		for (Atom p: q.getBody()) {
+		for(Atom p : q.getBody().getAtoms()) {
 			aliases.put(p, ALIAS_PREFIX + (counter++));
 			for (Term t: p.getTerms()) {
 				joins.put(t, p);
 			}
-		}*/
+		}
 		// Make SELECT clause
 		result.append("SELECT ");
-/* MR		Collection<Term> head = q.getHead().getTerms();
-		if (head.isEmpty()) {
+		Term[] head = q.getTerms();
+		if (head.length == 0) {
 			result.append("*");
 		} else {
 			String sep = "";
 			for (Term t: head) {
 				Atom p = joins.get(t).iterator().next();
-				int pos = p.getTermPositions(t).iterator().next();
-				Attribute a = ((Relation) p.getPredicate()).getAttribute(pos);
-				result.append(sep).append(aliases.get(p)).append('.').append(a.getName());
+				int pos = p.getTermPosition(t);
+/* MR				Attribute a = ((Relation) p.getPredicate()).getAttribute(pos);
+				result.append(sep).append(aliases.get(p)).append('.').append(a.getName());*/
 				sep = ", ";
 			}
-		}*/
+		}
 		
 		// Remove non-join clusters
 		for (Iterator<Term> i = joins.keySet().iterator(); i.hasNext(); ) {
