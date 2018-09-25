@@ -78,6 +78,7 @@ import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.datasources.services.RESTAccessMethodGenerator;
 import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodAttributeSpecification;
+import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
 //import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
@@ -486,10 +487,11 @@ public class PDQController {
 
     	       	ObservableSchema schema = this.schemas.get(this.currentSchemaViewitems.getValue());
     	       	if (schema == null) {
-    	       		Relation relation = this.currentSchema.get().getSchema().getRelation(this.currentSchemaViewitems.getValue());
-    	       		if(currentSchemaViewitems.getParent().valueProperty().get().equals("Relations") && (relation != null)) {
-    	       			try {
-    	       				Stage dialog = new Stage();
+   	       			try {
+   	       				Relation relation = this.currentSchema.get().getSchema().getRelation(this.currentSchemaViewitems.getValue());
+   	       				if((currentSchemaViewitems.getParent().valueProperty().get().equals("Relations") ||
+   	       					currentSchemaViewitems.getParent().getParent().valueProperty().get().equals("Services")) && (relation != null)) {
+     	       				Stage dialog = new Stage();
 							dialog.initModality(Modality.WINDOW_MODAL);
 							dialog.initStyle(StageStyle.UTILITY);
 							dialog.initOwner(this.getOriginatingWindow(event));
@@ -503,10 +505,10 @@ public class PDQController {
 							relationController.setRelation(relation);
 							dialog.showAndWait();
 							return;
-						} catch (IOException e) {
-							throw new UserInterfaceException(e);
-						}
-    	       		}
+   	       				}
+					} catch (Throwable e) {
+//						throw new UserInterfaceException(e);
+					}
     	       		
     	       		int index = this.currentSchemaViewitems.getParent().getChildren().indexOf(this.currentSchemaViewitems);
     	       		
@@ -541,9 +543,17 @@ public class PDQController {
 							throw new UserInterfaceException(e.getMessage());
 						}
     	       		}
-           	       	Service service = this.currentSchema.get().getServices()[index];
+    	       		Service service = null;
+           	       	for(Service sr : this.currentSchema.get().getServices())
+           	       	{
+           	       		if(sr.getName().equals(currentSchemaViewitems.getValue()))
+           	       		{
+           	       			service = sr;
+           	       			break;
+           	       		}
+           	       	}
            	       	if((currentSchemaViewitems.getParent().valueProperty().get().equals("Services") ||
-           	       		currentSchemaViewitems.getParent().valueProperty().get().equals("Concrete")) && (service != null))
+           	       		currentSchemaViewitems.getParent().getParent().valueProperty().get().equals("Relations")) && (service != null))
            	       	{
        					try {
 							Stage dialog = new Stage();
@@ -894,14 +904,16 @@ public class PDQController {
 		Boolean isNavigator = newValue.getValue().equals(bundle.getString("application.schema.schemas.relations")) || 
 				newValue.getValue().equals(bundle.getString("application.schema.schemas.views")) || 
 				newValue.getValue().equals(bundle.getString("application.schema.schemas.services")) ||
-				newValue.getValue().equals(bundle.getString("application.schema.schemas.concrete")) ||
 				newValue.getValue().equals(bundle.getString("application.schema.schemas.dependencies"));
 		
-		if (!this.schemas.containsKey(schemaName) && isNavigator) {
+		if (!this.schemas.containsKey(schemaName)) {
 			schemaName = newValue.getParent().getValue();
 		}
-		else if(!this.schemas.containsKey(schemaName) && !isNavigator) {
+		if (!this.schemas.containsKey(schemaName)) {
 			schemaName = newValue.getParent().getParent().getValue();
+		}
+		if (!this.schemas.containsKey(schemaName)) {
+			schemaName = newValue.getParent().getParent().getParent().getValue();
 		}
 		this.currentSchema.set(this.schemas.get(schemaName));
 		this.queriesListView.setItems(this.queries.get(schemaName));
@@ -1291,25 +1303,65 @@ public class PDQController {
     	ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
 		TreeItem<String> relations = new TreeItem<>(bundle.getString("application.schema.schemas.relations"), new ImageView(this.dbRelationIcon));
 		TreeItem<String> services = new TreeItem<>(bundle.getString("application.schema.schemas.services"), new ImageView(this.webRelationIcon));
-		TreeItem<String> concrete = new TreeItem<>(bundle.getString("application.schema.schemas.concrete"), new ImageView(this.webRelationIcon));
 		TreeItem<String> views = new TreeItem<>(bundle.getString("application.schema.schemas.views"), new ImageView(this.dbViewIcon));
 		TreeItem<String> dependencies = new TreeItem<>(bundle.getString("application.schema.schemas.dependencies"), new ImageView(this.dependencyIcon));
 		
 		for (Relation r : s.getSchema().getRelations()) {
 			ImageView imageView = null;
+			TreeItem ti;
 			if (r instanceof View) {
 				imageView = new ImageView(this.dbViewIcon);
-				views.getChildren().add(new TreeItem<>(r.getName(), imageView));
+				ti = new TreeItem<>(r.getName(), imageView);
+				views.getChildren().add(ti);
 			} else {
 				imageView = new ImageView(this.dbRelationIcon);
-				relations.getChildren().add(new TreeItem<>(r.getName(), imageView));
+				ti = new TreeItem<>(r.getName(), imageView);
+				relations.getChildren().add(ti);
 			}
-			//item.getChildren().add(new TreeItem<>(r.getName(), imageView));
+			boolean found = false;
+			for(AccessMethodDescriptor a : r.getAccessMethods())
+			{
+				for(Service sr: s.getServices())
+				{
+					for(RESTExecutableAccessMethodSpecification ream : sr.getAccessMethod())
+					{
+						if(ream.getName().equals(a.getName()))
+						{
+							imageView = new ImageView(this.webRelationIcon);
+							ti.getChildren().add(new TreeItem<>(sr.getName(), imageView));
+							found = true;
+						}
+						if(found) break;
+					}
+					if(found) break;
+				}
+				if(found) break;
+			}
 		}
 		for(Service sr : s.getServices())
 		{
 			ImageView imageView = new ImageView(this.webRelationIcon);
-			services.getChildren().add(new TreeItem<>(sr.getName(), imageView));
+			TreeItem ti = new TreeItem<>(sr.getName(), imageView);
+			services.getChildren().add(ti);
+			boolean found = false;
+			for(Relation r: s.getSchema().getRelations())
+			{
+				for(AccessMethodDescriptor a : r.getAccessMethods())
+				{
+					for(RESTExecutableAccessMethodSpecification ream : sr.getAccessMethod())
+					{
+						if(ream.getName().equals(a.getName()))
+						{
+							imageView = new ImageView(this.dbRelationIcon);
+							ti.getChildren().add(new TreeItem<>(r.getName(), imageView));
+							found = true;
+						}
+						if(found) break;
+					}
+					if(found) break;
+				}
+				if(found) break;
+			}
 		}
 		for (Dependency ic : s.getSchema().getAllDependencies()) {
 			ImageView imageView = null;
