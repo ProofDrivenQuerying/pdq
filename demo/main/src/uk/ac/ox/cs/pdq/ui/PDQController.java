@@ -487,9 +487,9 @@ public class PDQController {
     	       	ObservableSchema schema = this.schemas.get(this.currentSchemaViewitems.getValue());
     	       	if (schema == null) {
     	       		Relation relation = this.currentSchema.get().getSchema().getRelation(this.currentSchemaViewitems.getValue());
-    	       		if (relation != null) {
-						try {
-							Stage dialog = new Stage();
+    	       		if(currentSchemaViewitems.getParent().valueProperty().get().equals("Relations") && (relation != null)) {
+    	       			try {
+    	       				Stage dialog = new Stage();
 							dialog.initModality(Modality.WINDOW_MODAL);
 							dialog.initStyle(StageStyle.UTILITY);
 							dialog.initOwner(this.getOriginatingWindow(event));
@@ -509,8 +509,41 @@ public class PDQController {
     	       		}
     	       		
     	       		int index = this.currentSchemaViewitems.getParent().getChildren().indexOf(this.currentSchemaViewitems);
+    	       		
+    	       		Dependency dependency = this.currentSchema.get().getSchema().getAllDependencies()[index];
+    	       		if((currentSchemaViewitems.getParent().valueProperty().get().equals("Dependencies") ||
+    	       			currentSchemaViewitems.getParent().valueProperty().get().equals("Views")) && (dependency != null)) {
+						try {
+							Stage dialog = new Stage();
+							dialog.initModality(Modality.WINDOW_MODAL);
+							dialog.initStyle(StageStyle.UTILITY);
+							dialog.initOwner(this.getOriginatingWindow(event));
+							ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
+							FXMLLoader loader = new FXMLLoader(PDQApplication.class.getResource("/resources/layouts/dependency-window.fxml"), bundle);
+							Parent parent = (Parent) loader.load();
+							Scene scene = new Scene(parent);
+							dialog.setScene(scene);
+							dialog.setTitle(bundle.getString("dependency.dialog.title"));
+
+							// Set the currently selected schema/query/plan
+							DependencyController dependencyController = loader.getController();
+							dependencyController.setQueue(this.dataQueue);
+							dependencyController.setDependency(dependency);
+							ObservableSchema s = this.currentSchema.get();
+							dependencyController.setSchema(s);
+							dependencyController.setQueries(this.queries.get(s.getName()));
+
+							dialog.showAndWait();
+//			    	        this.saveSchema(s);
+//							this.loadTreeItems();
+							return;
+						} catch (IOException e) {
+							throw new UserInterfaceException(e.getMessage());
+						}
+    	       		}
            	       	Service service = this.currentSchema.get().getServices()[index];
-           	       	if(service != null)
+           	       	if((currentSchemaViewitems.getParent().valueProperty().get().equals("Services") ||
+           	       		currentSchemaViewitems.getParent().valueProperty().get().equals("Concrete")) && (service != null))
            	       	{
        					try {
 							Stage dialog = new Stage();
@@ -543,37 +576,6 @@ public class PDQController {
            	       	}
     	       		
            	       	       		//index -= this.currentSchema.get().getSchema().getRelations().size();
-    	       		
-    	       		Dependency dependency = this.currentSchema.get().getSchema().getAllDependencies()[index];
-    	       		if (dependency != null) {
-						try {
-							Stage dialog = new Stage();
-							dialog.initModality(Modality.WINDOW_MODAL);
-							dialog.initStyle(StageStyle.UTILITY);
-							dialog.initOwner(this.getOriginatingWindow(event));
-							ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
-							FXMLLoader loader = new FXMLLoader(PDQApplication.class.getResource("/resources/layouts/dependency-window.fxml"), bundle);
-							Parent parent = (Parent) loader.load();
-							Scene scene = new Scene(parent);
-							dialog.setScene(scene);
-							dialog.setTitle(bundle.getString("dependency.dialog.title"));
-
-							// Set the currently selected schema/query/plan
-							DependencyController dependencyController = loader.getController();
-							dependencyController.setQueue(this.dataQueue);
-							dependencyController.setDependency(dependency);
-							ObservableSchema s = this.currentSchema.get();
-							dependencyController.setSchema(s);
-							dependencyController.setQueries(this.queries.get(s.getName()));
-
-							dialog.showAndWait();
-//			    	        this.saveSchema(s);
-//							this.loadTreeItems();
-							return;
-						} catch (IOException e) {
-							throw new UserInterfaceException(e.getMessage());
-						}
-    	       		}
     	       	}
     		}
     	}
@@ -892,6 +894,7 @@ public class PDQController {
 		Boolean isNavigator = newValue.getValue().equals(bundle.getString("application.schema.schemas.relations")) || 
 				newValue.getValue().equals(bundle.getString("application.schema.schemas.views")) || 
 				newValue.getValue().equals(bundle.getString("application.schema.schemas.services")) ||
+				newValue.getValue().equals(bundle.getString("application.schema.schemas.concrete")) ||
 				newValue.getValue().equals(bundle.getString("application.schema.schemas.dependencies"));
 		
 		if (!this.schemas.containsKey(schemaName) && isNavigator) {
@@ -1288,6 +1291,7 @@ public class PDQController {
     	ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
 		TreeItem<String> relations = new TreeItem<>(bundle.getString("application.schema.schemas.relations"), new ImageView(this.dbRelationIcon));
 		TreeItem<String> services = new TreeItem<>(bundle.getString("application.schema.schemas.services"), new ImageView(this.webRelationIcon));
+		TreeItem<String> concrete = new TreeItem<>(bundle.getString("application.schema.schemas.concrete"), new ImageView(this.webRelationIcon));
 		TreeItem<String> views = new TreeItem<>(bundle.getString("application.schema.schemas.views"), new ImageView(this.dbViewIcon));
 		TreeItem<String> dependencies = new TreeItem<>(bundle.getString("application.schema.schemas.dependencies"), new ImageView(this.dependencyIcon));
 		
