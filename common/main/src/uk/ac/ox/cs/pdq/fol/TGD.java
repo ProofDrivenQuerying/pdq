@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author Efthymia Tsamoura
+ * @author Efthymia Tsamoura, Mark Ridler
  */
 public class TGD extends Dependency {
 
@@ -15,17 +15,8 @@ public class TGD extends Dependency {
 	}
 	
 	@Override
-	public String toString() {
-		String f = "";
-		String b = "";
-		
-		if(this.getUniversal().length > 0)
-			f = Arrays.asList(this.getUniversal()).toString();
-		
-		if(this.getExistential().length > 0) 
-			b = Arrays.asList(this.getExistential()).toString();
-		
-		return f + this.body + LogicalSymbols.IMPLIES + /* MR b +*/ this.head;
+	public String toString() {				
+		return this.body.toString() + LogicalSymbols.IMPLIES + this.head.toString();
 	}
 	
 	public boolean isLinear() {
