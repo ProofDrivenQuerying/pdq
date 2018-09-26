@@ -561,11 +561,11 @@ public class PDQController {
 							dialog.initStyle(StageStyle.UTILITY);
 							dialog.initOwner(this.getOriginatingWindow(event));
 							ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
-							FXMLLoader loader = new FXMLLoader(PDQApplication.class.getResource("/resources/layouts/relation-window.fxml"), bundle);
+							FXMLLoader loader = new FXMLLoader(PDQApplication.class.getResource("/resources/layouts/service-window.fxml"), bundle);
 							Parent parent = (Parent) loader.load();
 							Scene scene = new Scene(parent);
 							dialog.setScene(scene);
-							dialog.setTitle(bundle.getString("relation.dialog.title"));
+							dialog.setTitle(bundle.getString("service.dialog.title"));
 							RelationController relationController = loader.getController();
 							ArrayList<Attribute> list = new ArrayList<>();
 							for(RESTExecutableAccessMethodAttributeSpecification a: service.getAccessMethod()[0].getAttributes())
