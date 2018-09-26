@@ -507,7 +507,7 @@ public class PDQController {
 							return;
    	       				}
 					} catch (Throwable e) {
-//						throw new UserInterfaceException(e);
+						throw new UserInterfaceException(e);
 					}
     	       		
     	       		int index = this.currentSchemaViewitems.getParent().getChildren().indexOf(this.currentSchemaViewitems);
@@ -566,18 +566,8 @@ public class PDQController {
 							Scene scene = new Scene(parent);
 							dialog.setScene(scene);
 							dialog.setTitle(bundle.getString("service.dialog.title"));
-							RelationController relationController = loader.getController();
-							ArrayList<Attribute> list = new ArrayList<>();
-							for(RESTExecutableAccessMethodAttributeSpecification a: service.getAccessMethod()[0].getAttributes())
-							{
-								list.add(Attribute.create(RESTAccessMethodGenerator.typeType(a.getType()), a.getName()));
-							}
-							Attribute[] attributes = new Attribute[list.size()];
-							for(int i = 0; i < list.size(); i++) attributes[i] = list.get(i);
-							AccessMethodDescriptor[] accessmethods = new AccessMethodDescriptor[1];
-							accessmethods[0] = AccessMethodDescriptor.create(service.getAccessMethod()[0].getName(), new Integer[0]);
-							Relation relation2 = Relation.create("relation", attributes, accessmethods);
-							relationController.setRelation(relation2);
+							ServiceController serviceController = loader.getController();
+							serviceController.setService(service);
 							dialog.showAndWait();
 							return;
 						} catch (Exception e) {

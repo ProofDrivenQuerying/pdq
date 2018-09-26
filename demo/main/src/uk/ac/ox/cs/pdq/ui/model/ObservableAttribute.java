@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import uk.ac.ox.cs.pdq.datasources.services.RESTAccessMethodGenerator;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.util.Types;
 
@@ -18,6 +19,9 @@ public class ObservableAttribute {
 	
 	/** The name. */
 	private final SimpleStringProperty name =  new SimpleStringProperty(this, "name");
+	
+	/** The relation attribute name. */
+	private final SimpleStringProperty relationName =  new SimpleStringProperty(this, "relationName");
 	
 	/** The type. */
 	private final SimpleObjectProperty<Type> type =  new SimpleObjectProperty<>(this, "type");
@@ -45,6 +49,23 @@ public class ObservableAttribute {
 			}
 		});
 	}
+		
+	public ObservableAttribute(String name, String type, String relationattributename) {
+			this.name.set(name);
+			this.relationName.set(relationattributename);
+			this.type.set(RESTAccessMethodGenerator.typeType(type));
+			this.displayType.set(Types.simpleName(RESTAccessMethodGenerator.typeType(type)));
+			this.displayType.addListener(new ChangeListener<String>() {
+				@Override
+				public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+					try {
+						ObservableAttribute.this.type.set(Class.forName(arg2));
+					} catch (ClassNotFoundException e) {
+						throw new IllegalStateException("Inconsistent type '" + arg2 + "'");
+					}
+				}
+			});
+	}
 	
 	/**
 	 * Name property.
@@ -53,6 +74,15 @@ public class ObservableAttribute {
 	 */
 	public Property<String> nameProperty() {
 		return this.name;
+	}
+	
+	/**
+	 * Relation Name property.
+	 *
+	 * @return the property
+	 */
+	public Property<String> relationNameProperty() {
+		return this.relationName;
 	}
 	
 	/**
@@ -80,6 +110,15 @@ public class ObservableAttribute {
 	 */
 	public String getName() {
 		return this.name.get();
+	}
+
+	/**
+	 * Gets the relation name.
+	 *
+	 * @return the relation name
+	 */
+	public String getRelationName() {
+		return this.relationName.get();
 	}
 
 	/**
