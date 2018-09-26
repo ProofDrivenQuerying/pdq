@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.Border;
 
-import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
 //import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;
@@ -72,7 +71,7 @@ public class EdgePropertiesDialog extends JFrame {
 		titledBorders.setBorder(border);
 		titledBorders.setLayout(new BoxLayout(titledBorders, BoxLayout.Y_AXIS));
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write(this.node.getConfiguration().getPlan());
+		(new PrintStream(bos)).println(this.node.getConfiguration().getPlan().toString());
 		PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Type"), this.type.toString());
 		PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Plan"), bos.toString());
 		return titledBorders;
