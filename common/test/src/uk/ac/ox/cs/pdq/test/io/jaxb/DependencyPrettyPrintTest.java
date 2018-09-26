@@ -1,34 +1,14 @@
 package uk.ac.ox.cs.pdq.test.io.jaxb;
 
-import java.io.File;
-
-import javax.xml.bind.JAXBException;
-
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
-import uk.ac.ox.cs.pdq.algebra.Condition;
-import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
-import uk.ac.ox.cs.pdq.algebra.JoinTerm;
-import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.algebra.RenameTerm;
-import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.TGD;
-import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 // @author Mark Ridler
