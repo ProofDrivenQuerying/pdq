@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.io.jaxb;
+package uk.ac.ox.cs.pdq.test.fol;
 
 import java.io.File;
 
@@ -38,7 +38,11 @@ public class DependencyPrettyPrintTest {
 		Utility.assertsEnabled();
 	}
 
+	// Dependencies are created as either Dependency or TGD
+	// Body and head terms consist of variable xi and yi respectively
 	// Calls Dependency.toString(), TGD.toString()
+	// - Dependency: (forall[x0,x1](body_pred(x0,x1) --> (exists[y0,y1]head_pred(y0,y1))))
+	// - TGD: body_pred(x0,x1)→(exists[y0,y1]head_pred(y0,y1))
 	@Test
 	public void testDependencyPrettyPrint() {
 		
