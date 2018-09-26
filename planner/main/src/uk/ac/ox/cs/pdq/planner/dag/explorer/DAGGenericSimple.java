@@ -55,13 +55,13 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
 public class DAGGenericSimple extends DAGExplorer {
 
 	/** The left. */
-	private List<DAGChaseConfiguration> leftSideConfigurations= new ArrayList<>();;
+	private List<DAGChaseConfiguration> leftSideConfigurations = new ArrayList<>();;
 	private int leftIndex = 0;
-    
+
 	/** The right. */
-	private List<DAGChaseConfiguration> rightSideConfigurations= new ArrayList<>();;
-	private int rightIndex = 0; 
-	
+	private List<DAGChaseConfiguration> rightSideConfigurations = new ArrayList<>();;
+	private int rightIndex = 0;
+
 	/** Removes success dominated configurations *. */
 	protected final SuccessDominance successDominance;
 
@@ -70,9 +70,10 @@ public class DAGGenericSimple extends DAGExplorer {
 	 */
 	protected List<Entry<RelationalTerm, Cost>> exploredPlans = new ArrayList<>();
 	/**
-	 * different configurations can result the same plan. We cache the generated plans to make sure we skip the configuration that results in a known plan.  
+	 * different configurations can result the same plan. We cache the generated
+	 * plans to make sure we skip the configuration that results in a known plan.
 	 */
-	private Set<RelationalTerm> allPlanCache = new HashSet<>();		
+	private Set<RelationalTerm> allPlanCache = new HashSet<>();
 
 	/**
 	 * Instantiates a new DAG generic.
@@ -94,7 +95,8 @@ public class DAGGenericSimple extends DAGExplorer {
 	 * @param chaser
 	 *            Saturates the newly created configurations
 	 * @param connection
-	 *            handle to database manager used to store facts during chasing and exploration
+	 *            handle to database manager used to store facts during chasing and
+	 *            exploration
 	 * @param costEstimator
 	 *            Estimates the cost of a plan
 	 * @param successDominance
@@ -118,8 +120,8 @@ public class DAGGenericSimple extends DAGExplorer {
 		Preconditions.checkNotNull(successDominance);
 		Preconditions.checkArgument(validators != null);
 		this.successDominance = successDominance;
-		List<DAGChaseConfiguration> initialConfigurations = createInitialApplyRuleConfigurations(
-				this.parameters, this.query, this.accessibleQuery, this.accessibleSchema, this.chaser, this.connection);
+		List<DAGChaseConfiguration> initialConfigurations = createInitialApplyRuleConfigurations(this.parameters,
+				this.query, this.accessibleQuery, this.accessibleSchema, this.chaser, this.connection);
 		checkConfigurationsForSuccess(initialConfigurations);
 		this.leftSideConfigurations.addAll(initialConfigurations);
 		this.rightSideConfigurations.addAll(initialConfigurations);
@@ -127,16 +129,15 @@ public class DAGGenericSimple extends DAGExplorer {
 
 	/**
 	 * Checks every configuration for success and sets them as best plan.
+	 * 
 	 * @param configurations
 	 */
 	private void checkConfigurationsForSuccess(List<DAGChaseConfiguration> configurations) {
 		// check initial configurations for success
-		for (DAGChaseConfiguration configuration:configurations) {
+		for (DAGChaseConfiguration configuration : configurations) {
 			Cost cost = this.costEstimator.cost(configuration.getPlan());
 			configuration.setCost(cost);
-			if (configuration.isClosed()
-					&& (this.bestPlan == null
-					|| configuration.getCost().lessThan(this.bestCost))
+			if (configuration.isClosed() && (this.bestPlan == null || configuration.getCost().lessThan(this.bestCost))
 					&& configuration.isSuccessful(this.accessibleQuery)) {
 				this.setBestPlan(configuration);
 			}
@@ -153,22 +154,22 @@ public class DAGGenericSimple extends DAGExplorer {
 	 */
 	@Override
 	public void performSingleExplorationStep() throws PlannerException, LimitReachedException {
-		List<DAGChaseConfiguration> newLeftSideConfigurations = new ArrayList<>();		
+		List<DAGChaseConfiguration> newLeftSideConfigurations = new ArrayList<>();
 		leftIndex = 0;
 		rightIndex = 0;
 		// Get the next pair of configurations to combine
 		while (leftIndex < leftSideConfigurations.size()) {
 			DAGChaseConfiguration l = this.leftSideConfigurations.get(this.leftIndex);
 			DAGChaseConfiguration r = this.rightSideConfigurations.get(this.rightIndex);
-			RelationalTerm leftToRightPlan = PlanCreationUtility.createJoinPlan(l.getPlan(),r.getPlan());
+			RelationalTerm leftToRightPlan = PlanCreationUtility.createJoinPlan(l.getPlan(), r.getPlan());
 			if (!allPlanCache.contains(leftToRightPlan)) {
 				allPlanCache.add(leftToRightPlan);
-				reasonAndSetBestPlan(newLeftSideConfigurations, l, r);
+				newLeftSideConfigurations = reasonAndUpdateLeftSideConfigurations(newLeftSideConfigurations, l, r);
 			}
-			RelationalTerm rightToLeftPlan = PlanCreationUtility.createJoinPlan(r.getPlan(),l.getPlan());
+			RelationalTerm rightToLeftPlan = PlanCreationUtility.createJoinPlan(r.getPlan(), l.getPlan());
 			if (!allPlanCache.contains(rightToLeftPlan)) {
 				allPlanCache.add(rightToLeftPlan);
-				reasonAndSetBestPlan(newLeftSideConfigurations, r, l);
+				newLeftSideConfigurations = reasonAndUpdateLeftSideConfigurations(newLeftSideConfigurations, r, l);
 			}
 			if (this.checkLimitReached()) {
 				this.forcedTermination = true;
@@ -187,15 +188,13 @@ public class DAGGenericSimple extends DAGExplorer {
 		}
 		leftSideConfigurations = newLeftSideConfigurations;
 	}
-	//private RelationalTerm expected_plan = null; 
-	private void reasonAndSetBestPlan(List<DAGChaseConfiguration> newLeftSideConfigurations, DAGChaseConfiguration l,
+
+	// private RelationalTerm expected_plan = null;
+	private List<DAGChaseConfiguration> reasonAndUpdateLeftSideConfigurations(List<DAGChaseConfiguration> newLeftSideConfigurations, DAGChaseConfiguration l,
 			DAGChaseConfiguration r) {
-		
-		
-		BinaryConfiguration configuration = new BinaryConfiguration(l,r);
-		//boolean containsAny = containsAny();
-		if (//containsAny &&
-				ConfigurationUtility.isNonTrivial(l,r)) {
+
+		BinaryConfiguration configuration = new BinaryConfiguration(l, r);
+		if (ConfigurationUtility.isNonTrivial(l, r)) {
 			// Create a new binary configuration
 			Cost cost = this.costEstimator.cost(configuration.getPlan());
 			configuration.setCost(cost);
@@ -205,33 +204,24 @@ public class DAGGenericSimple extends DAGExplorer {
 						this.accessibleSchema.getInferredAccessibilityAxioms());
 				// If it is closed and has a match, update the best configuration
 				if (configuration.isClosed() && configuration.isSuccessful(this.accessibleQuery)) {
-					this.exploredPlans.add(new AbstractMap.SimpleEntry<RelationalTerm, Cost>(
-							configuration.getPlan(), configuration.getCost()));
+					this.exploredPlans.add(new AbstractMap.SimpleEntry<RelationalTerm, Cost>(configuration.getPlan(),
+							configuration.getCost()));
 					this.setBestPlan(configuration);
 				}
 				newLeftSideConfigurations.add(configuration);
 			}
 		}
+		return newLeftSideConfigurations;
 	}
-	protected static boolean containsAny(DAGChaseConfiguration l,
-			DAGChaseConfiguration r) {
-//		if (expected_plan == null) {
-//		try {
-//			expected_plan = CostIOManager.readRelationalTermFromRelationaltermWithCost(new File("/home/gabor/git/pdq/regression/test/planner/dag/fast/benchmark/case_005/expected-plan.xml"), this.accessibleSchema);
-//			// remove final projection
-//			expected_plan = expected_plan.getChild(0);
-//		} catch (FileNotFoundException | JAXBException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//	
-//	
-//	if (checkPlanSimilarity(expected_plan,configuration.getPlan())) {
-//		System.out.println();
-//	}
-	
+
+	/** Checks if the left side's output appears as input on the right. 
+	 * @param l
+	 * @param r
+	 * @return
+	 */
+	protected static boolean containsAny(DAGChaseConfiguration l, DAGChaseConfiguration r) {
 		boolean containsAny = false;
-		for (Constant rightInput:r.getInput()) {
+		for (Constant rightInput : r.getInput()) {
 			if (l.getOutput().contains(rightInput)) {
 				containsAny = true;
 				break;
@@ -239,18 +229,24 @@ public class DAGGenericSimple extends DAGExplorer {
 		}
 		return containsAny;
 	}
+
+	/** Used for debugging only.checks if the two given plan has the same child hierarchy. 
+	 * @param plan1
+	 * @param plan2
+	 * @return
+	 */
 	protected boolean checkPlanSimilarity(RelationalTerm plan1, RelationalTerm plan2) {
 		if (!plan1.getClass().equals(plan2.getClass()))
-				return false;
+			return false;
 		if (plan1.getChildren().length != plan2.getChildren().length)
 			return false;
 		if (plan1.getChildren().length == 0)
 			return true;
-		
+
 		if (plan1.getChildren().length == 1)
 			return checkPlanSimilarity(plan1.getChild(0), plan2.getChild(0));
 		// 2 children case
-		if (!checkPlanSimilarity(plan1.getChild(0), plan2.getChild(0))) 
+		if (!checkPlanSimilarity(plan1.getChild(0), plan2.getChild(0)))
 			return false;
 		return checkPlanSimilarity(plan1.getChild(1), plan2.getChild(1));
 	}
@@ -262,33 +258,32 @@ public class DAGGenericSimple extends DAGExplorer {
 	public List<Entry<RelationalTerm, Cost>> getExploredPlans() {
 		return this.exploredPlans;
 	}
-	
+
 	/**
 	 * Creates the initial configurations.
 	 *
-	 * @return a list of ApplyRule configurations based on the facts derived after chasing the input schema with the canonical database of the query
-	 * @throws SQLException 
+	 * @return a list of ApplyRule configurations based on the facts derived after
+	 *         chasing the input schema with the canonical database of the query
+	 * @throws SQLException
 	 */
-	public static List<DAGChaseConfiguration> createInitialApplyRuleConfigurations(
-			PlannerParameters parameters,
-			ConjunctiveQuery query, 
-			ConjunctiveQuery accessibleQuery,
-			AccessibleSchema accessibleSchema, 
-			Chaser chaser, 
-			DatabaseManager connection
-			) throws SQLException {
-		AccessibleDatabaseChaseInstance state = null;
-		state = new AccessibleDatabaseChaseInstance(query, accessibleSchema, connection, false);
+	public static List<DAGChaseConfiguration> createInitialApplyRuleConfigurations(PlannerParameters parameters,
+			ConjunctiveQuery query, ConjunctiveQuery accessibleQuery, AccessibleSchema accessibleSchema, Chaser chaser,
+			DatabaseManager connection) throws SQLException {
+		// reason with dependencies
+		AccessibleDatabaseChaseInstance state = new AccessibleDatabaseChaseInstance(query, accessibleSchema, connection, false);
 		chaser.reasonUntilTermination(state, accessibleSchema.getOriginalDependencies());
 
 		List<DAGChaseConfiguration> collection = new ArrayList<>();
-		Collection<Pair<AccessibilityAxiom,Collection<Atom>>> groupsOfFacts = state.groupFactsByAccessMethods(accessibleSchema.getAccessibilityAxioms());
-		for (Pair<AccessibilityAxiom, Collection<Atom>> groupOfFacts: groupsOfFacts) {
+		Collection<Pair<AccessibilityAxiom, Collection<Atom>>> groupsOfFacts = state
+				.groupFactsByAccessMethods(accessibleSchema.getAccessibilityAxioms());
+		
+		// go over the groups of facts and create applyRule configurations for each.
+		for (Pair<AccessibilityAxiom, Collection<Atom>> groupOfFacts : groupsOfFacts) {
 			ApplyRule applyRule = null;
 			Collection<Collection<Atom>> groupForGivenAccessMethod = new LinkedHashSet<>();
 			switch (parameters.getFollowUpHandling()) {
 			case MINIMAL:
-				for (Atom p: groupOfFacts.getRight()) {
+				for (Atom p : groupOfFacts.getRight()) {
 					groupForGivenAccessMethod.add(Sets.newHashSet(p));
 				}
 				break;
@@ -296,19 +291,16 @@ public class DAGGenericSimple extends DAGExplorer {
 				groupForGivenAccessMethod.add(groupOfFacts.getRight());
 				break;
 			}
-			for (Collection<Atom> atoms:groupForGivenAccessMethod) {
-				AccessibleChaseInstance newState = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
-						new AccessibleDatabaseChaseInstance(atoms, connection, false);
-				applyRule = new ApplyRule(
-						newState,
-						groupOfFacts.getLeft(),
-						Sets.newHashSet(atoms)
-						);
+			// creating apply rule configurations
+			for (Collection<Atom> atoms : groupForGivenAccessMethod) {
+				AccessibleChaseInstance newState = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) new AccessibleDatabaseChaseInstance(
+						atoms, connection, false);
+				applyRule = new ApplyRule(newState, groupOfFacts.getLeft(), Sets.newHashSet(atoms));
 				applyRule.generate(chaser, query, accessibleSchema.getInferredAccessibilityAxioms());
 				collection.add(applyRule);
 			}
 		}
 		return collection;
 	}
-	
+
 }
