@@ -61,70 +61,75 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * 
  */
 public class PlanCreationUtility {
-	
-	
 
-
-/**
- * Creates a join plan from two subplans
- */
+	/**
+	 * Creates a join plan from two subplans
+	 */
 	public static RelationalTerm createJoinPlan(RelationalTerm left, RelationalTerm right) {
 		Preconditions.checkNotNull(left);
 		Preconditions.checkNotNull(right);
 		Set<Attribute> outputs = new HashSet<Attribute>(Arrays.asList(left.getOutputAttributes()));
 		Set<Attribute> inputs = new HashSet<Attribute>(Arrays.asList(right.getInputAttributes()));
-		if (CollectionUtils.containsAny(outputs, inputs)) 
+		if (CollectionUtils.containsAny(outputs, inputs))
 			return DependentJoinTerm.create(left, right);
-		else 
+		else
 			return JoinTerm.create(left, right);
 	}
 
-	 /*Creates a single access plans
-	 * @param relation: the relation being accessed the c
-	 * @param accessMethod the access being used
-	 * @exposedFacts: the facts being exposed by the access: used in order to name the attributes in the output
-	 * @return the term representing the output  plan
+	/**
+	 * Creates a single access plans
+	 * 
+	 * @param relation:
+	 *            the relation being accessed the c
+	 * @param accessMethod
+	 *            the access being used
+	 * @exposedFacts: the facts being exposed by the access: used in order to name
+	 *                the attributes in the output
+	 * @return the term representing the output plan
 	 */
-	public static RelationalTerm createSingleAccessPlan(Relation relation, AccessMethodDescriptor accessMethod, Collection<Atom> exposedFacts) {
+	public static RelationalTerm createSingleAccessPlan(Relation relation, AccessMethodDescriptor accessMethod,
+			Collection<Atom> exposedFacts) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(accessMethod);
 		Preconditions.checkArgument(exposedFacts != null && exposedFacts.size() > 0);
 		Preconditions.checkArgument(Arrays.asList(relation.getAccessMethods()).contains(accessMethod));
-                //op1 will accumulate terms as more and more renamings are added
+		// op1 will accumulate terms as more and more renamings are added
 		RelationalTerm op1 = null;
-                //access will store the term prior to any renamings
+		// access will store the term prior to any renamings
 		AccessTerm access = null;
-		//planRelation is a copy of the relation 
+		// planRelation is a copy of the relation
 		Relation planRelation = null;
-		//Iterate over each exposed fact
-		for (Atom exposedFact: exposedFacts) {
+		// Iterate over each exposed fact
+		for (Atom exposedFact : exposedFacts) {
 			Preconditions.checkArgument(exposedFact.getPredicate().getName().equals(relation.getName()));
-              //TOCOMENT: WHY NOT PULL THIS OUT BEFORE THE LOOP?
+			// TOCOMENT: WHY NOT PULL THIS OUT BEFORE THE LOOP?
 			if (access == null) {
 				Attribute[] attributes = new Attribute[relation.getArity()];
-				System.arraycopy(relation.getAttributes(), 0, attributes, 0, attributes.length); 
+				System.arraycopy(relation.getAttributes(), 0, attributes, 0, attributes.length);
 				planRelation = Relation.create(relation.getName(), attributes, relation.getAccessMethods());
-				//Compute the input constants
-				Map<Integer, TypedConstant> inputConstants = computeInputConstants(accessMethod, exposedFact.getTerms());
-				//Create an access operator
+				// Compute the input constants
+				Map<Integer, TypedConstant> inputConstants = computeInputConstants(accessMethod,
+						exposedFact.getTerms());
+				// Create an access operator
 				access = AccessTerm.create(planRelation, accessMethod, inputConstants);
 			}
 
-			//Rename the output attributes in the output according to the exposed facts
+			// Rename the output attributes in the output according to the exposed facts
 			Attribute[] renamings = computeRenamedAttributes(planRelation.getAttributes(), exposedFact.getTerms());
-			//Add a rename operator; and put the result in op1
+			// Add a rename operator; and put the result in op1
 			if (op1 == null) {
-				op1 = RenameTerm.create(renamings, access); 		
-				//Find if this fact has schema constants in output positions or repeated constants
-				//If yes, then compute the filtering conditions
+				op1 = RenameTerm.create(renamings, access);
+				// Find if this fact has schema constants in output positions or repeated
+				// constants
+				// If yes, then compute the filtering conditions
 				Condition filteringConditions = PlanCreationUtility.createFilteringConditions(exposedFact.getTerms());
-				if (filteringConditions != null && ! checkEquality(filteringConditions, access.getInputConstants())) {
+				if (filteringConditions != null && !checkEquality(filteringConditions, access.getInputConstants())) {
 					op1 = SelectionTerm.create(filteringConditions, op1);
 				}
 			} else {
-				RelationalTerm op2 = RenameTerm.create(renamings, access); 		
+				RelationalTerm op2 = RenameTerm.create(renamings, access);
 				Condition filteringConditions = PlanCreationUtility.createFilteringConditions(exposedFact.getTerms());
-				if (filteringConditions != null && ! checkEquality(filteringConditions, access.getInputConstants())) {
+				if (filteringConditions != null && !checkEquality(filteringConditions, access.getInputConstants())) {
 					op2 = SelectionTerm.create(filteringConditions, op2);
 				}
 				op1 = JoinTerm.create(op1, op2);
@@ -132,12 +137,12 @@ public class PlanCreationUtility {
 		}
 		return op1;
 	}
-	
+
 	private static boolean checkEquality(Condition filteringConditions, Map<Integer, TypedConstant> inputConstants) {
 		if (filteringConditions instanceof ConjunctiveCondition) {
 			SimpleCondition[] conditions = ((ConjunctiveCondition) filteringConditions).getSimpleConditions();
-			for (SimpleCondition s: conditions) {
-				if (!checkEquality(s,inputConstants))
+			for (SimpleCondition s : conditions) {
+				if (!checkEquality(s, inputConstants))
 					return false;
 			}
 			return true;
@@ -149,47 +154,51 @@ public class PlanCreationUtility {
 				return false;
 			return inputConstants.get(position).equals(constant);
 		}
-		
+
 		return false;
 	}
 
-/**
- *Look for constants in the input positions
- */
+	/**
+	 * Look for constants in the input positions
+	 */
 	private static Map<Integer, TypedConstant> computeInputConstants(AccessMethodDescriptor method, Term[] terms) {
 		Map<Integer, TypedConstant> ret = new HashMap<>();
-		for(Integer i: method.getInputs()) {
+		for (Integer i : method.getInputs()) {
 			if (terms[i] instanceof TypedConstant)
-				ret.put(i, (TypedConstant)terms[i]);
+				ret.put(i, (TypedConstant) terms[i]);
 		}
 		return ret;
 	}
-	
-/**
- * renames tha attributes in the first list based on the names of terms in the second lists
- */
+
+	/**
+	 * renames tha attributes in the first list based on the names of terms in the
+	 * second lists
+	 */
 	private static Attribute[] computeRenamedAttributes(Attribute[] attributes, Term[] terms) {
 		Preconditions.checkArgument(attributes.length == terms.length);
 		Attribute[] renamings = new Attribute[terms.length];
-		for(int index = 0; index < terms.length; ++index)
+		for (int index = 0; index < terms.length; ++index)
 			renamings[index] = Attribute.create(attributes[index].getType(), terms[index].toString());
 		return renamings;
 	}
+
 	/**
 	 * Creates the select predicates.
 	 *
-	 * @param terms List<Term>
-	 * @return 	 	a conjunction of selectioin conditions that the output values of a source must satisfy
-	 * 		based on the exposed fact's terms.
-	 * 		The selection conditions enforce value equality when two terms are equal
-	 * 		and equality to a constant when an exposed fact's term is mapped to a schema constant.
-	 * 		The returned list is null if there does not exist any select condition
+	 * @param terms
+	 *            List<Term>
+	 * @return a conjunction of selectioin conditions that the output values of a
+	 *         source must satisfy based on the exposed fact's terms. The selection
+	 *         conditions enforce value equality when two terms are equal and
+	 *         equality to a constant when an exposed fact's term is mapped to a
+	 *         schema constant. The returned list is null if there does not exist
+	 *         any select condition
 	 */
 	public static Condition createFilteringConditions(Term[] terms) {
 		Set<SimpleCondition> result = new LinkedHashSet<>();
 		Integer termIndex = 0;
 		for (Term term : terms) {
-			if (term instanceof TypedConstant) 
+			if (term instanceof TypedConstant)
 				result.add(ConstantEqualityCondition.create(termIndex, (TypedConstant) term));
 			else {
 				List<Integer> appearances = Utility.search(terms, term);
@@ -205,16 +214,18 @@ public class PlanCreationUtility {
 			}
 			++termIndex;
 		}
-		return result.isEmpty() ? null : ConjunctiveCondition.create(result.toArray(new SimpleCondition[result.size()]));
+		return result.isEmpty() ? null
+				: ConjunctiveCondition.create(result.toArray(new SimpleCondition[result.size()]));
 	}
-	
+
 	/**
 	 * Gets the types of a query's free variables
 	 *
-	 * @param query the q
+	 * @param query
+	 *            the q
 	 * @return a list of types for each free variable of the query
 	 */
-	private static Type[] computeVariableTypes(ConjunctiveQuery query,Schema schema) {
+	private static Type[] computeVariableTypes(ConjunctiveQuery query, Schema schema) {
 		Variable[] freeVariables = query.getFreeVariables();
 		Type[] types = new Type[query.getFreeVariables().length];
 		boolean assigned = false;
@@ -222,7 +233,7 @@ public class PlanCreationUtility {
 			assigned = false;
 			Variable t = freeVariables[i];
 			Atom[] atoms = query.getAtoms();
-			for (Atom atom:atoms) {
+			for (Atom atom : atoms) {
 				Relation s = schema.getRelation(atom.getPredicate().getName());
 				List<Integer> pos = Utility.search(atom.getTerms(), t);
 				if (!pos.isEmpty()) {
@@ -231,7 +242,7 @@ public class PlanCreationUtility {
 					break;
 				}
 			}
-			if (!assigned) 
+			if (!assigned)
 				throw new IllegalStateException("Could not infer query type.");
 		}
 		return types;
@@ -240,22 +251,21 @@ public class PlanCreationUtility {
 	/**
 	 * Creates the final projection, based on the free variables of the query
 	 *
-	 * @param query Query
-	 * @param plan partial plan wihtout the final projection
+	 * @param query
+	 *            Query
+	 * @param plan
+	 *            partial plan wihtout the final projection
 	 * @return Projection
 	 */
 	public static ProjectionTerm createFinalProjection(ConjunctiveQuery query, RelationalTerm plan, Schema schema) {
 		List<Attribute> projections = new ArrayList<>();
-		Type[] variableTypes = computeVariableTypes(query,schema);
+		Type[] variableTypes = computeVariableTypes(query, schema);
 		Variable[] freeVariables = query.getFreeVariables();
-		for (int index = 0; index < freeVariables.length; ++index)  {
-			Constant constant = ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().get(query).get(freeVariables[index]);
-			Attribute attribute = Attribute.create(variableTypes[index], ((UntypedConstant)constant).getSymbol());
-			if (! Arrays.asList(plan.getOutputAttributes()).contains(attribute)) {
-//TOCOMENT: SYSTEM.OUT.PRINTLIN???
-				System.out.println("Invalid plan!" + plan.getOutputAttributes() + " should contain " + attribute +" but it doesn't.");
-				Preconditions.checkArgument(Arrays.asList(plan.getOutputAttributes()).contains(attribute));
-			}
+		for (int index = 0; index < freeVariables.length; ++index) {
+			Constant constant = ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().get(query)
+					.get(freeVariables[index]);
+			Attribute attribute = Attribute.create(variableTypes[index], ((UntypedConstant) constant).getSymbol());
+			Preconditions.checkArgument(Arrays.asList(plan.getOutputAttributes()).contains(attribute));
 			projections.add(attribute);
 		}
 		return ProjectionTerm.create(projections.toArray(new Attribute[projections.size()]), plan);

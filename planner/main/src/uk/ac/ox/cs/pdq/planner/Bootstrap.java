@@ -107,7 +107,6 @@ public class Bootstrap {
 		return this.verbose;
 	}
 
-	/** TOCOMMENT: WHAT ARE THESE? . */
 	@DynamicParameter(names = "-D", description = "Dynamic parameters. Override values defined in the configuration files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 

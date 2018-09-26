@@ -22,7 +22,6 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
-import uk.ac.ox.cs.pdq.datasources.utility.Utility;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -211,7 +210,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		for (String token: fromClause.trim().split(",")) {
 			String[] aliased = token.trim().split("(AS|\\s)");
 			Relation r = relationMap.get(aliased[0].trim());
-			Atom pred = Atom.create(r, Utility.createVariables(r));
+			Atom pred = Atom.create(r, createVariables(r));
 			if (aliased.length == 1) {
 				result.put(aliased[0].trim(), pred);
 			} else {

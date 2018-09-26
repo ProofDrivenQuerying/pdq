@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.algebra;
 
-import java.util.Set;
-
 import uk.ac.ox.cs.pdq.db.Attribute;
 
 /**
@@ -37,8 +35,6 @@ public interface Plan {
 	public Plan[] getChildren();
 	
 	public Plan getChild(int index);
-	
-	public Set<AccessTerm> accessPlans();
 	
 	public boolean isClosed();
 }

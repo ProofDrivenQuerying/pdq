@@ -31,7 +31,14 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
 public class AlgebraUtilities {
 
-	// TOCOMMENT: WHAT IS THIS CHECKING?
+	/**
+	 * Asserts that the given condition can be applied to the given attribute types.
+	 * Returns false when there are mismatching types.
+	 * 
+	 * @param selectionCondition
+	 * @param outputAttributes
+	 * @return
+	 */
 	public static boolean assertSelectionCondition(Condition selectionCondition, Attribute[] outputAttributes) {
 		if (selectionCondition instanceof ConjunctiveCondition) {
 			for (SimpleCondition conjunct : ((ConjunctiveCondition) selectionCondition).getSimpleConditions()) {
@@ -42,35 +49,61 @@ public class AlgebraUtilities {
 		} else
 			return assertSelectionCondition((SimpleCondition) selectionCondition, outputAttributes);
 	}
-	
+
+	/**
+	 * Asserts that the given condition can be applied to the given attribute types.
+	 * Returns false when there are mismatching types.
+	 * 
+	 * @param joinConditions
+	 * @param left
+	 * @param right
+	 * @return
+	 */
 	public static boolean assertJoinCondition(Condition joinConditions, RelationalTerm left, RelationalTerm right) {
 		if (joinConditions instanceof ConjunctiveCondition) {
 			for (SimpleCondition conjunct : ((ConjunctiveCondition) joinConditions).getSimpleConditions()) {
-				if (conjunct instanceof AttributeEqualityCondition && 
-						!assertJoinCondition((AttributeEqualityCondition)conjunct,left,right))
+				if (conjunct instanceof AttributeEqualityCondition
+						&& !assertJoinCondition((AttributeEqualityCondition) conjunct, left, right))
 					return false;
 			}
 			return true;
-		} else
-			if(joinConditions instanceof AttributeEqualityCondition)
-				return assertJoinCondition((AttributeEqualityCondition)joinConditions,left,right);
-			else 
-				return false;
+		} else if (joinConditions instanceof AttributeEqualityCondition)
+			return assertJoinCondition((AttributeEqualityCondition) joinConditions, left, right);
+		else
+			return false;
 	}
-	
-	public static boolean assertJoinCondition(AttributeEqualityCondition joinCondition, RelationalTerm left, RelationalTerm right) {
+
+	/**
+	 * Asserts that the given condition can be applied to the given attribute types.
+	 * Returns false when there are mismatching types.
+	 * 
+	 * @param joinCondition
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	public static boolean assertJoinCondition(AttributeEqualityCondition joinCondition, RelationalTerm left,
+			RelationalTerm right) {
 		int numberOfAttributesLeftChild = left.getNumberOfOutputAttributes();
-		if(joinCondition.getPosition() >= left.getNumberOfOutputAttributes() || 
-				joinCondition.getOther() - numberOfAttributesLeftChild >= right.getNumberOfOutputAttributes())
+		if (joinCondition.getPosition() >= left.getNumberOfOutputAttributes()
+				|| joinCondition.getOther() - numberOfAttributesLeftChild >= right.getNumberOfOutputAttributes())
 			return false;
 		Type typeOfLeftAttribute = left.getOutputAttribute(joinCondition.getPosition()).getType();
-		Type typeOfRightAttribute = right.getOutputAttribute(joinCondition.getOther() - numberOfAttributesLeftChild).getType();
-		if(!typeOfLeftAttribute.equals(typeOfRightAttribute))
+		Type typeOfRightAttribute = right.getOutputAttribute(joinCondition.getOther() - numberOfAttributesLeftChild)
+				.getType();
+		if (!typeOfLeftAttribute.equals(typeOfRightAttribute))
 			return false;
 		return true;
 	}
-	
 
+	/**
+	 * Asserts that the given condition can be applied to the given attribute types.
+	 * Returns false when there are mismatching types.
+	 * 
+	 * @param selectionCondition
+	 * @param outputAttributes
+	 * @return
+	 */
 	public static boolean assertSelectionCondition(SimpleCondition selectionCondition, Attribute[] outputAttributes) {
 		if (selectionCondition instanceof ConstantInequalityCondition) {
 			int position = ((ConstantInequalityCondition) selectionCondition).getPosition();
@@ -97,6 +130,13 @@ public class AlgebraUtilities {
 			throw new RuntimeException("Unknown operator type");
 	}
 
+	/**
+	 * Finds the position pairs for the dependent join's tunnelled variables.
+	 * 
+	 * @param left
+	 * @param right
+	 * @return
+	 */
 	protected static Map<Integer, Integer> computePositionsInRightChildThatAreBoundFromLeftChild(RelationalTerm left,
 			RelationalTerm right) {
 		Map<Integer, Integer> result = new LinkedHashMap<>();
@@ -109,8 +149,14 @@ public class AlgebraUtilities {
 		return result;
 	}
 
-	// TOCOMMENT: WHAT DOES THE NEXT FUNCITON DO?
-
+	/**
+	 * Finds all variables in the given relational terms, and computes attribute
+	 * equality conditions. Using these conditions creates and returns the
+	 * ConjunctiveCondition
+	 * 
+	 * @param children
+	 * @return
+	 */
 	protected static ConjunctiveCondition computeJoinConditions(RelationalTerm[] children) {
 		Multimap<Attribute, Integer> joinVariables = LinkedHashMultimap.create();
 		int totalCol = 0;
@@ -146,6 +192,14 @@ public class AlgebraUtilities {
 		return ConjunctiveCondition.create(equalities.toArray(new SimpleCondition[equalities.size()]));
 	}
 
+	/**
+	 * The access method descriptor contains the index of the attribute only. This
+	 * method maps those indexes to the actual Attribute objects.
+	 * 
+	 * @param relation
+	 * @param accessMethod
+	 * @return
+	 */
 	public static Attribute[] computeInputAttributes(Relation relation, AccessMethodDescriptor accessMethod) {
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
@@ -159,8 +213,16 @@ public class AlgebraUtilities {
 		return inputs.toArray(new Attribute[inputs.size()]);
 	}
 
-	// TOCOMMENT: ALL OF THESE NEED COMMENTS!
-
+	/**
+	 * Tests if the given access method and relation is compatible or not. Generates
+	 * a list of attributes by filtering out the provided input constants from the
+	 * accessMethod's inputs.
+	 * 
+	 * @param relation
+	 * @param accessMethod
+	 * @param inputConstants
+	 * @return
+	 */
 	public static Attribute[] computeInputAttributes(Relation relation, AccessMethodDescriptor accessMethod,
 			Map<Integer, TypedConstant> inputConstants) {
 		Assert.assertNotNull(relation);
@@ -183,7 +245,18 @@ public class AlgebraUtilities {
 		return inputs.toArray(new Attribute[inputs.size()]);
 	}
 
-	public static Attribute[] computeInputAttributes(RelationalTerm left, RelationalTerm right, boolean isDependentJoinTerm) {
+	/**
+	 * Generates a list of attributes by adding the left and right inputs. In case
+	 * of dependent join it will not return the right-inputs that are provided as an
+	 * output from the left side. accessMethod's inputs.
+	 * 
+	 * @param left
+	 * @param right
+	 * @param isDependentJoinTerm
+	 * @return
+	 */
+	public static Attribute[] computeInputAttributes(RelationalTerm left, RelationalTerm right,
+			boolean isDependentJoinTerm) {
 		Assert.assertNotNull(left);
 		Assert.assertNotNull(right);
 		Attribute[] leftInputs = left.getInputAttributes();
@@ -192,16 +265,24 @@ public class AlgebraUtilities {
 		List<Attribute> result = Lists.newArrayList(leftInputs);
 		for (int attributeIndex = 0; attributeIndex < right.getNumberOfInputAttributes(); attributeIndex++) {
 			Attribute inputAttribute = right.getInputAttribute(attributeIndex);
-			
+
 			if (!isDependentJoinTerm || !Arrays.asList(leftOutputs).contains(inputAttribute)) {
 				// only dependent join maps attribute from left to right.
 				result.add(rightInputs[attributeIndex]);
 			}
 		}
 		return result.toArray(new Attribute[result.size()]);
-		
+
 	}
 
+	/**
+	 * Creates a list that contains both left and right side output attributes. No
+	 * filtering, duplication is allowed.
+	 * 
+	 * @param child1
+	 * @param child2
+	 * @return
+	 */
 	public static Attribute[] computeOutputAttributes(RelationalTerm child1, RelationalTerm child2) {
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
@@ -212,6 +293,13 @@ public class AlgebraUtilities {
 		return input;
 	}
 
+	/**
+	 * Generates a list of attributes where the input attributes are filtered out
+	 * from the output attributes.
+	 * 
+	 * @param child
+	 * @return
+	 */
 	public static Attribute[] computeProperOutputAttributes(RelationalTerm child) {
 		Assert.assertNotNull(child);
 		List<Attribute> output = Lists.newArrayList();
@@ -221,7 +309,8 @@ public class AlgebraUtilities {
 	}
 
 	/**
-	 *
+	 * Returns all accesses in the given RelationalTerm.
+	 * 
 	 * @param operator
 	 *            the operator
 	 * @return the access operators that are children of the input operator
@@ -233,6 +322,17 @@ public class AlgebraUtilities {
 		return operator.getAccesses();
 	}
 
+	/**
+	 * Since every input attribute is also an output of any relational term, it is
+	 * possible to map the renamings from the output to the inputs. This function
+	 * for each input attribute will find out the index of this attribute in the
+	 * output list, and using this index will map it to an Attribute in the given
+	 * renamings parameter.
+	 * 
+	 * @param renamings
+	 * @param child
+	 * @return
+	 */
 	public static Attribute[] computeRenamedInputAttributes(Attribute[] renamings, RelationalTerm child) {
 		Attribute[] newInputAttributes = new Attribute[child.getNumberOfInputAttributes()];
 		Attribute[] oldOutputAttributes = child.getOutputAttributes();
@@ -297,18 +397,25 @@ public class AlgebraUtilities {
 		}
 	}
 
-	/** Converts the input joinTerm (or DependentJoinTerm) to logic by applying conditions.
-	 * @param t1logic toLogic result from the left side
-	 * @param t2logic toLogic result from the right side of the join
-	 * @param joinTerm join or dependent join term
+	/**
+	 * Converts the input joinTerm (or DependentJoinTerm) to logic by applying
+	 * conditions.
+	 * 
+	 * @param t1logic
+	 *            toLogic result from the left side
+	 * @param t2logic
+	 *            toLogic result from the right side of the join
+	 * @param joinTerm
+	 *            join or dependent join term
 	 * @return
 	 */
-	public static RelationalTermAsLogic applyConditions(RelationalTermAsLogic t1logic, RelationalTermAsLogic t2logic, RelationalTerm joinTerm) {
+	public static RelationalTermAsLogic applyConditions(RelationalTermAsLogic t1logic, RelationalTermAsLogic t2logic,
+			RelationalTerm joinTerm) {
 		List<SimpleCondition> conditions = joinTerm.getConditions();
-		RelationalTermAsLogic TNewlogic = AlgebraUtilities.merge(t1logic,t2logic);
+		RelationalTermAsLogic TNewlogic = AlgebraUtilities.merge(t1logic, t2logic);
 		Formula phiNew = TNewlogic.getFormula();
 		Map<Attribute, Term> mapNew = TNewlogic.getMapping();
-		
+
 		// Apply conditions
 		for (SimpleCondition s : conditions) {
 			if (s instanceof AttributeEqualityCondition) {

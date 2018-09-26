@@ -167,7 +167,7 @@ public class TestLinearKchase extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(3);
 
 		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+		NodeFactory nodeFactory = new NodeFactory(costEstimator);
 
 		// Create linear explorer
 		LinearKChase explorer = null;

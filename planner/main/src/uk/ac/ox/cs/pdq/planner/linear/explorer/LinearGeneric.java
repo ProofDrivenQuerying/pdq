@@ -74,10 +74,17 @@ public class LinearGeneric extends LinearExplorer {
 	 */
 	@Override
 	public void performSingleExplorationStep() throws PlannerException, LimitReachedException {
+		_performSingleExplorationStep();
+	}
+	
+	/**
+	 * @returns null or the fresh node that was created in this step
+	 */
+	public SearchNode _performSingleExplorationStep() throws PlannerException, LimitReachedException {
 		// Choose the next node to explore below it
 		SearchNode selectedNode = this.chooseNode();
 		if (selectedNode == null) 
-			return;
+			return null;
 		
 		LinearConfiguration selectedConfiguration = selectedNode.getConfiguration();
 
@@ -89,7 +96,7 @@ public class LinearGeneric extends LinearExplorer {
 		Candidate selectedCandidate = selectedConfiguration.chooseCandidate();
 		if(selectedCandidate == null) {
 			selectedNode.setStatus(NodeStatus.TERMINAL);
-			return;
+			return null;
 		}
 		
 		// Search for other candidate facts that could be exposed along with the selected candidate.
@@ -124,9 +131,12 @@ public class LinearGeneric extends LinearExplorer {
 			if (this.bestPlan == null || (this.bestPlan != null && freshNode.getConfiguration().getCost().lessThan(this.bestCost))) {
 				this.bestPlan =  freshNode.getConfiguration().getPlan();
 				this.bestCost = freshNode.getConfiguration().getCost();
+				this.bestNode = freshNode;
 			}
 		}
 		this.rounds++;
+		return freshNode;
+		
 	}
 	
 	public List<Entry<RelationalTerm, Cost>> getExploredPlans() {

@@ -8,9 +8,11 @@ import java.io.PrintStream;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -38,6 +40,7 @@ import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
+import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion;
@@ -108,12 +111,15 @@ public class PDQ {
 			description = "Dynamic parameters. Override values defined in the configuration files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 
-	private FileWriter stats = null;
+	private FileWriter statsFile = null;
+	private String statsMsg = "";
+	
 
 	/**
 	 * Prints the first created plan as a png image and opens it in a new window.
 	 */
 	private boolean printPlan=false;
+
 	/**
 	 * Main functionality of this class. 
 	 */
@@ -121,7 +127,6 @@ public class PDQ {
 		Set<File> testDirectories = getTestDirectories(new File(this.input));
 		
 		for(File directory:testDirectories) {
-			boolean isFailed = false;
 			String stats = directory.getAbsolutePath() + " : ";
 			try {
 				GlobalCounterProvider.resetCounters();
@@ -136,127 +141,28 @@ public class PDQ {
 				Entry<RelationalTerm, Cost> observation = null;
 
 				if(mode.equals(Modes.planner) || mode.equals(Modes.full)) {
-
-					// Loading planner configuration
-					PlannerParameters plParams = new PlannerParameters(new File(directory, CONFIGURATION_FILE));
-					CostParameters costParams = new CostParameters(new File(directory, CONFIGURATION_FILE));
-					costParams.setCatalog(directory + "/" + CATALOG_FILE);
-					ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory, CONFIGURATION_FILE));
-					DatabaseParameters databaseParams = new DatabaseParameters(new File(directory, CONFIGURATION_FILE));
-
-					for (String k : this.dynamicParams.keySet()) {
-						plParams.set(k, this.dynamicParams.get(k));
-						costParams.set(k, this.dynamicParams.get(k));
-						reasoningParams.set(k, this.dynamicParams.get(k));
-						databaseParams.set(k, this.dynamicParams.get(k));
-					}
-
-					//Load a conjunctive query from an XML
-					ConjunctiveQuery query = IOManager.importQuery(new File(directory, QUERY_FILE));
-
-					// Call the planner to find a plan
-					long start = System.currentTimeMillis();
-					ExplorationSetUp planner = new ExplorationSetUp(plParams, costParams, reasoningParams, databaseParams, schema);
-					observation = planner.search(query);
-					double duration = (System.currentTimeMillis() - start) / 1000.0;
-					if (printPlan && observation!=null) {
-						printPlan = false;
-						PlanPrinter.openPngPlan(observation.getKey());
-					}
-					DecimalFormat myFormatter = new DecimalFormat("####.##");
-					String duration_s = " Duration: " + myFormatter.format(duration) + "s.";				
-
-					// Load expected plan and cost
-					AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance = acceptance(plParams, costParams);
-					this.out.print("Using " + acceptance.getClass().getSimpleName() + ": ");
-					File expectedPlanFile = new File(directory, EXPECTED_PLAN_FILE);
-					RelationalTerm expectedPlan = null;
-					Cost expectedCost = null;
-					AcceptanceResult results = null;
-					if (expectedPlanFile.exists()) {
-						try {
-							expectedPlan = CostIOManager.readRelationalTermFromRelationaltermWithCost(expectedPlanFile, schema);
-							expectedCost = CostIOManager.readRelationalTermCost(expectedPlanFile, schema);
-							if (observation==null) {
-								String msg = "FAIL: No new plan, while old exists."; 
-								System.out.println(msg);
-								stats+=msg;
-								isFailed = true;
-							} else {
-								results = acceptance.check(
-										new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation);
-								results.report(this.out);
-								stats+=results.report();
-								isFailed = results.getLevel() == AcceptanceLevels.FAIL;
-							}
-						} catch(Throwable t) {
-							t.printStackTrace();
-							stats+="Failed to read previous plan: " + t.getMessage() ;
-						}
+					// PLANNING
+					PlannerTypes plannerType = null;
+					if (isInMadatoryPassFolder(directory)) {
+						List<Entry<RelationalTerm, Cost>> observations = new ArrayList<Entry<RelationalTerm, Cost>>();
+						System.out.println("Running DAG GENERIC");
+						observations.add( doPlanning(directory,schema, PlannerTypes.DAG_GENERIC ) );
+						System.out.println("Running DAG OPTIMISED");
+						observations.add( doPlanning(directory,schema, PlannerTypes.DAG_OPTIMIZED ) );
+						System.out.println("Running DAG GENERIC SIMPLE");
+						observations.add( doPlanning(directory,schema, PlannerTypes.DAG_GENERIC_SIMPLE ) );
+						if (observations.get(0)!=null)
+							observation = observations.get(0);
 					} else {
-						if (observation==null)
-							System.out.println("No previous or current plan result.");
-						else
-							System.out.println("No previous plan found, but there is a new plan");
-						stats+="No previous plan found.";
+						observation = doPlanning(directory,schema, plannerType );
 					}
-					if (observation != null && (expectedPlan == null || expectedCost.greaterThan(observation.getValue())) ) {
-						this.out.print("\tWriting plan: " + observation + " " + observation.getValue());
-						CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + EXPECTED_PLAN_FILE),  observation.getKey(), observation.getValue());
-						stats+= "New Plan written.";
-					}
-					if (observation!=null && observation.getValue()!= null)
-						stats+= "Cost: " + observation.getValue();
-					this.out.println("\n " + duration_s);
-					stats+= "Finished, " + duration_s;
-					if (isFailed)
-						stats = "NOT ACCEPTED" + stats;
-					else
-						stats = "SUCC" + stats;
 				}
 
 
 				if(mode.equals(Modes.runtime) || mode.equals(Modes.full)) {
-
-					// Load the runtime parameters
-					RuntimeParameters runtimeParams = new RuntimeParameters(new File(directory, CONFIGURATION_FILE));
-					RegressionParameters regParams = new RegressionParameters(new File(directory, CONFIGURATION_FILE));
-
-					for (String k : this.dynamicParams.keySet()) {
-						runtimeParams.set(k, this.dynamicParams.get(k));
-						regParams.set(k, this.dynamicParams.get(k));
-					}
-
-					// Create a runtime object with an empty list of facts (data will be loaded from a third party database)
-					Runtime runtime = new Runtime(runtimeParams, schema);
-					
-					// Specify the directory where the access methods are described 
-					File accesses = new File(directory, runtimeParams.getAccessDirectory());
-					runtime.setAccessRepository(AccessRepository.getRepository(accesses.getAbsolutePath()));
-
-					Table results = null;
-
-					if(mode.equals(Modes.full)) {
-						if (observation.getKey() == null) 
-							this.out.println("\tSKIP: Plan is empty in " + directory.getAbsolutePath());
-						else
-							results = runtime.evaluatePlan(observation.getKey());
-					}
-					else {
-						// Load expected plan and cost
-						File expectedPlanFile = new File(directory, EXPECTED_PLAN_FILE);
-						RelationalTerm expectedPlan = CostIOManager.readRelationalTermFromRelationaltermWithCost(expectedPlanFile, schema);
-
-						if (expectedPlan == null) 
-							this.out.println("\tSKIP: Plan is empty in " + directory.getAbsolutePath());
-						else
-							results = runtime.evaluatePlan(expectedPlan);
-					}
-
-					AcceptanceResult accResult = new ExpectedCardinalityAcceptanceCheck().check(regParams.getExpectedCardinality(), results);
-					accResult.report(this.out);
+					// RUNTIME
+					doRuntime(directory, schema, observation);
 				}
-
 			} catch (FileNotFoundException | JAXBException e) {
 				e.printStackTrace();
 				stats+= "Failed: " + e.getMessage();
@@ -274,11 +180,146 @@ public class PDQ {
 				stats+= "Failed: " + e.getMessage();				
 				stats = "FAIL" + stats;
 			}
+			stats+= this.statsMsg;
+			this.statsMsg = "";
 			printStats(stats + "\n");				
 			
 		}
 	}
 
+	private boolean isInMadatoryPassFolder(File directory) {
+		if (directory.getName().equals("MandatoryPass"))
+			return true;
+		if (directory.getParentFile()!=null)
+			return isInMadatoryPassFolder(directory.getParentFile());
+		return false;
+	}
+
+	private void doRuntime(File directory, Schema schema, Entry<RelationalTerm, Cost> observation)
+			throws JAXBException, Exception, FileNotFoundException {
+		// Load the runtime parameters
+		RuntimeParameters runtimeParams = new RuntimeParameters(new File(directory, CONFIGURATION_FILE));
+		RegressionParameters regParams = new RegressionParameters(new File(directory, CONFIGURATION_FILE));
+
+		for (String k : this.dynamicParams.keySet()) {
+			runtimeParams.set(k, this.dynamicParams.get(k));
+			regParams.set(k, this.dynamicParams.get(k));
+		}
+
+		// Create a runtime object with an empty list of facts (data will be loaded from a third party database)
+		Runtime runtime = new Runtime(runtimeParams, schema);
+		
+		// Specify the directory where the access methods are described 
+		File accesses = new File(directory, runtimeParams.getAccessDirectory());
+		runtime.setAccessRepository(AccessRepository.getRepository(accesses.getAbsolutePath()));
+
+		Table results = null;
+
+		if(mode.equals(Modes.full)) {
+			if (observation.getKey() == null) 
+				this.out.println("\tSKIP: Plan is empty in " + directory.getAbsolutePath());
+			else
+				results = runtime.evaluatePlan(observation.getKey());
+		}
+		else {
+			// Load expected plan and cost
+			File expectedPlanFile = new File(directory, EXPECTED_PLAN_FILE);
+			RelationalTerm expectedPlan = CostIOManager.readRelationalTermFromRelationaltermWithCost(expectedPlanFile, schema);
+
+			if (expectedPlan == null) 
+				this.out.println("\tSKIP: Plan is empty in " + directory.getAbsolutePath());
+			else
+				results = runtime.evaluatePlan(expectedPlan);
+		}
+
+		AcceptanceResult accResult = new ExpectedCardinalityAcceptanceCheck().check(regParams.getExpectedCardinality(), results);
+		accResult.report(this.out);
+	}
+
+	private Entry<RelationalTerm, Cost> doPlanning(File directory,Schema schema, PlannerTypes replacePlanner) throws JAXBException, PlannerException, SQLException, IOException, InterruptedException {
+		boolean isFailed=false;
+		// Loading planner configuration
+		PlannerParameters plParams = new PlannerParameters(new File(directory, CONFIGURATION_FILE));
+		if (replacePlanner!= null) {
+			plParams.setPlannerType(replacePlanner);
+		}
+		CostParameters costParams = new CostParameters(new File(directory, CONFIGURATION_FILE));
+		costParams.setCatalog(directory + "/" + CATALOG_FILE);
+		ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory, CONFIGURATION_FILE));
+		DatabaseParameters databaseParams = new DatabaseParameters(new File(directory, CONFIGURATION_FILE));
+
+		for (String k : this.dynamicParams.keySet()) {
+			plParams.set(k, this.dynamicParams.get(k));
+			costParams.set(k, this.dynamicParams.get(k));
+			reasoningParams.set(k, this.dynamicParams.get(k));
+			databaseParams.set(k, this.dynamicParams.get(k));
+		}
+
+		//Load a conjunctive query from an XML
+		ConjunctiveQuery query = IOManager.importQuery(new File(directory, QUERY_FILE));
+
+		
+		// Call the planner to find a plan
+		long start = System.currentTimeMillis();
+		ExplorationSetUp planner = new ExplorationSetUp(plParams, costParams, reasoningParams, databaseParams, schema);
+		Entry<RelationalTerm, Cost> observation = planner.search(query);
+		double duration = (System.currentTimeMillis() - start) / 1000.0;
+		if (printPlan && observation!=null) {
+			printPlan = false;
+			PlanPrinter.openPngPlan(observation.getKey());
+		}
+		DecimalFormat myFormatter = new DecimalFormat("####.##");
+		String duration_s = " Duration: " + myFormatter.format(duration) + "s.";				
+
+		// Load expected plan and cost
+		AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance = acceptance(plParams, costParams);
+		this.out.print("Using " + acceptance.getClass().getSimpleName() + ": ");
+		File expectedPlanFile = new File(directory, EXPECTED_PLAN_FILE);
+		RelationalTerm expectedPlan = null;
+		Cost expectedCost = null;
+		AcceptanceResult results = null;
+		if (expectedPlanFile.exists()) {
+			try {
+				expectedPlan = CostIOManager.readRelationalTermFromRelationaltermWithCost(expectedPlanFile, schema);
+				expectedCost = CostIOManager.readRelationalTermCost(expectedPlanFile, schema);
+				if (observation==null) {
+					String msg = "FAIL: No new plan, while old exists."; 
+					System.out.println(msg);
+					statsMsg+=msg;
+					isFailed = true;
+				} else {
+					results = acceptance.check(
+							new AbstractMap.SimpleEntry<RelationalTerm,Cost>(expectedPlan, expectedCost), observation);
+					results.report(this.out);
+					statsMsg+=results.report();
+					isFailed = results.getLevel() == AcceptanceLevels.FAIL;
+				}
+			} catch(Throwable t) {
+				t.printStackTrace();
+				statsMsg+="Failed to read previous plan: " + t.getMessage() ;
+			}
+		} else {
+			if (observation==null)
+				System.out.println("No previous or current plan result.");
+			else
+				System.out.println("No previous plan found, but there is a new plan");
+			statsMsg+="No previous plan found.";
+		}
+		if (observation != null && (expectedPlan == null || expectedCost.greaterThan(observation.getValue())) ) {
+			this.out.print("\tWriting plan: " + observation + " " + observation.getValue());
+			CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + EXPECTED_PLAN_FILE),  observation.getKey(), observation.getValue());
+			statsMsg+= "New Plan written.";
+		}
+		if (observation!=null && observation.getValue()!= null)
+			statsMsg+= "Cost: " + observation.getValue();
+		this.out.println("\n " + duration_s);
+		statsMsg+= "Finished, " + duration_s;
+		if (isFailed)
+			statsMsg = " NOT ACCEPTED " + statsMsg;
+		else
+			statsMsg = " SUCCESS " + statsMsg;
+		return observation;
+	}
 	/** Checks the content of each sub directory and selects the ones that look like a test folder.
 	 * @param directory
 	 * @return
@@ -354,10 +395,10 @@ public class PDQ {
 	}
 
 	private void printStats(String message) {
-		if (stats!=null) {
+		if (statsFile!=null) {
 			try {
-				stats.write(message);
-				stats.flush();
+				statsFile.write(message);
+				statsFile.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -384,19 +425,18 @@ public class PDQ {
 		}
 		File folder = new File("TestResults/current");
 		folder.mkdirs();
-		File statsFile = new File(folder,"summary"+System.currentTimeMillis() + ".txt");
-		System.out.println("Creating log file: " + statsFile.getAbsolutePath());
-		//statsFile.getParentFile().mkdir();
-		statsFile.delete();
+		File stats = new File(folder,"summary"+System.currentTimeMillis() + ".txt");
+		System.out.println("Creating log file: " + stats.getAbsolutePath());
+		stats.delete();
 		try {
-			stats = new FileWriter(statsFile);
+			statsFile = new FileWriter(stats);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		printStats("Start running regression test: " + mode.toString() + " in folder: " + input);
+		printStats("Start running regression test: " + mode.toString() + " in folder: " + input + "\n");
 		try {
 			runRegression();
 			printStats("regression test finished successfully");
@@ -405,8 +445,8 @@ public class PDQ {
 			t.printStackTrace();
 		}
 		try {
-			if (stats!=null)
-				stats.close();
+			if (statsFile!=null)
+				statsFile.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

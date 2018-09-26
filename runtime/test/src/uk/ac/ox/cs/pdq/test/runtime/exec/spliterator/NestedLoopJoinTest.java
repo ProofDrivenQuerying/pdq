@@ -512,10 +512,7 @@ public class NestedLoopJoinTest {
 		// (nationKey) and the 0th REGION attribute (regionKey).
 		Condition joinCondition = AttributeEqualityCondition.create(1, 3);
 		target.close();
-		// TOCOMMENT do we want JoinTerm to support external join conditions?
-		// target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild,
-		// joinCondition));
-		target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild), decor);
+		target = new NestedLoopJoin(JoinTerm.create(leftChild, rightChild,joinCondition), decor);
 
 		// Construct some dummy tuples to test the tuple-dependent getJoinCondition
 		// method.
@@ -546,9 +543,7 @@ public class NestedLoopJoinTest {
 
 		// SELECT COUNT(*) FROM NATION, REGION WHERE
 		// NATION.N_NATIONKEY=REGION.R_REGIONKEY;
-		// TOCOMMENT extra conditions are deleted so we get 25 results instead of 5
 		Assert.assertEquals(25, result.size());
-		// Assert.assertEquals(5, result.size());
 		Assert.assertTrue(result.stream().allMatch(tuple -> tuple.size() == 6));
 		target.close();
 	}

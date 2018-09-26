@@ -128,7 +128,7 @@ public class TestLinearOptimized extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(3);
 		
 		//Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+		NodeFactory nodeFactory = new NodeFactory(costEstimator);
 				
 		//Create linear explorer
 		LinearOptimized explorer = null;
@@ -257,7 +257,7 @@ public class TestLinearOptimized extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(3);
 		
 		//Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+		NodeFactory nodeFactory = new NodeFactory(costEstimator);
 				
 		//Create linear explorer
 		LinearOptimized explorer = null;
@@ -356,7 +356,7 @@ public class TestLinearOptimized extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(3);
 		
 		//Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+		NodeFactory nodeFactory = new NodeFactory(costEstimator);
 				
 		//Create linear explorer
 		LinearOptimized explorer = null;

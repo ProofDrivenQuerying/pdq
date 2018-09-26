@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<schema>
+    <relations>
+        <relation name="R2">
+            <attribute name="x0" type="java.lang.String"/>
+        </relation>
+        <relation name="R0">
+            <attribute name="x0" type="java.lang.String"/>
+            <attribute name="x1" type="java.lang.String"/>
+        </relation>
+        <relation name="R1">
+            <attribute name="x0" type="java.lang.String"/>
+            <attribute name="x1" type="java.lang.String"/>
+        </relation>
+        <relation name="R3">
+            <attribute name="x0" type="java.lang.String"/>
+            <attribute name="x1" type="java.lang.String"/>
+            <attribute name="x2" type="java.lang.String"/>
+        </relation>
+        <relation name="R4">
+            <attribute name="x0" type="java.lang.String"/>
+            <attribute name="x1" type="java.lang.String"/>
+            <attribute name="x2" type="java.lang.String"/>
+        </relation>
+        <view name="V5">
+            <attribute name="x1" type="java.lang.String"/>
+            <attribute name="x2" type="java.lang.String"/>
+            <access-method name="mt_5"/>
+        </view>
+        <view name="V39">
+            <attribute name="x0" type="java.lang.String"/>
+            <attribute name="x2" type="java.lang.String"/>
+            <access-method name="mt_39"/>
+        </view>
+        <view name="V3">
+            <attribute name="x2" type="java.lang.String"/>
+            <access-method name="mt_3"/>
+        </view>
+    </relations>
+    <dependencies>
+        <dependency type="TGD">
+            <body>
+                <atom name="V5">
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="R4">
+                    <variable name="x0"/>
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="R4">
+                    <variable name="x0"/>
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="V5">
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="V39">
+                    <variable name="x0"/>
+                    <variable name="x2"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="R1">
+                    <variable name="x2"/>
+                    <variable name="x0"/>
+                </atom>
+                <atom name="R4">
+                    <variable name="x0"/>
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+                <atom name="R0">
+                    <variable name="x2"/>
+                    <variable name="x2"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="R1">
+                    <variable name="x2"/>
+                    <variable name="x0"/>
+                </atom>
+                <atom name="R4">
+                    <variable name="x0"/>
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+                <atom name="R0">
+                    <variable name="x2"/>
+                    <variable name="x2"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="V39">
+                    <variable name="x0"/>
+                    <variable name="x2"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="V3">
+                    <variable name="x2"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="R4">
+                    <variable name="x0"/>
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="R4">
+                    <variable name="x0"/>
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="V3">
+                    <variable name="x2"/>
+                </atom>
+            </head>
+        </dependency>
+    </dependencies>
+</schema>

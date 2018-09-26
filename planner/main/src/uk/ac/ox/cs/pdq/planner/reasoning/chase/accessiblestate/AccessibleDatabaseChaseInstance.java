@@ -94,11 +94,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 				AccessibleStateUtility.createAtomsMap(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
 				AccessibleStateUtility.getAllTermsAppearingInAccessibleFacts(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
 				connection);
-		// the previous constructor added tuples to the local this.facts map without adding them to the database. We need to delete them add them again to make sure they are written to the database.
-//		LinkedHashSet<Atom> factsTmp = new LinkedHashSet<Atom>();
-//		factsTmp.addAll(this.facts);
-//		this.facts.clear();
-//		this.addFacts(factsTmp);
+
 	}
 	
 	public AccessibleDatabaseChaseInstance(Collection<Atom> facts, DatabaseManager connection, boolean maintainProvenance) throws SQLException {
@@ -297,19 +293,12 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	 */
 	@Override
 	public void generate(AccessibilityAxiom axiom, Collection<Atom> facts) {
-//		Collection<Atom> generatedFacts = 
-//		Utility.getFactsProducedAfterFiringAccessibilityAxiom(axiom, facts, this.inferredAccessibleAtoms, this.derivedInferredAccessibleAtoms, this.graph);
-//		this.addFacts(generatedFacts);
+
 		Collection<Atom> createdFacts = new LinkedHashSet<>();
 		for(Atom fact:facts) {			
 			Atom accessedFact = Atom.create(fact.getPredicate(), fact.getTerms());
 			createdFacts.add(accessedFact);
 			Predicate predicate = null;
-//			if(fact.getPredicate() instanceof Relation) {
-//				Relation relation = (Relation) fact.getPredicate();
-//				predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality());
-//			}
-//			else 
 				predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getPredicate().getArity());
 			Atom inferredAccessibleFact = Atom.create(predicate, fact.getTerms());
 			createdFacts.add(inferredAccessibleFact);

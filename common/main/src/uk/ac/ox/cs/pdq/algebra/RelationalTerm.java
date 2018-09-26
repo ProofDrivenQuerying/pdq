@@ -144,21 +144,6 @@ public abstract class RelationalTerm implements Serializable, Plan {
 		return attrs.indexOf(attribute);
 	}
 	
-	// TODO: Untested!
-	@Override
-	public Set<AccessTerm> accessPlans() {
-
-		Set<AccessTerm> ret = new LinkedHashSet<AccessTerm>();
-
-		if (this instanceof AccessTerm)
-			ret.add((AccessTerm) this);
-		else {
-			for (Plan child: this.getChildren()) 
-				ret.addAll(child.accessPlans());
-		}
-		return ret;
-	}
-
 	public boolean isClosed() {
 		return this.getInputAttributes().length == 0;
 	}

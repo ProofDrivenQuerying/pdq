@@ -6,11 +6,13 @@ import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 /**
- * TOCOMMENT I understqnd that there are two views of database objects reflected in the code in common. 
+ * 
+ * TO COMMENT I understqnd that there are two views of database objects reflected in the code in common. 
  * On is the traditional where we don't have access restrictions, hence we have normal relations etc.
  * The other is the "access restrictions" perspective and this is why this object exists. Is this the case? 
  * By putting this in a package called wrappers and naming it a wrapper you don't do justice to it if it's the main
  * "access restriction perspective" object.
+ * Gabor: now this question is out-dated by the new AccessMethodDescriptor and Executable Access method pairs.
  * 
  * The Wrapper interface provide access functions.
  * @author Julien Leblay
