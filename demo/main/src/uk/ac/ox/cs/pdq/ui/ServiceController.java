@@ -47,7 +47,7 @@ public class ServiceController {
     @FXML private TableColumn<ObservableAccessMethod, String> colAccessMethodName;
     
     /** The col access method type. */
-    @FXML private TableColumn<ObservableAccessMethod, Types> colAccessMethodType;
+    @FXML private TableColumn<ObservableAccessMethod, String> colAccessMethodType;
     
     /** The col attribute name. */
     @FXML private TableColumn<ObservableAttribute, String> colAttributeName;
@@ -66,7 +66,7 @@ public class ServiceController {
         assert this.relationAttributes != null : "fx:id=\"relationAttributes\" was not injected: check your FXML file 'relation-editor.fxml'.";
         this.configureTables();
     }
-
+    
 	/**
 	 * Initialisation of the attributes and access methods tables.
 	 */
@@ -80,7 +80,7 @@ public class ServiceController {
 	    this.relationAccessMethods.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 	    this.relationAccessMethods.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 	    this.colAccessMethodName.setCellValueFactory(new PropertyValueFactory<ObservableAccessMethod, String>("name"));
-// MR	    this.colAccessMethodType.setCellValueFactory(new PropertyValueFactory<ObservableAccessMethod, Types>("type"));
+	    this.colAccessMethodType.setCellValueFactory(new PropertyValueFactory<ObservableAccessMethod, String>("type"));
 	    
 	    this.relationAccessMethods.getSelectionModel().selectedItemProperty().addListener(this.accessMethodSelected);
 	    this.relationAccessMethods.addEventHandler(MouseEvent.MOUSE_ENTERED, this.accessMethodMouseEntered);

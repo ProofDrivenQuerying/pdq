@@ -21,7 +21,7 @@ public class ObservableAccessMethod {
 	private final SimpleStringProperty name =  new SimpleStringProperty(this, "name");
 	
 	/** The type. */
-	private final SimpleObjectProperty<Types> type =  new SimpleObjectProperty<>(this, "type");
+	private final SimpleObjectProperty<String> type =  new SimpleObjectProperty<>(this, "type");
 	
 	/** The inputs. */
 	private final SimpleListProperty<Integer> inputs =  new SimpleListProperty<>(this, "inputs");
@@ -33,7 +33,7 @@ public class ObservableAccessMethod {
 	 */
 	public ObservableAccessMethod(AccessMethodDescriptor b) {
 		this.name.set(b.getName());
-// MR		this.type.set(b.getType());
+		this.type.set((b.getNumberOfInputs() == 0) ? "Free" : "Limited");
 		this.inputs.set(FXCollections.observableArrayList(b.getInputs()));
 	}
 	
@@ -51,7 +51,7 @@ public class ObservableAccessMethod {
 	 *
 	 * @return the property
 	 */
-	public Property<Types> typeProperty() {
+	public Property<String> typeProperty() {
 		return this.type;
 	}
 	
@@ -78,7 +78,7 @@ public class ObservableAccessMethod {
 	 *
 	 * @return the type
 	 */
-	public Types getType() {
+	public String getType() {
 		return this.type.get();
 	}
 
