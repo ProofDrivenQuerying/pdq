@@ -510,11 +510,32 @@ public class PDQController {
 						throw new UserInterfaceException(e);
 					}
     	       		
-    	       		int index = this.currentSchemaViewitems.getParent().getChildren().indexOf(this.currentSchemaViewitems);
+  	       			try {
+   	       				View view = (View) this.currentSchema.get().getSchema().getRelation(this.currentSchemaViewitems.getValue());
+   	       				if(currentSchemaViewitems.getParent().valueProperty().get().equals("Views") && (view != null)) {
+     	       				Stage dialog = new Stage();
+							dialog.initModality(Modality.WINDOW_MODAL);
+							dialog.initStyle(StageStyle.UTILITY);
+							dialog.initOwner(this.getOriginatingWindow(event));
+							ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
+							FXMLLoader loader = new FXMLLoader(PDQApplication.class.getResource("/resources/layouts/view-window.fxml"), bundle);
+							Parent parent = (Parent) loader.load();
+							Scene scene = new Scene(parent);
+							dialog.setScene(scene);
+							dialog.setTitle(bundle.getString("view.dialog.title"));
+							ViewController viewController = loader.getController();
+							viewController.setView(view);
+							dialog.showAndWait();
+							return;
+   	       				}
+					} catch (Throwable e) {
+						throw new UserInterfaceException(e);
+					}
+
+  	       			int index = this.currentSchemaViewitems.getParent().getChildren().indexOf(this.currentSchemaViewitems);
     	       		
     	       		Dependency dependency = this.currentSchema.get().getSchema().getAllDependencies()[index];
-    	       		if((currentSchemaViewitems.getParent().valueProperty().get().equals("Dependencies") ||
-    	       			currentSchemaViewitems.getParent().valueProperty().get().equals("Views")) && (dependency != null)) {
+    	       		if(currentSchemaViewitems.getParent().valueProperty().get().equals("Dependencies") && (dependency != null)) {
 						try {
 							Stage dialog = new Stage();
 							dialog.initModality(Modality.WINDOW_MODAL);
@@ -543,7 +564,8 @@ public class PDQController {
 							throw new UserInterfaceException(e.getMessage());
 						}
     	       		}
-    	       		Service service = null;
+    	       		
+     	       		Service service = null;
            	       	for(Service sr : this.currentSchema.get().getServices())
            	       	{
            	       		if(sr.getName().equals(currentSchemaViewitems.getValue()))
