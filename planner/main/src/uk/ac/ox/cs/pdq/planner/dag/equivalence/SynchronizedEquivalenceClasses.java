@@ -195,8 +195,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
-	 * Size.
-	 *
+	 * Number of classes
+	 *TOCOMMENT: RENAME 
 	 * @return int
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses#size()
 	 */
@@ -206,7 +206,7 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
-	 * Contains.
+	 * TOCOMMENT: RENAME TO CONTAINEDBYSOME
 	 *
 	 * @param configuration DAGChaseConfiguration
 	 * @return boolean
@@ -218,7 +218,7 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
-	 * Iterator.
+	 * 
 	 *
 	 * @return Iterator<Entry<DAGChaseConfiguration,SynchronizedEquivalenceClass>>
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses#iterator()
@@ -229,7 +229,7 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
-	 * Clear.
+	 * 
 	 *
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses#clear()
 	 */
@@ -274,7 +274,7 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
-	 * Retain all.
+	 * TOCOMMENT: METHOD NAME HAS NO MEANING. SEEMS TO BE CLEARING OUT ALL CLASSES, KEEPING THE CLASSES THERE?
 	 *
 	 * @param configurations Collection<DAGChaseConfiguration>
 	 * @see uk.ac.ox.cs.pdq.equivalence.dag.DAGEquivalenceClasses#retainAll(Collection<DAGChaseConfiguration>)

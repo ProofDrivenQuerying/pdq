@@ -162,7 +162,7 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	}
 
 	/**
-	 * Gets the all.
+	 * Gets all configurations in the class.
 	 *
 	 * @return Collection<DAGChaseConfiguration>
 	 */

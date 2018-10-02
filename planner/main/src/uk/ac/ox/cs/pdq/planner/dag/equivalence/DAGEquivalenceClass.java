@@ -36,7 +36,7 @@ public abstract class DAGEquivalenceClass {
 	public abstract void removeEntry(DAGChaseConfiguration configuration);
 
 	/**
-	 * Gets the all.
+	 * Gets all the configurations in the class.
 	 *
 	 * @return the configurations of the class
 	 */

@@ -150,8 +150,9 @@ public class DAGOptimizedNew extends DAGExplorer {
 			this.checkLimitReached();
 			Queue<DAGChaseConfiguration> leftCopy = new ConcurrentLinkedQueue<>();
 			leftCopy.addAll(this.leftSideConfigurations);
+			
+			Collection<DAGChaseConfiguration> newlyCreatedConfigurations = new ArrayList<>();	
 			// Perform chasing with left to right configurations
-			Collection<DAGChaseConfiguration> newlyCreatedConfigurations = new ArrayList<>();			
 			newlyCreatedConfigurations.addAll(this.createBinaryConfigurations(
 					leftCopy, this.equivalenceClasses.getConfigurations(),
 					this.accessibleSchema.getInferredAccessibilityAxioms(), this.bestConfiguration,
@@ -162,6 +163,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 			// Perform chasing with right to left configurations
 			Queue<DAGChaseConfiguration> backwardsRightInput = new ConcurrentLinkedQueue<>();
 			backwardsRightInput.addAll(this.leftSideConfigurations);
+			//TOCOMMENT: WHAT IS BackwardsLeft/Backwards right? In what sense are they backwards?
 			ConcurrentLinkedQueue<DAGChaseConfiguration> backwardsLeftInput = new ConcurrentLinkedQueue<>(this.equivalenceClasses.getConfigurations());
 			
 			newlyCreatedConfigurations.addAll(this.createBinaryConfigurations(
@@ -254,8 +256,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 					Collection<DAGChaseConfiguration> selected = this.selectConfigurationsToCombineOnTheRight(left,
 							rightInput, this.equivalenceClasses, this.depth, bestConfiguration);
 					for (DAGChaseConfiguration entry : selected) {
-						// If the left configuration participates in the creation of at most topk new
-						// binary configurations
+						// If the new configuration is not already in the output
 						if (!output.containsKey(Pair.of(left, entry))) {
 							DAGChaseConfiguration configuration = this.createBinaryConfigurationAndReason(left,
 									entry, representatives, inferredAccessibilityAxioms);
@@ -305,7 +306,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 			representative = representatives.getRepresentative(this.equivalenceClasses, right, left);
 		}
 
-		// If the representative is null, then create a binary configuration
+		// If the representative of composition is null, then create a binary configuration
 		// from scratch by fully chasing its state
 		if (representative == null) {
 			configuration = new BinaryConfiguration(left, right);
@@ -326,7 +327,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 		DAGChaseConfiguration configuration;
 		// Poll the next configuration
 		while ((configuration = input.poll()) != null) {
-			// This dominance related stuff needs to be checked, unit tested and then added
+			// TOCOMMENT: This dominance related stuff needs to be checked, unit tested and then added
 			// again.
 			// If the configuration is not dominated
 			DAGChaseConfiguration dominator = this.equivalenceClasses.dominate(this.dominance, configuration);

@@ -101,7 +101,8 @@ public interface DAGEquivalenceClasses {
 	DAGChaseConfiguration dominate(Dominance[] dominance, DAGChaseConfiguration configuration);
 
 	/**
-	 * Contains.
+	 * TOCOMMENT: RENAME TO CONTAINEDBYSOME
+	 * 
 	 *
 	 * @param configuration the configuration
 	 * @return true if at least one class contains the input configuration
@@ -128,21 +129,22 @@ public interface DAGEquivalenceClasses {
 	void clear();
 
 	/**
-	 * Size.
+	 * Number of classes
+     * TOCOMMENT: RENAME?
 	 *
 	 * @return int
 	 */
 	int size();
 
 	/**
-	 * Average class size.
+	 * 
 	 *
 	 * @return double
 	 */
 	double averageClassSize();
 
 	/**
-	 * Median class size.
+	 * 
 	 *
 	 * @return int
 	 */

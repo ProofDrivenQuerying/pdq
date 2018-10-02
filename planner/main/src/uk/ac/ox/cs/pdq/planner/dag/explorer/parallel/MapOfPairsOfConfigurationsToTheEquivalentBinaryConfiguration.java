@@ -26,8 +26,8 @@ public class MapOfPairsOfConfigurationsToTheEquivalentBinaryConfiguration {
 	private final Map<Pair<DAGEquivalenceClass,DAGEquivalenceClass>,DAGChaseConfiguration> representatives  = new ConcurrentHashMap<>();
 
 	/**
-	 * Gets the representative.
-	 *
+	 * Gets the representative of the composition of left and right, if there is one, otherwise null
+	 *TOCOMMENT: RENAME TO SOMETHING MORE MEANINGFULL, INDICATING a compoisiton
 	 * @param equivalenceClasses the eclasses
 	 * @param left the left
 	 * @param right the right
