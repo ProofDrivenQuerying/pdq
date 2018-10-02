@@ -21,7 +21,7 @@ public class ObservableDependency extends TGD {
 	 * @param dep the dep
 	 */
 	public ObservableDependency(TGD dep) {
-		super(dep.getBodyAtoms(), dep.getHeadAtoms());
+		super(dep.getBodyAtoms(), dep.getHeadAtoms(), dep.getName());
 		this.dependency = dep;
 	}
 

@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.io.jaxb.adapted;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlType;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
@@ -13,10 +14,12 @@ import uk.ac.ox.cs.pdq.fol.TGD;
  * @author Gabor
  *
  */
+@XmlType(propOrder = { "name", "body", "head" })
 public class AdaptedDependency {
 	private Atom[] body;
 	private Atom[] head;
 	private String type = "TGD";
+	private String name = "dependency";
 	
 	public AdaptedDependency() {
 	}
@@ -34,13 +37,22 @@ public class AdaptedDependency {
 
 	public Dependency toDependency() {
 		if ("TGD".equals(type))
-			return TGD.create(body, head);
+			return TGD.create(body, head, name);
 		if ("EGD".equals(type)) {
-			return EGD.create(body, head);
+			return EGD.create(body, head, name);
 		}
 		return Dependency.create(body, head);
 	}
 
+	@XmlAttribute(name = "name")
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	@XmlElement(name = "atom")
 	@XmlElementWrapper(name = "body")
 	public Atom[] getBody() {

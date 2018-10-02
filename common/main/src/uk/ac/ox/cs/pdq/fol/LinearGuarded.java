@@ -21,6 +21,10 @@ public class LinearGuarded extends TGD {
 	protected LinearGuarded(Atom body, Atom[] head) {
 		super(new Atom[]{body},head);
 	}
+
+	protected LinearGuarded(Atom body, Atom[] head, String name) {
+		super(new Atom[]{body},head, name);
+	}
 	
 	/**
 	 * Constructs a guarded dependency based on the input key-foreign key
@@ -31,6 +35,10 @@ public class LinearGuarded extends TGD {
 	 */
 	protected LinearGuarded(Relation relation, ForeignKey foreignKey) {
 		super(createBody(relation), createHead(relation, foreignKey));
+	}
+
+	protected LinearGuarded(Relation relation, ForeignKey foreignKey, String name) {
+		super(createBody(relation), createHead(relation, foreignKey), name);
 	}
 
 	/**
@@ -86,5 +94,9 @@ public class LinearGuarded extends TGD {
     
     public static LinearGuarded create(Atom body, Atom[] head) {
         return Cache.linearGuarded.retrieve(new LinearGuarded(body, head));
+    }
+ 
+    public static LinearGuarded create(Atom body, Atom[] head, String name) {
+        return Cache.linearGuarded.retrieve(new LinearGuarded(body, head, name));
     }
 }

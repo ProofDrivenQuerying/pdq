@@ -394,18 +394,25 @@ public class CustomColorAction extends ColorAction {
         default:
         	
         	if(this.m_dataField.equals("type")) {
-    			switch((NodeStatus) item.get("type")) {
-    			case SUCCESSFUL:
-    				return this.nodePalette[0];
-    			case ONGOING:
-    				return this.nodePalette[1];
-    			case TERMINAL: 
-    				return this.nodePalette[3];
-//    			case DEAD:
-//    				return this.nodePalette[4];
-    			default:
-    				return this.m_defaultColor;
+        		if(item.canGetInt("type"))
+        		{
+        			switch((NodeStatus) item.get("type")) {
+        			case SUCCESSFUL:
+        				return this.nodePalette[0];
+        			case ONGOING:
+        				return this.nodePalette[1];
+        			case TERMINAL: 
+        				return this.nodePalette[3];
+//    				case DEAD:
+//    					return this.nodePalette[4];
+        			default:
+        				return this.m_defaultColor;
+        			}
     			}
+        		else
+        		{
+      				return this.m_defaultColor;      			
+        		}
         	}
         	
             Integer idx = (Integer)this.m_omap.get(item.get(this.m_dataField));

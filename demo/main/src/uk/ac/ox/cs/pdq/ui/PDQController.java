@@ -969,7 +969,7 @@ public class PDQController {
     		(ObservableValue<? extends ObservablePlan> observable,
 				ObservablePlan oldValue, ObservablePlan newValue) -> {
 			if (newValue != null) {
-		    	PDQController.this.savePlan(newValue);
+// MR		    	PDQController.this.savePlan(newValue);
 
 		    	Plan plan = newValue.getPlan();
 // MR				PDQController.this.settingsExecutorTypeList.setDisable(plan == null);
@@ -1383,7 +1383,7 @@ public class PDQController {
 				imageView = new ImageView(this.dependencyIcon);
 			}
 			//item.getChildren().add(new TreeItem<>(VeryShortDepencencyWriter.convert(ic), imageView));
-			dependencies.getChildren().add(new TreeItem<>(ic.toString(), imageView));
+			dependencies.getChildren().add(new TreeItem<>(ic.getName(), imageView));
 		}
 		
 		if(!relations.getChildren().isEmpty()) {

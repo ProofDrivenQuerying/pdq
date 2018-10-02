@@ -30,6 +30,17 @@ public class EGD extends Dependency {
 		}
 	}
 
+	protected EGD(Atom[] body, Atom[] head, String name, boolean isFromFunctionalDependency) {
+		super(body, head, name);
+		this.isFromFunctionalDependency = isFromFunctionalDependency;
+		Assert.assertTrue(isConjunctionOfNonEqualities(body));
+		Assert.assertTrue(!isConjunctionOfNonEqualities(head));
+		if (isFromFunctionalDependency) {
+			Assert.assertEquals(2,body.length);
+			Assert.assertEquals(body[0].getPredicate(),body[1].getPredicate());
+		}
+	}
+
 	private static boolean isConjunctionOfNonEqualities(Atom[] atoms) {
 		for(Atom atom:atoms) {
 			if(atom.isEquality())
@@ -64,10 +75,19 @@ public class EGD extends Dependency {
 	}
 	
     public static EGD create(Atom[] head, Atom[] body) {
-        return Cache.egd.retrieve(new EGD(head, body,false));
+        return Cache.egd.retrieve(new EGD(head, body, false));
     }
+
+    public static EGD create(Atom[] head, Atom[] body, String name) {
+        return Cache.egd.retrieve(new EGD(head, body, name, false));
+    }
+ 
     public static EGD create(Atom[] head, Atom[] body, boolean isFromFunctionalDependency) {
-        return Cache.egd.retrieve(new EGD(head, body,isFromFunctionalDependency));
+        return Cache.egd.retrieve(new EGD(head, body, isFromFunctionalDependency));
+    }
+
+    public static EGD create(Atom[] head, Atom[] body, String name, boolean isFromFunctionalDependency) {
+        return Cache.egd.retrieve(new EGD(head, body, name, isFromFunctionalDependency));
     }
 
 	public boolean isFromFunctionalDependency() {
