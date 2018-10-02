@@ -79,11 +79,21 @@ public class DAGOptimizedNew extends DAGExplorer {
 
 	/**
 	 * Instantiates a new DAG optimized.
-	 *
+	 * 
+	 * @param eventBus
+	 * @param parameters
+	 * @param query
+	 * @param accessibleQuery
+	 * @param accessibleSchema
+	 * @param chaser
+	 * @param connection
+	 * @param costEstimator
 	 * @param filter
 	 *            Filters out configurations at the end of each iteration
 	 * @param maxDepth
 	 *            The maximum depth to explore
+	 * @throws PlannerException
+	 * @throws SQLException
 	 */
 	public DAGOptimizedNew(EventBus eventBus, PlannerParameters parameters, ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery, AccessibleSchema accessibleSchema, Chaser chaser,
@@ -209,53 +219,35 @@ public class DAGOptimizedNew extends DAGExplorer {
 		// then we copy the state of c to the state of c' = BinConfiguration(c'_1,c'_2).
 		MapOfPairsOfConfigurationsToTheEquivalentBinaryConfiguration representatives = new MapOfPairsOfConfigurationsToTheEquivalentBinaryConfiguration();
 		// The output configurations
-		// Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>,
-		// DAGChaseConfiguration> output = new HashMap<>();
-		Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>, DAGChaseConfiguration> output2 = new HashMap<>();
+		Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>, DAGChaseConfiguration> output = new HashMap<>();
 
-		Collection<DAGChaseConfiguration> copy = new ConcurrentLinkedQueue<>();
-		copy.addAll(leftSideConfigurations);
 		try {
 			Queue<DAGChaseConfiguration> leftInput = new ConcurrentLinkedQueue<>();
 			leftInput.addAll(leftSideConfigurations);
 			Collection<DAGChaseConfiguration> rightInput = rightSideConfigurations;
-			do {
-				DAGChaseConfiguration left;
-				// Poll the next configuration from the left input
-				while ((left = leftSideConfigurations.poll()) != null) {
-					Preconditions.checkNotNull(this.equivalenceClasses.getEquivalenceClass(left));
-					Preconditions.checkState(!this.equivalenceClasses.getEquivalenceClass(left).isEmpty());
-					// If it comes from an equivalence class that is not sleeping
-					if (!this.equivalenceClasses.getEquivalenceClass(left).isSleeping()) {
-						// Select configuration from the right input to combine with
-						Collection<DAGChaseConfiguration> selected = this.selectConfigurationsToCombineOnTheRight(left,
-								rightInput, this.equivalenceClasses, this.depth, bestConfiguration);
-						for (DAGChaseConfiguration entry : selected) {
-							// If the left configuration participates in the creation of at most topk new
-							// binary configurations
-							if (!output2.containsKey(Pair.of(left, entry))) {
-								DAGChaseConfiguration configuration = this.createBinaryConfigurationAndReason(left,
-										entry, representatives, inferredAccessibilityAxioms);
-								// Create a new binary configuration
-								output2.put(Pair.of(left, entry), configuration);
-							}
+			DAGChaseConfiguration left;
+			// Poll the next configuration from the left input
+			while ((left = leftSideConfigurations.poll()) != null) {
+				Preconditions.checkNotNull(this.equivalenceClasses.getEquivalenceClass(left));
+				Preconditions.checkState(!this.equivalenceClasses.getEquivalenceClass(left).isEmpty());
+				// If it comes from an equivalence class that is not sleeping
+				if (!this.equivalenceClasses.getEquivalenceClass(left).isSleeping()) {
+					// Select configuration from the right input to combine with
+					Collection<DAGChaseConfiguration> selected = this.selectConfigurationsToCombineOnTheRight(left,
+							rightInput, this.equivalenceClasses, this.depth, bestConfiguration);
+					for (DAGChaseConfiguration entry : selected) {
+						// If the left configuration participates in the creation of at most topk new
+						// binary configurations
+						if (!output.containsKey(Pair.of(left, entry))) {
+							DAGChaseConfiguration configuration = this.createBinaryConfigurationAndReason(left,
+									entry, representatives, inferredAccessibilityAxioms);
+							// Create a new binary configuration
+							output.put(Pair.of(left, entry), configuration);
 						}
 					}
 				}
-				// If twoWay = TRUE create also configurations BinaryConfiguration(R,L), where R
-				// and L belong to the right and left
-				// input collections, respectively.
-				boolean twoWay = false;
-				if (twoWay) {
-					leftInput = new ConcurrentLinkedQueue<>(rightSideConfigurations);
-					rightInput = copy;
-					twoWay = false;
-				} else {
-					copy.clear();
-					break;
-				}
-			} while (true);
-			return output2.values();
+			}
+			return output.values();
 		} catch (Throwable e) {
 			e.printStackTrace();
 			handleExceptions(e);
@@ -263,7 +255,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 		}
 	}
 
-	private synchronized Collection<DAGChaseConfiguration> selectConfigurationsToCombineOnTheRight(
+	private Collection<DAGChaseConfiguration> selectConfigurationsToCombineOnTheRight(
 			DAGChaseConfiguration left, Collection<DAGChaseConfiguration> right,
 			DAGEquivalenceClasses equivalenceClasses, int depth, DAGChaseConfiguration bestConfiguration) {
 		Set<DAGChaseConfiguration> selected = Sets.newLinkedHashSet();
@@ -295,9 +287,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 			representative = representatives.getRepresentative(this.equivalenceClasses, right, left);
 		}
 
-		// If the representative is null or we do not use templates or we cannot find a
-		// template configuration that
-		// consists of the corresponding ApplyRules, then create a binary configuration
+		// If the representative is null, then create a binary configuration
 		// from scratch by fully chasing its state
 		if (representative == null) {
 			configuration = new BinaryConfiguration(left, right);
@@ -322,11 +312,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 			// again.
 			// If the configuration is not dominated
 			DAGChaseConfiguration dominator = this.equivalenceClasses.dominate(this.dominance, configuration);
-			if (dominator != null
-			// ExplorerUtils.isDominated(this.dag, binConfig) != null ||
-			// ExplorerUtils.isDominated(binConfigs, binConfig) != null
-			) {
-			} else {
+			if (dominator == null) {
 				// Assess its potential
 				if (ConfigurationUtility.getPotential(configuration,
 						bestConfiguration == null ? null : bestConfiguration.getPlan(),
@@ -355,6 +341,8 @@ public class DAGOptimizedNew extends DAGExplorer {
 						output.add(configuration);
 					}
 				}
+			} else { 
+				// when dominator is present do nothing.
 			}
 		}
 		return bestConfiguration;
