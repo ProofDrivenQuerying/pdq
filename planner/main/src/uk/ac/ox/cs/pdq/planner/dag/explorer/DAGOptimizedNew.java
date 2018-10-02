@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -147,13 +148,30 @@ public class DAGOptimizedNew extends DAGExplorer {
 			}
 		} else if (this.depth > 1) {
 			this.checkLimitReached();
-			// Perform parallel chasing
-			Collection<DAGChaseConfiguration> newlyCreatedConfigurations = this.createBinaryConfigurations(
-					this.leftSideConfigurations, this.equivalenceClasses.getConfigurations(),
+			Queue<DAGChaseConfiguration> leftCopy = new ConcurrentLinkedQueue<>();
+			leftCopy.addAll(this.leftSideConfigurations);
+			// Perform chasing with left to right configurations
+			Collection<DAGChaseConfiguration> newlyCreatedConfigurations = new ArrayList<>();			
+			newlyCreatedConfigurations.addAll(this.createBinaryConfigurations(
+					leftCopy, this.equivalenceClasses.getConfigurations(),
 					this.accessibleSchema.getInferredAccessibilityAxioms(), this.bestConfiguration,
 					this.equivalenceClasses, true,
 					Double.valueOf((this.maxElapsedTime - (this.elapsedTime / 1e6))).longValue(),
-					TimeUnit.MILLISECONDS);
+					TimeUnit.MILLISECONDS));
+			
+			// Perform chasing with right to left configurations
+			Queue<DAGChaseConfiguration> backwardsRightInput = new ConcurrentLinkedQueue<>();
+			backwardsRightInput.addAll(this.leftSideConfigurations);
+			ConcurrentLinkedQueue<DAGChaseConfiguration> backwardsLeftInput = new ConcurrentLinkedQueue<>(this.equivalenceClasses.getConfigurations());
+			
+			newlyCreatedConfigurations.addAll(this.createBinaryConfigurations(
+					backwardsLeftInput, backwardsRightInput,
+					this.accessibleSchema.getInferredAccessibilityAxioms(), this.bestConfiguration,
+					this.equivalenceClasses, true,
+					Double.valueOf((this.maxElapsedTime - (this.elapsedTime / 1e6))).longValue(),
+					TimeUnit.MILLISECONDS));
+			
+			// Check for new configurations
 			if (newlyCreatedConfigurations == null || newlyCreatedConfigurations.isEmpty()) {
 				this.forcedTermination = true;
 				return;
