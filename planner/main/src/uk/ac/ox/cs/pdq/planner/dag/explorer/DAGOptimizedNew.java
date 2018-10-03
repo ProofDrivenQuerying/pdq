@@ -152,7 +152,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 			leftCopy.addAll(this.leftSideConfigurations);
 			
 			Collection<DAGChaseConfiguration> newlyCreatedConfigurations = new ArrayList<>();	
-			// Perform chasing with left to right configurations
+			// Creating configurations and chasing when necessary.
 			newlyCreatedConfigurations.addAll(this.createBinaryConfigurations(
 					leftCopy, this.equivalenceClasses.getConfigurations(),
 					this.accessibleSchema.getInferredAccessibilityAxioms(), this.bestConfiguration,
@@ -160,14 +160,9 @@ public class DAGOptimizedNew extends DAGExplorer {
 					Double.valueOf((this.maxElapsedTime - (this.elapsedTime / 1e6))).longValue(),
 					TimeUnit.MILLISECONDS));
 			
-			// Perform chasing with right to left configurations
-			Queue<DAGChaseConfiguration> backwardsRightInput = new ConcurrentLinkedQueue<>();
-			backwardsRightInput.addAll(this.leftSideConfigurations);
-			//TOCOMMENT: WHAT IS BackwardsLeft/Backwards right? In what sense are they backwards?
-			ConcurrentLinkedQueue<DAGChaseConfiguration> backwardsLeftInput = new ConcurrentLinkedQueue<>(this.equivalenceClasses.getConfigurations());
-			
+			// creating configurations right to left.
 			newlyCreatedConfigurations.addAll(this.createBinaryConfigurations(
-					backwardsLeftInput, backwardsRightInput,
+					new ConcurrentLinkedQueue<>(this.equivalenceClasses.getConfigurations()), new ConcurrentLinkedQueue<>(this.leftSideConfigurations),
 					this.accessibleSchema.getInferredAccessibilityAxioms(), this.bestConfiguration,
 					this.equivalenceClasses, true,
 					Double.valueOf((this.maxElapsedTime - (this.elapsedTime / 1e6))).longValue(),
@@ -248,6 +243,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 			DAGChaseConfiguration left;
 			// Poll the next configuration from the left input
 			while ((left = leftSideConfigurations.poll()) != null) {
+				this.checkLimitReached();
 				Preconditions.checkNotNull(this.equivalenceClasses.getEquivalenceClass(left));
 				Preconditions.checkState(!this.equivalenceClasses.getEquivalenceClass(left).isEmpty());
 				// If it comes from an equivalence class that is not sleeping
@@ -327,6 +323,8 @@ public class DAGOptimizedNew extends DAGExplorer {
 		DAGChaseConfiguration configuration;
 		// Poll the next configuration
 		while ((configuration = input.poll()) != null) {
+			this.checkLimitReached();
+
 			// TOCOMMENT: This dominance related stuff needs to be checked, unit tested and then added
 			// again.
 			// If the configuration is not dominated
