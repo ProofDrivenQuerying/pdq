@@ -152,7 +152,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 			leftCopy.addAll(this.leftSideConfigurations);
 			
 			Collection<DAGChaseConfiguration> newlyCreatedConfigurations = new ArrayList<>();	
-			// Perform chasing with left to right configurations
+			// Form composition of current left configurations with all configurations, then chase if necessary
 			newlyCreatedConfigurations.addAll(this.createBinaryConfigurations(
 					leftCopy, this.equivalenceClasses.getConfigurations(),
 					this.accessibleSchema.getInferredAccessibilityAxioms(), this.bestConfiguration,
@@ -160,12 +160,13 @@ public class DAGOptimizedNew extends DAGExplorer {
 					Double.valueOf((this.maxElapsedTime - (this.elapsedTime / 1e6))).longValue(),
 					TimeUnit.MILLISECONDS));
 			
-			// Perform chasing with right to left configurations
+			// Form composition with left and right reverseed
 			Queue<DAGChaseConfiguration> backwardsRightInput = new ConcurrentLinkedQueue<>();
 			backwardsRightInput.addAll(this.leftSideConfigurations);
-			//TOCOMMENT: WHAT IS BackwardsLeft/Backwards right? In what sense are they backwards?
+			//TOCOMMENT: just reuse left
 			ConcurrentLinkedQueue<DAGChaseConfiguration> backwardsLeftInput = new ConcurrentLinkedQueue<>(this.equivalenceClasses.getConfigurations());
 			
+			//TOCOMMENT: inline all configurations for backwardsLeft below, and same with this.leftSide
 			newlyCreatedConfigurations.addAll(this.createBinaryConfigurations(
 					backwardsLeftInput, backwardsRightInput,
 					this.accessibleSchema.getInferredAccessibilityAxioms(), this.bestConfiguration,
@@ -224,6 +225,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 		this.depth++;
 	}
 
+	// compsose left and right and then chase if necessary
 	private Collection<DAGChaseConfiguration> createBinaryConfigurations(
 			Queue<DAGChaseConfiguration> leftSideConfigurations,
 			Collection<DAGChaseConfiguration> rightSideConfigurations, Dependency[] inferredAccessibilityAxioms,
