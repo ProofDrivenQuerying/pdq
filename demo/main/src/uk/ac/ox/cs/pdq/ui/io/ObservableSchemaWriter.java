@@ -1,13 +1,18 @@
 package uk.ac.ox.cs.pdq.ui.io;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLWriter;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 //import uk.ac.ox.cs.pdq.io.xml.SchemaWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
@@ -22,15 +27,11 @@ public class ObservableSchemaWriter extends AbstractXMLWriter<ObservableSchema> 
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(ObservableSchemaWriter.class);
-
-	/**  Schema writer. */
-// MR	private SchemaWriter schemaWriter = null;
 	
 	/**
 	 * Default constructor.
 	 */
 	public ObservableSchemaWriter() {
-// MR		this.schemaWriter = new SchemaWriter();
 	}
 	
 	/*
@@ -39,8 +40,20 @@ public class ObservableSchemaWriter extends AbstractXMLWriter<ObservableSchema> 
 	 */
 	@Override
 	public void write(PrintStream out, ObservableSchema o) {
-		out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		this.writeSchema(out, o);
+			out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+	}
+	
+	
+	public void write(File file, ObservableSchema o) {
+		try
+		{
+			PrintStream out = new PrintStream(file);
+			out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+			this.writeSchema(file, o);
+		}
+		catch(FileNotFoundException e)
+		{
+		}
 	}
 
 	/**
@@ -49,10 +62,13 @@ public class ObservableSchemaWriter extends AbstractXMLWriter<ObservableSchema> 
 	 * @param out the out
 	 * @param s the s
 	 */
-	private void writeSchema(PrintStream out, ObservableSchema s) {
-		Map<QNames, String> att = new LinkedHashMap<>();
-		att.put(QNames.NAME, s.getName());
-		att.put(QNames.DESCRIPTION, s.getDescription());
-// MR		this.schemaWriter.write(out, s.getSchema(), att);
+	private void writeSchema(File file, ObservableSchema s) {
+		try
+		{
+			IOManager.exportSchemaToXml(s.getSchema(), file);
+		}
+		catch(JAXBException e)
+		{
+		}
 	}
 }

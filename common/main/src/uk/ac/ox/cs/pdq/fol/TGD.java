@@ -20,7 +20,7 @@ public class TGD extends Dependency {
 	
 	@Override
 	public String toString() {				
-		return this.body.toString() + LogicalSymbols.IMPLIES + this.head.toString();
+		return this.body.toString() + " " + LogicalSymbols.IMPLIES + " " + this.head.toString();
 	}
 	
 	public boolean isLinear() {

@@ -37,7 +37,8 @@
                   </graphic>
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#deleteSelectedSchemas" text="%application.schema.schemas.delete-selected" fx:id="schemasDeleteButton" />
-                    <MenuItem disable="false" mnemonicParsing="false" onAction="#openImportSchemaWindow" text="%application.schema.schemas.import" fx:id="schemasNewSchemaButton" />
+                    <MenuItem disable="false" mnemonicParsing="false" onAction="#openImportSchemaWindow" text="%application.schema.schemas.import" fx:id="schemasImportButton" />
+                    <MenuItem disable="false" mnemonicParsing="false" onAction="#openExportSchemaWindow" text="%application.schema.schemas.export" fx:id="schemasExportButton" />
                   </items>
                 </MenuButton>
               </children>

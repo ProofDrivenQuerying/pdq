@@ -95,7 +95,7 @@ public class QuantifiedFormula extends Formula {
                 this.toString += variables[index].toString();
             }
             this.toString += "]";
-            this.toString += this.child.toString() + ")";
+            this.toString += " " + this.child.toString() + ")";
 		}
 		return this.toString;
 	}
