@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="600">
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %-5p [%t] (%F:%L) - %m%n" />
+        </Console>
+		<RollingFile name="FILE" fileName="log/pdq-benchmark.log"
+			filePattern="log/pdq-benchmark-%d{MM-dd-yyyy}.log.gz" ignoreExceptions="false">
+			<PatternLayout>
+				<pattern>%d %-5p [%t] (%F:%L) - %m%n</pattern>
+			</PatternLayout>
+ 			<TimeBasedTriggeringPolicy />
+ 		</RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="uk.ac.ox.cs.pdq" level="error">
+            <AppenderRef ref="CONSOLE" />
+        </Logger>
+        <!-- 
+        <Logger name="uk.ac.ox.cs.pdq.dag.explorer" level="debug" additivity="false">
+            <AppenderRef ref="CONSOLE" />
+        </Logger>
+        <Logger name="uk.ac.ox.cs.pdq.parallel" level="debug" additivity="false">
+            <AppenderRef ref="CONSOLE" />
+        </Logger>
+        <Logger name="uk.ac.ox.cs.pdq.equivalence" level="debug" additivity="false">
+            <AppenderRef ref="CONSOLE" />
+        </Logger>
+        
+        <Logger name="uk.ac.ox.cs.pdq.runtime" level="error" additivity="false">
+            <AppenderRef ref="CONSOLE" />
+        </Logger>
+        <Logger name="uk.ac.ox.cs.pdq.builder" level="error" additivity="false">
+            <AppenderRef ref="CONSOLE" />
+        </Logger>
+        <Logger name="uk.ac.ox.cs.pdq.benchmark" level="warn" additivity="false">
+            <AppenderRef ref="CONSOLE" />
+        </Logger>
+        
+        <Root level="debug">
+            <AppenderRef ref="FILE" />
+        </Root>
+         -->
+    </Loggers>
+</Configuration>
