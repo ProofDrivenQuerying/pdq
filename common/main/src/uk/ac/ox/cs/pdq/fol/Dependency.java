@@ -39,7 +39,7 @@ public class Dependency extends QuantifiedFormula {
 		Assert.assertTrue(isUnquantified(body));
 		Assert.assertTrue(isExistentiallyQuantified(head) || isUnquantified(head));
 		Assert.assertTrue(Arrays.asList(body.getFreeVariables()).containsAll(Arrays.asList(head.getFreeVariables())));
-		this.name = "default";
+		this.name = "dependency";
 		this.body = body;
 		this.head = head;
 		this.bodyAtoms = this.body.getAtoms();

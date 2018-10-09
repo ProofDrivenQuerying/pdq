@@ -375,9 +375,9 @@ public class AdaptedDbSchema {
 		for (int i = 0; i<dependencies2.length; i++) {
 			Dependency d = dependencies2[i];
 			if (d instanceof TGD) {
-				newDep[i] = TGD.create(convertAtoms(d.getBodyAtoms()), convertAtoms(d.getHeadAtoms()));
+				newDep[i] = TGD.create(convertAtoms(d.getBodyAtoms()), convertAtoms(d.getHeadAtoms()), d.getName());
 			} else if (d instanceof EGD) {
-				newDep[i] = EGD.create(convertAtoms(d.getBodyAtoms()), convertAtoms(d.getHeadAtoms()));
+				newDep[i] = EGD.create(convertAtoms(d.getBodyAtoms()), convertAtoms(d.getHeadAtoms()), d.getName());
 			} else {
 				throw new IllegalArgumentException("Unsupported type: " + d);
 			}
