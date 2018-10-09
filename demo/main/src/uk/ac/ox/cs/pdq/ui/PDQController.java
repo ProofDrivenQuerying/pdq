@@ -119,7 +119,9 @@ public class PDQController {
 	/*
 	 * JavaFX-specific initializations
 	 */
-
+	/** Used to protect selects from competing with each other */
+	private boolean g_lock = true;
+	
 	/** Default icon for relations. */
 	private final Image dbRelationIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/table.gif"));
 
@@ -545,18 +547,25 @@ public class PDQController {
 			if (event.getClickCount() > 1) {
 
 				MultipleSelectionModel msm = schemasTreeView.getSelectionModel();
-				int row = 3;
-				msm.select(row);
+				ObservableList<TreeItem<String>> obl = msm.getSelectedItems();
+				this.currentSchemaViewitems = (TreeItem<String>) msm.getSelectedItem();
 				
-			ObservableSchema schema = this.schemas.get(this.currentSchemaViewitems.getValue());
+				if((currentSchemaViewitems.getParent() == null) ||
+				   (currentSchemaViewitems.getParent().getParent() == null) ||
+				   (currentSchemaViewitems.getParent().getParent().valueProperty().get() == null))
+				{		
+					return;
+				}
+					
+				ObservableSchema schema = this.schemas.get(this.currentSchemaViewitems.getValue());
 				if (schema == null) {
 					try {
 						Relation relation = this.currentSchema.get().getSchema()
 								.getRelation(this.currentSchemaViewitems.getValue());
 						if ((currentSchemaViewitems.getParent().valueProperty().get().equals("Relations")
-								|| currentSchemaViewitems.getParent().getParent().valueProperty().get()
+								|| (currentSchemaViewitems.getParent().getParent().valueProperty().get()
 										.equals("Services"))
-								&& (relation != null)) {
+								&& (relation != null))) {
 							Stage dialog = new Stage();
 							dialog.initModality(Modality.WINDOW_MODAL);
 							dialog.initStyle(StageStyle.UTILITY);
@@ -583,6 +592,36 @@ public class PDQController {
 								.getRelation(this.currentSchemaViewitems.getValue());
 						if (currentSchemaViewitems.getParent().valueProperty().get().equals("Views")
 								&& (view != null)) {
+							
+							Dependency[] dependencies = this.currentSchema.get().getSchema().getAllDependencies();
+							int index = 0;
+							for(TreeItem<String> ti : schemasTreeView.getRoot().getChildren())
+							{
+								for(TreeItem<String> ti2 : ti.getChildren())
+								{
+									if(ti2.getValue().equals("Dependencies"))
+									{
+										for(TreeItem<String> ti3 : ti2.getChildren())
+										{
+											int row = schemasTreeView.getRow(ti3);
+											Dependency dependency = dependencies[index]; 
+											index++;
+											Dependency dependency2 = view.getViewToRelationDependency();
+											Dependency dependency3 = view.getRelationToViewDependency();
+											
+											if((dependency != null) && 
+											   (((dependency2 != null) && dependency2.equals(dependency)) ||
+											     (dependency3 != null) && dependency3.equals(dependency)))
+											{
+												g_lock = false;
+												msm.select(row);
+												g_lock = true;
+											}
+										}
+									}
+								}
+							}
+							
 							Stage dialog = new Stage();
 							dialog.initModality(Modality.WINDOW_MODAL);
 							dialog.initStyle(StageStyle.UTILITY);
@@ -672,6 +711,7 @@ public class PDQController {
 					}
 
 					// index -= this.currentSchema.get().getSchema().getRelations().size();
+					
 				}
 			}
 		}
@@ -1066,7 +1106,10 @@ public class PDQController {
 		}
 		this.currentSchema.set(this.schemas.get(schemaName));
 		this.queriesListView.setItems(this.queries.get(schemaName));
-		this.currentSchemaViewitems = newValue;
+		if(g_lock)
+		{
+			this.currentSchemaViewitems = newValue;	
+		}
 		if (!schemaName.equals(oldName)) {
 			this.queriesListView.getSelectionModel().clearSelection();
 			this.currentQuery.set(null);
@@ -1532,7 +1575,7 @@ public class PDQController {
 			} else {
 				imageView = new ImageView(this.dependencyIcon);
 			}
-			TreeItem<String> ti = new TreeItem<>(ic.getName(), imageView);
+			TreeItem<String> ti = new TreeItem<>(ic.getName().equals("dependency") ? ic.toString() : ic.getName(), imageView);
 			dependencies.getChildren().add(ti);
 		}
 
