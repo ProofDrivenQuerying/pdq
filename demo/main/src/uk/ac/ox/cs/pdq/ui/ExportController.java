@@ -98,13 +98,13 @@ public class ExportController {
 								"application.dialog.import.message.file-required"));
 				return;
 			}
-			if (new File(ExportController.this.exportFileField.getText()).exists()) {
+/* MR			if (new File(ExportController.this.exportFileField.getText()).exists()) {
 				ExportController.this.detailsImage.setImage(ExportController.this.errorIcon);
 				ExportController.this.detailsLabel.setText(
 						ExportController.this.bundle.getString(
 								"application.dialog.import.message.file-exists"));
 				return;
-			}
+			}*/
 			ExportController.this.okButton.setDisable(false);
 			ExportController.this.detailsLabel.setText("");
 			ExportController.this.detailsImage.setImage(null);
@@ -122,7 +122,6 @@ public class ExportController {
 			event.consume();
 			File f = new File(this.exportFileField.getText());
 			try  {
-				// MR Object o = null;
 				if (this.schema != null) {
 					ObservableSchemaWriter writer = new ObservableSchemaWriter();
 					writer.write(f, this.schema);
@@ -130,7 +129,6 @@ public class ExportController {
 					ObservableQueryWriter writer = new ObservableQueryWriter(this.schema.getSchema());
 					writer.write(f, this.schema);
 				}*/
-				// MR this.dataQueue.add(o);
 				ExportController.this.rootPane.getScene().getWindow().hide();
 			} catch (Exception e) {
 				ExportController.this.detailsImage.setImage(ExportController.this.errorIcon);
@@ -173,6 +171,9 @@ public class ExportController {
 	/** The schema currently selected. If null, we are importing a schema, other a query. */
 	private ObservableSchema schema = null;
 
+	/** The path to the service definitions being exported. */
+	private String path = null;
+	
 	/**  Queue containing the object(s) to import. */
 	ConcurrentLinkedQueue dataQueue;
 
