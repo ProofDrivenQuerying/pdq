@@ -26,6 +26,7 @@ import com.google.common.base.Preconditions;
 //import uk.ac.ox.cs.pdq.SchemaReader;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLReader;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
@@ -85,7 +86,7 @@ public class ObservableSchemaReader {
 				Unmarshaller jaxbUnmarshaller2 = jaxbContext2.createUnmarshaller();
 				list.add((Service) jaxbUnmarshaller2.unmarshal(serviceFile));
 			}
-			this.schema = IOManager.importSchema(file);
+			this.schema = DbIOManager.importSchema(file);
 			this.name = file.getPath();
 			this.services = new Service[list.size()];
 			for(int i = 0; i < list.size(); i++) services[i] = list.get(i);
