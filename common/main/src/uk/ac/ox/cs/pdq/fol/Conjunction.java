@@ -51,7 +51,7 @@ public final class Conjunction extends Formula {
 	@Override
 	public String toString() {
 		if (this.toString == null)
-			this.toString = "(" + this.children[0].toString() + " & " + this.children[1].toString() + ")";
+			this.toString = this.children[0].toString() + " & " + this.children[1].toString();
 		return this.toString;
 	}
 
