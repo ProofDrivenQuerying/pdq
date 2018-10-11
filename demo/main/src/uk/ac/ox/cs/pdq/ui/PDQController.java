@@ -88,9 +88,14 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -1365,6 +1370,9 @@ public class PDQController {
 	 * Loads queries present in the work directory.
 	 */
 	private void loadQueries() {
+		
+		// Open the query directory
+		
 		File queryDir = new File(this.workDirectory.getAbsolutePath() + '/' + QUERY_DIRECTORY);
 		for (ObservableSchema s : this.schemas.values()) {
 			ObservableList<ObservableQuery> qs = this.queries.get(s.getName());
@@ -1372,6 +1380,9 @@ public class PDQController {
 				qs = FXCollections.observableArrayList();
 				this.queries.put(s.getName(), qs);
 			}
+			
+			// List files in the query directory
+			
 			for (File queryFile : listFiles(queryDir, makePrefix(s), QUERY_FILENAME_SUFFIX)) {
 				try (FileInputStream in = new FileInputStream(queryFile.getAbsolutePath())) {
 					ObservableQueryReader queryReader = new ObservableQueryReader(s.getSchema());
@@ -1400,6 +1411,9 @@ public class PDQController {
 	 * Loads queries present in the work directory.
 	 */
 	private void loadPlans() {
+		
+		// Find plan based on schema and query
+		
 		File planDir = new File(this.workDirectory.getAbsolutePath() + '/' + PLAN_DIRECTORY);
 		for (ObservableSchema s : this.schemas.values()) {
 			for (ObservableQuery q : this.queries.get(s.getName())) {
@@ -1408,6 +1422,9 @@ public class PDQController {
 					ps = FXCollections.observableArrayList();
 					this.plans.put(Pair.of(s, q), ps);
 				}
+				
+				// For all plan files in the planDir go  to the CostIOManager
+				
 				for (File planFile : listFiles(planDir, makePrefix(q), PLAN_FILENAME_SUFFIX)) {
 					try (FileInputStream in = new FileInputStream(planFile.getAbsolutePath())) {
 						File settings = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROPERTIES_SUFFIX));
@@ -1424,6 +1441,9 @@ public class PDQController {
 						ObservablePlan p = new ObservablePlan(p1, q1, r1, s1);
 						p.setPlanFile(planFile);
 						p.setSettingsFile(settings);
+						
+						// Read the proof file
+						
 						File proof = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROOF_FILENAME_SUFFIX));
 						if (proof.exists()) {
 							try (FileInputStream prIn = new FileInputStream(proof.getAbsolutePath())) {
@@ -1514,6 +1534,8 @@ public class PDQController {
 		TreeItem<String> dependencies = new TreeItem<>(bundle.getString("application.schema.schemas.dependencies"),
 				new ImageView(this.dependencyIcon));
 
+		// For all relations choose an icon depending on view or not
+		
 		for (Relation r : s.getSchema().getRelations()) {
 			ImageView imageView = null;
 			TreeItem ti;
@@ -1526,6 +1548,9 @@ public class PDQController {
 				ti = new TreeItem<>(r.getName(), imageView);
 				relations.getChildren().add(ti);
 			}
+			
+			// Find the service related to the relation by access method name
+			
 			boolean found = false;
 			for (AccessMethodDescriptor a : r.getAccessMethods()) {
 				for (Service sr : s.getServices()) {
@@ -1545,6 +1570,9 @@ public class PDQController {
 					break;
 			}
 		}
+		
+		// Find the relation related to the service by access method name
+		
 		for (Service sr : s.getServices()) {
 			ImageView imageView = new ImageView(this.webRelationIcon);
 			TreeItem ti = new TreeItem<>(sr.getName(), imageView);
@@ -1568,15 +1596,109 @@ public class PDQController {
 					break;
 			}
 		}
-		for (Dependency ic : s.getSchema().getAllDependencies()) {
+		
+		
+		Dependency[] dependencys = s.getSchema().getAllDependencies();
+		Dependency[] dependencys2 = new Dependency[dependencys.length];
+		
+		// For all dependencies 
+		
+		for (int d = 0; d < dependencys.length; d++) {
+			Dependency ic = dependencys[d];
+			
+			// choose the icon based on TGD and isGuarded()
+			
 			ImageView imageView = null;
 			if (ic instanceof TGD && ((TGD) ic).isGuarded()) {
 				imageView = new ImageView(this.fkIcon);
 			} else {
 				imageView = new ImageView(this.dependencyIcon);
 			}
-			TreeItem<String> ti = new TreeItem<>(ic.getName().equals("dependency") ? ic.toString() : ic.getName(), imageView);
+			
+			// Replace symbol _x with attribute name for every variable in the body atoms
+			
+			Atom[] bodyatoms = ic.getBodyAtoms();
+			Atom[] bodyatoms2 = new Atom[bodyatoms.length];
+			for(int a = 0; a < bodyatoms.length; a++)
+			{
+				Atom atom = bodyatoms[a];
+				Predicate predicate = atom.getPredicate();
+				Term[] terms = atom.getTerms();
+				Term[] terms2 = new Term[terms.length];
+				for (Relation relation : s.getSchema().getRelations())
+				{
+					if(relation.getName().equals(predicate.getName()))
+					{
+						Attribute[] attributes = relation.getAttributes();
+						for(int t = 0; t < terms.length; t++)
+						{
+							Term term = terms[t];
+							if(t < attributes.length)
+							{
+								Attribute attribute = attributes[t];
+								if(term instanceof Variable)
+								{
+									Variable variable = (Variable) term;
+									terms2[t] = Variable.create(attribute.getName());
+								}
+							}
+						}
+					}
+				}
+				Atom atom2 = Atom.create(predicate, terms2);
+				bodyatoms2[a] = atom2;
+			}
+
+			// Replace symbol _x with attribute name for every variable in the head atoms
+			
+			Atom[] headatoms = ic.getHeadAtoms();
+			Atom[] headatoms2 = new Atom[headatoms.length];
+			for(int a = 0; a < headatoms.length; a++)
+			{
+				Atom atom = headatoms[a];
+				Predicate predicate = atom.getPredicate();
+				Term[] terms = atom.getTerms();
+				Term[] terms2 = new Term[terms.length];
+				for (Relation relation : s.getSchema().getRelations())
+				{
+					if(relation.getName().equals(predicate.getName()))
+					{
+						Attribute[] attributes = relation.getAttributes();
+						for(int t = 0; t < terms.length; t++)
+						{
+							Term term = terms[t];
+							if(t < attributes.length)
+							{
+								Attribute attribute = attributes[t];
+								if(term instanceof Variable)
+								{
+									Variable variable = (Variable) term;
+									terms2[t] = Variable.create(attribute.getName());
+								}
+							}
+						}
+					}
+				}
+				Atom atom2 = Atom.create(predicate, terms2);
+				headatoms2[a] = atom2;
+			}
+			
+			Dependency ic2 = TGD.create(bodyatoms2, headatoms2, ic.getName());
+			dependencys2[d] = ic2;
+			
+			TreeItem<String> ti = new TreeItem<>(ic2.getName().equals("dependency") ? ic2.toString() : ic2.getName(), imageView);
 			dependencies.getChildren().add(ti);
+		}
+		Relation[] relationz = s.getSchema().getRelations();
+		Schema schema = new Schema(relationz, dependencys2);
+		for(ObservableSchema obschema : this.schemas.values())
+		{
+			if(obschema.equals(s))
+			{
+				this.schemas.remove(s.getName(), s);
+				s.setSchema(schema);
+				this.schemas.putIfAbsent(s.getName(), s);
+			}
 		}
 
 		if (!relations.getChildren().isEmpty()) {
