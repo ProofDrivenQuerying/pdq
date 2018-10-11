@@ -24,6 +24,7 @@ import uk.ac.ox.cs.pdq.util.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.View;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.ui.model.ObservableAccessMethod;
 import uk.ac.ox.cs.pdq.ui.model.ObservableAttribute;
 
@@ -114,7 +115,8 @@ public class ViewController {
 			attributes.add(new ObservableAttribute(att));
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		new PrintStream(out).println(this.view.toString());
+		TGD tgd = this.view.getRelationToViewDependency();
+		if(tgd != null) new PrintStream(out).println(tgd.toString());
 		this.viewTextArea.setText(out.toString());
 	}
 }
