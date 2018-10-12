@@ -1531,6 +1531,7 @@ public class PDQController {
 	
 	private void processDependencyBodyOrHeadAtoms(Atom[] atoms, Atom[] atoms2, Relation[] relations)
 	{
+		// Iterate over all atoms
 			
 		for(int a = 0; a < atoms.length; a++)
 		{
@@ -1538,11 +1539,17 @@ public class PDQController {
 			Predicate predicate = atom.getPredicate();
 			Term[] terms = atom.getTerms();
 			Term[] terms2 = new Term[terms.length];
+			
+			// Check that relation name equals predicate name
+			
 			for (Relation relation : relations)
 			{
 				if(relation.getName().equals(predicate.getName()))
 				{
 					Attribute[] attributes = relation.getAttributes();
+					
+					// Iterate over all terms
+					
 					for(int t = 0; t < terms.length; t++)
 					{
 						Term term = terms[t];
@@ -1555,11 +1562,15 @@ public class PDQController {
 								String value = map.get(variable.getSymbol());
 								if(value == null)
 								{
+									// This is a new variable so name it after the attribute
+									
 									map.put(variable.getSymbol(), attribute.getName());
 									terms2[t] = Variable.create(attribute.getName());
 								}
 								else
 								{
+									// Reuse the existing variable name
+									
 									terms2[t] = Variable.create(value);									
 								}
 							}
@@ -1713,6 +1724,9 @@ public class PDQController {
 			TreeItem<String> ti = new TreeItem<>(ic2.getName().equals("dependency") ? ic2.toString() : ic2.getName(), imageView);
 			dependencies.getChildren().add(ti);
 		}
+		
+		// Swap the old schema with the new schema
+		
 		Schema schema = new Schema(relationz, dependencys2);
 		for(ObservableSchema obschema : this.schemas.values())
 		{
