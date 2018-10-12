@@ -12,7 +12,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -153,20 +152,16 @@ public class DAGOptimizedNew extends DAGExplorer {
 			
 			Collection<DAGChaseConfiguration> newlyCreatedConfigurations = new ArrayList<>();	
 			// Creating configurations and chasing when necessary.
-			newlyCreatedConfigurations.addAll(this.createBinaryConfigurations(
+			newlyCreatedConfigurations.addAll(this.selectAndCreateBinaryConfigurationsToCreateAndChase(
 					leftCopy, this.equivalenceClasses.getConfigurations(),
 					this.accessibleSchema.getInferredAccessibilityAxioms(), this.bestConfiguration,
-					this.equivalenceClasses, true,
-					Double.valueOf((this.maxElapsedTime - (this.elapsedTime / 1e6))).longValue(),
-					TimeUnit.MILLISECONDS));
+					this.equivalenceClasses));
 			
 			// creating configurations right to left.
-			newlyCreatedConfigurations.addAll(this.createBinaryConfigurations(
+			newlyCreatedConfigurations.addAll(this.selectAndCreateBinaryConfigurationsToCreateAndChase(
 					new ConcurrentLinkedQueue<>(this.equivalenceClasses.getConfigurations()), new ConcurrentLinkedQueue<>(this.leftSideConfigurations),
 					this.accessibleSchema.getInferredAccessibilityAxioms(), this.bestConfiguration,
-					this.equivalenceClasses, true,
-					Double.valueOf((this.maxElapsedTime - (this.elapsedTime / 1e6))).longValue(),
-					TimeUnit.MILLISECONDS));
+					this.equivalenceClasses));
 			
 			// Check for new configurations
 			if (newlyCreatedConfigurations == null || newlyCreatedConfigurations.isEmpty()) {
@@ -193,11 +188,6 @@ public class DAGOptimizedNew extends DAGExplorer {
 				this.setBestPlan(result);
 			}
 
-			if (equivalenceClasses instanceof SynchronizedEquivalenceClasses) {
-				((SynchronizedEquivalenceClasses) equivalenceClasses)
-						.wakeupSleep(bestConfiguration != null ? bestConfiguration.getCost() : null);
-			}
-
 			// Stop if no new configuration is being found
 			if (nonDominatedConfigurations.isEmpty()) {
 				this.forcedTermination = true;
@@ -219,11 +209,10 @@ public class DAGOptimizedNew extends DAGExplorer {
 		this.depth++;
 	}
 
-	private Collection<DAGChaseConfiguration> createBinaryConfigurations(
+	private Collection<DAGChaseConfiguration> selectAndCreateBinaryConfigurationsToCreateAndChase(
 			Queue<DAGChaseConfiguration> leftSideConfigurations,
 			Collection<DAGChaseConfiguration> rightSideConfigurations, Dependency[] inferredAccessibilityAxioms,
-			DAGChaseConfiguration bestConfiguration, DAGEquivalenceClasses equivalenceClasses2, boolean b,
-			long longValue, TimeUnit milliseconds) throws PlannerException {
+			DAGChaseConfiguration bestConfiguration, DAGEquivalenceClasses equivalenceClasses2) throws PlannerException {
 
 		// Map of representatives. For each configuration c = BinConfiguration(c_1,c_2)
 		// we create a map from the
@@ -325,8 +314,6 @@ public class DAGOptimizedNew extends DAGExplorer {
 		while ((configuration = input.poll()) != null) {
 			this.checkLimitReached();
 
-			// TOCOMMENT: This dominance related stuff needs to be checked, unit tested and then added
-			// again.
 			// If the configuration is not dominated
 			DAGChaseConfiguration dominator = this.equivalenceClasses.dominate(this.dominance, configuration);
 			if (dominator == null) {
