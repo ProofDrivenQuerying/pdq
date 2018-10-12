@@ -1,73 +1,129 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="ProjectionTerm">
-    <projections name="c4" type="java.lang.String"/>
-    <projections name="c5" type="java.lang.String"/>
+    <projections name="c4" type="java.math.BigDecimal"/>
+    <projections name="c5" type="java.math.BigDecimal"/>
     <RelationalTerm type="DependentJoinTerm">
-        <RelationalTerm type="RenameTerm">
-            <renamings name="c2" type="java.lang.String"/>
-            <renamings name="k25" type="java.lang.String"/>
-            <renamings name="k26" type="java.lang.String"/>
-            <renamings name="k27" type="java.lang.String"/>
-            <renamings name="k28" type="java.lang.String"/>
-            <renamings name="k29" type="java.lang.String"/>
-            <renamings name="k30" type="java.lang.String"/>
-            <RelationalTerm type="AccessTerm">
-                <accessMethod name="m20"/>
-                <relation name="supplier">
-                    <attribute name="s_suppkey" type="java.lang.String"/>
-                    <attribute name="s_name" type="java.lang.String"/>
-                    <attribute name="s_address" type="java.lang.String"/>
-                    <attribute name="s_nationkey" type="java.lang.String"/>
-                    <attribute name="s_phone" type="java.lang.String"/>
-                    <attribute name="s_acctbal" type="java.lang.String"/>
-                    <attribute name="s_comment" type="java.lang.String"/>
-                    <access-method name="m3" inputs="3"/>
-                    <access-method name="m20"/>
-                </relation>
+        <RelationalTerm type="DependentJoinTerm">
+            <RelationalTerm type="DependentJoinTerm">
+                <RelationalTerm type="DependentJoinTerm">
+                    <RelationalTerm type="RenameTerm">
+                        <renamings name="k40" type="java.lang.Integer"/>
+                        <renamings name="k52" type="java.lang.String"/>
+                        <renamings name="k53" type="java.lang.String"/>
+                        <RelationalTerm type="AccessTerm">
+                            <accessMethod name="m8"/>
+                            <relation name="region">
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+<access-method name="m8"/>
+                            </relation>
+                        </RelationalTerm>
+                    </RelationalTerm>
+                    <RelationalTerm type="RenameTerm">
+                        <renamings name="k27" type="java.lang.Integer"/>
+                        <renamings name="k39" type="java.lang.String"/>
+                        <renamings name="k40" type="java.lang.Integer"/>
+                        <renamings name="k41" type="java.lang.String"/>
+                        <RelationalTerm type="AccessTerm">
+                            <accessMethod name="m7" inputs="2"/>
+                            <relation name="nation">
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+<access-method name="m7" inputs="2"/>
+                            </relation>
+                        </RelationalTerm>
+                    </RelationalTerm>
+                </RelationalTerm>
+                <RelationalTerm type="RenameTerm">
+                    <renamings name="c2" type="java.lang.Integer"/>
+                    <renamings name="k25" type="java.lang.String"/>
+                    <renamings name="k26" type="java.lang.String"/>
+                    <renamings name="k27" type="java.lang.Integer"/>
+                    <renamings name="k28" type="java.lang.String"/>
+                    <renamings name="k29" type="java.math.BigDecimal"/>
+                    <renamings name="k30" type="java.lang.String"/>
+                    <RelationalTerm type="AccessTerm">
+                        <accessMethod name="m3" inputs="3"/>
+                        <relation name="supplier">
+                            <attribute name="s_suppkey" type="java.lang.Integer"/>
+                            <attribute name="s_name" type="java.lang.String"/>
+                            <attribute name="s_address" type="java.lang.String"/>
+                            <attribute name="s_nationkey" type="java.lang.Integer"/>
+                            <attribute name="s_phone" type="java.lang.String"/>
+                            <attribute name="s_acctbal" type="java.math.BigDecimal"/>
+                            <attribute name="s_comment" type="java.lang.String"/>
+                            <access-method name="m3" inputs="3"/>
+                            <access-method name="m20"/>
+                        </relation>
+                    </RelationalTerm>
+                </RelationalTerm>
+            </RelationalTerm>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c1" type="java.lang.Integer"/>
+                <renamings name="c2" type="java.lang.Integer"/>
+                <renamings name="k22" type="java.lang.Integer"/>
+                <renamings name="k23" type="java.math.BigDecimal"/>
+                <renamings name="k24" type="java.lang.String"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="m5" inputs="1"/>
+                    <relation name="partsupp">
+                        <attribute name="ps_partkey" type="java.lang.Integer"/>
+                        <attribute name="ps_suppkey" type="java.lang.Integer"/>
+                        <attribute name="ps_availqty" type="java.lang.Integer"/>
+                        <attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+                        <attribute name="ps_comment" type="java.lang.String"/>
+                        <access-method name="m4" inputs="0"/>
+                        <access-method name="m5" inputs="1"/>
+                        <access-method name="m6" inputs="0,1"/>
+                    </relation>
+                </RelationalTerm>
             </RelationalTerm>
         </RelationalTerm>
         <RelationalTerm type="SelectionTerm">
             <predicate type="ConjunctiveCondition">
                 <predicates position="4" type="ConstantEqualityCondition">
-                    <constant value="10"/>
+                    <constant type="java.math.BigDecimal" value="10"/>
                 </predicates>
                 <predicates position="10" type="ConstantEqualityCondition">
-                    <constant value="1995-01-01"/>
+                    <constant type="java.sql.Date" value="1995-01-01"/>
                 </predicates>
             </predicate>
             <RelationalTerm type="RenameTerm">
-                <renamings name="c0" type="java.lang.String"/>
-                <renamings name="c1" type="java.lang.String"/>
-                <renamings name="c2" type="java.lang.String"/>
-                <renamings name="c3" type="java.lang.String"/>
-                <renamings name="10" type="java.lang.String"/>
-                <renamings name="c4" type="java.lang.String"/>
-                <renamings name="c5" type="java.lang.String"/>
-                <renamings name="c6" type="java.lang.String"/>
+                <renamings name="c0" type="java.lang.Integer"/>
+                <renamings name="c1" type="java.lang.Integer"/>
+                <renamings name="c2" type="java.lang.Integer"/>
+                <renamings name="c3" type="java.lang.Integer"/>
+                <renamings name="10" type="java.math.BigDecimal"/>
+                <renamings name="c4" type="java.math.BigDecimal"/>
+                <renamings name="c5" type="java.math.BigDecimal"/>
+                <renamings name="c6" type="java.math.BigDecimal"/>
                 <renamings name="c7" type="java.lang.String"/>
                 <renamings name="c8" type="java.lang.String"/>
-                <renamings name="1995-01-01" type="java.lang.String"/>
-                <renamings name="c9" type="java.lang.String"/>
-                <renamings name="c10" type="java.lang.String"/>
+                <renamings name="1995-01-01" type="java.sql.Date"/>
+                <renamings name="c9" type="java.sql.Date"/>
+                <renamings name="c10" type="java.sql.Date"/>
                 <renamings name="c11" type="java.lang.String"/>
                 <renamings name="c12" type="java.lang.String"/>
                 <renamings name="c13" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
-                    <accessMethod name="m11" inputs="2"/>
+                    <accessMethod name="m12" inputs="1,2"/>
                     <relation name="lineitem">
-                        <attribute name="l_orderkey" type="java.lang.String"/>
-                        <attribute name="l_partkey" type="java.lang.String"/>
-                        <attribute name="l_suppkey" type="java.lang.String"/>
-                        <attribute name="l_linenumber" type="java.lang.String"/>
-                        <attribute name="l_quantity" type="java.lang.String"/>
-                        <attribute name="l_extendedprice" type="java.lang.String"/>
-                        <attribute name="l_discount" type="java.lang.String"/>
-                        <attribute name="l_tax" type="java.lang.String"/>
+                        <attribute name="l_orderkey" type="java.lang.Integer"/>
+                        <attribute name="l_partkey" type="java.lang.Integer"/>
+                        <attribute name="l_suppkey" type="java.lang.Integer"/>
+                        <attribute name="l_linenumber" type="java.lang.Integer"/>
+                        <attribute name="l_quantity" type="java.math.BigDecimal"/>
+                        <attribute name="l_extendedprice" type="java.math.BigDecimal"/>
+                        <attribute name="l_discount" type="java.math.BigDecimal"/>
+                        <attribute name="l_tax" type="java.math.BigDecimal"/>
                         <attribute name="l_returnflag" type="java.lang.String"/>
                         <attribute name="l_linestatus" type="java.lang.String"/>
-                        <attribute name="l_shipdate" type="java.lang.String"/>
-                        <attribute name="l_commitdate" type="java.lang.String"/>
-                        <attribute name="l_receiptdate" type="java.lang.String"/>
+                        <attribute name="l_shipdate" type="java.sql.Date"/>
+                        <attribute name="l_commitdate" type="java.sql.Date"/>
+                        <attribute name="l_receiptdate" type="java.sql.Date"/>
                         <attribute name="l_shipinstruct" type="java.lang.String"/>
                         <attribute name="l_shipmode" type="java.lang.String"/>
                         <attribute name="l_comment" type="java.lang.String"/>
@@ -79,5 +135,5 @@
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="620406.4278572596" type="DoubleCost"/>
+    <cost value="287603.96282359806" type="DoubleCost"/>
 </RelationalTermWithCost>

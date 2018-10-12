@@ -1,0 +1,7 @@
+MandatoryPass folder: these should work and provide the same result with every planner types. Sort of a minimum test that every current and future planner have to pass. These tests would have a switch in the case.properties file to indicate that these have to be executed multiple times using every available planner type.
+
+Bushy plans folder: the name tells it, these would have different results depending on the chosen planner.
+
+tpc-h folder: all tests that requires special external conditions should be grouped separately so when we execute the tests we won't have various failures because of these missing external resources.
+
+fast and slow: these fast and slow groups made some sense with the linear tests, but in the dag world speed is highly relative to the chosen algorithm, validators and filters. Also these contain broken tests, most of them have different result using different algorithms, some of the slow ones can be executed successfully with the new DAG_GENERIC_SIMPLE while both the generic and optimized runs out of the two minutes timeout, so I would try to get rid of these tests in a long run by re-grouping and fixing them one by one.
