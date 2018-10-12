@@ -26,6 +26,9 @@ public class LinearGuarded extends TGD {
 		super(new Atom[]{body},head, name);
 	}
 	
+	protected LinearGuarded(Atom[] body, Atom[] head, String name) {
+		super(body,head, name);
+	}
 	/**
 	 * Constructs a guarded dependency based on the input key-foreign key
 	 * dependency.
@@ -99,4 +102,9 @@ public class LinearGuarded extends TGD {
     public static LinearGuarded create(Atom body, Atom[] head, String name) {
         return Cache.linearGuarded.retrieve(new LinearGuarded(body, head, name));
     }
+    
+    public static LinearGuarded create(Atom[] body, Atom[] head, String name) {
+    	return Cache.linearGuarded.retrieve(new LinearGuarded(body, head, name));
+    }
 }
+

@@ -92,6 +92,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -113,7 +114,7 @@ import uk.ac.ox.cs.pdq.ui.proof.Proof;
 /**
  * Controller class for the main PDQ window.
  * 
- * @author Julien Leblay
+ * @author Julien Leblay, Mark Ridler
  *
  */
 public class PDQController {
@@ -567,6 +568,9 @@ public class PDQController {
 					try {
 						Relation relation = this.currentSchema.get().getSchema()
 								.getRelation(this.currentSchemaViewitems.getValue());
+						
+						// Check position of the relation in the TreeItem<String> tree view
+						
 						if ((currentSchemaViewitems.getParent().valueProperty().get().equals("Relations")
 								|| (currentSchemaViewitems.getParent().getParent().valueProperty().get()
 										.equals("Services"))
@@ -598,6 +602,8 @@ public class PDQController {
 						if (currentSchemaViewitems.getParent().valueProperty().get().equals("Views")
 								&& (view != null)) {
 							
+							// Scan through the list of dependencies to see which should be highlighted
+							
 							Dependency[] dependencies = this.currentSchema.get().getSchema().getAllDependencies();
 							int index = 0;
 							for(TreeItem<String> ti : schemasTreeView.getRoot().getChildren())
@@ -611,6 +617,9 @@ public class PDQController {
 											int row = schemasTreeView.getRow(ti3);
 											Dependency dependency = dependencies[index]; 
 											index++;
+											
+											// Get both dependencies characteristic of a view
+											
 											Dependency dependency2 = view.getViewToRelationDependency();
 											Dependency dependency3 = view.getRelationToViewDependency();
 											
@@ -618,6 +627,8 @@ public class PDQController {
 											   (((dependency2 != null) && dependency2.equals(dependency)) ||
 											     (dependency3 != null) && dependency3.equals(dependency)))
 											{
+												// Disable select updates with g_lock flag.
+												
 												g_lock = false;
 												msm.select(row);
 												g_lock = true;
@@ -676,8 +687,6 @@ public class PDQController {
 							dependencyController.setQueries(this.queries.get(s.getName()));
 
 							dialog.showAndWait();
-							// this.saveSchema(s);
-							// this.loadTreeItems();
 							return;
 						} catch (IOException e) {
 							throw new UserInterfaceException(e.getMessage());
@@ -691,6 +700,9 @@ public class PDQController {
 							break;
 						}
 					}
+					
+					// Check services in the list of services and when connected to a relation by access method
+					
 					if ((currentSchemaViewitems.getParent().valueProperty().get().equals("Services")
 							|| currentSchemaViewitems.getParent().getParent().valueProperty().get().equals("Relations"))
 							&& (service != null)) {
@@ -1259,6 +1271,8 @@ public class PDQController {
 	/** The plan currently selected. */
 	SimpleObjectProperty<ObservablePlan> currentPlan = new SimpleObjectProperty<>();
 
+	/** A map of old vs new variable names. */
+	HashMap<String, String> map = new HashMap<>();
 	/**
 	 * Default construction, sets up the work directory, and loads all of its
 	 * content.
@@ -1513,6 +1527,51 @@ public class PDQController {
 		return result;
 	}
 
+	// Replace symbol _x with attribute name for every variable in the atoms
+	
+	private void processDependencyBodyOrHeadAtoms(Atom[] atoms, Atom[] atoms2, Relation[] relations)
+	{
+			
+		for(int a = 0; a < atoms.length; a++)
+		{
+			Atom atom = atoms[a];
+			Predicate predicate = atom.getPredicate();
+			Term[] terms = atom.getTerms();
+			Term[] terms2 = new Term[terms.length];
+			for (Relation relation : relations)
+			{
+				if(relation.getName().equals(predicate.getName()))
+				{
+					Attribute[] attributes = relation.getAttributes();
+					for(int t = 0; t < terms.length; t++)
+					{
+						Term term = terms[t];
+						if(t < attributes.length)
+						{
+							Attribute attribute = attributes[t];
+							if(term instanceof Variable)
+							{
+								Variable variable = (Variable) term;
+								String value = map.get(variable.getSymbol());
+								if(value == null)
+								{
+									map.put(variable.getSymbol(), attribute.getName());
+									terms2[t] = Variable.create(attribute.getName());
+								}
+								else
+								{
+									terms2[t] = Variable.create(value);									
+								}
+							}
+						}
+					}
+				}
+			}
+			Atom atom2 = Atom.create(predicate, terms2);
+			atoms2[a] = atom2;
+		}
+	}
+	
 	/**
 	 * Reloads the schema into the left-hand side tree view.
 	 *
@@ -1536,13 +1595,34 @@ public class PDQController {
 
 		// For all relations choose an icon depending on view or not
 		
-		for (Relation r : s.getSchema().getRelations()) {
+		Relation[] relationz = s.getSchema().getRelations();
+		Relation[] relationz2 = new Relation[relationz.length];
+		for (int z = 0; z < relationz.length; z++) {
+			Relation r = relationz[z];
 			ImageView imageView = null;
 			TreeItem ti;
 			if (r instanceof View) {
 				imageView = new ImageView(this.dbViewIcon);
 				ti = new TreeItem<>(r.getName(), imageView);
 				views.getChildren().add(ti);
+				View v = (View) r;
+								
+				// Process the ViewToRelation dependency
+
+				Dependency viewToRelation = v.getViewToRelationDependency();
+				Atom[] bodyatoms = viewToRelation.getBodyAtoms();
+				Atom[] bodyatoms2 = new Atom[bodyatoms.length];
+				processDependencyBodyOrHeadAtoms(bodyatoms, bodyatoms2, relationz);
+				Atom[] headatoms = viewToRelation.getHeadAtoms();
+				Atom[] headatoms2 = new Atom[headatoms.length];
+				processDependencyBodyOrHeadAtoms(headatoms, headatoms2, relationz);
+				if(viewToRelation instanceof LinearGuarded)
+				{
+					LinearGuarded viewToRelation2;
+					viewToRelation2 = LinearGuarded.create(bodyatoms2, headatoms2, viewToRelation.getName());
+					v.setViewToRelationDependency(viewToRelation2);
+				}
+				
 			} else {
 				imageView = new ImageView(this.dbRelationIcon);
 				ti = new TreeItem<>(r.getName(), imageView);
@@ -1606,7 +1686,7 @@ public class PDQController {
 		for (int d = 0; d < dependencys.length; d++) {
 			Dependency ic = dependencys[d];
 			
-			// choose the icon based on TGD and isGuarded()
+			// Choose the icon based on TGD and isGuarded()
 			
 			ImageView imageView = null;
 			if (ic instanceof TGD && ((TGD) ic).isGuarded()) {
@@ -1619,77 +1699,20 @@ public class PDQController {
 			
 			Atom[] bodyatoms = ic.getBodyAtoms();
 			Atom[] bodyatoms2 = new Atom[bodyatoms.length];
-			for(int a = 0; a < bodyatoms.length; a++)
-			{
-				Atom atom = bodyatoms[a];
-				Predicate predicate = atom.getPredicate();
-				Term[] terms = atom.getTerms();
-				Term[] terms2 = new Term[terms.length];
-				for (Relation relation : s.getSchema().getRelations())
-				{
-					if(relation.getName().equals(predicate.getName()))
-					{
-						Attribute[] attributes = relation.getAttributes();
-						for(int t = 0; t < terms.length; t++)
-						{
-							Term term = terms[t];
-							if(t < attributes.length)
-							{
-								Attribute attribute = attributes[t];
-								if(term instanceof Variable)
-								{
-									Variable variable = (Variable) term;
-									terms2[t] = Variable.create(attribute.getName());
-								}
-							}
-						}
-					}
-				}
-				Atom atom2 = Atom.create(predicate, terms2);
-				bodyatoms2[a] = atom2;
-			}
+			processDependencyBodyOrHeadAtoms(bodyatoms, bodyatoms2, relationz);
 
 			// Replace symbol _x with attribute name for every variable in the head atoms
 			
 			Atom[] headatoms = ic.getHeadAtoms();
 			Atom[] headatoms2 = new Atom[headatoms.length];
-			for(int a = 0; a < headatoms.length; a++)
-			{
-				Atom atom = headatoms[a];
-				Predicate predicate = atom.getPredicate();
-				Term[] terms = atom.getTerms();
-				Term[] terms2 = new Term[terms.length];
-				for (Relation relation : s.getSchema().getRelations())
-				{
-					if(relation.getName().equals(predicate.getName()))
-					{
-						Attribute[] attributes = relation.getAttributes();
-						for(int t = 0; t < terms.length; t++)
-						{
-							Term term = terms[t];
-							if(t < attributes.length)
-							{
-								Attribute attribute = attributes[t];
-								if(term instanceof Variable)
-								{
-									Variable variable = (Variable) term;
-									terms2[t] = Variable.create(attribute.getName());
-								}
-							}
-						}
-					}
-				}
-				Atom atom2 = Atom.create(predicate, terms2);
-				headatoms2[a] = atom2;
-			}
-			
+			processDependencyBodyOrHeadAtoms(headatoms, headatoms2, relationz);
+		
 			Dependency ic2 = TGD.create(bodyatoms2, headatoms2, ic.getName());
 			dependencys2[d] = ic2;
 			
 			TreeItem<String> ti = new TreeItem<>(ic2.getName().equals("dependency") ? ic2.toString() : ic2.getName(), imageView);
 			dependencies.getChildren().add(ti);
 		}
-		Relation[] relationz = s.getSchema().getRelations();
 		Schema schema = new Schema(relationz, dependencys2);
 		for(ObservableSchema obschema : this.schemas.values())
 		{
@@ -1700,6 +1723,7 @@ public class PDQController {
 				this.schemas.putIfAbsent(s.getName(), s);
 			}
 		}
+		map.clear();
 
 		if (!relations.getChildren().isEmpty()) {
 			item.getChildren().add(relations);
