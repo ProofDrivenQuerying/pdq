@@ -235,51 +235,48 @@ public class DAGOptimizedNew extends DAGExplorer {
 				this.checkLimitReached();
 				Preconditions.checkNotNull(this.equivalenceClasses.getEquivalenceClass(left));
 				Preconditions.checkState(!this.equivalenceClasses.getEquivalenceClass(left).isEmpty());
-				// If it comes from an equivalence class that is not sleeping
-				if (!this.equivalenceClasses.getEquivalenceClass(left).isSleeping()) {
-					// Select configuration from the right input to combine with
-					Collection<DAGChaseConfiguration>  selected = Sets.newLinkedHashSet();
-					for (DAGChaseConfiguration configuration : rightInput) {
-						Preconditions.checkNotNull(equivalenceClasses.getEquivalenceClass(configuration));
-						Preconditions.checkState(!equivalenceClasses.getEquivalenceClass(configuration).isEmpty());
-						if (!equivalenceClasses.getEquivalenceClass(configuration).isSleeping()
-								&& ConfigurationUtility.validate(left, configuration,
-										Arrays.asList(new Validator[] { this.validator }), depth)
-								&& ConfigurationUtility.getPotential(left, configuration,
-										bestConfiguration == null ? null : bestConfiguration.getPlan(),
-										bestConfiguration == null ? null : bestConfiguration.getCost(), this.costEstimator,
-										this.successDominance))
-							selected.add(configuration);
-					}
-					
-					for (DAGChaseConfiguration entry : selected) {
-						// If the new configuration is not already in the output
-						if (!output.containsKey(Pair.of(left, entry))) {
-							DAGChaseConfiguration configuration = null;
-							// A configuration BinConfiguration(c,c'), where c and c' belong to the
-							// equivalence classes of
-							// the left and right input configuration, respectively.
-							DAGChaseConfiguration representative = representatives.getRepresentative(this.equivalenceClasses, left, entry);
-							if (representative == null) {
-								representative = representatives.getRepresentative(this.equivalenceClasses, entry, left);
-							}
-							// If the representative of composition is null, then create a binary configuration
-							// from scratch by fully chasing its state
-							if (representative == null) {
-								configuration = new BinaryConfiguration(left, entry);
-								this.chaser.reasonUntilTermination(configuration.getState(), inferredAccessibilityAxioms);
-								representatives.put(this.equivalenceClasses, left, entry, configuration);
-							}
-							// otherwise, re-use the state of the representative
-							else if (representative != null) {
-								configuration = new BinaryConfiguration(left, entry, representative.getState().clone());
-							}
-							Cost cost = this.costEstimator.cost(configuration.getPlan());
-							configuration.setCost(cost);							
-							
-							// Create a new binary configuration
-							output.put(Pair.of(left, entry), configuration);
+				// Select configuration from the right input to combine with
+				Collection<DAGChaseConfiguration>  selected = Sets.newLinkedHashSet();
+				for (DAGChaseConfiguration configuration : rightInput) {
+					Preconditions.checkNotNull(equivalenceClasses.getEquivalenceClass(configuration));
+					Preconditions.checkState(!equivalenceClasses.getEquivalenceClass(configuration).isEmpty());
+					if (!equivalenceClasses.getEquivalenceClass(configuration).isSleeping()
+							&& ConfigurationUtility.validate(left, configuration,
+									Arrays.asList(new Validator[] { this.validator }), depth)
+							&& ConfigurationUtility.getPotential(left, configuration,
+									bestConfiguration == null ? null : bestConfiguration.getPlan(),
+									bestConfiguration == null ? null : bestConfiguration.getCost(), this.costEstimator,
+									this.successDominance))
+						selected.add(configuration);
+				}
+				
+				for (DAGChaseConfiguration entry : selected) {
+					// If the new configuration is not already in the output
+					if (!output.containsKey(Pair.of(left, entry))) {
+						DAGChaseConfiguration configuration = null;
+						// A configuration BinConfiguration(c,c'), where c and c' belong to the
+						// equivalence classes of
+						// the left and right input configuration, respectively.
+						DAGChaseConfiguration representative = representatives.getRepresentative(this.equivalenceClasses, left, entry);
+						if (representative == null) {
+							representative = representatives.getRepresentative(this.equivalenceClasses, entry, left);
 						}
+						// If the representative of composition is null, then create a binary configuration
+						// from scratch by fully chasing its state
+						if (representative == null) {
+							configuration = new BinaryConfiguration(left, entry);
+							this.chaser.reasonUntilTermination(configuration.getState(), inferredAccessibilityAxioms);
+							representatives.put(this.equivalenceClasses, left, entry, configuration);
+						}
+						// otherwise, re-use the state of the representative
+						else if (representative != null) {
+							configuration = new BinaryConfiguration(left, entry, representative.getState().clone());
+						}
+						Cost cost = this.costEstimator.cost(configuration.getPlan());
+						configuration.setCost(cost);							
+						
+						// Create a new binary configuration
+						output.put(Pair.of(left, entry), configuration);
 					}
 				}
 			}
