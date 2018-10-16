@@ -240,8 +240,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 				for (DAGChaseConfiguration configuration : rightInput) {
 					Preconditions.checkNotNull(equivalenceClasses.getEquivalenceClass(configuration));
 					Preconditions.checkState(!equivalenceClasses.getEquivalenceClass(configuration).isEmpty());
-					if (!equivalenceClasses.getEquivalenceClass(configuration).isSleeping()
-							&& ConfigurationUtility.validate(left, configuration,
+					if (ConfigurationUtility.validate(left, configuration,
 									Arrays.asList(new Validator[] { this.validator }), depth)
 							&& ConfigurationUtility.getPotential(left, configuration,
 									bestConfiguration == null ? null : bestConfiguration.getPlan(),
