@@ -576,7 +576,7 @@ public class PDQController {
 										.equals("Services"))
 								&& (relation != null))) {
 							Stage dialog = new Stage();
-							dialog.initModality(Modality.WINDOW_MODAL);
+							dialog.initModality(Modality.NONE);
 							dialog.initStyle(StageStyle.UTILITY);
 							dialog.initOwner(this.getOriginatingWindow(event));
 							ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -639,7 +639,7 @@ public class PDQController {
 							}
 							
 							Stage dialog = new Stage();
-							dialog.initModality(Modality.WINDOW_MODAL);
+							dialog.initModality(Modality.NONE);
 							dialog.initStyle(StageStyle.UTILITY);
 							dialog.initOwner(this.getOriginatingWindow(event));
 							ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -666,7 +666,7 @@ public class PDQController {
 							&& (dependency != null)) {
 						try {
 							Stage dialog = new Stage();
-							dialog.initModality(Modality.WINDOW_MODAL);
+							dialog.initModality(Modality.NONE);
 							dialog.initStyle(StageStyle.UTILITY);
 							dialog.initOwner(this.getOriginatingWindow(event));
 							ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -708,7 +708,7 @@ public class PDQController {
 							&& (service != null)) {
 						try {
 							Stage dialog = new Stage();
-							dialog.initModality(Modality.WINDOW_MODAL);
+							dialog.initModality(Modality.NONE);
 							dialog.initStyle(StageStyle.UTILITY);
 							dialog.initOwner(this.getOriginatingWindow(event));
 							ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
