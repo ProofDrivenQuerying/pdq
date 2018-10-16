@@ -4,13 +4,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -172,22 +171,14 @@ public class DAGOptimizedNew extends DAGExplorer {
 			this.checkLimitReached();
 			// Iterate over all newly created configurations and return the best
 			// configuration
-			Set<DAGChaseConfiguration> nonDominatedConfigurations = Collections
-					.newSetFromMap(new ConcurrentHashMap<DAGChaseConfiguration, Boolean>());
-
-			DAGChaseConfiguration result = null;
-			;
+			Set<DAGChaseConfiguration> nonDominatedConfigurations = null;
 			try {
-				result = findBestAndUpdateEquivalences(new ConcurrentLinkedQueue<>(newlyCreatedConfigurations),
-						bestConfiguration, nonDominatedConfigurations);
+				//nonDominatedConfigurations will contain all new configs that had no equivalence classes before and are not dominated by anything. 
+				nonDominatedConfigurations = findBestAndUpdateEquivalences(new ConcurrentLinkedQueue<>(newlyCreatedConfigurations), bestConfiguration);
 			} catch (Exception e) {
 				e.printStackTrace();
 				handleExceptions(e);
 			}
-			if (result != null) {
-				this.setBestPlan(result);
-			}
-
 			// Stop if no new configuration is being found
 			if (nonDominatedConfigurations.isEmpty()) {
 				this.forcedTermination = true;
@@ -287,8 +278,22 @@ public class DAGOptimizedNew extends DAGExplorer {
 		}
 	}
 
-	private DAGChaseConfiguration findBestAndUpdateEquivalences(Queue<DAGChaseConfiguration> input,
-			DAGChaseConfiguration bestConfiguration, Set<DAGChaseConfiguration> output) throws Exception {
+	/**
+	 * Loops through the new input configs and updates the best configuration if
+	 * there is a better one, and updates the equavalence classes. Returns the new
+	 * configurations that did not exists in the equavalence classes before
+	 * 
+	 * @param input
+	 *            - new configurations to update the equavalence classes with.
+	 * @param bestConfiguration
+	 *            - previous best config
+	 * @return the new configurations that did not exists in the equavalence classes before and are not dominated by other classes.
+	 * @throws Exception
+	 */
+	private Set<DAGChaseConfiguration> findBestAndUpdateEquivalences(Queue<DAGChaseConfiguration> input,
+			DAGChaseConfiguration bestConfiguration) throws Exception {
+		
+		Set<DAGChaseConfiguration> output = new HashSet<DAGChaseConfiguration>();
 		DAGChaseConfiguration configuration;
 		// Poll the next configuration
 		while ((configuration = input.poll()) != null) {
@@ -329,7 +334,10 @@ public class DAGOptimizedNew extends DAGExplorer {
 				// when dominator is present do nothing.
 			}
 		}
-		return bestConfiguration;
+		if (bestConfiguration != null) {
+			this.setBestPlan(bestConfiguration);
+		}
+		return output;
 	}
 
 	/**
