@@ -4,13 +4,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -189,19 +188,7 @@ public class DAGOptimizedNewParallel extends DAGExplorer {
 				createQueue.add(a);
 				createQueue.add(b);
 			}
-//			
-//			Collection<DAGChaseConfiguration> newlyCreatedConfigurations = new ArrayList<>();	
-//			// Creating configurations and chasing when necessary.
-//			newlyCreatedConfigurations.addAll(this.createBinaryConfigurations(
-//					leftCopy, this.equivalenceClasses.getConfigurations(),
-//					this.accessibleSchema.getInferredAccessibilityAxioms(), this.bestConfiguration,
-//					this.equivalenceClasses));
-//			
-//			// creating configurations right to left.
-//			newlyCreatedConfigurations.addAll(this.createBinaryConfigurations(
-//					new ConcurrentLinkedQueue<>(this.equivalenceClasses.getConfigurations()), new ConcurrentLinkedQueue<>(this.leftSideConfigurations),
-//					this.accessibleSchema.getInferredAccessibilityAxioms(), this.bestConfiguration,
-//					this.equivalenceClasses));
+			
 			Collection<DAGChaseConfiguration> newlyCreatedConfigurations = new ArrayList<>();
 			for (CreateBinaryConfigurationsTask t:currentTasks) {
 				newlyCreatedConfigurations.addAll(t.getReturnValue());
@@ -216,25 +203,13 @@ public class DAGOptimizedNewParallel extends DAGExplorer {
 			this.checkLimitReached();
 			// Iterate over all newly created configurations and return the best
 			// configuration
-			Set<DAGChaseConfiguration> nonDominatedConfigurations = Collections
-					.newSetFromMap(new ConcurrentHashMap<DAGChaseConfiguration, Boolean>());
-
-			DAGChaseConfiguration result = null;
-			;
+			Set<DAGChaseConfiguration> nonDominatedConfigurations = null;
 			try {
-				result = findBestAndUpdateEquivalences(new ConcurrentLinkedQueue<>(newlyCreatedConfigurations),
-						bestConfiguration, nonDominatedConfigurations);
+				//nonDominatedConfigurations will contain all new configs that had no equivalence classes before and are not dominated by anything. 
+				nonDominatedConfigurations = findBestAndUpdateEquivalences(new ConcurrentLinkedQueue<>(newlyCreatedConfigurations), bestConfiguration);
 			} catch (Exception e) {
 				e.printStackTrace();
 				handleExceptions(e);
-			}
-			if (result != null) {
-				this.setBestPlan(result);
-			}
-
-			if (equivalenceClasses instanceof SynchronizedEquivalenceClasses) {
-				((SynchronizedEquivalenceClasses) equivalenceClasses)
-						.wakeupSleep(bestConfiguration != null ? bestConfiguration.getCost() : null);
 			}
 
 			// Stop if no new configuration is being found
@@ -316,7 +291,7 @@ public class DAGOptimizedNewParallel extends DAGExplorer {
 		}
 		public void run() {
 			try {
-				returnValue = executor.createBinaryConfigurations(leftSideConfigurations2, rightSideConfigurations, inferredAccessibilityAxioms, bestConfiguration2, equivalenceClasses2);
+				returnValue = executor.selectAndCreateBinaryConfigurationsToCreateAndReason(leftSideConfigurations2, rightSideConfigurations, inferredAccessibilityAxioms, bestConfiguration2, equivalenceClasses2);
 			} catch(Throwable t) {
 				this.t = t;
 			}
@@ -346,7 +321,8 @@ public class DAGOptimizedNewParallel extends DAGExplorer {
 			return returnValue;
 		}
 	}
-	private Collection<DAGChaseConfiguration> createBinaryConfigurations(
+
+	private Collection<DAGChaseConfiguration> selectAndCreateBinaryConfigurationsToCreateAndReason(
 			Queue<DAGChaseConfiguration> leftSideConfigurations,
 			Collection<DAGChaseConfiguration> rightSideConfigurations, Dependency[] inferredAccessibilityAxioms,
 			DAGChaseConfiguration bestConfiguration, DAGEquivalenceClasses equivalenceClasses2) throws PlannerException {
@@ -372,19 +348,47 @@ public class DAGOptimizedNewParallel extends DAGExplorer {
 				this.checkLimitReached();
 				Preconditions.checkNotNull(this.equivalenceClasses.getEquivalenceClass(left));
 				Preconditions.checkState(!this.equivalenceClasses.getEquivalenceClass(left).isEmpty());
-				// If it comes from an equivalence class that is not sleeping
-				if (!this.equivalenceClasses.getEquivalenceClass(left).isSleeping()) {
-					// Select configuration from the right input to combine with
-					Collection<DAGChaseConfiguration> selected = this.selectConfigurationsToCombineOnTheRight(left,
-							rightInput, this.equivalenceClasses, this.depth, bestConfiguration);
-					for (DAGChaseConfiguration entry : selected) {
-						// If the new configuration is not already in the output
-						if (!output.containsKey(Pair.of(left, entry))) {
-							DAGChaseConfiguration configuration = this.createBinaryConfigurationAndReason(left,
-									entry, representatives, inferredAccessibilityAxioms);
-							// Create a new binary configuration
-							output.put(Pair.of(left, entry), configuration);
+				// Select configuration from the right input to combine with
+				Collection<DAGChaseConfiguration>  selected = Sets.newLinkedHashSet();
+				for (DAGChaseConfiguration configuration : rightInput) {
+					Preconditions.checkNotNull(equivalenceClasses.getEquivalenceClass(configuration));
+					Preconditions.checkState(!equivalenceClasses.getEquivalenceClass(configuration).isEmpty());
+					if (ConfigurationUtility.validate(left, configuration,
+									Arrays.asList(new Validator[] { this.validator }), depth)
+							&& ConfigurationUtility.getPotential(left, configuration,
+									bestConfiguration == null ? null : bestConfiguration.getPlan(),
+									bestConfiguration == null ? null : bestConfiguration.getCost(), this.costEstimator,
+									this.successDominance))
+						selected.add(configuration);
+				}
+				
+				for (DAGChaseConfiguration entry : selected) {
+					// If the new configuration is not already in the output
+					if (!output.containsKey(Pair.of(left, entry))) {
+						DAGChaseConfiguration configuration = null;
+						// A configuration BinConfiguration(c,c'), where c and c' belong to the
+						// equivalence classes of
+						// the left and right input configuration, respectively.
+						DAGChaseConfiguration representative = representatives.getRepresentative(this.equivalenceClasses, left, entry);
+						if (representative == null) {
+							representative = representatives.getRepresentative(this.equivalenceClasses, entry, left);
 						}
+						// If the representative of composition is null, then create a binary configuration
+						// from scratch by fully chasing its state
+						if (representative == null) {
+							configuration = new BinaryConfiguration(left, entry);
+							this.chaser.reasonUntilTermination(configuration.getState(), inferredAccessibilityAxioms);
+							representatives.put(this.equivalenceClasses, left, entry, configuration);
+						}
+						// otherwise, re-use the state of the representative
+						else if (representative != null) {
+							configuration = new BinaryConfiguration(left, entry, representative.getState().clone());
+						}
+						Cost cost = this.costEstimator.cost(configuration.getPlan());
+						configuration.setCost(cost);							
+						
+						// Create a new binary configuration
+						output.put(Pair.of(left, entry), configuration);
 					}
 				}
 			}
@@ -395,64 +399,28 @@ public class DAGOptimizedNewParallel extends DAGExplorer {
 			return null;
 		}
 	}
-
-	private Collection<DAGChaseConfiguration> selectConfigurationsToCombineOnTheRight(
-			DAGChaseConfiguration left, Collection<DAGChaseConfiguration> right,
-			DAGEquivalenceClasses equivalenceClasses, int depth, DAGChaseConfiguration bestConfiguration) {
-		Set<DAGChaseConfiguration> selected = Sets.newLinkedHashSet();
-		for (DAGChaseConfiguration configuration : right) {
-			Preconditions.checkNotNull(equivalenceClasses.getEquivalenceClass(configuration));
-			Preconditions.checkState(!equivalenceClasses.getEquivalenceClass(configuration).isEmpty());
-			if (!equivalenceClasses.getEquivalenceClass(configuration).isSleeping()
-					&& ConfigurationUtility.validate(left, configuration,
-							Arrays.asList(new Validator[] { this.validator }), depth)
-					&& ConfigurationUtility.getPotential(left, configuration,
-							bestConfiguration == null ? null : bestConfiguration.getPlan(),
-							bestConfiguration == null ? null : bestConfiguration.getCost(), this.costEstimator,
-							this.successDominance))
-				selected.add(configuration);
-		}
-		return selected;
-	}
-
-	private DAGChaseConfiguration createBinaryConfigurationAndReason(DAGChaseConfiguration left,
-			DAGChaseConfiguration right, MapOfPairsOfConfigurationsToTheEquivalentBinaryConfiguration representatives,
-			Dependency[] inferredAccessibilityAxioms) throws SQLException {
-		DAGChaseConfiguration configuration = null;
-		// A configuration BinConfiguration(c,c'), where c and c' belong to the
-		// equivalence classes of
-		// the left and right input configuration, respectively.
-		DAGChaseConfiguration representative = representatives.getRepresentative(this.equivalenceClasses, left, right);
-
-		if (representative == null) {
-			representative = representatives.getRepresentative(this.equivalenceClasses, right, left);
-		}
-
-		// If the representative of composition is null, then create a binary configuration
-		// from scratch by fully chasing its state
-		if (representative == null) {
-			configuration = new BinaryConfiguration(left, right);
-			this.chaser.reasonUntilTermination(configuration.getState(), inferredAccessibilityAxioms);
-			representatives.put(this.equivalenceClasses, left, right, configuration);
-		}
-		// otherwise, re-use the state of the representative
-		else if (representative != null) {
-			configuration = new BinaryConfiguration(left, right, representative.getState().clone());
-		}
-		Cost cost = this.costEstimator.cost(configuration.getPlan());
-		configuration.setCost(cost);
-		return configuration;
-	}
-
-	private DAGChaseConfiguration findBestAndUpdateEquivalences(Queue<DAGChaseConfiguration> input,
-			DAGChaseConfiguration bestConfiguration, Set<DAGChaseConfiguration> output) throws Exception {
+	
+	/**
+	 * Loops through the new input configs and updates the best configuration if
+	 * there is a better one, and updates the equavalence classes. Returns the new
+	 * configurations that did not exists in the equavalence classes before
+	 * 
+	 * @param input
+	 *            - new configurations to update the equavalence classes with.
+	 * @param bestConfiguration
+	 *            - previous best config
+	 * @return the new configurations that did not exists in the equavalence classes before and are not dominated by other classes.
+	 * @throws Exception
+	 */
+	private Set<DAGChaseConfiguration> findBestAndUpdateEquivalences(Queue<DAGChaseConfiguration> input,
+			DAGChaseConfiguration bestConfiguration) throws Exception {
+		
+		Set<DAGChaseConfiguration> output = new HashSet<DAGChaseConfiguration>();
 		DAGChaseConfiguration configuration;
 		// Poll the next configuration
 		while ((configuration = input.poll()) != null) {
 			this.checkLimitReached();
 
-			// TOCOMMENT: This dominance related stuff needs to be checked, unit tested and then added
-			// again.
 			// If the configuration is not dominated
 			DAGChaseConfiguration dominator = this.equivalenceClasses.dominate(this.dominance, configuration);
 			if (dominator == null) {
@@ -488,7 +456,10 @@ public class DAGOptimizedNewParallel extends DAGExplorer {
 				// when dominator is present do nothing.
 			}
 		}
-		return bestConfiguration;
+		if (bestConfiguration != null) {
+			this.setBestPlan(bestConfiguration);
+		}
+		return output;
 	}
 
 	/**
