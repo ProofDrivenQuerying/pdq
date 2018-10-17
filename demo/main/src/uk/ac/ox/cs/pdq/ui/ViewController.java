@@ -20,7 +20,6 @@ import javafx.scene.input.MouseEvent;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
-import uk.ac.ox.cs.pdq.util.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.View;
