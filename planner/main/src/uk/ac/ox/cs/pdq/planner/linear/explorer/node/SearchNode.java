@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
@@ -65,7 +66,7 @@ public abstract class SearchNode implements Cloneable{
 	/**  The best path from root. */
 	private List<Integer> bestPathFromRoot = null;
 
-	/**  The path plan from root. */
+	/**  The best plan from root. */
 	private RelationalTerm bestPlanFromRoot = null;
 	
 	private Cost costOfBestPlanFromRoot = null;
@@ -73,7 +74,11 @@ public abstract class SearchNode implements Cloneable{
 	/**  The plan that cost dominates the node. */
 	private RelationalTerm dominatingPlan = null;
 	
+	/**  The cost dominating plan. */
 	private Cost costOfDominatingPlan = null;
+	
+	/** The metadata. */
+	private Metadata metadata = null;
 
 	/**
 	 * Instantiates a new search node.
@@ -347,4 +352,23 @@ public abstract class SearchNode implements Cloneable{
 		this.costOfBestPlanFromRoot = costOfBestPlanFromRoot;
 	}
 
+	/**
+	 * Gets the metadata.
+	 *
+	 * @return the metadata
+	 */
+	public Metadata getMetadata() {
+		return this.metadata;
+	}
+
+
+	/**
+	 * Sets the metadata.
+	 *
+	 * @param metadata the new metadata
+	 */
+	public void setMetadata(Metadata metadata) {
+		this.metadata = metadata;
+	}
+	
 }

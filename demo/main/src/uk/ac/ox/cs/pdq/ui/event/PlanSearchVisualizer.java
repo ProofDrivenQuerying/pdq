@@ -62,6 +62,7 @@ public class PlanSearchVisualizer implements EventHandler {
 						explorer.getElapsedTime() / 1e6,
 						rounds,
 						explorer.getBestPlan(),
+						explorer.getBestCost(),
 						Arrays.asList(new LinearChaseConfiguration[] {((LinearExplorer)explorer).getBestNode().getConfiguration()})));
 				synchronized (this.dataQueue) {
 					try {

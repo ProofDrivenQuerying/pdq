@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.beans.value.ObservableValue;
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
@@ -45,10 +46,10 @@ public class ObservableSearchState {
 	 * @param pl the pl
 	 * @param bestConfigurationsList the best configurations list
 	 */
-	public ObservableSearchState(Double time, Integer rounds, Plan pl, List<LinearChaseConfiguration> bestConfigurationsList) {
+	public ObservableSearchState(Double time, Integer rounds, Plan pl, Cost co, List<LinearChaseConfiguration> bestConfigurationsList) {
 		this.plan.set(pl);
 		this.proof.set(bestConfigurationsList == null ? null : Proof.toProof(bestConfigurationsList));
-// MR		this.cost.set(pl == null || pl.isEmpty() ? null : pl.getCost().getValue());
+		this.cost.set(pl == null ? null : co.getValue());
 		this.time.set(time);
 		this.iterations.set(rounds);
 	}

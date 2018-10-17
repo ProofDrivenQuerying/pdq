@@ -17,12 +17,13 @@ import org.apache.log4j.Logger;
 import prefuse.Visualization;
 import prefuse.data.Graph;
 import prefuse.visual.AggregateTable;
+import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.util.EventHandler;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.ui.prefuse.control.PathHighlightControl;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.PathTypes;
@@ -113,14 +114,14 @@ public class PrefuseEventHandler implements EventHandler {
 	@Subscribe
 	public void processNode(SearchNode node) {
 
-/*		if (node == null || node.getMetadata() == null || (node.getMetadata() instanceof EquivalenceMetadata && node.getPointer() == null)) {
+		if (node == null || node.getMetadata() == null || (node.getMetadata() instanceof EquivalenceMetadata && node.getEquivalentNode() == null)) {
 			throw new java.lang.IllegalArgumentException();
 		}
 
 		Metadata metadata = node.getMetadata();
 
 		if (metadata instanceof EquivalenceMetadata) {
-			Utils.addEdge(this.graph, node, node.getPointer(), EdgeTypes.POINTER);
+			Utils.addEdge(this.graph, node, node.getEquivalentNode(), EdgeTypes.POINTER);
 		} 
 		else if (metadata instanceof BestPlanMetadata) {
 
@@ -147,7 +148,7 @@ public class PrefuseEventHandler implements EventHandler {
 		}
 
 		this.visualization.run(this.colorAction);
-		this.visualization.run(this.layoutAction);*/
+		this.visualization.run(this.layoutAction);
 	}
 	
 	

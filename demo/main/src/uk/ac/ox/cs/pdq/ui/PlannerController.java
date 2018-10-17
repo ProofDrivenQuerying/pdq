@@ -409,7 +409,7 @@ public class PlannerController {
 			final ExplorationSetUp planner = new ExplorationSetUp(this.params, this.costParams, this.reasoningParams, this.databaseParams, this.schema);
 			this.setSearchSpaceVisualizer(planner);
 
-			planner.registerEventHandler(new PlanSearchVisualizer(this.dataQueue, 5));
+			planner.registerEventHandler(new PlanSearchVisualizer(this.dataQueue, 1));
 			this.pauser = new Pauser(this.dataQueue, 99999);
 			ExecutorService executor = Executors.newFixedThreadPool(2);
 			executor.execute(this.pauser);
