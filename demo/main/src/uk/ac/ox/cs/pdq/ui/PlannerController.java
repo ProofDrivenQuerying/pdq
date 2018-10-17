@@ -64,6 +64,9 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 //import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
 //import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
 //import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
@@ -417,13 +420,16 @@ public class PlannerController {
 				try {
 					log.debug("Searching plan...");
 					Map.Entry<RelationalTerm, Cost> bestPlan = planner.search(this.query);
-					PlannerController.this.bestPlan = bestPlan.getKey();
-					log.debug("Best plan: " + bestPlan);
+					if(bestPlan != null)
+					{
+						PlannerController.this.bestPlan = bestPlan.getKey();
+						log.debug("Best plan: " + bestPlan);
+					}
 					ObservablePlan p = PlannerController.this.plan.copy();
 					p.setPlan(bestPlan.getKey());
 					p.setProof(PlannerController.this.bestProof);
 					if (bestPlan != null) {
-					p.setCost(bestPlan.getValue());
+						p.setCost(bestPlan.getValue());
 					}
 					p.store();
 					PlannerController.this.planQueue.add(p);
@@ -633,8 +639,6 @@ public class PlannerController {
 						this.searchSpaceMetadataCandidatesTab.setDisable(true);
 						PlannerController.this.updatePlanTab(this.bestPlan);
 						PlannerController.this.updateProofTab(PlannerController.this.bestProof);
-						//		SelectionModel<Tab> sm = PlannerController.this.plannerTabs.getSelectionModel();
-						//		sm.select(PlannerController.this.plannerTabPlan);
 					}
 
 					/**
@@ -670,7 +674,6 @@ public class PlannerController {
 					 */
 					public void updateGeneralMetadata(SearchNode node) {
 						ByteArrayOutputStream bos = new ByteArrayOutputStream();
-						//AccessOnlyPlanWriter.to(new PrintStream(bos)).write(node.getConfiguration().getPlan());
 						new PrintStream(bos).println(node.getConfiguration().getPlan().toString());
 						this.searchSpaceMetadataGeneral.setText(
 								"Type: " + node.getStatus() + "\n\n" + 
@@ -705,22 +708,22 @@ public class PlannerController {
 					 * @param node the node
 					 */
 					public void updateSuccessMetadata(SearchNode node) {
-	/* MR					Metadata m = node.getMetadata();
+						Metadata m = node.getMetadata();
 						if (m instanceof BestPlanMetadata && ((BestPlanMetadata) m).getPlan() != null) {
 							BestPlanMetadata metadata = (BestPlanMetadata) m;
 							ByteArrayOutputStream prBos = new ByteArrayOutputStream();
 							ByteArrayOutputStream plBos = new ByteArrayOutputStream();
-							AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(plBos)).write((LeftDeepPlan) metadata.getPlan());
-							ExtendedPrettyProofWriter.to(new PrintStream(prBos), this.accSchema).write(Proof.toProof(metadata.getConfigurations()));
+							new PrintStream(plBos).println(metadata.getPlan().toString());
+							new PrintStream(prBos).println(Proof.toProof(metadata.getConfigurations()).toString());
 							this.searchSpaceMetadataSuccessTab.setDisable(false);
 							this.searchSpaceMetadataSuccess.setText(
 									"*******************\n* Proof \n*******************\n" + prBos + "\n\n" +
 											"*******************\n* Plan\n*******************\n" + plBos + "\n\n" +
-											"*******************\n* Cost\n*******************\n" + metadata.getPlan().getCost());
+											"*******************\n* Cost\n*******************\n" + "0.0\n\n");
 						} else {
 							this.searchSpaceMetadataSuccess.setText("");
 							this.searchSpaceMetadataSuccessTab.setDisable(true);
-						}*/
+						}
 					} 
 
 					/**
@@ -733,13 +736,12 @@ public class PlannerController {
 						String str = "Type: " + type + "\n";
 						if (type != EdgeTypes.POINTER) {
 							ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		// MR					AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write(node.getConfiguration().getPlan());
+							new PrintStream(bos).println(node.getConfiguration().getPlan().toString());
 							str += "\nMiddlewarecommands:\n" + bos;
 						}
 						this.searchSpaceMetadataGeneral.setText(str);
 						this.searchSpaceMetadataGeneralTab.setDisable(false);
 						this.searchSpaceMetadataCandidatesTab.setDisable(true);
-						//		this.searchSpaceMetadataEquivalenceTab.setDisable(true);
 						this.searchSpaceMetadataDominanceTab.setDisable(true);
 						this.searchSpaceMetadataSuccessTab.setDisable(true);
 					}
@@ -751,34 +753,34 @@ public class PlannerController {
 					 * @param node the node
 					 */
 					public void updatePruningMetadata(SearchNode node) {
-/* MR						Metadata metadata = node.getMetadata();
+						Metadata metadata = node.getMetadata();
 						if (metadata instanceof DominanceMetadata) {
 							this.searchSpaceMetadataDominanceTab.setDisable(false);
 							ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
-							AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos1)).write((LeftDeepPlan) ((DominanceMetadata) metadata).getDominatedPlan());
+							new PrintStream(bos1).println(((DominanceMetadata) metadata).getDominatedPlan().toString());
 							ByteArrayOutputStream bos2 = new ByteArrayOutputStream();
-							AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos2)).write((LeftDeepPlan) ((DominanceMetadata) metadata).getDominancePlan());
+							new PrintStream(bos2).println(((DominanceMetadata) metadata).getDominancePlan().toString());
 							switch (((DominanceMetadata) metadata).getType()) {
 							case DOMINANCE:
 								this.searchSpaceMetadataDominance.setText(
 										"Dominator node\n" + ((DominanceMetadata) metadata).getDominance() + "\n\n" + 
 												"Dominated plan\n" + bos1 + "\n\n" +
-												"Cost of dominated plan\n" + ((DominanceMetadata) metadata).getDominatedPlan().getCost() + "\n\n"+
+												"Cost of dominated plan\n" + "0.0" + "\n\n"+
 												"Dominator's plan\n" + bos2 + "\n\n" +
-												"Cost of dominator plan\n" + ((DominanceMetadata) metadata).getDominancePlan().getCost() + "\n\n");
+												"Cost of dominator plan\n" + "0.0" + "\n\n");
 								break;
 							case COST:	
 								this.searchSpaceMetadataDominance.setText(
 										"Plan\n" + bos1 + "\n\n" +
-												"Plan's cost\n" + ((DominanceMetadata) metadata).getDominatedPlan().getCost() + "\n\n"+
+												"Plan's cost\n" + "0.0" + "\n\n"+
 												"Best plan\n" + bos2 + "\n\n" +
-												"Best plan's cost\n" + ((DominanceMetadata) metadata).getDominancePlan().getCost() + "\n\n");
+												"Best plan's cost\n" + "0.0" + "\n\n");
 								break;
 							}
 						} else {
 							this.searchSpaceMetadataDominance.setText("");
 							this.searchSpaceMetadataDominanceTab.setDisable(true);
-						}*/
+						}
 					}
 
 					/**
