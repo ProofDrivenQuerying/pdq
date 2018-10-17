@@ -19,6 +19,7 @@ import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
+import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
@@ -41,6 +42,10 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence.PathEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence.PathEquivalenceClasses.PathEquivalenceClass;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.StatusUpdateMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
 import uk.ac.ox.cs.pdq.planner.util.IndexedDirectedGraph;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
@@ -185,6 +190,9 @@ public class LinearOptimized extends LinearExplorer {
 		Candidate selectedCandidate = selectedConfig.chooseCandidate();
 		if(selectedCandidate == null) {
 			selectedNode.setStatus(NodeStatus.TERMINAL);
+			Metadata metadata = new StatusUpdateMetadata(selectedNode, this.getElapsedTime());
+			selectedNode.setMetadata(metadata);
+			this.eventBus.post(selectedNode);
 			return null;
 		}
 
@@ -217,17 +225,24 @@ public class LinearOptimized extends LinearExplorer {
 //		log.info("UNEXPOSED CANDIDATES\t");
 //		log.info(Joiner.on("\n\t").join(freshNode.getConfiguration().getCandidates()));
 
+		Metadata metadata = new CreationMetadata(selectedNode, this.getElapsedTime());
+		freshNode.setMetadata(metadata);
+		this.eventBus.post(freshNode);
+
 		this.planTree.addVertex(freshNode);
 		this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
 
 		// If the cost of the plan of the newly created node is higher than the best plan found so far 
 		//then zombify the newly created node  
 		boolean domination = false;
+		Plan freshNodePlan = freshNode.getBestPlanFromRoot();
 		if (this.bestPlan != null) {
 			if (freshNode.getCostOfBestPlanFromRoot().greaterOrEquals(this.bestCost)) {
 				domination = true;
 				freshNode.setDominatingPlan(this.bestPlan);
 				freshNode.setCostOfDominatingPlan(this.bestCost);
+				metadata = new DominanceMetadata(selectedNode, this.bestPlan, freshNodePlan, this.getElapsedTime());
+				freshNode.setMetadata(metadata);
 				log.debug(freshNode.getBestPlanFromRoot() + " has higher cost than plan " + this.bestPlan + " Costs " +  freshNode.getCostOfBestPlanFromRoot() + ">=" + this.bestCost);
 			}
 		}
@@ -237,8 +252,11 @@ public class LinearOptimized extends LinearExplorer {
 			SearchNode dominatingNode = ExplorerUtility.isCostAndFactDominated(this.planTree.vertexSet(), freshNode);
 			if(dominatingNode != null) {
 				domination = true;
+				Plan dominancePlan = dominatingNode.getConfiguration().getPlan();
 				freshNode.setDominatingPlan(dominatingNode.getConfiguration().getPlan());
 				freshNode.setCostOfDominatingPlan(dominatingNode.getConfiguration().getCost());
+				metadata = new DominanceMetadata(dominatingNode, dominancePlan, freshNodePlan, this.getElapsedTime());
+				freshNode.setMetadata(metadata);
 				log.debug(dominatingNode.getConfiguration().getPlan() + " dominates " + freshNode.getCostOfBestPlanFromRoot() + dominatingNode.getConfiguration().getCost() + "<" + freshNode.getCostOfBestPlanFromRoot());
 			}
 		}

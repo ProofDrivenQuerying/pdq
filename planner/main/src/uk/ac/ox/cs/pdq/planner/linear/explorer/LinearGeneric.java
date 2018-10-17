@@ -23,6 +23,8 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -116,6 +118,10 @@ public class LinearGeneric extends LinearExplorer {
 		freshNode.getConfiguration().setCost(cost);
 		
 		freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
+		
+		Metadata metadata = new CreationMetadata(selectedNode, this.getElapsedTime());
+		freshNode.setMetadata(metadata);
+		this.eventBus.post(freshNode);
 		
 		this.planTree.addVertex(freshNode);
 		this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());

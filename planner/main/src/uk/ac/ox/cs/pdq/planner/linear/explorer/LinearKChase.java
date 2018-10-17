@@ -12,6 +12,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
+import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
@@ -29,6 +30,12 @@ import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.StatusUpdateMetadata;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -188,6 +195,9 @@ public class LinearKChase extends LinearExplorer {
 		Candidate selectedCandidate = selectedConfig.chooseCandidate();
 		if(selectedCandidate == null) {
 			selectedNode.setStatus(NodeStatus.TERMINAL);
+			Metadata metadata = new StatusUpdateMetadata(selectedNode, this.getElapsedTime());
+			selectedNode.setMetadata(metadata);
+			this.eventBus.post(selectedNode);
 			return null;
 		}
 
@@ -207,16 +217,23 @@ public class LinearKChase extends LinearExplorer {
 		freshNode.getConfiguration().setCost(cost);
 		freshNode.setCostOfBestPlanFromRoot(cost);
 		
+		Metadata metadata = new CreationMetadata(selectedNode, this.getElapsedTime());
+		freshNode.setMetadata(metadata);
+		this.eventBus.post(freshNode);
+		
 		this.planTree.addVertex(freshNode);
 		this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
 
 		boolean domination = false;
 		/* If the cost of the plan of the newly created node is higher than the best plan found so far then kill the newly created node  */
+		Plan freshNodePlan = freshNode.getConfiguration().getPlan();
 		if (this.bestPlan != null) {
 			if (freshNode.getConfiguration().getCost().greaterOrEquals(this.bestCost)) {
 				domination = true;
 				freshNode.setDominatingPlan(this.bestPlan);
 				freshNode.setCostOfDominatingPlan(this.bestCost);
+				metadata = new DominanceMetadata(selectedNode, this.bestPlan, freshNodePlan, this.getElapsedTime());
+				freshNode.setMetadata(metadata);
 				log.debug(freshNode.getConfiguration().getPlan() + " has higher cost than plan " + this.bestPlan + " Costs " + freshNode.getConfiguration().getCost() + ">=" + this.bestCost);
 			}
 		}
@@ -226,8 +243,11 @@ public class LinearKChase extends LinearExplorer {
 			SearchNode dominatingNode = ExplorerUtility.isCostAndFactDominated(ExplorerUtility.getNodesThatAreFullyChased(this.planTree), freshNode);
 			if(dominatingNode != null) {
 				domination = true;
+				Plan dominancePlan = dominatingNode.getConfiguration().getPlan();
 				freshNode.setDominatingPlan(dominatingNode.getConfiguration().getPlan());
 				freshNode.setCostOfDominatingPlan(dominatingNode.getConfiguration().getCost());
+				metadata = new DominanceMetadata(dominatingNode, dominancePlan, freshNodePlan, this.getElapsedTime());
+				freshNode.setMetadata(metadata);
 				log.debug(dominatingNode.getConfiguration().getPlan() + " dominates " + freshNode.getConfiguration().getPlan() + dominatingNode.getConfiguration().getCost() + "<" + freshNode.getConfiguration().getCost());
 			}
 		}
@@ -256,6 +276,10 @@ public class LinearKChase extends LinearExplorer {
 			this.bestCost = costOfSuccessfulPlan;
 			this.eventBus.post(this.getBestPlan());
 			log.trace("\t+++BEST PLAN: " + AlgebraUtilities.getAccesses(this.bestPlan) + " " + this.bestCost);
+// MR			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), 
+//					this.getConfigurations(this.costPropagator.getBestPath()), this.getElapsedTime());
+//			freshNode.setMetadata(successMetadata);
+			this.eventBus.post(freshNode);
 		}
 	}
 }

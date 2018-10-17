@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
@@ -138,6 +139,8 @@ public abstract class LinearExplorer extends Explorer {
 		if (!root.getConfiguration().hasCandidates()) 
 			root.setStatus(NodeStatus.TERMINAL);
 		this.elapsedTime += System.nanoTime() - this.tick;
+		CreationMetadata metadata = new CreationMetadata(null, this.getElapsedTime());
+		root.setMetadata(metadata);
 		this.eventBus.post(root);
 		this.planTree.addVertex(root);
 	}
