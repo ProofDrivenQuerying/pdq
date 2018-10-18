@@ -1718,7 +1718,12 @@ public class PDQController {
 			Atom[] headatoms2 = new Atom[headatoms.length];
 			processDependencyBodyOrHeadAtoms(headatoms, headatoms2, relationz);
 		
-			Dependency ic2 = TGD.create(bodyatoms2, headatoms2, ic.getName());
+			Dependency ic2;
+			if (ic instanceof TGD && ((TGD) ic).isGuarded()) {
+				ic2 = LinearGuarded.create(bodyatoms2, headatoms2, ic.getName());
+			} else {
+				ic2 = TGD.create(bodyatoms2, headatoms2, ic.getName());
+			}
 			dependencys2[d] = ic2;
 			
 			TreeItem<String> ti = new TreeItem<>(ic2.getName().equals("dependency") ? ic2.toString() : ic2.getName(), imageView);
