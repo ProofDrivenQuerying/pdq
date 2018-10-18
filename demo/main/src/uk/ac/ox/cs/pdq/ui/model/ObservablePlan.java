@@ -4,13 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import javax.xml.bind.JAXBException;
+
 import javafx.beans.property.SimpleObjectProperty;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
+import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 //import uk.ac.ox.cs.pdq.io.xml.PlanWriter;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -508,9 +512,10 @@ public void setQueryMatchInterval(Integer o) {
 					f.createNewFile();
 				}
 				if (this.plan.isNotNull().get()) {
-// MR					PlanWriter.to(o).write(this.plan.get());
+						CostIOManager.writeRelationalTermAndCost(this.planFile.get(), (RelationalTerm) this.plan.get(), this.cost.get());
+					// o.println(this.plan.get().toString());
 				}
-			} catch (IOException e) {
+			} catch (JAXBException | IOException e) {
 				throw new UserInterfaceException("Could not write file " + f.getAbsolutePath());
 			}
 			f = this.getSettingsFile();
@@ -530,7 +535,7 @@ public void setQueryMatchInterval(Integer o) {
 					if (!f2.exists()) {
 						f2.createNewFile();
 					}
-// MR					writer2.write(o, this.getProof());
+					o.println(this.getProof().toString());
 				} catch (IOException e) {
 					throw new UserInterfaceException("Could not write file " + f.getAbsolutePath());
 				}
