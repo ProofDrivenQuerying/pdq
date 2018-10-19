@@ -65,16 +65,16 @@ public class DAGOptimizedNew extends DAGExplorer {
 	protected int depth;
 
 	/** Filters out configurations at the end of each iteration. */
-	private final Filter filter;
+	protected final Filter filter;
 
 	/** Configurations produced during the previous round. */
-	private final Queue<DAGChaseConfiguration> leftSideConfigurations;
+	protected final Queue<DAGChaseConfiguration> leftSideConfigurations;
 
 	/** Classes of structurally equivalent configurations. */
-	private final DAGEquivalenceClasses equivalenceClasses;
-	private SuccessDominance successDominance = new SuccessDominanceFactory().getInstance();
-	private Dominance[] dominance;
-	private Validator validator;
+	protected final DAGEquivalenceClasses equivalenceClasses;
+	protected SuccessDominance successDominance = new SuccessDominanceFactory().getInstance();
+	protected Dominance[] dominance;
+	protected Validator validator;
 
 	/**
 	 * Instantiates a new DAG optimized.
@@ -200,7 +200,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 		this.depth++;
 	}
 
-	private Collection<DAGChaseConfiguration> selectAndCreateBinaryConfigurationsToCreateAndReason(
+	protected Collection<DAGChaseConfiguration> selectAndCreateBinaryConfigurationsToCreateAndReason(
 			Queue<DAGChaseConfiguration> leftSideConfigurations,
 			Collection<DAGChaseConfiguration> rightSideConfigurations, Dependency[] inferredAccessibilityAxioms,
 			DAGChaseConfiguration bestConfiguration, DAGEquivalenceClasses equivalenceClasses2) throws PlannerException {
@@ -290,7 +290,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 	 * @return the new configurations that did not exists in the equavalence classes before and are not dominated by other classes.
 	 * @throws Exception
 	 */
-	private Set<DAGChaseConfiguration> findBestAndUpdateEquivalences(Queue<DAGChaseConfiguration> input,
+	protected Set<DAGChaseConfiguration> findBestAndUpdateEquivalences(Queue<DAGChaseConfiguration> input,
 			DAGChaseConfiguration bestConfiguration) throws Exception {
 		
 		Set<DAGChaseConfiguration> output = new HashSet<DAGChaseConfiguration>();
@@ -348,7 +348,7 @@ public class DAGOptimizedNew extends DAGExplorer {
 	 * @throws PlannerException
 	 *             the planner exception
 	 */
-	private static void handleExceptions(Throwable e) throws PlannerException {
+	protected static void handleExceptions(Throwable e) throws PlannerException {
 		Throwable throwable = e.getCause();
 		if (throwable != null) {
 			if (throwable instanceof RuntimeException) {
