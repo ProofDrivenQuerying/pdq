@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import javax.swing.JComponent;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
@@ -38,6 +40,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -114,7 +117,8 @@ import uk.ac.ox.cs.pdq.ui.proof.Proof;
 /**
  * Controller class for the main PDQ window.
  * 
- * @author Julien Leblay, Mark Ridler
+ * @author Julien Leblay
+ * @author Mark Ridler
  *
  */
 public class PDQController {
@@ -128,6 +132,9 @@ public class PDQController {
 	/** Used to protect selects from competing with each other */
 	private boolean g_lock = true;
 	
+	/** A map of View Controllers. */
+	public static HashMap<Stage, ViewController> g_viewControllerMap = new HashMap<>();
+
 	/** Default icon for relations. */
 	private final Image dbRelationIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/table.gif"));
 
@@ -539,7 +546,76 @@ public class PDQController {
 			return null;
 		}
 	}
+	
+	
+	private void focusState(Stage dialog, boolean value) {
+	    if (value) {
+	        
+	    	// Focus gained, highlight both dependencies
+	    	
+			MultipleSelectionModel msm = schemasTreeView.getSelectionModel();
+			Dependency[] dependencies = this.currentSchema.get().getSchema().getAllDependencies();
+			int index = 0;
+			for(TreeItem<String> ti : schemasTreeView.getRoot().getChildren())
+			{
+				for(TreeItem<String> ti2 : ti.getChildren())
+				{
+					if(ti2.getValue().equals("Dependencies"))
+					{
+						for(TreeItem<String> ti3 : ti2.getChildren())
+						{
+							int row = schemasTreeView.getRow(ti3);
+							Dependency dependency = dependencies[index]; 
+							index++;
+							
+							// Get both dependencies characteristic of a view
+							
+							ViewController viewController = g_viewControllerMap.get(dialog);
+							View view = viewController.getView();
+							
+							Dependency dependency2 = view.getViewToRelationDependency();
+							Dependency dependency3 = view.getRelationToViewDependency();
+							
+							if((dependency != null) && 
+							   (((dependency2 != null) && dependency2.equals(dependency)) ||
+							     (dependency3 != null) && dependency3.equals(dependency)))
+							{
+								// Disable select updates with g_lock flag.
+								
+								g_lock = false;
+								msm.select(row);
+								g_lock = true;
+							}
+						}
+					}
+				}
+			}
+			
+			// Highlight view
+			
+			for(TreeItem<String> ti : schemasTreeView.getRoot().getChildren())
+			{
+				for(TreeItem<String> ti2 : ti.getChildren())
+				{
+					if(ti2.getValue().equals("Views"))
+					{
+						for(TreeItem<String> ti3 : ti2.getChildren())
+						{
+							ViewController viewController = g_viewControllerMap.get(dialog);
+							if(ti3.getValue().contentEquals(viewController.getView().getName()))
+							{
+								// Disable select updates with g_lock flag.
 
+								g_lock = false;
+								msm.select(ti3);
+								g_lock = true;
+							}
+						}
+					}
+				}
+			}	
+	    }
+	}
 	/**
 	 * Action that open's either the relation or dependencies inspector window.
 	 *
@@ -575,7 +651,7 @@ public class PDQController {
 								|| (currentSchemaViewitems.getParent().getParent().valueProperty().get()
 										.equals("Services"))
 								&& (relation != null))) {
-							Stage dialog = new Stage();
+							Stage dialog = new Stage();							
 							dialog.initModality(Modality.NONE);
 							dialog.initStyle(StageStyle.UTILITY);
 							dialog.initOwner(this.getOriginatingWindow(event));
@@ -639,6 +715,11 @@ public class PDQController {
 							}
 							
 							Stage dialog = new Stage();
+
+							dialog.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+							    focusState(dialog, newValue);
+							});
+
 							dialog.initModality(Modality.NONE);
 							dialog.initStyle(StageStyle.UTILITY);
 							dialog.initOwner(this.getOriginatingWindow(event));
@@ -651,6 +732,7 @@ public class PDQController {
 							dialog.setTitle(bundle.getString("view.dialog.title"));
 							ViewController viewController = loader.getController();
 							viewController.setView(view);
+							g_viewControllerMap.put(dialog, viewController);
 							dialog.showAndWait();
 							return;
 						}
@@ -1185,18 +1267,16 @@ public class PDQController {
 	 */
 	void displayPlan(Plan p) {
 		PDQController.this.planViewArea.getItems().clear();
-		/*
-		 * MR if (p instanceof LeftDeepPlan) { ByteArrayOutputStream bos = new
-		 * ByteArrayOutputStream(); AlgebraLikeLeftDeepPlanWriter.to(new
-		 * PrintStream(bos)).write((LeftDeepPlan) p); for (String line:
-		 * bos.toString().split("\n")) { Text t = new Text(line);
-		 * PDQController.this.planViewArea.getItems().add(t); } } else if (p != null) {
-		 * log.warn("Display of " + p.getClass().getSimpleName() +
-		 * " plans not yet supported.");
-		 * PDQController.this.planViewArea.getItems().add(new
-		 * Text("<Non linear plan selected>")); } else {
-		 * PDQController.this.planViewArea.getItems().add(new Text("<No plan>")); }
-		 */
+		if(p != null)
+		{
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			new PrintStream(bos).println(p.toString());
+			for (String line: bos.toString().split("\n"))
+			{
+				Text t = new Text(line);
+				PDQController.this.planViewArea.getItems().add(t);
+			}
+		}
 	}
 
 	/**
@@ -1273,6 +1353,7 @@ public class PDQController {
 
 	/** A map of old vs new variable names. */
 	HashMap<String, String> map = new HashMap<>();
+	
 	/**
 	 * Default construction, sets up the work directory, and loads all of its
 	 * content.
