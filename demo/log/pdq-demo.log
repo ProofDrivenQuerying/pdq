@@ -1,6 +1,9 @@
-2018-09-24 09:39:55,139 WARN  [JavaFX Application Thread] (PDQController.java:1225) - IO exception caught file loading file '/users/marler/.pdq/plans/0_0_0.p'. null
-2018-09-24 09:52:28,532 WARN  [JavaFX Application Thread] (PDQController.java:1225) - IO exception caught file loading file '/users/marler/.pdq/plans/0_0_0.p'. null
-2018-09-24 10:32:15,703 WARN  [JavaFX Application Thread] (PDQController.java:1225) - IO exception caught file loading file '/users/marler/.pdq/plans/0_0_0.p'. null
-2018-09-24 10:35:26,647 WARN  [JavaFX Application Thread] (PDQController.java:1225) - IO exception caught file loading file '/users/marler/.pdq/plans/0_0_0.p'. null
-2018-09-26 11:14:39,612 WARN  [JavaFX Application Thread] (PDQController.java:1240) - IO exception caught file loading file '/users/marler/.pdq/plans/0_0_0.p'. null
-2018-09-26 11:23:43,476 WARN  [JavaFX Application Thread] (PDQController.java:1240) - IO exception caught file loading file '/users/marler/.pdq/plans/0_0_0.p'. null
+2018-10-29 12:17:20,852 FATAL [JavaFX Application Thread] (PDQApplication.java:112) - javafx.fxml.LoadException: 
+/auto/users/marler/git/pdq/demo/target/classes/resources/layouts/root-window.fxml
+
+2018-10-29 13:20:55,412 FATAL [JavaFX Application Thread] (PDQApplication.java:112) - javafx.fxml.LoadException: 
+/auto/users/marler/git/pdq/demo/target/classes/resources/layouts/root-window.fxml
+
+2018-10-29 15:32:52,118 FATAL [JavaFX Application Thread] (PDQApplication.java:112) - javafx.fxml.LoadException: 
+/auto/users/marler/git/pdq/demo/target/classes/resources/layouts/root-window.fxml
+

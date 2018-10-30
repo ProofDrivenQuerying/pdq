@@ -12,7 +12,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Schema;
-//import uk.ac.ox.cs.pdq.db.builder.ConjunctiveQueryBodyBuilder;
+import uk.ac.ox.cs.pdq.db.builder.ConjunctiveQueryBodyBuilder;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteLexer;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteParser;
@@ -82,7 +82,7 @@ public class SQLLikeQueryReader {
         
         log.debug("query aliases: " + this.aliasToTables);
         
-      // MR ConjunctiveQueryBodyBuilder qBuilder = new ConjunctiveQueryBodyBuilder(this.schema, this.aliasToTables);
+        ConjunctiveQueryBodyBuilder qBuilder = new ConjunctiveQueryBodyBuilder(this.schema, this.aliasToTables);
         
         List<String> joinConstraints = new ArrayList<String>();
         for( ParseTree p : listener.getJoinConstraints() ) {
@@ -103,12 +103,12 @@ public class SQLLikeQueryReader {
         	String rightAlias = right.split("\\.")[0];
         	String rightColumnName = right.split("\\.")[1];
         	
-/* MR        	ConjunctiveQueryBodyBuilder.AliasAttrConstraintTerm leftAliasAttr =
+        	ConjunctiveQueryBodyBuilder.AliasAttrConstraintTerm leftAliasAttr =
         			new ConjunctiveQueryBodyBuilder.AliasAttrConstraintTerm(leftAlias, leftColumnName);
         	ConjunctiveQueryBodyBuilder.AliasAttrConstraintTerm rightAliasAttr =
         			new ConjunctiveQueryBodyBuilder.AliasAttrConstraintTerm(rightAlias, rightColumnName);
         	
-        	qBuilder.addConstraint(leftAliasAttr, rightAliasAttr); */
+        	qBuilder.addConstraint(leftAliasAttr, rightAliasAttr);
         } // end joining on join constraints
     	
     	
@@ -124,7 +124,7 @@ public class SQLLikeQueryReader {
         		String left = rawConstraint.split("=")[0];
         		String right = rawConstraint.split("=")[1];
         		
-/* MR        		ConjunctiveQueryBodyBuilder.ConstraintTerm leftConstraint = null;
+        		ConjunctiveQueryBodyBuilder.ConstraintTerm leftConstraint = null;
         		ConjunctiveQueryBodyBuilder.ConstraintTerm rightConstraint = null;
         		
         		// process left:
@@ -151,7 +151,7 @@ public class SQLLikeQueryReader {
         			rightConstraint = new ConjunctiveQueryBodyBuilder.AliasAttrConstraintTerm(aliasName, attrName);
         		}
         		
-        		qBuilder.addConstraint(leftConstraint, rightConstraint); */
+        		qBuilder.addConstraint(leftConstraint, rightConstraint);
         	}
 		}
     	
@@ -161,22 +161,24 @@ public class SQLLikeQueryReader {
     		String rawResultColumn = ctxt.getText();
     		
     		if( rawResultColumn.equals("*") ) {
-// MR  			qBuilder.returnAllVars();
+  			qBuilder.returnAllVars();
     		} else {
-    			String aliasName = rawResultColumn.split("\\.")[0];
-    			String attrName = rawResultColumn.split("\\.")[1];
+    			if(rawResultColumn.contains("."))
+    			{
+    				String aliasName = rawResultColumn.split("\\.")[0];
+    				String attrName = rawResultColumn.split("\\.")[1];
     			
-// MR   			qBuilder.addResultColumn(aliasName, attrName);
+    				qBuilder.addResultColumn(aliasName, attrName);
+    			}
     		}
     	}
     	
-// MR    	log.debug("qBuilder: " + qBuilder);
+    	log.debug("qBuilder: " + qBuilder);
     	
-/* MR    	ConjunctiveQuery query = qBuilder.toConjunctiveQuery();
+    	ConjunctiveQuery query = qBuilder.toConjunctiveQuery();
     	log.debug("query: " + query);
     	
-        return query; */
-    	return null;
+        return query;
 	}
 
 }

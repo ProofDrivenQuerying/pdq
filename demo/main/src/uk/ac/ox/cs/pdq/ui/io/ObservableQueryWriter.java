@@ -7,9 +7,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLWriter;
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
-//import uk.ac.ox.cs.pdq.io.xml.QueryWriter;
+import uk.ac.ox.cs.pdq.io.xml.AbstractXMLWriter;
+import uk.ac.ox.cs.pdq.io.xml.QNames;
+import uk.ac.ox.cs.pdq.io.xml.QueryWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 
 // TODO: Auto-generated Javadoc
@@ -25,13 +25,13 @@ public class ObservableQueryWriter extends AbstractXMLWriter<ObservableQuery> {
 	private static Logger log = Logger.getLogger(ObservableQueryWriter.class);
 
 	/**  Query writer. */
-// MR	private QueryWriter queryWriter = null;
+	private QueryWriter queryWriter = null;
 	
 	/**
 	 * Default constructor.
 	 */
 	public ObservableQueryWriter() {
-// MR		this.queryWriter = new QueryWriter();
+		this.queryWriter = new QueryWriter();
 	}
 	
 	/*
@@ -54,6 +54,6 @@ public class ObservableQueryWriter extends AbstractXMLWriter<ObservableQuery> {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		att.put(QNames.NAME, s.getName());
 		att.put(QNames.DESCRIPTION, s.getDescription());
-// MR		this.queryWriter.write(out, (ConjunctiveQuery) s.getQuery(), att);
+		this.queryWriter.write(out, (ConjunctiveQuery) s.getQuery(), att);
 	}
 }

@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLReader;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
-//import uk.ac.ox.cs.pdq.io.xml.QueryReader;
+import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
@@ -43,7 +43,7 @@ public class ObservableQueryReader {
 	private String description;
 
 	/**  Query builder. */
-// MR	private QueryReader queryReader;
+	private QueryReader queryReader;
 	
 	/**
 	 * Default constructor.
@@ -51,7 +51,7 @@ public class ObservableQueryReader {
 	 * @param schema the schema
 	 */
 	public ObservableQueryReader(Schema schema) {
-// MR		this.queryReader = new QueryReader(schema);
+		this.queryReader = new QueryReader(schema);
 	}
 	
 	/**
@@ -77,14 +77,10 @@ public class ObservableQueryReader {
 	 * @param args the arguments
 	 */
 	public static void main(String... args) {
-		try (
-				InputStream sin = new FileInputStream("test/input/minimal-schema.xml");
-				InputStream qin = new FileInputStream("test/input/query.xml")) {
-/* MR			ObservableSchema s = new ObservableSchemaReader().read(sin);
-			ObservableQuery q = new ObservableQueryReader(s.getSchema()).read(qin);
-			new ObservableQueryWriter().write(System.out, q);*/
-		} catch (IOException e) {
-			log.error(e.getMessage(),e);
-		}
+		File sin = new File("test/input/minimal-schema.xml");
+		File qin = new File("test/input/query.xml");
+		ObservableSchema s = new ObservableSchemaReader().read(sin);
+		ObservableQuery q = new ObservableQueryReader(s.getSchema()).read(qin);
+		new ObservableQueryWriter().write(System.out, q);
 	}
 }

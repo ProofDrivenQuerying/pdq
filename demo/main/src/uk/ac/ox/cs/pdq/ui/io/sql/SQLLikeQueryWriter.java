@@ -12,6 +12,7 @@ import java.util.Set;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Formula;
@@ -39,14 +40,16 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implemen
 	 * explicitly provided at write time.
 	 */
 	private PrintStream out;
+	private Schema schema;
 
 	/**
 	 * Instantiates a new SQL like query writer.
 	 *
 	 * @param out the default output
 	 */
-	private SQLLikeQueryWriter(PrintStream out) {
+	private SQLLikeQueryWriter(PrintStream out, Schema s) {
 		this.out = out;
+		this.schema = s;
 	}
 	
 	/**
@@ -55,8 +58,8 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implemen
 	 * @param out the out
 	 * @return a new SQLLikeQueryWriter with the given default output.
 	 */
-	public static SQLLikeQueryWriter to(PrintStream out) {
-		return new SQLLikeQueryWriter(out);
+	public static SQLLikeQueryWriter to(PrintStream out, Schema s) {
+		return new SQLLikeQueryWriter(out, s);
 	}
 	
 	/*
@@ -111,9 +114,13 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implemen
 			for (Term t: head) {
 				Atom p = joins.get(t).iterator().next();
 				int pos = p.getTermPosition(t);
-/* MR				Attribute a = ((Relation) p.getPredicate()).getAttribute(pos);
-				result.append(sep).append(aliases.get(p)).append('.').append(a.getName());*/
-				sep = ", ";
+				Relation r = this.schema.getRelation(p.getPredicate().getName());
+				if(r != null)
+				{
+					Attribute a = r.getAttribute(pos);
+					result.append(sep).append(aliases.get(p)).append('.').append(a.getName());
+					sep = ", ";
+				}
 			}
 		}
 		
@@ -140,10 +147,10 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implemen
 					for (Atom other: joined) {
 						for (Term u : joins.keySet()) {
 							if (joins.get(u).contains(other) && joins.get(u).contains(curr)) {
-/* MR								result.append(sep2).append(aliases.get(curr)).append('.')
-									.append(((Relation) curr.getPredicate()).getAttribute(curr.getTermPositions(u).get(0)))
+								result.append(sep2).append(aliases.get(curr)).append('.')
+									.append(this.schema.getRelation(curr.getPredicate().getName()).getAttribute(curr.getTermPosition(u)))
 									.append("=").append(aliases.get(other)).append('.')
-									.append(((Relation) other.getPredicate()).getAttribute(other.getTermPositions(u).get(0)));*/
+									.append(this.schema.getRelation(other.getPredicate().getName()).getAttribute(other.getTermPosition(u)));
 								sep2 = " AND ";
 							}
 						}
@@ -188,10 +195,10 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implemen
 	 * @param t the t
 	 * @return a short String representation of the dependency.
 	 */
-	public static String convert(Formula f) {
+	public static String convert(Formula f, Schema s) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(baos);
-		SQLLikeQueryWriter.to(ps).write(f);
+		SQLLikeQueryWriter.to(ps, s).write(f);
 		return baos.toString();
 	}
 	

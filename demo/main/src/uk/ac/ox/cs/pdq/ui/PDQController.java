@@ -106,6 +106,7 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.ui.io.ObservableQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaReader;
+import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 import uk.ac.ox.cs.pdq.ui.io.xml.ProofReader;
 import uk.ac.ox.cs.pdq.ui.model.ObservablePlan;
@@ -979,6 +980,32 @@ public class PDQController {
 		}
 	}
 
+
+	/**
+	 * Action that saves the current query.
+	 *
+	 * @param event
+	 *            the event
+	 */
+	@FXML
+	void saveSelectedQuery(ActionEvent event) {
+		if (!event.isConsumed()) {
+			event.consume();
+			try
+			{
+				String str = this.queryTextArea.textProperty().get();
+				SQLLikeQueryReader qr = new SQLLikeQueryReader(this.currentSchema.get().getSchema());
+				ConjunctiveQuery cjq = qr.fromString(str);
+				this.currentQuery.get().setQuery(cjq);
+				saveQuery(this.currentQuery.get());
+			}
+			catch(Exception e)
+			{
+				throw new UserInterfaceException(e);				
+			}
+		}
+	}
+	
 	/**
 	 * Action that open's the runtime window and start a new runtime session.
 	 *
@@ -1122,10 +1149,11 @@ public class PDQController {
 		this.queriesListView.getSelectionModel().selectedItemProperty().addListener(this.querySelected);
 		this.queryPlanArea.visibleProperty().bind(Bindings.isNotNull(this.currentQuery));
 		this.queriesEditMenuButton.disableProperty().bind(Bindings.isNull(this.currentSchema));
-		this.queryTextArea.textProperty().bind(Bindings.createStringBinding(() -> {
+/* MR		this.queryTextArea.textProperty().bind(Bindings.createStringBinding(() -> {
 			ObservableQuery q = PDQController.this.currentQuery.get();
-			return q != null ? SQLLikeQueryWriter.convert(q.getFormula()) : "";
-		}, this.currentQuery));
+			boolean b = this.queryTextArea.textProperty().isBound();
+			return (q != null) ? SQLLikeQueryWriter.convert(q.getFormula()) : "";
+		}, this.currentQuery));*/
 	}
 
 	/**
@@ -1228,6 +1256,11 @@ public class PDQController {
 			ObservableList<ObservablePlan> list = PDQController.this.plans
 					.get(Pair.of(PDQController.this.currentSchema.get(), newValue));
 			PDQController.this.plansTableView.setItems(list);
+			this.queryTextArea.textProperty().set(SQLLikeQueryWriter.convert(this.currentQuery.get().getFormula(), this.currentSchema.get().getSchema()));
+		}
+		else
+		{
+			this.queryTextArea.textProperty().set("");
 		}
 	};
 
