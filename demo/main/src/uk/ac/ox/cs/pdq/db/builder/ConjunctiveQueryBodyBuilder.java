@@ -55,19 +55,24 @@ public class ConjunctiveQueryBodyBuilder {
 	/** The returns all vars. */
 	private boolean             returnsAllVars;
 	
+	/** The all terms. */
+	private Term[] 				terms;
 
 	/**
 	 * Constructor for ConjunctiveQueryBodyBuilder.
 	 * @param schema Schema
 	 * @param aliasToRelations Map<String,String>
 	 */
-	public ConjunctiveQueryBodyBuilder(Schema schema, Map<String, String> aliasToRelations) {
+	public ConjunctiveQueryBodyBuilder(Schema schema, Map<String, String> aliasToRelations, Term[] terms) {
 		this.schema = schema;
+		
 		this.aliasToRelations = aliasToRelations;
 		
 		this.qName = "Q";
 		
 		this.returnsAllVars = false;
+		
+		this.terms = terms;
 		
 		this.buildInitialPredicates();
 	}
@@ -78,21 +83,15 @@ public class ConjunctiveQueryBodyBuilder {
 	private void buildInitialPredicates() {
 		log.debug("buildInitialPredicates. aliasToRelations = " + this.aliasToRelations);
 		
+		// Build an Atom from predicate and terms
 		int counter = 0;
 		for( Map.Entry<String, String> entry : this.aliasToRelations.entrySet() ) {
 			String aliasName = entry.getKey();
 			String relationName = entry.getValue();
 
-			Relation relation = this.schema.getRelation(relationName);
-			Attribute[] attributes = relation.getAttributes();
+			Predicate predicate = Predicate.create(relationName, terms.length);
 
-			Term[] terms = new Term[ attributes.length ];
-
-			for( int i = 0; i < terms.length; i++ ) {
-				terms[i] = new Variable(attributes[i].getName());
-			}
-
-			this.aliasToPredicateFormulas.put(aliasName, Atom.create( relation, terms ));
+			this.aliasToPredicateFormulas.put(aliasName, Atom.create( predicate, this.terms ));
 
 			counter++;
 		}
@@ -107,6 +106,7 @@ public class ConjunctiveQueryBodyBuilder {
 	 */
 	public void addConstraint(ConstraintTerm left, ConstraintTerm right) throws Exception {
 
+		// Check left and right constant / aliasAttr
 		if( left.isConstant() && right.isConstant() ) {
 			ConstantConstraintTerm leftConst = (ConstantConstraintTerm) left;
 			ConstantConstraintTerm rightConst = (ConstantConstraintTerm) right;
@@ -147,13 +147,15 @@ public class ConjunctiveQueryBodyBuilder {
 		Atom rightPredForm = this.aliasToPredicateFormulas.get(rightAlias);
 
 		// Prepare left constant term:
+		Relation relation = this.schema.getRelation(rightPredForm.getPredicate().getName());
+
 		TypedConstant<?> leftConstant = new TypedConstant<>(
-				Types.cast(((Relation) rightPredForm.getPredicate()).getAttribute(rightAttr).getType(),
+				Types.cast(relation.getAttribute(rightAttr).getType(),
 						leftConst.getConstant()));
 
 
 		// Get term in said position:
-		int rightAttrIndex = this.schema.getRelation( this.aliasToRelations.get(rightAlias) ).getAttributeIndex(rightAttr);
+		int rightAttrIndex = this.schema.getRelation( this.aliasToRelations.get(rightAlias) ).getAttributePosition(rightAttr);
 		Term rightTerm = rightPredForm.getTerm(rightAttrIndex);
 
 		if( rightTerm.isVariable() ) {
@@ -183,7 +185,7 @@ public class ConjunctiveQueryBodyBuilder {
 		Atom leftPredForm = this.aliasToPredicateFormulas.get(leftAlias);
 
 		// Get term in said position:
-		int leftAttrIndex = this.schema.getRelation( this.aliasToRelations.get(leftAlias) ).getAttributeIndex(leftAttr);
+		int leftAttrIndex = this.schema.getRelation( this.aliasToRelations.get(leftAlias) ).getAttributePosition(leftAttr);
 		Term leftTerm = leftPredForm.getTerm(leftAttrIndex);
 
 		// Prepare right variable:
@@ -196,7 +198,7 @@ public class ConjunctiveQueryBodyBuilder {
 		
 		Term rightTerm = null;
 		try {
-			rightAttrIndex = this.schema.getRelation( this.aliasToRelations.get(rightAlias) ).getAttributeIndex(rightAttr);
+			rightAttrIndex = this.schema.getRelation( this.aliasToRelations.get(rightAlias) ).getAttributePosition(rightAttr);
 			rightTerm = rightPredForm.getTerm(rightAttrIndex);
 		} catch( NullPointerException e ) {
 			log.error("null pointer. rightAttr=" + rightAttr
@@ -208,6 +210,7 @@ public class ConjunctiveQueryBodyBuilder {
 			throw e;
 		}
 
+		// Check left and right isVariable()
 		if( !leftTerm.isVariable() && !rightTerm.isVariable() ) {
 			if( !leftTerm.equals(rightTerm) ) {
 				throw new Exception("conflicting constants");
@@ -242,6 +245,7 @@ public class ConjunctiveQueryBodyBuilder {
 	 */
 	private void replaceTerm(Term oldTerm, Term newTerm) {
 
+		// Iterate over aliasToPredicateFormulas
 		for( Map.Entry<String, Atom> entry : this.aliasToPredicateFormulas.entrySet() ) {
 			String alias = entry.getKey();
 			Atom predicateFormula = entry.getValue();
@@ -257,9 +261,11 @@ public class ConjunctiveQueryBodyBuilder {
 					newTerms[i] = terms[i];
 				}
 			}
-
+			
+			// Create shiny new Atom
 			Atom newPredicateFormula = Atom.create(predicateFormula.getPredicate(), newTerms);
 
+			// Replace in the alias map
 			this.aliasToPredicateFormulas.put(alias, newPredicateFormula);
 		}
 
@@ -280,12 +286,14 @@ public class ConjunctiveQueryBodyBuilder {
 			}
 		}
 		
+		// Create brand new Predicate
 		Predicate predicate = Predicate.create(this.qName, vars.size());
 		
 		Term[] terms = new Term[vars.size()];
 		int i = 0;
 		for(Variable var : vars) terms[i++] = var;
 		
+		// Create brand new Atom
 		this.resultPredicate = Atom.create(predicate, terms);
 	}
 	
@@ -302,11 +310,14 @@ public class ConjunctiveQueryBodyBuilder {
 		
 		if( this.resultPredicate == null ) {
 			
+			// Create Atom from Predicate and Term
 			Predicate predicate = Predicate.create(this.qName, 1);
 			Term term = this._findTerm(aliasName, attrName);
 			this.resultPredicate = Atom.create(predicate, term);
 			
 		} else {
+			
+			// Create Atom from Predicate and Terms
 			int newArity = this.resultPredicate.getPredicate().getArity() + 1;
 			Predicate newSignature = Predicate.create(this.qName, newArity);
 			
@@ -348,18 +359,8 @@ public class ConjunctiveQueryBodyBuilder {
 		List<Atom> preds = new ArrayList<>();
 		preds.addAll(this.aliasToPredicateFormulas.values());
 		Atom[] atoms;
-		int i;
-		if(this.resultPredicate == null)
-		{
-			atoms = new Atom[preds.size()];
-		 	i = 0;
-		}
-		else
-		{
-		 	atoms = new Atom[preds.size() + 1];
-		 	atoms[0] = this.resultPredicate;
-		 	i = 1;
-		}
+		atoms = new Atom[preds.size()];
+		int i = 0;
 		for(Atom atom : preds) atoms[i++] = atom;
 		if(atoms.length > 0)
 		{

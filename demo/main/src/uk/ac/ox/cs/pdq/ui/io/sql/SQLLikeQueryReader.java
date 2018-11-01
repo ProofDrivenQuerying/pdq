@@ -14,8 +14,11 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.ConjunctiveQueryBodyBuilder;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteLexer;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteParser;
+import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteParser.Compound_select_stmtContext;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -58,20 +61,45 @@ public class SQLLikeQueryReader {
 	 * @throws Exception the exception
 	 */
 	public ConjunctiveQuery fromString(String str) throws Exception {
-		
+	
+		// Initialise variablez
 		CharStream stream = new ANTLRInputStream(str);
         SQLiteLexer lexer = new SQLiteLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         SQLiteParser parser = new SQLiteParser(tokens);
-        
         SQLiteSimpleListener listener = new SQLiteSimpleListener();
+
+        // Run the SQLite parser
         parser.addParseListener(listener);
-        
         parser.parse();
         
-        // Collect relation names and aliases:
+        // Parse the variables from the SELECT ... FROM statement
+		ArrayList<Variable> list = new ArrayList<>();
+        String[] clauses = str.split("SELECT");
+        if(clauses.length > 1)
+        {
+        	String clause2 = clauses[1];
+        	clauses = clause2.split("FROM");
+        	if(clauses.length > 0)
+        	{
+        		String clause1 = clauses[0];
+        		String[] variables = clause1.split(",");
+        		for(String variable : variables)
+        		{
+        			String[] varparts = variable.split("\\.");
+        			if(varparts.length > 1)
+        			{
+         				list.add(new Variable(varparts[1]));
+        			}
+        		}
+        	}
+        }
+        Term[] terms = new Term[list.size()];
+        int i = 0;
+        for(Variable var : list) terms[i++] = var;
+               
+        // Collect relation names and aliases:       
         this.aliasToTables = new HashMap<String, String>();
-        
         for(ParseTree p : listener.getTableAliases()) {
         	String raw = p.getText();
         	String[] elements = raw.split("AS");
@@ -82,8 +110,9 @@ public class SQLLikeQueryReader {
         
         log.debug("query aliases: " + this.aliasToTables);
         
-        ConjunctiveQueryBodyBuilder qBuilder = new ConjunctiveQueryBodyBuilder(this.schema, this.aliasToTables);
-        
+        // Initialise the Arnold Schwarzenegger Conjunctive Query Body Builder
+        ConjunctiveQueryBodyBuilder qBuilder = new ConjunctiveQueryBodyBuilder(this.schema, this.aliasToTables, terms);
+  
         List<String> joinConstraints = new ArrayList<String>();
         for( ParseTree p : listener.getJoinConstraints() ) {
         	String[] individualConstraints = p.getText().split("AND");
@@ -93,6 +122,7 @@ public class SQLLikeQueryReader {
         	}
         }
         
+        // Begin joining on join constraints
     	for( String constraint : joinConstraints ) {
         	String[] elements = constraint.split("=");
         	String left = elements[0];
@@ -109,11 +139,10 @@ public class SQLLikeQueryReader {
         			new ConjunctiveQueryBodyBuilder.AliasAttrConstraintTerm(rightAlias, rightColumnName);
         	
         	qBuilder.addConstraint(leftAliasAttr, rightAliasAttr);
-        } // end joining on join constraints
+        } 
     	
     	
     	// Begin adding where constraints:
-    	
 		ParseTree ctx = listener.getLastExpr();
 		if (ctx != null) {
         	String rawExpression = ctx.getText();
@@ -127,7 +156,7 @@ public class SQLLikeQueryReader {
         		ConjunctiveQueryBodyBuilder.ConstraintTerm leftConstraint = null;
         		ConjunctiveQueryBodyBuilder.ConstraintTerm rightConstraint = null;
         		
-        		// process left:
+        		// Process left:
         		if(left.contains("'")) {
          			String constant = left.replaceAll("'", "");
          			
@@ -139,7 +168,7 @@ public class SQLLikeQueryReader {
         			leftConstraint = new ConjunctiveQueryBodyBuilder.AliasAttrConstraintTerm(aliasName, attrName);
         		}
         		
-        		// process right:
+        		// Process right:
          		if(right.contains("'")) {
          			String constant = right.replaceAll("'", "");
          			
@@ -156,7 +185,6 @@ public class SQLLikeQueryReader {
 		}
     	
     	// Build the query head:
-    	
     	for (ParseTree ctxt : listener.getResultColumns() ) {
     		String rawResultColumn = ctxt.getText();
     		
@@ -175,7 +203,9 @@ public class SQLLikeQueryReader {
     	
     	log.debug("qBuilder: " + qBuilder);
     	
+    	// Call toConjunctiveQuery() as the last step
     	ConjunctiveQuery query = qBuilder.toConjunctiveQuery();
+    	
     	log.debug("query: " + query);
     	
         return query;

@@ -147,10 +147,15 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implemen
 					for (Atom other: joined) {
 						for (Term u : joins.keySet()) {
 							if (joins.get(u).contains(other) && joins.get(u).contains(curr)) {
-								result.append(sep2).append(aliases.get(curr)).append('.')
-									.append(this.schema.getRelation(curr.getPredicate().getName()).getAttribute(curr.getTermPosition(u)))
-									.append("=").append(aliases.get(other)).append('.')
-									.append(this.schema.getRelation(other.getPredicate().getName()).getAttribute(other.getTermPosition(u)));
+								Relation r = this.schema.getRelation(curr.getPredicate().getName());
+								Relation r2 = this.schema.getRelation(other.getPredicate().getName());
+								if((r != null) && (r2 != null))
+								{
+									result.append(sep2).append(aliases.get(curr)).append('.')
+										.append(r.getAttribute(curr.getTermPosition(u)))
+										.append("=").append(aliases.get(other)).append('.')
+										.append(r2.getAttribute(other.getTermPosition(u)));
+								}
 								sep2 = " AND ";
 							}
 						}
@@ -173,17 +178,19 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implemen
 		
 		// Make WHERE clause
 		sep = "\nWHERE ";
-/* MR		for (Atom p: q.getBody()) {
-			List<Term> terms = p.getTerms();
-			for (int i = 0, l = terms.size(); i < l; i++) {
-				if (!terms.get(i).isVariable() && !terms.get(i).isSkolem()) {
+		Atom[] atoms = q.getBody().getAtoms();
+		for (int a = 0; a < atoms.length; a++) {
+			Atom p = atoms[a];
+			Term[] terms = p.getTerms();
+			for (int i = 0, l = terms.length; i < l; i++) {
+				if (!terms[i].isVariable() /* MR && !terms[i].isSkolem() */) {
 					result.append(sep).append(aliases.get(p)).append('.')
-						.append(((Relation) p.getPredicate()).getAttribute(i))
-						.append('=').append("'").append(terms.get(i)).append("'"); 
+						.append(this.schema.getRelation(p.getPredicate().getName()).getAttribute(i))
+						.append('=').append("'").append(terms[i]).append("'"); 
 					sep = "\nAND ";
 				}
 			}
-		}*/
+		}
 		
 		return result.toString();
 	}

@@ -7,6 +7,7 @@ import java.util.Map;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -29,8 +30,12 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		att.put(QNames.TYPE, "conjunctive");
 		open(out, QNames.QUERY, att);
-		this.writeBody(out, query.getBody());
-		this.writeHead(out, query.getAtom(0));
+		if(query != null)
+		{
+			this.writeBody(out, query.getBody());
+			Variable[] freeVars = query.getFreeVariables();
+			this.writeHead(out, Atom.create(Predicate.create("Q", freeVars.length), freeVars));
+		}
 		close(out, QNames.QUERY);
 	}
 
@@ -45,8 +50,12 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 		Map<QNames, String> att = new LinkedHashMap<>(atts);
 		att.put(QNames.TYPE, "conjunctive");
 		open(out, QNames.QUERY, att);
-		this.writeBody(out, query.getBody());
-		this.writeHead(out, query.getAtom(0));
+		if(query != null)
+		{
+			this.writeBody(out, query.getBody());
+			Variable[] freeVars = query.getFreeVariables();
+			this.writeHead(out, Atom.create(Predicate.create("Q", freeVars.length), freeVars));
+		}
 		close(out, QNames.QUERY);
 	}
 
