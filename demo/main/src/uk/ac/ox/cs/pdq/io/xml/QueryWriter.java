@@ -82,7 +82,7 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	 */
 	public void writePredicate(PrintStream out, Atom p) {
 		Map<QNames, String> att = new LinkedHashMap<>();
-		att.put(QNames.NAME, p.toString());
+		att.put(QNames.NAME, p.getPredicate().getName());
 		open(out, QNames.ATOM, att);
 		for (Term t: p.getTerms()) {
 			Map<QNames, String> att2 = new LinkedHashMap<>();
@@ -105,7 +105,7 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	 */
 	public void writeHead(PrintStream out, Atom p) {
 		Map<QNames, String> att = new LinkedHashMap<>();
-		att.put(QNames.NAME, p.toString());
+		att.put(QNames.NAME, toString(p));
 		open(out, QNames.HEAD, att);
 		for (Term t: p.getTerms()) {
 			Map<QNames, String> att2 = new LinkedHashMap<>();
@@ -120,6 +120,16 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 		close(out, QNames.HEAD);
 	}
 
+	/**
+	 * Does the equivalent to Atom.toString() without the variables
+	 */
+	public String toString(Atom atom)
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append(atom.getPredicate().getName());
+		return builder.toString();
+	}
+	
 	/**
 	 * Write.
 	 *
