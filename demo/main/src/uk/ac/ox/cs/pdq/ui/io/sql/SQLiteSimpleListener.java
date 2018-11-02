@@ -33,16 +33,19 @@ public class SQLiteSimpleListener extends SQLiteBaseListener {
 	/** The padding depth. */
 	private int paddingDepth = 0;
 	
-//	Map<String, String> resultAliasAttrs = new HashMap<String, String>();
+	//	Map<String, String> resultAliasAttrs = new HashMap<String, String>();
 	
 	/** The table aliases. */
-private Set<ParseTree> tableAliases = new HashSet<ParseTree>();
+	private Set<ParseTree> tableAliases = new HashSet<ParseTree>();
 	
 	/** The join constraints. */
 	private Set<ParseTree> joinConstraints = new HashSet<ParseTree>();
 	
 	/** The result columns. */
 	private Set<ParseTree> resultColumns = new HashSet<ParseTree>();
+	
+	/** The result columns. */
+	private Set<ParseTree> columnNames = new HashSet<ParseTree>();
 	
 	/** The last expr. */
 	private ParseTree lastExpr = null;
@@ -84,6 +87,15 @@ private Set<ParseTree> tableAliases = new HashSet<ParseTree>();
 	 */
 	public Set<ParseTree> getTableAliases() {
 		return this.tableAliases;
+	}
+	
+	/**
+	 * Gets the column names.
+	 *
+	 * @return the column names
+	 */
+	public Set<ParseTree> getColumnNames() {
+		return this.columnNames;
 	}
 	
 	/**
@@ -154,6 +166,7 @@ private Set<ParseTree> tableAliases = new HashSet<ParseTree>();
 	@Override
 	public void exitColumn_name(@NotNull SQLiteParser.Column_nameContext ctx) {
 		this.printPadded("exitColumn_name");
+		this.columnNames.add(ctx);
 	}
 
 	/* (non-Javadoc)

@@ -74,27 +74,13 @@ public class SQLLikeQueryReader {
         parser.parse();
         
         // Parse the variables from the SELECT ... FROM statement
-		ArrayList<Variable> list = new ArrayList<>();
-        String[] clauses = str.split("SELECT");
-        if(clauses.length > 1)
-        {
-        	String clause2 = clauses[1];
-        	clauses = clause2.split("FROM");
-        	if(clauses.length > 0)
-        	{
-        		String clause1 = clauses[0];
-        		String[] variables = clause1.split(",");
-        		for(String variable : variables)
-        		{
-        			String[] varparts = variable.split("\\.");
-        			if(varparts.length > 1)
-        			{
-         				list.add(new Variable(varparts[1]));
-        			}
-        		}
-        	}
+    	ArrayList<Variable> list = new ArrayList<>();
+    	     for(ParseTree p : listener.getColumnNames()) {
+        	String columnName = p.getText();
+        	list.add(new Variable(columnName));
         }
-        Term[] terms = new Term[list.size()];
+
+    	Term[] terms = new Term[list.size()];
         int i = 0;
         for(Variable var : list) terms[i++] = var;
                
