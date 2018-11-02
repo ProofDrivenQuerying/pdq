@@ -313,7 +313,10 @@ public class ConjunctiveQueryBodyBuilder {
 			// Create Atom from Predicate and Term
 			Predicate predicate = Predicate.create(this.qName, 1);
 			Term term = this._findTerm(aliasName, attrName);
-			this.resultPredicate = Atom.create(predicate, term);
+			if(term != null)
+			{
+				this.resultPredicate = Atom.create(predicate, term);
+			}
 			
 		} else {
 			
@@ -344,10 +347,13 @@ public class ConjunctiveQueryBodyBuilder {
 	 */
 	private Term _findTerm(String aliasName, String attrName) {
 		Atom predFormula = this.aliasToPredicateFormulas.get(aliasName);
-
-		// Get term in said position:
-		int attrIndex = this.schema.getRelation( this.aliasToRelations.get(aliasName) ).getAttributePosition(attrName);
-		return predFormula.getTerm(attrIndex);
+		if(predFormula != null)
+		{
+			// Get term in said position:
+			int attrIndex = this.schema.getRelation( this.aliasToRelations.get(aliasName) ).getAttributePosition(attrName);
+			return predFormula.getTerm(attrIndex);
+		}
+		return null;
 	}
 		
 	/**

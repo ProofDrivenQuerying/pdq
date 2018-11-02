@@ -9,20 +9,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.db.EntityRelation;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
-import uk.ac.ox.cs.pdq.db.GuardedDependency;
-import uk.ac.ox.cs.pdq.db.LinearGuarded;
+import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TGD;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.FormulaEquivalence;
 import uk.ac.ox.cs.pdq.fol.Atom;
 
 import com.google.common.base.Preconditions;
@@ -58,7 +54,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	public SchemaBuilder(Schema schema) {
 		this.addRelations(schema.getRelations());
-		this.addDependencies(schema.getDependencies());
+		this.addDependencies(schema.getAllDependencies());
 	}
 
 	/**
@@ -91,10 +87,10 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param am the am
 	 * @return this builder
 	 */
-	public SchemaBuilder setAccessMethods(String name, AccessMethod... am) {
+	public SchemaBuilder setAccessMethods(String name, AccessMethodDescriptor[] am) {
 		Relation existing = this.relations.get(name);
 		if (existing != null) {
-			existing.setAccessMethods(Lists.newArrayList(am), true);
+// MR			existing.setAccessMethods(am, true);
 		}
 		return this;
 	}
@@ -107,7 +103,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param attributes List<Attribute>
 	 * @return this builder
 	 */
-	public Relation addOrReplaceRelation(String name, List<Attribute> attributes) {
+	public Relation addOrReplaceRelation(String name, Attribute[] attributes) {
 		return this.addOrReplaceRelation(name, attributes, false);
 	}
 
@@ -121,7 +117,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param isEquality the is equality
 	 * @return this builder
 	 */
-	public Relation addOrReplaceRelation(String name, List<Attribute> attributes, boolean isEquality) {
+	public Relation addOrReplaceRelation(String name, Attribute[] attributes, boolean isEquality) {
 		Relation result = this.relations.get(name);
 		if (result != null && result.getAttributes().equals(attributes)) {
 			return result;
@@ -138,12 +134,12 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param name String
 	 * @return the relation built
 	 */
-	public EntityRelation addEntityRelation(String name) {
+/* MR	public EntityRelation addEntityRelation(String name) {
 		Preconditions.checkState(this.relations.get(name) == null, "Relation '" + name + "' already exists.");
 		EntityRelation result = new EntityRelation(name, Types.FREE);
 		this.addRelation(result);
 		return result;
-	}
+	}*/
 
 	/**
 	 * Adds the dependency.
@@ -153,10 +149,10 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	public SchemaBuilder addDependency(Dependency dep) {
 		for (Dependency ic : this.dependencies.values()) {
-			if (FormulaEquivalence.approximateEquivalence(
+/* MR			if (FormulaEquivalence.approximateEquivalence(
 					(Formula) ic, (Formula) dep) ) {
 				return this;
-			}
+			}*/
 		}
 		this.dependencies.put(((TGD) dep).getId(), dep);
 		return this;
@@ -173,10 +169,10 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 			for (Iterator<Entry<Integer, Dependency>> it =
 					this.dependencies.entrySet().iterator();
 					it.hasNext();) {
-				if (FormulaEquivalence.approximateEquivalence(
+/* MR				if (FormulaEquivalence.approximateEquivalence(
 						(Formula) it.next().getValue(), (Formula) ic) ) {
 					it.remove();
-				}
+				}*/
 			}
 		};
 		return this;
@@ -199,7 +195,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param ics the ics
 	 * @return this builder
 	 */
-	public SchemaBuilder addDependencies(Collection<Dependency> ics) {
+	public SchemaBuilder addDependencies(Dependency[] ics) {
 		for (Dependency ic : ics) {
 			this.addDependency(ic);
 		}
@@ -221,7 +217,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param relations the relations
 	 * @return this builder
 	 */
-	public SchemaBuilder addRelations(Collection<? extends Relation> relations) {
+	public SchemaBuilder addRelations(Relation[] relations) {
 		for (Relation relation : relations) {
 			this.addRelation(relation);
 		}
@@ -236,7 +232,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	public SchemaBuilder addSchema(Schema schema) {
 		this.addRelations(schema.getRelations());
-		this.addDependencies(schema.getDependencies());
+		this.addDependencies(schema.getAllDependencies());
 		return this;
 	}
 
@@ -284,10 +280,10 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param view the view
 	 */
 	private void ensureViewDefinition(View view) {
-		LinearGuarded d = view.getDependency();
+		LinearGuarded d = view.getViewToRelationDependency();
 		LinearGuarded t = this.findViewDependency(view);
 		if (d != null) {
-			TGD inverse = d.invert();
+			TGD inverse = view.getRelationToViewDependency();
 
 			if (t == null) {
 				this.dependencies.put(d.getId(), d);
@@ -298,8 +294,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 			}
 		} else {
 			if (t != null) {
-				view.setDependency(t);
-				TGD inverse = t.invert();
+//				view.setDependency(t);
+				TGD inverse = view.getRelationToViewDependency();
 				TGD i = this.findDependency(inverse);
 				if (i == null) {
 					this.dependencies.put(inverse.getId(), inverse);
@@ -317,16 +313,16 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	private void ensureForeignKeyDefinition(Relation relation) {
 		for (ForeignKey fkey: relation.getForeignKeys()) {
-			LinearGuarded gd = new LinearGuarded(relation, fkey);
+/* MR			LinearGuarded gd = new LinearGuarded(relation, fkey);
 			if (this.findFKDependency(gd) == null) {
 				this.addDependency(gd);
-			}
+			}*/
 		}
 		for (LinearGuarded gd: this.findFKDependency(relation)) {
-			ForeignKey fk = new ForeignKey(gd);
+/* MR			ForeignKey fk = new ForeignKey(gd);
 			if (!relation.getForeignKeys().contains(fk)) {
 				relation.addForeignKey(fk);
-			}
+			}*/
 		}
 	}
 
@@ -336,7 +332,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	private void removeOrphanDependencies() {
 		for (Iterator<Integer> i = this.dependencies.keySet().iterator(); i.hasNext();) {
 			Dependency ic = this.dependencies.get(i.next());
-			for (Atom p: ic.getLeft().getAtoms()) {
+			for (Atom p: ic.getBodyAtom(0).getAtoms()) {
 				if (this.relations.get(p.getPredicate().getName()) == null) {
 					i.remove();
 					break;
@@ -345,7 +341,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		}
 		for (Iterator<Integer> i = this.dependencies.keySet().iterator(); i.hasNext();) {
 			Dependency ic = this.dependencies.get(i.next());
-			for (Atom p: ic.getRight().getAtoms()) {
+			for (Atom p: ic.getHeadAtom(0).getAtoms()) {
 				if (this.relations.get(p.getPredicate().getName()) == null) {
 					i.remove();
 					break;
@@ -378,8 +374,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	private LinearGuarded findViewDependency(View v) {
 		if (this.dependencies != null) {
 			for (Dependency ic : this.dependencies.values()) {
-				if (ic.getLeft().getAtoms().size() == 1) {
-					if (ic.getLeft().getAtoms().get(0)
+				if (ic.getBodyAtom(0).getAtoms().length == 1) {
+					if (ic.getBodyAtom(0).getAtoms()[0]
 							.getPredicate().getName().equals(v.getName())) {
 						return (LinearGuarded) ic;
 					}
@@ -399,9 +395,9 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	private TGD findDependency(TGD dep) {
 		if (this.dependencies != null) {
 			for (Dependency ic: this.dependencies.values()) {
-				if (FormulaEquivalence.approximateEquivalence((Formula) ic, (Formula) dep)) {
+/* MR				if (FormulaEquivalence.approximateEquivalence((Formula) ic, (Formula) dep)) {
 					return (TGD) ic;
-				}
+				}*/
 			}
 		}
 		return null;
@@ -413,7 +409,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param gd the gd
 	 * @return the guarded dependency that is equal to the given one.
 	 */
-	private GuardedDependency findFKDependency(GuardedDependency gd) {
+/* MR	private GuardedDependency findFKDependency(GuardedDependency gd) {
 		if (this.dependencies != null) {
 			for (Dependency ic:this.dependencies.values()) {
 				if (FormulaEquivalence.approximateEquivalence((Formula) gd, (Formula) ic)) {
@@ -422,7 +418,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 			}
 		}
 		return null;
-	}
+	}*/
 
 	/**
 	 * Find fk dependency.
@@ -435,7 +431,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		if (this.dependencies != null) {
 			for (Dependency ic: this.dependencies.values()) {
 				if (ic instanceof LinearGuarded
-						&& ((LinearGuarded) ic).getRight().size() == 1
+						&& ((LinearGuarded) ic).getHeadAtoms().length == 1
 						&& ((LinearGuarded) ic).getGuard().getPredicate().equals(r)) {
 					result.add((LinearGuarded) ic);
 				}
@@ -459,7 +455,15 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		} else {
 			this.dependencies.clear();
 		}
-		return new Schema(this.relations.values(), this.dependencies.values());
+		
+		Relation[] relations = new Relation[this.relations.values().size()];
+		int i = 0;
+		for(Relation r : this.relations.values()) relations[i++] = r;
+		Dependency[] dependencies = new Dependency[this.dependencies.values().size()];
+		i = 0;
+		for(Dependency d: this.dependencies.values()) dependencies[i++] = d;
+		
+		return new Schema(relations, dependencies);
 	}
 
 	/**
@@ -477,7 +481,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		 * @param name String
 		 * @param attributes List<Attribute>
 		 */
-		public TemporaryRelation(String name, List<Attribute> attributes) {
+		public TemporaryRelation(String name, Attribute[] attributes) {
 			this(name, attributes, false);
 		}
 		/**
@@ -486,7 +490,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		 * @param attributes List<Attribute>
 		 * @param isEq true if the relation acts as an equality
 		 */
-		public TemporaryRelation(String name, List<Attribute> attributes, boolean isEq) {
+		public TemporaryRelation(String name, Attribute[] attributes, boolean isEq) {
 			super(name, attributes, isEq);
 		}
 	}

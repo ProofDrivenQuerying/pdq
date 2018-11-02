@@ -18,6 +18,7 @@ import java.io.PrintStream;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -692,23 +693,26 @@ public class PDQController {
 										for(TreeItem<String> ti3 : ti2.getChildren())
 										{
 											int row = schemasTreeView.getRow(ti3);
-											Dependency dependency = dependencies[index]; 
-											index++;
-											
-											// Get both dependencies characteristic of a view
-											
-											Dependency dependency2 = view.getViewToRelationDependency();
-											Dependency dependency3 = view.getRelationToViewDependency();
-											
-											if((dependency != null) && 
-											   (((dependency2 != null) && dependency2.equals(dependency)) ||
-											     (dependency3 != null) && dependency3.equals(dependency)))
+											if(index < dependencies.length)
 											{
-												// Disable select updates with g_lock flag.
+												Dependency dependency = dependencies[index]; 
+												index++;
+											
+												// Get both dependencies characteristic of a view
+											
+												Dependency dependency2 = view.getViewToRelationDependency();
+												Dependency dependency3 = view.getRelationToViewDependency();
+											
+												if((dependency != null) && 
+												  (((dependency2 != null) && dependency2.equals(dependency)) ||
+													(dependency3 != null) && dependency3.equals(dependency)))
+												{
+													// Disable select updates with g_lock flag.
 												
-												g_lock = false;
-												msm.select(row);
-												g_lock = true;
+													g_lock = false;
+													msm.select(row);
+													g_lock = true;
+												}
 											}
 										}
 									}
@@ -1622,7 +1626,11 @@ public class PDQController {
 		TreeItem<String> root = new TreeItem<>(null);
 		this.schemasTreeView.setRoot(root);
 		this.schemasTreeView.setShowRoot(false);
+		ArrayList<ObservableSchema> list = new ArrayList<>();
 		for (ObservableSchema s : this.schemas.values()) {
+			list.add(s);
+		}
+		for (ObservableSchema s : list) {
 			this.loadTreeItem(s);
 		}
 	}
@@ -1847,14 +1855,19 @@ public class PDQController {
 		// Swap the old schema with the new schema
 		
 		Schema schema = new Schema(relationz, dependencys2);
+		ArrayList<ObservableSchema> obslist = new ArrayList<>();
 		for(ObservableSchema obschema : this.schemas.values())
 		{
 			if(obschema.equals(s))
 			{
-				this.schemas.remove(s.getName(), s);
-				s.setSchema(schema);
-				this.schemas.putIfAbsent(s.getName(), s);
+				obslist.add(obschema);
 			}
+		}
+		for(ObservableSchema obs : obslist)
+		{
+			this.schemas.remove(s.getName(), s);
+			s.setSchema(schema);
+			this.schemas.putIfAbsent(s.getName(), s);
 		}
 		map.clear();
 
