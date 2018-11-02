@@ -42,18 +42,22 @@ public class AdaptedQuery {
 		try {
 			List<Atom> newAtoms = new ArrayList<>();
 			
-			for (Atom a: atoms) {
-				List<Term> terms = new ArrayList<>();
-				for(Term t: a.getTerms()) {
-					if (t instanceof UntypedConstant) {
-						terms.add(TypedConstant.create(((UntypedConstant) t).getSymbol()));
-					} else {
-						terms.add(t);
+			if(atoms != null)
+			{
+				for (Atom a: atoms) {
+					List<Term> terms = new ArrayList<>();
+					for(Term t: a.getTerms()) {
+						if (t instanceof UntypedConstant) {
+							terms.add(TypedConstant.create(((UntypedConstant) t).getSymbol()));
+						} else {
+							terms.add(t);
+						}
 					}
+					newAtoms.add(Atom.create(a.getPredicate(),terms.toArray(new Term[terms.size()])));
 				}
-				newAtoms.add(Atom.create(a.getPredicate(),terms.toArray(new Term[terms.size()])));
+				return ConjunctiveQuery.create(freeVariables, newAtoms.toArray(new Atom[newAtoms.size()]));	
 			}
-			return ConjunctiveQuery.create(freeVariables, newAtoms.toArray(new Atom[newAtoms.size()]));
+			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

@@ -205,7 +205,10 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implemen
 	public static String convert(Formula f, Schema s) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(baos);
-		SQLLikeQueryWriter.to(ps, s).write(f);
+		if(f instanceof ConjunctiveQuery)
+		{
+			SQLLikeQueryWriter.to(ps, s).write(f);
+		}	
 		return baos.toString();
 	}
 	

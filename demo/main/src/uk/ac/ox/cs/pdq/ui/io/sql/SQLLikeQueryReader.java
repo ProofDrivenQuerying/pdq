@@ -19,6 +19,10 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteLexer;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteParser;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteParser.Compound_select_stmtContext;
+import org.antlr.v4.runtime.ANTLRErrorListener;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -68,14 +72,30 @@ public class SQLLikeQueryReader {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         SQLiteParser parser = new SQLiteParser(tokens);
         SQLiteSimpleListener listener = new SQLiteSimpleListener();
-
+        SQLiteErrorListener elistener = new SQLiteErrorListener();
+        
         // Run the SQLite parser
         parser.addParseListener(listener);
-        parser.parse();
+        parser.addErrorListener(elistener);
         
+        try
+        {
+        	parser.parse();
+        }
+        catch (Exception e)
+        {
+        	System.out.println(e);
+        	Alert alert = new Alert(AlertType.INFORMATION);
+        	alert.setTitle("Information Dialog");
+        	alert.setHeaderText(null);
+        	alert.setContentText("We experienced an error:\n" + e);
+        	alert.showAndWait();
+        	return null;
+        }
+                
         // Parse the variables from the SELECT ... FROM statement
     	ArrayList<Variable> list = new ArrayList<>();
-    	     for(ParseTree p : listener.getColumnNames()) {
+    	for(ParseTree p : listener.getColumnNames()) {
         	String columnName = p.getText();
         	list.add(new Variable(columnName));
         }
