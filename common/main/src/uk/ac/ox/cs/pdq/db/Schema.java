@@ -82,15 +82,6 @@ public class Schema {
 		} else {
 			this.egdDependencies = new EGD[0];
 		}
-
-		// This will be done outside of the class.
-		// List<EGD> EGDs = new ArrayList<>();
-		// for(Relation relation:this.relations) {
-		// if(relation.getKey() != null)
-		// EGDs.add(Utility.getEGDs(relation, relation.getKey().getAttributes()));
-		// }
-		// this.egdDependencies = EGDs.toArray(new EGD[EGDs.size()]);
-
 	}
 
 	/**
