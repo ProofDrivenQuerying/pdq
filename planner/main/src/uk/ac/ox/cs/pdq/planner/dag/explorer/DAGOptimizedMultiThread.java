@@ -78,7 +78,7 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 			postProcessQueue.add(new ThreadPoolWorker(postprocessQueue,"PostProcessPoolThread"+i));
 		}
 	}
-	private void shutdownThreads() {
+	public void shutdownThreads() {
 		if (createPool != null) for (ThreadPoolWorker t: createPool) t.setShutdown(true);
 		if (postProcessQueue != null) for (ThreadPoolWorker t: postProcessQueue) t.setShutdown(true);
 	}
