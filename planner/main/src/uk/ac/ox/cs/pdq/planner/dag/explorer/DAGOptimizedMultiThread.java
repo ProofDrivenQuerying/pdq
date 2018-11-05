@@ -36,7 +36,7 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
  * @author Gabor
  *
  */
-public class DAGOptimizedNewParallel extends DAGOptimizedNew {
+public class DAGOptimizedMultiThread extends DAGOptimized {
 
 	/** Configurations produced during the previous round. */
 	private final Queue<Runnable> createQueue;
@@ -62,7 +62,7 @@ public class DAGOptimizedNewParallel extends DAGOptimizedNew {
 	 * @throws PlannerException
 	 * @throws SQLException
 	 */
-	public DAGOptimizedNewParallel(EventBus eventBus, PlannerParameters parameters, ConjunctiveQuery query,
+	public DAGOptimizedMultiThread(EventBus eventBus, PlannerParameters parameters, ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery, AccessibleSchema accessibleSchema, Chaser chaser,
 			DatabaseManager connection, CostEstimator costEstimator, Filter filter, int maxDepth)
 			throws PlannerException, SQLException {
@@ -215,7 +215,7 @@ public class DAGOptimizedNewParallel extends DAGOptimizedNew {
 	}
 	
 	private class CreateBinaryConfigurationsTask implements Runnable {
-		private DAGOptimizedNewParallel executor;
+		private DAGOptimizedMultiThread executor;
 		private Queue<DAGChaseConfiguration> leftSideConfigurations2;
 		private Collection<DAGChaseConfiguration> rightSideConfigurations;
 		private Dependency[] inferredAccessibilityAxioms;
@@ -224,7 +224,7 @@ public class DAGOptimizedNewParallel extends DAGOptimizedNew {
 		private Collection<DAGChaseConfiguration> returnValue;
 		private Throwable t;
 		volatile private boolean finished = false;
-		public CreateBinaryConfigurationsTask(DAGOptimizedNewParallel executor,
+		public CreateBinaryConfigurationsTask(DAGOptimizedMultiThread executor,
 				Queue<DAGChaseConfiguration> leftSideConfigurations,
 				Collection<DAGChaseConfiguration> rightSideConfigurations, Dependency[] inferredAccessibilityAxioms,
 				DAGChaseConfiguration bestConfiguration, DAGEquivalenceClasses equivalenceClasses2) {

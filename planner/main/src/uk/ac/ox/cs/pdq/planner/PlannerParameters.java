@@ -696,9 +696,6 @@ public class PlannerParameters extends Parameters {
 		@EnumParameterValue(description = "DAG DP planning algorithm, relying on parallelism")
 		DAG_OPTIMIZED,
 		
-		/** The dag optimized legacy. */
-		@EnumParameterValue(description = "DAG DP planning algorithm, relying on parallelism")
-		DAG_OPTIMIZED_LEGACY, 
 	}
 
 	/** */
