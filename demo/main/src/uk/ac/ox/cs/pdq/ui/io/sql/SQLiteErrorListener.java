@@ -14,10 +14,16 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.apache.log4j.Logger;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 import org.antlr.v4.runtime.Parser;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteBaseListener;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteParser;
 import org.antlr.v4.runtime.ANTLRErrorListener;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -40,7 +46,11 @@ public class SQLiteErrorListener implements ANTLRErrorListener {
 	public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
 			String msg, RecognitionException e) {
 		// TODO Auto-generated method stub
-		throw e;
+    	Alert alert = new Alert(AlertType.INFORMATION);
+    	alert.setTitle("Information Dialog");
+    	alert.setHeaderText(null);
+    	alert.setContentText(msg);
+    	alert.showAndWait();
 	}
 
 	@Override

@@ -84,7 +84,6 @@ public class SQLLikeQueryReader {
         }
         catch (Exception e)
         {
-        	System.out.println(e);
         	Alert alert = new Alert(AlertType.INFORMATION);
         	alert.setTitle("Information Dialog");
         	alert.setHeaderText(null);
@@ -108,10 +107,13 @@ public class SQLLikeQueryReader {
         this.aliasToTables = new HashMap<String, String>();
         for(ParseTree p : listener.getTableAliases()) {
         	String raw = p.getText();
-        	String[] elements = raw.split("AS");
-        	String tableName = elements[0];
-        	String aliasName = elements[1];
-        	this.aliasToTables.put(aliasName, tableName);
+        	if(raw.contains("AS"))
+        	{
+        		String[] elements = raw.split("AS");
+        		String tableName = elements[0];
+        		String aliasName = elements[1];
+        		this.aliasToTables.put(aliasName, tableName);
+        	}
         }
         
         log.debug("query aliases: " + this.aliasToTables);
