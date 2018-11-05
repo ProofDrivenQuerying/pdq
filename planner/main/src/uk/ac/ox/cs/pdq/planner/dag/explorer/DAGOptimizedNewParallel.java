@@ -119,8 +119,8 @@ public class DAGOptimizedNewParallel extends DAGOptimizedNew {
 			for (int i = 0; i < right.size(); i += STEP) {
 				Collection<DAGChaseConfiguration> rightSTEP = new ArrayList<>();
 				for (int j = i; j< i+STEP; j++) {
-					if (i+j < right.size())
-						rightSTEP.add(right.get(i+j));
+					if (j < right.size())
+						rightSTEP.add(right.get(j));
 				}
 				CreateBinaryConfigurationsTask a = new CreateBinaryConfigurationsTask(this,
 						new ConcurrentLinkedQueue<>(leftCopy), new ConcurrentLinkedQueue<>(rightSTEP),
