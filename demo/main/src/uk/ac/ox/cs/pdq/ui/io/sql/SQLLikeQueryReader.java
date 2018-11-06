@@ -87,7 +87,7 @@ public class SQLLikeQueryReader {
         	Alert alert = new Alert(AlertType.INFORMATION);
         	alert.setTitle("Information Dialog");
         	alert.setHeaderText(null);
-        	alert.setContentText("We experienced an error:\n" + e);
+        	alert.setContentText(e.toString());
         	alert.showAndWait();
         	return null;
         }

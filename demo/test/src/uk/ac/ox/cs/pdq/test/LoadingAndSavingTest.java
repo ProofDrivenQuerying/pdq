@@ -31,7 +31,7 @@ public class LoadingAndSavingTest {
 	private ObservableQuery currentQuery = new ObservableQuery("name", "description", null);
 	private File workDirectory = new File("/users/marler/.pdq");
 
-	// testSave method re-factored from PDQController saveSelectedQuery
+	// testSave method re-factored from PDQController.saveSelectedQuery
 	@Test
 	public void testSave() {
 
@@ -50,6 +50,7 @@ public class LoadingAndSavingTest {
 		}
 	}
 
+	// testLoad method re-factored from PDQController.loadQueries
 	@Test
 	public void testLoad() {
 
