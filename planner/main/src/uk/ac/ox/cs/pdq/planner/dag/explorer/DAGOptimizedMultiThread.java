@@ -180,6 +180,10 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 		}
 		this.depth++;
 	}
+	/**
+	 * @author gabor
+	 * This thread will execute runnable tasks from the given queue. In case the queue is empty it will wait for new tasks to appear in it.
+	 */
 	private class ThreadPoolWorker extends Thread{
 		private Queue<Runnable> queue;
 		private boolean shutdown = false;
@@ -214,6 +218,10 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 		}
 	}
 	
+	/**
+	 * This class represents one part of the exploration. Multiple instances will be executed at the same time by executor threads.
+	 *
+	 */
 	private class CreateBinaryConfigurationsTask implements Runnable {
 		private DAGOptimizedMultiThread executor;
 		private Queue<DAGChaseConfiguration> leftSideConfigurations2;
@@ -247,6 +255,11 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 				this.notifyAll();
 			}
 		}
+		/**
+		 * Waits until the results are generated. In case exception was thrown while executing the task this function will re-throw it.
+		 * @return
+		 * @throws PlannerException
+		 */
 		public Collection<DAGChaseConfiguration> getReturnValue() throws PlannerException {
 			long start = System.currentTimeMillis();
 			while (!finished && System.currentTimeMillis() - start < 1000*60*2 ) { // 1 min
