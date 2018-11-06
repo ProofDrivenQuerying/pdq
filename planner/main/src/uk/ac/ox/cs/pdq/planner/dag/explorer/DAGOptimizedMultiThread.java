@@ -40,9 +40,7 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 
 	/** Configurations produced during the previous round. */
 	private final Queue<Runnable> createQueue;
-	private final Queue<Runnable> postprocessQueue;
 	private List<ThreadPoolWorker> createPool;
-	private List<ThreadPoolWorker> postProcessQueue;
 	
 	/**
 	 * Instantiates a new DAG optimized.
@@ -68,19 +66,14 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 			throws PlannerException, SQLException {
 		super(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, filter, maxDepth);
 		this.createQueue = new ConcurrentLinkedQueue<>();
-		this.postprocessQueue = new ConcurrentLinkedQueue<>();
 		createPool = new ArrayList<>();
 		for (int i = 0; i < 20; i++) {
 			createPool.add(new ThreadPoolWorker(createQueue,"CreatePoolThread"+i));
 		}
-		postProcessQueue = new ArrayList<>();
-		for (int i = 0; i < 20; i++) {
-			postProcessQueue.add(new ThreadPoolWorker(postprocessQueue,"PostProcessPoolThread"+i));
-		}
 	}
 	public void shutdownThreads() {
-		if (createPool != null) for (ThreadPoolWorker t: createPool) t.setShutdown(true);
-		if (postProcessQueue != null) for (ThreadPoolWorker t: postProcessQueue) t.setShutdown(true);
+		if (createPool != null) 
+			for (ThreadPoolWorker t: createPool) t.setShutdown(true);
 	}
 	/**
 	 * _explore.
@@ -224,29 +217,31 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 	 */
 	private class CreateBinaryConfigurationsTask implements Runnable {
 		private DAGOptimizedMultiThread executor;
-		private Queue<DAGChaseConfiguration> leftSideConfigurations2;
+		private Queue<DAGChaseConfiguration> leftSideConfigurations;
 		private Collection<DAGChaseConfiguration> rightSideConfigurations;
 		private Dependency[] inferredAccessibilityAxioms;
-		private DAGChaseConfiguration bestConfiguration2;
-		private DAGEquivalenceClasses equivalenceClasses2;
+		private DAGChaseConfiguration bestConfiguration;
+		private DAGEquivalenceClasses equivalenceClasses;
 		private Collection<DAGChaseConfiguration> returnValue;
 		private Throwable t;
 		volatile private boolean finished = false;
+		
 		public CreateBinaryConfigurationsTask(DAGOptimizedMultiThread executor,
 				Queue<DAGChaseConfiguration> leftSideConfigurations,
 				Collection<DAGChaseConfiguration> rightSideConfigurations, Dependency[] inferredAccessibilityAxioms,
-				DAGChaseConfiguration bestConfiguration, DAGEquivalenceClasses equivalenceClasses2) {
+				DAGChaseConfiguration bestConfiguration, DAGEquivalenceClasses equivalenceClasses) {
 					this.executor = executor;
-					leftSideConfigurations2 = leftSideConfigurations;
+					this.leftSideConfigurations = leftSideConfigurations;
 					this.rightSideConfigurations = rightSideConfigurations;
 					this.inferredAccessibilityAxioms = inferredAccessibilityAxioms;
-					bestConfiguration2 = bestConfiguration;
-					this.equivalenceClasses2 = equivalenceClasses2;
+					this.bestConfiguration = bestConfiguration;
+					this.equivalenceClasses = equivalenceClasses;
 					t = null;
 		}
 		public void run() {
 			try {
-				returnValue = executor.selectAndCreateBinaryConfigurationsToCreateAndReason(leftSideConfigurations2, rightSideConfigurations, inferredAccessibilityAxioms, bestConfiguration2, equivalenceClasses2);
+				returnValue = executor.selectAndCreateBinaryConfigurationsToCreateAndReason(
+						leftSideConfigurations, rightSideConfigurations, inferredAccessibilityAxioms, bestConfiguration, equivalenceClasses);
 			} catch(Throwable t) {
 				this.t = t;
 			}
