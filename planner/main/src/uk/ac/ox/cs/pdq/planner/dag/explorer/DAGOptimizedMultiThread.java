@@ -67,6 +67,7 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 		super(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, filter, maxDepth);
 		this.createQueue = new ConcurrentLinkedQueue<>();
 		createPool = new ArrayList<>();
+		//TODO: DO NOT HARDCODE
 		for (int i = 0; i < 20; i++) {
 			createPool.add(new ThreadPoolWorker(createQueue,"CreatePoolThread"+i));
 		}
@@ -101,12 +102,15 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 					}
 				}
 			}
-		} else if (this.depth > 1) {
+		} else if (this.depth > 1) 
+			//generate new configurations by composing old
+		    {
 			this.checkLimitReached();
 			List<CreateBinaryConfigurationsTask> currentTasks = new ArrayList<>();
 			Queue<DAGChaseConfiguration> leftCopy = new ConcurrentLinkedQueue<>();
 			leftCopy.addAll(this.leftSideConfigurations);
 			final int STEP = 5;
+			//TODO: MAKE A PARAMETER AND COMMENT ABOUT ITS FUNCTION
 			ArrayList<DAGChaseConfiguration> right = new ArrayList<>();
 			right.addAll(this.equivalenceClasses.getConfigurations());
 			for (int i = 0; i < right.size(); i += STEP) {
@@ -164,6 +168,7 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 					this.equivalenceClasses.getConfigurations()));
 
 			// Filter out configurations
+			//TOCOMMENT: WHAT KIND OF FILTERING IS BEING DONE
 			if (this.filter != null) {
 				Collection<DAGChaseConfiguration> toDelete = this.filter
 						.filter(this.equivalenceClasses.getConfigurations());
