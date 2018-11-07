@@ -653,6 +653,8 @@ public class PDQController {
 								|| (currentSchemaViewitems.getParent().getParent().valueProperty().get()
 										.equals("Services"))
 								&& (relation != null))) {
+							
+							// Open the Stage dialog
 							Stage dialog = new Stage();							
 							dialog.initModality(Modality.NONE);
 							dialog.initStyle(StageStyle.UTILITY);
@@ -665,6 +667,8 @@ public class PDQController {
 							Scene scene = new Scene(parent);
 							dialog.setScene(scene);
 							dialog.setTitle(bundle.getString("relation.dialog.title"));
+							
+							// Open the relation controller
 							RelationController relationController = loader.getController();
 							relationController.setRelation(relation);
 							dialog.showAndWait();
@@ -719,6 +723,7 @@ public class PDQController {
 								}
 							}
 							
+							// Open the Stage dialog
 							Stage dialog = new Stage();
 
 							dialog.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
@@ -735,6 +740,8 @@ public class PDQController {
 							Scene scene = new Scene(parent);
 							dialog.setScene(scene);
 							dialog.setTitle(bundle.getString("view.dialog.title"));
+							
+							// Open the view controller
 							ViewController viewController = loader.getController();
 							viewController.setView(view);
 							g_viewControllerMap.put(dialog, viewController);
@@ -753,6 +760,8 @@ public class PDQController {
 					if (currentSchemaViewitems.getParent().valueProperty().get().equals("Dependencies")
 							&& (dependency != null)) {
 						try {
+							
+							// Open the Stage dialog
 							Stage dialog = new Stage();
 							dialog.initModality(Modality.NONE);
 							dialog.initStyle(StageStyle.UTILITY);
