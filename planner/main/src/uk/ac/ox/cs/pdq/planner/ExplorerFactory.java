@@ -13,12 +13,9 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimizedNew;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimizedMultiThread;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.FilterFactory;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.IterativeExecutor;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.IterativeExecutorFactory;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ValidatorFactory;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
@@ -165,19 +162,8 @@ public class ExplorerFactory {
 					accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance, dominance,
 					filter, validators, parameters.getMaxDepth());
 
-		case DAG_OPTIMIZED_LEGACY:
-			IterativeExecutor executor0 = null;
-			IterativeExecutor executor1 = null;
-			executor0 = IterativeExecutorFactory.createIterativeExecutor(parameters.getIterativeExecutorType(),
-					parameters.getFirstPhaseThreads(), chaser, connection, costEstimator, successDominance, dominance,
-					validators);
-			executor1 = IterativeExecutorFactory.createIterativeExecutor(parameters.getIterativeExecutorType(),
-					parameters.getSecondPhaseThreads(), chaser, connection, costEstimator, successDominance, dominance,
-					validators);
-			return new DAGOptimized(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection,
-					costEstimator, filter, executor0, executor1, parameters.getMaxDepth());
 		case DAG_OPTIMIZED:
-			return new DAGOptimizedNew(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection,
+			return new DAGOptimizedMultiThread(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection,
 					costEstimator, filter, parameters.getMaxDepth());
 
 		case LINEAR_OPTIMIZED:

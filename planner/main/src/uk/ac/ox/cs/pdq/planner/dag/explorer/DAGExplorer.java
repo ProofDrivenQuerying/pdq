@@ -97,7 +97,7 @@ public abstract class DAGExplorer extends Explorer {
 	 * @param configuration the configuration
 	 * @return true if the best configuration/plan is updated
 	 */
-	public boolean setBestPlan(DAGChaseConfiguration configuration) {
+	public synchronized boolean setBestPlan(DAGChaseConfiguration configuration) {
 		if(this.bestConfiguration != null && configuration != null &&
 				this.bestConfiguration.getCost().lessOrEquals(configuration.getCost())) {
 			return false;

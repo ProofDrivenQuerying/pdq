@@ -54,6 +54,7 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimizedMultiThread;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -219,6 +220,9 @@ public class ExplorationSetUp {
 			this.handleEarlyTermination(explorer);
 			throw e;
 		} finally {
+			if (explorer instanceof DAGOptimizedMultiThread) {
+				((DAGOptimizedMultiThread) explorer).shutdownThreads();
+			}
 			try {
 				if (databaseConnection!=null) {
 					databaseConnection.dropDatabase();
