@@ -78,19 +78,7 @@ public class SQLLikeQueryReader {
         parser.addParseListener(listener);
         parser.addErrorListener(elistener);
         
-        try
-        {
-        	parser.parse();
-        }
-        catch (Exception e)
-        {
-        	Alert alert = new Alert(AlertType.INFORMATION);
-        	alert.setTitle("Information Dialog");
-        	alert.setHeaderText(null);
-        	alert.setContentText(e.toString());
-        	alert.showAndWait();
-        	return null;
-        }
+        parser.parse();
                 
         // Parse the variables from the SELECT ... FROM statement
     	ArrayList<Variable> list = new ArrayList<>();

@@ -748,6 +748,7 @@ public class PDQController {
 					int index = this.currentSchemaViewitems.getParent().getChildren()
 							.indexOf(this.currentSchemaViewitems);
 
+					// Check dependency to load into the dependency controller
 					Dependency dependency = this.currentSchema.get().getSchema().getAllDependencies()[index];
 					if (currentSchemaViewitems.getParent().valueProperty().get().equals("Dependencies")
 							&& (dependency != null)) {
@@ -780,6 +781,7 @@ public class PDQController {
 						}
 					}
 
+					// Find the service that corresponds to currentSchemaViewItems
 					Service service = null;
 					for (Service sr : this.currentSchema.get().getServices()) {
 						if (sr.getName().equals(currentSchemaViewitems.getValue())) {
@@ -813,9 +815,6 @@ public class PDQController {
 							throw new UserInterfaceException(e);
 						}
 					}
-
-					// index -= this.currentSchema.get().getSchema().getRelations().size();
-					
 				}
 			}
 		}
@@ -1005,7 +1004,7 @@ public class PDQController {
 			}
 			catch(Exception e)
 			{
-				throw new UserInterfaceException(e);				
+				return;				
 			}
 		}
 	}
@@ -1916,13 +1915,14 @@ public class PDQController {
 	void updateWidgets() {
 		while (this.dataQueue != null && !this.dataQueue.isEmpty()) {
 			Object o = this.dataQueue.poll();
-			// Update the result table
+			// ObservablePlan: Update the result table
 			if (o instanceof ObservablePlan) {
 				this.currentPlan.set((ObservablePlan) o);
 				this.plansTableView.getItems().set(this.plansTableView.getSelectionModel().getSelectedIndex(),
 						(ObservablePlan) o);
 				this.plansTableView.getSelectionModel().select((ObservablePlan) o);
 			}
+			// ObservableSchema: run loadTreeItem or reloadTreeItem
 			if (o instanceof ObservableSchema) {
 				ObservableSchema s = this.schemas.get(((ObservableSchema) o).getName());
 				TreeItem<String> item = null;
@@ -1943,6 +1943,7 @@ public class PDQController {
 				this.saveSchema(s);
 				this.schemaSelected(item);
 			}
+			// ObservableQuery: run saveQuery 
 			if (o instanceof ObservableQuery) {
 				ObservableQuery q = (ObservableQuery) o;
 				this.currentQuery.set(q);

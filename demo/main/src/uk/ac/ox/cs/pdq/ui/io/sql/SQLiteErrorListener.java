@@ -49,8 +49,9 @@ public class SQLiteErrorListener implements ANTLRErrorListener {
     	Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setTitle("Information Dialog");
     	alert.setHeaderText(null);
-    	alert.setContentText(msg);
+    	alert.setContentText("Line: " + line + ":" + charPositionInLine + " " + msg);
     	alert.showAndWait();
+    	throw e;
 	}
 
 	@Override
