@@ -109,7 +109,7 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 
 		try {
 			
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser,
+			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleSchema, chaser,
 					connection);
 			Set<String> predicateNames = new HashSet<>();
 			for (DAGChaseConfiguration c : configurations) {
@@ -254,7 +254,7 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
 		try {
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser,
+			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleSchema, chaser,
 					connection);
 
 			Set<String> predicateNames = new HashSet<>();

@@ -83,7 +83,7 @@ public class TestDAGExplorerUtilities extends PdqTest {
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
 		try {
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleQuery, accessibleSchema,
+			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleSchema,
 					chaser, connection);
 			Set<DAGChaseConfiguration> uniqueConfigs = new HashSet<>();
 			int index = 0;

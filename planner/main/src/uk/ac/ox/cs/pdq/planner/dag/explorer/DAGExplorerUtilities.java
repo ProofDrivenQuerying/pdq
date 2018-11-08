@@ -33,7 +33,6 @@ public class DAGExplorerUtilities {
 	public static List<DAGChaseConfiguration> createInitialApplyRuleConfigurations(
 			PlannerParameters parameters,
 			ConjunctiveQuery query, 
-			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 
 			DatabaseManager connection

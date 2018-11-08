@@ -118,7 +118,7 @@ public class DAGGenericLegacy extends DAGExplorer {
 		this.filter = filter;
 		this.validators = validators;
 		this.maxDepth = maxDepth;
-		List<DAGChaseConfiguration> initialConfigurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(this.parameters, this.query, this.accessibleQuery, this.accessibleSchema, this.chaser, this.connection);
+		List<DAGChaseConfiguration> initialConfigurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(this.parameters, this.query, this.accessibleSchema, this.chaser, this.connection);
 		if(this.filter != null)
 			initialConfigurations.removeAll(this.filter.filter(initialConfigurations));
 		this.leftSideConfigurations = new ArrayList<>();

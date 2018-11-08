@@ -102,7 +102,7 @@ public class DAGOptimized extends DAGExplorer {
 		this.filter = filter;
 		this.maxDepth = maxDepth;
 		List<DAGChaseConfiguration> initialConfigurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(
-				this.parameters, this.query, this.accessibleQuery, this.accessibleSchema, this.chaser, this.connection);
+				this.parameters, this.query, this.accessibleSchema, this.chaser, this.connection);
 		if (this.filter != null) {
 			Collection<DAGChaseConfiguration> toDelete = this.filter.filter(initialConfigurations);
 			initialConfigurations.removeAll(toDelete);

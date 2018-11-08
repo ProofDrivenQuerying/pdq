@@ -65,6 +65,7 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 			DatabaseManager connection, CostEstimator costEstimator, Filter filter, int maxDepth)
 			throws PlannerException, SQLException {
 		super(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, filter, maxDepth);
+		
 		this.createQueue = new ConcurrentLinkedQueue<>();
 		createPool = new ArrayList<>();
 		for (int i = 0; i < parameters.getDagThreads(); i++) {

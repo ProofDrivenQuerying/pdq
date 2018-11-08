@@ -179,7 +179,7 @@ public class TestMultiThreadedExecutor extends PdqTest {
 		MultiThreadedExecutor executor = new MultiThreadedExecutor(mtcontext);
 
 		try {
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleQuery, accessibleSchema,
+			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleSchema,
 					chaser, connection);
 			Set<String> predicateNames = new HashSet<>();
 			for (DAGChaseConfiguration c : configurations) {
@@ -338,7 +338,7 @@ public class TestMultiThreadedExecutor extends PdqTest {
 		MultiThreadedExecutor executor = new MultiThreadedExecutor(mtcontext);
 
 		try {
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser,
+			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleSchema, chaser,
 					connection);
 			Set<String> predicateNames = new HashSet<>();
 			for (DAGChaseConfiguration c : configurations) {
@@ -518,7 +518,7 @@ public class TestMultiThreadedExecutor extends PdqTest {
 
 			MultiThreadedExecutor executor = new MultiThreadedExecutor(mtcontext);
 
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, query, accessibleQuery, accessibleSchema, chaser,
+			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, query, accessibleSchema, chaser,
 					connection);
 			Queue<DAGChaseConfiguration> leftSideConfigurations = new ConcurrentLinkedQueue<>();
 			DAGEquivalenceClasses equivalenceClasses = new SynchronizedEquivalenceClasses();
@@ -543,8 +543,6 @@ public class TestMultiThreadedExecutor extends PdqTest {
 				}
 				newConfigurations = executor.createBinaryConfigurations(round + 1, leftSideConfigurations, equivalenceClasses.getConfigurations(), new Dependency[] {}, null,
 						equivalenceClasses, twoWay, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
-				// System.out.println("Round: #" + round + " found configs: " +
-				// newConfigurations.size());
 			}
 			Assert.assertEquals(120, newConfigurations.size());
 
