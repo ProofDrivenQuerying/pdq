@@ -175,13 +175,7 @@ public class PlannerParameters extends Parameters {
 	@Parameter(description = "Number of threads to use in the first phase of "
 			+ "a parallel DAG planning algorithm",
 			defaultValue = "50")
-	protected Integer firstPhaseThreads = 10;
-
-	/** The second phase threads. */
-	@Parameter(description = "Number of threads to use in the second phase of "
-			+ "a parallel DAG planning algorithm",
-			defaultValue = "50")
-	protected Integer secondPhaseThreads = 10;
+	protected Integer dagThreads = 10;
 
 	/** The depth threshold. */
 	@Parameter(description = "Threshold for the DEPTH_THROTTLING validator",
@@ -560,8 +554,8 @@ public class PlannerParameters extends Parameters {
 	 *
 	 * @return Integer
 	 */
-	public Integer getFirstPhaseThreads() {
-		return this.firstPhaseThreads;
+	public Integer getDagThreads() {
+		return this.dagThreads;
 	}
 
 	/**
@@ -569,8 +563,8 @@ public class PlannerParameters extends Parameters {
 	 *
 	 * @param i Number
 	 */
-	public void setFirstPhaseThreads(Number i) {
-		this.firstPhaseThreads = i != null ? i.intValue() : null;
+	public void setDagThreads(Number i) {
+		this.dagThreads = i != null ? i.intValue() : null;
 	}
 
 	/**
@@ -579,34 +573,7 @@ public class PlannerParameters extends Parameters {
 	 * @param i Integer
 	 */
 	public void setFirstPhaseThreads(Integer i) {
-		this.firstPhaseThreads = i != null ? i.intValue() : null;
-	}
-
-	/**
-	 * Gets the second phase threads.
-	 *
-	 * @return Integer
-	 */
-	public Integer getSecondPhaseThreads() {
-		return this.secondPhaseThreads;
-	}
-
-	/**
-	 * Sets the second phase threads.
-	 *
-	 * @param i Number
-	 */
-	public void setSecondPhaseThreads(Number i) {
-		this.secondPhaseThreads = i != null ? i.intValue() : null;
-	}
-
-	/**
-	 * Sets the second phase threads.
-	 *
-	 * @param i Integer
-	 */
-	public void setSecondPhaseThreads(Integer i) {
-		this.secondPhaseThreads = i != null ? i.intValue() : null;
+		this.dagThreads = i != null ? i.intValue() : null;
 	}
 
 	/**
