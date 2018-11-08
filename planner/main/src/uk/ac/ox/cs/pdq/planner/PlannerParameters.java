@@ -192,6 +192,11 @@ public class PlannerParameters extends Parameters {
 	@Parameter(description = "If true, we will use an Internal database manager instead of the external one.",
 			defaultValue = "true")
 	private Boolean useInternalDatabase = false;
+	
+	/** DAG thread timeout value. should be smaller then the main reasoning timeout. */
+	@Parameter(description = "DAG thread timeout value. should be smaller then the main reasoning timeout",
+			defaultValue = "120000")
+	private long dagThreadTimeout = 1000*60*2; // 2 minutes
 
 	/**
 	 * Gets the max iterations.
@@ -627,6 +632,14 @@ public class PlannerParameters extends Parameters {
 
 	public void setUseInternalDatabase(Boolean useInternalDatabase) {
 		this.useInternalDatabase = useInternalDatabase;
+	}
+
+	public long getDagThreadTimeout() {
+		return dagThreadTimeout;
+	}
+
+	public void setDagThreadTimeout(long dagThreadTimeout) {
+		this.dagThreadTimeout = dagThreadTimeout;
 	}
 
 	/** Planning algorithm types. */

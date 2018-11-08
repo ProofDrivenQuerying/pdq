@@ -40,8 +40,8 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 
 	/** Configurations produced during the previous round. */
 	private final Queue<Runnable> createQueue;
-	private List<ThreadPoolWorker> createPool;
-	
+	private List<ThreadPoolWorker> threadPool;
+	private long TIMEOUT;
 	/**
 	 * Instantiates a new DAG optimized.
 	 * 
@@ -67,14 +67,19 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 		super(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, filter, maxDepth);
 		
 		this.createQueue = new ConcurrentLinkedQueue<>();
-		createPool = new ArrayList<>();
+		threadPool = new ArrayList<>();
 		for (int i = 0; i < parameters.getDagThreads(); i++) {
-			createPool.add(new ThreadPoolWorker(createQueue,"CreatePoolThread"+i));
+			threadPool.add(new ThreadPoolWorker(createQueue,"CreatePoolThread"+i));
 		}
+		TIMEOUT = parameters.getDagThreadTimeout();
 	}
+	
+	/**
+	 * Stops the pool.
+	 */
 	public void shutdownThreads() {
-		if (createPool != null) 
-			for (ThreadPoolWorker t: createPool) t.setShutdown(true);
+		if (threadPool != null) 
+			for (ThreadPoolWorker t: threadPool) t.setShutdown(true);
 	}
 	/**
 	 * _explore.
@@ -111,7 +116,7 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 			int groupSize = 1;
 			ArrayList<DAGChaseConfiguration> right = new ArrayList<>();
 			right.addAll(this.equivalenceClasses.getConfigurations());
-			while(right.size()>createPool.size()*groupSize) {
+			while(right.size()>threadPool.size()*groupSize) {
 				// find the smallest groupSize that will engage all threads in the pool. 
 				groupSize++;
 			}
@@ -200,6 +205,7 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 				while (!shutdown) {
 					Runnable task = queue.poll();
 					if (task == null) {
+						// wait until task arrives
 						synchronized (queue) {
 							try {
 								queue.wait(100);
@@ -207,11 +213,13 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 							}
 						}
 					} else {
+						// run the task, it shouldn't have a return value nor should it throw anything.
 						task.run();
 					}
 						
 				}
 			} catch(Throwable t) {
+				// since it will be executed as a thread we need to make sure we log any events...
 				t.printStackTrace();
 			}
 		}
@@ -235,6 +243,9 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 		private Throwable t;
 		volatile private boolean finished = false;
 		
+		/**
+		 * Constructor to store all parameters needed for the selectAndCreateBinaryConfigurationsToCreateAndReason call.
+		 */
 		public CreateBinaryConfigurationsTask(DAGOptimizedMultiThread executor,
 				Queue<DAGChaseConfiguration> leftSideConfigurations,
 				Collection<DAGChaseConfiguration> rightSideConfigurations, Dependency[] inferredAccessibilityAxioms,
@@ -252,9 +263,11 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 				returnValue = executor.selectAndCreateBinaryConfigurationsToCreateAndReason(
 						leftSideConfigurations, rightSideConfigurations, inferredAccessibilityAxioms, bestConfiguration, equivalenceClasses);
 			} catch(Throwable t) {
+				// store any exception to re throw it later when the thread is joined.
 				this.t = t;
 			}
 			synchronized (this) {
+				// mark it done, and notify anyone waiting for the results.
 				finished = true;
 				this.notifyAll();
 			}
@@ -266,13 +279,14 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 		 */
 		public Collection<DAGChaseConfiguration> getReturnValue() throws PlannerException {
 			long start = System.currentTimeMillis();
-			while (!finished && System.currentTimeMillis() - start < 1000*60*2 ) { // 1 min
-				synchronized (this) {
-					try {
-						this.wait(100);
-					} catch (InterruptedException e) {
+			try {
+				while (!finished && System.currentTimeMillis() - start < TIMEOUT ) { 
+					synchronized (this) {
+							this.wait(100);
 					}
 				}
+			} catch (InterruptedException e) {
+				// in case the thread is interrupted we ignore it, and return.
 			}
 			if (!finished) {
 				throw new PlannerException("Worker thread read error at createBinaryConfigurations. ");
