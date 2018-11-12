@@ -13,10 +13,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
  * @author Efthymia Tsamoura
  */
 public class ClosedValidator implements Validator{
-	private boolean ignoreDepth = false;
-	public void setIgnoreDepth(boolean ignore) {
-		this.ignoreDepth = ignore;
-	}
 
 	/**
 	 * Instantiates a new linear validator.
@@ -52,9 +48,7 @@ public class ClosedValidator implements Validator{
 	 */
 	@Override
 	public boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right, int depth) {
-		if (ignoreDepth)
-			return this.validate(left, right);
-		return left.getHeight() + right.getHeight() == depth && this.validate(left, right);
+		return this.validate(left, right);
 	}
 
 	/**

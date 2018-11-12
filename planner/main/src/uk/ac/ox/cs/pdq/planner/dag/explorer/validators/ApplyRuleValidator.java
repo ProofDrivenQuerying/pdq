@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
  * @author Efthymia Tsamoura
  */
 public class ApplyRuleValidator implements Validator{
-	private boolean ignoreDepth = false;
 	/**
 	 * Instantiates a new apply rule validator.
 	 */
@@ -45,13 +44,9 @@ public class ApplyRuleValidator implements Validator{
 	 */
 	@Override
 	public boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right, int depth) {
-		if (ignoreDepth)
-			return this.validate(left, right);
-		return left.getHeight() + right.getHeight() == depth && this.validate(left, right);
+		return this.validate(left, right);
 	}
-	public void setIgnoreDepth(boolean ignore) {
-		this.ignoreDepth = ignore;
-	}
+	
 	/**
 	 * Clone.
 	 *
