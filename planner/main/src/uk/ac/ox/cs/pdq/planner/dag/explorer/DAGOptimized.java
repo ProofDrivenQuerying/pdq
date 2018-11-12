@@ -95,10 +95,10 @@ public class DAGOptimized extends DAGExplorer {
 	 * @throws SQLException
 	 */
 	public DAGOptimized(EventBus eventBus, PlannerParameters parameters, ConjunctiveQuery query,
-			ConjunctiveQuery accessibleQuery, AccessibleSchema accessibleSchema, Chaser chaser,
+			AccessibleSchema accessibleSchema, Chaser chaser,
 			DatabaseManager connection, CostEstimator costEstimator, Filter filter, int maxDepth)
 			throws PlannerException, SQLException {
-		super(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
+		super(eventBus, parameters, query, accessibleSchema, chaser, connection, costEstimator);
 		this.filter = filter;
 		this.maxDepth = maxDepth;
 		List<DAGChaseConfiguration> initialConfigurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(

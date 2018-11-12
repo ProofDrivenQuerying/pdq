@@ -1,9 +1,12 @@
 package uk.ac.ox.cs.pdq.planner.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Lists;
@@ -13,6 +16,9 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -99,4 +105,26 @@ public class PlannerUtility {
 		return ConjunctiveQuery.create(query.getFreeVariables(), atoms);
 	}
 	
+	public static Map<Variable, Constant> generateCanonicalMappingForQuery(ConjunctiveQuery query) {
+		Map<Variable, Constant> canonicalMapping = new LinkedHashMap<>();
+		List<Variable> freeVariables = Arrays.asList(query.getFreeVariables());
+		for (Atom atom : query.getBody().getAtoms()) {
+			for (Term t : atom.getTerms()) {
+				if (t.isVariable()) {
+					Constant c = canonicalMapping.get(t);
+					if (c == null && !freeVariables.contains(t)) {
+//						c = UntypedConstant.create(ChaseConstantGenerator.getName());
+						c = UntypedConstant.create("v_" + ((Variable)t).getSymbol() + query.getId());
+						canonicalMapping.put((Variable) t, c);
+					} else if (c==null) {
+						// c is a free variable we want to preserve its name in the new constant.
+						c = UntypedConstant.create("fv_" + ((Variable)t).getSymbol() + query.getId());
+						canonicalMapping.put((Variable) t, c);
+					}
+				}
+			}
+		}
+		return canonicalMapping;
+	}
+
 }

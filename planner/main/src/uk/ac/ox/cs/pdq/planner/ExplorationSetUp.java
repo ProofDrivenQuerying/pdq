@@ -6,7 +6,6 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -51,14 +50,12 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimizedMultiThread;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
-import uk.ac.ox.cs.pdq.reasoning.chase.ChaseConstantGenerator;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
@@ -405,18 +402,7 @@ public class ExplorationSetUp {
 	 *         is called with empty input canonical mapping.
 	 */
 	public static ConjunctiveQuery generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(ConjunctiveQuery query) {
-		Map<Variable, Constant> canonicalMapping = new LinkedHashMap<>();
-		for (Atom atom : query.getBody().getAtoms()) {
-			for (Term t : atom.getTerms()) {
-				if (t.isVariable()) {
-					Constant c = canonicalMapping.get(t);
-					if (c == null) {
-						c = UntypedConstant.create(ChaseConstantGenerator.getName());
-						canonicalMapping.put((Variable) t, c);
-					}
-				}
-			}
-		}
+		Map<Variable, Constant> canonicalMapping = PlannerUtility.generateCanonicalMappingForQuery(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
 		substitutionFiltered.putAll(canonicalMapping);
 		for (Variable variable : query.getBoundVariables())

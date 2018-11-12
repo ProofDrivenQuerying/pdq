@@ -113,10 +113,10 @@ public class DAGGenericSimple extends DAGExplorer {
 	 * @throws SQLException
 	 */
 	public DAGGenericSimple(EventBus eventBus, PlannerParameters parameters, ConjunctiveQuery query,
-			ConjunctiveQuery accessibleQuery, AccessibleSchema accessibleSchema, Chaser chaser,
+			AccessibleSchema accessibleSchema, Chaser chaser,
 			DatabaseManager connection, CostEstimator costEstimator, SuccessDominance successDominance, Filter filter,
 			List<Validator> validators, int maxDepth) throws PlannerException, SQLException {
-		super(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
+		super(eventBus, parameters, query, accessibleSchema, chaser, connection, costEstimator);
 		Preconditions.checkNotNull(successDominance);
 		Preconditions.checkArgument(validators != null);
 		this.successDominance = successDominance;

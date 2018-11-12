@@ -144,26 +144,26 @@ public class ExplorerFactory {
 					parameters.getChaseInterval());
 
 		case DAG_GENERIC:
-			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGenericLegacy(eventBus, parameters, query, accessibleQuery,
+			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGenericLegacy(eventBus, parameters, query, 
 					accessibleSchema, chaser, connection, costEstimator, successDominance, filter, validators,
 					parameters.getMaxDepth());
 		case DAG_GENERIC_SIMPLE:
 			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGenericSimple(eventBus, parameters, query,
-					accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance, filter,
+					accessibleSchema, chaser, connection, costEstimator, successDominance, filter,
 					validators, parameters.getMaxDepth());
 
 		case DAG_SIMPLEDP:
-			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGSimpleDP(eventBus, parameters, query, accessibleQuery,
+			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGSimpleDP(eventBus, parameters, query, 
 					accessibleSchema, chaser, connection, costEstimator, successDominance, dominance, filter,
 					validators, parameters.getMaxDepth());
 
 		case DAG_CHASEFRIENDLYDP:
 			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGChaseFriendlyDP(eventBus, parameters, query,
-					accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance, dominance,
+					accessibleSchema, chaser, connection, costEstimator, successDominance, dominance,
 					filter, validators, parameters.getMaxDepth());
 
 		case DAG_OPTIMIZED:
-			return new DAGOptimizedMultiThread(eventBus, parameters, query, accessibleQuery, accessibleSchema, chaser, connection,
+			return new DAGOptimizedMultiThread(eventBus, parameters, query, accessibleSchema, chaser, connection,
 					costEstimator, filter, parameters.getMaxDepth());
 
 		case LINEAR_OPTIMIZED:

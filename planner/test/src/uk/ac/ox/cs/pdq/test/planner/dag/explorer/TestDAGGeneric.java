@@ -135,7 +135,7 @@ public class TestDAGGeneric extends PdqTest {
 		validators.add(new DefaultValidator());
 
 		try {
-			DAGGenericLegacy explorer = new DAGGenericLegacy(new EventBus(), parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, connection, costEstimator,
+			DAGGenericLegacy explorer = new DAGGenericLegacy(new EventBus(), parameters, ts.getQuery(), accessibleSchema, chaser, connection, costEstimator,
 					successDominance, null, validators, 4);
 			explorer.explore();
 			explorer.getExploredPlans();
@@ -247,7 +247,7 @@ public class TestDAGGeneric extends PdqTest {
 			List<Validator> validators = new ArrayList<>();
 			validators.add(new DefaultValidator());
 
-			explorer = new DAGGenericLegacy(new EventBus(), parameters, ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator,
+			explorer = new DAGGenericLegacy(new EventBus(), parameters, ts.getQuery(), accessibleSchema, chaser, databaseConnection, costEstimator,
 					successDominance, null, validators, 3);
 
 			explorer.explore();
@@ -384,7 +384,7 @@ public class TestDAGGeneric extends PdqTest {
 		validators.add(new ClosedValidator());
 
 		try {
-			DAGGenericLegacy explorer = new DAGGenericLegacy(new EventBus(), parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance,
+			DAGGenericLegacy explorer = new DAGGenericLegacy(new EventBus(), parameters, query, accessibleSchema, chaser, connection, costEstimator, successDominance,
 					null, validators, relations.length);
 			explorer.explore();
 			explorer.getExploredPlans();
@@ -514,7 +514,7 @@ public class TestDAGGeneric extends PdqTest {
 			List<Validator> validators = new ArrayList<>();
 			validators.add(new DefaultValidator());
 
-			explorer = new DAGGenericLegacy(new EventBus(), parameters, query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, successDominance,
+			explorer = new DAGGenericLegacy(new EventBus(), parameters, query, accessibleSchema, chaser, databaseConnection, costEstimator, successDominance,
 					null, validators, 3);
 
 			explorer.explore();

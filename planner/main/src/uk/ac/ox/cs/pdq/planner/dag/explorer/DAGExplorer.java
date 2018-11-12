@@ -1,5 +1,8 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
@@ -7,11 +10,14 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
+import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 /**
@@ -68,7 +74,6 @@ public abstract class DAGExplorer extends Explorer {
 	public DAGExplorer(EventBus eventBus, 
 			PlannerParameters parameters,
 			ConjunctiveQuery query, 
-			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 
 			DatabaseManager connection,
@@ -76,7 +81,6 @@ public abstract class DAGExplorer extends Explorer {
 		super(eventBus);
 		Preconditions.checkArgument(parameters != null);
 		Preconditions.checkArgument(query != null);
-		Preconditions.checkArgument(accessibleQuery != null);
 		Preconditions.checkArgument(accessibleSchema != null);
 		Preconditions.checkArgument(chaser != null);
 		Preconditions.checkArgument(connection != null);
@@ -84,11 +88,22 @@ public abstract class DAGExplorer extends Explorer {
 		
 		this.parameters = parameters;
 		this.query = query;
-		this.accessibleQuery = accessibleQuery;
+		this.accessibleQuery = generateAccessibleQuery(query);
 		this.accessibleSchema = accessibleSchema;
 		this.chaser = chaser;
 		this.connection = connection;
 		this.costEstimator = costEstimator;
+		
+				
+	}
+	
+	private static ConjunctiveQuery generateAccessibleQuery(ConjunctiveQuery query) {
+		Map<Variable, Constant> canonicalMapping = PlannerUtility.generateCanonicalMappingForQuery(query);
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
+		substitutionFiltered.putAll(canonicalMapping);
+		for (Variable variable : query.getBoundVariables())
+			substitutionFiltered.remove(variable);
+		return PlannerUtility.createAccessibleQuery(query);
 	}
 
 	/**
