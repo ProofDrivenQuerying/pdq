@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
+package uk.ac.ox.cs.pdq.planner.dag.explorer;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
