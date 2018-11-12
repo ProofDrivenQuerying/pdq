@@ -149,8 +149,6 @@ public class PDQ {
 						observations.add( doPlanning(directory,schema, PlannerTypes.DAG_GENERIC ) );
 						System.out.println("Running DAG OPTIMISED");
 						observations.add( doPlanning(directory,schema, PlannerTypes.DAG_OPTIMIZED ) );
-						System.out.println("Running DAG GENERIC SIMPLE");
-						observations.add( doPlanning(directory,schema, PlannerTypes.DAG_GENERIC_SIMPLE ) );
 						if (observations.get(0)!=null)
 							observation = observations.get(0);
 					} else {
@@ -363,8 +361,6 @@ public class PDQ {
 	private AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance(PlannerParameters params, CostParameters cost) {
 		switch (params.getPlannerType()) {
 		case DAG_GENERIC:
-		case DAG_SIMPLEDP:
-		case DAG_CHASEFRIENDLYDP:
 		case DAG_OPTIMIZED:
 			if (params.getSuccessDominanceType() == SuccessDominanceTypes.OPEN || params.getDominanceType() == DominanceTypes.OPEN) 
 				return new ApproximateCostAcceptanceCheck();

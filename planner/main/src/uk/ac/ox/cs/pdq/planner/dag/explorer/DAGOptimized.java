@@ -359,5 +359,4 @@ public class DAGOptimized extends DAGExplorer {
 		}
 		throw new PlannerException(e);
 	}
-
 }

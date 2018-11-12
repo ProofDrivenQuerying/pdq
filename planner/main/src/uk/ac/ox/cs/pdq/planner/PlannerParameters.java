@@ -660,17 +660,6 @@ public class PlannerParameters extends Parameters {
 		/** The dag generic. */
 		@EnumParameterValue(description = "Generic (exhaustive) DAG planning algorithm")
 		DAG_GENERIC, 
-		/** The dag generic. */
-		@EnumParameterValue(description = "Generic (exhaustive) DAG planning simplified algorithm ")
-		DAG_GENERIC_SIMPLE, 
-
-		/** The dag simpledp. */
-		@EnumParameterValue(description = "DAG planning algorithm, simulating classic DP plan optimization")
-		DAG_SIMPLEDP,
-
-		/** The dag chasefriendlydp. */
-		@EnumParameterValue(description = "DAG DP planning algorithm, avoiding redundant chasing")
-		DAG_CHASEFRIENDLYDP, 
 
 		/** The dag optimized. */
 		@EnumParameterValue(description = "DAG DP planning algorithm, relying on parallelism")

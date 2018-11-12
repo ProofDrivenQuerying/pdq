@@ -15,7 +15,6 @@ import org.mockito.Mockito;
 
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
@@ -33,15 +32,12 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGenericLegacy;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ClosedValidator;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGenericSimple;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
@@ -49,131 +45,15 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
-import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 /**
- * Tests the DAG generic class. Makes sure we have all possible plans explored.
+ * Tests the DAGGenericSimple class. Makes sure we have all possible plans explored.
  * 
  * @author Efthymia Tsamoura
  * @author Gabor
  */
 public class TestDAGGeneric extends PdqTest {
-
-	private final boolean printPlans = false;
-
-	/**
-	 * Uses scenario5 as input, checks the accessible schema before exploration, and
-	 * the explored plans afterwards. In this test we should have 30 plans similar
-	 * to this:
-	 * 
-	 * <pre>
-	 * Plan=Join{[(#0=#8&#1=#9)]
-	 * 		DependentJoin{[(#2=#6&#3=#7)]
-	 * 			Rename{[c1,c2,c7,c8]Access{R2.mt_3[]}},
-	 * 			Rename{[c9,c10,c7,c8]Access{R3.mt_4[#2=c,#3=d]}}},
-	 * 		DependentJoin{[(#2=#6&#3=#7)]
-	 * 			Rename{[c1,c2,c3,c4]Access{R0.mt_0[]}},
-	 * 			Rename{[c5,c6,c3,c4]Access{R1.mt_2[#2=c,#3=d]}}}}
-	 * Cost=1.0
-	 * </pre>
-	 * 
-	 * Asserts that we have busy plans too not only left-deep.
-	 */
-	@Test
-	public void test1ExplorationSteps() {
-		GlobalCounterProvider.getNext("CannonicalName");
-		TestScenario ts = getScenario5();
-		// Create accessible schema
-		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
-
-		assertAccessibleSchema(accessibleSchema, ts.getSchema(), 5);
-
-		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery());
-		ConjunctiveQuery query = ts.getQuery();
-		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
-		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
-		substitutionFiltered.putAll(substitution);
-		for(Variable variable:query.getBoundVariables()) 
-			substitutionFiltered.remove(variable);
-		ExplorationSetUp.getCanonicalSubstitution().put(query,substitution);
-		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
-		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery,substitution);
-		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
-
-		// Create database connection
-		DatabaseManager connection = null;
-		try {
-			connection = new InternalDatabaseManager();
-			connection.initialiseDatabaseForSchema(accessibleSchema);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail();
-		}
-
-		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser();
-
-		// Mock the planner parameters
-		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
-		when(parameters.getSeed()).thenReturn(1);
-		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
-
-		// Mock the cost estimator
-		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
-		when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new DoubleCost(1.0));
-
-		// Mock success domination
-		SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
-		when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
-				.thenReturn(false);
-		when(successDominance.clone()).thenReturn(successDominance);
-
-		// Create validators
-		List<Validator> validators = new ArrayList<>();
-		validators.add(new DefaultValidator());
-
-		try {
-			DAGGenericLegacy explorer = new DAGGenericLegacy(new EventBus(), parameters, ts.getQuery(), accessibleSchema, chaser, connection, costEstimator,
-					successDominance, null, validators, 4);
-			explorer.explore();
-			explorer.getExploredPlans();
-			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();
-			Assert.assertNotNull(exploredPlans);
-			Assert.assertFalse(exploredPlans.isEmpty());
-			Assert.assertEquals(30, exploredPlans.size());
-			boolean topIsAlwaysDependentJoin = true;
-			for (Entry<RelationalTerm, Cost> plan : exploredPlans) {
-				try {
-					if (printPlans)
-						PlanPrinter.openPngPlan(plan.getKey());
-				} catch (Throwable t) {
-					t.printStackTrace();
-				}
-				if (!(plan.getKey() instanceof DependentJoinTerm)) {
-					topIsAlwaysDependentJoin = false;
-				}
-				int dependentJoints = countDependentJoinsInPlan(plan.getKey());
-				Assert.assertTrue(dependentJoints >= 1); // each plan must contain at least one dependent join term.
-			}
-
-			// left deep and right deep plans have dependent join on top. This makes sure at
-			// least one of them is not like that.
-			Assert.assertFalse(topIsAlwaysDependentJoin);
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			Assert.fail();
-		} catch (PlannerException e) {
-			e.printStackTrace();
-			Assert.fail();
-		} catch (LimitReachedException e) {
-			e.printStackTrace();
-			Assert.fail();
-		}
-	}
-
 	/**
 	 * Uses scenario3 as input. Asserts that we found 8 plans, similar to this:
 	 * 
@@ -234,8 +114,8 @@ public class TestDAGGeneric extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(3);
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
-		// Create DAGGeneric
-		DAGGenericLegacy explorer = null;
+		// Create DAGGenericSimple
+		DAGGenericSimple explorer = null;
 		try {
 			// Mock success domination
 			SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
@@ -247,7 +127,7 @@ public class TestDAGGeneric extends PdqTest {
 			List<Validator> validators = new ArrayList<>();
 			validators.add(new DefaultValidator());
 
-			explorer = new DAGGenericLegacy(new EventBus(), parameters, ts.getQuery(), accessibleSchema, chaser, databaseConnection, costEstimator,
+			explorer = new DAGGenericSimple(new EventBus(), parameters, ts.getQuery(), accessibleSchema, chaser, databaseConnection, costEstimator,
 					successDominance, null, validators, 3);
 
 			explorer.explore();
@@ -256,167 +136,6 @@ public class TestDAGGeneric extends PdqTest {
 			Assert.assertFalse(exploredPlans.isEmpty());
 			Assert.assertEquals(8, exploredPlans.size());
 		} catch (PlannerException | SQLException e) {
-			e.printStackTrace();
-			Assert.fail();
-		} catch (LimitReachedException e) {
-			e.printStackTrace();
-			Assert.fail();
-		}
-	}
-
-	/**
-	 * Creates a schema out of 1,2 or 3 group of 4 relations where each four
-	 * relation forms a busy sub-plan. Current assertions are set to validate the
-	 * results of a chase execution of 8 relations. Number of relations can be
-	 * changed in the first line of the function for testing purposes. The case of 4
-	 * relations is havily tested, the case of 12 relations is too slow for normal
-	 * unit tests, so we use only the 8 relation mode for now.
-	 * <pre>
-	 * Expected plans are similar to this:
-	 * 
-	 * Project{[c0,c1,c10,c11]
-	 * 		Join{[(#0=#24&#1=#25&#8=#16&#9=#17)]
-	 * 			Join{[]DependentJoin{[(#2=#6&#3=#7)]
-	 * 				Rename{[c0,c1,c2,c3]
-	 * 					Access{R0.mt_0[]}},
-	 * 				Rename{[c4,c5,c2,c3]
-	 * 					Access{R1.mt_1[#2=c,#3=d]}}},
-	 * 			DependentJoin{[(#2=#6&#3=#7)]
-	 * 				Rename{[c10,c11,c16,c17]
-	 * 					Access{R6.mt_6[]}},
-	 * 				Rename{[c18,c19,c16,c17]
-	 * 					Access{R7.mt_7[#2=c,#3=d]}}}},
-	 * 		Join{[]
-	 * 			DependentJoin{[(#2=#6&#3=#7)]
-	 * 				Rename{[c10,c11,c12,c13]
-	 * 					Access{R4.mt_4[]}},
-	 * 				Rename{[c14,c15,c12,c13]
-	 * 					Access{R5.mt_5[#2=c,#3=d]}}},
-	 * 			DependentJoin{[(#2=#6&#3=#7)]
-	 * 				Rename{[c0,c1,c6,c7]
-	 * 					Access{R2.mt_2[]}},
-	 * 				Rename{[c8,c9,c6,c7]
-	 * 					Access{R3.mt_3[#2=c,#3=d]}}}}}}
-	 * </pre>
-	 */
-	@Test
-	public void test4LargeBushyPlanExploration() {
-		final int NUMBER_OF_RELATIONS = 8; // can be 4, 8 or 12. With 8 relations, and using the ClosedValidator it should
-											// be successful in 3-4sec. with 12 it takes way too long.
-		// Create the relations
-		Relation[] relations = new Relation[NUMBER_OF_RELATIONS + 1];
-		for (int i = 0; i < relations.length - 1; i++) {
-			if (i % 2 == 0)
-				relations[i] = Relation.create("R" + i, new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
-						new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
-			else
-				relations[i] = Relation.create("R" + i, new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
-						new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] { 2, 3 }) });
-		}
-		relations[relations.length - 1] = Relation.create("Accessible", new Attribute[] { this.a_s });
-		// Create query
-		// R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w')
-		Atom[] atoms = new Atom[relations.length - 1];
-		List<Variable> head = new ArrayList<>();
-		for (int z = 0; z < (relations.length - 1) / 4; z++) {
-			Variable x = Variable.create("x" + z);
-			head.add(x);
-			Variable y = Variable.create("y" + z);
-			head.add(y);
-			Variable v = Variable.create("z" + z);
-			Variable w = Variable.create("w" + z);
-			atoms[4 * z + 0] = Atom.create(relations[4 * z + 0], new Term[] { x, y, v, w });
-			atoms[4 * z + 1] = Atom.create(relations[4 * z + 1], new Term[] { Variable.create("x" + z + "b"), Variable.create("y" + z + "b"), v, w });
-			atoms[4 * z + 2] = Atom.create(relations[4 * z + 2], new Term[] { x, y, Variable.create("z" + z + "c"), Variable.create("w" + z + "c") });
-			atoms[4 * z + 3] = Atom.create(relations[4 * z + 3],
-					new Term[] { Variable.create("x" + z + "d"), Variable.create("y" + z + "d"), Variable.create("z" + z + "c"), Variable.create("w" + z + "c") });
-		}
-		ConjunctiveQuery query = ConjunctiveQuery.create(head.toArray(new Variable[head.size()]), atoms);
-
-		// Create schema
-		Schema schema = new Schema(relations);
-
-		// Create accessible schema
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
-
-		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
-		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
-		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
-		substitutionFiltered.putAll(substitution);
-		for(Variable variable:query.getBoundVariables()) 
-			substitutionFiltered.remove(variable);
-		ExplorationSetUp.getCanonicalSubstitution().put(query,substitution);
-		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(query,substitutionFiltered);
-		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery,substitution);
-		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
-
-		// Create database connection
-		DatabaseManager connection = null;
-		try {
-			connection = new InternalDatabaseManager();
-			connection.initialiseDatabaseForSchema(accessibleSchema);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail();
-		}
-
-		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser();
-
-		// Mock the planner parameters
-		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
-		when(parameters.getSeed()).thenReturn(1);
-		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
-
-		// Mock the cost estimator
-		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
-		when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new DoubleCost(1.0));
-
-		// Mock success domination
-		SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
-		when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
-				.thenReturn(false);
-
-		// Create validators
-		List<Validator> validators = new ArrayList<>();
-		// validators.add(new DefaultValidator());
-		validators.add(new ClosedValidator());
-
-		try {
-			DAGGenericLegacy explorer = new DAGGenericLegacy(new EventBus(), parameters, query, accessibleSchema, chaser, connection, costEstimator, successDominance,
-					null, validators, relations.length);
-			explorer.explore();
-			explorer.getExploredPlans();
-			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();
-			Assert.assertNotNull(explorer.getBestPlan());
-			Assert.assertEquals(0,(int)explorer.getBestPlan().getNumberOfInputAttributes());
-			Assert.assertNotNull(exploredPlans);
-			Assert.assertFalse(exploredPlans.isEmpty());
-			Assert.assertEquals(120, exploredPlans.size());
-			boolean topIsAlwaysDependentJoin = true;
-			for (Entry<RelationalTerm, Cost> plan : exploredPlans) {
-				try {
-					if (printPlans)
-						PlanPrinter.openPngPlan(plan.getKey());
-				} catch (Throwable t) {
-					t.printStackTrace();
-				}
-				if (!(plan.getKey() instanceof DependentJoinTerm)) {
-					topIsAlwaysDependentJoin = false;
-				}
-				int dependentJoints = countDependentJoinsInPlan(plan.getKey());
-				Assert.assertTrue(dependentJoints >= 1); // each plan must contain at least one dependent join term.
-			}
-
-			// left deep and right deep plans have dependent join on top. This makes sure at
-			// least one of them is not like that.
-			Assert.assertFalse(topIsAlwaysDependentJoin);
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			Assert.fail();
-		} catch (PlannerException e) {
 			e.printStackTrace();
 			Assert.fail();
 		} catch (LimitReachedException e) {
@@ -501,8 +220,8 @@ public class TestDAGGeneric extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(3);
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
-		// Create DAGGeneric
-		DAGGenericLegacy explorer = null;
+		// Create DAGGenericSimple
+		DAGGenericSimple explorer = null;
 		try {
 			// Mock success domination
 			SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
@@ -514,7 +233,7 @@ public class TestDAGGeneric extends PdqTest {
 			List<Validator> validators = new ArrayList<>();
 			validators.add(new DefaultValidator());
 
-			explorer = new DAGGenericLegacy(new EventBus(), parameters, query, accessibleSchema, chaser, databaseConnection, costEstimator, successDominance,
+			explorer = new DAGGenericSimple(new EventBus(), parameters, query, accessibleSchema, chaser, databaseConnection, costEstimator, successDominance,
 					null, validators, 3);
 
 			explorer.explore();
@@ -529,44 +248,6 @@ public class TestDAGGeneric extends PdqTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
-	}
-
-	// utility function to do asserts on the accessible schema
-	private void assertAccessibleSchema(AccessibleSchema accessibleSchema, Schema schema, int numberOfAxioms) {
-		Assert.assertNotNull(accessibleSchema);
-
-		// accessibility axioms
-		Assert.assertNotNull(accessibleSchema.getAccessibilityAxioms());
-		Assert.assertEquals(numberOfAxioms, accessibleSchema.getAccessibilityAxioms().length);
-		int abcd = 0;
-		int anythingElse = 0;
-		int cdab = 0;
-		for (AccessibilityAxiom axiom : accessibleSchema.getAccessibilityAxioms()) {
-			if (axiom.getBoundVariables().length == 4 && axiom.getBoundVariables()[0].equals(Variable.create("a"))) {
-				Assert.assertEquals(axiom.getBoundVariables()[0], Variable.create("a"));
-				Assert.assertEquals(axiom.getBoundVariables()[1], Variable.create("b"));
-				Assert.assertEquals(axiom.getBoundVariables()[2], Variable.create("c"));
-				Assert.assertEquals(axiom.getBoundVariables()[3], Variable.create("d"));
-				abcd++;
-			} else if (axiom.getBoundVariables().length == 4 && axiom.getBoundVariables()[0].equals(Variable.create("c"))) {
-				Assert.assertEquals(axiom.getBoundVariables()[0], Variable.create("c"));
-				Assert.assertEquals(axiom.getBoundVariables()[1], Variable.create("d"));
-				Assert.assertEquals(axiom.getBoundVariables()[2], Variable.create("a"));
-				Assert.assertEquals(axiom.getBoundVariables()[3], Variable.create("b"));
-				cdab++;
-			} else {
-				anythingElse++;
-			}
-		}
-		Assert.assertEquals(3, abcd);
-		Assert.assertEquals(0, anythingElse);
-		Assert.assertEquals(2, cdab);
-
-		Assert.assertNotNull(accessibleSchema.getRelations());
-		Assert.assertEquals(10, accessibleSchema.getRelations().length);
-		Dependency[] infAccAxioms = accessibleSchema.getInferredAccessibilityAxioms();
-		Assert.assertNotNull(infAccAxioms);
-		Assert.assertEquals(0, infAccAxioms.length);
 	}
 
 }

@@ -18,8 +18,6 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.FilterFactory;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ValidatorFactory;
-import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
-import uk.ac.ox.cs.pdq.planner.dominance.DominanceFactory;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominanceFactory;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
@@ -105,7 +103,6 @@ public class ExplorerFactory {
 			CostEstimator costEstimator, PlannerParameters parameters, ReasoningParameters reasoningParameters)
 			throws Exception {
 
-		Dominance[] dominance = new DominanceFactory(parameters.getDominanceType()).getInstance();
 		SuccessDominance successDominance = new SuccessDominanceFactory().getInstance();
 
 		NodeFactory nodeFactory = null;
@@ -144,23 +141,9 @@ public class ExplorerFactory {
 					parameters.getChaseInterval());
 
 		case DAG_GENERIC:
-			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGenericLegacy(eventBus, parameters, query, 
-					accessibleSchema, chaser, connection, costEstimator, successDominance, filter, validators,
-					parameters.getMaxDepth());
-		case DAG_GENERIC_SIMPLE:
 			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGenericSimple(eventBus, parameters, query,
 					accessibleSchema, chaser, connection, costEstimator, successDominance, filter,
 					validators, parameters.getMaxDepth());
-
-		case DAG_SIMPLEDP:
-			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGSimpleDP(eventBus, parameters, query, 
-					accessibleSchema, chaser, connection, costEstimator, successDominance, dominance, filter,
-					validators, parameters.getMaxDepth());
-
-		case DAG_CHASEFRIENDLYDP:
-			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGChaseFriendlyDP(eventBus, parameters, query,
-					accessibleSchema, chaser, connection, costEstimator, successDominance, dominance,
-					filter, validators, parameters.getMaxDepth());
 
 		case DAG_OPTIMIZED:
 			return new DAGOptimizedMultiThread(eventBus, parameters, query, accessibleSchema, chaser, connection,
