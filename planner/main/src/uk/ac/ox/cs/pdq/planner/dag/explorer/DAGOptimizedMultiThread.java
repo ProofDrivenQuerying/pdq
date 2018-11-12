@@ -113,13 +113,9 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 			List<CreateBinaryConfigurationsTask> currentTasks = new ArrayList<>();
 			Queue<DAGChaseConfiguration> leftCopy = new ConcurrentLinkedQueue<>();
 			leftCopy.addAll(this.leftSideConfigurations);
-			int groupSize = 1;
 			ArrayList<DAGChaseConfiguration> right = new ArrayList<>();
 			right.addAll(this.equivalenceClasses.getConfigurations());
-			while(right.size()>threadPool.size()*groupSize) {
-				// find the smallest groupSize that will engage all threads in the pool. 
-				groupSize++;
-			}
+			int groupSize = right.size()/threadPool.size()+1;
 			// group the right side configurations to create multiple tasks. 
 			for (int i = 0; i < right.size(); i += groupSize) {
 				Collection<DAGChaseConfiguration> rightGroup = new ArrayList<>();
