@@ -59,13 +59,10 @@ public class ValidatorFactory {
 			return new DepthValidator(this.depthThreshold);
 		case RIGHT_DEPTH_VALIDATOR:
 			return new RightDepthValidator(this.depthThreshold);
-		case APPLYRULE_DEPTH_VALIDATOR:
-			return new ApplyRuleDepthValidator(this.depthThreshold);
 		case LINEAR_VALIDATOR:
 			return new LinearValidator();
 		default:
-			break;
+			throw new RuntimeException("Invalid validator type: " + this.type);
 		}
-		return null;
 	}
 }

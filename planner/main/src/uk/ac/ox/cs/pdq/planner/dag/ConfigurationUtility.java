@@ -30,21 +30,6 @@ public class ConfigurationUtility {
 	private final static FactDominance factDominance = new FastFactDominance(false);
 	
 	/**
-	 * Checks if is left deep.
-	 *
-	 * @param configuration the configuration
-	 * @return 		true if the input configuration is a left-deep one
-	 */
-	public static boolean isLeftDeep(DAGConfiguration configuration) {
-		if(configuration instanceof BinaryConfiguration) {
-			if (((BinaryConfiguration) configuration).getRight() instanceof BinaryConfiguration) 
-				return false;
-			return isLeftDeep(((BinaryConfiguration) configuration).getLeft());
-		}
-		return true;
-	}
-
-	/**
 	 * Gets the apply rule configurations that lie within a given configuration.
 	 *
 	 * @param configuration the configuration

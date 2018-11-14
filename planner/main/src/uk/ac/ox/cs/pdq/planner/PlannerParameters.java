@@ -697,11 +697,6 @@ public class PlannerParameters extends Parameters {
 		@EnumParameterValue(description = "Requires the input pair of configurations to be non trivial and the right's depth to be <= the depth threshold")
 		RIGHT_DEPTH_VALIDATOR,
 		
-		/** The applyrule depth validator. */
-		@EnumParameterValue(description = "Requires the input pair of configurations to be non trivial, their combined depth to be <= the depth threshold"
-				+ "and at least one of the input configurations to be an ApplyRule.")
-		APPLYRULE_DEPTH_VALIDATOR,
-		
 		/** The linear validator. */
 		@EnumParameterValue(description = "Requires the input pair of configurations to be non trivial and their composition to be a closed left-deep configuration")
 		LINEAR_VALIDATOR,

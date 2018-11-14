@@ -84,9 +84,23 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 	@Override
 	public Boolean isLeftDeep() {
 		if(this.isLeftDeep == null) {
-			this.isLeftDeep = ConfigurationUtility.isLeftDeep(this);
+			this.isLeftDeep = computeIsLeftDeep(this);
 		}
 		return this.isLeftDeep;
+	}
+	/**
+	 * Checks if is left deep.
+	 *
+	 * @param configuration the configuration
+	 * @return 		true if the input configuration is a left-deep one
+	 */
+	private static boolean computeIsLeftDeep(DAGConfiguration configuration) {
+		if(configuration instanceof BinaryConfiguration) {
+			if (((BinaryConfiguration) configuration).getRight() instanceof BinaryConfiguration) 
+				return false;
+			return computeIsLeftDeep(((BinaryConfiguration) configuration).getLeft());
+		}
+		return true;
 	}
 	
 	/* (non-Javadoc)
