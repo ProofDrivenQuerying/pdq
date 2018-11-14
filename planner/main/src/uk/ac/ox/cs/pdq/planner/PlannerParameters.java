@@ -182,12 +182,6 @@ public class PlannerParameters extends Parameters {
 			defaultValue = "2")
 	protected Integer depthThreshold = 2;
 	
-	/** The zombification. */
-	@Parameter(description = "If true, then we perform (de)zombification during optimised linear plan exploration "
-			+ "plan search",
-			defaultValue = "true")
-	protected Boolean zombification;
-	
 	/** Internal or external database should be used . */
 	@Parameter(description = "If true, we will use an Internal database manager instead of the external one.",
 			defaultValue = "true")
@@ -608,24 +602,6 @@ public class PlannerParameters extends Parameters {
 		this.depthThreshold = depthThreshold != null ? depthThreshold.intValue() : null;
 	}
 	
-	/**
-	 * Gets the zombification.
-	 *
-	 * @return the zombification
-	 */
-	public Boolean getZombification() {
-		return this.zombification == null ? false : this.zombification;
-	}
-
-	/**
-	 * Sets the zombification.
-	 *
-	 * @param zombification the new zombification
-	 */
-	public void setZombification(Boolean zombification) {
-		this.zombification = zombification;
-	}
-
 	public Boolean getUseInternalDatabase() {
 		return useInternalDatabase;
 	}

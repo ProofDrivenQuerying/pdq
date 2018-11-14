@@ -13,6 +13,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.jgrapht.graph.DefaultEdge;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -70,9 +71,6 @@ public class LinearOptimized extends LinearExplorer {
 	/** TOCOMMENT: WHAT IS IT . */
 	private final Set<List<Integer>> prunedPaths = new HashSet<>(); 
 
-	/** TOCOMMENT: WHAT IS IT */
-	private final boolean zombification;
-
 	/**  Classes of equivalent configurations. */
 	private PathEquivalenceClasses equivalenceClasses = new PathEquivalenceClasses();
 
@@ -120,8 +118,7 @@ public class LinearOptimized extends LinearExplorer {
 			NodeFactory nodeFactory,
 			int depth,
 			int queryMatchInterval, 
-			PostPruning postPruning,
-			boolean zombification) throws PlannerException, SQLException {
+			PostPruning postPruning) throws PlannerException, SQLException {
 		super(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, nodeFactory, depth);
 		Preconditions.checkNotNull(costPropagator);
 		Preconditions.checkArgument(queryMatchInterval >= 0);
@@ -130,7 +127,6 @@ public class LinearOptimized extends LinearExplorer {
 		this.costPropagator = costPropagator;
 		this.queryMatchInterval = queryMatchInterval;
 		this.postPruning = postPruning;
-		this.zombification = zombification;
 	}
 
 	/**
@@ -204,18 +200,18 @@ public class LinearOptimized extends LinearExplorer {
 		freshNode.getConfiguration().setCost(cost);
 		freshNode.setCostOfBestPlanFromRoot(cost);
 
-//		log.info("SELECTED NODE: " + selectedNode);
-//		log.info("EXPOSED CANDIDATES\t");
-//		if(selectedNode.getConfiguration().getExposedCandidates() != null) {
-//			log.info(Joiner.on("\n\t").join(selectedNode.getConfiguration().getExposedCandidates()));
-//		}
-//		log.info("UNEXPOSED CANDIDATES\t");
-//		log.info(Joiner.on("\n\t").join(selectedNode.getConfiguration().getCandidates()));
-//		log.info("FRESH: " + freshNode + " PARENT: " + selectedNode);
-//		log.info("EXPOSED CANDIDATES\t");
-//		log.info(Joiner.on("\n\t").join(freshNode.getConfiguration().getExposedCandidates()));
-//		log.info("UNEXPOSED CANDIDATES\t");
-//		log.info(Joiner.on("\n\t").join(freshNode.getConfiguration().getCandidates()));
+		log.info("SELECTED NODE: " + selectedNode);
+		log.info("EXPOSED CANDIDATES\t");
+		if(selectedNode.getConfiguration().getExposedCandidates() != null) {
+			log.info(Joiner.on("\n\t").join(selectedNode.getConfiguration().getExposedCandidates()));
+		}
+		log.info("UNEXPOSED CANDIDATES\t");
+		log.info(Joiner.on("\n\t").join(selectedNode.getConfiguration().getCandidates()));
+		log.info("FRESH: " + freshNode + " PARENT: " + selectedNode);
+		log.info("EXPOSED CANDIDATES\t");
+		log.info(Joiner.on("\n\t").join(freshNode.getConfiguration().getExposedCandidates()));
+		log.info("UNEXPOSED CANDIDATES\t");
+		log.info(Joiner.on("\n\t").join(freshNode.getConfiguration().getCandidates()));
 
 		this.planTree.addVertex(freshNode);
 		this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
@@ -263,11 +259,9 @@ public class LinearOptimized extends LinearExplorer {
 			 */
 			if (parentEquivalent != null && !parentEquivalent.getStatus().equals(NodeStatus.SUCCESSFUL)) {
 				freshNode.setEquivalentNode(parentEquivalent);
-				if(this.zombification) {
-					PathEquivalenceClass equivalenceClass = this.equivalenceClasses.addEntry(parentEquivalent, freshNode);
-					if (this.costPropagator instanceof OrderDependentCostPropagator) 
-						this.wakeupDescendants(freshNode.getPathFromRoot(), equivalenceClass);
-				}
+				PathEquivalenceClass equivalenceClass = this.equivalenceClasses.addEntry(parentEquivalent, freshNode);
+				if (this.costPropagator instanceof OrderDependentCostPropagator) 
+					this.wakeupDescendants(freshNode.getPathFromRoot(), equivalenceClass);
 				freshNode.setStatus(NodeStatus.TERMINAL);
 				//Cannot do postpruning here
 				this.updateBestPlan(selectedNode, freshNode);

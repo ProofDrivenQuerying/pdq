@@ -367,7 +367,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 			OrderIndependentCostPropagator costPropagator = new OrderIndependentCostPropagator(costEstimator);
 			// create explorer
 			explorer = new LinearOptimized(new EventBus(), query, accessibleQuery, accessibleSchema, chaser,
-					databaseConnection, costEstimator,costPropagator, nodeFactory,4,1, postpruning,false);
+					databaseConnection, costEstimator,costPropagator, nodeFactory,4,1, postpruning);
 
 			// first exploration step should create a plan: Rename{[c0,c1]Access{S.mt_1[]}}
 			SearchNode newNode = explorer._performSingleExplorationStep();

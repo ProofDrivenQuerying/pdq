@@ -145,8 +145,7 @@ public class TestLinearOptimized extends PdqTest {
 					nodeFactory,
 					parameters.getMaxDepth(),
 					1,
-					null,
-					false);
+					null);
 				
 				PlanTree<SearchNode> planTree = null;
 				planTree = explorer.getPlanTree();
@@ -274,8 +273,7 @@ public class TestLinearOptimized extends PdqTest {
 					nodeFactory,
 					parameters.getMaxDepth(),
 					1,
-					null,
-					false);
+					null);
 				
 				PlanTree<SearchNode> planTree = null;
 				planTree = explorer.getPlanTree();
@@ -373,8 +371,7 @@ public class TestLinearOptimized extends PdqTest {
 					nodeFactory,
 					parameters.getMaxDepth(),
 					1,
-					null,
-					false);
+					null);
 				
 				explorer.explore();
 				PlanTree<SearchNode> planTree = null;

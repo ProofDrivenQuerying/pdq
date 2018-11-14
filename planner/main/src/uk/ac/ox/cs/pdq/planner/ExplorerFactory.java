@@ -153,7 +153,7 @@ public class ExplorerFactory {
 		case LINEAR_OPTIMIZED:
 			return new LinearOptimized(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection,
 					costEstimator, costPropagator, nodeFactory, parameters.getMaxDepth(),
-					parameters.getQueryMatchInterval(), postPruning, parameters.getZombification());
+					parameters.getQueryMatchInterval(), postPruning);
 
 		default:
 			throw new IllegalStateException("Unsupported planner type " + parameters.getPlannerType());
