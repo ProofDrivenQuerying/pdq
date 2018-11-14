@@ -49,18 +49,18 @@ public class ValidatorFactory {
 	 *
 	 * @return Validator
 	 */
-	public Validator getInstance() {
+	public Validator[] getInstance() {
 		switch(this.type) {
 		case DEFAULT_VALIDATOR:
-			return new DefaultValidator();
+			return new Validator[] {new DefaultValidator()};
 		case APPLYRULE_VALIDATOR:
-			return new ApplyRuleValidator();
+			return new Validator[] {new DefaultValidator(), new ApplyRuleValidator()};
 		case DEPTH_VALIDATOR:
-			return new DepthValidator(this.depthThreshold);
+			return new Validator[] {new DefaultValidator(), new DepthValidator(this.depthThreshold)};
 		case RIGHT_DEPTH_VALIDATOR:
-			return new RightDepthValidator(this.depthThreshold);
+			return new Validator[] {new DefaultValidator(), new RightDepthValidator(this.depthThreshold)};
 		case LINEAR_VALIDATOR:
-			return new LinearValidator();
+			return new Validator[] {new DefaultValidator(), new LinearValidator()};
 		default:
 			throw new RuntimeException("Invalid validator type: " + this.type);
 		}

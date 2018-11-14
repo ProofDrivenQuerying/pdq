@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer.validators;
 
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
-import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 
@@ -33,8 +32,7 @@ public class ClosedValidator implements Validator{
 		return  (left instanceof ApplyRule && right instanceof ApplyRule || 
 				left instanceof BinaryConfiguration && right instanceof BinaryConfiguration)
 				&& left.isClosed()
-				&& left.getOutput().containsAll(right.getInput())
-				&& ConfigurationUtility.isNonTrivial(left, right);
+				&& left.getOutput().containsAll(right.getInput());
 	}
 
 	/**

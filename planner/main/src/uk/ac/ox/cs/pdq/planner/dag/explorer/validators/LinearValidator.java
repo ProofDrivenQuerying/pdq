@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer.validators;
 
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
-import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 
@@ -30,8 +29,7 @@ public class LinearValidator implements Validator{
 	public boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right) {
 		return  right instanceof ApplyRule
 				&& left.isClosed()
-				&& left.getOutput().containsAll(right.getInput())
-				&& ConfigurationUtility.isNonTrivial(left, right);
+				&& left.getOutput().containsAll(right.getInput());
 	}
 
 	/**

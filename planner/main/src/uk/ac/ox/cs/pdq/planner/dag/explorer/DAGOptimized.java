@@ -73,7 +73,7 @@ public class DAGOptimized extends DAGExplorer {
 	protected final DAGEquivalenceClasses equivalenceClasses;
 	protected SuccessDominance successDominance = new SuccessDominanceFactory().getInstance();
 	protected Dominance[] dominance;
-	protected Validator validator;
+	protected Validator[] validator;
 
 	/**
 	 * Instantiates a new DAG optimized.
@@ -113,7 +113,7 @@ public class DAGOptimized extends DAGExplorer {
 			this.equivalenceClasses.addEntry(initialConfiguration);
 		}
 		this.dominance = new DominanceFactory(parameters.getDominanceType()).getInstance();
-		this.validator = (Validator) new ValidatorFactory(parameters.getValidatorType(), parameters.getDepthThreshold())
+		this.validator = new ValidatorFactory(parameters.getValidatorType(), parameters.getDepthThreshold())
 				.getInstance();
 	}
 
@@ -231,7 +231,7 @@ public class DAGOptimized extends DAGExplorer {
 					Preconditions.checkNotNull(equivalenceClasses.getEquivalenceClass(configuration));
 					Preconditions.checkState(!equivalenceClasses.getEquivalenceClass(configuration).isEmpty());
 					if (ConfigurationUtility.validate(left, configuration,
-									Arrays.asList(new Validator[] { this.validator }), depth)
+									Arrays.asList(this.validator), depth)
 							&& ConfigurationUtility.getPotential(left, configuration,
 									bestConfiguration == null ? null : bestConfiguration.getPlan(),
 									bestConfiguration == null ? null : bestConfiguration.getCost(), this.costEstimator,

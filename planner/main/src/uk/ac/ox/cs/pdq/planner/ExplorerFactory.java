@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.planner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.eventbus.EventBus;
@@ -125,9 +126,9 @@ public class ExplorerFactory {
 				throw new IllegalStateException(
 						"Attempting to get a propagator for a cost estimator that is neither blackbox nor simple");
 		} else {
-			Validator validator = (Validator) new ValidatorFactory(parameters.getValidatorType(),
+			Validator[] validatorArray = new ValidatorFactory(parameters.getValidatorType(),
 					parameters.getDepthThreshold()).getInstance();
-			validators.add(validator);
+			validators.addAll(Arrays.asList(validatorArray));
 			filter = (Filter) new FilterFactory(parameters.getFilterType()).getInstance();
 		}
 

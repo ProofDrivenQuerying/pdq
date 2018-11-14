@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer.validators;
 
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
-import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 
@@ -29,8 +28,7 @@ public class ApplyRuleValidator implements Validator{
 	 */
 	@Override
 	public boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right) {
-		return (left instanceof ApplyRule || right instanceof ApplyRule)
-				&& ConfigurationUtility.isNonTrivial(left, right);
+		return (left instanceof ApplyRule || right instanceof ApplyRule);
 	}
 
 	/**

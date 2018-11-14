@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer.validators;
 
-import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 
@@ -39,7 +38,7 @@ public class RightDepthValidator implements Validator{
 	 */
 	@Override
 	public boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right) {
-		return right.getHeight() <= this.depthThreshold && ConfigurationUtility.isNonTrivial(left, right);
+		return right.getHeight() <= this.depthThreshold;
 	}
 
 	/**
