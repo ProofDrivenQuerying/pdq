@@ -366,7 +366,6 @@ public class PDQ {
 				return new ApproximateCostAcceptanceCheck();
 			switch (params.getValidatorType()) {
 			case DEPTH_VALIDATOR:
-			case APPLYRULE_DEPTH_VALIDATOR:
 			case RIGHT_DEPTH_VALIDATOR:
 				return new ApproximateCostAcceptanceCheck();
 			default:
