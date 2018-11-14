@@ -10,12 +10,10 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
-import uk.ac.ox.cs.pdq.planner.dominance.FactDominance;
-import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 
 
@@ -26,9 +24,6 @@ import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
  */
 public class ConfigurationUtility {
 
-	/**  Performs fact dominance checks. */
-	private final static FactDominance factDominance = new FastFactDominance(false);
-	
 	/**
 	 * Gets the apply rule configurations that lie within a given configuration.
 	 *
@@ -64,48 +59,6 @@ public class ConfigurationUtility {
 		return ret;
 	}
 
-	/**
-	 * TOCOMMENT: THE COMMENT AND THE CODE DO NOT MATCH, SO SOMETHING HAS TO CHANGE
-	 *
-	 * @param left the left
-	 * @param right the right
-	 * @return 		true if the input pair of configurations is non trivial.
-	 * 		An ordered pair of configurations (left, right)
-	 * 			is non-trivial if the output facts of the right configuration are not included in
-	 * 			the output facts of left configuration and vice versa, and if the ApplyRule
-	 * 			subconfigurations of left and right do not overlap.
-	 */
-	public static Boolean isNonTrivial(DAGChaseConfiguration left, DAGChaseConfiguration right) {
-		if (left.equals(right))
-			return false;
-		
-		
-		Collection<ApplyRule> leftApplyRules = left.getApplyRules();
-		Collection<ApplyRule> rightApplyRules = right.getApplyRules();
-		for (ApplyRule leftApplyRule:leftApplyRules) {
-			for (ApplyRule rightApplyRule:rightApplyRules) {
-				if (leftApplyRule.getFacts().equals(rightApplyRule.getFacts())) 
-					return false;
-			}
-		}
-
-		if (left.getOutputFacts().containsAll(right.getOutputFacts()) || right.getOutputFacts().containsAll(left.getOutputFacts())) 
-			return false;
-		
-		for (DAGConfiguration l:left.getSubconfigurations()) {
-			for (DAGConfiguration r:right.getSubconfigurations()) {
-				if (l.equals(r)
-						// Julien: Consider deleting -> not part of the definition of non-trivial
-						|| factDominance.isDominated((ChaseConfiguration)l, (ChaseConfiguration)r)
-						|| factDominance.isDominated((ChaseConfiguration)r, (ChaseConfiguration)l)
-						) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-	
 	/**
 	 *
 	 * @param left the left
@@ -202,7 +155,7 @@ public class ConfigurationUtility {
 			Cost costOfBestPlan,
 			CostEstimator costEstimator, 
 			SuccessDominance successDominance) {
-		if (isNonTrivial(left, right)) {
+		if (DefaultValidator.isNonTrivial(left, right)) {
 			if(bestPlan == null) 
 				return true;
 			RelationalTerm plan = PlanCreationUtility.createJoinPlan(left.getPlan(), right.getPlan());

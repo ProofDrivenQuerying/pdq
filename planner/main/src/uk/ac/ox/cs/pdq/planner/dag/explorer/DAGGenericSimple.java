@@ -29,9 +29,9 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
-import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
@@ -194,7 +194,7 @@ public class DAGGenericSimple extends DAGExplorer {
 			DAGChaseConfiguration r) {
 
 		BinaryConfiguration configuration = new BinaryConfiguration(l, r);
-		if (ConfigurationUtility.isNonTrivial(l, r)) {
+		if (DefaultValidator.isNonTrivial(l, r)) {
 			// Create a new binary configuration
 			Cost cost = this.costEstimator.cost(configuration.getPlan());
 			configuration.setCost(cost);
