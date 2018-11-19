@@ -1,11 +1,9 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
@@ -15,8 +13,6 @@ import org.jgrapht.graph.DefaultEdge;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
@@ -34,16 +30,13 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
-import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagatorUtility;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence.PathEquivalenceClasses;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence.PathEquivalenceClasses.PathEquivalenceClass;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
-import uk.ac.ox.cs.pdq.planner.util.IndexedDirectedGraph;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -101,7 +94,6 @@ public class LinearOptimized extends LinearExplorer {
 	 * @param depth the depth
 	 * @param queryMatchInterval the query match interval
 	 * @param postPruning 		Removes the redundant follow up joins and accesses from a plan
-	 * @param zombification 		True if we wake up previously terminal nodes
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
 	 */
@@ -216,8 +208,6 @@ public class LinearOptimized extends LinearExplorer {
 		this.planTree.addVertex(freshNode);
 		this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
 
-		// If the cost of the plan of the newly created node is higher than the best plan found so far 
-		//then zombify the newly created node  
 		boolean domination = false;
 		if (this.bestPlan != null) {
 			if (freshNode.getCostOfBestPlanFromRoot().greaterOrEquals(this.bestCost)) {
@@ -228,7 +218,7 @@ public class LinearOptimized extends LinearExplorer {
 			}
 		}
 
-		// If at least one node in the plan tree dominates the newly created node, then zombify the newly created node
+		// set dominating plan if there is one
 		if (!domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
 			SearchNode dominatingNode = ExplorerUtility.isCostAndFactDominated(this.planTree.vertexSet(), freshNode);
 			if(dominatingNode != null) {
@@ -259,9 +249,6 @@ public class LinearOptimized extends LinearExplorer {
 			 */
 			if (parentEquivalent != null && !parentEquivalent.getStatus().equals(NodeStatus.SUCCESSFUL)) {
 				freshNode.setEquivalentNode(parentEquivalent);
-				PathEquivalenceClass equivalenceClass = this.equivalenceClasses.addEntry(parentEquivalent, freshNode);
-				if (this.costPropagator instanceof OrderDependentCostPropagator) 
-					this.wakeupDescendants(freshNode.getPathFromRoot(), equivalenceClass);
 				freshNode.setStatus(NodeStatus.TERMINAL);
 				//Cannot do postpruning here
 				this.updateBestPlan(selectedNode, freshNode);
@@ -349,128 +336,4 @@ public class LinearOptimized extends LinearExplorer {
 			log.trace("\t+++BEST PLAN: " + AlgebraUtilities.getAccesses(this.bestPlan) + " " + this.bestCost);
 		}
 	}
-
-	/**
-	 * Wakes up (de-zombifies) the unexplored descendants of a path.
-	 * A path b_1, b_2, ..., b_j, b_{j+1} is zombified when it is (success) dominated.
-	 * However, if a new path a_1, a_2, ..., a_ i is found which is equivalent to the prefix path b_1, b_2, ..., b_j and
-	 * the cost of the plan built up from the path a_1, a_2, ..., a_i, b_{j+1} is lower than the best plan found so far
-	 * then we wake up the zombie path
-	 *
-	 * @param path the path
-	 * @param equivalenceClass the equivalence class
-	 * @throws PlannerException the planner exception
-	 * @throws LimitReachedException the limit reached exception
-	 */
-	private void wakeupDescendants(List<Integer> path, PathEquivalenceClass equivalenceClass) 
-			throws PlannerException, LimitReachedException  {
-		this.wakeupDescendants(path, equivalenceClass, Sets.<List<Integer>>newHashSet());
-	}
-
-	/**
-	 * Wakeup descendants.
-	 *
-	 * @param path List<Integer>
-	 * @param equivalenceClass EquivalenceClass
-	 * @param visitedPaths Set<List<Integer>>
-	 * @throws PlannerException the planner exception
-	 * @throws LimitReachedException the limit reached exception
-	 */
-	private void wakeupDescendants(List<Integer> path, PathEquivalenceClass equivalenceClass, 
-			Set<List<Integer>> visitedPaths)
-					throws PlannerException, LimitReachedException  {
-		List<Integer> representativePath = equivalenceClass.getRepresentativePath();
-		Set<SearchNode> deadDescendants = this.getDeadDescendants(equivalenceClass.getRepresentativeNode(), this.planTree);
-		for(SearchNode deadDescendant:deadDescendants) {
-			List<Integer> pathFromRoot = deadDescendant.getPathFromRoot();
-			List<Integer> equivalencePath = this.createPath(representativePath, path, pathFromRoot);
-			RelationalTerm equivalencePlan = CostPropagatorUtility.createLeftDeepPlan(this.planTree, equivalencePath);
-			Cost costOfEquivalencePlan = this.costPropagator.getCostEstimator().cost(equivalencePlan);
-			if(costOfEquivalencePlan.lessThan(deadDescendant.getCostOfBestPlanFromRoot())) {
-				deadDescendant.setBestPathFromRoot(equivalencePath);
-				deadDescendant.setBestPlanFromRoot(equivalencePlan);
-			}
-			if(this.bestPlan == null && costOfEquivalencePlan.lessThan(deadDescendant.getCostOfDominatingPlan()) ||
-					this.bestPlan != null && costOfEquivalencePlan.lessThan(this.bestCost)	) {
-
-				List<Match> matches = deadDescendant.matchesQuery(this.accessibleQuery);
-
-				SearchNode parent = this.planTree.getParent(deadDescendant);
-				if (!matches.isEmpty()) {
-					deadDescendant.setStatus(NodeStatus.SUCCESSFUL);
-					this.equivalenceClasses.addEntry(deadDescendant);
-					this.updateBestPlan(parent, deadDescendant, matches.get(0));
-				}
-				else {
-					deadDescendant.setStatus(NodeStatus.ONGOING);
-					deadDescendant.setDominatingPlan(null);
-					this.equivalenceClasses.addEntry(deadDescendant);
-					this.unexploredDescendants.add(deadDescendant);
-				}
-			}
-		}
-
-		Set<List<Integer>> otherPaths = equivalenceClass.getPaths();
-		for(List<Integer> otherPath:otherPaths) {
-			if(!visitedPaths.contains(otherPath)) {
-				visitedPaths.add(otherPath);
-				List<Entry<PathEquivalenceClass, List<Integer>>> isPrefixOf = this.equivalenceClasses.isPrefixOf(otherPath);
-				for(Entry<PathEquivalenceClass, List<Integer>> entry:isPrefixOf) {
-					if(!entry.getKey().equals(equivalenceClass)) {
-						List<Integer> existingPath = entry.getValue();
-						List<Integer> outputPath = this.createPath(otherPath, path, existingPath);
-						this.equivalenceClasses.addEntry(outputPath, entry.getKey());
-						this.wakeupDescendants(outputPath, entry.getKey(), visitedPaths);
-					}
-				}
-			}
-		}
-
-	}
-
-	/**
-	 * TOCOMMENT: WHAT DOES IT DO? .
-	 *
-	 * @param target List<Integer>
-	 * @param replacement List<Integer>
-	 * @param source List<Integer>
-	 * @return List<Integer>
-	 */
-	private List<Integer> createPath(List<Integer> target, List<Integer> replacement, List<Integer> source) {
-		Preconditions.checkArgument(Collections.indexOfSubList(source, target) == 0);
-		List<Integer> output = Lists.newArrayList(replacement);
-		output.addAll(source.subList(target.size(), source.size()));
-		return output;
-	}
-
-	/**
-	 * TOCOMMENT: WHAT IS IT?
-	 *
-	 * @param representativeNode N
-	 * @param planTree IndexedDirectedGraph<N>
-	 * @return Set<N>
-	 */
-	private Set<SearchNode> getDeadDescendants(SearchNode representativeNode, IndexedDirectedGraph<SearchNode> planTree) {
-		Set<SearchNode> deadDescendants = Sets.newHashSet();
-		this.getDeadDescendantsRecursive(representativeNode, planTree, deadDescendants);
-		return deadDescendants;
-	}
-
-	/**
-	 *  TOCOMMENT: WHAT IS IT?? 
-	 *
-	 * @param representativeNode N
-	 * @param planTree IndexedDirectedGraph<N>
-	 * @param deadDescendants Set<N>
-	 * @return the dead descendants recursive
-	 */
-	private void getDeadDescendantsRecursive(SearchNode representativeNode, IndexedDirectedGraph<SearchNode> planTree, Set<SearchNode> deadDescendants) {
-		for(DefaultEdge edge:planTree.outgoingEdgesOf(representativeNode)) {
-			if(planTree.getEdgeTarget(edge).getStatus().equals(NodeStatus.TERMINAL)) 
-				deadDescendants.add(planTree.getEdgeTarget(edge));
-			else 
-				this.getDeadDescendantsRecursive(planTree.getEdgeTarget(edge), planTree, deadDescendants);
-		}
-	}
-
 }
