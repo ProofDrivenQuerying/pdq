@@ -6,15 +6,9 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
-import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
-import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 
 
 /**
@@ -110,19 +104,6 @@ public class ConfigurationUtility {
 		}
 		return true;
 	}
-
-	/**
-	 * Tells whether the plan is a potential new best plan.
-	 * TOCOMMENT: IS THAT WHY THE NAME IS WHAT IT IS?
-	 *
-	 * @param configuration the configuration
-	 * @param bestPlan Best plan found so far
-	 * @param successDominance Success dominance checks
-	 * @return true if the input configuration is not success dominated by the best plan
-	 */
-	public static Boolean getPotential(DAGChaseConfiguration configuration, RelationalTerm bestPlan, Cost costOfBestPlan, SuccessDominance successDominance) {
-		return bestPlan == null || !successDominance.isDominated(configuration.getPlan(), configuration.getCost(), bestPlan, costOfBestPlan);
-	}
 	
 	/**
 	 *
@@ -136,31 +117,6 @@ public class ConfigurationUtility {
 			if(detector.isDominated(source, target)) {
 				return true;
 			}
-		}
-		return false;
-	}
-
-	/**
-	 *
-	 * @param left the left
-	 * @param right the right
-	 * @param bestPlan Best plan found so far
-	 * @param costEstimator Estimates a plan's cost
-	 * @param successDominance Success dominance checks
-	 * @return true if the configuration composed from the left and right input configurations is not success dominated by the best plan
-	 */
-	public static Boolean getPotential(DAGChaseConfiguration left, 
-			DAGChaseConfiguration right,
-			RelationalTerm bestPlan, 
-			Cost costOfBestPlan,
-			CostEstimator costEstimator, 
-			SuccessDominance successDominance) {
-		if (DefaultValidator.isNonTrivial(left, right)) {
-			if(bestPlan == null) 
-				return true;
-			RelationalTerm plan = PlanCreationUtility.createJoinPlan(left.getPlan(), right.getPlan());
-			Cost cost = costEstimator.cost(plan);
-			return !successDominance.isDominated(plan, cost, bestPlan, costOfBestPlan);
 		}
 		return false;
 	}

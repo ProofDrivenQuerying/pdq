@@ -19,6 +19,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
@@ -33,12 +34,14 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.SynchronizedEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ValidatorFactory;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.DominanceFactory;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominanceFactory;
+import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -232,7 +235,7 @@ public class DAGOptimized extends DAGExplorer {
 					Preconditions.checkState(!equivalenceClasses.getEquivalenceClass(configuration).isEmpty());
 					if (ConfigurationUtility.validate(left, configuration,
 									Arrays.asList(this.validator), depth)
-							&& ConfigurationUtility.getPotential(left, configuration,
+							&& getPotential(left, configuration,
 									bestConfiguration == null ? null : bestConfiguration.getPlan(),
 									bestConfiguration == null ? null : bestConfiguration.getCost(), this.costEstimator,
 									this.successDominance))
@@ -278,6 +281,31 @@ public class DAGOptimized extends DAGExplorer {
 	}
 
 	/**
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @param bestPlan Best plan found so far
+	 * @param costEstimator Estimates a plan's cost
+	 * @param successDominance Success dominance checks
+	 * @return true if the configuration composed from the left and right input configurations is not success dominated by the best plan
+	 */
+	public static Boolean getPotential(DAGChaseConfiguration left, 
+			DAGChaseConfiguration right,
+			RelationalTerm bestPlan, 
+			Cost costOfBestPlan,
+			CostEstimator costEstimator, 
+			SuccessDominance successDominance) {
+		if (DefaultValidator.isNonTrivial(left, right)) {
+			if(bestPlan == null) 
+				return true;
+			RelationalTerm plan = PlanCreationUtility.createJoinPlan(left.getPlan(), right.getPlan());
+			Cost cost = costEstimator.cost(plan);
+			return !successDominance.isDominated(plan, cost, bestPlan, costOfBestPlan);
+		}
+		return false;
+	}
+
+	/**
 	 * Loops through the new input configs and updates the best configuration if
 	 * there is a better one, and updates the equavalence classes. Returns the new
 	 * configurations that did not exists in the equavalence classes before
@@ -302,9 +330,9 @@ public class DAGOptimized extends DAGExplorer {
 			DAGChaseConfiguration dominator = this.equivalenceClasses.dominate(this.dominance, configuration);
 			if (dominator == null) {
 				// Assess its potential
-				if (ConfigurationUtility.getPotential(configuration,
-						bestConfiguration == null ? null : bestConfiguration.getPlan(),
-						bestConfiguration == null ? null : bestConfiguration.getCost(), this.successDominance)) {
+				RelationalTerm currentBestPlan = bestConfiguration == null ? null : bestConfiguration.getPlan();
+				Cost currentCost = bestConfiguration == null ? null : bestConfiguration.getCost();
+				if (currentBestPlan == null || !successDominance.isDominated(configuration.getPlan(), configuration.getCost(), currentBestPlan, currentCost)) {
 					// Find the configurations dominated by the current one and remove them
 					Collection<DAGChaseConfiguration> dominated = this.equivalenceClasses.dominatedBy(this.dominance,
 							configuration);
