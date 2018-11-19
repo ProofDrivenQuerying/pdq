@@ -40,16 +40,6 @@ public class TypedConstant<T> extends Constant implements Typed  {
 		this.type = value.getClass();
 		this.value = value;
 	}
-
-	/**
-	 * Copy constructor.
-	 *
-	 * @param constant the constant
-	 */
-	public TypedConstant(TypedConstant<T> constant) {
-		this.type = constant.type;
-		this.value = constant.value;
-	}
 	
 	/**
 	 * Is untyped constant.
