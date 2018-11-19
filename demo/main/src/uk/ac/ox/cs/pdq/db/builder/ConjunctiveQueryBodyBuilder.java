@@ -185,8 +185,22 @@ public class ConjunctiveQueryBodyBuilder {
 		Atom leftPredForm = this.aliasToPredicateFormulas.get(leftAlias);
 
 		// Get term in said position:
-		int leftAttrIndex = this.schema.getRelation( this.aliasToRelations.get(leftAlias) ).getAttributePosition(leftAttr);
-		Term leftTerm = leftPredForm.getTerm(leftAttrIndex);
+		int leftAttrIndex = -1;
+//		Term leftTerm = null;
+		
+		try {
+			leftAttrIndex = this.schema.getRelation(this.aliasToRelations.get(leftAlias)).getAttributePosition(leftAttr);
+//			leftTerm = leftPredForm.getTerm(leftAttrIndex);
+		} catch(NullPointerException e)
+		{	
+			log.error("null pointer. leftAttr=" + leftAttr
+					+ ", leftAlias=" + leftAlias
+					+ ", leftAttrIndex=" + leftAttrIndex
+					+ ", relationName=" + this.aliasToRelations.get(leftAlias)
+					+ ", leftPredForm=" + leftPredForm
+			, e);
+			throw e;
+		}
 
 		// Prepare right variable:
 		String rightAlias = rightAliasAttr.getAlias();
@@ -196,10 +210,10 @@ public class ConjunctiveQueryBodyBuilder {
 		// Get term in said position:
 		int rightAttrIndex = -1;
 		
-		Term rightTerm = null;
+//		Term rightTerm = null;
 		try {
 			rightAttrIndex = this.schema.getRelation( this.aliasToRelations.get(rightAlias) ).getAttributePosition(rightAttr);
-			rightTerm = rightPredForm.getTerm(rightAttrIndex);
+//			rightTerm = rightPredForm.getTerm(rightAttrIndex);
 		} catch( NullPointerException e ) {
 			log.error("null pointer. rightAttr=" + rightAttr
 					+ ", rightAlias=" + rightAlias
@@ -211,6 +225,7 @@ public class ConjunctiveQueryBodyBuilder {
 		}
 
 		// Check left and right isVariable()
+		/*
 		if( !leftTerm.isVariable() && !rightTerm.isVariable() ) {
 			if( !leftTerm.equals(rightTerm) ) {
 				throw new Exception("conflicting constants");
@@ -233,7 +248,7 @@ public class ConjunctiveQueryBodyBuilder {
 			this.replaceTerm( leftTerm,  newTerm);
 			this.replaceTerm( rightTerm, newTerm);
 
-		}
+		}*/
 
 	}
 

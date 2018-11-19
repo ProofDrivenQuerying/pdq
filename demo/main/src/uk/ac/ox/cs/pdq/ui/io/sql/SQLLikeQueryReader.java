@@ -70,20 +70,27 @@ public class SQLLikeQueryReader {
 		CharStream stream = new ANTLRInputStream(str);
         SQLiteLexer lexer = new SQLiteLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        SQLiteParser parser = new SQLiteParser(tokens);
+        SQLLikeQueryParser parser = new SQLLikeQueryParser(tokens);
         SQLiteSimpleListener listener = new SQLiteSimpleListener();
         SQLiteErrorListener elistener = new SQLiteErrorListener();
         
-        // Run the SQLite parser
-        parser.addParseListener(listener);
-        parser.addErrorListener(elistener);
-        
-        parser.parse();
+        try
+        {
+        	parser.parse();
+        }
+        catch(Exception e)
+        {
+           	Alert alert = new Alert(AlertType.INFORMATION);
+        	alert.setTitle("Information Dialog");
+        	alert.setHeaderText(null);
+        	alert.setContentText(e.getMessage());
+        	alert.showAndWait();
+        	throw e;
+        }
                 
         // Parse the variables from the SELECT ... FROM statement
     	ArrayList<Variable> list = new ArrayList<>();
-    	for(ParseTree p : listener.getColumnNames()) {
-        	String columnName = p.getText();
+    	for(String columnName : parser.getColumnNames()) {
         	list.add(new Variable(columnName));
         }
 
@@ -93,13 +100,12 @@ public class SQLLikeQueryReader {
                
         // Collect relation names and aliases:       
         this.aliasToTables = new HashMap<String, String>();
-        for(ParseTree p : listener.getTableAliases()) {
-        	String raw = p.getText();
+        for(String raw : parser.getTableAliases()) {
         	if(raw.contains("AS"))
         	{
         		String[] elements = raw.split("AS");
-        		String tableName = elements[0];
-        		String aliasName = elements[1];
+        		String tableName = elements[0].replaceAll("\\s","");
+        		String aliasName = elements[1].replaceAll("\\s","");
         		this.aliasToTables.put(aliasName, tableName);
         	}
         }
@@ -110,8 +116,8 @@ public class SQLLikeQueryReader {
         ConjunctiveQueryBodyBuilder qBuilder = new ConjunctiveQueryBodyBuilder(this.schema, this.aliasToTables, terms);
   
         List<String> joinConstraints = new ArrayList<String>();
-        for( ParseTree p : listener.getJoinConstraints() ) {
-        	String[] individualConstraints = p.getText().split("AND");
+        for(String s : parser.getJoinConstraints() ) {
+        	String[] individualConstraints = s.split("AND");
         	
         	for( String constraint : individualConstraints ) {
         		joinConstraints.add(constraint);
@@ -139,15 +145,14 @@ public class SQLLikeQueryReader {
     	
     	
     	// Begin adding where constraints:
-		ParseTree ctx = listener.getLastExpr();
-		if (ctx != null) {
-        	String rawExpression = ctx.getText();
+		String rawExpression = parser.getLastExpr();
+		if (rawExpression != null) {
         	log.debug("raw where expr: " + rawExpression);
         	String[] rawConstraints = rawExpression.split("AND");
         	
         	for( String rawConstraint : rawConstraints ) {
-        		String left = rawConstraint.split("=")[0];
-        		String right = rawConstraint.split("=")[1];
+        		String left = rawConstraint.split("=")[0].replaceAll("\\s", "");
+        		String right = rawConstraint.split("=")[1].replaceAll("\\s", "");
         		
         		ConjunctiveQueryBodyBuilder.ConstraintTerm leftConstraint = null;
         		ConjunctiveQueryBodyBuilder.ConstraintTerm rightConstraint = null;
@@ -163,6 +168,10 @@ public class SQLLikeQueryReader {
         			
         			leftConstraint = new ConjunctiveQueryBodyBuilder.AliasAttrConstraintTerm(aliasName, attrName);
         		}
+         		else
+         		{
+         			leftConstraint = new ConjunctiveQueryBodyBuilder.ConstantConstraintTerm(left);
+         		}
         		
         		// Process right:
          		if(right.contains("'")) {
@@ -175,14 +184,16 @@ public class SQLLikeQueryReader {
         			
         			rightConstraint = new ConjunctiveQueryBodyBuilder.AliasAttrConstraintTerm(aliasName, attrName);
         		}
-        		
+         		else
+         		{
+         			rightConstraint = new ConjunctiveQueryBodyBuilder.ConstantConstraintTerm(right);
+         		}
         		qBuilder.addConstraint(leftConstraint, rightConstraint);
         	}
 		}
     	
     	// Build the query head:
-    	for (ParseTree ctxt : listener.getResultColumns() ) {
-    		String rawResultColumn = ctxt.getText();
+    	for (String rawResultColumn : parser.getResultColumns() ) {
     		
     		if( rawResultColumn.equals("*") ) {
   			qBuilder.returnAllVars();
@@ -206,5 +217,4 @@ public class SQLLikeQueryReader {
     	
         return query;
 	}
-
 }
