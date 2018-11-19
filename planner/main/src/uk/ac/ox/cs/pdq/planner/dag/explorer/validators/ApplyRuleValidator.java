@@ -6,10 +6,10 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 
 
 /**
- * Requires the input pair of configurations to be non trivial
- * and at least one of the input configurations to be an ApplyRule.
+ * Validates that at least one of the input configurations is an ApplyRule.
  *
  * @author Efthymia Tsamoura
+ * @author Gabor
  */
 public class ApplyRuleValidator implements Validator{
 	/**

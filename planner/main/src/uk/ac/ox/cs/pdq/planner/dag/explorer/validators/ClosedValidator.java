@@ -7,7 +7,7 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 
 
 /**
- * Requires the input pair of configurations to be non trivial and their composition to be a closed configuration.
+ * Requires the input pair of configurations form a closed composition.
  *
  * @author Efthymia Tsamoura
  */

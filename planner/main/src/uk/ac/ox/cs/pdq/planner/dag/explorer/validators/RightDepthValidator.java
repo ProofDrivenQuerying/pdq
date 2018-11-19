@@ -5,7 +5,7 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 
 
 /**
- * Requires the input pair of configurations to be non trivial and the right's depth to be <= the depth threshold.
+ * Requires the input pair of configurations right's depth to be <= the depth threshold.
  *
  * @author Efthymia Tsamoura
  */
