@@ -14,13 +14,6 @@ public class DepthValidator implements Validator{
 	private final int depthThreshold;
 
 	/**
-	 * Instantiates a new depth validator.
-	 */
-	public DepthValidator() {
-		this.depthThreshold = 3;
-	}
-
-	/**
 	 * Constructor for DepthThrottlingValidator.
 	 * @param depthThreshold int
 	 */
