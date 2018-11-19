@@ -22,6 +22,7 @@ import com.google.common.eventbus.EventBus;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
@@ -39,8 +40,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ValidatorFactory;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.DominanceFactory;
-import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
-import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominanceFactory;
+import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
@@ -74,7 +74,7 @@ public class DAGOptimized extends DAGExplorer {
 
 	/** Classes of structurally equivalent configurations. */
 	protected final DAGEquivalenceClasses equivalenceClasses;
-	protected SuccessDominance successDominance = new SuccessDominanceFactory().getInstance();
+	protected CostDominance successDominance = new CostDominance(new CountNumberOfAccessedRelationsCostEstimator());
 	protected Dominance[] dominance;
 	protected Validator[] validator;
 
@@ -294,7 +294,7 @@ public class DAGOptimized extends DAGExplorer {
 			RelationalTerm bestPlan, 
 			Cost costOfBestPlan,
 			CostEstimator costEstimator, 
-			SuccessDominance successDominance) {
+			CostDominance successDominance) {
 		if (DefaultValidator.isNonTrivial(left, right)) {
 			if(bestPlan == null) 
 				return true;

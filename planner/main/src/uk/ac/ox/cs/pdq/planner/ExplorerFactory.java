@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
@@ -19,8 +20,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.FilterFactory;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ValidatorFactory;
-import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
-import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominanceFactory;
+import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
@@ -104,7 +104,7 @@ public class ExplorerFactory {
 			CostEstimator costEstimator, PlannerParameters parameters, ReasoningParameters reasoningParameters)
 			throws Exception {
 
-		SuccessDominance successDominance = new SuccessDominanceFactory().getInstance();
+		CostDominance successDominance = new CostDominance(new CountNumberOfAccessedRelationsCostEstimator());
 
 		NodeFactory nodeFactory = null;
 		PostPruning postPruning = null;

@@ -33,7 +33,7 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
-import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
+import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
@@ -63,7 +63,7 @@ public class DAGGenericSimple extends DAGExplorer {
 	private int rightIndex = 0;
 
 	/** Removes success dominated configurations *. */
-	protected final SuccessDominance successDominance;
+	protected final CostDominance successDominance;
 
 	/**
 	 * List of closed and successful plans.
@@ -114,7 +114,7 @@ public class DAGGenericSimple extends DAGExplorer {
 	 */
 	public DAGGenericSimple(EventBus eventBus, PlannerParameters parameters, ConjunctiveQuery query,
 			AccessibleSchema accessibleSchema, Chaser chaser,
-			DatabaseManager connection, CostEstimator costEstimator, SuccessDominance successDominance, Filter filter,
+			DatabaseManager connection, CostEstimator costEstimator, CostDominance successDominance, Filter filter,
 			List<Validator> validators, int maxDepth) throws PlannerException, SQLException {
 		super(eventBus, parameters, query, accessibleSchema, chaser, connection, costEstimator);
 		Preconditions.checkNotNull(successDominance);

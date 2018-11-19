@@ -40,7 +40,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGenericSimple;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
-import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
+import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
@@ -118,7 +118,7 @@ public class TestDAGGeneric extends PdqTest {
 		DAGGenericSimple explorer = null;
 		try {
 			// Mock success domination
-			SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
+			CostDominance successDominance = Mockito.mock(CostDominance.class);
 			when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
 					.thenReturn(false);
 			when(successDominance.clone()).thenReturn(successDominance);
@@ -224,7 +224,7 @@ public class TestDAGGeneric extends PdqTest {
 		DAGGenericSimple explorer = null;
 		try {
 			// Mock success domination
-			SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
+			CostDominance successDominance = Mockito.mock(CostDominance.class);
 			when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
 					.thenReturn(false);
 			when(successDominance.clone()).thenReturn(successDominance);

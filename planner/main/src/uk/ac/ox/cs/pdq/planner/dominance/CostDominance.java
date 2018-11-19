@@ -7,22 +7,14 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 
 /**
-* Closed success dominance. 
-* A closed plan p success dominates another closed plan p', if p is successful and has cost < the cost of p'.
+* Closed cost dominance. 
+* A closed plan p cost dominates another closed plan p', if p is closed and has cost < the cost of p'.
 *
 * @author Efthymia Tsamoura
+* @author Gabor
 */
 
-/**
-* Open success dominance.
-* A plan p success dominates another closed plan ', if p is successful and has cost < the cost of p'.
-* If either of the plans is open, then a simple plan cost estimator is used to assess their cost;
-* otherwise, the costs of their corresponding (closed) plans are considered.
-*
-* @author Efthymia Tsamoura
-*/
-
-public class SuccessDominance {
+public class CostDominance {
 
 	//	/**  True if we use a simple cost function to compare plans. */
 	//	private final boolean simpleFunction;
@@ -34,7 +26,7 @@ public class SuccessDominance {
 	 * Constructor for SuccessDominance.
 	 * @param simpleFunction Boolean
 	 */
-	public SuccessDominance(OrderIndependentCostEstimator estimator) {
+	public CostDominance(OrderIndependentCostEstimator estimator) {
 		Preconditions.checkNotNull(estimator);
 		this.costEstimatorForOpenPlans = estimator;
 	}
@@ -59,7 +51,7 @@ public class SuccessDominance {
 	 * @return SuccessDominance
 	 */
 	@Override
-	public SuccessDominance clone() {
-		return new SuccessDominance(this.costEstimatorForOpenPlans);
+	public CostDominance clone() {
+		return new CostDominance(this.costEstimatorForOpenPlans);
 	}
 }

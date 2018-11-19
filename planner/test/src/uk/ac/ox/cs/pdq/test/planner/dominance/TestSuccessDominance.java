@@ -7,8 +7,8 @@ import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
-import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominanceFactory;
+import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
+import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /** 
@@ -24,8 +24,7 @@ public class TestSuccessDominance extends PdqTest {
 	 */
 	@Test
 	public void testSuccessDominance() {
-		SuccessDominanceFactory factory = new SuccessDominanceFactory();
-		SuccessDominance sd = factory.getInstance();
+		CostDominance sd = new CostDominance(new CountNumberOfAccessedRelationsCostEstimator());
 		
 		AccessTerm at1 = AccessTerm.create(R, method0);
 		AccessTerm at2 = AccessTerm.create(S, method0);
