@@ -235,7 +235,7 @@ public class DAGOptimized extends DAGExplorer {
 					Preconditions.checkState(!equivalenceClasses.getEquivalenceClass(configuration).isEmpty());
 					if (ConfigurationUtility.validate(left, configuration,
 									Arrays.asList(this.validator), depth)
-							&& getPotential(left, configuration,
+							&& isPotentialBestPlan(left, configuration,
 									bestConfiguration == null ? null : bestConfiguration.getPlan(),
 									bestConfiguration == null ? null : bestConfiguration.getCost(), this.costEstimator,
 									this.successDominance))
@@ -289,7 +289,7 @@ public class DAGOptimized extends DAGExplorer {
 	 * @param successDominance Success dominance checks
 	 * @return true if the configuration composed from the left and right input configurations is not success dominated by the best plan
 	 */
-	public static Boolean getPotential(DAGChaseConfiguration left, 
+	public static Boolean isPotentialBestPlan(DAGChaseConfiguration left, 
 			DAGChaseConfiguration right,
 			RelationalTerm bestPlan, 
 			Cost costOfBestPlan,
