@@ -11,11 +11,11 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
  * @author Efthymia Tsamoura
  * @author Gabor
  */
-public class ApplyRuleValidator implements Validator{
+public class ApplyRulePairValidator implements PairValidator{
 	/**
 	 * Instantiates a new apply rule validator.
 	 */
-	public ApplyRuleValidator() {
+	public ApplyRulePairValidator() {
 	}
 
 	/**
@@ -24,7 +24,7 @@ public class ApplyRuleValidator implements Validator{
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.dag.explorer.validators.Validator#validate(DAGConfiguration, DAGConfiguration)
+	 * @see uk.ac.ox.cs.pdq.PairValidator.explorer.validators.Validator#validate(DAGConfiguration, DAGConfiguration)
 	 */
 	@Override
 	public boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right) {
@@ -38,7 +38,7 @@ public class ApplyRuleValidator implements Validator{
 	 * @param right DAGConfiguration
 	 * @param depth int
 	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.dag.explorer.validators.Validator#validate(DAGConfiguration, DAGConfiguration, int)
+	 * @see uk.ac.ox.cs.pdq.PairValidator.explorer.validators.Validator#validate(DAGConfiguration, DAGConfiguration, int)
 	 */
 	@Override
 	public boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right, int depth) {
@@ -49,11 +49,11 @@ public class ApplyRuleValidator implements Validator{
 	 * Clone.
 	 *
 	 * @return Validator
-	 * @see uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator#clone()
+	 * @see uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator#clone()
 	 */
 	@Override
-	public Validator clone() {
-		return new ApplyRuleValidator();
+	public PairValidator clone() {
+		return new ApplyRulePairValidator();
 	}
 
 }

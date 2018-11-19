@@ -11,7 +11,7 @@ import com.google.common.collect.Sets;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 
@@ -30,7 +30,7 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 	private List<DAGChaseConfiguration> rightSideConfigurations;
 	
 	/** Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions. */
-	private final List<Validator> validators;
+	private final List<PairValidator> validators;
 
 	private final Set<RelationalTerm> plansOfConfigurationPairsReturnedInThePast = Sets.newLinkedHashSet();
 
@@ -53,7 +53,7 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 	public SelectorOfPairsOfConfigurationsToCombine(
 			List<DAGChaseConfiguration> left,
 			List<DAGChaseConfiguration> right,
-			List<Validator> validators) {
+			List<PairValidator> validators) {
 		Preconditions.checkNotNull(left);
 		Preconditions.checkNotNull(right);
 		Preconditions.checkNotNull(validators);

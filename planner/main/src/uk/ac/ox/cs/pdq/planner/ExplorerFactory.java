@@ -18,8 +18,8 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimizedMultiThread;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.FilterFactory;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ValidatorFactory;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidatorFactory;
 import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
@@ -109,7 +109,7 @@ public class ExplorerFactory {
 		NodeFactory nodeFactory = null;
 		PostPruning postPruning = null;
 		CostPropagator costPropagator = null;
-		List<Validator> validators = new ArrayList<>();
+		List<PairValidator> validators = new ArrayList<>();
 		Filter filter = null;
 
 		if (parameters.getPlannerType().equals(PlannerTypes.LINEAR_GENERIC)
@@ -126,7 +126,7 @@ public class ExplorerFactory {
 				throw new IllegalStateException(
 						"Attempting to get a propagator for a cost estimator that is neither blackbox nor simple");
 		} else {
-			Validator[] validatorArray = new ValidatorFactory(parameters.getValidatorType(),
+			PairValidator[] validatorArray = new PairValidatorFactory(parameters.getValidatorType(),
 					parameters.getDepthThreshold()).getInstance();
 			validators.addAll(Arrays.asList(validatorArray));
 			filter = (Filter) new FilterFactory(parameters.getFilterType()).getInstance();

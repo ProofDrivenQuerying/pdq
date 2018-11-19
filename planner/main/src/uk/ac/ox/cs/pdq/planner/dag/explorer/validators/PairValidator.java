@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
  * @author Efthymia Tsamoura
  *
  */
-public interface Validator {
+public interface PairValidator {
 	
 	/**
 	 * Validate.
@@ -34,5 +34,5 @@ public interface Validator {
 	 *
 	 * @return Validator
 	 */
-	Validator clone();
+	PairValidator clone();
 }

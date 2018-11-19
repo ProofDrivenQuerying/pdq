@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.ValidatorTypes;
  * @author Efthymia Tsamoura
  *
  */
-public class ValidatorFactory {
+public class PairValidatorFactory {
 
 	/**  The type of the target validator object*. */
 	private final ValidatorTypes type;
@@ -29,7 +29,7 @@ public class ValidatorFactory {
 	 * Constructor for ValidatorFactory.
 	 * @param type ValidatorTypes
 	 */
-	public ValidatorFactory(ValidatorTypes type) {
+	public PairValidatorFactory(ValidatorTypes type) {
 		this.type = type;
 		this.depthThreshold = 3;
 	}
@@ -39,7 +39,7 @@ public class ValidatorFactory {
 	 * @param type ValidatorTypes
 	 * @param depthThreshold int
 	 */
-	public ValidatorFactory(ValidatorTypes type, int depthThreshold) {
+	public PairValidatorFactory(ValidatorTypes type, int depthThreshold) {
 		this.type = type;
 		this.depthThreshold = depthThreshold;
 	}
@@ -49,18 +49,18 @@ public class ValidatorFactory {
 	 *
 	 * @return Validator
 	 */
-	public Validator[] getInstance() {
+	public PairValidator[] getInstance() {
 		switch(this.type) {
 		case DEFAULT_VALIDATOR:
-			return new Validator[] {new DefaultValidator()};
+			return new PairValidator[] {new DefaultPairValidator()};
 		case APPLYRULE_VALIDATOR:
-			return new Validator[] {new DefaultValidator(), new ApplyRuleValidator()};
+			return new PairValidator[] {new DefaultPairValidator(), new ApplyRulePairValidator()};
 		case DEPTH_VALIDATOR:
-			return new Validator[] {new DefaultValidator(), new DepthValidator(this.depthThreshold)};
+			return new PairValidator[] {new DefaultPairValidator(), new DepthPairValidator(this.depthThreshold)};
 		case RIGHT_DEPTH_VALIDATOR:
-			return new Validator[] {new DefaultValidator(), new RightDepthValidator(this.depthThreshold)};
+			return new PairValidator[] {new DefaultPairValidator(), new RightDepthPairValidator(this.depthThreshold)};
 		case LINEAR_VALIDATOR:
-			return new Validator[] {new DefaultValidator(), new LinearValidator()};
+			return new PairValidator[] {new DefaultPairValidator(), new LinearPairValidator()};
 		default:
 			throw new RuntimeException("Invalid validator type: " + this.type);
 		}

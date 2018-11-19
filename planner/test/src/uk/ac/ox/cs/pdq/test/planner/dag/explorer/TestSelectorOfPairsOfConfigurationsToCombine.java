@@ -37,8 +37,8 @@ import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGExplorerUtilities;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.SelectorOfPairsOfConfigurationsToCombine;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultPairValidator;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
@@ -121,8 +121,8 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 			}
 			Assert.assertEquals(4, predicateNames.size());
 
-			List<Validator> validators = new ArrayList<>();
-			validators.add(new DefaultValidator());
+			List<PairValidator> validators = new ArrayList<>();
+			validators.add(new DefaultPairValidator());
 			List<DAGChaseConfiguration> left = configurations;
 			List<DAGChaseConfiguration> right = configurations;
 
@@ -267,8 +267,8 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 			}
 			Assert.assertEquals(4, predicateNames.size());
 
-			List<Validator> validators = new ArrayList<>();
-			validators.add(new DefaultValidator());
+			List<PairValidator> validators = new ArrayList<>();
+			validators.add(new DefaultPairValidator());
 
 			List<DAGChaseConfiguration> left = configurations;
 			List<DAGChaseConfiguration> right = new ArrayList<>();

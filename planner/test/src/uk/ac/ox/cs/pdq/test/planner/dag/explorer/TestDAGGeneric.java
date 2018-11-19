@@ -38,8 +38,8 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGenericSimple;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultPairValidator;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
 import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
@@ -124,8 +124,8 @@ public class TestDAGGeneric extends PdqTest {
 			when(successDominance.clone()).thenReturn(successDominance);
 
 			// Create validators
-			List<Validator> validators = new ArrayList<>();
-			validators.add(new DefaultValidator());
+			List<PairValidator> validators = new ArrayList<>();
+			validators.add(new DefaultPairValidator());
 
 			explorer = new DAGGenericSimple(new EventBus(), parameters, ts.getQuery(), accessibleSchema, chaser, databaseConnection, costEstimator,
 					successDominance, null, validators, 3);
@@ -230,8 +230,8 @@ public class TestDAGGeneric extends PdqTest {
 			when(successDominance.clone()).thenReturn(successDominance);
 
 			// Create validators
-			List<Validator> validators = new ArrayList<>();
-			validators.add(new DefaultValidator());
+			List<PairValidator> validators = new ArrayList<>();
+			validators.add(new DefaultPairValidator());
 
 			explorer = new DAGGenericSimple(new EventBus(), parameters, query, accessibleSchema, chaser, databaseConnection, costEstimator, successDominance,
 					null, validators, 3);

@@ -35,9 +35,9 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.SynchronizedEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ValidatorFactory;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultPairValidator;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidatorFactory;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.DominanceFactory;
 import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
@@ -76,7 +76,7 @@ public class DAGOptimized extends DAGExplorer {
 	protected final DAGEquivalenceClasses equivalenceClasses;
 	protected CostDominance successDominance = new CostDominance(new CountNumberOfAccessedRelationsCostEstimator());
 	protected Dominance[] dominance;
-	protected Validator[] validator;
+	protected PairValidator[] validator;
 
 	/**
 	 * Instantiates a new DAG optimized.
@@ -116,7 +116,7 @@ public class DAGOptimized extends DAGExplorer {
 			this.equivalenceClasses.addEntry(initialConfiguration);
 		}
 		this.dominance = new DominanceFactory(parameters.getDominanceType()).getInstance();
-		this.validator = new ValidatorFactory(parameters.getValidatorType(), parameters.getDepthThreshold())
+		this.validator = new PairValidatorFactory(parameters.getValidatorType(), parameters.getDepthThreshold())
 				.getInstance();
 	}
 
@@ -295,7 +295,7 @@ public class DAGOptimized extends DAGExplorer {
 			Cost costOfBestPlan,
 			CostEstimator costEstimator, 
 			CostDominance successDominance) {
-		if (DefaultValidator.isNonTrivial(left, right)) {
+		if (DefaultPairValidator.isNonTrivial(left, right)) {
 			if(bestPlan == null) 
 				return true;
 			RelationalTerm plan = PlanCreationUtility.createJoinPlan(left.getPlan(), right.getPlan());

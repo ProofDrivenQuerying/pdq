@@ -7,7 +7,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 
 
@@ -90,7 +90,7 @@ public class ConfigurationUtility {
 	 * 		i.e., satisfies given shape restrictions.
 	 * 		If depth > 0, then the corresponding binary configuration must be of the given depth.
 	 */
-	public static boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right, List<Validator> validators, int depth) {
+	public static boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right, List<PairValidator> validators, int depth) {
 		if(depth > 0) {
 			for(int i = 0; i < validators.size(); ++i) {
 				if(!validators.get(i).validate(left, right, depth)) 

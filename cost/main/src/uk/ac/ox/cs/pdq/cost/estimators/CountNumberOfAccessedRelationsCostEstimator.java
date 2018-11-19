@@ -24,7 +24,7 @@ public class CountNumberOfAccessedRelationsCostEstimator implements OrderIndepen
 	 */
 	@Override
 	public CountNumberOfAccessedRelationsCostEstimator clone() {
-		return (CountNumberOfAccessedRelationsCostEstimator) new CountNumberOfAccessedRelationsCostEstimator();
+		return new CountNumberOfAccessedRelationsCostEstimator();
 	}
 
 	/**

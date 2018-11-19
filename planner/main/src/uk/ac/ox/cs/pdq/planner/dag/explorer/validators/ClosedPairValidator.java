@@ -11,12 +11,12 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
  *
  * @author Efthymia Tsamoura
  */
-public class ClosedValidator implements Validator{
+public class ClosedPairValidator implements PairValidator{
 
 	/**
 	 * Instantiates a new linear validator.
 	 */
-	public ClosedValidator() {
+	public ClosedPairValidator() {
 	}
 
 	/**
@@ -25,7 +25,7 @@ public class ClosedValidator implements Validator{
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.dag.explorer.validators.Validator#validate(DAGConfiguration, DAGConfiguration)
+	 * @see uk.ac.ox.cs.pdq.PairValidator.explorer.validators.Validator#validate(DAGConfiguration, DAGConfiguration)
 	 */
 	@Override
 	public boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right) {
@@ -42,7 +42,7 @@ public class ClosedValidator implements Validator{
 	 * @param right DAGConfiguration
 	 * @param depth int
 	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.dag.explorer.validators.Validator#validate(DAGConfiguration, DAGConfiguration, int)
+	 * @see uk.ac.ox.cs.pdq.PairValidator.explorer.validators.Validator#validate(DAGConfiguration, DAGConfiguration, int)
 	 */
 	@Override
 	public boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right, int depth) {
@@ -53,11 +53,11 @@ public class ClosedValidator implements Validator{
 	 * Clone.
 	 *
 	 * @return Validator
-	 * @see uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator#clone()
+	 * @see uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator#clone()
 	 */
 	@Override
-	public Validator clone() {
-		return new ClosedValidator();
+	public PairValidator clone() {
+		return new ClosedPairValidator();
 	}
 
 }
