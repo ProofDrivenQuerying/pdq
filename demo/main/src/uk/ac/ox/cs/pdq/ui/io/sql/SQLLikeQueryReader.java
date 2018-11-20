@@ -146,11 +146,13 @@ public class SQLLikeQueryReader {
     	
     	// Begin adding where constraints:
 		String rawExpression = parser.getLastExpr();
-		if (rawExpression != null) {
+		if ((rawExpression != null) && (!rawExpression.equals(""))) {
         	log.debug("raw where expr: " + rawExpression);
         	String[] rawConstraints = rawExpression.split("AND");
         	
         	for( String rawConstraint : rawConstraints ) {
+        	if(rawConstraint.split("=").length >= 2)
+        	{
         		String left = rawConstraint.split("=")[0].replaceAll("\\s", "");
         		String right = rawConstraint.split("=")[1].replaceAll("\\s", "");
         		
@@ -189,6 +191,7 @@ public class SQLLikeQueryReader {
          			rightConstraint = new ConjunctiveQueryBodyBuilder.ConstantConstraintTerm(right);
          		}
         		qBuilder.addConstraint(leftConstraint, rightConstraint);
+        	}
         	}
 		}
     	
