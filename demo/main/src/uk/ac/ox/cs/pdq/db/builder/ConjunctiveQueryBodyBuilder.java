@@ -89,9 +89,18 @@ public class ConjunctiveQueryBodyBuilder {
 			String aliasName = entry.getKey();
 			String relationName = entry.getValue();
 
-			Predicate predicate = Predicate.create(relationName, terms.length);
+			Relation relation = this.schema.getRelation(relationName);
+			Attribute[] attributes = relation.getAttributes();
 
-			this.aliasToPredicateFormulas.put(aliasName, Atom.create( predicate, this.terms ));
+			Predicate predicate = Predicate.create(relationName, attributes.length);
+
+			Term[] terms = new Term[ attributes.length ];
+
+			for( int i = 0; i < terms.length; i++ ) {
+				terms[i] = new Variable(attributes[i].getName());
+			}
+
+			this.aliasToPredicateFormulas.put(aliasName, Atom.create( predicate, terms ));
 
 			counter++;
 		}
@@ -186,11 +195,11 @@ public class ConjunctiveQueryBodyBuilder {
 
 		// Get term in said position:
 		int leftAttrIndex = -1;
-//		Term leftTerm = null;
+		Term leftTerm = null;
 		
 		try {
 			leftAttrIndex = this.schema.getRelation(this.aliasToRelations.get(leftAlias)).getAttributePosition(leftAttr);
-//			leftTerm = leftPredForm.getTerm(leftAttrIndex);
+			leftTerm = leftPredForm.getTerm(leftAttrIndex);
 		} catch(NullPointerException e)
 		{	
 			log.error("null pointer. leftAttr=" + leftAttr
@@ -210,10 +219,10 @@ public class ConjunctiveQueryBodyBuilder {
 		// Get term in said position:
 		int rightAttrIndex = -1;
 		
-//		Term rightTerm = null;
+		Term rightTerm = null;
 		try {
 			rightAttrIndex = this.schema.getRelation( this.aliasToRelations.get(rightAlias) ).getAttributePosition(rightAttr);
-//			rightTerm = rightPredForm.getTerm(rightAttrIndex);
+			rightTerm = rightPredForm.getTerm(rightAttrIndex);
 		} catch( NullPointerException e ) {
 			log.error("null pointer. rightAttr=" + rightAttr
 					+ ", rightAlias=" + rightAlias
@@ -225,7 +234,6 @@ public class ConjunctiveQueryBodyBuilder {
 		}
 
 		// Check left and right isVariable()
-		/*
 		if( !leftTerm.isVariable() && !rightTerm.isVariable() ) {
 			if( !leftTerm.equals(rightTerm) ) {
 				throw new Exception("conflicting constants");
@@ -248,7 +256,7 @@ public class ConjunctiveQueryBodyBuilder {
 			this.replaceTerm( leftTerm,  newTerm);
 			this.replaceTerm( rightTerm, newTerm);
 
-		}*/
+		}
 
 	}
 
