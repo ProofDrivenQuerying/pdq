@@ -7,24 +7,23 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 
 /**
-* Closed cost dominance. 
-* A closed plan p cost dominates another closed plan p', if p is closed and has cost < the cost of p'.
-*
-* @author Efthymia Tsamoura
-* @author Gabor
-*/
+ * Closed cost dominance. A closed plan p cost dominates another closed plan p',
+ * if p is closed and has cost < the cost of p'.
+ *
+ * @author Efthymia Tsamoura
+ * @author Gabor
+ */
 
 public class CostDominance {
-
-	//	/**  True if we use a simple cost function to compare plans. */
-	//	private final boolean simpleFunction;
 
 	/** The estimator. */
 	private final OrderIndependentCostEstimator costEstimatorForOpenPlans;
 
 	/**
 	 * Constructor for SuccessDominance.
-	 * @param simpleFunction Boolean
+	 * 
+	 * @param simpleFunction
+	 *            Boolean
 	 */
 	public CostDominance(OrderIndependentCostEstimator estimator) {
 		Preconditions.checkNotNull(estimator);
@@ -34,15 +33,17 @@ public class CostDominance {
 	/**
 	 * Checks if is dominated.
 	 *
-	 * @param source the source
-	 * @param target the target
+	 * @param source
+	 *            the source
+	 * @param target
+	 *            the target
 	 * @return true if the source plan is success dominated by the target
 	 */
 	public boolean isDominated(RelationalTerm source, Cost sourceCost, RelationalTerm target, Cost targetCost) {
-		if(source.isClosed() && target.isClosed()) 
+		if (source.isClosed() && target.isClosed())
 			return sourceCost.greaterThan(targetCost);
-		
-		return this.costEstimatorForOpenPlans.cost(source).greaterThan(this.costEstimatorForOpenPlans.cost(target)); 
+
+		return this.costEstimatorForOpenPlans.cost(source).greaterThan(this.costEstimatorForOpenPlans.cost(target));
 	}
 
 	/**
