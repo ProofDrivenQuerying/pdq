@@ -15,7 +15,6 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Utility;
 
 
@@ -65,7 +64,8 @@ public class Candidate implements Cloneable{
 		this.rule = rule;
 		this.fact = fact;
 		this.match = match;
-		this.input = PlannerUtility.getInputConstants(rule.getAccessMethod(), fact);
+		List<Constant> allConstants  = uk.ac.ox.cs.pdq.util.Utility.getTypedAndUntypedConstants(fact,rule.getAccessMethod().getInputs());
+		this.input = Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.removeDuplicates(allConstants));
 		this.output = Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.getTypedAndUntypedConstants(fact));
 		this.properOutput = Lists.newArrayList(this.output);
 		this.properOutput.removeAll(this.input);

@@ -9,9 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
-
-import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -27,6 +24,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * The Class PlannerUtility.
  *
  * @author Efthymia Tsamoura
+ * @author Gabor
  */
 public class PlannerUtility {
 
@@ -53,18 +51,6 @@ public class PlannerUtility {
 			}
 		}
 		return inputs;
-	}
-
-	/**
-	 * Gets the constants lying in input positions of a given method from a single fact
-	 *
-	 * @param accessMethod a method on the relations of a fact
-	 * @param fact the fact
-	 * @return the constants in the input positions of the given fact
-	 */
-	public static List<Constant> getInputConstants(AccessMethodDescriptor accessMethod, Atom fact) {
-		List<Constant> ret  = Utility.getTypedAndUntypedConstants(fact,accessMethod.getInputs());
-		return Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.removeDuplicates(ret));
 	}
 
 	/**
@@ -113,7 +99,6 @@ public class PlannerUtility {
 				if (t.isVariable()) {
 					Constant c = canonicalMapping.get(t);
 					if (c == null && !freeVariables.contains(t)) {
-//						c = UntypedConstant.create(ChaseConstantGenerator.getName());
 						c = UntypedConstant.create("v_" + ((Variable)t).getSymbol() + query.getId());
 						canonicalMapping.put((Variable) t, c);
 					} else if (c==null) {
