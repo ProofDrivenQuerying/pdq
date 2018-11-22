@@ -13,11 +13,11 @@ import com.google.common.collect.Sets;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
-import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -58,7 +58,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 			AccessibilityAxiom rule,
 			Set<Atom> facts
 			) {		
-		super(state, PlannerUtility.getInputConstants(rule, facts), Utility.getUntypedConstants(facts), 1);
+		super(state, ApplyRule.getInputConstants(rule, facts), Utility.getUntypedConstants(facts), 1);
 		Preconditions.checkNotNull(rule);
 		Preconditions.checkNotNull(facts);
 		this.rule = rule;
@@ -142,6 +142,31 @@ public class ApplyRule extends DAGChaseConfiguration {
 	 */
 	public List<ApplyRule> getApplyRulesList() {
 		return Lists.newArrayList(this);
+	}
+	
+	/**
+	 * Given a set of facts F=F1.... on the same relation R,
+	 * and an accessibility axiom on R, corresponding to performing a particular access method mt
+	 * on R; find the constants that lie within the input positions of each Fi for mt 
+	 *
+	 * TOCOMMENT: It seems like we only get untyped constants. Why?
+	 * TOCOMMENT: should we have an assert that checks that all facts use the correct relation
+	 *  
+	 * @param rule the accessibility axiom for some method being fired
+	 * @param facts the facts
+	 * @return the constants of the input facts that correspond to the input positions of the method
+	 */
+	public static Collection<Constant> getInputConstants(AccessibilityAxiom rule, Set<Atom> facts) {
+		Collection<Constant> inputs = new LinkedHashSet<>();
+		for(Atom fact:facts) {
+			List<Constant> constants = Utility.getTypedAndUntypedConstants(fact,rule.getAccessMethod().getInputs());
+			for(Constant constant:constants) {
+				if(constant.isUntypedConstant()) {
+					inputs.add(constant);
+				}
+			}
+		}
+		return inputs;
 	}
 	
 }
