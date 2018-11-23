@@ -15,8 +15,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -27,9 +26,6 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
  */
 public abstract class PostPruning {
 
-	/**  Factory of tree nodes. */
-	protected final NodeFactory nodeFactory;
-	
 	/**  The accessible counterpart of the input schema *. */
 	protected final AccessibleSchema accessibleSchema;
 	
@@ -48,10 +44,8 @@ public abstract class PostPruning {
 	 * @param nodeFactory 		Factory of tree nodes
 	 * @param accessibleSchema 		The accessible counterpart of the input schema
 	 */
-	public PostPruning(NodeFactory nodeFactory, AccessibleSchema accessibleSchema) {
-		Preconditions.checkArgument(nodeFactory != null);
+	public PostPruning(AccessibleSchema accessibleSchema) {
 		Preconditions.checkArgument(accessibleSchema != null);
-		this.nodeFactory = nodeFactory;
 		this.accessibleSchema = accessibleSchema;
 	}
 

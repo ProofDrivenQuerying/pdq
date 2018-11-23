@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.planner.linear.explorer.pruning;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +23,11 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearConfigurationNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -51,8 +53,8 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	 * @param chaser the chaser
 	 * @param query the query
 	 */
-	public PostPruningRemoveFollowUps(NodeFactory nodeFactory, AccessibleSchema accessibleSchema, Chaser chaser, ConjunctiveQuery query) {
-		super(nodeFactory, accessibleSchema);
+	public PostPruningRemoveFollowUps(AccessibleSchema accessibleSchema, Chaser chaser, ConjunctiveQuery query) {
+		super(accessibleSchema);
 		Preconditions.checkNotNull(chaser);
 		Preconditions.checkNotNull(query);
 		this.chaser = chaser;
@@ -85,11 +87,16 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 				 */
 				Set<Candidate> mustBeExposed = getCandidatesThatExposeInputFacts(alreadyExposed, factsToExpose);
 				if(!mustBeExposed.isEmpty()) {
-					SearchNode freshNode;
+					HashSet<Candidate> alreadyExposedSet = Sets.newHashSet(alreadyExposed);
+					LinearConfigurationNode rootNode = (LinearConfigurationNode) root;
 					if(i > 0)
-						freshNode = this.nodeFactory.getInstance(path.get(i-1), Sets.newHashSet(alreadyExposed));
-					else 
-						freshNode = this.nodeFactory.getInstance(root, Sets.newHashSet(alreadyExposed));
+						rootNode =(LinearConfigurationNode) path.get(i-1);
+					LinearChaseConfiguration newConfiguration = new LinearChaseConfiguration(
+							rootNode.getConfiguration(),
+							alreadyExposedSet);
+					SearchNode freshNode = new LinearConfigurationNode(rootNode, newConfiguration);
+					
+					
 					freshNode.setStatus(NodeStatus.TERMINAL);
 					//Find the consequences of the newly created node
 					freshNode.close(this.chaser, this.accessibleSchema.getAccessibilityAxioms());

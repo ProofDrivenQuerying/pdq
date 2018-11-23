@@ -14,8 +14,8 @@ import com.google.common.collect.Sets;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.BlackBoxNode;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearConfigurationNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 
 /**
@@ -29,10 +29,10 @@ import uk.ac.ox.cs.pdq.planner.util.PlanTree;
  * @author Efthymia Tsamoura
  *
  */
-public class OrderDependentCostPropagator extends CostPropagator<BlackBoxNode> {
+public class OrderDependentCostPropagator extends CostPropagator<LinearConfigurationNode> {
 
 	/**  the nodes that have been already updated */
-	private Set<BlackBoxNode> updatedNodes = Sets.newHashSet();
+	private Set<LinearConfigurationNode> updatedNodes = Sets.newHashSet();
 
 	/**
 	 * Empty constructor.
@@ -55,7 +55,7 @@ public class OrderDependentCostPropagator extends CostPropagator<BlackBoxNode> {
 	 * @param planTree the plan tree
 	 */
 	@Override
-	public void propagate(BlackBoxNode node, PlanTree<BlackBoxNode> planTree) {
+	public void propagate(LinearConfigurationNode node, PlanTree<LinearConfigurationNode> planTree) {
 		this.updatedNodes.clear();
 		this._propagate(node, planTree);
 	}
@@ -66,48 +66,42 @@ public class OrderDependentCostPropagator extends CostPropagator<BlackBoxNode> {
 	 * @param node BlackBoxNode
 	 * @param planTree PlanTree<BlackBoxNode>
 	 */
-	public void _propagate(BlackBoxNode node, PlanTree<BlackBoxNode> planTree) {
+	public void _propagate(LinearConfigurationNode node, PlanTree<LinearConfigurationNode> planTree) {
 		this.updatedNodes.add(node);
 		if (node.getStatus() == NodeStatus.SUCCESSFUL) 
 			node.ground();
 		else if (node.getEquivalentNode() != null) {
-			BlackBoxNode pointer = node.getEquivalentNode();
-			if (pointer.getPathsToSuccess() != null) 
-				node.setPathsToSuccess(pointer.getPathsToSuccess());
+			LinearConfigurationNode pointer = node.getEquivalentNode();
+			if (pointer.getPathToSuccess() != null) 
+				node.setPathToSuccess(pointer.getPathToSuccess());
 		} else {
-			Set<BlackBoxNode> children = new LinkedHashSet<>();
+			Set<LinearConfigurationNode> children = new LinkedHashSet<>();
 			for (DefaultEdge edge : planTree.outgoingEdgesOf(node)) 
 				children.add(planTree.getEdgeTarget(edge));
 			
 			// Iterate over all children and copy their corresponding paths-to-success
-			for (BlackBoxNode child:children) {
-				Set<List<Integer>> paths = child.getPathsToSuccess();
-				if (paths != null) {
-					for (List<Integer> path:paths) {
-						ArrayList<Integer> sequence = Lists.newArrayList();
-						sequence.add(child.getId());
-						sequence.addAll(path);
-						node.addPathToSuccess(sequence);
-					}
+			for (LinearConfigurationNode child:children) {
+				List<Integer> path = child.getPathToSuccess();
+				if (path != null) {
+					ArrayList<Integer> sequence = Lists.newArrayList();
+					sequence.add(child.getId());
+					sequence.addAll(path);
+					node.setPathToSuccess(sequence);
 				}
 			}
 		}
-
-
 		// When reaching the root, we find out which one of these 
 		// paths-to-success correspond to the minimum cost plan and we return it
 		if (node.equals(planTree.getRoot())) {
-			Set<List<Integer>> paths = node.getPathsToSuccess();
-			if (paths != null) {
-				for (List<Integer> path:paths) {
-					RelationalTerm plan = CostPropagatorUtility.createLeftDeepPlan(planTree, path);
-					Cost cost = this.costEstimator.cost(plan);
-					Preconditions.checkState(plan != null);
-					if (this.bestPlan == null || cost.lessThan(this.bestCost)) {
-						this.bestPlan = plan;
-						this.bestCost = cost;
-						this.bestPath = path;
-					}
+			List<Integer> path = node.getPathToSuccess();
+			if (path != null) {
+				RelationalTerm plan = CostPropagatorUtility.createLeftDeepPlan(planTree, path);
+				Cost cost = this.costEstimator.cost(plan);
+				Preconditions.checkState(plan != null);
+				if (this.bestPlan == null || cost.lessThan(this.bestCost)) {
+					this.bestPlan = plan;
+					this.bestCost = cost;
+					this.bestPath = path;
 				}
 			}
 		} 
@@ -116,7 +110,7 @@ public class OrderDependentCostPropagator extends CostPropagator<BlackBoxNode> {
 			for (DefaultEdge edge: planTree.incomingEdgesOf(node)) 
 				this._propagate(planTree.getEdgeSource(edge), planTree);
 			
-			for (BlackBoxNode n:planTree.vertexSet()) {
+			for (LinearConfigurationNode n:planTree.vertexSet()) {
 				if (n.getEquivalentNode() != null && n.getEquivalentNode().equals(node) && !this.updatedNodes.contains(n)) 
 					this._propagate(n, planTree);
 			}

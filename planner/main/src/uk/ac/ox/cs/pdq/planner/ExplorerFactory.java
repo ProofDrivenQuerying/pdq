@@ -8,7 +8,6 @@ import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -22,12 +21,10 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidatorFactory;
 import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
-import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearKChase;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimized;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruningFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -106,7 +103,6 @@ public class ExplorerFactory {
 
 		CostDominance successDominance = new CostDominance(new CountNumberOfAccessedRelationsCostEstimator());
 
-		NodeFactory nodeFactory = null;
 		PostPruning postPruning = null;
 		CostPropagator costPropagator = null;
 		List<PairValidator> validators = new ArrayList<>();
@@ -115,12 +111,9 @@ public class ExplorerFactory {
 		if (parameters.getPlannerType().equals(PlannerTypes.LINEAR_GENERIC)
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_KCHASE)
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_OPTIMIZED)) {
-			nodeFactory = new NodeFactory(costEstimator);
-			postPruning = new PostPruningFactory(parameters.getPostPruningType(), nodeFactory, chaser, query,
+			postPruning = new PostPruningFactory(parameters.getPostPruningType(), chaser, query,
 					accessibleSchema).getInstance();
-			if (costEstimator instanceof OrderDependentCostEstimator)
-				costPropagator = new OrderDependentCostPropagator((OrderDependentCostEstimator) costEstimator);
-			else if (costEstimator instanceof OrderIndependentCostEstimator)
+			if (costEstimator instanceof OrderIndependentCostEstimator)
 				costPropagator = new OrderIndependentCostPropagator((OrderIndependentCostEstimator) costEstimator);
 			else
 				throw new IllegalStateException(
@@ -135,10 +128,10 @@ public class ExplorerFactory {
 		switch (parameters.getPlannerType()) {
 		case LINEAR_GENERIC:
 			return new LinearGeneric(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection,
-					costEstimator, nodeFactory, parameters.getMaxDepth());
+					costEstimator, parameters.getMaxDepth());
 		case LINEAR_KCHASE:
 			return new LinearKChase(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection,
-					costEstimator, costPropagator, nodeFactory, parameters.getMaxDepth(),
+					costEstimator, costPropagator, parameters.getMaxDepth(),
 					parameters.getChaseInterval());
 
 		case DAG_GENERIC:
@@ -152,7 +145,7 @@ public class ExplorerFactory {
 
 		case LINEAR_OPTIMIZED:
 			return new LinearOptimized(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection,
-					costEstimator, costPropagator, nodeFactory, parameters.getMaxDepth(),
+					costEstimator, costPropagator, parameters.getMaxDepth(),
 					parameters.getQueryMatchInterval(), postPruning);
 
 		default:

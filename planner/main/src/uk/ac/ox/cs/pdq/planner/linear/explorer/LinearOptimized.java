@@ -19,7 +19,6 @@ import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -27,15 +26,13 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
-import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence.PathEquivalenceClasses;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.equivalence.PathEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
@@ -107,15 +104,13 @@ public class LinearOptimized extends LinearExplorer {
 			DatabaseManager connection,
 			CostEstimator costEstimator,
 			CostPropagator costPropagator,
-			NodeFactory nodeFactory,
 			int depth,
 			int queryMatchInterval, 
 			PostPruning postPruning) throws PlannerException, SQLException {
-		super(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, nodeFactory, depth);
+		super(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, depth);
 		Preconditions.checkNotNull(costPropagator);
 		Preconditions.checkArgument(queryMatchInterval >= 0);
-		Preconditions.checkArgument(costPropagator instanceof OrderIndependentCostPropagator && costEstimator instanceof OrderIndependentCostEstimator
-				|| costPropagator instanceof OrderDependentCostPropagator && costEstimator instanceof OrderDependentCostEstimator);
+		Preconditions.checkArgument(costPropagator instanceof OrderIndependentCostPropagator && costEstimator instanceof OrderIndependentCostEstimator);
 		this.costPropagator = costPropagator;
 		this.queryMatchInterval = queryMatchInterval;
 		this.postPruning = postPruning;
@@ -184,7 +179,12 @@ public class LinearOptimized extends LinearExplorer {
 		}
 
 		// Create a new node from the exposed facts and add it to the plan tree
-		SearchNode freshNode = this.nodeFactory.getInstance(selectedNode, similarCandidates);	
+		LinearChaseConfiguration newConfiguration = new LinearChaseConfiguration(
+				selectedNode.getConfiguration(),
+				similarCandidates);
+		SearchNode freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
+		
+		
 		freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
 		if (!freshNode.getConfiguration().hasCandidates()) 
 			freshNode.setStatus(NodeStatus.TERMINAL);

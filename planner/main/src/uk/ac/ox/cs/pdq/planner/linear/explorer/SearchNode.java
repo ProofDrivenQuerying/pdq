@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.linear.explorer.node;
+package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
 import java.util.ArrayList;
 import java.util.List;

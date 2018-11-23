@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence;
+package uk.ac.ox.cs.pdq.planner.linear.explorer.equivalence;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 
 /**
  * Collections of paths that have equivalent configurations.

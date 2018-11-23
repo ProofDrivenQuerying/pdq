@@ -55,8 +55,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
@@ -141,13 +140,10 @@ public class TestLinearGeneric extends PdqTest {
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getMaxDepth()).thenReturn(3);
 
-		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(costEstimator);
-
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), scenario1.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
+			explorer = new LinearGeneric(new EventBus(), scenario1.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, 
 					parameters.getMaxDepth());
 
 			PlanTree<SearchNode> planTree = null;
@@ -259,13 +255,10 @@ public class TestLinearGeneric extends PdqTest {
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getMaxDepth()).thenReturn(3);
 
-		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(costEstimator);
-
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), scenario2.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
+			explorer = new LinearGeneric(new EventBus(), scenario2.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, 
 					parameters.getMaxDepth());
 
 			PlanTree<SearchNode> planTree = null;
@@ -334,13 +327,10 @@ public class TestLinearGeneric extends PdqTest {
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getMaxDepth()).thenReturn(3);
 
-		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(costEstimator);
-
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), scenario3.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
+			explorer = new LinearGeneric(new EventBus(), scenario3.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, 
 					parameters.getMaxDepth());
 
 			explorer.explore();
@@ -457,13 +447,10 @@ public class TestLinearGeneric extends PdqTest {
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getMaxDepth()).thenReturn(numberOfRelations);
 
-		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(costEstimator);
-
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
+			explorer = new LinearGeneric(new EventBus(), query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, 
 					parameters.getMaxDepth());
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -529,13 +516,10 @@ public class TestLinearGeneric extends PdqTest {
 		when(parameters.getMaxDepth()).thenReturn(4);
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
-		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(costEstimator);
-
 		// Create Linear Generic
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory,
+			explorer = new LinearGeneric(new EventBus(), ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator,
 					parameters.getMaxDepth());
 			explorer.explore();
 			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();

@@ -10,8 +10,8 @@ import com.google.common.collect.Lists;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SimpleNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearConfigurationNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 
 /**
@@ -26,7 +26,7 @@ import uk.ac.ox.cs.pdq.planner.util.PlanTree;
  *
  * @author Efthymia Tsamoura
  */
-public class OrderIndependentCostPropagator extends CostPropagator<SimpleNode> {
+public class OrderIndependentCostPropagator extends CostPropagator<LinearConfigurationNode> {
 
 	/**
 	 * Empty constructor.
@@ -47,10 +47,10 @@ public class OrderIndependentCostPropagator extends CostPropagator<SimpleNode> {
 	 *
 	 * @param node SimpleNode
 	 * @param planTree PlanTree<SimpleNode>
-	 * @see uk.ac.ox.cs.pdq.plan.cost.CostPropagator#propagate(uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode, org.jgrapht.DirectedGraph, uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode)
+	 * @see uk.ac.ox.cs.pdq.plan.cost.CostPropagator#propagate(uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode, org.jgrapht.DirectedGraph, uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode)
 	 */
 	@Override
-	public void propagate(SimpleNode node, PlanTree<SimpleNode> planTree) {
+	public void propagate(LinearConfigurationNode node, PlanTree<LinearConfigurationNode> planTree) {
 		if (node.getStatus() == NodeStatus.SUCCESSFUL) 
 			node.ground();
 		
@@ -67,7 +67,7 @@ public class OrderIndependentCostPropagator extends CostPropagator<SimpleNode> {
 			}
 			// Iterate over all children of the given node.
 			for (DefaultEdge edge:planTree.outgoingEdgesOf(node)) {
-				SimpleNode child = planTree.getEdgeTarget(edge);
+				LinearConfigurationNode child = planTree.getEdgeTarget(edge);
 				if (child.getPathToSuccess() != null) {
 					List<Integer> sequence = Lists.newArrayList(child.getId());
 					sequence.addAll(child.getPathToSuccess());
@@ -92,7 +92,7 @@ public class OrderIndependentCostPropagator extends CostPropagator<SimpleNode> {
 			for (DefaultEdge edge: planTree.incomingEdgesOf(node)) 
 				this.propagate(planTree.getEdgeSource(edge), planTree);
 			
-			for (SimpleNode n: planTree.vertexSet()) {
+			for (LinearConfigurationNode n: planTree.vertexSet()) {
 				if (n.getEquivalentNode() != null && n.getEquivalentNode().equals(node)) 
 					this.propagate(n, planTree);
 			}

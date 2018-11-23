@@ -14,9 +14,8 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
@@ -57,8 +56,6 @@ public abstract class LinearExplorer extends Explorer {
 	/**  Estimates the cost of a plan *. */
 	protected final CostEstimator costEstimator;
 
-	/**  Creates new nodes. */
-	protected final NodeFactory nodeFactory;
 	protected SearchNode bestNode;
 
 	/**  Maximum exploration depth. */
@@ -98,12 +95,10 @@ public abstract class LinearExplorer extends Explorer {
 			Chaser chaser,
 			DatabaseManager connection,
 			CostEstimator costEstimator,
-			NodeFactory nodeFactory,
 			int depth
 			) throws PlannerException, SQLException {
 		super(eventBus);
 		Assert.assertNotNull(eventBus);
-		Assert.assertNotNull(nodeFactory);
 		Assert.assertNotNull(query);
 		Assert.assertNotNull(accessibleQuery);
 		Assert.assertNotNull(accessibleSchema);
@@ -117,7 +112,6 @@ public abstract class LinearExplorer extends Explorer {
 		this.chaser = chaser;
 		this.connection = connection;
 		this.costEstimator = costEstimator;
-		this.nodeFactory = nodeFactory;
 		this.depth = depth;
 		this.initialisePlanTree();
 	}
@@ -133,7 +127,9 @@ public abstract class LinearExplorer extends Explorer {
 				new AccessibleDatabaseChaseInstance(this.query, this.accessibleSchema, this.connection, true);
 		this.chaser.reasonUntilTermination(state, this.accessibleSchema.getOriginalDependencies());
 		this.tick = System.nanoTime();
-		SearchNode root = this.nodeFactory.getInstance(state);
+		LinearChaseConfiguration configuration = new LinearChaseConfiguration(state);
+		SearchNode root = new LinearConfigurationNode(configuration);
+		
 		root.getConfiguration().detectCandidates(this.accessibleSchema);
 		if (!root.getConfiguration().hasCandidates()) 
 			root.setStatus(NodeStatus.TERMINAL);

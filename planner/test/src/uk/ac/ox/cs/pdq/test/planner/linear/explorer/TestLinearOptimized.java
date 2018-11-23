@@ -42,8 +42,7 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimized;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
@@ -127,9 +126,6 @@ public class TestLinearOptimized extends PdqTest {
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getMaxDepth()).thenReturn(3);
 		
-		//Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(costEstimator);
-				
 		//Create linear explorer
 		LinearOptimized explorer = null;
 		try {
@@ -142,7 +138,6 @@ public class TestLinearOptimized extends PdqTest {
 					databaseConnection, 
 					costEstimator,
 					costPropagatpor,
-					nodeFactory,
 					parameters.getMaxDepth(),
 					1,
 					null);
@@ -255,9 +250,6 @@ public class TestLinearOptimized extends PdqTest {
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getMaxDepth()).thenReturn(3);
 		
-		//Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(costEstimator);
-				
 		//Create linear explorer
 		LinearOptimized explorer = null;
 		try {
@@ -270,7 +262,6 @@ public class TestLinearOptimized extends PdqTest {
 					databaseConnection, 
 					costEstimator,
 					costPropagatpor,
-					nodeFactory,
 					parameters.getMaxDepth(),
 					1,
 					null);
@@ -353,9 +344,6 @@ public class TestLinearOptimized extends PdqTest {
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getMaxDepth()).thenReturn(3);
 		
-		//Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(costEstimator);
-				
 		//Create linear explorer
 		LinearOptimized explorer = null;
 		try {
@@ -368,7 +356,6 @@ public class TestLinearOptimized extends PdqTest {
 					databaseConnection, 
 					costEstimator,
 					costPropagatpor,
-					nodeFactory,
 					parameters.getMaxDepth(),
 					1,
 					null);

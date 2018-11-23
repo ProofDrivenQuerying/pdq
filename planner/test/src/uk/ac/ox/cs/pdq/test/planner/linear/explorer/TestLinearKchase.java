@@ -36,7 +36,6 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearKChase;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
@@ -166,9 +165,6 @@ public class TestLinearKchase extends PdqTest {
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getMaxDepth()).thenReturn(3);
 
-		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(costEstimator);
-
 		// Create linear explorer
 		LinearKChase explorer = null;
 		try {
@@ -177,7 +173,7 @@ public class TestLinearKchase extends PdqTest {
 			OrderDependentCostPropagator costPropagator = new OrderDependentCostPropagator(costEstimator);
 
 			explorer = new LinearKChase(new EventBus(), ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, costPropagator,
-					nodeFactory, parameters.getMaxDepth(), chaseInterval);
+					parameters.getMaxDepth(), chaseInterval);
 
 			explorer.explore();
 

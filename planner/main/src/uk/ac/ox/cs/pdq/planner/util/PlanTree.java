@@ -9,7 +9,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 
 /**
  * A tree of search nodes.

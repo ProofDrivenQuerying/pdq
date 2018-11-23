@@ -50,9 +50,8 @@ import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearKChase;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimized;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruningRemoveFollowUps;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
@@ -133,15 +132,12 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getMaxDepth()).thenReturn(3);
 
-		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(costEstimator);
-
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
 			explorer = new LinearGeneric(new EventBus(), scenario1.getQuery(), accessibleQuery, accessibleSchema,
-					chaser, databaseConnection, costEstimator, nodeFactory, parameters.getMaxDepth());
-			PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(nodeFactory, accessibleSchema,
+					chaser, databaseConnection, costEstimator, parameters.getMaxDepth());
+			PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(accessibleSchema,
 					chaser, query);
 
 			PlanTree<SearchNode> planTree = null;
@@ -245,18 +241,15 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getMaxDepth()).thenReturn(2);
 
-		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(costEstimator);
-
 		// Create linear explorer
 		LinearGeneric explorer = null;
-		PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(nodeFactory, accessibleSchema, chaser,
+		PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(accessibleSchema, chaser,
 				query);
 
 		try {
 			// create explorer
 			explorer = new LinearGeneric(new EventBus(), query, accessibleQuery, accessibleSchema, chaser,
-					databaseConnection, costEstimator, nodeFactory, 4);
+					databaseConnection, costEstimator, 4);
 
 			// first exploration step should create a plan: Rename{[c0,c1]Access{S.mt_1[]}}
 			SearchNode newNode = explorer._performSingleExplorationStep();
@@ -354,12 +347,9 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getMaxDepth()).thenReturn(2);
 
-		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(costEstimator);
-
 		// Create linear explorer
 		LinearOptimized explorer = null;
-		PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(nodeFactory, accessibleSchema, chaser,
+		PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(accessibleSchema, chaser,
 				query);
 
 		try {
@@ -367,7 +357,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 			OrderIndependentCostPropagator costPropagator = new OrderIndependentCostPropagator(costEstimator);
 			// create explorer
 			explorer = new LinearOptimized(new EventBus(), query, accessibleQuery, accessibleSchema, chaser,
-					databaseConnection, costEstimator,costPropagator, nodeFactory,4,1, postpruning);
+					databaseConnection, costEstimator,costPropagator, 4,1, postpruning);
 
 			// first exploration step should create a plan: Rename{[c0,c1]Access{S.mt_1[]}}
 			SearchNode newNode = explorer._performSingleExplorationStep();
@@ -465,12 +455,9 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getMaxDepth()).thenReturn(2);
 
-		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(costEstimator);
-
 		// Create linear explorer
 		LinearKChase explorer = null;
-		PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(nodeFactory, accessibleSchema, chaser,
+		PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(accessibleSchema, chaser,
 				query);
 
 		try {
@@ -478,7 +465,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 			OrderIndependentCostPropagator costPropagator = new OrderIndependentCostPropagator(costEstimator);
 			// create explorer
 			explorer = new LinearKChase(new EventBus(), query, accessibleQuery, accessibleSchema, chaser,
-					databaseConnection, costEstimator,costPropagator, nodeFactory,4,1);
+					databaseConnection, costEstimator,costPropagator, 4,1);
 
 			// first exploration step should create a plan: Rename{[c0,c1]Access{S.mt_1[]}}
 			SearchNode newNode = explorer._performSingleExplorationStep();
@@ -584,15 +571,12 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getMaxDepth()).thenReturn(3);
 
-		// Create nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(costEstimator);
-
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
 			explorer = new LinearGeneric(new EventBus(), query, accessibleQuery, accessibleSchema, chaser,
-					databaseConnection, costEstimator, nodeFactory, parameters.getMaxDepth());
-			PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(nodeFactory, accessibleSchema,
+					databaseConnection, costEstimator, parameters.getMaxDepth());
+			PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(accessibleSchema,
 					chaser, query);
 
 			PlanTree<SearchNode> planTree = null;

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.linear.explorer.node;
+package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
  *
  * @author Efthymia Tsamoura
  */
-public class SimpleNode extends SearchNode {
+public class LinearConfigurationNode extends SearchNode {
 
 	/** Path to success. We keep the node identifiers for each path */
 	List<Integer> pathToSuccess = null;
@@ -24,7 +24,7 @@ public class SimpleNode extends SearchNode {
 	 * @param configuration LinearConfiguration
 	 * @throws PlannerException the planner exception
 	 */
-	public SimpleNode(LinearChaseConfiguration configuration) throws PlannerException {
+	public LinearConfigurationNode(LinearChaseConfiguration configuration) throws PlannerException {
 		super(configuration);
 	}
 
@@ -35,7 +35,7 @@ public class SimpleNode extends SearchNode {
 	 * @param configuration LinearConfiguration
 	 * @throws PlannerException the planner exception
 	 */
-	public SimpleNode(SimpleNode parent, LinearChaseConfiguration configuration) throws PlannerException {
+	public LinearConfigurationNode(LinearConfigurationNode parent, LinearChaseConfiguration configuration) throws PlannerException {
 		super(parent, configuration);
 	}
 
@@ -71,7 +71,7 @@ public class SimpleNode extends SearchNode {
 	 * @return SimpleNode
 	 */
 	@Override
-	public SimpleNode getEquivalentNode() {
-		return (SimpleNode) super.getEquivalentNode();
+	public LinearConfigurationNode getEquivalentNode() {
+		return (LinearConfigurationNode) super.getEquivalentNode();
 	}
 }

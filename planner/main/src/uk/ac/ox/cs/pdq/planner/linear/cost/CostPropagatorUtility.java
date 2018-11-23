@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.planner.linear.LeftDeepPlanGenerator;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 import uk.ac.ox.cs.pdq.planner.util.IndexedDirectedGraph;
 
 

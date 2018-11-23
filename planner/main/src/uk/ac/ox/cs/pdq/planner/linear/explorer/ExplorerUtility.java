@@ -10,8 +10,7 @@ import uk.ac.ox.cs.pdq.planner.dominance.FactDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.equivalence.FactEquivalence;
 import uk.ac.ox.cs.pdq.planner.equivalence.FastFactEquivalence;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 
 import com.google.common.base.Preconditions;

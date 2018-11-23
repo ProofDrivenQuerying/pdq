@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence;
+package uk.ac.ox.cs.pdq.planner.linear.explorer.equivalence;
 
 /**
  * This package contains classes that store tree paths having equivalent configurations.
