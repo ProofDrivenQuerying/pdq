@@ -64,8 +64,6 @@ public abstract class LinearExplorer extends Explorer {
 	/**
 	 * The tree of plans.
 	 * A new node is appended to this tree at the end of each iteration.
-	 * The SearchNode  can be either a SimpleNode, when simple plan propagation is employed,
-	 * or a BlackBoxNode, when black box plan propagation is employed
 	 */
 	protected final PlanTree<SearchNode> planTree = new PlanTree<>(DefaultEdge.class);
 

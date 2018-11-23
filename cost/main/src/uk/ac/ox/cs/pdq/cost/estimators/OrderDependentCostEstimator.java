@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
 /**
- * Top level interface for all blackbox plan cost estimators.
+ * Top level interface for all Order Dependent cost estimators.
  * 	The cost of a plan depends on the operators' order
  *
  * @author Julien Leblay
@@ -12,7 +12,7 @@ public interface OrderDependentCostEstimator extends CostEstimator {
 	/**
 	 * Clone.
 	 *
-	 * @return BlackBoxCostEstimator<P>
+	 * @return CostEstimator<P>
 	 */
 	OrderDependentCostEstimator clone();
 	

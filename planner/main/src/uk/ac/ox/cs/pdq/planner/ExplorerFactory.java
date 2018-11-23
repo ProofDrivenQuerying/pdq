@@ -117,7 +117,7 @@ public class ExplorerFactory {
 				costPropagator = new OrderIndependentCostPropagator((OrderIndependentCostEstimator) costEstimator);
 			else
 				throw new IllegalStateException(
-						"Attempting to get a propagator for a cost estimator that is neither blackbox nor simple");
+						"Attempting to get a propagator for a unknown cost estimator: " + costEstimator);
 		} else {
 			PairValidator[] validatorArray = new PairValidatorFactory(parameters.getValidatorType(),
 					parameters.getDepthThreshold()).getInstance();

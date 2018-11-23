@@ -11,8 +11,6 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 	-SIMPLE_RANDOM: Estimates the cost as the sum of the cost of all accesses in a plan, \n where cost are assigned randomly
 	-SIMPLE_GIVEN: Estimates the cost as the sum of the cost of all accesses in a plan, \n where cost are measured automatically from the underlying datasources	
 	-SIMPLE_COUNT: Estimates the cost as the sum of all accesses in a plan	
-	-BLACKBOX: Estimates the cost through some externally defined cost function.\nCurrently, this defaults to the white box cost functions relying on textbox cost estimation techniques	
-	-BLACKBOX_DB Estimates the cost by translating the query to SQL and asking its cost to a database
 	-INVERSE_LENGTH Experimental: estimates the cost as the number of atoms in a plan
 	-SIMPLE_ERSPI Estimates the cost as the sum of the estimated result size per invocation associated to each access method used in a plan.
 	

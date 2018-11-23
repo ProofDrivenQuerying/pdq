@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.planner.util.PlanTree;
  *
  * Black box cost propagator. When a node has been updated, this class propogates information about search nodes in the search space, their plans and associated costs.
  * According to this propagation paradigm, each node keeps all the paths-to-success. 
- * The nodes of the input plan tree must be of BlackBoxNode type; otherwise, a runtime exception is thrown.
+ * The nodes of the input plan tree must be of OrderDependent type; otherwise, a runtime exception is thrown.
  *  
  *
  *
@@ -36,8 +36,6 @@ public class OrderDependentCostPropagator extends CostPropagator<LinearConfigura
 
 	/**
 	 * Empty constructor.
-	 *
-	 * @param estimator BlackBoxCostEstimator<LeftDeepPlan,?>
 	 */
 	public OrderDependentCostPropagator(OrderDependentCostEstimator estimator) {
 		super(estimator);
@@ -63,8 +61,8 @@ public class OrderDependentCostPropagator extends CostPropagator<LinearConfigura
 	/**
 	 * _propagate.
 	 *
-	 * @param node BlackBoxNode
-	 * @param planTree PlanTree<BlackBoxNode>
+	 * @param node LinearConfigurationNode
+	 * @param planTree PlanTree<LinearConfigurationNode>
 	 */
 	public void _propagate(LinearConfigurationNode node, PlanTree<LinearConfigurationNode> planTree) {
 		this.updatedNodes.add(node);
