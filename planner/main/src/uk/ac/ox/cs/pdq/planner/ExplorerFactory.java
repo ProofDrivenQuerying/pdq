@@ -25,8 +25,7 @@ import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearKChase;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimized;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruningFactory;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.PostPruningRemoveFollowUps;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
@@ -103,7 +102,7 @@ public class ExplorerFactory {
 
 		CostDominance successDominance = new CostDominance(new CountNumberOfAccessedRelationsCostEstimator());
 
-		PostPruning postPruning = null;
+		PostPruningRemoveFollowUps postPruning = null;
 		CostPropagator costPropagator = null;
 		List<PairValidator> validators = new ArrayList<>();
 		Filter filter = null;
@@ -111,8 +110,7 @@ public class ExplorerFactory {
 		if (parameters.getPlannerType().equals(PlannerTypes.LINEAR_GENERIC)
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_KCHASE)
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_OPTIMIZED)) {
-			postPruning = new PostPruningFactory(parameters.getPostPruningType(), chaser, query,
-					accessibleSchema).getInstance();
+			postPruning = new PostPruningRemoveFollowUps(accessibleSchema, chaser, query);
 			if (costEstimator instanceof OrderIndependentCostEstimator)
 				costPropagator = new OrderIndependentCostPropagator((OrderIndependentCostEstimator) costEstimator);
 			else

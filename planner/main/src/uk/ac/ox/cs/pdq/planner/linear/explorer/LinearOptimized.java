@@ -33,7 +33,6 @@ import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.equivalence.PathEquivalenceClasses;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -56,7 +55,7 @@ public class LinearOptimized extends LinearExplorer {
 	protected final int queryMatchInterval;
 
 	/**  Performs plan post-pruning. */
-	private final PostPruning postPruning;
+	private final PostPruningRemoveFollowUps postPruning;
 	
 	/** TOCOMMENT: WHAT IS IT . */
 	private final Set<List<Integer>> prunedPaths = new HashSet<>(); 
@@ -106,7 +105,7 @@ public class LinearOptimized extends LinearExplorer {
 			CostPropagator costPropagator,
 			int depth,
 			int queryMatchInterval, 
-			PostPruning postPruning) throws PlannerException, SQLException {
+			PostPruningRemoveFollowUps postPruning) throws PlannerException, SQLException {
 		super(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, depth);
 		Preconditions.checkNotNull(costPropagator);
 		Preconditions.checkArgument(queryMatchInterval >= 0);
