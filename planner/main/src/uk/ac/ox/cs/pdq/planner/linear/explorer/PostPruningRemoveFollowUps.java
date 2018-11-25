@@ -261,10 +261,7 @@ public final class PostPruningRemoveFollowUps {
 				}
 			}
 			else {
-				//Relation r = schema.getRelation(fact.getPredicate().getName());
 				outputTerms.addAll(Utility.getTypedAndUntypedConstants(fact));
-				//Relation relation = (Relation) fact.getPredicate();
-				//inferredAccessibleFact = new Atom(this.accessibleSchema.getInferredAccessibleRelation(relation), fact.getTerms() );
 				Predicate predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getPredicate().getArity());
 				inferredAccessibleFact = Atom.create(predicate, fact.getTerms());
 			}
@@ -367,6 +364,7 @@ public final class PostPruningRemoveFollowUps {
 
 	/**
 	 * The Class Element.
+	 * TOCOMMENT: WHAT IS IT AND WHY DO WE HAVE IT?
 	 */
 	private class Element {
 		
@@ -405,7 +403,7 @@ public final class PostPruningRemoveFollowUps {
 
 		/**
 		 * Gets the input terms.
-		 *
+		 *TOCOMMENT: WHY BOTHER HAVING THIS (ALSO FOR THE NEXT FEW)?
 		 * @return Collection<Constant>
 		 */
 		public Collection<Constant> getInputTerms() {
