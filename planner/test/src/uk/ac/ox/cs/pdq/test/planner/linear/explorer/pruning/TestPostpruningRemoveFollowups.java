@@ -349,15 +349,12 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 
 		// Create linear explorer
 		LinearOptimized explorer = null;
-		PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(accessibleSchema, chaser,
-				query);
-
 		try {
 			//Create the cost Propagator
 			OrderIndependentCostPropagator costPropagator = new OrderIndependentCostPropagator(costEstimator);
 			// create explorer
 			explorer = new LinearOptimized(new EventBus(), query, accessibleSchema, chaser,
-					databaseConnection, costEstimator,costPropagator, 4,1, postpruning);
+					databaseConnection, costEstimator,costPropagator, 4,1);
 
 			// first exploration step should create a plan: Rename{[c0,c1]Access{S.mt_1[]}}
 			SearchNode newNode = explorer._performSingleExplorationStep();
@@ -372,7 +369,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 					.applySubstitution(accessibleQuery, matches.get(0).getMapping()).getAtoms();
 
 			// attempt pruning the plan with the two accesses.
-			if (postpruning.pruneSearchNodePath(newNode, explorer.getPlanTree().getPath(newNode.getPathFromRoot()),
+			if (explorer.getPostPruning().pruneSearchNodePath(newNode, explorer.getPlanTree().getPath(newNode.getPathFromRoot()),
 					factsInQueryMatch)) {
 				System.out.println("Successfully pruned node: " + newNode + " path: "
 						+ Arrays.asList(newNode.getBestPathFromRoot()));

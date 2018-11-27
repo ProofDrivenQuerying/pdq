@@ -103,15 +103,14 @@ public class LinearOptimized extends LinearExplorer {
 			CostEstimator costEstimator,
 			CostPropagator costPropagator,
 			int depth,
-			int queryMatchInterval, 
-			PostPruningRemoveFollowUps postPruning) throws PlannerException, SQLException {
+			int queryMatchInterval) throws PlannerException, SQLException {
 		super(eventBus, query, accessibleSchema, chaser, connection, costEstimator, depth);
 		Preconditions.checkNotNull(costPropagator);
 		Preconditions.checkArgument(queryMatchInterval >= 0);
 		Preconditions.checkArgument(costPropagator instanceof OrderIndependentCostPropagator && costEstimator instanceof OrderIndependentCostEstimator);
 		this.costPropagator = costPropagator;
 		this.queryMatchInterval = queryMatchInterval;
-		this.postPruning = postPruning;
+		this.postPruning = new PostPruningRemoveFollowUps(accessibleSchema, chaser, this.accessibleQuery);
 	}
 
 	/**
@@ -333,5 +332,9 @@ public class LinearOptimized extends LinearExplorer {
 			this.eventBus.post(this.getBestPlan());
 			log.trace("\t+++BEST PLAN: " + AlgebraUtilities.getAccesses(this.bestPlan) + " " + this.bestCost);
 		}
+	}
+	
+	public PostPruningRemoveFollowUps getPostPruning() {
+		return postPruning;
 	}
 }

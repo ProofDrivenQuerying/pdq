@@ -138,8 +138,7 @@ public class TestLinearOptimized extends PdqTest {
 					costEstimator,
 					costPropagatpor,
 					parameters.getMaxDepth(),
-					1,
-					null);
+					1);
 				
 				PlanTree<SearchNode> planTree = null;
 				planTree = explorer.getPlanTree();
@@ -261,8 +260,7 @@ public class TestLinearOptimized extends PdqTest {
 					costEstimator,
 					costPropagatpor,
 					parameters.getMaxDepth(),
-					1,
-					null);
+					1);
 				
 				PlanTree<SearchNode> planTree = null;
 				planTree = explorer.getPlanTree();
@@ -354,8 +352,7 @@ public class TestLinearOptimized extends PdqTest {
 					costEstimator,
 					costPropagatpor,
 					parameters.getMaxDepth(),
-					1,
-					null);
+					1);
 				
 				explorer.explore();
 				PlanTree<SearchNode> planTree = null;
