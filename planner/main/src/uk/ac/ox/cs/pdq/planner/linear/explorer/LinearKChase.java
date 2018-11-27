@@ -71,7 +71,6 @@ public class LinearKChase extends LinearExplorer {
 	public LinearKChase(
 			EventBus eventBus, 
 			ConjunctiveQuery query,
-			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
 			DatabaseManager connection,
@@ -79,7 +78,7 @@ public class LinearKChase extends LinearExplorer {
 			CostPropagator costPropagator,
 			int depth,
 			int chaseInterval) throws PlannerException, SQLException {
-		super(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, depth);
+		super(eventBus, query, accessibleSchema, chaser, connection, costEstimator, depth);
 		Preconditions.checkNotNull(costPropagator);
 		Preconditions.checkArgument(costPropagator instanceof OrderIndependentCostPropagator && costEstimator instanceof OrderIndependentCostEstimator
 				|| costPropagator instanceof OrderDependentCostPropagator && costEstimator instanceof OrderDependentCostEstimator);

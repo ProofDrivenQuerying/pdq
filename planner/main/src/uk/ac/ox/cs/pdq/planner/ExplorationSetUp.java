@@ -154,7 +154,7 @@ public class ExplorationSetUp {
 	 */
 	public Entry<RelationalTerm, Cost> search(ConjunctiveQuery query) throws PlannerException, SQLException {
 		query = convertQueryConstantsToString(query);
-		ConjunctiveQuery accessibleQuery = generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(query);
+		generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(query);
 
 		Explorer explorer = null;
 		DatabaseManager databaseConnection;
@@ -185,7 +185,7 @@ public class ExplorationSetUp {
 			Chaser reasoner = new ReasonerFactory(this.reasoningParams).getInstance();
 
 			explorer = ExplorerFactory.createExplorer(
-					this.eventBus, this.schema, this.accessibleSchema, query, accessibleQuery, 
+					this.eventBus, this.schema, this.accessibleSchema, query, 
 					reasoner, databaseConnection,
 					costEstimator, this.plannerParams, this.reasoningParams);
 

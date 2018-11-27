@@ -172,7 +172,7 @@ public class TestLinearKchase extends PdqTest {
 			// OrderDependentCostEstimator sad = ;
 			OrderDependentCostPropagator costPropagator = new OrderDependentCostPropagator(costEstimator);
 
-			explorer = new LinearKChase(new EventBus(), ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, costPropagator,
+			explorer = new LinearKChase(new EventBus(), ts.getQuery(), accessibleSchema, chaser, databaseConnection, costEstimator, costPropagator,
 					parameters.getMaxDepth(), chaseInterval);
 
 			explorer.explore();

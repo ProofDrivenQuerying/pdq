@@ -143,7 +143,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), scenario1.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, 
+			explorer = new LinearGeneric(new EventBus(), scenario1.getQuery(), accessibleSchema, chaser, databaseConnection, costEstimator, 
 					parameters.getMaxDepth());
 
 			PlanTree<SearchNode> planTree = null;
@@ -258,7 +258,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), scenario2.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, 
+			explorer = new LinearGeneric(new EventBus(), scenario2.getQuery(), accessibleSchema, chaser, databaseConnection, costEstimator, 
 					parameters.getMaxDepth());
 
 			PlanTree<SearchNode> planTree = null;
@@ -330,7 +330,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), scenario3.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, 
+			explorer = new LinearGeneric(new EventBus(), scenario3.getQuery(), accessibleSchema, chaser, databaseConnection, costEstimator, 
 					parameters.getMaxDepth());
 
 			explorer.explore();
@@ -378,6 +378,7 @@ public class TestLinearGeneric extends PdqTest {
 	 */
 	public List<Entry<RelationalTerm, Cost>> findExploredPlans(int numberOfRelations, DatabaseParameters dbParams) {
 		// Create the relations
+		
 		Relation[] relations = new Relation[(int) (numberOfRelations + Math.pow(2.0, numberOfRelations)) + 1];
 		for (int index = 0; index < numberOfRelations; ++index)
 			relations[index] = Relation.create("R" + index, new Attribute[] { this.a_s, this.b_s, this.c_s, this.d_s },
@@ -391,7 +392,7 @@ public class TestLinearGeneric extends PdqTest {
 		for (int index = 0; index < numberOfRelations; ++index)
 			atoms[index] = Atom.create(relations[index], new Term[] { x, y, z, Variable.create("v" + random.nextInt()) });
 		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y, z }, atoms);
-
+		ExplorationSetUp.generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(query);
 		// Create all views and update the relations with the newly create views
 		Set<Atom> setOfAtoms = new LinkedHashSet<>();
 		for (int index = 0; index < numberOfRelations; ++index)
@@ -423,9 +424,6 @@ public class TestLinearGeneric extends PdqTest {
 		// Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 
-		// Create accessible query
-		ConjunctiveQuery accessibleQuery = ExplorationSetUp.generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(query);
-		
 		// Create database connection
 		DatabaseManager databaseConnection = null;
 		try {
@@ -450,7 +448,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, 
+			explorer = new LinearGeneric(new EventBus(), query, accessibleSchema, chaser, databaseConnection, costEstimator, 
 					parameters.getMaxDepth());
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -519,7 +517,7 @@ public class TestLinearGeneric extends PdqTest {
 		// Create Linear Generic
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), ts.getQuery(), accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator,
+			explorer = new LinearGeneric(new EventBus(), ts.getQuery(), accessibleSchema, chaser, databaseConnection, costEstimator,
 					parameters.getMaxDepth());
 			explorer.explore();
 			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();

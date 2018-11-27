@@ -55,13 +55,12 @@ public class LinearGeneric extends LinearExplorer {
 	public LinearGeneric(
 			EventBus eventBus, 
 			ConjunctiveQuery query,
-			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
 			DatabaseManager connection,
 			CostEstimator costEstimator,
 			int depth) throws PlannerException, SQLException {
-		super(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, depth);
+		super(eventBus, query, accessibleSchema, chaser, connection, costEstimator, depth);
 	}
 
 	/**

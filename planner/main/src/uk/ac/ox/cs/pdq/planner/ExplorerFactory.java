@@ -96,7 +96,7 @@ public class ExplorerFactory {
 	 */
 	@SuppressWarnings("rawtypes")
 	public static Explorer createExplorer(EventBus eventBus, Schema schema, AccessibleSchema accessibleSchema,
-			ConjunctiveQuery query, ConjunctiveQuery accessibleQuery, Chaser chaser, DatabaseManager connection,
+			ConjunctiveQuery query, Chaser chaser, DatabaseManager connection,
 			CostEstimator costEstimator, PlannerParameters parameters, ReasoningParameters reasoningParameters)
 			throws Exception {
 
@@ -125,10 +125,10 @@ public class ExplorerFactory {
 
 		switch (parameters.getPlannerType()) {
 		case LINEAR_GENERIC:
-			return new LinearGeneric(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection,
+			return new LinearGeneric(eventBus, query, accessibleSchema, chaser, connection,
 					costEstimator, parameters.getMaxDepth());
 		case LINEAR_KCHASE:
-			return new LinearKChase(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection,
+			return new LinearKChase(eventBus, query, accessibleSchema, chaser, connection,
 					costEstimator, costPropagator, parameters.getMaxDepth(),
 					parameters.getChaseInterval());
 
@@ -142,7 +142,7 @@ public class ExplorerFactory {
 					costEstimator, filter, parameters.getMaxDepth());
 
 		case LINEAR_OPTIMIZED:
-			return new LinearOptimized(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection,
+			return new LinearOptimized(eventBus, query, accessibleSchema, chaser, connection,
 					costEstimator, costPropagator, parameters.getMaxDepth(),
 					parameters.getQueryMatchInterval(), postPruning);
 

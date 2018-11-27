@@ -135,7 +135,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), scenario1.getQuery(), accessibleQuery, accessibleSchema,
+			explorer = new LinearGeneric(new EventBus(), scenario1.getQuery(), accessibleSchema,
 					chaser, databaseConnection, costEstimator, parameters.getMaxDepth());
 			PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(accessibleSchema,
 					chaser, query);
@@ -248,7 +248,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 
 		try {
 			// create explorer
-			explorer = new LinearGeneric(new EventBus(), query, accessibleQuery, accessibleSchema, chaser,
+			explorer = new LinearGeneric(new EventBus(), query, accessibleSchema, chaser,
 					databaseConnection, costEstimator, 4);
 
 			// first exploration step should create a plan: Rename{[c0,c1]Access{S.mt_1[]}}
@@ -356,7 +356,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 			//Create the cost Propagator
 			OrderIndependentCostPropagator costPropagator = new OrderIndependentCostPropagator(costEstimator);
 			// create explorer
-			explorer = new LinearOptimized(new EventBus(), query, accessibleQuery, accessibleSchema, chaser,
+			explorer = new LinearOptimized(new EventBus(), query, accessibleSchema, chaser,
 					databaseConnection, costEstimator,costPropagator, 4,1, postpruning);
 
 			// first exploration step should create a plan: Rename{[c0,c1]Access{S.mt_1[]}}
@@ -464,7 +464,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 			//Create the cost Propagator
 			OrderIndependentCostPropagator costPropagator = new OrderIndependentCostPropagator(costEstimator);
 			// create explorer
-			explorer = new LinearKChase(new EventBus(), query, accessibleQuery, accessibleSchema, chaser,
+			explorer = new LinearKChase(new EventBus(), query, accessibleSchema, chaser,
 					databaseConnection, costEstimator,costPropagator, 4,1);
 
 			// first exploration step should create a plan: Rename{[c0,c1]Access{S.mt_1[]}}
@@ -574,7 +574,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		// Create linear explorer
 		LinearGeneric explorer = null;
 		try {
-			explorer = new LinearGeneric(new EventBus(), query, accessibleQuery, accessibleSchema, chaser,
+			explorer = new LinearGeneric(new EventBus(), query, accessibleSchema, chaser,
 					databaseConnection, costEstimator, parameters.getMaxDepth());
 			PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(accessibleSchema,
 					chaser, query);

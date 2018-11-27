@@ -97,7 +97,6 @@ public class LinearOptimized extends LinearExplorer {
 	public LinearOptimized(
 			EventBus eventBus,
 			ConjunctiveQuery query,
-			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
 			DatabaseManager connection,
@@ -106,7 +105,7 @@ public class LinearOptimized extends LinearExplorer {
 			int depth,
 			int queryMatchInterval, 
 			PostPruningRemoveFollowUps postPruning) throws PlannerException, SQLException {
-		super(eventBus, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, depth);
+		super(eventBus, query, accessibleSchema, chaser, connection, costEstimator, depth);
 		Preconditions.checkNotNull(costPropagator);
 		Preconditions.checkArgument(queryMatchInterval >= 0);
 		Preconditions.checkArgument(costPropagator instanceof OrderIndependentCostPropagator && costEstimator instanceof OrderIndependentCostEstimator);

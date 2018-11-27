@@ -132,7 +132,6 @@ public class TestLinearOptimized extends PdqTest {
 				explorer = new LinearOptimized(
 					new EventBus(), 
 					ts.getQuery(), 
-					accessibleQuery,
 					accessibleSchema, 
 					chaser, 
 					databaseConnection, 
@@ -256,7 +255,6 @@ public class TestLinearOptimized extends PdqTest {
 			explorer = new LinearOptimized(
 					new EventBus(), 
 					ts.getQuery(), 
-					accessibleQuery,
 					accessibleSchema, 
 					chaser, 
 					databaseConnection, 
@@ -350,7 +348,6 @@ public class TestLinearOptimized extends PdqTest {
 			explorer = new LinearOptimized(
 					new EventBus(), 
 					ts.getQuery(), 
-					accessibleQuery,
 					accessibleSchema, 
 					chaser, 
 					databaseConnection, 
