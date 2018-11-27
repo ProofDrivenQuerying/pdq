@@ -280,38 +280,42 @@ public class LinearOptimized extends LinearExplorer {
 	 */
 	@SuppressWarnings("unchecked")
 	private void updateBestPlan(SearchNode parentNode, SearchNode freshNode, Match match) throws PlannerException, LimitReachedException {
-		this.costPropagator.propagate(freshNode, this.planTree);
+		SearchNode nodeToAdd = freshNode;
+		
+		// compute best path for new node
+		List<Integer> newPath = nodeToAdd.getBestPathFromRoot();
+		if (nodeToAdd.getEquivalentNode() != null)
+			newPath = nodeToAdd.getEquivalentNode().getBestPathFromRoot();
+		
+		// check if we need to prune this new node.
+		if(this.postPruning != null && !this.prunedPaths.contains(newPath)) {
+			this.prunedPaths.add(newPath);
+			List<SearchNode> path = LinearUtility.createPath(this.planTree, newPath);
+			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(this.accessibleQuery, match.getMapping()).getAtoms();
+			boolean isPruned = this.postPruning.pruneSearchNodePath(this.planTree.getRoot(), path, factsInQueryMatch);
+			if(isPruned) {
+				this.postPruning.addPrunedPathToTree(this.planTree, this.planTree.getRoot(), this.postPruning.getPath());
+				this.prunedPaths.add(newPath);
+				// update the nodeToAdd with the new pruned node.
+				nodeToAdd = this.postPruning.getPath().get( this.postPruning.getPath().size()-1);
+			}
+		}
+		// add new node to cost propagator (this will re-calculate the best plan and its cost if needed)
+		this.costPropagator.propagate(nodeToAdd, this.planTree);
+		// get new best plan and its cost.
 		RelationalTerm successfulPlan = this.costPropagator.getBestPlan();
 		Cost costOfSuccessfulPlan = this.costPropagator.getBestCost();
+		
+		// check if best plan changed
 		if (this.bestPlan == null && successfulPlan != null || this.bestPlan != null && successfulPlan != null && costOfSuccessfulPlan.lessThan(this.bestCost)) {
+			// update best plan.
 			this.bestPlan = successfulPlan;
 			this.bestCost = costOfSuccessfulPlan;
 			this.eventBus.post(this.getBestPlan());
 			this.eventBus.post(this.getBestPlan());
-		
-			if(this.postPruning != null && !this.prunedPaths.contains(this.costPropagator.getBestPath())) {
-				this.prunedPaths.add(this.costPropagator.getBestPath());
-				List<SearchNode> path = LinearUtility.createPath(this.planTree, this.costPropagator.getBestPath());
-				Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(this.accessibleQuery, match.getMapping()).getAtoms();
-				boolean isPruned = this.postPruning.pruneSearchNodePath(this.planTree.getRoot(), path, factsInQueryMatch);
-				if(isPruned) {
-					this.postPruning.addPrunedPathToTree(this.planTree, this.planTree.getRoot(), this.postPruning.getPath());
-					freshNode = this.postPruning.getPath().get( this.postPruning.getPath().size()-1);
-					this.costPropagator.propagate(freshNode, this.planTree);
-					successfulPlan = this.costPropagator.getBestPlan();
-					costOfSuccessfulPlan = this.costPropagator.getBestCost();
-					if ((this.bestPlan == null && successfulPlan != null) || 
-							(this.bestPlan != null && successfulPlan != null && costOfSuccessfulPlan.lessThan(this.bestCost))) {
-						this.bestPlan = successfulPlan;
-						this.eventBus.post(this.getBestPlan());
-					}
-					this.prunedPaths.add(this.costPropagator.getBestPath());
-				}
-			}
 			log.trace("\t+++BEST PLAN: " + AlgebraUtilities.getAccesses(this.bestPlan) + " " + this.bestCost);
 		}
-	}
-	
+	}	
 	
 	/**
 	 * Update best plan.
@@ -323,12 +327,17 @@ public class LinearOptimized extends LinearExplorer {
 	 */
 	@SuppressWarnings("unchecked")
 	private void updateBestPlan(SearchNode parentNode, SearchNode freshNode) throws PlannerException, LimitReachedException {
+		
+		// Update cost propagator with the frash node
 		this.costPropagator.propagate(freshNode, this.planTree);
-		RelationalTerm successfulPlan = this.costPropagator.getBestPlan();
+		// get the best plan and it's cost after update. 
+		RelationalTerm bestPlanAfterAddingFreshNode = this.costPropagator.getBestPlan();
 		Cost costOfSuccessfulPlan = this.costPropagator.getBestCost();
-		if (this.bestPlan == null && successfulPlan != null
-			|| this.bestPlan != null && successfulPlan != null && costOfSuccessfulPlan.lessThan(this.bestCost)) {
-			this.bestPlan = successfulPlan;
+		
+		// check if the new best is better then what we were storing, update if needed.
+		if (this.bestPlan == null && bestPlanAfterAddingFreshNode != null
+			|| this.bestPlan != null && bestPlanAfterAddingFreshNode != null && costOfSuccessfulPlan.lessThan(this.bestCost)) {
+			this.bestPlan = bestPlanAfterAddingFreshNode;
 			this.eventBus.post(this.getBestPlan());
 			log.trace("\t+++BEST PLAN: " + AlgebraUtilities.getAccesses(this.bestPlan) + " " + this.bestCost);
 		}
