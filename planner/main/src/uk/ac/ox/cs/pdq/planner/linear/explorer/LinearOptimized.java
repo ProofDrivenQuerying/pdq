@@ -51,7 +51,7 @@ public class LinearOptimized extends LinearExplorer {
 	@SuppressWarnings("rawtypes")
 	protected final CostPropagator costPropagator;
 
-	/**  How often we check for query matches. */
+	/** How many rounds we do not check for query matches. */
 	protected final int queryMatchInterval;
 
 	/**  Performs plan post-pruning. */
