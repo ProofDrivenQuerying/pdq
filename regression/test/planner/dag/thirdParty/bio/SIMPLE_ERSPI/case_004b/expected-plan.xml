@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="ProjectionTerm">
+    <projections name="c48" type="java.lang.String"/>
+    <projections name="c49" type="java.lang.String"/>
+    <projections name="c50" type="java.lang.String"/>
+    <projections name="c46" type="java.lang.String"/>
+    <projections name="c47" type="java.lang.String"/>
+    <projections name="c36" type="java.lang.Integer"/>
+    <projections name="c37" type="java.lang.String"/>
+    <projections name="c38" type="java.lang.String"/>
+    <projections name="c39" type="java.lang.String"/>
+    <projections name="c40" type="java.lang.Boolean"/>
+    <projections name="c41" type="java.lang.Boolean"/>
+    <projections name="c42" type="java.lang.String"/>
+    <projections name="c43" type="java.lang.String"/>
+    <projections name="c44" type="java.lang.Boolean"/>
+    <RelationalTerm type="JoinTerm">
+        <RelationalTerm type="JoinTerm">
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c48" type="java.lang.String"/>
+                <renamings name="c49" type="java.lang.String"/>
+                <renamings name="c50" type="java.lang.String"/>
+                <renamings name="c51" type="java.lang.String"/>
+                <renamings name="c52" type="java.lang.String"/>
+                <renamings name="c53" type="java.lang.String"/>
+                <renamings name="c54" type="java.lang.String"/>
+                <renamings name="c55" type="java.lang.String"/>
+                <renamings name="c56" type="java.lang.String"/>
+                <renamings name="c57" type="java.lang.String"/>
+                <renamings name="c58" type="java.lang.String"/>
+                <renamings name="c59" type="java.lang.String"/>
+                <renamings name="c60" type="java.lang.String"/>
+                <renamings name="c61" type="java.lang.String"/>
+                <renamings name="c62" type="java.lang.String"/>
+                <renamings name="c63" type="java.lang.Integer"/>
+                <renamings name="c64" type="java.lang.String"/>
+                <renamings name="c65" type="java.lang.String"/>
+                <renamings name="c66" type="java.lang.String"/>
+                <renamings name="c67" type="java.lang.String"/>
+                <renamings name="c68" type="java.lang.String"/>
+                <renamings name="c69" type="java.lang.String"/>
+                <renamings name="c70" type="java.lang.String"/>
+                <renamings name="c71" type="java.lang.String"/>
+                <renamings name="c46" type="java.lang.String"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="pubmed_pub_14"/>
+                    <relation name="PublicationFull">
+                        <attribute name="id" type="java.lang.String"/>
+                        <attribute name="source" type="java.lang.String"/>
+                        <attribute name="pmid" type="java.lang.String"/>
+                        <attribute name="pmcid" type="java.lang.String"/>
+                        <attribute name="DOI" type="java.lang.String"/>
+                        <attribute name="title" type="java.lang.String"/>
+                        <attribute name="authorString" type="java.lang.String"/>
+                        <attribute name="journalTitle" type="java.lang.String"/>
+                        <attribute name="issue" type="java.lang.String"/>
+                        <attribute name="journalVolume" type="java.lang.String"/>
+                        <attribute name="pubYear" type="java.lang.String"/>
+                        <attribute name="journalIssn" type="java.lang.String"/>
+                        <attribute name="pubType" type="java.lang.String"/>
+                        <attribute name="inEPMC" type="java.lang.String"/>
+                        <attribute name="inPMC" type="java.lang.String"/>
+                        <attribute name="citedByCount" type="java.lang.Integer"/>
+                        <attribute name="hasReferences" type="java.lang.String"/>
+                        <attribute name="hasTextMinedTerms" type="java.lang.String"/>
+                        <attribute name="hasDbCrossReferences" type="java.lang.String"/>
+                        <attribute name="hasLabsLinks" type="java.lang.String"/>
+                        <attribute name="hasTMAccessionNumbers" type="java.lang.String"/>
+                        <attribute name="authors" type="java.lang.String"/>
+                        <attribute name="gene" type="java.lang.String"/>
+                        <attribute name="organism" type="java.lang.String"/>
+                        <attribute name="uniprotPubs" type="java.lang.String"/>
+                        <access-method name="pubmed_pub_1"/>
+                        <access-method name="pubmed_pub_2"/>
+                        <access-method name="pubmed_pub_3"/>
+                        <access-method name="pubmed_pub_4"/>
+                        <access-method name="pubmed_pub_5"/>
+                        <access-method name="pubmed_pub_6"/>
+                        <access-method name="pubmed_pub_7"/>
+                        <access-method name="pubmed_pub_8"/>
+                        <access-method name="pubmed_pub_9"/>
+                        <access-method name="pubmed_pub_10"/>
+                        <access-method name="pubmed_pub_11"/>
+                        <access-method name="pubmed_pub_12"/>
+                        <access-method name="pubmed_pub_13"/>
+                        <access-method name="pubmed_pub_14"/>
+                        <access-method name="pubmed_pub_15"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+            <RelationalTerm type="SelectionTerm">
+                <predicate type="ConjunctiveCondition">
+                    <predicates position="7" type="ConstantEqualityCondition">
+                        <constant value="Homo sapiens"/>
+                    </predicates>
+                </predicate>
+                <RelationalTerm type="RenameTerm">
+                    <renamings name="c36" type="java.lang.Integer"/>
+                    <renamings name="c37" type="java.lang.String"/>
+                    <renamings name="c38" type="java.lang.String"/>
+                    <renamings name="c39" type="java.lang.String"/>
+                    <renamings name="c40" type="java.lang.Boolean"/>
+                    <renamings name="c41" type="java.lang.Boolean"/>
+                    <renamings name="c42" type="java.lang.String"/>
+                    <renamings name="Homo sapiens" type="java.lang.String"/>
+                    <renamings name="c43" type="java.lang.String"/>
+                    <renamings name="c44" type="java.lang.Boolean"/>
+                    <RelationalTerm type="AccessTerm">
+                        <accessMethod name="reactome_pathway_1"/>
+                        <relation name="PathwayBySpecies">
+                            <attribute name="pathwayId" type="java.lang.Integer"/>
+                            <attribute name="pathwayName" type="java.lang.String"/>
+                            <attribute name="stableIdentifier" type="java.lang.String"/>
+                            <attribute name="goBiologicalProcess" type="java.lang.String"/>
+                            <attribute name="isInDisease" type="java.lang.Boolean"/>
+                            <attribute name="isInferred" type="java.lang.Boolean"/>
+                            <attribute name="organismId" type="java.lang.String"/>
+                            <attribute name="organism" type="java.lang.String"/>
+                            <attribute name="doi" type="java.lang.String"/>
+                            <attribute name="hasDiagram" type="java.lang.Boolean"/>
+                            <access-method name="reactome_pathway_1"/>
+                        </relation>
+                    </RelationalTerm>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="SelectionTerm">
+            <predicate type="ConjunctiveCondition">
+                <predicates position="2" type="ConstantEqualityCondition">
+                    <constant value="Homo sapiens"/>
+                </predicates>
+            </predicate>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c46" type="java.lang.String"/>
+                <renamings name="c47" type="java.lang.String"/>
+                <renamings name="Homo sapiens" type="java.lang.String"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="uniprot_active"/>
+                    <relation name="ProteinFree">
+                        <attribute name="id" type="java.lang.String"/>
+                        <attribute name="entry_name" type="java.lang.String"/>
+                        <attribute name="organism" type="java.lang.String"/>
+                        <access-method name="uniprot_active"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="3000.0" type="DoubleCost"/>
+</RelationalTermWithCost>

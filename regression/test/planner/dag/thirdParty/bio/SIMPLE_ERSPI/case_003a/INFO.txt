@@ -1,0 +1,16 @@
+Comment:
+
+Select from Pathway join Publication
+
+Query:
+
+SELECT publicationId, source, pmid, pathwayId, pathwayName, stableIdentifier
+  goBiologicalProcess, isInferred, organismId, organism, pdoi, hasDiagram
+ FROM Pathway
+  JOIN Publication ON Pathway.organism = Publication.organism
+ WHERE isInDisease = 'true' 
+ 
+Schema:
+
+Pathway has 10 columns and 0 rows
+Publication has 25 columns and 0 rows

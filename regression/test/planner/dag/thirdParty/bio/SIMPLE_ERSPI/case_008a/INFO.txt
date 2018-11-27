@@ -1,0 +1,23 @@
+Comment:
+
+Select from Assay join Document join Target
+
+Query:
+
+SELECT assay_category, assay_cell_type, assay_chembl_id,
+  assay_organism, assay_strain, assay_subcellular_fraction,
+  assay_tax_id, assay_test_type, assay_type, assay_type_description,
+  target_organism, pref_name, species_group_flag, target_chembl_id,
+  target_component_accession, target_component_id, target_component_type,
+  authors, doc_type, document_chembl_id, doi, first_page, issue,
+  document_journal, last_page, pubmed_id, title, volume, document_year
+ FROM Assay
+  JOIN Document ON Assay.document_chembl_id = Document.document_chembl_id
+  JOIN Target ON Assay.target_chembl_id = Target.target_chembl_id
+ WHERE assay_tissue = 'Brain' 
+ 
+Schema:
+
+Assay has 22 columns and 0 rows
+Document has 12 columns and 0 rows
+Target has 8 columns and 0 rows

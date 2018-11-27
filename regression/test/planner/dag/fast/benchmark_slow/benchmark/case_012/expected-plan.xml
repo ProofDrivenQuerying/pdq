@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="ProjectionTerm">
+    <projections name="c5033" type="java.lang.String"/>
+    <projections name="c5034" type="java.lang.String"/>
+    <projections name="c5040" type="java.lang.String"/>
+    <projections name="c5022" type="java.lang.String"/>
+    <RelationalTerm type="DependentJoinTerm">
+        <RelationalTerm type="SelectionTerm">
+            <predicate type="ConjunctiveCondition">
+                <predicates position="4" type="ConstantEqualityCondition">
+                    <constant value="1-URGENT"/>
+                </predicates>
+            </predicate>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c5033" type="java.lang.String"/>
+                <renamings name="c5034" type="java.lang.String"/>
+                <renamings name="c5035" type="java.lang.String"/>
+                <renamings name="c5037" type="java.lang.String"/>
+                <renamings name="1-URGENT" type="java.lang.String"/>
+                <renamings name="c5015" type="java.lang.String"/>
+                <renamings name="k5053" type="java.lang.String"/>
+                <renamings name="k5055" type="java.lang.String"/>
+                <renamings name="k5056" type="java.lang.String"/>
+                <renamings name="c5022" type="java.lang.String"/>
+                <renamings name="c5023" type="java.lang.String"/>
+                <renamings name="c5024" type="java.lang.String"/>
+                <renamings name="c5025" type="java.lang.String"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="m16"/>
+                    <relation name="order_customer">
+                        <attribute name="cname" type="java.lang.String"/>
+                        <attribute name="caddress" type="java.lang.String"/>
+                        <attribute name="cnation" type="java.lang.String"/>
+                        <attribute name="cactbal" type="java.lang.String"/>
+                        <attribute name="opriority" type="java.lang.String"/>
+                        <attribute name="oclerk" type="java.lang.String"/>
+                        <attribute name="pname" type="java.lang.String"/>
+                        <attribute name="pbrand" type="java.lang.String"/>
+                        <attribute name="ptype" type="java.lang.String"/>
+                        <attribute name="lextendedprice" type="java.lang.String"/>
+                        <attribute name="ldiscount" type="java.lang.String"/>
+                        <attribute name="ltax" type="java.lang.String"/>
+                        <attribute name="lflag" type="java.lang.String"/>
+                        <access-method name="m14" inputs="2"/>
+                        <access-method name="m15" inputs="0,2,4,6"/>
+                        <access-method name="m16"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="SelectionTerm">
+            <predicate type="ConjunctiveCondition">
+                <predicates position="3" type="ConstantEqualityCondition">
+                    <constant value="AMERICA"/>
+                </predicates>
+            </predicate>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="c5035" type="java.lang.String"/>
+                <renamings name="c5040" type="java.lang.String"/>
+                <renamings name="c5041" type="java.lang.String"/>
+                <renamings name="AMERICA" type="java.lang.String"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="m21" inputs="0"/>
+                    <relation name="region_nation">
+                        <attribute name="nation_key" type="java.lang.String"/>
+                        <attribute name="nation_name" type="java.lang.String"/>
+                        <attribute name="region_key" type="java.lang.String"/>
+                        <attribute name="region_name" type="java.lang.String"/>
+                        <access-method name="m21" inputs="0"/>
+                        <access-method name="m13"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="150.0" type="DoubleCost"/>
+</RelationalTermWithCost>
