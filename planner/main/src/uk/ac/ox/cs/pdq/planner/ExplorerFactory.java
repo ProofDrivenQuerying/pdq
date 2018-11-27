@@ -8,6 +8,7 @@ import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -21,6 +22,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidatorFactory;
 import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
+import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearKChase;
@@ -110,6 +112,8 @@ public class ExplorerFactory {
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_OPTIMIZED)) {
 			if (costEstimator instanceof OrderIndependentCostEstimator)
 				costPropagator = new OrderIndependentCostPropagator((OrderIndependentCostEstimator) costEstimator);
+			else if (costEstimator instanceof OrderDependentCostEstimator)
+				costPropagator = new OrderDependentCostPropagator((OrderDependentCostEstimator) costEstimator);
 			else
 				throw new IllegalStateException(
 						"Attempting to get a propagator for a unknown cost estimator: " + costEstimator);
