@@ -116,7 +116,7 @@ public class ExplorerFactory {
 			else
 				throw new IllegalStateException(
 						"Attempting to get a propagator for a unknown cost estimator: " + costEstimator);
-		} else {
+		} else { 
 			PairValidator[] validatorArray = new PairValidatorFactory(parameters.getValidatorType(),
 					parameters.getDepthThreshold()).getInstance();
 			validators.addAll(Arrays.asList(validatorArray));
