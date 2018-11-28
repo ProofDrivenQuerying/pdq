@@ -103,14 +103,14 @@ public class LinearKChase extends LinearExplorer {
 		log.debug("Iteration: " + this.rounds);
 		SearchNode freshNode = null;
 		if(this.rounds % this.chaseInterval != 0  || chaseInterval==1) {
-			freshNode = _performeSingleExplorationStepWithoutChasing();
+			freshNode = _performSingleExplorationStepWithoutChasing();
 		}
 		if (this.terminates() || chaseInterval==1 || this.rounds % this.chaseInterval == 0 ) {
 			// we do cases when:
 			//  - This is the last round (exploration will terminate)
 			//  - chaseInterval == 1, so we do chase in every round,
 			//  - this is the K round without chasing (this.rounds % this.chaseInterval == 0)
-			_performeSingleExplorationStepWithChasing();
+			_performSingleExplorationStepWithChasing();
 		}
 		this.rounds++;
 		return freshNode;
@@ -122,7 +122,7 @@ public class LinearKChase extends LinearExplorer {
 	 * @throws PlannerException
 	 * @throws LimitReachedException
 	 */
-	private void _performeSingleExplorationStepWithChasing() throws PlannerException, LimitReachedException {
+	private void _performSingleExplorationStepWithChasing() throws PlannerException, LimitReachedException {
 		Collection<SearchNode> leaves = ExplorerUtility.getLeafNodesThatAreNotFullyChased(this.planTree);
 		log.debug("Number of partially generated leaves " + leaves.size());
 		for(SearchNode leaf:leaves) {
@@ -171,7 +171,7 @@ public class LinearKChase extends LinearExplorer {
 	 * @throws PlannerException
 	 * @throws LimitReachedException
 	 */
-	private SearchNode _performeSingleExplorationStepWithoutChasing() throws PlannerException {
+	private SearchNode _performSingleExplorationStepWithoutChasing() throws PlannerException {
 		// Choose the next node to explore below it
 		SearchNode selectedNode = this.chooseNode();
 		if (selectedNode == null) 
