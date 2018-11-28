@@ -288,10 +288,8 @@ public class LinearOptimized extends LinearExplorer {
 		SearchNode nodeToAdd = freshNode;
 
 		// compute best path for new node
-		List<Integer> newPath = nodeToAdd.getBestPathFromRoot();
-		if (nodeToAdd.getEquivalentNode() != null)
-			newPath = nodeToAdd.getEquivalentNode().getBestPathFromRoot();
-
+		List<Integer> newPath = nodeToAdd.getPathFromRoot();
+		
 		// check if we need to prune this new node.
 		if (this.postPruning != null && !this.prunedPaths.contains(newPath)) {
 			this.prunedPaths.add(newPath);
