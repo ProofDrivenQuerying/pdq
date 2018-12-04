@@ -113,42 +113,50 @@ public class PrefuseEventHandler implements EventHandler {
 	 */
 	@Subscribe
 	public void processNode(SearchNode node) {
+		
+		try
+		{
 
-		if (node == null || node.getMetadata() == null || (node.getMetadata() instanceof EquivalenceMetadata && node.getEquivalentNode() == null)) {
-			throw new java.lang.IllegalArgumentException();
-		}
-
-		Metadata metadata = node.getMetadata();
-
-		if (metadata instanceof EquivalenceMetadata) {
-			Utils.addEdge(this.graph, node, node.getEquivalentNode(), EdgeTypes.POINTER);
-		} 
-		else if (metadata instanceof BestPlanMetadata) {
-
-			this.paths.add(new Path(((BestPlanMetadata) metadata).getBestPathToSuccess(), ((BestPlanMetadata) metadata).getPlan()));
-			log.debug(Joiner.on("\n").join(this.paths));
-
-			this.updatePathHighlightControl();
-			this.updatePathHighlightSlider();
-			this.updateAggregateTable();
-			
-		} 
-		else if (metadata instanceof CreationMetadata){
-			if (((CreationMetadata) metadata).getParent() != null) {
-				Utils.addNode(this.graph, node);
-				Utils.addEdge(this.graph, ((CreationMetadata) metadata).getParent(), node, EdgeTypes.HIERARCHY);
-			} else {
-				Utils.addNode(this.graph, node);
+			if (node == null || node.getMetadata() == null || (node.getMetadata() instanceof EquivalenceMetadata && node.getEquivalentNode() == null)) {
+				throw new java.lang.IllegalArgumentException();
 			}
-		}
 
-		Utils.modifyNodeProperty(this.graph, node.getId(), "type", node.getStatus());
-		if (metadata.getParent() != null) {
-			Utils.modifyNodeProperty(this.graph, metadata.getParent().getId(), "type", metadata.getParent().getStatus());
-		}
+			Metadata metadata = node.getMetadata();
 
-		this.visualization.run(this.colorAction);
-		this.visualization.run(this.layoutAction);
+			if (metadata instanceof EquivalenceMetadata) {
+				Utils.addEdge(this.graph, node, node.getEquivalentNode(), EdgeTypes.POINTER);
+			} 
+			else if (metadata instanceof BestPlanMetadata) {
+
+				this.paths.add(new Path(((BestPlanMetadata) metadata).getBestPathToSuccess(), ((BestPlanMetadata) metadata).getPlan()));
+				log.debug(Joiner.on("\n").join(this.paths));
+
+				this.updatePathHighlightControl();
+				this.updatePathHighlightSlider();
+				this.updateAggregateTable();
+
+			} 
+			else if (metadata instanceof CreationMetadata){
+				if (((CreationMetadata) metadata).getParent() != null) {
+					Utils.addNode(this.graph, node);
+					Utils.addEdge(this.graph, ((CreationMetadata) metadata).getParent(), node, EdgeTypes.HIERARCHY);
+				} else {
+					Utils.addNode(this.graph, node);
+				}
+			}
+
+			Utils.modifyNodeProperty(this.graph, node.getId(), "type", node.getStatus());
+			//		if (metadata.getParent() != null) {
+			//			Utils.modifyNodeProperty(this.graph, metadata.getParent().getId(), "type", metadata.getParent().getStatus());
+			//		}
+
+			this.visualization.run(this.colorAction);
+			this.visualization.run(this.layoutAction);
+		}
+		catch(Exception e)
+		{
+			// throw e;
+		}
 	}
 	
 	
