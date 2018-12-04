@@ -91,9 +91,11 @@ import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
@@ -1695,6 +1697,24 @@ public class PDQController {
 									// This is a new variable so name it after the attribute
 									
 									map.put(variable.getSymbol(), attribute.getName());
+									terms2[t] = Variable.create(attribute.getName());
+								}
+								else
+								{
+									// Reuse the existing variable name
+									
+									terms2[t] = Variable.create(value);									
+								}
+							}
+							else if(term instanceof Constant)
+							{
+								Constant tc =  (Constant) term;
+								String value = map.get(tc.toString());
+								if(value == null)
+								{
+									// This is a new variable so name it after the attribute
+									
+									map.put(tc.toString(), attribute.getName());
 									terms2[t] = Variable.create(attribute.getName());
 								}
 								else
