@@ -56,20 +56,27 @@ public class EdgeShapeRenderer extends EdgeRenderer{
 	protected Shape getRawShape(VisualItem item) {
 		EdgeItem   edge = (EdgeItem)item;
 		EdgeTypes type = (EdgeTypes) edge.get("type");
-		switch(type) {
-		case HIERARCHY:
-			this.m_edgeType = Constants.EDGE_TYPE_LINE;
-			this.m_edgeArrow = Constants.EDGE_ARROW_FORWARD;
-			this.m_width = 1.0;
-			return super.getRawShape(item);
-		case POINTER:
-			this.m_edgeType = Constants.EDGE_TYPE_CURVE;
-			this.m_edgeArrow = Constants.EDGE_ARROW_FORWARD;
-			this.m_arrowWidth = 10;
-			this.m_width = 1.0;
-			return super.getRawShape(item);
-		default:
-			throw new java.lang.IllegalArgumentException();
+		if(type != null)
+		{
+			switch(type) {
+			case HIERARCHY:
+				this.m_edgeType = Constants.EDGE_TYPE_LINE;
+				this.m_edgeArrow = Constants.EDGE_ARROW_FORWARD;
+				this.m_width = 1.0;
+				return super.getRawShape(item);
+			case POINTER:
+				this.m_edgeType = Constants.EDGE_TYPE_CURVE;
+				this.m_edgeArrow = Constants.EDGE_ARROW_FORWARD;
+				this.m_arrowWidth = 10;
+				this.m_width = 1.0;
+				return super.getRawShape(item);
+			default:
+				throw new java.lang.IllegalArgumentException();
+			}
+		}
+		else
+		{
+			throw new java.lang.IllegalArgumentException();			
 		}
 	}
 
