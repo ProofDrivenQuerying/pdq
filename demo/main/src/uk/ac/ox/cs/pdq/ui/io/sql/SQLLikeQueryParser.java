@@ -23,6 +23,7 @@ import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteParser.Column_nameContext;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteParser.Compound_select_stmtContext;
 
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 
@@ -535,7 +536,7 @@ public class SQLLikeQueryParser {
 		}
 	}
 	
-		private void numeric_value_expression() throws Exception
+	private void numeric_value_expression() throws Exception
 	{
 		match(NUMERIC_LITERAL);
 	}
@@ -669,7 +670,17 @@ public class SQLLikeQueryParser {
 		{
 			match(FROM);
 		}
-		table_reference();
+		int index = marker();
+		try
+		{
+			table_reference();
+			if(lookahead(1) == JOIN) throw new Exception("JOIN");
+		}
+		catch(Exception e)
+		{
+			rollback(index);
+			joined_table();
+		}
 		while(lookahead(1) == COMMA)
 		{
 			match(COMMA);
@@ -683,32 +694,36 @@ public class SQLLikeQueryParser {
 		//		    <table name> [ <correlation specification> ]
 		//		|   <derived table> <correlation specification>
 		//		| 	<joined table>
+		int index = marker();
 		try
 		{
 			Token token1 = table_name();
-			Token token2 = correlation_specification();
-			tableAliases.add(token1.getText() + " AS " + token2.getText());
+			int index2 = marker();
+			try
+			{
+				Token token2 = correlation_specification();
+				tableAliases.add(token1.getText() + " AS " + token2.getText());
+			}
+			catch(Exception e)
+			{
+				rollback(index2);
+				tableAliases.add(token1.getText());
+			}
 		}
 		catch(Exception e1)
 		{
+			rollback(index);
 			try
 			{
-				derived_table();
-				correlation_specification();
+				joined_table();
 			}
 			catch(Exception e2)
 			{				
-				joined_table();
+				rollback(index);
+				derived_table();
+				correlation_specification();
 			}
 		}
-	}
-	
-	private void joined_table() throws Exception
-	{
-//		<joined table> ::=
-//				<cross join>
-//			|   <qualified join>
-//			|   <left paren> <joined table> <right paren>		
 	}
 	
 	private Token correlation_specification() throws Exception
@@ -731,46 +746,182 @@ public class SQLLikeQueryParser {
 	
 	private void derived_column_list() throws Exception
 	{
-//	<derived column list> ::= <column name list>
+		column_name_list();
 	}
 	
 	private void derived_table() throws Exception
 	{
-//	<derived table> ::= <table subquery>
+		table_subquery();
 	}
 	
 	private void table_subquery() throws Exception
 	{
-//	<table subquery> ::= <subquery>
+		subquery();
 	}
 
-//	private void joined_table()
-//	{
-//		<joined table> ::=
-//			<cross join>
-//		|   <qualified join>
-//	| <left paren> <joined table> <right paren>
-//	}
-/*	<cross join> ::=
-			<table reference> CROSS JOIN <table reference>
+	private void column_name_list() throws Exception
+	{
+	}
+	
+	private void subquery() throws Exception
+	{
+	}
+	
+	private void joined_table() throws Exception
+	{
+		// <joined table> ::=
+		//	<cross join>
+		// |   <qualified join>
+		// |   <left paren> <joined table> <right paren>
+		int index = marker();
+		try
+		{
+			cross_join();
+		}
+		catch(Exception e1)
+		{
+			rollback(index);
+			try
+			{
+				qualified_join();
+			}
+			catch(Exception e2)
+			{
+				rollback(index);
+				match(OPEN_PAR);
+				joined_table();
+				match(CLOSE_PAR);
+			}
+		}
+	}
+	
+	
+	private void cross_join() throws Exception
+	{
+		// <cross join> ::= <table reference> CROSS JOIN <table reference>
+		table_reference();
+		match(CROSS);
+		match(JOIN);
+		table_reference();
+	}
 
-	<qualified join> ::=
-			<table reference> [ NATURAL ] [ <join type> ] JOIN <table reference> [ <join specification> ]
+	private void qualified_join() throws Exception
+	{
+		//	<qualified join> ::= <table reference> [ NATURAL ] [ <join type> ] JOIN <table reference> [ <join specification> 
+		table_reference();
+		if(lookahead(1) == NATURAL)
+		{
+			match(NATURAL);
+		}
+		if(lookahead(1) == INNER ||
+		   lookahead(1) == OUTER ||
+		   lookahead(1) == UNION ||
+		   lookahead(1) == LEFT ||
+		   lookahead(1) == RIGHT ||
+		   lookahead(1) == FULL)
+		{
+			join_type();
+		}
+		while(lookahead(1) == JOIN)
+		{
+			match(JOIN);
+			table_reference();
+			int index = marker();
+			try
+			{
+				join_specification();
+			}
+			catch(Exception e)
+			{
+				rollback(index);
+			}
+		}
+	}
 
-	<join type> ::=
-			INNER
-		|   <outer join type> [ OUTER ]
-		|   UNION
+	private void join_type() throws Exception
+	{
+		//	<join type> ::=
+		//	INNER
+		// |   <outer join type> [ OUTER ]
+		// |   UNION
+		if(lookahead(1) == INNER)
+		{
+			match(INNER);
+		}
+		else if(lookahead(1) == UNION)
+		{
+			match(UNION);
+		}
+		else
+		{
+			outer_join_type();
+			if(lookahead(1) == OUTER)
+			{
+				match(OUTER);
+			}
+		}
+	}
+	
+	private void outer_join_type() throws Exception
+	{
+		//	<outer join type> ::= LEFT | RIGHT | FULL
+		if(lookahead(1) == LEFT)
+		{
+			match(LEFT);
+		}
+		else if(lookahead(1) == RIGHT)
+		{
+			match(RIGHT);
+		}
+		else if(lookahead(1) == FULL)
+		{
+			match(FULL);
+		}
+		else
+		{
+			throw new Exception("outer_join_type(): mismatched " + gettext());
+		}
+	}
+	
+	private void join_specification() throws Exception
+	{
+		//	<join specification> ::= <join condition> | <named columns join>
+		if(lookahead(1) == ON)
+		{
+			join_condition();
+		}
+		else if(lookahead(1) == USING)
+		{
+			named_columns_join();
+		}
+	}
+	
 
-	<outer join type> ::= LEFT | RIGHT | FULL
+	private void join_condition() throws Exception
+	{
+		// <join condition> ::= ON <search condition>
+		match(ON);
+		int index1 = marker();
+		search_condition();
+		int index2 = marker();
+		joinConstraints.add(tokens.getText(new Interval(index1, index2 - 1)));
+	}
 
-	<join specification> ::= <join condition> | <named columns join>
-
-	<join condition> ::= ON <search condition>
-
-	<named columns join> ::= USING <left paren> <join column list> <right paren>
-
-	<join column list> ::= <column name list>*/
+	
+	private void named_columns_join() throws Exception
+	{
+		// <named columns join> ::= USING <left paren> <join column list> <right paren>
+		match(USING);
+		match(OPEN_PAR);
+		join_column_list();
+		match(CLOSE_PAR);
+	}
+	
+	private void join_column_list() throws Exception
+	{
+		// <join column list> ::= <column name list>
+		 column_name_list();
+	}
 	
 	private void where_clause() throws Exception
 	{
@@ -778,14 +929,7 @@ public class SQLLikeQueryParser {
 		this.where = tokens.get(tokens.index());
 		search_condition();
 	}
-	
-		/**
-	 * From string.
-	 *
-	 * @param str the str
-	 * @return the conjunctive query
-	 * @throws Exception the exception
-	 */
+
 	public void parse() throws Exception
 	{
 		query_specification();
@@ -806,14 +950,15 @@ public class SQLLikeQueryParser {
 	{
 		return tokens.LA(n);
 	}
-
-	public void rollback(int n, int index) throws Exception
+	
+	public int marker()
 	{
-		if(lookahead(1) == n)
-		{
-			tokens.seek(index);
-			throw new Exception("rollback");
-		}
+		return tokens.index();
+	}
+
+	public void rollback(int index) throws Exception
+	{
+		tokens.seek(index);
 	}
 
 	public Token match(int token) throws Exception

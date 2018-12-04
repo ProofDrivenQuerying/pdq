@@ -130,10 +130,10 @@ public class SQLLikeQueryReader {
         	String left = elements[0];
         	String right = elements[1];
         	
-        	String leftAlias = left.split("\\.")[0];
-        	String leftColumnName = left.split("\\.")[1];
-        	String rightAlias = right.split("\\.")[0];
-        	String rightColumnName = right.split("\\.")[1];
+        	String leftAlias = left.split("\\.")[0].replaceAll("\\s", "");
+        	String leftColumnName = left.split("\\.")[1].replaceAll("\\s", "");
+        	String rightAlias = right.split("\\.")[0].replaceAll("\\s", "");
+        	String rightColumnName = right.split("\\.")[1].replaceAll("\\s", "");
         	
         	ConjunctiveQueryBodyBuilder.AliasAttrConstraintTerm leftAliasAttr =
         			new ConjunctiveQueryBodyBuilder.AliasAttrConstraintTerm(leftAlias, leftColumnName);
