@@ -409,6 +409,33 @@ public class CustomColorAction extends ColorAction {
         				return this.m_defaultColor;
         			}
     			}
+        		else if(item.canGetString("type"))
+        		{
+        			String string = item.getString("type");
+        			if(string != null)
+        			{
+        				if(string.equals("SUCCESSFUL"))
+        				{		
+        					return this.nodePalette[0];
+        				}
+        				else if (string.equals("ONGOING"))
+        				{
+        					return this.nodePalette[1];
+        				}
+        				else if (string.equals("TERMINAL"))
+        				{
+        					return this.nodePalette[3];
+        				}
+        				else
+        				{
+        					return this.m_defaultColor;
+        				}
+        			}
+        			else
+        			{
+        				return this.m_defaultColor;
+        			}
+        		}
         		else
         		{
       				return this.m_defaultColor;      			
