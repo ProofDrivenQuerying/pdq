@@ -424,15 +424,13 @@ public class PlannerController {
 					{
 						PlannerController.this.bestPlan = bestPlan.getKey();
 						log.debug("Best plan: " + bestPlan);
-					}
-					ObservablePlan p = PlannerController.this.plan.copy();
-					p.setPlan(bestPlan.getKey());
-					p.setProof(PlannerController.this.bestProof);
-					if (bestPlan != null) {
+						ObservablePlan p = PlannerController.this.plan.copy();
+						p.setPlan(bestPlan.getKey());
+						p.setProof(PlannerController.this.bestProof);
 						p.setCost(bestPlan.getValue());
+						p.store();
+						PlannerController.this.planQueue.add(p);
 					}
-					p.store();
-					PlannerController.this.planQueue.add(p);
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 					throw new IllegalStateException();
