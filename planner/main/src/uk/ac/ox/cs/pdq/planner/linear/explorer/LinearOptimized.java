@@ -34,7 +34,7 @@ import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.equivalence.PathEquivalenceClasses;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.equivalence.EquivalenceClasses;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -63,7 +63,7 @@ public class LinearOptimized extends LinearExplorer {
 	private final Set<List<Integer>> prunedPaths = new HashSet<>();
 
 	/** Classes of equivalent configurations. */
-	private PathEquivalenceClasses equivalenceClasses = new PathEquivalenceClasses();
+	private EquivalenceClasses equivalenceClasses = new EquivalenceClasses();
 
 	/** The unexplored descendants. */
 	private final Queue<SearchNode> unexploredDescendants = new PriorityQueue<>(10, new Comparator<SearchNode>() {
@@ -122,6 +122,11 @@ public class LinearOptimized extends LinearExplorer {
 		this.costPropagator = costPropagator;
 		this.queryMatchInterval = queryMatchInterval;
 		this.postPruning = new PostPruningRemoveFollowUps(accessibleSchema, chaser, this.accessibleQuery);
+		// initalize equivalence classes with the initial applyrules.
+		for (SearchNode node:this.planTree.vertexSet()) {
+			equivalenceClasses.add(node);
+		}
+		
 	}
 
 	/**
@@ -145,6 +150,7 @@ public class LinearOptimized extends LinearExplorer {
 			if (selectedNode == null)
 				return null;
 			freshNode = this.explorationStep(selectedNode);
+			
 		} else {
 			SearchNode selectedNode = this.unexploredDescendants.peek();
 			if (selectedNode == null)
@@ -243,17 +249,21 @@ public class LinearOptimized extends LinearExplorer {
 						+ freshNode.getCostOfBestPlanFromRoot());
 			}
 		}
-
-		// Close the newly created node using the inferred accessible dependencies of
-		// the accessible schema
-		freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
-
-		if (domination) {
-			freshNode.setStatus(NodeStatus.TERMINAL);
-			this.eventBus.post(freshNode);
-
-		} else {
-			this.equivalenceClasses.addEntry(freshNode);
+		
+		if (!domination) {
+			SearchNode representative = this.equivalenceClasses.add(freshNode);
+			if (representative.equals(freshNode)) {
+				// this node is a new representative, so lets chase it.
+				// Close the newly created node using the inferred accessible dependencies of
+				// the accessible schema
+				// the close function will do a full reason until termination.
+				freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
+			} else {
+				// the frash node has representative lets check if the fresh is better or not.
+				if (representative.getCostOfBestPlanFromRoot().greaterThan(freshNode.getCostOfBestPlanFromRoot())) {
+					equivalenceClasses.updateRepresentative(representative, freshNode);
+				}
+			}
 			/* Check for query match */
 			if (this.rounds % this.queryMatchInterval == 0) {
 				List<Match> matches = freshNode.matchesQuery(this.accessibleQuery);
@@ -264,6 +274,12 @@ public class LinearOptimized extends LinearExplorer {
 					this.updateBestPlan(selectedNode, freshNode, matches.get(0));
 				}
 			}
+			
+		} else {
+			// dominated node should be closed.
+			freshNode.setStatus(NodeStatus.TERMINAL);
+			this.eventBus.post(freshNode);
+			freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
 		}
 		return freshNode;
 	}

@@ -62,7 +62,7 @@ public abstract class ChaseConfiguration implements Configuration {
 	protected Cost cost;
 
 	/** Input constants. */
-	protected final Collection<Constant> input;
+	private final Collection<Constant> input;
 
 	/** Output constants. */
 	protected final Collection<Constant> output;
