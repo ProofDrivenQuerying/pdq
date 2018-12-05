@@ -259,7 +259,7 @@ public class LinearOptimized extends LinearExplorer {
 				// the close function will do a full reason until termination.
 				freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
 			} else {
-				// the frash node has representative lets check if the fresh is better or not.
+				// the fresh node has representative lets check if the fresh is better or not.
 				if (representative.getCostOfBestPlanFromRoot().greaterThan(freshNode.getCostOfBestPlanFromRoot())) {
 					equivalenceClasses.updateRepresentative(representative, freshNode);
 				}
