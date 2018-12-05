@@ -326,146 +326,6 @@ public class SQLLikeQueryParser {
 		}
 	}
 	
-/*
-<table name> ::= <qualified name> | <qualified local table name>
-
-<qualified name> ::= [ <schema name> <period> ] <qualified identifier>
-
-<character set specification> ::=
-		<standard character repertoire name>
-	|	<implementation-defined character repertoire name>
-	|	<user-defined character repertoire name>
-	|	<standard universal character form-of-use name>
-	|	<implementation-defined universal character form-of-use name>
-
-<standard character repertoire name> ::= <character set name>
-
-<implementation-defined character repertoire name> ::= <character set name>
-
-<user-defined character repertoire name> ::= <character set name>
-
-<standard universal character form-of-use name> ::= <character set name>
-
-<implementation-defined universal character form-of-use name> ::= <character set name>
-
-<character set name> ::= [ <schema name> <period> ] <SQL language identifier>
-*/
-
-// <introducer> ::= <underscore>
-
-// <actual identifier> ::= <regular identifier> | <delimited identifier>
-
-
-/*
-<boolean term> ::=
-		<boolean factor>
-	|   <boolean term> AND <boolean factor>
-
-<boolean factor> ::= [ NOT ] <boolean test>
-
-<boolean test> ::= <boolean primary> [ IS [ NOT ] <truth value> ]
-
-<boolean primary> ::= <predicate> | <left paren> <search condition> <right paren>
-
-<predicate> ::=
-		<comparison predicate>
-	|   <between predicate>
-	|   <in predicate>
-	|   <like predicate>
-	|   <null predicate>
-	|   <quantified comparison predicate>
-	|   <exists predicate>
-	|   <match predicate>
-	|   <overlaps predicate>
-
-<comparison predicate> ::= <row value constructor> <comp op> <row value constructor>
-
-<row value constructor> ::=
-		<row value constructor element>
-	|   <left paren> <row value constructor list> <right paren>
-	|   <row subquery>
-
-<row value constructor element> ::=
-		<value expression>
-	|   <null specification>
-	|   <default specification>
-
-<value expression> ::=
-		<numeric value expression>
-	|   <string value expression>
-	|   <datetime value expression>
-	|   <interval value expression>
-
-<numeric value expression> ::=
-		<term>
-	|   <numeric value expression> <plus sign> <term>
-	|   <numeric value expression> <minus sign> <term>
-
-<term> ::=
-		<factor>
-	|   <term> <asterisk> <factor>
-	|   <term> <solidus> <factor>
-
-<factor> ::= [ <sign> ] <numeric primary>
-
-<numeric primary> ::= <value expression primary> | <numeric value function>
-
-<value expression primary> ::=
-		<unsigned value specification>
-	|   <column reference>
-	|   <set function specification>
-	|   <scalar subquery>
-	|   <case expression>
-	|   <left paren> <value expression> <right paren>
-	|   <cast specification>
-
-<unsigned value specification> ::= <unsigned literal> | <general value specification>
-
-<unsigned literal> ::= <unsigned numeric literal> | <general literal>
-
-<general value specification> ::=
-		<parameter specification>
-	|   <dynamic parameter specification>
-	|   <variable specification>
-	|   USER
-	|   CURRENT_USER
-	|   SESSION_USER
-	|   SYSTEM_USER
-	|   VALUE
-
-<parameter specification> ::= <parameter name> [ <indicator parameter> ]
-
-<parameter name> ::= <colon> <identifier>
-
-<indicator parameter> ::= [ INDICATOR ] <parameter name>
-
-<dynamic parameter specification> ::= <question mark>
-
-<variable specification> ::= <embedded variable name> [ <indicator variable> ]
-
-<embedded variable name> ::= <colon><host identifier>
-
-<host identifier> ::= <identifier>
-
-<indicator variable> ::= [ INDICATOR ] <embedded variable name>
-
-<column reference> ::= [ <qualifier> <period> ] <column name>
-
-<qualifier> ::= <table name> | <correlation name>
-
-<correlation name> ::= <identifier>
-
-<set function specification> ::=
-	COUNT <left paren> <asterisk> <right paren>
-|   <general set function>
-
-<general set function> ::=
-	<set function type> <left paren> [ <set quantifier> ] <value expression> <right paren>
-
-<set function type> ::= AVG | MAX | MIN | SUM | COUNT
-
-<set quantifier> ::= DISTINCT | ALL
-*/
 	
 	private void query_specification() throws Exception
 	{
@@ -511,11 +371,8 @@ public class SQLLikeQueryParser {
 			if(lookahead(1) == DOT)
 			{
 				match(DOT);
-				if(lookahead(1) == IDENTIFIER)
-				{
-					Token token2 = identifier();
-					columnNames.add(token2.getText());
-				}
+				Token token2 = identifier();
+				columnNames.add(token2.getText());
 			}
 		}
 		else if(lookahead(1) != FROM)
@@ -699,16 +556,8 @@ public class SQLLikeQueryParser {
 		{
 			Token token1 = table_name();
 			int index2 = marker();
-			try
-			{
-				Token token2 = correlation_specification();
-				tableAliases.add(token1.getText() + " AS " + token2.getText());
-			}
-			catch(Exception e)
-			{
-				rollback(index2);
-				tableAliases.add(token1.getText());
-			}
+			Token token2 = correlation_specification();
+			tableAliases.add(token1.getText() + " AS " + token2.getText());
 		}
 		catch(Exception e1)
 		{
@@ -720,8 +569,15 @@ public class SQLLikeQueryParser {
 			catch(Exception e2)
 			{				
 				rollback(index);
-				derived_table();
-				correlation_specification();
+				try
+				{
+					derived_table();
+					correlation_specification();
+				}
+				catch(Exception e)
+				{
+					throw e;
+				}
 			}
 		}
 	}
