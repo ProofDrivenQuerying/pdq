@@ -230,13 +230,13 @@ public class ConjunctiveQueryBodyBuilder {
 					+ ", relationName=" + this.aliasToRelations.get(rightAlias)
 					+ ", rightPredForm=" + rightPredForm
 			, e);
-			throw e;
+			throw new Exception("Missing relation: " + rightAlias);
 		}
 
 		// Check left and right isVariable()
 		if( !leftTerm.isVariable() && !rightTerm.isVariable() ) {
 			if( !leftTerm.equals(rightTerm) ) {
-				throw new Exception("conflicting constants");
+				throw new Exception("Conflicting constants");
 			}
 
 		} else if( !leftTerm.isVariable() && rightTerm.isVariable() ) {
