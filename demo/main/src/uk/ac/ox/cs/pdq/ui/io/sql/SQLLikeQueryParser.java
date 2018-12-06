@@ -437,7 +437,9 @@ public class SQLLikeQueryParser {
 	private Token table_name() throws Exception
 	{
 		// <table name> ::= <qualified name> | <qualified local table name>
-		if(lookahead(1) == IDENTIFIER)
+		if(lookahead(1) == IDENTIFIER ||
+		   lookahead(1) == AS ||
+		   lookahead(1) == ON)
 		{
 			return qualified_name();
 		}
@@ -519,6 +521,7 @@ public class SQLLikeQueryParser {
 		{
 			where_clause();
 		}
+		matchEOF();
 	}
 		
 	private void from_clause() throws Exception
@@ -527,58 +530,38 @@ public class SQLLikeQueryParser {
 		{
 			match(FROM);
 		}
-		int index = marker();
-		try
-		{
-			table_reference();
-			if(lookahead(1) == JOIN) throw new Exception("JOIN");
-		}
-		catch(Exception e)
-		{
-			rollback(index);
-			joined_table();
-		}
+		table_reference(true);
 		while(lookahead(1) == COMMA)
 		{
 			match(COMMA);
-			table_reference();
+			table_reference(true);
 		}
 	}
 
-	private void table_reference() throws Exception
+	private void table_reference(boolean join) throws Exception
 	{
 		//	<table reference> ::=
 		//		    <table name> [ <correlation specification> ]
 		//		|   <derived table> <correlation specification>
 		//		| 	<joined table>
 		int index = marker();
-		try
+		if(lookahead(1) == IDENTIFIER ||
+		   lookahead(1) == AS ||
+		   lookahead(1) == ON)
 		{
 			Token token1 = table_name();
-			int index2 = marker();
 			Token token2 = correlation_specification();
 			tableAliases.add(token1.getText() + " AS " + token2.getText());
 		}
-		catch(Exception e1)
+		if(join && lookahead(1) == JOIN)
 		{
 			rollback(index);
-			try
-			{
-				joined_table();
-			}
-			catch(Exception e2)
-			{				
-				rollback(index);
-				try
-				{
-					derived_table();
-					correlation_specification();
-				}
-				catch(Exception e)
-				{
-					throw e;
-				}
-			}
+			joined_table();
+		}
+		else if(lookahead(1) != JOIN && lookahead(1) != ON)
+		{
+			derived_table();
+			correlation_specification();
 		}
 	}
 	
@@ -629,24 +612,43 @@ public class SQLLikeQueryParser {
 		//	<cross join>
 		// |   <qualified join>
 		// |   <left paren> <joined table> <right paren>
-		int index = marker();
-		try
+		if(lookahead(1) == OPEN_PAR)
 		{
-			cross_join();
+			match(OPEN_PAR);
+			joined_table();
+			match(CLOSE_PAR);
 		}
-		catch(Exception e1)
-		{
-			rollback(index);
-			try
+		else
+		{		
+			table_reference(false);
+			if(lookahead(1) == CROSS)
+			{
+				cross_join();
+			}
+			else if(lookahead(1) == NATURAL ||
+					lookahead(1) == INNER ||
+					lookahead(1) == OUTER ||
+					lookahead(1) == UNION ||
+					lookahead(1) == LEFT ||
+					lookahead(1) == RIGHT ||
+					lookahead(1) == FULL ||
+					lookahead(1) == JOIN)
 			{
 				qualified_join();
 			}
-			catch(Exception e2)
+			while(lookahead(1) == JOIN)
 			{
-				rollback(index);
-				match(OPEN_PAR);
-				joined_table();
-				match(CLOSE_PAR);
+				match(JOIN);
+				table_reference(true);
+				int index = marker();
+				try
+				{
+					join_specification();
+				}
+				catch(Exception e)
+				{
+					rollback(index);
+				}
 			}
 		}
 	}
@@ -655,16 +657,12 @@ public class SQLLikeQueryParser {
 	private void cross_join() throws Exception
 	{
 		// <cross join> ::= <table reference> CROSS JOIN <table reference>
-		table_reference();
 		match(CROSS);
-		match(JOIN);
-		table_reference();
 	}
 
 	private void qualified_join() throws Exception
 	{
 		//	<qualified join> ::= <table reference> [ NATURAL ] [ <join type> ] JOIN <table reference> [ <join specification> 
-		table_reference();
 		if(lookahead(1) == NATURAL)
 		{
 			match(NATURAL);
@@ -677,20 +675,6 @@ public class SQLLikeQueryParser {
 		   lookahead(1) == FULL)
 		{
 			join_type();
-		}
-		while(lookahead(1) == JOIN)
-		{
-			match(JOIN);
-			table_reference();
-			int index = marker();
-			try
-			{
-				join_specification();
-			}
-			catch(Exception e)
-			{
-				rollback(index);
-			}
 		}
 	}
 
@@ -817,6 +801,13 @@ public class SQLLikeQueryParser {
 		tokens.seek(index);
 	}
 
+	public void matchEOF() throws Exception
+	{
+		if(lookahead(1) != -1)
+		{
+			error("Mismatched token");
+		}
+	}
 	public Token match(int token) throws Exception
 	{
 		Token tok = tokens.get(tokens.index());
