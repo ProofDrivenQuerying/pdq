@@ -62,8 +62,9 @@ public class ConjunctiveQueryBodyBuilder {
 	 * Constructor for ConjunctiveQueryBodyBuilder.
 	 * @param schema Schema
 	 * @param aliasToRelations Map<String,String>
+	 * @throws Exception 
 	 */
-	public ConjunctiveQueryBodyBuilder(Schema schema, Map<String, String> aliasToRelations, Term[] terms) {
+	public ConjunctiveQueryBodyBuilder(Schema schema, Map<String, String> aliasToRelations, Term[] terms) throws Exception {
 		this.schema = schema;
 		
 		this.aliasToRelations = aliasToRelations;
@@ -79,30 +80,38 @@ public class ConjunctiveQueryBodyBuilder {
 
 	/**
 	 * Builds an initial set of PredicateFormulas with fresh variables in every position.
+	 * @throws Exception 
 	 */
-	private void buildInitialPredicates() {
+	private void buildInitialPredicates() throws Exception {
 		log.debug("buildInitialPredicates. aliasToRelations = " + this.aliasToRelations);
 		
 		// Build an Atom from predicate and terms
 		int counter = 0;
 		for( Map.Entry<String, String> entry : this.aliasToRelations.entrySet() ) {
-			String aliasName = entry.getKey();
-			String relationName = entry.getValue();
+			try
+			{
+				String aliasName = entry.getKey();
+				String relationName = entry.getValue();
 
-			Relation relation = this.schema.getRelation(relationName);
-			Attribute[] attributes = relation.getAttributes();
+				Relation relation = this.schema.getRelation(relationName);
+				Attribute[] attributes = relation.getAttributes();
 
-			Predicate predicate = Predicate.create(relationName, attributes.length);
+				Predicate predicate = Predicate.create(relationName, attributes.length);
 
-			Term[] terms = new Term[ attributes.length ];
+				Term[] terms = new Term[ attributes.length ];
 
-			for( int i = 0; i < terms.length; i++ ) {
-				terms[i] = new Variable(attributes[i].getName());
+				for( int i = 0; i < terms.length; i++ ) {
+					terms[i] = new Variable(attributes[i].getName());
+				}
+
+				this.aliasToPredicateFormulas.put(aliasName, Atom.create( predicate, terms ));
+
+				counter++;
 			}
-
-			this.aliasToPredicateFormulas.put(aliasName, Atom.create( predicate, terms ));
-
-			counter++;
+			catch(NullPointerException e)
+			{
+				throw new Exception("No such relation");
+			}
 		}
 	}
 
