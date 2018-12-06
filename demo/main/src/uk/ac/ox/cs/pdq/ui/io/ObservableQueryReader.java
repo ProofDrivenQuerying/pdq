@@ -64,13 +64,19 @@ public class ObservableQueryReader {
 	public ObservableQuery read(File query) {
 		try {
 			ConjunctiveQuery cq = IOManager.importQuery(query);
-			return new ObservableQuery(query.getPath(), this.description, cq);
+			return new ObservableQuery(homepath(query.getPath()), this.description, cq);
 		} catch (JAXBException | FileNotFoundException e) {
 			throw new ReaderException("Exception thrown while reading schema ", e);
 		}
 	}
 
 	
+	private String homepath(String path)
+	{
+		String home = System.getProperty("user.dir");
+		return path.replace(home, "");
+	}
+
 	/**
 	 * For test purpose only.
 	 *

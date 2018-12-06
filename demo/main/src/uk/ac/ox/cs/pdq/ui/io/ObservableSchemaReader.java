@@ -87,13 +87,19 @@ public class ObservableSchemaReader {
 				list.add((Service) jaxbUnmarshaller2.unmarshal(serviceFile));
 			}
 			this.schema = DbIOManager.importSchema(file);
-			this.name = file.getPath();
+			this.name = homepath(file.getPath());
 			this.services = new Service[list.size()];
 			for(int i = 0; i < list.size(); i++) services[i] = list.get(i);
 			return new ObservableSchema(this.name, this.description, this.schema, this.services);
 		} catch (JAXBException | FileNotFoundException e) {
 			throw new ReaderException("Exception thrown while reading schema ", e);
 		}
+	}
+
+	private String homepath(String path)
+	{
+		String home = System.getProperty("user.dir");
+		return path.replace(home, "");
 	}
 
 	private static File[] listFiles(File directory, final String prefix, final String suffix) {
