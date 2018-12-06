@@ -34,7 +34,7 @@ import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.equivalence.EquivalenceClasses;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.equivalence.LinearEquivalenceClasses;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -63,7 +63,7 @@ public class LinearOptimized extends LinearExplorer {
 	private final Set<List<Integer>> prunedPaths = new HashSet<>();
 
 	/** Classes of equivalent configurations. */
-	private EquivalenceClasses equivalenceClasses = new EquivalenceClasses();
+	private LinearEquivalenceClasses equivalenceClasses = new LinearEquivalenceClasses();
 
 	/** The unexplored descendants. */
 	private final Queue<SearchNode> unexploredDescendants = new PriorityQueue<>(10, new Comparator<SearchNode>() {

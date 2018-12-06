@@ -16,13 +16,13 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
  * @author gabor
  *
  */
-public class EquivalenceClasses {
+public class LinearEquivalenceClasses {
 	/**
 	 * Map of representative to the list of configurations belonging to that class.
 	 */
 	Map<SearchNode, List<SearchNode>> classes = new HashMap<>();
 
-	public EquivalenceClasses() {
+	public LinearEquivalenceClasses() {
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class EquivalenceClasses {
 	 * @param config
 	 * @return
 	 */
-	protected SearchNode searchRepresentative(SearchNode config) {
+	public SearchNode searchRepresentative(SearchNode config) {
 		if (classes.containsKey(config))
 			return config;
 
