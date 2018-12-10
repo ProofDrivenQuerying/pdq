@@ -23,6 +23,7 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
@@ -137,7 +138,12 @@ public class LinearGeneric extends LinearExplorer {
 			if (this.bestPlan == null || (this.bestPlan != null && freshNode.getConfiguration().getCost().lessThan(this.bestCost))) {
 				this.bestPlan =  freshNode.getConfiguration().getPlan();
 				this.bestCost = freshNode.getConfiguration().getCost();
+				this.bestConfigurationsList = this.getConfigurations(freshNode.getBestPathFromRoot());
 				this.bestNode = freshNode;
+				metadata = new BestPlanMetadata(selectedNode, this.bestPlan, freshNode.getBestPathFromRoot(), 
+						this.bestConfigurationsList, this.getElapsedTime());
+				freshNode.setMetadata(metadata);
+				this.eventBus.post(freshNode);
 			}
 		}
 		this.rounds++;
