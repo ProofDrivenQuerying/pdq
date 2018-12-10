@@ -18,6 +18,7 @@ import prefuse.Visualization;
 import prefuse.data.Graph;
 import prefuse.visual.AggregateTable;
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.util.EventHandler;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
@@ -127,8 +128,8 @@ public class PrefuseEventHandler implements EventHandler {
 				Utils.addEdge(this.graph, node, node.getEquivalentNode(), EdgeTypes.POINTER);
 			} 
 			else if (metadata instanceof BestPlanMetadata) {
-
-				this.paths.add(new Path(((BestPlanMetadata) metadata).getBestPathToSuccess(), ((BestPlanMetadata) metadata).getPlan()));
+				Path path = new Path(((BestPlanMetadata) metadata).getBestPathToSuccess(), ((BestPlanMetadata) metadata).getPlan(), new DoubleCost(0.0));
+				this.paths.add(path);
 				log.debug(Joiner.on("\n").join(this.paths));
 
 				this.updatePathHighlightControl();
