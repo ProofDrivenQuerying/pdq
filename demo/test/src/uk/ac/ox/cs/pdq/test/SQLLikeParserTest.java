@@ -33,7 +33,7 @@ public class SQLLikeParserTest {
 		ex[12] = true; sql[12] = "SELECT * FROM R AS a0 JOIN S AS a1 ON a0";
 		ex[13] = true; sql[13] = "SELECT * FROM R AS a0 JOIN S AS a1 ON a0.x";
 		ex[14] = true; sql[14] = "SELECT * FROM R AS a0 JOIN S AS a1 ON a0.x =";
-		ex[15] = true; sql[15] = "SELECT * FROM R AS a0 JOIN S AS a1 ON a0.x = a1";
+		ex[15] = false; sql[15] = "SELECT * FROM R AS a0 JOIN S AS a1 ON a0.x = a1";
 		ex[16] = false; sql[16] = "SELECT * FROM R AS a0 JOIN S AS a1 ON a0.x = a1.y";
 		
 		for(int i = 0; i < size; i++)
