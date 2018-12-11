@@ -643,15 +643,7 @@ public class SQLLikeQueryParser {
 			{
 				match(JOIN);
 				table_reference(true);
-				int index = marker();
-				try
-				{
-					join_specification();
-				}
-				catch(Exception e)
-				{
-					rollback(index);
-				}
+				join_specification();
 			}
 		}
 	}
