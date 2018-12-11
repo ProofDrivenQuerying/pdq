@@ -1,4 +1,3 @@
-
 package uk.ac.ox.cs.pdq.ui.io.sql;
 
 import java.util.ArrayList;
@@ -546,24 +545,27 @@ public class SQLLikeQueryParser {
 		//		|   <derived table> <correlation specification>
 		//		| 	<joined table>
 		int index = marker();
-		if(lookahead(1) == IDENTIFIER ||
-		   lookahead(1) == AS ||
-		   lookahead(1) == ON)
+		Token token1 = table_name();
+		if(lookahead(1) == AS ||
+		   lookahead(1) == IDENTIFIER)
 		{
-			Token token1 = table_name();
 			Token token2 = correlation_specification();
 			tableAliases.add(token1.getText() + " AS " + token2.getText());
 		}
-		if(join && lookahead(1) == JOIN)
+		if(lookahead(1) == JOIN)
+		{
+			if(join)
+			{
+				rollback(index);
+				joined_table();
+			}
+		}
+	/*	else if(lookahead(1) != ON)
 		{
 			rollback(index);
-			joined_table();
-		}
-		else if(lookahead(1) != JOIN && lookahead(1) != ON)
-		{
 			derived_table();
 			correlation_specification();
-		}
+		}*/
 	}
 	
 	private Token correlation_specification() throws Exception
@@ -806,7 +808,7 @@ public class SQLLikeQueryParser {
 	{
 		if(lookahead(1) != -1)
 		{
-			error("Mismatched token");
+			error("Mismatched EOF");
 		}
 	}
 	public Token match(int token) throws Exception
