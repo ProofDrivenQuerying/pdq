@@ -35,7 +35,6 @@ import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.equivalence.LinearEquivalenceClasses;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -125,7 +124,7 @@ public class LinearOptimized extends LinearExplorer {
 		this.postPruning = new PostPruningRemoveFollowUps(accessibleSchema, chaser, this.accessibleQuery);
 		// initalize equivalence classes with the initial applyrules.
 		for (SearchNode node:this.planTree.vertexSet()) {
-			equivalenceClasses.add(node.getConfiguration());
+			equivalenceClasses.add(node);
 		}
 		
 	}
@@ -252,8 +251,8 @@ public class LinearOptimized extends LinearExplorer {
 		}
 		
 		if (!domination) {
-			ChaseConfiguration representative = this.equivalenceClasses.add(freshNode.getConfiguration());
-			if (representative.equals(freshNode.getConfiguration())) {
+			SearchNode representative = this.equivalenceClasses.add(freshNode);
+			if (representative.equals(freshNode)) {
 				// this node is a new representative, so lets chase it.
 				// Close the newly created node using the inferred accessible dependencies of
 				// the accessible schema
@@ -261,8 +260,8 @@ public class LinearOptimized extends LinearExplorer {
 				freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
 			} else {
 				// the fresh node has representative lets check if the fresh is better or not.
-				if (representative.getCost().greaterThan(freshNode.getConfiguration().getCost())) {
-					equivalenceClasses.updateRepresentative(representative, freshNode.getConfiguration());
+				if (representative.getCostOfBestPlanFromRoot().greaterThan(freshNode.getCostOfBestPlanFromRoot())) {
+					equivalenceClasses.updateRepresentative(representative, freshNode);
 				}
 			}
 			/* Check for query match */
