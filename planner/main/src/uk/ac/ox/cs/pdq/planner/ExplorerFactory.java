@@ -26,7 +26,7 @@ import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearKChase;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimized;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimizedExperiment;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
@@ -143,7 +143,7 @@ public class ExplorerFactory {
 					costEstimator, filter, parameters.getMaxDepth());
 
 		case LINEAR_OPTIMIZED:
-			return new LinearOptimized(eventBus, query, accessibleSchema, chaser, connection,
+			return new LinearOptimizedExperiment(eventBus, query, accessibleSchema, chaser, connection,
 					costEstimator, costPropagator, parameters.getMaxDepth(),
 					parameters.getQueryMatchInterval());
 
