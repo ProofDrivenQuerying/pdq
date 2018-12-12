@@ -49,6 +49,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.FocusModel;
@@ -64,6 +65,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -1012,6 +1014,36 @@ public class PDQController {
 				ConjunctiveQuery cjq = qr.fromString(str);
 				this.currentQuery.get().setQuery(cjq);
 				saveQuery(this.currentQuery.get());
+		    	Alert alert = new Alert(AlertType.INFORMATION);
+		    	alert.setTitle("Result Dialog");
+		    	alert.setHeaderText(null);
+		    	alert.setContentText("Successfully saved");
+		    	alert.showAndWait();
+			}
+			catch(Exception e)
+			{
+				return;				
+			}
+		}
+	}
+	
+	/**
+	 * Action that saves as the current query.
+	 *
+	 * @param event
+	 *            the event
+	 */
+	@FXML
+	void saveAsSelectedQuery(ActionEvent event) {
+		if (!event.isConsumed()) {
+			event.consume();
+			try
+			{
+				String str = this.queryTextArea.textProperty().get();
+				SQLLikeQueryReader qr = new SQLLikeQueryReader(this.currentSchema.get().getSchema());
+				ConjunctiveQuery cjq = qr.fromString(str);
+				this.currentQuery.get().setQuery(cjq);
+				saveAsQuery(this.currentQuery.get());
 			}
 			catch(Exception e)
 			{
@@ -1482,6 +1514,43 @@ public class PDQController {
 	}
 
 	/**
+	 * Saves as a query.
+	 *
+	 * @param query
+	 *            the query
+	 */
+	private void saveAsQuery(ObservableQuery query) {
+		try {
+			final Stage dialog = new Stage();
+			dialog.initModality(Modality.WINDOW_MODAL);
+			dialog.initStyle(StageStyle.UTILITY);
+			//dialog.initOwner(this.getOriginatingWindow(event));
+			ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
+			FXMLLoader loader = new FXMLLoader(
+					PDQApplication.class.getResource("/resources/layouts/saveas-dialog.fxml"), bundle);
+			Parent parent = (Parent) loader.load();
+			Scene scene = new Scene(parent);
+			dialog.setScene(scene);
+			dialog.setTitle(bundle.getString("application.dialog.saveas.query.title"));
+
+			// Set the currently selected schema/query/plan
+			SaveAsController saveasController = loader.getController();
+			saveasController.setSchema(this.currentSchema.get());
+			saveasController.setQueue(this.dataQueue);
+			saveasController.saveAs(query);
+			dialog.addEventHandler(KeyEvent.ANY, (KeyEvent e) -> {
+				if (!e.isConsumed() && e.getCode() == KeyCode.ESCAPE) {
+					e.consume();
+					dialog.close();
+				}
+			});
+			dialog.showAndWait();
+		} catch (IOException e) {
+			throw new UserInterfaceException(e);
+		}
+	}
+
+/**
 	 * Saves a plan.
 	 *
 	 * @param plan

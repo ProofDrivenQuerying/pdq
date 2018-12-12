@@ -87,6 +87,7 @@
                             <MenuItem disable="false" mnemonicParsing="false" onAction="#deleteSelectedQueries" text="%application.query.queries.delete-selected" fx:id="queriesDeleteButton" />
                             <MenuItem disable="false" mnemonicParsing="false" onAction="#openImportQueryWindow" text="%application.query.queries.import" fx:id="queriesGenerateButton" />
                             <MenuItem disable="false" mnemonicParsing="false" onAction="#saveSelectedQuery" text="%application.query.queries.save" fx:id="querySaveButton" />
+				            <MenuItem disable="false" mnemonicParsing="false" onAction="#saveAsSelectedQuery" text="%application.query.queries.saveas" fx:id="querySaveAsButton" />
                           </items>
                         </MenuButton>
                       </children>

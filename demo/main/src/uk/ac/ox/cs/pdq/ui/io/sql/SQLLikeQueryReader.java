@@ -219,12 +219,6 @@ public class SQLLikeQueryReader {
         	throw e;
         }
         
-     	Alert alert = new Alert(AlertType.INFORMATION);
-    	alert.setTitle("Result Dialog");
-    	alert.setHeaderText(null);
-    	alert.setContentText("Successfully saved");
-    	alert.showAndWait();
-   	
-        return query;
+         return query;
 	}
 }
