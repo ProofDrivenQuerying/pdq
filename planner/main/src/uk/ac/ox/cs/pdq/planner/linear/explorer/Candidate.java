@@ -151,4 +151,9 @@ public class Candidate implements Cloneable{
 		}
 		return "EMPTY CANDIDATE";
 	}
+
+	public SearchNode getAsSearchNode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

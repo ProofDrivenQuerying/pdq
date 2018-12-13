@@ -203,7 +203,14 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		LinearChaseConfiguration newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),
 				similarCandidates);
 		SearchNode freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
-
+		
+		boolean isRepresented = false;
+		SearchNode selectedNodesRepresentative = equivalenceClasses.searchRepresentative(selectedNode);
+		if (equivalenceClasses.searchRepresentative(freshNode)!=null || selectedNodesRepresentative!=selectedNode) {
+			// either left or right side has representative
+			isRepresented = true;
+		}
+		
 		freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
 		if (!freshNode.getConfiguration().hasCandidates())
 			freshNode.setStatus(NodeStatus.TERMINAL);
@@ -239,7 +246,7 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		}
 
 		// set dominating plan if there is one
-		if (!domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
+		if (!isRepresented && !domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
 			SearchNode dominatingNode = ExplorerUtility.isCostAndFactDominated(this.planTree.vertexSet(), freshNode);
 			if (dominatingNode != null) {
 				domination = true;
@@ -280,7 +287,7 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 			// dominated node should be closed.
 			freshNode.setStatus(NodeStatus.TERMINAL);
 			this.eventBus.post(freshNode);
-			freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
+			//freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
 		}
 		return freshNode;
 	}

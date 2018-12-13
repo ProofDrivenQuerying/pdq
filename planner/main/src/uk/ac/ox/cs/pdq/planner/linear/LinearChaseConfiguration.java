@@ -226,5 +226,5 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 
 	public Set<Candidate> getExposedCandidates() {
 		return this.newlyExposedCandidates;
-	} 
+	}
 }
