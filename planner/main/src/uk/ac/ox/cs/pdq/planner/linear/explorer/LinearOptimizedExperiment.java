@@ -287,7 +287,6 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 			// dominated node should be closed.
 			freshNode.setStatus(NodeStatus.TERMINAL);
 			this.eventBus.post(freshNode);
-			//freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
 		}
 		return freshNode;
 	}
