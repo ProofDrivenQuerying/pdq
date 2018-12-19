@@ -1,0 +1,318 @@
+<services name="Yahoo GeoPlanet">
+	<input-methods>
+		<input-method name="appid"     type="url-param"    value="JzP8IhLV34FYtPGFngow9GLtYgdmoXAFCyjNOAPiry1mGIdTpk40H_kJCUzXGBs-" />
+		<input-method name="format"    type="url-param"    value="json"/>
+		<input-method name="keywords"  type="path-element" template=".q({1})"/>
+		<input-method name="type"      type="path-element" template=".type({1})"/>
+		<input-method name="kwtype"    type="path-element" template="$and(.q({1},.type({2}))"/>
+		<input-method name="type"      type="path-element" template=""/>
+		<input-method name="woeid"     type="path-element" template=".woeid({1})" batch-delimiter="," batch-size="10"/>
+		<input-method name="inline"    type="path-element" template="/{1}" />
+		<input-method name="relation"  type="path-element" template="/{1}/{2}" />
+		<input-method name="count"     type="path-element" template=";count={1}"/>
+		<input-method name="start"     type="path-element" template=";start={1}"/>
+		<input-method name="q"         type="url-param"    template="select * from {1} where woeid IN ({2})" batch-delimiter=","/>
+	</input-methods>
+	<usage-policies>
+		<policy name="url_auth"
+				type="uk.ac.ox.cs.pdq.services.policies.URLAuthentication"
+				input-method="appid"/>
+		<policy name="2000_request_per_day"
+				type="uk.ac.ox.cs.pdq.services.policies.RequestAllowance"
+				limit="2000" period="24h"/>
+		<policy name="10_request_per_second"
+				type="uk.ac.ox.cs.pdq.services.policies.RequestAllowance"
+				limit="10" period="1s"/>
+	</usage-policies>
+	<service
+		name="YahooPlaces"
+		protocol="REST"
+		url="http://where.yahooapis.com/v1/places" 
+		documentation="http://developer.yahoo.com/geo/geoplanet/"
+		result-delimiter="places/place">
+
+		<policy name="url_auth"/>
+		<policy name="2000_request_per_day"/>
+		<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+				limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
+
+		<static-input name="format" input-method="format"/>
+
+		<attribute name="woeid"    type="java.lang.Integer"     input-method="woeid.1"    path="woeid"/>
+		<attribute name="name"     type="java.lang.String"      input-method="keywords.1" path="name"/>
+		<attribute name="type"     type="java.lang.Integer"     input-method="type.1"     path="placeTypeName attrs/code"/>
+
+		<attribute name="placeTypeName" type="java.lang.String" path="placeTypeName"/>
+		<attribute name="country"       type="java.lang.String" path="country"/>
+		<attribute name="admin1"        type="java.lang.String" path="admin1"/>
+		<attribute name="admin2"        type="java.lang.String" path="admin2"/>
+		<attribute name="admin3"        type="java.lang.String" path="admin3"/>
+		<attribute name="locality1"     type="java.lang.String" path="locality1"/>
+		<attribute name="locality2"     type="java.lang.String" path="locality2"/>
+		<attribute name="postal"        type="java.lang.String" path="postal"/>
+		<attribute name="centroid_lat"  type="java.lang.Double" path="centroid/latitude"/>
+		<attribute name="centroid_lng"  type="java.lang.Double" path="centroid/longitude"/>
+		<attribute name="bboxNorth"     type="java.lang.Double" path="northEast/latitude"/>
+		<attribute name="bboxSouth"     type="java.lang.Double" path="southWest/latitude"/>
+		<attribute name="bboxEast"      type="java.lang.Double" path="northEast/longitude"/>
+		<attribute name="bboxWest"      type="java.lang.Double" path="southWest/longitude"/>
+		<attribute name="timezone"      type="java.lang.String" path="timezone"/>
+
+		<access-method type="LIMITED" name="yh_geo_woeid" inputs="1"   cost="1.0" />
+		<access-method type="LIMITED" name="yh_geo_name"  inputs="2"   cost="100.0" />
+		<access-method type="LIMITED" name="yh_geo_type"  inputs="2,3" cost="50.0" input-method="kwtype"/>
+	</service>
+	<service
+		name="YahooPlaceRelationship"
+		protocol="REST"
+		url="http://where.yahooapis.com/v1/place"
+		documentation="http://developer.yahoo.com/geo/geoplanet/guide/api-reference.html#api-place"
+		result-delimiter="places/place">
+
+		<policy name="url_auth"/>
+		<policy name="2000_request_per_day"/>
+		<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+				limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
+
+		<static-input name="format"     input-method="format"/>
+
+		<attribute name="relation"      type="java.lang.String"  input-method="relation.2"/>
+		<attribute name="of"            type="java.lang.Integer" input-method="relation.1" />
+		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
+		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="name"          type="java.lang.String"  path="name"/>
+		<attribute name="uri"           type="java.lang.String"  path="uri"/>
+
+		<access-method type="LIMITED" name="yh_geo_rel" inputs="1,2" cost="50.0" />
+	</service>
+	<service
+		name="YahooBelongsTo"
+		protocol="REST"
+		url="http://where.yahooapis.com/v1/place"
+		documentation="http://developer.yahoo.com/geo/geoplanet/guide/api-reference.html#api-place"
+		result-delimiter="places/place">
+
+		<policy name="url_auth"/>
+		<policy name="2000_request_per_day"/>
+		<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+				limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
+
+		<static-input name="format"     input-method="format"/>
+		<static-input name="relation"   input-method="relation.2" value="belongtos"/>
+
+		<attribute name="source"        type="java.lang.Integer" input-method="relation.1" />
+		<attribute name="target"        type="java.lang.Integer" path="woeid"/>
+		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="name"          type="java.lang.String"  path="name"/>
+		<attribute name="uri"           type="java.lang.String"  path="uri"/>
+
+		<access-method type="LIMITED" name="yh_geo_belongs" inputs="1" cost="50.0" />
+	</service>
+	<service
+		name="YahooPlaceCommonAncestor"
+		protocol="REST"
+		url="http://where.yahooapis.com/v1/place"
+		documentation="http://developer.yahoo.com/geo/geoplanet/guide/api-reference.html#api-place">
+
+		<policy name="url_auth"/>
+		<policy name="2000_request_per_day"/>
+
+		<static-input name="format" input-method="format"/>
+
+		<attribute    name="woeid1"         type="java.lang.Integer" input-method="relation.1" />
+		<static-input name="commonAncestor" type="java.lang.String"  input-method="relation.2" value="common"/>
+		<attribute    name="woeid2"         type="java.lang.Integer" input-method="inline.1" />
+
+		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
+		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="name"          type="java.lang.String"  path="name"/>
+		<attribute name="uri"           type="java.lang.String"  path="uri"/>
+
+		<access-method type="LIMITED" name="yh_com_anc" inputs="1,2" cost="25.0" />
+	</service>
+	<service
+		name="YahooPlaceType"
+		protocol="REST"
+		url="http://where.yahooapis.com/v1/placetypes"
+		documentation="http://developer.yahoo.com/geo/geoplanet/guide/api-reference.html#api-placetypes"
+		result-delimiter="placeTypes/placeType">
+
+		<policy name="url_auth"/>
+		<policy name="2000_request_per_day"/>
+
+		<static-input name="format" input-method="format"/>
+
+		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="code"          type="java.lang.Integer" path="placeTypeName attrs/code" input-method="type.1"/>
+		<attribute name="uri"           type="java.lang.String"  path="uri"/>
+		
+		<access-method type="FREE"    name="yh_geo_types"      cost="50.0" />
+		<access-method type="LIMITED" name="yh_geo_types_name" inputs="2" cost="5.0" />
+	</service>
+	<service
+		name="YahooPlaceCode"
+		protocol="REST"
+		url="http://where.yahooapis.com/v1/concordance"
+		documentation="http://developer.yahoo.com/geo/geoplanet/guide/api-reference.html#api-concordance">
+
+		<policy name="url_auth"/>
+		<policy name="2000_request_per_day"/>
+
+		<static-input name="format" input-method="format"/>
+
+		<attribute name="namespace" type="java.lang.String"  input-method="relation.1"/>
+		<attribute name="code"      type="java.lang.String"  input-method="relation.2"/>
+		<attribute name="woeid"     type="java.lang.Integer" path="woeid"/>
+		
+		<access-method type="LIMITED" name="yh_geo_code" inputs="1,2" cost="1.0" />
+	</service>
+	<service
+		name="YahooContinents"
+		protocol="REST"
+		url="http://where.yahooapis.com/v1/continents"
+		documentation="http://developer.yahoo.com/geo/geoplanet/guide/api-reference.html#api-continents"
+		result-delimiter="places/place">
+
+		<policy name="url_auth"/>
+		<policy name="2000_request_per_day"/>
+		<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+				limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
+
+		<static-input name="format"     input-method="format"/>
+
+		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
+		<attribute name="placeType"     type="java.lang.Integer" path="placeTypeName attrs/code"/>
+		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="name"          type="java.lang.String"  path="name"/>
+
+		<access-method type="FREE" name="yh_geo_continent" cost="1.0" />
+	</service>
+	<service
+		name="YahooCountries"
+		protocol="REST"
+		url="http://where.yahooapis.com/v1/countries"
+		documentation="http://developer.yahoo.com/geo/geoplanet/guide/api-reference.html#api-countries"
+		result-delimiter="places/place">
+
+		<policy name="url_auth"/>
+		<policy name="2000_request_per_day"/>
+		<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+				limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
+
+		<static-input name="format"     input-method="format"/>
+
+		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
+		<attribute name="placeType"     type="java.lang.Integer" path="placeTypeName attrs/code"/>
+		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="name"          type="java.lang.String"  path="name"/>
+
+		<access-method type="FREE" name="yh_geo_country" cost="1.0" />
+	</service>
+	<service
+		name="YahooSeas"
+		protocol="REST"
+		url="http://where.yahooapis.com/v1/seas"
+		documentation="http://developer.yahoo.com/geo/geoplanet/guide/api-reference.html#api-seas"
+		result-delimiter="places/place">
+
+		<policy name="url_auth"/>
+		<policy name="2000_request_per_day"/>
+		<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+				limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
+
+		<static-input name="format"     input-method="format"/>
+
+		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
+		<attribute name="placeType"     type="java.lang.Integer" path="placeTypeName attrs/code"/>
+		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="name"          type="java.lang.String"  path="name"/>
+
+		<access-method type="FREE" name="yh_geo_sea" cost="1.0" />
+	</service>
+	<service
+		name="YahooOceans"
+		protocol="REST"
+		url="http://where.yahooapis.com/v1/oceans"
+		documentation="http://developer.yahoo.com/geo/geoplanet/guide/api-reference.html#api-oceans"
+		result-delimiter="places/place">
+
+		<policy name="url_auth"/>
+		<policy name="2000_request_per_day"/>
+		<policy type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+				limit="50" start-index="0" page-size="count.1" page-index="start.1" total-items="total"/>
+
+		<static-input name="format"     input-method="format"/>
+
+		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
+		<attribute name="placeType"     type="java.lang.Integer" path="placeTypeName attrs/code"/>
+		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="name"          type="java.lang.String"  path="name"/>
+
+		<access-method type="FREE" name="yh_geo_ocean" cost="1.0" />
+	</service>
+	<service
+		name="YahooWeather"
+		protocol="REST"
+		url="http://query.yahooapis.com/v1/public/yql" 
+		documentation="http://developer.yahoo.com/yql/"
+		result-delimiter="query/results/channel">
+
+		<policy name="2000_request_per_day"/>
+		<policy name="10_request_per_second" />
+
+		<static-input name="format"        input-method="format"/>
+		<static-input name="weather_table" input-method="q.1" value="weather.forecast"/>
+
+		<attribute name="woeid"          type="java.lang.Integer" input-method="q.2" />
+
+		<attribute name="city"           type="java.lang.String"  path="location/city"/>
+		<attribute name="country"        type="java.lang.String"  path="location/country"/>
+		<attribute name="region"         type="java.lang.String"  path="location/region"/>
+
+		<attribute name="distance_unit"  type="java.lang.String"  path="units/distance"/>
+		<attribute name="pressure_unit"  type="java.lang.String"  path="units/pressure"/>
+		<attribute name="speed_unit"     type="java.lang.String"  path="units/speed"/>
+		<attribute name="temp_unit"      type="java.lang.String"  path="units/temperature"/>
+
+		<attribute name="wind_chill"     type="java.lang.Integer" path="wind/chill"/>
+		<attribute name="wind_direction" type="java.lang.Integer" path="wind/direction"/>
+		<attribute name="wind_speed"     type="java.lang.String"  path="wind/speed"/>
+
+		<attribute name="humidity"       type="java.lang.Double"  path="atmosphere/humidity"/>
+		<attribute name="pressure"       type="java.lang.Double"  path="atmosphere/pressure"/>
+		<attribute name="rising"         type="java.lang.Integer" path="atmosphere/rising"/>
+		<attribute name="visibility"     type="java.lang.Double"  path="atmosphere/visibility"/>
+
+		<attribute name="sunrise"        type="java.lang.String"  path="astronomy/sunrise"/>
+		<attribute name="sunset"         type="java.lang.String"  path="astronomy/sunset"/>
+
+		<attribute name="date"           type="java.lang.String"  path="item/condition/date"/>
+		<attribute name="temperature"    type="java.lang.Double"  path="item/condition/temp"/>
+		<attribute name="condition"      type="java.lang.String"  path="item/condition/text"/>
+		<attribute name="code"           type="java.lang.Integer" path="item/condition/code"/>
+
+		<access-method type="LIMITED" name="yh_wtr_woeid" inputs="1" cost="10.0" />
+	</service>
+	<service
+		name="YahooWeatherForecast"
+		protocol="REST"
+		url="http://query.yahooapis.com/v1/public/yql" 
+		documentation="http://developer.yahoo.com/yql/"
+		result-delimiter="query/results/channel/forecast">
+
+		<policy name="2000_request_per_day"/>
+
+		<static-input name="format" input-method="format"/>
+
+		<static-input name="weather_table" input-method="q.1" value="weather.forecast"/>
+
+		<attribute name="woeid"     type="java.lang.Integer" input-method="q.2" />
+		<attribute name="code"      type="java.lang.Integer" path="code"/>
+		<attribute name="date"      type="java.lang.String"  path="date"/>
+		<attribute name="condition" type="java.lang.String"  path="text"/>
+		<attribute name="high"      type="java.lang.Integer" path="high"/>
+		<attribute name="low"       type="java.lang.Integer" path="low"/>
+
+		<access-method type="LIMITED" name="yh_wtrf_woeid" inputs="1" cost="10.0" />
+	</service>
+</services>

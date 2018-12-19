@@ -1,0 +1,51 @@
+<services name="DBLP API">
+	<input-methods>
+		<input-method name="format"   type="url-param"    value="json"/>
+		<input-method name="q"        type="url-param"/>
+		<!-- page size (# hits) -->
+		<input-method name="h"        type="url-param" />
+		<!-- first hit index -->
+		<input-method name="f"        type="url-param"/>
+		<input-method name="author"   type="url-param"    template=":ce:author:{1}"/>
+		<input-method name="venue"    type="url-param"    template=":ce:venue:{1}"/>
+		<input-method name="type"     type="url-param"    template=":ce:type:{1}"/>
+		<input-method name="year"     type="url-param"    template=":ce:year:{1}"/>
+	</input-methods>
+	<usage-policies>
+		<policy name="2000_request_per_day"
+				type="uk.ac.ox.cs.pdq..services.policies.RequestAllowance"
+				limit="2000" period="24h"/>
+		<policy name="10_request_per_second"
+				type="uk.ac.ox.cs.pdq..services.policies.RequestAllowance"
+				limit="10" period="1s"/>
+		<policy name="50_items_per_page"
+				type="uk.ac.ox.cs.pdq..services.policies.ItemsLimit"
+				limit="50" start-index="0" page-size="h" page-index="f" total-items="hits/@total"/>
+	</usage-policies>
+	<service
+		name="YahooWeather"
+		protocol="REST"
+		url="http://query.yahooapis.com/v1/public/yql" 
+		documentation="http://developer.yahoo.com/yql/"
+		result-delimiter="hit">
+
+		<policy name="10_request_per_second"/>
+		<policy name="2000_request_per_day"/>
+
+		<static-input name="format" input-method="format"/>
+
+		<attribute name="id"        type="java.lang.Integer" path="@id"/>
+		<attribute name="authors"   type="java.lang.Integer" path="info/authors"    input-method="author" />
+
+		<attribute name="title"     type="java.lang.String"  path="info/title/text" input-method="title" />
+		<attribute name="venue"     type="java.lang.String"  path="info/venue/text" input-method="venue" />
+		<attribute name="year"      type="java.lang.Integer" path="info/year"       input-method="year" />
+
+		<attribute name="type"      type="java.lang.String"  path="info/type"       input-method="type" />
+
+		<access-method type="LIMITED" name="dblp_auth"  inputs="1" cost="1.0" />
+		<access-method type="LIMITED" name="dblp_title" inputs="1" cost="1.0" />
+		<access-method type="LIMITED" name="dblp_venue" inputs="1" cost="1.0" />
+		<access-method type="LIMITED" name="dblp_year"  inputs="1" cost="1.0" />
+	</service>
+</services>

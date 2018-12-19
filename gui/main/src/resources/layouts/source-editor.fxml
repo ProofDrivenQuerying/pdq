@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+
+<BorderPane id="BorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <bottom>
+    <HBox alignment="CENTER_LEFT" padding="$x1" prefHeight="60.0" prefWidth="600.0" BorderPane.alignment="CENTER_LEFT">
+      <children>
+        <Pane prefHeight="62.0" prefWidth="150.0" HBox.hgrow="ALWAYS">
+          <children>
+            <Label id="relationEditorMessages" fx:id="sourceEditorMessages" layoutX="0.0" layoutY="0.0" prefHeight="50.000099999997474" prefWidth="410.0" text="Messages" />
+          </children>
+          <HBox.margin>
+            <Insets fx:id="x2" />
+          </HBox.margin>
+        </Pane>
+        <Button id="relationEditorCancel" fx:id="sourceEditorCancel" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Cancel">
+          <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </HBox.margin>
+        </Button>
+        <Button id="relationEditorOK" fx:id="sourceEditorOK" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="OK" HBox.margin="$x1" />
+      </children>
+    </HBox>
+  </bottom>
+  <center>
+    <VBox prefHeight="200.0" prefWidth="100.0">
+      <children>
+        <SplitPane dividerPositions="0.41156462585034015" focusTraversable="true" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+          <items>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+              <children>
+                <HBox prefHeight="30.0" prefWidth="200.0">
+                  <children>
+                    <Pane prefHeight="30.0" prefWidth="160.0" HBox.hgrow="ALWAYS">
+                      <children>
+                        <Label layoutX="0.0" layoutY="0.0" prefHeight="30.0" prefWidth="148.0" styleClass="dialog-field" text="" />
+                      </children>
+                    </Pane>
+                    <Button id="relationEditorAttributesDelete" fx:id="sourceEditorDelete" mnemonicParsing="false" text="-">
+                      <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" fx:id="x3" />
+                      </HBox.margin>
+                    </Button>
+                    <Button id="relationEditorAttributesAdd" fx:id="sourceEditorAdd" mnemonicParsing="false" prefWidth="46.0" text="+" HBox.margin="$x3" />
+                  </children>
+                </HBox>
+                <ListView fx:id="sourceEditorList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+              </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+              <children>
+                <HBox prefHeight="30.0" prefWidth="200.0">
+                  <children>
+                    <Label prefHeight="30.0" prefWidth="68.0" text="Name:">
+                      <HBox.margin>
+                        <Insets left="5.0" />
+                      </HBox.margin>
+                    </Label>
+                    <TextField fx:id="sourceEditorNameTextField" prefWidth="200.0" HBox.hgrow="ALWAYS" HBox.margin="$x3" />
+                  </children>
+                </HBox>
+                <Accordion>
+                  <expandedPane>
+                    <TitledPane fx:id="sourceEditorRESTRepositorySettings" animated="false" text="REST service repository">
+                      <content>
+                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                          <children>
+                            <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <children>
+                                <TextField prefWidth="148.0" HBox.hgrow="ALWAYS" HBox.margin="$x3" />
+                                <Button mnemonicParsing="false" prefWidth="109.0" text="Select file..." HBox.margin="$x3" />
+                                <Button mnemonicParsing="false" prefWidth="80.0" text="Import" HBox.margin="$x3" />
+                              </children>
+                            </HBox>
+                          </children>
+                        </AnchorPane>
+                      </content>
+                    </TitledPane>
+                  </expandedPane>
+                  <panes>
+                    <TitledPane fx:id="sourceEditorDatabaseSettings" animated="false" text="Database source">
+                      <content>
+                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                          <children>
+                            <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <children>
+                                <Label prefHeight="21.0" prefWidth="149.0" text="Driver:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                <ComboBox prefHeight="25.0" prefWidth="222.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                  <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                      <String fx:value="Item 1" />
+                                      <String fx:value="Item 2" />
+                                      <String fx:value="Item 3" />
+                                    </FXCollections>
+                                  </items>
+                                </ComboBox>
+                                <Label prefHeight="21.0" prefWidth="149.0" text="Connection URL:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                <Label prefHeight="21.0" prefWidth="149.0" text="Database name:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                <Label prefHeight="21.0" prefWidth="149.0" text="Login:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                <Label prefHeight="21.0" prefWidth="149.0" text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                <TextField prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <TextField prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                <TextField prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                <TextField prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              </children>
+                              <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="216.0" minWidth="10.0" prefWidth="115.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="226.0" minWidth="0.0" prefWidth="224.0" />
+                              </columnConstraints>
+                              <rowConstraints>
+                                <RowConstraints maxHeight="59.0" minHeight="10.0" prefHeight="59.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="58.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="58.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="58.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="58.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
+                              </rowConstraints>
+                            </GridPane>
+                          </children>
+                        </AnchorPane>
+                      </content>
+                    </TitledPane>
+                    <fx:reference source="sourceEditorRESTRepositorySettings" />
+                    <TitledPane fx:id="sourceEditorFormsCollectionSettings" animated="false" expanded="false" text="Forms collection">
+                      <content>
+                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                      </content>
+                    </TitledPane>
+                  </panes>
+                </Accordion>
+              </children>
+            </VBox>
+          </items>
+          <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </VBox.margin>
+        </SplitPane>
+      </children>
+    </VBox>
+  </center>
+  <top>
+    <HBox prefHeight="60.0" prefWidth="200.0">
+      <children>
+        <Label id="relationEditorTitle" fx:id="sourceEditorTitle" prefHeight="60.0" prefWidth="600.0" styleClass="dialog-title" text="Edit sources" HBox.hgrow="ALWAYS">
+          <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </HBox.margin>
+        </Label>
+      </children>
+    </HBox>
+  </top>
+</BorderPane>

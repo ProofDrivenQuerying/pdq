@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?scenebuilder-preview-i18n-resource ../i18n/ui.properties?>
+<?scenebuilder-stylesheet default.css?>
+
+<HBox prefHeight="440.0" prefWidth="572.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="uk.ac.ox.cs.pdq.ui.RelationController">
+  <children>
+    <VBox prefHeight="600.0" prefWidth="400.0">
+      <children>
+        <Label maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="100.0" styleClass="section-title" text="%relation.dialog.table.attributes" VBox.vgrow="NEVER" />
+        <TableView id="runtimeResults" fx:id="relationAttributes" editable="false" prefHeight="549.0" prefWidth="400.0" VBox.vgrow="ALWAYS">
+          <columns>
+            <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="121.0" text="%relation.dialog.table.attributes.name" fx:id="colAttributeName" />
+            <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="120.0" text="%relation.dialog.table.attributes.type" fx:id="colAttributeType" />
+          </columns>
+        </TableView>
+      </children>
+    </VBox>
+    <VBox prefHeight="549.0" prefWidth="392.0" HBox.hgrow="ALWAYS">
+      <children>
+        <Label maxHeight="30.0" minHeight="30.0" prefHeight="30.0" styleClass="section-title" text="%relation.dialog.table.accessMethods" VBox.vgrow="NEVER" />
+        <TableView id="runtimeResults" fx:id="relationAccessMethods" editable="false" prefHeight="271.9999000000025" prefWidth="484.0" VBox.vgrow="ALWAYS">
+          <columns>
+            <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="121.0" text="%relation.dialog.table.accessMethods.name" fx:id="colAccessMethodName" />
+            <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="120.0" text="%relation.dialog.table.accessMethods.type" fx:id="colAccessMethodType" />
+          </columns>
+        </TableView>
+      </children>
+    </VBox>
+  </children>
+  <stylesheets>
+    <URL value="@default.css" />
+  </stylesheets>
+</HBox>
