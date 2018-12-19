@@ -31,16 +31,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import org.junit.Assert;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SQLLikeQueryReader.
+ * The Class SQLLikeQueryParser.
  */
 public class SQLLikeQueryParser {
 	
 	/** The log. */
 	private static Logger log = Logger.getLogger(SQLLikeQueryParser.class);
 	
-	/** The schema. */
+	/** The tokens. */
 	private CommonTokenStream tokens;
 	
 	/** The where. */
