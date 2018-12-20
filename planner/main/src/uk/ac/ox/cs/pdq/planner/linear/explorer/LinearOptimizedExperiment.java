@@ -204,13 +204,24 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 				similarCandidates);
 		SearchNode freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
 		
-		boolean isRepresented = false;
+		boolean executeChase = true;
 		SearchNode selectedNodesRepresentative = equivalenceClasses.searchRepresentative(selectedNode);
-		if (equivalenceClasses.searchRepresentative(freshNode)!=null || selectedNodesRepresentative!=selectedNode) {
-			// either left or right side has representative
-			isRepresented = true;
-		}
+		List<SearchNode> wholeClass = equivalenceClasses.getEquivalenceClass(selectedNodesRepresentative);
 		
+		if (wholeClass!=null) {
+			// when there are equivalent classes, we can check if we have the selected candidate already exposed in one of them.
+			for (SearchNode sn : wholeClass) {
+				if (sn.getConfiguration()!=null && sn.getConfiguration().getExposedCandidates()!=null) {
+					for (Candidate c:sn.getConfiguration().getExposedCandidates()) {
+						if (c.isEqualAxiom(selectedCandidate)) {
+							//the selected candidate was already exposed in sn, so we can copy the facts
+							newConfiguration.getState().addFacts(sn.getConfiguration().getState().getFacts());
+							executeChase=false;			
+						}
+					}
+				}
+			}
+		}
 		freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
 		if (!freshNode.getConfiguration().hasCandidates())
 			freshNode.setStatus(NodeStatus.TERMINAL);
@@ -234,10 +245,10 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		this.planTree.addVertex(freshNode);
 		this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
 
-		boolean domination = false;
+		boolean dominated = false;
 		if (this.bestPlan != null) {
 			if (freshNode.getCostOfBestPlanFromRoot().greaterOrEquals(this.bestCost)) {
-				domination = true;
+				dominated = true;
 				freshNode.setDominatingPlan(this.bestPlan);
 				freshNode.setCostOfDominatingPlan(this.bestCost);
 				log.debug(freshNode.getBestPlanFromRoot() + " has higher cost than plan " + this.bestPlan + " Costs "
@@ -246,10 +257,10 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		}
 
 		// set dominating plan if there is one
-		if (!isRepresented && !domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
+		if (!dominated && this.costPropagator instanceof OrderIndependentCostPropagator) {
 			SearchNode dominatingNode = ExplorerUtility.isCostAndFactDominated(this.planTree.vertexSet(), freshNode);
 			if (dominatingNode != null) {
-				domination = true;
+				dominated = true;
 				freshNode.setDominatingPlan(dominatingNode.getConfiguration().getPlan());
 				freshNode.setCostOfDominatingPlan(dominatingNode.getConfiguration().getCost());
 				log.debug(dominatingNode.getConfiguration().getPlan() + " dominates "
@@ -258,14 +269,14 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 			}
 		}
 		
-		if (!domination) {
+		if (!dominated) {
 			SearchNode representative = this.equivalenceClasses.add(freshNode);
 			if (representative.equals(freshNode)) {
 				// this node is a new representative, so lets chase it.
 				// Close the newly created node using the inferred accessible dependencies of
 				// the accessible schema
 				// the close function will do a full reason until termination.
-				freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
+				if (executeChase) freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
 			} else {
 				// the fresh node has representative lets check if the fresh is better or not.
 				if (representative.getCostOfBestPlanFromRoot().greaterThan(freshNode.getCostOfBestPlanFromRoot())) {
@@ -282,12 +293,12 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 					this.updateBestPlan(selectedNode, freshNode, matches.get(0));
 				}
 			}
-			
 		} else {
 			// dominated node should be closed.
 			freshNode.setStatus(NodeStatus.TERMINAL);
 			this.eventBus.post(freshNode);
 		}
+		
 		return freshNode;
 	}
 

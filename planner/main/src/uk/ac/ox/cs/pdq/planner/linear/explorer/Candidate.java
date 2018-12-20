@@ -151,9 +151,8 @@ public class Candidate implements Cloneable{
 		}
 		return "EMPTY CANDIDATE";
 	}
-
-	public SearchNode getAsSearchNode() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public boolean isEqualAxiom(Candidate c) {
+		return this.rule.equals(c.rule) && this.input.equals(c.input);
 	}
 }

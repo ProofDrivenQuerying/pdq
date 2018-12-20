@@ -73,6 +73,13 @@ public class LinearEquivalenceClasses {
 		classes.put(newRep, eqClass);
 	}
 
+	/** Returns the list of all nodes in the given class. Returns null if the input representative is not a representative of any class. 
+	 * @param representative
+	 * @return
+	 */
+	public List<SearchNode> getEquivalenceClass(SearchNode representative) {
+		return classes.get(representative);
+	}
 	/**
 	 * Finds out if this is a known configuration and returns its representative (or
 	 * itself if it is a representative)
