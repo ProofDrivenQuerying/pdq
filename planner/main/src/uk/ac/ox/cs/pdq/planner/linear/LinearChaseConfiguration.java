@@ -55,8 +55,12 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	 * @param parent 		The parent linear configuration
 	 * @param candidatesToExpose 		The candidate facts exposed in this configuration
 	 */
-	public LinearChaseConfiguration(LinearChaseConfiguration parent, Set<Candidate> candidatesToExpose) {		
-		super(parent.getState().clone(), new LinkedHashSet<Constant>(), LinearUtility.getOutputConstants(candidatesToExpose));
+		
+	public LinearChaseConfiguration(LinearChaseConfiguration parent, Set<Candidate> candidatesToExpose) {
+		this(parent, candidatesToExpose, parent.getState().clone());
+	}
+	public LinearChaseConfiguration(LinearChaseConfiguration parent, Set<Candidate> candidatesToExpose, AccessibleChaseInstance state) {
+		super(state, new LinkedHashSet<Constant>(), LinearUtility.getOutputConstants(candidatesToExpose));
 		Assert.assertNotNull(parent);
 		Assert.assertTrue(candidatesToExpose!= null && !candidatesToExpose.isEmpty());
 		Assert.assertTrue(this.getInput() != null && this.getInput().isEmpty());

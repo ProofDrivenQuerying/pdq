@@ -200,9 +200,7 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		}
 
 		// Create a new node from the exposed facts and add it to the plan tree
-		LinearChaseConfiguration newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),
-				similarCandidates);
-		SearchNode freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
+		LinearChaseConfiguration newConfiguration = null;
 		
 		boolean executeChase = true;
 		SearchNode selectedNodesRepresentative = equivalenceClasses.searchRepresentative(selectedNode);
@@ -215,13 +213,17 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 					for (Candidate c:sn.getConfiguration().getExposedCandidates()) {
 						if (c.isEqualAxiom(selectedCandidate)) {
 							//the selected candidate was already exposed in sn, so we can copy the facts
-							newConfiguration.getState().addFacts(sn.getConfiguration().getState().getFacts());
+							newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates,sn.getConfiguration().getState().clone());
 							executeChase=false;			
 						}
 					}
 				}
 			}
 		}
+		if (newConfiguration == null)
+			newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates);
+		
+		SearchNode freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
 		freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
 		if (!freshNode.getConfiguration().hasCandidates())
 			freshNode.setStatus(NodeStatus.TERMINAL);
