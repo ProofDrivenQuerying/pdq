@@ -24,6 +24,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -43,6 +44,11 @@ public class PdqTest {
 	protected Variable y = Variable.create("y");
 	protected Variable z = Variable.create("z");
 	protected Variable w = Variable.create("w");
+	
+	protected UntypedConstant c1 = UntypedConstant.create("c1");
+	protected UntypedConstant c2 = UntypedConstant.create("c2");
+	protected UntypedConstant c3 = UntypedConstant.create("c3");
+	protected UntypedConstant c4 = UntypedConstant.create("c4");
 
 	/* example access methods */
 	protected AccessMethodDescriptor method0 = AccessMethodDescriptor.create(new Integer[] {});
