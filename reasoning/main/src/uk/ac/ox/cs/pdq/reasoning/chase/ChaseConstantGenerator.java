@@ -51,13 +51,13 @@ public final class ChaseConstantGenerator {
 	 *         variable name
 	 */
 	public static String getTriggerWitness(Dependency dependency, Map<Variable, Constant> mapping, Variable existentialVariable) {
-		String namesOfUniversalVariables = "";
+		String namesAndValuesOfUniversalVariables = "";
 		for (Variable variable : dependency.getUniversal()) {
 			Variable variableTerm = variable;
 			Preconditions.checkState(mapping.get(variableTerm) != null);
-			namesOfUniversalVariables += variable.getSymbol() + mapping.get(variableTerm);
+			namesAndValuesOfUniversalVariables += variable.getSymbol() + mapping.get(variableTerm);
 		}
-		String key = "TGD" + dependency.getId() + existentialVariable.getSymbol() + namesOfUniversalVariables;
+		String key = "TGD" + dependency.getId() + existentialVariable.getSymbol() + namesAndValuesOfUniversalVariables;
 		String result = cachedLabelledNulls.get(key);
 		if (result == null) {
 			result = getName(NON_CANONICAL_CONSTANT_PREFIX);
