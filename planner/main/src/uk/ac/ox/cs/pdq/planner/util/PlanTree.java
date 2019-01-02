@@ -1,6 +1,8 @@
 package uk.ac.ox.cs.pdq.planner.util;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -96,6 +98,20 @@ public class PlanTree<N extends SearchNode> extends IndexedDirectedGraph<N> impl
 		}
 		else {
 			return this.getEdgeSource(edges.iterator().next());
+		}
+	}
+	public List<N> getChildren(N parent) {
+		Preconditions.checkArgument(this.vertexSet().contains(parent));
+		Set<DefaultEdge> edges = this.outgoingEdgesOf(parent);
+		if(edges.isEmpty()) {
+			return new ArrayList<>();
+		}
+		else {
+			List<N> children = new ArrayList<>();
+			for (DefaultEdge edge:edges) {
+				children.add(this.getEdgeTarget(edge));
+			}
+			return children;
 		}
 	}
 }

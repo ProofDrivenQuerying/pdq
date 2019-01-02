@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import uk.ac.ox.cs.pdq.planner.equivalence.FastStructuralEquivalence;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
@@ -96,5 +97,18 @@ public class LinearEquivalenceClasses {
 				return eqClassRep;
 		}
 		return null;
+	}
+
+	/**Set of representatives.
+	 * @return
+	 */
+	public Set<SearchNode> getRepresentatives() {
+		return classes.keySet();
+	}
+
+	public List<SearchNode> getAllNodes() {
+		List<SearchNode> all = new ArrayList<>(); 
+		for (SearchNode eqClassRep : classes.keySet()) all.addAll(getEquivalenceClass(eqClassRep));
+		return all;
 	}
 }

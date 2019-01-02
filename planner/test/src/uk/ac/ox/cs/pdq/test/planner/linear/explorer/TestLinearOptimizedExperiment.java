@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -25,11 +26,15 @@ import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -41,8 +46,10 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimizedExperiment;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.equivalence.LinearEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
@@ -450,6 +457,137 @@ public class TestLinearOptimizedExperiment extends PdqTest {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@SuppressWarnings("rawtypes")	
+	@Test 
+	public void testNewOptimization() {
+		//Relations
+		Relation R = Relation.create("R", new Attribute[] {this.a},new AccessMethodDescriptor[] {method0});
+		Relation S = Relation.create("S", new Attribute[] {this.a},new AccessMethodDescriptor[] {method0});
+		Relation T = Relation.create("T", new Attribute[] {this.a},new AccessMethodDescriptor[] {method0});
+		Relation U = Relation.create("U", new Attribute[] {this.a},new AccessMethodDescriptor[] {method0});
+		
+		//Constraints Sigma= R(x) —> S(x),
+		TGD d1 = TGD.create(new Atom[] {Atom.create(R, new Term[] {x})}, new Atom[] {Atom.create(S, new Term[] {x})});
+		// S(x) —> R(x)
+		TGD d2 = TGD.create(new Atom[] {Atom.create(S, new Term[] {x})}, new Atom[] {Atom.create(R, new Term[] {x})});
+		// T(x) —> U(x)
+		TGD d3 = TGD.create(new Atom[] {Atom.create(T, new Term[] {x})}, new Atom[] {Atom.create(U, new Term[] {x})});
+		// U(x) —> T(x)
+		TGD d4 = TGD.create(new Atom[] {Atom.create(U, new Term[] {x})}, new Atom[] {Atom.create(T, new Term[] {x})});
+		
+		Schema s = new Schema(new Relation[] {R,S,T,U}, new Dependency[] {d1,d2,d3,d4});
+		ConjunctiveQuery cq = ConjunctiveQuery.create(new Variable[] {}, new Atom[] {Atom.create(R, new Term[] {x}), Atom.create(U, new Term[] {x})});
+		//Create accessible schema
+		AccessibleSchema accessibleSchema = new AccessibleSchema(s);
+		
+		//Create accessible query
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(cq);
+		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(cq);
+		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
+		substitutionFiltered.putAll(substitution);
+		for(Variable variable:cq.getBoundVariables()) 
+			substitutionFiltered.remove(variable);
+		ExplorationSetUp.getCanonicalSubstitution().put(cq,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(cq,substitutionFiltered);
+		ExplorationSetUp.getCanonicalSubstitution().put(accessibleQuery,substitution);
+		ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().put(accessibleQuery,substitutionFiltered);
+
+		//Create database connection
+		DatabaseManager databaseConnection = null;
+		try {
+			databaseConnection = createConnection(accessibleSchema);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+		
+		//Create the chaser 
+		RestrictedChaser chaser = new RestrictedChaser();
+		
+		//Create the cost estimator 
+		OrderIndependentCostEstimator costEstimator = new CountNumberOfAccessedRelationsCostEstimator();
+		
+		//Create the cost propagator
+		CostPropagator costPropagatpor = new OrderIndependentCostPropagator(costEstimator);
+				
+		//Mock the planner parameters
+		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
+		Mockito.reset(parameters);
+		when(parameters.getSeed()).thenReturn(1);
+		when(parameters.getMaxDepth()).thenReturn(3);
+		
+		//Create linear explorer
+		LinearOptimizedExperiment explorer = null;
+		try {
+			explorer = new LinearOptimizedExperiment(
+					new EventBus(), 
+					cq, 
+					accessibleSchema, 
+					chaser, 
+					databaseConnection, 
+					costEstimator,
+					costPropagatpor,
+					parameters.getMaxDepth(),
+					1);
+			SearchNode root = explorer.getPlanTree().getRoot();
+			Candidate candidateForN1 = root.getConfiguration().getCandidates().get(0);
+			Set<Candidate> candidates = root.getConfiguration().getSimilarCandidates(candidateForN1);
+			
+			// 2 steps of exploration:
+			// create n1
+			explorer.explorationStep(root, candidateForN1,candidates ,true);
+			// create n2
+			explorer.explorationStep(root, candidateForN1,candidates ,true);
+			
+			// Checking results:
+			PlanTree<SearchNode> planTree = explorer.getPlanTree();
+			LinearEquivalenceClasses classes = explorer.getLinearEquivalenceClasses();
+			// there should be two representative at this stage. One for n0[n0], and one for n1[n1,n2]
+			Assert.assertEquals(2, classes.getRepresentatives().size());
+			// root has no equal node.
+			Assert.assertEquals(1, classes.getEquivalenceClass(planTree.getRoot()).size());
+			// nodes 1 and 2 should be in the same classes
+			Assert.assertEquals(2, classes.getEquivalenceClass(planTree.getVertex(1)).size());
+			Assert.assertEquals(2, classes.getEquivalenceClass(classes.searchRepresentative(planTree.getVertex(2))).size());
+			Assert.assertEquals(classes.searchRepresentative(planTree.getVertex(1)),classes.searchRepresentative(planTree.getVertex(2)));
+			
+			Candidate candidateForN3 = planTree.getVertex(1).getConfiguration().getCandidates().get(1);
+			Set<Candidate> candidatesN3 = root.getConfiguration().getSimilarCandidates(candidateForN3);
+			Candidate candidateForN4 = planTree.getVertex(2).getConfiguration().getCandidates().get(1);
+			Set<Candidate> candidatesN4 = root.getConfiguration().getSimilarCandidates(candidateForN3);
+			// 2 more steps of exploration:
+			// create n3
+			explorer.explorationStep(planTree.getVertex(1), candidateForN3,candidatesN3 ,true);
+			// create n4 -- Since n3 is a successful node already, 
+			// therefore a new node was created throwing off the node numbering by one. this means the N4 node's verted ID will be 5.
+			explorer.explorationStep(planTree.getVertex(2), candidateForN4,candidatesN4 ,true);
+			
+			// assert equality classes
+			// there should be three representative at this stage: n0[n0],n1[n1,n2],n3[n3,n4]
+			Assert.assertEquals(3, classes.getRepresentatives().size());
+			// root has no equal node.
+			Assert.assertEquals(1, classes.getEquivalenceClass(planTree.getRoot()).size());
+			// nodes 1 and 2 should be in the same classes
+			Assert.assertEquals(2, classes.getEquivalenceClass(planTree.getVertex(1)).size());
+			Assert.assertEquals(2, classes.getEquivalenceClass(classes.searchRepresentative(planTree.getVertex(2))).size());
+			Assert.assertEquals(classes.searchRepresentative(planTree.getVertex(1)),classes.searchRepresentative(planTree.getVertex(2)));
+
+			// making sure n3 and n4 are equal
+			int N3 = 3;
+			int N4 = 5;// the vertex ID is off by one node that was created internally when we created n3.
+			Assert.assertEquals(2, classes.getEquivalenceClass(planTree.getVertex(N3)).size());
+			Assert.assertEquals(2, classes.getEquivalenceClass(classes.searchRepresentative(planTree.getVertex(N4))).size());
+			Assert.assertEquals(classes.searchRepresentative(planTree.getVertex(N3)),classes.searchRepresentative(planTree.getVertex(N4)));
+			
+		} catch (PlannerException | SQLException e) {
+			e.printStackTrace();
+			Assert.fail();
+		} catch (LimitReachedException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
 	}
 
 }

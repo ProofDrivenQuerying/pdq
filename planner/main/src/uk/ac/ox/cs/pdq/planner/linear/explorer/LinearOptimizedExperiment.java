@@ -177,9 +177,8 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 	 * @throws LimitReachedException
 	 *             the limit reached exception
 	 */
-	protected SearchNode explorationStep(SearchNode selectedNode) throws PlannerException, LimitReachedException {
+	public SearchNode explorationStep(SearchNode selectedNode) throws PlannerException, LimitReachedException {
 		LinearConfiguration selectedConfig = selectedNode.getConfiguration();
-
 		/*
 		 * Choose a new candidate fact. A candidate fact F(c1,c2,...,cN) is one for
 		 * which (i) there exists Accessible(c_i) facts for any c_i (ii)
@@ -190,11 +189,16 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 			selectedNode.setStatus(NodeStatus.TERMINAL);
 			return null;
 		}
-
 		// Search for other candidate facts that could be exposed along with the
 		// selected candidate.
 		Set<Candidate> similarCandidates = selectedConfig.getSimilarCandidates(selectedCandidate);
+		//if (test ) similarCandidates.add(selectedCandidate);
 		selectedConfig.removeCandidates(similarCandidates);
+		return this.explorationStep(selectedNode, selectedCandidate,similarCandidates,false);
+	}
+	public SearchNode explorationStep(SearchNode selectedNode,Candidate selectedCandidate, Set<Candidate> similarCandidates, boolean test) throws PlannerException, LimitReachedException {
+		LinearConfiguration selectedConfig = selectedNode.getConfiguration();
+
 		if (!selectedConfig.hasCandidates()) {
 			selectedNode.setStatus(NodeStatus.TERMINAL);
 		}
@@ -205,16 +209,17 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		boolean executeChase = true;
 		SearchNode selectedNodesRepresentative = equivalenceClasses.searchRepresentative(selectedNode);
 		List<SearchNode> wholeClass = equivalenceClasses.getEquivalenceClass(selectedNodesRepresentative);
+		//List<SearchNode> wholeClass = equivalenceClasses.getAllNodes();
 		
 		if (wholeClass!=null) {
 			// when there are equivalent classes, we can check if we have the selected candidate already exposed in one of them.
 			for (SearchNode sn : wholeClass) {
 				if (sn.getConfiguration()!=null && sn.getConfiguration().getExposedCandidates()!=null) {
-					for (Candidate c:sn.getConfiguration().getExposedCandidates()) {
+					for (Candidate c:getExposedCandidatesOf(sn)) {
 						if (c.isEqualAxiom(selectedCandidate)) {
 							//the selected candidate was already exposed in sn, so we can copy the facts
 							newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates,sn.getConfiguration().getState().clone());
-							executeChase=false;			
+							executeChase=false;
 						}
 					}
 				}
@@ -224,6 +229,11 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 			newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates);
 		
 		SearchNode freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
+		if (!executeChase) {
+			this.equivalenceClasses.add(freshNode);
+		}
+
+		
 		freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
 		if (!freshNode.getConfiguration().hasCandidates())
 			freshNode.setStatus(NodeStatus.TERMINAL);
@@ -272,20 +282,20 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		}
 		
 		if (!dominated) {
-			SearchNode representative = this.equivalenceClasses.add(freshNode);
-			if (representative.equals(freshNode)) {
+//			if (representative.equals(freshNode)) {
 				// this node is a new representative, so lets chase it.
 				// Close the newly created node using the inferred accessible dependencies of
 				// the accessible schema
 				// the close function will do a full reason until termination.
 				if (executeChase) freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
-			} else {
-				// the fresh node has representative lets check if the fresh is better or not.
-				if (representative.getCostOfBestPlanFromRoot().greaterThan(freshNode.getCostOfBestPlanFromRoot())) {
-					equivalenceClasses.updateRepresentative(representative, freshNode);
-				}
-			}
-			/* Check for query match */
+				this.equivalenceClasses.add(freshNode);
+//			} else {
+//				// the fresh node has representative lets check if the fresh is better or not.
+//				if (representative.getCostOfBestPlanFromRoot().greaterThan(freshNode.getCostOfBestPlanFromRoot())) {
+//					equivalenceClasses.updateRepresentative(representative, freshNode);
+//				}
+//			}
+//			/* Check for query match */
 			if (this.rounds % this.queryMatchInterval == 0) {
 				List<Match> matches = freshNode.matchesQuery(this.accessibleQuery);
 
@@ -302,6 +312,15 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		}
 		
 		return freshNode;
+	}
+
+	private Set<Candidate> getExposedCandidatesOf(SearchNode sn) {
+		Set<Candidate> candidates = new HashSet<>();
+		candidates.addAll(sn.getConfiguration().getExposedCandidates());
+		for (SearchNode child:planTree.getChildren(sn)) {
+			candidates.addAll(child.getConfiguration().getExposedCandidates());
+		}
+		return candidates;
 	}
 
 	/**
@@ -359,7 +378,13 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 			log.trace("\t+++BEST PLAN: " + AlgebraUtilities.getAccesses(this.bestPlan) + " " + this.bestCost);
 		}
 	}
-
+	
+	/** For testing purposes we can return the inner field LinearEquivalenceClasses
+	 * @return
+	 */
+	public LinearEquivalenceClasses getLinearEquivalenceClasses() {
+		return equivalenceClasses;
+	}
 	/**
 	 * @return postPruning
 	 */
