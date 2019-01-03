@@ -196,6 +196,7 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		selectedConfig.removeCandidates(similarCandidates);
 		return this.explorationStep(selectedNode, selectedCandidate,similarCandidates,false);
 	}
+	
 	public SearchNode explorationStep(SearchNode selectedNode,Candidate selectedCandidate, Set<Candidate> similarCandidates, boolean test) throws PlannerException, LimitReachedException {
 		LinearConfiguration selectedConfig = selectedNode.getConfiguration();
 
@@ -209,26 +210,21 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		boolean executeChase = true;
 		SearchNode selectedNodesRepresentative = equivalenceClasses.searchRepresentative(selectedNode);
 		List<SearchNode> wholeClass = equivalenceClasses.getEquivalenceClass(selectedNodesRepresentative);
-		//List<SearchNode> wholeClass = equivalenceClasses.getAllNodes();
 		
-		if (wholeClass!=null) {
-			// when there are equivalent classes, we can check if we have the selected candidate already exposed in one of them.
-			for (SearchNode sn : wholeClass) {
-				if (sn.getConfiguration()!=null && sn.getConfiguration().getExposedCandidates()!=null) {
-					for (Candidate c:getExposedCandidatesOf(sn)) {
-						if (c.isEqualAxiom(selectedCandidate)) {
-							//the selected candidate was already exposed in sn, so we can copy the facts
-							SearchNode nodeToClone = getExposedByCandidates(sn,c);
-							if (nodeToClone!=null) {
-								newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates,nodeToClone.getConfiguration().getState().clone());
-								executeChase=false;
-							}
-						}
+		// when there are equivalent classes, we can check if we have the selected candidate already exposed in one of them.
+		for (SearchNode sn : wholeClass) {
+			if (sn.getConfiguration().getExposedCandidates()!=null) {
+				for (Candidate c:getExposedCandidatesOf(sn)) {
+					if (c.isEqualAxiom(selectedCandidate)) {
+						//the selected candidate was already exposed in sn, so we can copy the facts
+						SearchNode nodeToClone = getExposedByCandidates(sn,c);
+						newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates,nodeToClone.getConfiguration().getState().clone());
+						executeChase=false;
 					}
 				}
 			}
 		}
-		if (newConfiguration == null)
+		if (executeChase)
 			newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates);
 		
 		SearchNode freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
