@@ -4,13 +4,13 @@
         <RelationalTerm type="JoinTerm">
             <RelationalTerm type="JoinTerm">
                 <RelationalTerm type="RenameTerm">
-                    <renamings name="c16" type="java.lang.Integer"/>
-                    <renamings name="c5" type="java.lang.String"/>
-                    <renamings name="c17" type="java.lang.String"/>
-                    <renamings name="c18" type="java.lang.Integer"/>
-                    <renamings name="c19" type="java.lang.String"/>
-                    <renamings name="c20" type="java.math.BigDecimal"/>
-                    <renamings name="c21" type="java.lang.String"/>
+                    <renamings name="v_x191433741593" type="java.lang.Integer"/>
+                    <renamings name="v_x61433741593" type="java.lang.String"/>
+                    <renamings name="v_x211433741593" type="java.lang.String"/>
+                    <renamings name="v_x221433741593" type="java.lang.Integer"/>
+                    <renamings name="v_x231433741593" type="java.lang.String"/>
+                    <renamings name="v_x241433741593" type="java.math.BigDecimal"/>
+                    <renamings name="v_x251433741593" type="java.lang.String"/>
                     <RelationalTerm type="AccessTerm">
                         <accessMethod name="m6"/>
                         <relation name="supplier">
@@ -27,13 +27,13 @@
                     </RelationalTerm>
                 </RelationalTerm>
                 <RelationalTerm type="RenameTerm">
-                    <renamings name="c1" type="java.lang.Integer"/>
-                    <renamings name="c5" type="java.lang.String"/>
-                    <renamings name="c6" type="java.lang.String"/>
-                    <renamings name="c7" type="java.lang.Integer"/>
-                    <renamings name="c8" type="java.lang.String"/>
-                    <renamings name="c9" type="java.math.BigDecimal"/>
-                    <renamings name="c10" type="java.lang.String"/>
+                    <renamings name="v_x11433741593" type="java.lang.Integer"/>
+                    <renamings name="v_x61433741593" type="java.lang.String"/>
+                    <renamings name="fv_x71433741593" type="java.lang.String"/>
+                    <renamings name="v_x81433741593" type="java.lang.Integer"/>
+                    <renamings name="fv_x91433741593" type="java.lang.String"/>
+                    <renamings name="fv_x101433741593" type="java.math.BigDecimal"/>
+                    <renamings name="v_x111433741593" type="java.lang.String"/>
                     <RelationalTerm type="AccessTerm">
                         <accessMethod name="m6"/>
                         <relation name="supplier">
@@ -51,11 +51,11 @@
                 </RelationalTerm>
             </RelationalTerm>
             <RelationalTerm type="RenameTerm">
-                <renamings name="c0" type="java.lang.Integer"/>
-                <renamings name="c1" type="java.lang.Integer"/>
-                <renamings name="c2" type="java.lang.Integer"/>
-                <renamings name="c3" type="java.math.BigDecimal"/>
-                <renamings name="c4" type="java.lang.String"/>
+                <renamings name="v_x01433741593" type="java.lang.Integer"/>
+                <renamings name="v_x11433741593" type="java.lang.Integer"/>
+                <renamings name="fv_x21433741593" type="java.lang.Integer"/>
+                <renamings name="v_x31433741593" type="java.math.BigDecimal"/>
+                <renamings name="v_x41433741593" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
                     <accessMethod name="m8"/>
                     <relation name="partsupp">
@@ -70,38 +70,74 @@
                 </RelationalTerm>
             </RelationalTerm>
         </RelationalTerm>
+        <RelationalTerm type="JoinTerm">
+            <RelationalTerm type="RenameTerm">
+                <renamings name="v_x81433741593" type="java.lang.Integer"/>
+                <renamings name="v_x131433741593" type="java.lang.String"/>
+                <renamings name="v_x141433741593" type="java.lang.Integer"/>
+                <renamings name="fv_x151433741593" type="java.lang.String"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="m10"/>
+                    <relation name="nation">
+                        <attribute name="n_nationkey" type="java.lang.Integer"/>
+                        <attribute name="n_name" type="java.lang.String"/>
+                        <attribute name="n_regionkey" type="java.lang.Integer"/>
+                        <attribute name="n_comment" type="java.lang.String"/>
+                        <access-method name="m10"/>
+                        <access-method name="m11" inputs="1,2"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="v_x221433741593" type="java.lang.Integer"/>
+                <renamings name="k8" type="java.lang.String"/>
+                <renamings name="k9" type="java.lang.Integer"/>
+                <renamings name="k10" type="java.lang.String"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="m10"/>
+                    <relation name="nation">
+                        <attribute name="n_nationkey" type="java.lang.Integer"/>
+                        <attribute name="n_name" type="java.lang.String"/>
+                        <attribute name="n_regionkey" type="java.lang.Integer"/>
+                        <attribute name="n_comment" type="java.lang.String"/>
+                        <access-method name="m10"/>
+                        <access-method name="m11" inputs="1,2"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+    <RelationalTerm type="JoinTerm">
         <RelationalTerm type="RenameTerm">
-            <renamings name="c7" type="java.lang.Integer"/>
-            <renamings name="c11" type="java.lang.String"/>
-            <renamings name="c12" type="java.lang.Integer"/>
-            <renamings name="c13" type="java.lang.String"/>
+            <renamings name="k9" type="java.lang.Integer"/>
+            <renamings name="k11" type="java.lang.String"/>
+            <renamings name="k12" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
-                <accessMethod name="m10"/>
-                <relation name="nation">
-                    <attribute name="n_nationkey" type="java.lang.Integer"/>
-                    <attribute name="n_name" type="java.lang.String"/>
-                    <attribute name="n_regionkey" type="java.lang.Integer"/>
-                    <attribute name="n_comment" type="java.lang.String"/>
-                    <access-method name="m10"/>
-                    <access-method name="m11" inputs="1,2"/>
+                <accessMethod name="m12"/>
+                <relation name="region">
+                    <attribute name="r_regionkey" type="java.lang.Integer"/>
+                    <attribute name="r_name" type="java.lang.String"/>
+                    <attribute name="r_comment" type="java.lang.String"/>
+                    <access-method name="m12"/>
+                    <access-method name="m13" inputs="1"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="RenameTerm">
+            <renamings name="v_x141433741593" type="java.lang.Integer"/>
+            <renamings name="fv_x171433741593" type="java.lang.String"/>
+            <renamings name="v_x181433741593" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="m12"/>
+                <relation name="region">
+                    <attribute name="r_regionkey" type="java.lang.Integer"/>
+                    <attribute name="r_name" type="java.lang.String"/>
+                    <attribute name="r_comment" type="java.lang.String"/>
+                    <access-method name="m12"/>
+                    <access-method name="m13" inputs="1"/>
                 </relation>
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
-    <RelationalTerm type="RenameTerm">
-        <renamings name="c12" type="java.lang.Integer"/>
-        <renamings name="c14" type="java.lang.String"/>
-        <renamings name="c15" type="java.lang.String"/>
-        <RelationalTerm type="AccessTerm">
-            <accessMethod name="m12"/>
-            <relation name="region">
-                <attribute name="r_regionkey" type="java.lang.Integer"/>
-                <attribute name="r_name" type="java.lang.String"/>
-                <attribute name="r_comment" type="java.lang.String"/>
-                <access-method name="m12"/>
-                <access-method name="m13" inputs="1"/>
-            </relation>
-        </RelationalTerm>
-    </RelationalTerm>
-    <cost value="536199.8551902937" type="DoubleCost"/>
+    <cost value="7334700.981529176" type="DoubleCost"/>
 </RelationalTermWithCost>
