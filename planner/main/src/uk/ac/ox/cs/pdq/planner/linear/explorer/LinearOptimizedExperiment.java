@@ -194,10 +194,13 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		Set<Candidate> similarCandidates = selectedConfig.getSimilarCandidates(selectedCandidate);
 		//if (test ) similarCandidates.add(selectedCandidate);
 		selectedConfig.removeCandidates(similarCandidates);
-		return this.explorationStep(selectedNode, selectedCandidate,similarCandidates,false);
+		return this.explorationStep(selectedNode, selectedCandidate,similarCandidates);
 	}
 	
-	public SearchNode explorationStep(SearchNode selectedNode,Candidate selectedCandidate, Set<Candidate> similarCandidates, boolean test) throws PlannerException, LimitReachedException {
+	/** 
+	 * Same as the explorationStep function above, but the parameters are broke down to support testing better.
+	 */
+	public SearchNode explorationStep(SearchNode selectedNode,Candidate selectedCandidate, Set<Candidate> similarCandidates) throws PlannerException, LimitReachedException {
 		LinearConfiguration selectedConfig = selectedNode.getConfiguration();
 
 		if (!selectedConfig.hasCandidates()) {
@@ -207,32 +210,33 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		// Create a new node from the exposed facts and add it to the plan tree
 		LinearChaseConfiguration newConfiguration = null;
 		
+		SearchNode freshNode = null;
 		boolean executeChase = true;
 		SearchNode selectedNodesRepresentative = equivalenceClasses.searchRepresentative(selectedNode);
 		List<SearchNode> wholeClass = equivalenceClasses.getEquivalenceClass(selectedNodesRepresentative);
 		
 		// when there are equivalent classes, we can check if we have the selected candidate already exposed in one of them.
+		SearchNode nodeToClone = null;
 		for (SearchNode sn : wholeClass) {
-			if (sn.getConfiguration().getExposedCandidates()!=null) {
+			if (executeChase && sn.getConfiguration().getExposedCandidates()!=null) {
 				for (Candidate c:getExposedCandidatesOf(sn)) {
 					if (c.isEqualAxiom(selectedCandidate)) {
 						//the selected candidate was already exposed in sn, so we can copy the facts
-						SearchNode nodeToClone = getExposedByCandidates(sn,c);
+						nodeToClone = getExposedByCandidates(sn,c);
 						newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates,nodeToClone.getConfiguration().getState().clone());
 						executeChase=false;
+						freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
+						this.equivalenceClasses.add(nodeToClone, freshNode);
+						break;
 					}
 				}
 			}
 		}
-		if (executeChase)
+		if (executeChase) {
+			// when we havent
 			newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates);
-		
-		SearchNode freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
-		if (!executeChase) {
-			this.equivalenceClasses.add(freshNode);
+			freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
 		}
-
-		
 		freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
 		if (!freshNode.getConfiguration().hasCandidates())
 			freshNode.setStatus(NodeStatus.TERMINAL);
@@ -285,7 +289,8 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 			// Close the newly created node using the inferred accessible dependencies of
 			// the accessible schema
 			// the close function will do a full reason until termination.
-			if (executeChase) freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
+			if (executeChase) 
+				freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
 			this.equivalenceClasses.add(freshNode);
 			/* Check for query match */
 			if (this.rounds % this.queryMatchInterval == 0) {

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.planner.equivalence.FastStructuralEquivalence;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 
@@ -57,6 +59,22 @@ public class LinearEquivalenceClasses {
 		eqClass.add(config);
 		classes.put(config, eqClass);
 		return config;
+	}
+	
+	/** Same as the normal add, but we have a known representative.
+	 * @param classRep
+	 * @param nodeToAdd
+	 */
+	public void add(SearchNode classRep, SearchNode nodeToAdd) {
+		Preconditions.checkNotNull(classRep);
+		Preconditions.checkNotNull(nodeToAdd);
+		// classRep is a representative
+		Preconditions.checkArgument(classes.keySet().contains(classRep));
+		// node to add is a new node.
+		Preconditions.checkArgument(!classes.get(classRep).contains(nodeToAdd));
+		
+		// actual adding to class
+		classes.get(classRep).add(nodeToAdd);
 	}
 
 	/**
@@ -111,4 +129,5 @@ public class LinearEquivalenceClasses {
 		for (SearchNode eqClassRep : classes.keySet()) all.addAll(getEquivalenceClass(eqClassRep));
 		return all;
 	}
+
 }

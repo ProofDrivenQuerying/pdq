@@ -299,7 +299,7 @@ public class TestLinearOptimizedExperiment extends PdqTest {
 	}
 	
 	/**
-	 * Tests with scenario3, asserts that all plans are dominated by the best plan.
+	 * Tests with PdqTest.scenario3, asserts that all plans are dominated by the best plan.
 	 */
 	@SuppressWarnings("rawtypes")
 	@Test 
@@ -459,6 +459,69 @@ public class TestLinearOptimizedExperiment extends PdqTest {
 		return null;
 	}
 	
+	/**
+	 * <pre>
+	 * Let the query Q= R(x) wedge U(x)
+	 * 
+	 * 
+	 * 
+	 *  Constraints Sigma= R(x) —> S(x), S(x) —> R(x), T(x) —> U(x), U(x) —> T(x)
+	 *  So constraint copy Sigma’= InfaccR(x) —> InfaccS(x), InfaccS(x) —> InfaccR(x)
+	 *  InfaccT(x)—> InfaccU(x), InfaccU(x) —> InfaccT(x)
+	 *  
+	 *  Free access on R, S, T, U
+	 *  Initial configuration after chasing canonicaldb of
+	 *  Q is n0= {R(x0), S(x0), T(x0), U(x0)}; obbviously n0  is its
+	 *  own representative
+
+	 *  Candidates in n0 R(x0), S(x0), T(x0), U(x0)
+	 *  
+	 *  
+	 *  1) Explore candidate R(x0) in n0
+	 *  
+	 *  
+	 *  create child node n1 initially with InfaccR(x0), 
+	 *  
+	 *  we haven’t already exposed R(x0) in an equivalent node,
+	 *  so chase to get 
+	 *  InfaccR(x0), InfaccS(x0)
+	 *  
+	 *  check for equivalent node after chasing, but there is none,
+	 *  so n1 is its own representative.
+	 *  
+	 *  Current tree: n0 with child n1
+	 *  
+	 *  2) Explore candidate R(x0) in n0
+	 *  
+	 *  created child node n2 initially adding on InfaccS(x0)
+	 *  
+	 *  again, we have not already exposed R(x0) in an equivalent
+	 *  node, so chase to get InfaccS(x0), InfaccR(x0). n2 is equivalent
+	 *  to n1, so set n1 to be the representative of n2
+	 *  
+	 *  Current tree: n0 with children n1 and n2, with n1 and n2 equivalent
+	 *  
+	 *  3) Explore candidate T(x0) in n1
+	 *  
+	 *  create child node n3 initially adding InfaccT(x0)
+	 *  we have not already exposed T(x0) in n1, so chase
+	 *  to get InfaccU(x0). 
+	 *  n3 is not equivalent to any existing node, so set n3 to be its
+	 *  own representative
+	 *  
+	 *  Current tree: n0 with children n1 and n2; n1 has child n3
+	 *  
+	 *  4) Explore candidate T(x0) in n2
+	 *  
+	 *  Create a new node n4
+	 *  We have already exposed T(x0) in n1, so re-use the configuration of
+	 *  n3 to get the configuration of n4, set representative of n4 to n3
+	 *  
+	 *  Current tree:no with children n1 and n2 that are equivalent;
+	 *  n1 has child n3, n2 has child n4; n3 and n4 are also equivalent
+	 * </pre>
+	 * 
+	 */
 	@SuppressWarnings("rawtypes")	
 	@Test 
 	public void testNewOptimization() {
@@ -537,9 +600,9 @@ public class TestLinearOptimizedExperiment extends PdqTest {
 			
 			// 2 steps of exploration:
 			// create n1
-			explorer.explorationStep(root, candidateForN1,candidates ,true);
+			explorer.explorationStep(root, candidateForN1,candidates);
 			// create n2
-			explorer.explorationStep(root, candidateForN1,candidates ,true);
+			explorer.explorationStep(root, candidateForN1,candidates);
 			
 			// Checking results:
 			PlanTree<SearchNode> planTree = explorer.getPlanTree();
@@ -559,11 +622,11 @@ public class TestLinearOptimizedExperiment extends PdqTest {
 			Set<Candidate> candidatesN4 = root.getConfiguration().getSimilarCandidates(candidateForN3);
 			// 2 more steps of exploration:
 			// create n3
-			explorer.explorationStep(planTree.getVertex(1), candidateForN3,candidatesN3 ,true);
+			explorer.explorationStep(planTree.getVertex(1), candidateForN3,candidatesN3);
 			// create n4 -- Since n3 is a successful node already, 
 			// therefore a new node was created throwing off the node numbering by one. this means the N4 node's verted ID will be 5.
-			explorer.explorationStep(planTree.getVertex(2), candidateForN4,candidatesN4 ,true);
-			
+			explorer.explorationStep(planTree.getVertex(2), candidateForN4,candidatesN4);
+			 
 			// assert equality classes
 			// there should be three representative at this stage: n0[n0],n1[n1,n2],n3[n3,n4]
 			Assert.assertEquals(3, classes.getRepresentatives().size());
