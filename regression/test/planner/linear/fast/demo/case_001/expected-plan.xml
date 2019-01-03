@@ -1,90 +1,97 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RelationalTermWithCost type="DependentJoinTerm">
+<RelationalTermWithCost type="ProjectionTerm">
+    <projections name="fv_city1983948209" type="java.lang.String"/>
+    <projections name="fv_country1983948209" type="java.lang.String"/>
+    <projections name="fv_region1983948209" type="java.lang.String"/>
+    <projections name="fv_temperature1983948209" type="java.lang.Double"/>
+    <projections name="fv_condition1983948209" type="java.lang.String"/>
     <RelationalTerm type="DependentJoinTerm">
         <RelationalTerm type="RenameTerm">
             <renamings name="iso" type="java.lang.String"/>
             <renamings name="FR" type="java.lang.String"/>
-            <renamings name="c0" type="java.lang.String"/>
+            <renamings name="v_place11983948209" type="java.lang.Integer"/>
             <RelationalTerm type="AccessTerm">
                 <accessMethod name="yh_geo_code" inputs="0,1"/>
                 <relation name="YahooPlaceCode">
                     <attribute name="namespace" type="java.lang.String"/>
                     <attribute name="code" type="java.lang.String"/>
-                    <attribute name="woeid" type="java.lang.String"/>
+                    <attribute name="woeid" type="java.lang.Integer"/>
                     <access-method name="yh_geo_code" inputs="0,1"/>
                 </relation>
             </RelationalTerm>
         </RelationalTerm>
-        <RelationalTerm type="RenameTerm">
-            <renamings name="children" type="java.lang.String"/>
-            <renamings name="c0" type="java.lang.String"/>
-            <renamings name="c1" type="java.lang.String"/>
-            <renamings name="c2" type="java.lang.String"/>
-            <renamings name="c3" type="java.lang.String"/>
-            <renamings name="c4" type="java.lang.String"/>
-            <RelationalTerm type="AccessTerm">
-                <accessMethod name="yh_geo_rel" inputs="0,1"/>
-                <relation name="YahooPlaceRelationship">
-                    <attribute name="relation" type="java.lang.String"/>
-                    <attribute name="of" type="java.lang.String"/>
-                    <attribute name="woeid" type="java.lang.String"/>
-                    <attribute name="placeTypeName" type="java.lang.String"/>
-                    <attribute name="name" type="java.lang.String"/>
-                    <attribute name="uri" type="java.lang.String"/>
-                    <access-method name="yh_geo_rel" inputs="0,1"/>
-                </relation>
+        <RelationalTerm type="DependentJoinTerm">
+            <RelationalTerm type="RenameTerm">
+                <renamings name="children" type="java.lang.String"/>
+                <renamings name="v_place11983948209" type="java.lang.Integer"/>
+                <renamings name="v_place21983948209" type="java.lang.Integer"/>
+                <renamings name="v_x91983948209" type="java.lang.String"/>
+                <renamings name="v_x101983948209" type="java.lang.String"/>
+                <renamings name="v_x111983948209" type="java.lang.String"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="yh_geo_rel" inputs="0,1"/>
+                    <relation name="YahooPlaceRelationship">
+                        <attribute name="relation" type="java.lang.String"/>
+                        <attribute name="of" type="java.lang.Integer"/>
+                        <attribute name="woeid" type="java.lang.Integer"/>
+                        <attribute name="placeTypeName" type="java.lang.String"/>
+                        <attribute name="name" type="java.lang.String"/>
+                        <attribute name="uri" type="java.lang.String"/>
+                        <access-method name="yh_geo_rel" inputs="0,1"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="v_place21983948209" type="java.lang.Integer"/>
+                <renamings name="fv_city1983948209" type="java.lang.String"/>
+                <renamings name="fv_country1983948209" type="java.lang.String"/>
+                <renamings name="fv_region1983948209" type="java.lang.String"/>
+                <renamings name="v_distance_unit1983948209" type="java.lang.String"/>
+                <renamings name="v_pressure_unit1983948209" type="java.lang.String"/>
+                <renamings name="v_speed_unit1983948209" type="java.lang.String"/>
+                <renamings name="v_temp_unit1983948209" type="java.lang.String"/>
+                <renamings name="v_wind_chill1983948209" type="java.lang.Integer"/>
+                <renamings name="v_wind_direction1983948209" type="java.lang.Integer"/>
+                <renamings name="v_wind_speed1983948209" type="java.lang.String"/>
+                <renamings name="v_humidity1983948209" type="java.lang.Double"/>
+                <renamings name="v_pressure1983948209" type="java.lang.Double"/>
+                <renamings name="v_rising1983948209" type="java.lang.Integer"/>
+                <renamings name="v_visibility1983948209" type="java.lang.Double"/>
+                <renamings name="v_sunrise1983948209" type="java.lang.String"/>
+                <renamings name="v_sunset1983948209" type="java.lang.String"/>
+                <renamings name="v_date1983948209" type="java.lang.String"/>
+                <renamings name="fv_temperature1983948209" type="java.lang.Double"/>
+                <renamings name="fv_condition1983948209" type="java.lang.String"/>
+                <renamings name="v_code1983948209" type="java.lang.Integer"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="yh_wtr_woeid" inputs="0"/>
+                    <relation name="YahooWeather">
+                        <attribute name="woeid" type="java.lang.Integer"/>
+                        <attribute name="city" type="java.lang.String"/>
+                        <attribute name="country" type="java.lang.String"/>
+                        <attribute name="region" type="java.lang.String"/>
+                        <attribute name="distance_unit" type="java.lang.String"/>
+                        <attribute name="pressure_unit" type="java.lang.String"/>
+                        <attribute name="speed_unit" type="java.lang.String"/>
+                        <attribute name="temp_unit" type="java.lang.String"/>
+                        <attribute name="wind_chill" type="java.lang.Integer"/>
+                        <attribute name="wind_direction" type="java.lang.Integer"/>
+                        <attribute name="wind_speed" type="java.lang.String"/>
+                        <attribute name="humidity" type="java.lang.Double"/>
+                        <attribute name="pressure" type="java.lang.Double"/>
+                        <attribute name="rising" type="java.lang.Integer"/>
+                        <attribute name="visibility" type="java.lang.Double"/>
+                        <attribute name="sunrise" type="java.lang.String"/>
+                        <attribute name="sunset" type="java.lang.String"/>
+                        <attribute name="date" type="java.lang.String"/>
+                        <attribute name="temperature" type="java.lang.Double"/>
+                        <attribute name="condition" type="java.lang.String"/>
+                        <attribute name="code" type="java.lang.Integer"/>
+                        <access-method name="yh_wtr_woeid" inputs="0"/>
+                    </relation>
+                </RelationalTerm>
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
-    <RelationalTerm type="RenameTerm">
-        <renamings name="c1" type="java.lang.String"/>
-        <renamings name="c5" type="java.lang.String"/>
-        <renamings name="c6" type="java.lang.String"/>
-        <renamings name="c7" type="java.lang.String"/>
-        <renamings name="c8" type="java.lang.String"/>
-        <renamings name="c9" type="java.lang.String"/>
-        <renamings name="c10" type="java.lang.String"/>
-        <renamings name="c11" type="java.lang.String"/>
-        <renamings name="c12" type="java.lang.String"/>
-        <renamings name="c13" type="java.lang.String"/>
-        <renamings name="c14" type="java.lang.String"/>
-        <renamings name="c15" type="java.lang.String"/>
-        <renamings name="c16" type="java.lang.String"/>
-        <renamings name="c17" type="java.lang.String"/>
-        <renamings name="c18" type="java.lang.String"/>
-        <renamings name="c19" type="java.lang.String"/>
-        <renamings name="c20" type="java.lang.String"/>
-        <renamings name="c21" type="java.lang.String"/>
-        <renamings name="c22" type="java.lang.String"/>
-        <renamings name="c23" type="java.lang.String"/>
-        <renamings name="c24" type="java.lang.String"/>
-        <RelationalTerm type="AccessTerm">
-            <accessMethod name="yh_wtr_woeid" inputs="0"/>
-            <relation name="YahooWeather">
-                <attribute name="woeid" type="java.lang.String"/>
-                <attribute name="city" type="java.lang.String"/>
-                <attribute name="country" type="java.lang.String"/>
-                <attribute name="region" type="java.lang.String"/>
-                <attribute name="distance_unit" type="java.lang.String"/>
-                <attribute name="pressure_unit" type="java.lang.String"/>
-                <attribute name="speed_unit" type="java.lang.String"/>
-                <attribute name="temp_unit" type="java.lang.String"/>
-                <attribute name="wind_chill" type="java.lang.String"/>
-                <attribute name="wind_direction" type="java.lang.String"/>
-                <attribute name="wind_speed" type="java.lang.String"/>
-                <attribute name="humidity" type="java.lang.String"/>
-                <attribute name="pressure" type="java.lang.String"/>
-                <attribute name="rising" type="java.lang.String"/>
-                <attribute name="visibility" type="java.lang.String"/>
-                <attribute name="sunrise" type="java.lang.String"/>
-                <attribute name="sunset" type="java.lang.String"/>
-                <attribute name="date" type="java.lang.String"/>
-                <attribute name="temperature" type="java.lang.String"/>
-                <attribute name="condition" type="java.lang.String"/>
-                <attribute name="code" type="java.lang.String"/>
-                <access-method name="yh_wtr_woeid" inputs="0"/>
-            </relation>
-        </RelationalTerm>
-    </RelationalTerm>
-    <cost value="3.3958007884803287E18" type="DoubleCost"/>
+    <cost value="1.13401807877519E16" type="DoubleCost"/>
 </RelationalTermWithCost>
