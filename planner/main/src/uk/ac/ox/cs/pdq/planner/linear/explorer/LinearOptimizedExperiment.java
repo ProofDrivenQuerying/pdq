@@ -218,8 +218,11 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 					for (Candidate c:getExposedCandidatesOf(sn)) {
 						if (c.isEqualAxiom(selectedCandidate)) {
 							//the selected candidate was already exposed in sn, so we can copy the facts
-							newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates,sn.getConfiguration().getState().clone());
-							executeChase=false;
+							SearchNode nodeToClone = getExposedByCandidates(sn,c);
+							if (nodeToClone!=null) {
+								newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates,nodeToClone.getConfiguration().getState().clone());
+								executeChase=false;
+							}
 						}
 					}
 				}
@@ -282,20 +285,13 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		}
 		
 		if (!dominated) {
-//			if (representative.equals(freshNode)) {
-				// this node is a new representative, so lets chase it.
-				// Close the newly created node using the inferred accessible dependencies of
-				// the accessible schema
-				// the close function will do a full reason until termination.
-				if (executeChase) freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
-				this.equivalenceClasses.add(freshNode);
-//			} else {
-//				// the fresh node has representative lets check if the fresh is better or not.
-//				if (representative.getCostOfBestPlanFromRoot().greaterThan(freshNode.getCostOfBestPlanFromRoot())) {
-//					equivalenceClasses.updateRepresentative(representative, freshNode);
-//				}
-//			}
-//			/* Check for query match */
+			// this node is a new representative, so lets chase it.
+			// Close the newly created node using the inferred accessible dependencies of
+			// the accessible schema
+			// the close function will do a full reason until termination.
+			if (executeChase) freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
+			this.equivalenceClasses.add(freshNode);
+			/* Check for query match */
 			if (this.rounds % this.queryMatchInterval == 0) {
 				List<Match> matches = freshNode.matchesQuery(this.accessibleQuery);
 
@@ -314,6 +310,10 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		return freshNode;
 	}
 
+	/** Gets the exposed candidates from the node and its immediate children
+	 * @param sn
+	 * @return
+	 */
 	private Set<Candidate> getExposedCandidatesOf(SearchNode sn) {
 		Set<Candidate> candidates = new HashSet<>();
 		candidates.addAll(sn.getConfiguration().getExposedCandidates());
@@ -321,6 +321,20 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 			candidates.addAll(child.getConfiguration().getExposedCandidates());
 		}
 		return candidates;
+	}
+	
+	/** Gets the searchnode that exposed the given candidates.
+	 * @param sn
+	 * @return
+	 */
+	private SearchNode getExposedByCandidates(SearchNode sn, Candidate c) {
+		if (sn.getConfiguration().getExposedCandidates().contains(c))
+			return sn;
+		for (SearchNode child:planTree.getChildren(sn)) {
+			if (child.getConfiguration().getExposedCandidates().contains(c))
+				return child;
+		}
+		return null;
 	}
 
 	/**
