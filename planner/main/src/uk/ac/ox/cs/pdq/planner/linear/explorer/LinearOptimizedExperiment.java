@@ -192,7 +192,6 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		// Search for other candidate facts that could be exposed along with the
 		// selected candidate.
 		Set<Candidate> similarCandidates = selectedConfig.getSimilarCandidates(selectedCandidate);
-		//if (test ) similarCandidates.add(selectedCandidate);
 		selectedConfig.removeCandidates(similarCandidates);
 		return this.explorationStep(selectedNode, selectedCandidate,similarCandidates);
 	}
