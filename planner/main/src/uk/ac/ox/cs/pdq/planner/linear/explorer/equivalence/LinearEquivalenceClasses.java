@@ -66,7 +66,8 @@ public class LinearEquivalenceClasses {
 	 * @param nodeToAdd
 	 */
 	public void add(SearchNode classRep, SearchNode nodeToAdd) {
-		Preconditions.checkNotNull(classRep);
+		if (classRep==null)
+			return;
 		Preconditions.checkNotNull(nodeToAdd);
 		// classRep is a representative
 		Preconditions.checkArgument(classes.keySet().contains(classRep));

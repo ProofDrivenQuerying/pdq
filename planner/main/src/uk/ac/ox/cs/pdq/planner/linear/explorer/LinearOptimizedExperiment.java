@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -212,8 +213,9 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		SearchNode freshNode = null;
 		boolean executeChase = true;
 		SearchNode selectedNodesRepresentative = equivalenceClasses.searchRepresentative(selectedNode);
-		List<SearchNode> wholeClass = equivalenceClasses.getEquivalenceClass(selectedNodesRepresentative);
-		
+		List<SearchNode> wholeClass = new ArrayList<>();
+		if (selectedNodesRepresentative !=null)
+			wholeClass.addAll(equivalenceClasses.getEquivalenceClass(selectedNodesRepresentative));
 		// when there are equivalent classes, we can check if we have the selected candidate already exposed in one of them.
 		SearchNode nodeToClone = null;
 		for (SearchNode sn : wholeClass) {
