@@ -225,7 +225,7 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 						newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates,nodeToClone.getConfiguration().getState().clone());
 						executeChase=false;
 						freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
-						this.equivalenceClasses.add(nodeToClone, freshNode);
+						this.equivalenceClasses.add(this.equivalenceClasses.searchRepresentative(nodeToClone), freshNode);
 						break;
 					}
 				}
@@ -284,13 +284,12 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 		}
 		
 		if (!dominated) {
-			// this node is a new representative, so lets chase it.
-			// Close the newly created node using the inferred accessible dependencies of
-			// the accessible schema
-			// the close function will do a full reason until termination.
-			if (executeChase) 
+			if (executeChase) { 
+				// If we need to execute chase, we can do so by calling the close method on the node.
 				freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
-			this.equivalenceClasses.add(freshNode);
+				this.equivalenceClasses.add(freshNode);
+			}
+			
 			/* Check for query match */
 			if (this.rounds % this.queryMatchInterval == 0) {
 				List<Match> matches = freshNode.matchesQuery(this.accessibleQuery);
