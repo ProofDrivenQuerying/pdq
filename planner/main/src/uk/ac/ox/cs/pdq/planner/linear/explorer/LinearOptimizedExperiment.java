@@ -233,7 +233,7 @@ public class LinearOptimizedExperiment extends LinearExplorer {
 			}
 		}
 		if (executeChase) {
-			// when we havent
+			// when we havent found a node to clone, we need to create a fresh new node. 
 			newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates);
 			freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
 		}
