@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.datasources.schemabuilder;
 
 /**
-	@author Mark Ridler
+	@author Mark Ridle and Michael Benedikt.
 	
 	This package relates to creating java objects representing datasource schemas, based on some 
 	external information (e.g. a DBMS catalog). It contains:
