@@ -1,9 +1,9 @@
 package uk.ac.ox.cs.pdq.datasources.services;
 
 /**
-	@author Mark Ridler
+	@author Michael Benedikt
 	
-	This package contains:
+	This package contains the modeling and atomic execution of REST web service accesses
 	
 	- AccessEvent.java
  		* Event for single access to an online service.

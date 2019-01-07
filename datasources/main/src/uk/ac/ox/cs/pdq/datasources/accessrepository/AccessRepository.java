@@ -10,8 +10,8 @@ import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 
 /** 
- * AccessRepository is the main class of the datasources project. 
- * It maintains a repository executable access methods. The access methods are defined in xml descriptors in a folder. 
+ * AccessRepository represents a repository executable access methods. 
+ * The access methods are defined in xml descriptors in a folder. 
  * @author gabor
  *
  */

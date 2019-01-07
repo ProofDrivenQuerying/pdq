@@ -10,7 +10,7 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 public interface OrderDependentCostEstimator extends CostEstimator {
 
 	/**
-	 * Clone.
+	 * 
 	 *
 	 * @return BlackBoxCostEstimator<P>
 	 */
