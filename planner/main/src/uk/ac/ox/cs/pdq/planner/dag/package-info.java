@@ -1,13 +1,15 @@
 package uk.ac.ox.cs.pdq.planner.dag;
 
 /**
-@author Efthymia Tsamoura
+@author Efthymia Tsamoura and Michael Benedikt
  * This package contains classes related to exploring DAG configurations.
- * DAG configurations are built up compositionally and can be either unary or binary.
- * Unary configurations correspond to single access plans, while binary configurations correspond to join plans. 
- * The DAG configurations use the chase as a proof system.
+ * DAG configurations are built up compositionally from basic plans that
+ * perform a single access ("unary plans"), 
+ * analogous to the way traditional query plans are built up from accesses.
  * 
- * Unary configurations are of the form ApplyRule(R,\vec{b}), where R is an accessibility axiom corresponding to method mt on relation R, 
+ * Unary configurations correspond to single access plans, 
+ * while binary configurations correspond to join plans. 
+ * They are of the form ApplyRule(R,\vec{b}), where R is an accessibility axiom corresponding to method mt on relation R, 
  * and \vec{b} is a binding of the universally quantified variables
  * of R to chase constants or schema constants. The input constants are all those chase constants in \vec{b} where the
  * corresponding variable of R occurs within the R atoms of R at an input position of method mt. The outputs facts
@@ -20,5 +22,5 @@ package uk.ac.ox.cs.pdq.planner.dag;
  * the union of the facts in x and y under the copy of the integrity constraints on the InfAcc relations. 
  * Similar to unary DAG configurations, calculating the set of facts requires the use of consequence closure.
  * 
- * This package also includes a class for transforming DAG configurations to bushy plans.
+ * 
 **/

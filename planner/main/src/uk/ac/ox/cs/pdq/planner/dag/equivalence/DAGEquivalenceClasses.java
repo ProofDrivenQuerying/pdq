@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 /**
  * Collections of DAG configuration equivalence classes.
  * 
+ * TOCOMMENT: CHECK IF THE COMMENTS HERE ARE STILL RELEVANT
  *  A mapping h from the chase constants of one configuration
 	conf to the chase constants of another configuration conf'
 	is fact-preserving if it preserves inferred accessible output facts
