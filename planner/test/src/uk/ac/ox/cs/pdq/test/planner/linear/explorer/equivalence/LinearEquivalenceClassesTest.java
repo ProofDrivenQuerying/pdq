@@ -54,6 +54,27 @@ public class LinearEquivalenceClassesTest extends PdqTest {
 		SearchNode n4 = getNode(new ArrayList<>());
 		Assert.assertEquals(n1, eq.add(n4));
 	}
+	
+	@Test
+	public void testAdditionToExistingClass() throws SQLException, PlannerException, DatabaseException {
+		LinearEquivalenceClasses eq = new LinearEquivalenceClasses();
+		Collection<Atom> facts = new ArrayList<>();
+
+		SearchNode n1 = getNode(facts);
+		eq.add(n1);
+		facts.add(Atom.create(R, new Term[] { c1, c2, c3 }));
+		SearchNode n2 = getNode(facts);
+		eq.add(n2);
+		facts.add(Atom.create(R, new Term[] { c2, c3, c4 }));
+		SearchNode n3 = getNode(facts);
+		eq.add(n3);
+		Assert.assertEquals(1, eq.getEquivalenceClass(n1).size());
+		Assert.assertEquals(1, eq.getEquivalenceClass(n2).size());
+		Assert.assertEquals(1, eq.getEquivalenceClass(n3).size());
+		SearchNode n4 = getNode(new ArrayList<>());
+		eq.add(n1,n4);
+		Assert.assertEquals(n1, eq.searchRepresentative(n4));
+	}
 
 	private SearchNode getNode(Collection<Atom> facts) throws DatabaseException, SQLException, PlannerException {
 		DatabaseManager connection = new InternalDatabaseManager();
