@@ -11,17 +11,17 @@ import com.google.common.base.Preconditions;
  */
 public class NaiveRelationalTermCardinalityMetadata implements RelationalTermCardinalityMetadata {
 
-	/** The input card. */
+	/**  */
 	private double inputCard = 0L;
 	
-	/** The output card. */
+	/**  */
 	private double outputCard = -1L;
 	
-	/** The parent. */
+	/**  */
 	private RelationalTerm parent;
 
 	/**
-	 * Gets the parent.
+	 * 
 	 *
 	 * @return LogicalOperator
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.RelationalTermCardinalityMetadata#getParent()
@@ -43,7 +43,7 @@ public class NaiveRelationalTermCardinalityMetadata implements RelationalTermCar
 	}
 
 	/**
-	 * Gets the input cardinality.
+	 * 
 	 *
 	 * @return the last estimated input cardinality of the operator
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.RelationalTermCardinalityMetadata#getInputCardinality()
@@ -54,7 +54,7 @@ public class NaiveRelationalTermCardinalityMetadata implements RelationalTermCar
 	}
 
 	/**
-	 * Gets the output cardinality.
+	 * 
 	 *
 	 * @return the last estimated output cardinality of the operator
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.RelationalTermCardinalityMetadata#getOutputCardinality()
@@ -65,7 +65,7 @@ public class NaiveRelationalTermCardinalityMetadata implements RelationalTermCar
 	}
 
 	/**
-	 * Sets the input cardinality.
+	 * 
 	 *
 	 * @param l Double
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.RelationalTermCardinalityMetadata#setInputCardinality(Double)
@@ -77,7 +77,7 @@ public class NaiveRelationalTermCardinalityMetadata implements RelationalTermCar
 	}
 
 	/**
-	 * Sets the output cardinality.
+	 * 
 	 *
 	 * @param l Double
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.RelationalTermCardinalityMetadata#setOutputCardinality(Double)
