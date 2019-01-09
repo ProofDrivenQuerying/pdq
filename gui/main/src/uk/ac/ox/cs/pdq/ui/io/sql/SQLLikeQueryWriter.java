@@ -106,7 +106,7 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implemen
 		}
 		// Make SELECT clause
 		result.append("SELECT ");
-		Term[] head = q.getTerms();
+		Term[] head = q.getFreeVariables();
 		if (head.length == 0) {
 			result.append("*");
 		} else {
