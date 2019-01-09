@@ -7,6 +7,10 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 
+/**
+ * @author marler
+ *
+ */
 public class SanityCheck {
 
 	/**
