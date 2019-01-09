@@ -39,7 +39,32 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
  * -frequency maps of single attributes
  * -and SQL Server 2014 single attribute histograms.
  * All the statistics are loaded by default from a catalog.properties file
+ * 
+ * The catalog.properties file format is: 
+ * Each line represent one piece of information, and parsed separately from the rest. 
+ * The format of a line can be one of the following (The [] indicate editable parts of the line, the file should not contain it.):
+ * Cost:
+ * RE:[TABLE_NAME]		BI:[ACCESS_METHOD_NAME]		RT:[COST_OF_ACCESS_METHOD] #COMMENT
+ * Erspi:
+ * RE:[TABLE_NAME]		BI:[ACCESS_METHOD_NAME]		ERSPI:[NUMBER OF OUTPUT TUPLES PER INPUT]
+ * Sql server histogram (this has no known usages/examples or tests):
+ * RE:[TABLE_NAME]		AT:[ATTRIBUTE_NAME]		SQLH:[???]
+ * Column selectivity:
+ * RE:[TABLE_NAME]		AT:[ATTRIBUTE_NAME]		SE:[SELECTIVITY]
+ * Column cardinality:
+ * RE:[TABLE_NAME]		AT:[ATTRIBUTE_NAME]		CC:[DECIMAL_CARDINALITY]
+ * relation cardinality:
+ * RE:[TABLE_NAME]		CA:[DECIMAL_CARDINALITY]
+ * Frequency map (No examples or any usage):
+ * RE:[TABLE_NAME] 		AT:[ATTRIBUTE_NAME]		HH:[???] VA:[???] FR:[???]
+ * Example content of the file for a relation that contains 150 records and has 2 access methods, and a selectivity example
+ * RE: cars CA: 150
+ * RE: cars BI: read_all RT: 12.5
+ * RE: cars BI: read_one RT: 0.5
+ * RE:AssayLimited  AT:assay_type SE:0.4 #Selectivity if assay_type='F'
+
  * @author Efthymia Tsamoura
+ * @author Gabor
  *
  */
 public class SimpleCatalog implements Catalog{
@@ -139,6 +164,10 @@ public class SimpleCatalog implements Catalog{
 	 * @param line the line
 	 */
 	private void parse(Schema schema, String line) {
+		if (line== null || line.trim().isEmpty() || line.trim().startsWith("#") || line.trim().startsWith("//")) {
+			// empty line or comment line.
+			return;
+		}
 		Pattern p = Pattern.compile(READ_CARDINALITY);
 		Matcher m = p.matcher(line);
 		if (m.find()) {
@@ -293,7 +322,7 @@ public class SimpleCatalog implements Catalog{
 	 * @param frequencyMaps the frequency maps
 	 * @param SQLServerHistograms the SQL server histograms
 	 */
-	private SimpleCatalog(Schema schema, Map<Relation,Integer> cardinalities, Map<Pair<Relation,AccessMethodDescriptor>,Integer> erpsi, Map<Pair<Relation,AccessMethodDescriptor>,Double> responseTimes,
+	public SimpleCatalog(Schema schema, Map<Relation,Integer> cardinalities, Map<Pair<Relation,AccessMethodDescriptor>,Integer> erpsi, Map<Pair<Relation,AccessMethodDescriptor>,Double> responseTimes,
 			Map<Pair<Relation,Attribute>,Double> columnSelectivity, Map<Pair<Relation,Attribute>,Integer> columnCardinalities, 
 			Map<Pair<Relation,Attribute>, SimpleFrequencyMap> frequencyMaps,
 			Map<Pair<Relation,Attribute>, SQLServerHistogram> SQLServerHistograms
@@ -535,6 +564,77 @@ public class SimpleCatalog implements Catalog{
 	public SimpleCatalog clone() {
 		return new SimpleCatalog(this.schema, this.cardinalities, this.numberOfOutputTuplesPerInput, this.costs, this.columnSelectivity, 
 				this.columnCardinalities, this.frequencyMaps, this.SQLServerHistograms);
+	}
+
+	public String exportCatalog() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("#Cost:\n");
+		sb.append("#	RE:[TABLE_NAME]		BI:[ACCESS_METHOD_NAME]		RT:[COST_OF_ACCESS_METHOD] #COMMENT\n");
+		sb.append("#Erspi:\n");
+		sb.append("#	RE:[TABLE_NAME]		BI:[ACCESS_METHOD_NAME]		ERSPI:[COST_OF_ACCESS_METHOD]\n");
+		sb.append("#Sql server histogram (this has no known usages/examples or tests):\n");
+		sb.append("#	RE:[TABLE_NAME]		AT:[ATTRIBUTE_NAME]		SQLH:[???]\n");
+		sb.append("#Column selectivity:\n");
+		sb.append("#	RE:[TABLE_NAME]		AT:[ATTRIBUTE_NAME]		SE:[SELECTIVITY]\n");
+		sb.append("#Column cardinality (Number Of Output Tuples Per Input):\n");
+		sb.append("#	RE:[TABLE_NAME]		AT:[ATTRIBUTE_NAME]		CC:[DECIMAL_CARDINALITY]\n");
+		sb.append("#Relation cardinality:\n");
+		sb.append("#	RE:[TABLE_NAME]		CA:[DECIMAL_CARDINALITY]\n");
+		
+		sb.append("\n#RELATION CARDINALITIES:\n");
+		for (Relation r: cardinalities.keySet()) {
+			sb.append("RE:");
+			sb.append(r.getName());
+			sb.append("\tCA:");
+			sb.append(cardinalities.get(r));
+			sb.append("\n");
+		}
+		
+		sb.append("\n#ACCESS METHOD COSTS:\n");
+		for (Pair<Relation,AccessMethodDescriptor> p: costs.keySet()) {
+			sb.append("RE:");
+			sb.append(p.getLeft().getName());
+			sb.append("\tBI:");
+			sb.append(p.getRight().getName());
+			sb.append("\tRT:");
+			sb.append(costs.get(p));
+			sb.append("\n");
+		}
+		sb.append("\n#COLUMN CARDINALITIES:\n");
+		for (Pair<Relation,Attribute> p: columnCardinalities.keySet()) {
+			sb.append("RE:");
+			sb.append(p.getLeft().getName());
+			sb.append("\tAT:");
+			sb.append(p.getRight().getName());
+			sb.append("\tCC:");
+			sb.append(columnCardinalities.get(p));
+			sb.append("\n");
+		}
+	
+		sb.append("\n#ERSPI (Number Of Output Tuples Per Input):\n");
+		for (Pair<Relation,AccessMethodDescriptor> p: numberOfOutputTuplesPerInput.keySet()) {
+			sb.append("RE:");
+			sb.append(p.getLeft().getName());
+			sb.append("\tBI:");
+			sb.append(p.getRight().getName());
+			sb.append("\tERSPI:");
+			sb.append(numberOfOutputTuplesPerInput.get(p));
+			sb.append("\n");
+		}
+		
+		sb.append("\n#COLUMN SELECTIVITY:\n");
+		for (Pair<Relation,Attribute> p: columnSelectivity.keySet()) {
+			sb.append("RE:");
+			sb.append(p.getLeft().getName());
+			sb.append("\tAT:");
+			sb.append(p.getRight().getName());
+			sb.append("\tSE:");
+			sb.append(columnSelectivity.get(p));
+			sb.append("\n");
+		}
+		
+		
+		return sb.toString();
 	}
 
 	/* (non-Javadoc)
