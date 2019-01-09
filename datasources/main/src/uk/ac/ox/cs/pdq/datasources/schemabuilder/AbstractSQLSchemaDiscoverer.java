@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -90,6 +91,26 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 		return this.discovered;
 	}
 
+	public Map<Relation,Integer> getRelationCardinalities() throws SQLException {
+		if (discovered == null)
+			return null;
+		Map<Relation,Integer> results = new HashMap<>();
+		for (Relation r: discovered.getRelations()) {
+			try(Connection connection = getConnection(this.properties);
+					Statement stmt = connection.createStatement();
+					ResultSet rs = stmt.executeQuery("select count(*) from " + r.getName())){ 
+				if (rs.next()) {
+						Integer count = rs.getInt(1);
+						results.put(r, count);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				log.error(e);
+				throw e;
+			}
+		}
+		return results;
+	}
 	/**
 	 *
 	 * @param databaseName the database name

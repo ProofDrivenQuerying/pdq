@@ -565,7 +565,18 @@ public class SimpleCatalog implements Catalog{
 		return new SimpleCatalog(this.schema, this.cardinalities, this.numberOfOutputTuplesPerInput, this.costs, this.columnSelectivity, 
 				this.columnCardinalities, this.frequencyMaps, this.SQLServerHistograms);
 	}
+	
+	/** This method can be used by schema discovery functions to add table cardinalities.
+	 * @param r
+	 * @param value
+	 */
+	public void addRelationCardinality(Relation r, Integer value) {
+		this.cardinalities.put(r, value);
+	}
 
+	/** Exports this class into a string that can be used to create a catalog.properties file.
+	 * @return
+	 */
 	public String exportCatalog() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("#Cost:\n");

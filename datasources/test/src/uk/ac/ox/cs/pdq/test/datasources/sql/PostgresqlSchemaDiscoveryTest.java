@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.test.datasources.sql;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -113,7 +114,44 @@ public class PostgresqlSchemaDiscoveryTest extends PdqTest {
 	public void setup() {
 		Utility.assertsEnabled();
 	}
+	
+	@Test
+	public void testCardinalities() {
+		Properties properties = new Properties();
+		properties.put("url", "jdbc:postgresql://localhost/");
+		properties.put("database", "tpch");
+		properties.put("username", "root");
+		properties.put("username", "postgres");
+		properties.put("password", "root");
+		properties.put("driver","org.postgresql.Driver");		
+		int i = 0;
+		for(String n: this.relationNames) {
+			TmpRelation r = new TmpRelation();
+			r.attributes = this.attributesNames[i];
+			r.bindings = new AccessMethodDescriptor(this.bindingPositions[i]);
+			this.relations.put(n, r);
+			i++;
+		}
+		PostgresqlSchemaDiscoverer disco = new PostgresqlSchemaDiscoverer();
+		disco.setProperties(properties);
+		Schema schema = disco.discover();
+		try {
+			Map<Relation, Integer> cardinalityMap = disco.getRelationCardinalities();
+			Assert.assertEquals(150000,(int)cardinalityMap.get(schema.getRelation("customer")));
+			Assert.assertEquals(25,(int)cardinalityMap.get(schema.getRelation("nation")));
+			Assert.assertEquals(800000,(int)cardinalityMap.get(schema.getRelation("partsupp")));
+			Assert.assertEquals(5,(int)cardinalityMap.get(schema.getRelation("region")));
+			Assert.assertEquals(1500000,(int)cardinalityMap.get(schema.getRelation("orders")));
+			Assert.assertEquals(10000,(int)cardinalityMap.get(schema.getRelation("supplier")));
+			Assert.assertEquals(6001215,(int)cardinalityMap.get(schema.getRelation("lineitem")));
+			Assert.assertEquals(200000,(int)cardinalityMap.get(schema.getRelation("part")));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
 		
+	}
+
 	/**
 	 * Test parse view defintion.
 	 */
