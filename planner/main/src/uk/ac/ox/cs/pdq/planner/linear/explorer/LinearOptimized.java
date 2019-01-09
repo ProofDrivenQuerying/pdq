@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -43,6 +44,7 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
  * to reach faster the best plan.
  *
  * @author Efthymia Tsamoura
+ * @author Gabor
  *
  */
 public class LinearOptimized extends LinearExplorer {
@@ -176,9 +178,8 @@ public class LinearOptimized extends LinearExplorer {
 	 * @throws LimitReachedException
 	 *             the limit reached exception
 	 */
-	protected SearchNode explorationStep(SearchNode selectedNode) throws PlannerException, LimitReachedException {
+	public SearchNode explorationStep(SearchNode selectedNode) throws PlannerException, LimitReachedException {
 		LinearConfiguration selectedConfig = selectedNode.getConfiguration();
-
 		/*
 		 * Choose a new candidate fact. A candidate fact F(c1,c2,...,cN) is one for
 		 * which (i) there exists Accessible(c_i) facts for any c_i (ii)
@@ -189,27 +190,54 @@ public class LinearOptimized extends LinearExplorer {
 			selectedNode.setStatus(NodeStatus.TERMINAL);
 			return null;
 		}
-
 		// Search for other candidate facts that could be exposed along with the
 		// selected candidate.
 		Set<Candidate> similarCandidates = selectedConfig.getSimilarCandidates(selectedCandidate);
 		selectedConfig.removeCandidates(similarCandidates);
+		return this.explorationStep(selectedNode, selectedCandidate,similarCandidates);
+	}
+	
+	/** 
+	 * Same as the explorationStep function above, but the parameters are broke down to support testing better.
+	 */
+	public SearchNode explorationStep(SearchNode selectedNode,Candidate selectedCandidate, Set<Candidate> similarCandidates) throws PlannerException, LimitReachedException {
+		LinearConfiguration selectedConfig = selectedNode.getConfiguration();
+
 		if (!selectedConfig.hasCandidates()) {
 			selectedNode.setStatus(NodeStatus.TERMINAL);
 		}
 
 		// Create a new node from the exposed facts and add it to the plan tree
-		LinearChaseConfiguration newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),
-				similarCandidates);
-		SearchNode freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
+		LinearChaseConfiguration newConfiguration = null;
 		
-		boolean isRepresented = false;
+		SearchNode freshNode = null;
+		boolean executeChase = true;
 		SearchNode selectedNodesRepresentative = equivalenceClasses.searchRepresentative(selectedNode);
-		if (equivalenceClasses.searchRepresentative(freshNode)!=null || selectedNodesRepresentative!=selectedNode) {
-			// either left or right side has representative
-			isRepresented = true;
+		List<SearchNode> wholeClass = new ArrayList<>();
+		if (selectedNodesRepresentative !=null)
+			wholeClass.addAll(equivalenceClasses.getEquivalenceClass(selectedNodesRepresentative));
+		// when there are equivalent classes, we can check if we have the selected candidate already exposed in one of them.
+		SearchNode nodeToClone = null;
+		for (SearchNode sn : wholeClass) {
+			if (executeChase && sn.getConfiguration().getExposedCandidates()!=null) {
+				for (Candidate c:getExposedCandidatesOf(sn)) {
+					if (c.isEqualAxiom(selectedCandidate)) {
+						//the selected candidate was already exposed in sn, so we can copy the facts
+						nodeToClone = getExposedByCandidates(sn,c);
+						newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates,nodeToClone.getConfiguration().getState().clone());
+						executeChase=false;
+						freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
+						this.equivalenceClasses.add(this.equivalenceClasses.searchRepresentative(nodeToClone), freshNode);
+						break;
+					}
+				}
+			}
 		}
-		
+		if (executeChase) {
+			// when we havent found a node to clone, we need to create a fresh new node. 
+			newConfiguration = new LinearChaseConfiguration(selectedNode.getConfiguration(),similarCandidates);
+			freshNode = new LinearConfigurationNode((LinearConfigurationNode) selectedNode, newConfiguration);
+		}
 		freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
 		if (!freshNode.getConfiguration().hasCandidates())
 			freshNode.setStatus(NodeStatus.TERMINAL);
@@ -233,10 +261,10 @@ public class LinearOptimized extends LinearExplorer {
 		this.planTree.addVertex(freshNode);
 		this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
 
-		boolean domination = false;
+		boolean dominated = false;
 		if (this.bestPlan != null) {
 			if (freshNode.getCostOfBestPlanFromRoot().greaterOrEquals(this.bestCost)) {
-				domination = true;
+				dominated = true;
 				freshNode.setDominatingPlan(this.bestPlan);
 				freshNode.setCostOfDominatingPlan(this.bestCost);
 				log.debug(freshNode.getBestPlanFromRoot() + " has higher cost than plan " + this.bestPlan + " Costs "
@@ -245,10 +273,10 @@ public class LinearOptimized extends LinearExplorer {
 		}
 
 		// set dominating plan if there is one
-		if (!isRepresented && !domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
+		if (!dominated && this.costPropagator instanceof OrderIndependentCostPropagator) {
 			SearchNode dominatingNode = ExplorerUtility.isCostAndFactDominated(this.planTree.vertexSet(), freshNode);
 			if (dominatingNode != null) {
-				domination = true;
+				dominated = true;
 				freshNode.setDominatingPlan(dominatingNode.getConfiguration().getPlan());
 				freshNode.setCostOfDominatingPlan(dominatingNode.getConfiguration().getCost());
 				log.debug(dominatingNode.getConfiguration().getPlan() + " dominates "
@@ -257,20 +285,13 @@ public class LinearOptimized extends LinearExplorer {
 			}
 		}
 		
-		if (!domination) {
-			SearchNode representative = this.equivalenceClasses.add(freshNode);
-			if (representative.equals(freshNode)) {
-				// this node is a new representative, so lets chase it.
-				// Close the newly created node using the inferred accessible dependencies of
-				// the accessible schema
-				// the close function will do a full reason until termination.
+		if (!dominated) {
+			if (executeChase) { 
+				// If we need to execute chase, we can do so by calling the close method on the node.
 				freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
-			} else {
-				// the fresh node has representative lets check if the fresh is better or not.
-				if (representative.getCostOfBestPlanFromRoot().greaterThan(freshNode.getCostOfBestPlanFromRoot())) {
-					equivalenceClasses.updateRepresentative(representative, freshNode);
-				}
+				this.equivalenceClasses.add(freshNode);
 			}
+			
 			/* Check for query match */
 			if (this.rounds % this.queryMatchInterval == 0) {
 				List<Match> matches = freshNode.matchesQuery(this.accessibleQuery);
@@ -281,14 +302,40 @@ public class LinearOptimized extends LinearExplorer {
 					this.updateBestPlan(selectedNode, freshNode, matches.get(0));
 				}
 			}
-			
 		} else {
 			// dominated node should be closed.
 			freshNode.setStatus(NodeStatus.TERMINAL);
 			this.eventBus.post(freshNode);
-			//freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
 		}
+		
 		return freshNode;
+	}
+
+	/** Gets the exposed candidates from the node and its immediate children
+	 * @param sn
+	 * @return
+	 */
+	private Set<Candidate> getExposedCandidatesOf(SearchNode sn) {
+		Set<Candidate> candidates = new HashSet<>();
+		candidates.addAll(sn.getConfiguration().getExposedCandidates());
+		for (SearchNode child:planTree.getChildren(sn)) {
+			candidates.addAll(child.getConfiguration().getExposedCandidates());
+		}
+		return candidates;
+	}
+	
+	/** Gets the searchnode that exposed the given candidates.
+	 * @param sn
+	 * @return
+	 */
+	private SearchNode getExposedByCandidates(SearchNode sn, Candidate c) {
+		if (sn.getConfiguration().getExposedCandidates().contains(c))
+			return sn;
+		for (SearchNode child:planTree.getChildren(sn)) {
+			if (child.getConfiguration().getExposedCandidates().contains(c))
+				return child;
+		}
+		return null;
 	}
 
 	/**
@@ -346,7 +393,13 @@ public class LinearOptimized extends LinearExplorer {
 			log.trace("\t+++BEST PLAN: " + AlgebraUtilities.getAccesses(this.bestPlan) + " " + this.bestCost);
 		}
 	}
-
+	
+	/** For testing purposes we can return the inner field LinearEquivalenceClasses
+	 * @return
+	 */
+	public LinearEquivalenceClasses getLinearEquivalenceClasses() {
+		return equivalenceClasses;
+	}
 	/**
 	 * @return postPruning
 	 */
