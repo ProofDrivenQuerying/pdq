@@ -79,6 +79,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
+import junit.framework.Assert;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
@@ -118,6 +119,7 @@ import uk.ac.ox.cs.pdq.ui.model.ObservablePlan;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
+import uk.ac.ox.cs.pdq.util.SanityCheck;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -1324,7 +1326,7 @@ public class PDQController {
 	private final ChangeListener<ObservablePlan> currentPlanChanged = (
 			ObservableValue<? extends ObservablePlan> observable, ObservablePlan oldValue, ObservablePlan newValue) -> {
 		if (newValue != null) {
-			// MR PDQController.this.savePlan(newValue);
+			PDQController.this.savePlan(newValue);
 
 			Plan plan = newValue.getPlan();
 			// MR PDQController.this.settingsExecutorTypeList.setDisable(plan == null);
@@ -1468,11 +1470,19 @@ public class PDQController {
 		for (File schemaFile : listFiles(schemaDir, "", SCHEMA_FILENAME_SUFFIX)) {
 			ObservableSchemaReader schemaReader = new ObservableSchemaReader();
 			ObservableSchema s = schemaReader.read(schemaFile);
+			try
+			{
+				SanityCheck.sanityCheck(s.getSchema());
+			}
+			catch(Exception e)
+			{
+				throw new UserInterfaceException(schemaFile.getName() + "; " + e.getMessage());
+			}
 			s.setFile(schemaFile);
 			this.schemas.put(s.getName(), s);
 		}
 	}
-
+	
 	/**
 	 * Saves a schema.
 	 *
@@ -1602,6 +1612,17 @@ public class PDQController {
 					qs.add(q);
 				} catch (IOException e) {
 					throw new UserInterfaceException(e.getMessage(), e);
+				}
+			}
+			
+			// Sanity check queries against schema
+			for(ObservableQuery q : qs)
+			{
+				try
+				{
+					SanityCheck.sanityCheck(q.getQuery(), s.getSchema());
+				} catch (Exception e) {
+					throw new UserInterfaceException(q.getName() + "; " + e.getMessage(), e);
 				}
 			}
 		}

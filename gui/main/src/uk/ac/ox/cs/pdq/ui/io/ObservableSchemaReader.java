@@ -30,8 +30,14 @@ import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLReader;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
+import uk.ac.ox.cs.pdq.datasources.utility.SanityCheck;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodAttributeSpecification;
+import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
+import uk.ac.ox.cs.pdq.ui.UserInterfaceException;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
 // TODO: Auto-generated Javadoc
@@ -90,12 +96,20 @@ public class ObservableSchemaReader {
 			this.name = homepath(file.getPath());
 			this.services = new Service[list.size()];
 			for(int i = 0; i < list.size(); i++) services[i] = list.get(i);
+			try
+			{
+				SanityCheck.sanityCheck(schema, services);
+			}
+			catch(Exception e)
+			{
+				throw new UserInterfaceException("Schema: " + this.name + " " + e.getMessage());
+			}
 			return new ObservableSchema(this.name, this.description, this.schema, this.services);
 		} catch (JAXBException | FileNotFoundException e) {
 			throw new ReaderException("Exception thrown while reading schema ", e);
 		}
 	}
-
+	
 	private String homepath(String path)
 	{
 		String home = System.getProperty("user.dir");
