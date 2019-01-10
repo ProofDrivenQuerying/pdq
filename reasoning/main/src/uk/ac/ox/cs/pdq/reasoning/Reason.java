@@ -138,10 +138,8 @@ public class Reason {
 
 	/**
 	 * Runs the planner from the input parameters, schema and query.
-	 *
-	 * @param <S> the generic type
 	 */
-	public <S extends ChaseInstance> void run() {				
+	public void run() {				
 		ReasoningParameters reasoningParams = this.getConfigFile() != null ?
 				new ReasoningParameters(this.getConfigFile()) :
 				new ReasoningParameters() ;
