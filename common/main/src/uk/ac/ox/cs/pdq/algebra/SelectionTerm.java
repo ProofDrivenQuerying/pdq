@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.junit.Assert;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -29,9 +31,9 @@ public class SelectionTerm extends RelationalTerm {
 
 	private SelectionTerm(Condition selectionCondition, RelationalTerm child) {
 		super(child.getInputAttributes(), child.getOutputAttributes());
-		Assert.assertNotNull(selectionCondition);
-		Assert.assertNotNull(child);
-		Assert.assertTrue(AlgebraUtilities.assertSelectionCondition(selectionCondition, child.getOutputAttributes()));
+		Preconditions.checkNotNull(selectionCondition);
+		Preconditions.checkNotNull(child);
+		Preconditions.checkArgument(AlgebraUtilities.assertSelectionCondition(selectionCondition, child.getOutputAttributes()));
 		this.selectionCondition = selectionCondition;
 		this.child = child;
 	}
