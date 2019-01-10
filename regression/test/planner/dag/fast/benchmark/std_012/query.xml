@@ -39,7 +39,7 @@
 			<variable name="l_linestatus" />
 			<variable name="l_shipdate" />
 			<variable name="l_shipdate" />
-			<constant value="1995-01-01" />
+			<constant value="1995-01-01" type="java.util.Date"/>
 			<variable name="l_shipinstruct" />
 			<constant value="MAIL" />
 			<variable name="l_comment" />

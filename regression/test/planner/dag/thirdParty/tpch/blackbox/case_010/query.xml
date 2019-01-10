@@ -3,7 +3,7 @@
 		<atom name="partsupp">
 			<variable name="x0" />
 			<variable name="x1" />
-			<constant value="7340" />
+			<constant value="7340" type="java.lang.Integer"/>
 			<variable name="x3" />
 			<variable name="x4" />
 		</atom>
@@ -33,7 +33,7 @@
 			<variable name="x21" />
 			<variable name="x22" />
 			<variable name="x23" />
-			<constant value="5755.94" />
+			<constant value="5755.94" type="java.math.BigDecimal"/>
 			<variable name="x25" />
 		</atom>
 	</body>

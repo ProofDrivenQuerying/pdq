@@ -3,7 +3,7 @@
 	<body>
 		<atom name="partsupp">
 			<variable name="x0" />
-			<constant value="5" />
+			<constant value="5" type="java.lang.Integer"/>
 			<variable name="x2" />
 			<variable name="x3" />
 			<variable name="x4" />

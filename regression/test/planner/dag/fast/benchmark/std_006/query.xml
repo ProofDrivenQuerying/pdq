@@ -14,7 +14,7 @@
 			<variable name="l_partkey" />
 			<variable name="s_suppkey" />
 			<variable name="l_linenumber" />
-			<constant value="10" />
+			<constant value="10" type="java.math.BigDecimal"/>
 			<variable name="l_extendedprice" />
 			<variable name="l_discount" />
 			<variable name="l_tax" />
