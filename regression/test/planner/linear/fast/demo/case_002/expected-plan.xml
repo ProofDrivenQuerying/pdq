@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="RenameTerm">
-    <renamings name="c0" type="java.lang.String"/>
+    <renamings name="v_woeid956337311" type="java.lang.Integer"/>
     <renamings name="Eiffel Tower" type="java.lang.String"/>
-    <renamings name="c1" type="java.lang.String"/>
-    <renamings name="c2" type="java.lang.String"/>
-    <renamings name="c3" type="java.lang.String"/>
-    <renamings name="c4" type="java.lang.String"/>
-    <renamings name="c5" type="java.lang.String"/>
-    <renamings name="c6" type="java.lang.String"/>
-    <renamings name="c7" type="java.lang.String"/>
-    <renamings name="c8" type="java.lang.String"/>
-    <renamings name="c9" type="java.lang.String"/>
-    <renamings name="c10" type="java.lang.String"/>
-    <renamings name="c11" type="java.lang.String"/>
-    <renamings name="c12" type="java.lang.String"/>
-    <renamings name="c13" type="java.lang.String"/>
-    <renamings name="c14" type="java.lang.String"/>
-    <renamings name="c15" type="java.lang.String"/>
-    <renamings name="c16" type="java.lang.String"/>
+    <renamings name="v_type956337311" type="java.lang.Integer"/>
+    <renamings name="v_placeTypeName956337311" type="java.lang.String"/>
+    <renamings name="fv_country956337311" type="java.lang.String"/>
+    <renamings name="v_admin1956337311" type="java.lang.String"/>
+    <renamings name="v_admin2956337311" type="java.lang.String"/>
+    <renamings name="v_admin3956337311" type="java.lang.String"/>
+    <renamings name="v_locality1956337311" type="java.lang.String"/>
+    <renamings name="v_locality2956337311" type="java.lang.String"/>
+    <renamings name="v_postal956337311" type="java.lang.String"/>
+    <renamings name="v_latitude956337311" type="java.lang.Double"/>
+    <renamings name="v_longitude956337311" type="java.lang.Double"/>
+    <renamings name="v_bboxNorth956337311" type="java.lang.Double"/>
+    <renamings name="v_bboxSouth956337311" type="java.lang.Double"/>
+    <renamings name="v_bboxEast956337311" type="java.lang.Double"/>
+    <renamings name="v_bboxWest956337311" type="java.lang.Double"/>
+    <renamings name="v_timezone956337311" type="java.lang.String"/>
     <RelationalTerm type="AccessTerm">
         <accessMethod name="yh_geo_name" inputs="1"/>
         <relation name="YahooPlaces">
-            <attribute name="woeid" type="java.lang.String"/>
+            <attribute name="woeid" type="java.lang.Integer"/>
             <attribute name="name" type="java.lang.String"/>
-            <attribute name="type" type="java.lang.String"/>
+            <attribute name="type" type="java.lang.Integer"/>
             <attribute name="placeTypeName" type="java.lang.String"/>
             <attribute name="country" type="java.lang.String"/>
             <attribute name="admin1" type="java.lang.String"/>
@@ -32,17 +32,17 @@
             <attribute name="locality1" type="java.lang.String"/>
             <attribute name="locality2" type="java.lang.String"/>
             <attribute name="postal" type="java.lang.String"/>
-            <attribute name="centroid_lat" type="java.lang.String"/>
-            <attribute name="centroid_lng" type="java.lang.String"/>
-            <attribute name="bboxNorth" type="java.lang.String"/>
-            <attribute name="bboxSouth" type="java.lang.String"/>
-            <attribute name="bboxEast" type="java.lang.String"/>
-            <attribute name="bboxWest" type="java.lang.String"/>
+            <attribute name="centroid_lat" type="java.lang.Double"/>
+            <attribute name="centroid_lng" type="java.lang.Double"/>
+            <attribute name="bboxNorth" type="java.lang.Double"/>
+            <attribute name="bboxSouth" type="java.lang.Double"/>
+            <attribute name="bboxEast" type="java.lang.Double"/>
+            <attribute name="bboxWest" type="java.lang.Double"/>
             <attribute name="timezone" type="java.lang.String"/>
             <access-method name="yh_geo_name" inputs="1"/>
             <access-method name="yh_geo_woeid" inputs="0"/>
             <access-method name="yh_geo_type" inputs="1,2"/>
         </relation>
     </RelationalTerm>
-    <cost value="2.4967919004335693E8" type="DoubleCost"/>
+    <cost value="2.0823265836946413E7" type="DoubleCost"/>
 </RelationalTermWithCost>
