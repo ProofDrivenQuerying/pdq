@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="RenameTerm">
-    <renamings name="c0" type="java.lang.Integer"/>
-    <renamings name="c1" type="java.lang.String"/>
-    <renamings name="c2" type="java.lang.Integer"/>
-    <renamings name="c4" type="java.lang.String"/>
+    <renamings name="fv_x02066723846" type="java.lang.Integer"/>
+    <renamings name="fv_x12066723846" type="java.lang.String"/>
+    <renamings name="fv_x22066723846" type="java.lang.Integer"/>
+    <renamings name="fv_x42066723846" type="java.lang.String"/>
     <RelationalTerm type="AccessTerm">
         <accessMethod name="m1"/>
         <relation name="region_nation">
@@ -14,5 +14,5 @@
             <access-method name="m1"/>
         </relation>
     </RelationalTerm>
-    <cost value="5.0" type="DoubleCost"/>
+    <cost value="1.0" type="DoubleCost"/>
 </RelationalTermWithCost>
