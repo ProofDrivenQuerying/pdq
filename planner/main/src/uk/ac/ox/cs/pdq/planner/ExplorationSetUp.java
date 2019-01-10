@@ -130,9 +130,12 @@ public class ExplorationSetUp {
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
 		this.databaseParams = databaseParams;
-		this.schema = convertTypesToString(schema);
 		this.originalSchema = schema;
-		//this.schema = schema;
+		if (plannerParams.getUseInternalDatabase()) {
+			this.schema = schema;
+		} else {
+			this.schema = convertTypesToString(schema);
+		}
 		this.accessibleSchema = new AccessibleSchema(this.schema);
 	}
 
@@ -153,9 +156,9 @@ public class ExplorationSetUp {
 	 * @throws SQLException
 	 */
 	public Entry<RelationalTerm, Cost> search(ConjunctiveQuery query) throws PlannerException, SQLException {
-		query = convertQueryConstantsToString(query);
-		generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(query);
+		
 
+		boolean convertTypes = true;
 		Explorer explorer = null;
 		DatabaseManager databaseConnection;
 		try {
@@ -163,6 +166,7 @@ public class ExplorationSetUp {
 				// internal
 				databaseConnection = new InternalDatabaseManager(new MultiInstanceFactCache(),
 						GlobalCounterProvider.getNext("DatabaseInstanceId"));
+				convertTypes = false; // the internal database can handle types correctly.
 			} else {
 				// external database.
 				if (this.databaseParams.getUseInternalDatabaseManager()) {
@@ -179,6 +183,10 @@ public class ExplorationSetUp {
 		}
 
 		try {
+			if (convertTypes) {
+				query = convertQueryConstantsToString(query);
+			}
+			generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(query);
 			// Top-level initialisations
 			CostEstimator costEstimator = CostEstimatorFactory.getEstimator(this.costParams, this.schema);
 
@@ -191,12 +199,16 @@ public class ExplorationSetUp {
 
 			explorer.setExceptionOnLimit(this.plannerParams.getExceptionOnLimit());
 			explorer.setMaxRounds(this.plannerParams.getMaxIterations().doubleValue());
-			explorer.setMaxElapsedTime(120l*1000l);
-		    //explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
+			//explorer.setMaxElapsedTime(120l*1000l); // 2 minutes
+		    explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
-			if (explorer.getBestPlan() != null && explorer.getBestCost() != null)
-				return new AbstractMap.SimpleEntry<RelationalTerm, Cost>(convertTypesBack(explorer.getBestPlan()), explorer.getBestCost());
-			else
+			if (explorer.getBestPlan() != null && explorer.getBestCost() != null) {
+				RelationalTerm bestPlan = explorer.getBestPlan();
+				if (convertTypes) {
+					bestPlan = convertTypesBack(bestPlan);
+				}
+				return new AbstractMap.SimpleEntry<RelationalTerm, Cost>(bestPlan, explorer.getBestCost());
+			} else
 				return null;
 		} catch (PlannerException e) {
 			this.handleEarlyTermination(explorer);
