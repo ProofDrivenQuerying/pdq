@@ -20,7 +20,7 @@ public interface CardinalityEstimator {
 	RelationalTermCardinalityMetadata getCardinalityMetadata(RelationalTerm o);
 
 	/**
-	 * Clone.
+	 * 
 	 *
 	 * @return a copy of this cardinality estimator.
 	 */

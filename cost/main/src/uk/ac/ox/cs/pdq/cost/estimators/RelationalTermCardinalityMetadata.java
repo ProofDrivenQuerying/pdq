@@ -11,42 +11,42 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 public interface RelationalTermCardinalityMetadata {
 
 	/**
-	 * Gets the parent.
+	 * 
 	 *
 	 * @return LogicalOperator
 	 */
 	RelationalTerm getParent();
 	
 	/**
-	 * Sets the parent.
+	 * 
 	 *
 	 * @param parent LogicalOperator
 	 */
 	void setParent(RelationalTerm parent);
 	
 	/**
-	 * Gets the input cardinality.
+	 * 
 	 *
 	 * @return Double
 	 */
 	Double getInputCardinality();
 	
 	/**
-	 * Gets the output cardinality.
+	 * 
 	 *
 	 * @return Double
 	 */
 	Double getOutputCardinality();
 	
 	/**
-	 * Sets the input cardinality.
+	 * 
 	 *
 	 * @param l Double
 	 */
 	void setInputCardinality(Double l);
 	
 	/**
-	 * Sets the output cardinality.
+	 * 
 	 *
 	 * @param l Double
 	 */

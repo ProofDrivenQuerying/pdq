@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 public interface OrderIndependentCostEstimator extends CostEstimator {
 	
 	/**
-	 * Cost.
+	 * 
 	 *
 	 * @param accesses The accesses of a plan
 	 * @return the cost of the accesses
@@ -24,7 +24,7 @@ public interface OrderIndependentCostEstimator extends CostEstimator {
 	Cost cost(Collection<AccessTerm> accesses);
 
 	/**
-	 * Clone.
+	 * 
 	 *
 	 * @return SimpleCostEstimator<P>
 	 */

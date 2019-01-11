@@ -55,7 +55,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * Estimate if needed.
+	 * TOCOMMENT: What is this?
 	 *
 	 * @param term LogicalOperator
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimateCardinalityIfNeeded(RelationalOperator)
@@ -68,7 +68,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * Estimate.
+	 * Main estimation function
 	 *
 	 * @param term LogicalOperator
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimateCardinality(RelationalOperator)
@@ -127,7 +127,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * Gets the metadata.
+	 * 
 	 *
 	 * @param o LogicalOperator
 	 * @return M
@@ -143,7 +143,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * Clone.
+	 * 
 	 *
 	 * @return NaiveCardinalityEstimator
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#clone()
@@ -179,7 +179,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * Estimate output.
+	 * Call to estimate a join
 	 *
 	 * @param o Join
 	 * @return Double
@@ -219,7 +219,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * Estimate output.
+	 * Estimate call for a dependent join
 	 *
 	 * @param o Join
 	 * @return Double
@@ -268,7 +268,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * Estimate output.
+	 * Call for a selection
 	 *
 	 * @param o Selection
 	 * @return Double

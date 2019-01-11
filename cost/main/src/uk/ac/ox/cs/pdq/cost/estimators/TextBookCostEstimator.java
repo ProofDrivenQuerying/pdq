@@ -150,7 +150,7 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 	}
 
 	/**
-	 * Cost.
+	 * 
 	 *
 	 * @param plan P
 	 * @return DoubleCost

@@ -1,9 +1,13 @@
 package uk.ac.ox.cs.pdq.planner.accessibleschema;
 
 /**
- * @author Efthymia Tsamoura
- * This package contains classes related to the accessible schema.
- * Given schema S_0, the Accessible Schema for S_0, denoted AcSch(S_0), 
+ * @author Efthymia Tsamoura and Michael benedikt
+ * If S_0 is a schema with relations, access methods, and constraints,
+ * then determining whether a query Q can be reformulated over a schema
+ * S_0 reduces to a reasoning problem with another schema derived from S_0 , called
+ * the "accessible schema for S_0", denoted AcSch(S_0). This package contains classes 
+ * related to the transformed schema.
+ * AcSch(S_0), 
  * is the schema without any access restrictions, such that:
  * i. The constants are those of S_0.
  * ii.The relations are those of S_0, a copy of each relation R denoted 

@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 
 /**
 	@author Efthymia Tsamoura
-
+TOCOMMENT: 
 	This package contains classes related to plan cost estimation.
 	The top level class CostParameters holds the parameters to initiate a cost estimation object. 
 	The package estimators contains classes that accept in the input plans and return the cost of these plans. 

@@ -13,14 +13,14 @@ import uk.ac.ox.cs.pdq.cost.DoubleCost;
  * Cost estimator favoring query with more atoms.
  *
  * @author Julien Leblay
- * @param <P> the generic type
+ * 
  */
 public class LengthBasedCostEstimator implements OrderDependentCostEstimator {
 
 	/**
-	 * Clone.
+	 * 
 	 *
-	 * @return LengthBasedCostEstimator<P>
+	 * @return LengthBasedCostEstimator
 	 * @see uk.ac.ox.cs.pdq.plan.cost.CostEstimator#clone()
 	 */
 	@Override
