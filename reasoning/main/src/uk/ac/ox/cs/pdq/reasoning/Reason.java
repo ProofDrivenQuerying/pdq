@@ -78,7 +78,7 @@ public class Reason {
 
 	/**
 	 * Initialize the Reason class by reading command line parameters, and running the
-	 * planner on them.
+	 * resoner on them.
 	 * 
 	 * @param args
 	 *            String[]
@@ -101,7 +101,7 @@ public class Reason {
 	}
 
 	/**
-	 * Runs the planner from the input parameters, schema, and query or facts.
+	 * Runs the resoner from the input parameters, schema, and query or facts.
 	 */
 	public void run() {
 		ReasoningParameters reasoningParams = this.getConfigFile() != null
