@@ -30,107 +30,58 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
- * Bootstrapping class for starting the reasoner. 
+ * Bootstrapping class for starting the reasoner.
  * 
  * @author Efthymia Tsamoura
+ * @author Gabor
  */
 public class Reason {
-
-	/** Logger. */
-	private static Logger log = Logger.getLogger(Reason.class); 
-	
-	/** The Constant PROGRAM_NAME. */
+	private static Logger log = Logger.getLogger(Reason.class);
 	private static final String PROGRAM_NAME = "pdq-reasoning-<version>.jar";
-	
-	/** The help. */
+	/* Main function parameters */
+
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
 	private boolean help;
-	
-	/**
-	 * Checks if is help.
-	 *
-	 * @return true, if is help
-	 */
-	public boolean isHelp() {
-		return this.help;
-	}
-	
-	/** The schema path. */
-	@Parameter(names = { "-s", "--schema" }, required = true,
-			 validateWith=FileValidator.class,
-		description ="Path to the input schema definition file.")
+
+	@Parameter(names = { "-s",
+			"--schema" }, required = true, validateWith = FileValidator.class, description = "Path to the input schema definition file.")
 	private String schemaPath;
 	
-	/**
-	 * Gets the schema path.
-	 *
-	 * @return the schema path
-	 */
-	public String getSchemaPath() {
-		return this.schemaPath;
-	}
-	
-	/** The query path. */
-	@Parameter(names = { "-q", "--query" }, required = false,
-			 validateWith=FileValidator.class,
-		description ="Path to the input query definition file.")
+	@Parameter(names = { "-q",
+			"--query" }, required = false, validateWith = FileValidator.class, description = "Path to the input query definition file. Either facts or a query is mandatory.")
 	private String queryPath;
-	
-	@Parameter(names = { "-f", "--facts" }, required = false,
-			 validateWith=FileValidator.class,
-		description ="Path to the input query definition file.")
+
+	@Parameter(names = { "-f",
+			"--facts" }, required = false, validateWith = FileValidator.class, description = "Path to the folder containing [RelationName].csv files containing data for the given relation. Either facts or a query is mandatory.")
 	private String factsPath;
-	
-	/**
-	 * Gets the query path.
-	 *
-	 * @return the query path
-	 */
-	public String getQueryPath() {
-		return this.queryPath;
-	}
-	
-	public String getFactsPath() {
-		return this.factsPath;
-	}
-	
-	/** The config file. */
-	@Parameter(names = { "-c", "--config" }, validateWith=FileValidator.class,
-			description = "Directory where to look for configuration files. "
-			+ "Default is the current directory.")
+
+	@Parameter(names = { "-c",
+			"--config" }, validateWith = FileValidator.class, description = "Directory where to look for configuration files. "
+					+ "Default is the current directory.")
 	private File configFile;
 	
-	/**
-	 * Gets the config file.
-	 *
-	 * @return the config file
-	 */
-	public File getConfigFile() {
-		return this.configFile;
-	}
-	
-	/** The verbose. */
-	@Parameter(names = { "-v", "--verbose" }, required = false,
-		description ="Path to the input query definition file.")
+	@Parameter(names = { "-v",
+			"--verbose" }, required = false, description = "Activates verbose mode.")
 	private boolean verbose = false;
 	
-	/**
-	 * Checks if is verbose.
-	 *
-	 * @return true, if is verbose
-	 */
-	public boolean isVerbose() {
-		return this.verbose;
-	}
-
-	/** The dynamic params. */
 	@DynamicParameter(names = "-D", description = "Dynamic parameters. Override values defined in the configuration files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
+	
+	/**
+	 * Run with --help for options
+	 * 
+	 * @param args
+	 */
+	public static void main(String... args) {
+		new Reason(args);
+	}
 
 	/**
-	 * Initialize the Bootstrap by reading command line parameters, and running
-	 * the planner on them.
-	 * @param args String[]
+	 * Initialize the Reason class by reading command line parameters, and running the
+	 * planner on them.
+	 * 
+	 * @param args
+	 *            String[]
 	 */
 	private Reason(String... args) {
 		JCommander jc = new JCommander(this);
@@ -142,7 +93,7 @@ public class Reason {
 			jc.usage();
 			return;
 		}
-		if (this.isHelp() || this.getQueryPath() == null && this.getFactsPath()==null) {
+		if (this.isHelp() || this.getQueryPath() == null && this.getFactsPath() == null) {
 			jc.usage();
 			return;
 		}
@@ -150,16 +101,15 @@ public class Reason {
 	}
 
 	/**
-	 * Runs the planner from the input parameters, schema and query.
+	 * Runs the planner from the input parameters, schema, and query or facts.
 	 */
-	public void run() {				
-		ReasoningParameters reasoningParams = this.getConfigFile() != null ?
-				new ReasoningParameters(this.getConfigFile()) :
-				new ReasoningParameters() ;
+	public void run() {
+		ReasoningParameters reasoningParams = this.getConfigFile() != null
+				? new ReasoningParameters(this.getConfigFile())
+				: new ReasoningParameters();
 
-		DatabaseParameters dbParams = this.getConfigFile() != null ?
-						new DatabaseParameters(this.getConfigFile()) :
-							DatabaseParameters.Postgres ;
+		DatabaseParameters dbParams = this.getConfigFile() != null ? new DatabaseParameters(this.getConfigFile())
+				: DatabaseParameters.Postgres;
 
 		for (String k : this.dynamicParams.keySet()) {
 			reasoningParams.set(k, this.dynamicParams.get(k));
@@ -167,11 +117,11 @@ public class Reason {
 		try {
 			Schema schema = DbIOManager.importSchema(new File(this.getSchemaPath()));
 			ConjunctiveQuery query = null;
-			if (this.getQueryPath()!=null)
+			if (this.getQueryPath() != null)
 				query = IOManager.importQuery(new File(this.getQueryPath()));
 			List<Atom> facts = new ArrayList<>();
-			if (this.getFactsPath()!=null) {
-				for (Relation r: schema.getRelations()) {
+			if (this.getFactsPath() != null) {
+				for (Relation r : schema.getRelations()) {
 					File rXml = new File(this.getQueryPath());
 					if (rXml.exists())
 						facts.addAll(DbIOManager.importFacts(r, rXml));
@@ -185,17 +135,19 @@ public class Reason {
 				throw new IllegalStateException("Query or facts must be provided.");
 			}
 			ReasonerFactory reasonerFactory = new ReasonerFactory(reasoningParams);
-								
+
 			Chaser reasoner = reasonerFactory.getInstance();
-			//Creates a chase state that consists of the canonical database of the input query.
+			// Creates a chase state that consists of the canonical database of the input
+			// query.
 			ExternalDatabaseManager edm = new ExternalDatabaseManager(dbParams);
-			LogicalDatabaseInstance manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm, GlobalCounterProvider.getNext("DatabaseInstanceID"));
+			LogicalDatabaseInstance manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm,
+					GlobalCounterProvider.getNext("DatabaseInstanceID"));
 			manager.initialiseDatabaseForSchema(schema);
 			ChaseInstance state;
-			if (query!=null)
-				state = new DatabaseChaseInstance(query,manager);
+			if (query != null)
+				state = new DatabaseChaseInstance(query, manager);
 			else
-				state = new DatabaseChaseInstance(facts,manager);
+				state = new DatabaseChaseInstance(facts, manager);
 			reasoner.reasonUntilTermination(state, schema.getAllDependencies());
 		} catch (Throwable e) {
 			log.error("Reasoning aborted: " + e.getMessage(), e);
@@ -203,12 +155,26 @@ public class Reason {
 		}
 	}
 
-	/**
-	 * Instantiates the bootstrap.
-	 *
-	 * @param args String[]
-	 */
-	public static void main(String... args) {
-		new Reason(args);
+	public boolean isHelp() {
+		return this.help;
+	}
+	public String getSchemaPath() {
+		return this.schemaPath;
+	}
+
+	public String getQueryPath() {
+		return this.queryPath;
+	}
+
+	public String getFactsPath() {
+		return this.factsPath;
+	}
+
+	public File getConfigFile() {
+		return this.configFile;
+	}
+
+	public boolean isVerbose() {
+		return this.verbose;
 	}
 }
