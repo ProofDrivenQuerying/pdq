@@ -1,9 +1,10 @@
 package uk.ac.ox.cs.pdq.datasources.io.jaxb;
 
 /**
-	@author Mark Ridler
+	@author Mark Ridler and Michael Benedikt
 	
-	This package contains:
+	This package deals with input and output of datasource metadata, based on
+	an XML format for describing source properties
 	
 	- DbIOManager.java
  		* Reads a Schema that contains external (database) sources, such as: <code>
