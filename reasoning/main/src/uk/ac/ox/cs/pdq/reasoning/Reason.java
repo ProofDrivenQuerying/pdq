@@ -134,20 +134,25 @@ public class Reason {
 			if (query == null && facts.isEmpty()) {
 				throw new IllegalStateException("Query or facts must be provided.");
 			}
+			if (query != null && !facts.isEmpty()) {
+				throw new IllegalStateException("One one of query or facts should be provided.");
+			}
 			ReasonerFactory reasonerFactory = new ReasonerFactory(reasoningParams);
 
 			Chaser reasoner = reasonerFactory.getInstance();
-			// Creates a chase state that consists of the canonical database of the input
-			// query.
 			ExternalDatabaseManager edm = new ExternalDatabaseManager(dbParams);
 			LogicalDatabaseInstance manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm,
 					GlobalCounterProvider.getNext("DatabaseInstanceID"));
 			manager.initialiseDatabaseForSchema(schema);
 			ChaseInstance state;
-			if (query != null)
+			if (query != null) {
+				// Creates a chase state that consists of the canonical database of the input
+				// query.
 				state = new DatabaseChaseInstance(query, manager);
-			else
+			} else {
+				// Creates a chase state that from the provided facts.
 				state = new DatabaseChaseInstance(facts, manager);
+			}
 			reasoner.reasonUntilTermination(state, schema.getAllDependencies());
 		} catch (Throwable e) {
 			log.error("Reasoning aborted: " + e.getMessage(), e);
