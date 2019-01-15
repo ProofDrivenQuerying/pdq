@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -69,6 +70,7 @@ public class ExecutorThread extends Thread {
 	 * Database name.
 	 */
 	private String databaseName = null;
+	private boolean allowDatabaseDropping = false;
 	/**
 	 * Extra error logging when set to true.
 	 */
@@ -90,6 +92,9 @@ public class ExecutorThread extends Thread {
 			databaseParameters = DatabaseParameters.Postgres;
 			driver = databaseParameters.getDatabaseDriver();
 		}
+		if (databaseParameters.isCreateNewDatabase()) {
+			allowDatabaseDropping = true; // freshly created database can be dropped.
+		}
 		String url = databaseParameters.getConnectionUrl();
 		String database = databaseParameters.getDatabaseName();
 		String username = databaseParameters.getDatabaseUser();
@@ -104,7 +109,7 @@ public class ExecutorThread extends Thread {
 		} catch (SQLException e) {
 			throw new DatabaseException("Connection failed to url: " + url + " using database: " + database + ", driver: " + driver, e);
 		}
-		if (!database.contains("_WORK")) {
+		if (!database.contains("_WORK") && databaseParameters.isCreateNewDatabase()) {
 			// we need to have 2 databases, one we used to connect to, and a secondary to use.
 			database = database + "_WORK";
 			databaseParameters.setDatabaseName(database);
@@ -121,6 +126,8 @@ public class ExecutorThread extends Thread {
 	private static DriverType getDriverType(String driver) throws DatabaseException {
 		
 		DriverType driverType = null;
+		if (driver==null || driver.isEmpty())
+			throw new DatabaseException("Driver must be set to \"mysql\" or \"postgres\". Currently it is not set.");
 		if (driver.toLowerCase().contains("mysql")) {
 			driverType = DriverType.MySql;
 		} else if (driver.toLowerCase().contains("postgres")) {
@@ -207,7 +214,15 @@ public class ExecutorThread extends Thread {
 			statements = command.toMySqlStatement(databaseName);
 			break;
 		case Postgres:
-			statements = command.toPostgresStatement(databaseName);
+			if (allowDatabaseDropping) {
+				statements = command.toPostgresStatement(databaseName);
+			} else {
+				List<String> statementsTmp = command.toPostgresStatement("ToDelete");
+				statements = new ArrayList<>();
+				for (String statement:statementsTmp) {
+					statements.add(statement.replaceAll("ToDelete.",""));
+				}
+			}
 			break;
 		}
 		boolean ignoreErrors = command.isIgnoreErrors();
@@ -238,14 +253,24 @@ public class ExecutorThread extends Thread {
 	}
 	private List<String> executeGeneric(Command command) throws DatabaseException, SQLException {
 		List<String> statements = null;
-
+		if (command instanceof DropDatabase && !allowDatabaseDropping) {
+			throw new DatabaseException("A database can only be dropped if it was created by this connection.");
+		}
 		// convert the command into the corresponding SQL dialect.
 		switch (driverType) {
 		case MySql:
 			statements = command.toMySqlStatement(databaseName);
 			break;
 		case Postgres:
-			statements = command.toPostgresStatement(databaseName);
+			if (allowDatabaseDropping) {
+				statements = command.toPostgresStatement(databaseName);
+			} else {
+				List<String> statementsTmp = command.toPostgresStatement("ToDelete");
+				statements = new ArrayList<>();
+				for (String statement:statementsTmp) {
+					statements.add(statement.replaceAll("ToDelete.",""));
+				}
+			}
 			break;
 		}
 		boolean ignoreErrors = command.isIgnoreErrors();

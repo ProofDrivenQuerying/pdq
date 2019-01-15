@@ -67,6 +67,9 @@ public class DatabaseParameters extends Parameters {
 
 	@Parameter(description="The database should have a constraint for making every fact unique. Default is false.")
 	private boolean factsAreUnique = false;
+
+
+	private boolean createNewDatabase;
 	
 	/**
 	 * Constructor for DatabaseParameters using default configuration file path.
@@ -255,6 +258,13 @@ public class DatabaseParameters extends Parameters {
 	}
 	public void setFactsAreUnique(boolean factsAreUnique) {
 		this.factsAreUnique = factsAreUnique;
+	}
+	
+	public boolean isCreateNewDatabase() {
+		return createNewDatabase;
+	}
+	public void setCreateNewDatabase(boolean createNewDatabase) {
+		this.createNewDatabase = createNewDatabase;
 	}
 	
 }

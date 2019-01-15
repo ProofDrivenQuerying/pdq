@@ -192,8 +192,12 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	 * @return
 	 */
 	public Collection<Atom> getFactsFromPhysicalDatabase() throws DatabaseException {
+		return getFactsFromPhysicalDatabase(Arrays.asList(schema.getRelations()));
+	}
+	
+	public Collection<Atom> getFactsFromPhysicalDatabase(List<Relation> relations) throws DatabaseException {
 		List<Command> queries = new ArrayList<>();
-		for (Relation r : schema.getRelations()) {
+		for (Relation r : relations) {
 			queries.add(new BasicSelect(r));
 		}
 		return convertMatchesToAtoms(executor.execute(queries), queries);
