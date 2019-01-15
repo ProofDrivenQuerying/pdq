@@ -19,12 +19,16 @@ import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
@@ -237,6 +241,34 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 			throw e;
 		}
 		return 0;
+	}
+	
+	/**
+	 * Reads all facts from the database for the given relations. 
+	 * @param relationNames
+	 * @return
+	 * @throws SQLException
+	 * @throws DatabaseException
+	 */
+	public Collection<Atom> discoverRelationFacts(List<String> relationNames) throws SQLException, DatabaseException {
+		DatabaseParameters params = DatabaseParameters.Empty;
+		params.setDatabaseUser(properties.getProperty("username"));
+		params.setDatabasePassword(properties.getProperty("password"));
+		params.setConnectionUrl(properties.getProperty("url"));
+		params.setDatabaseName(properties.getProperty("database"));
+		params.setDatabaseDriver(properties.getProperty("driver"));
+		params.setCreateNewDatabase(false);
+		ExternalDatabaseManager mg = new ExternalDatabaseManager(params);
+		mg.setSchema(discovered);
+		try {
+			List<Relation> relations = new ArrayList<>();
+			for (String relationName:relationNames) {
+				relations.add(discovered.getRelation(relationName));
+			}
+			return mg.getFactsFromPhysicalDatabase(relations);
+		}finally {
+			mg.shutdown();
+		}
 	}
 
 	/**

@@ -3,6 +3,9 @@ package uk.ac.ox.cs.pdq.test.datasources.sql;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -12,11 +15,13 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.datasources.schemabuilder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.schemabuilder.MySQLSchemaDiscoverer;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
@@ -88,7 +93,7 @@ public class MySQLSchemaDiscoveryTest {
 		for(String n: this.relationNames) {
 			Relation r = new Relation();
 			r.attributes = this.attributesNames[i];
-//			r.bindings = new AccessMethod[]{AccessMethod.create(this.bindingPositions[i])};
+			r.bindings = new AccessMethodDescriptor[]{AccessMethodDescriptor.create(this.bindingPositions[i])};
 			this.relations.put(n, r);
 			i++;
 		}
@@ -97,6 +102,47 @@ public class MySQLSchemaDiscoveryTest {
 		this.schema = disco.discover();
 	}
 	
+	
+	@Test
+	public void testFactsReading() {
+		Properties properties = new Properties();
+		properties.put("url", "jdbc:mysql://localhost/");
+		properties.put("database", "pdq");
+		properties.put("driver", "com.mysql.jdbc.Driver");
+		properties.put("username", "pdq");
+		properties.put("password", "pdq");
+		int i = 0;
+		for(String n: this.relationNames) {
+			Relation r = new Relation();
+			r.attributes = this.attributesNames[i];
+			r.bindings = new AccessMethodDescriptor[]{AccessMethodDescriptor.create(this.bindingPositions[i])};
+			this.relations.put(n, r);
+			i++;
+		}
+		MySQLSchemaDiscoverer disco = new MySQLSchemaDiscoverer();
+		disco.setProperties(properties);
+		disco.discover();
+		try {
+			String[] relations = new String[] {"nation","region","supplier"};
+			
+			Collection<Atom> discoveredFacts = disco.discoverRelationFacts(Arrays.asList(relations));
+			
+			Assert.assertEquals(0,getNumberOfFactsForRelation(discoveredFacts,"customer"));
+			Assert.assertEquals(25,getNumberOfFactsForRelation(discoveredFacts,"nation"));
+			Assert.assertEquals(5,getNumberOfFactsForRelation(discoveredFacts,"region"));
+			Assert.assertEquals(10000,getNumberOfFactsForRelation(discoveredFacts,"supplier"));
+		} catch (SQLException | DatabaseException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+	
+	private int getNumberOfFactsForRelation(Collection<Atom> discoveredFacts, String predicateName) {
+		int number = 0;
+		for (Atom a: discoveredFacts) if (a.getPredicate().getName().equalsIgnoreCase(predicateName)) number++;
+		return number;
+	}
+
 	/**
 	 * Makes sure assertions are enabled.
 	 */

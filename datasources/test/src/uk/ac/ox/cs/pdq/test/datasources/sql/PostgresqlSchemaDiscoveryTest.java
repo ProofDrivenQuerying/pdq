@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -12,12 +14,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.datasources.schemabuilder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.schemabuilder.PostgresqlSchemaDiscoverer;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -115,6 +119,47 @@ public class PostgresqlSchemaDiscoveryTest extends PdqTest {
 		Utility.assertsEnabled();
 	}
 	
+	@Test
+	public void testFactsReading() {
+		Properties properties = new Properties();
+		properties.put("url", "jdbc:postgresql://localhost/");
+		properties.put("database", "tpch");
+		properties.put("username", "root");
+		properties.put("username", "postgres");
+		properties.put("password", "root");
+		properties.put("driver","org.postgresql.Driver");		
+		int i = 0;
+		for(String n: this.relationNames) {
+			TmpRelation r = new TmpRelation();
+			r.attributes = this.attributesNames[i];
+			r.bindings = new AccessMethodDescriptor(this.bindingPositions[i]);
+			this.relations.put(n, r);
+			i++;
+		}
+		PostgresqlSchemaDiscoverer disco = new PostgresqlSchemaDiscoverer();
+		disco.setProperties(properties);
+		disco.discover();
+		try {
+			String[] relations = new String[] {"nation","region","supplier"};
+			
+			Collection<Atom> discoveredFacts = disco.discoverRelationFacts(Arrays.asList(relations));
+			
+			Assert.assertEquals(0,getNumberOfFactsForRelation(discoveredFacts,"customer"));
+			Assert.assertEquals(25,getNumberOfFactsForRelation(discoveredFacts,"nation"));
+			Assert.assertEquals(5,getNumberOfFactsForRelation(discoveredFacts,"region"));
+			Assert.assertEquals(10000,getNumberOfFactsForRelation(discoveredFacts,"supplier"));
+		} catch (SQLException | DatabaseException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+	
+	private int getNumberOfFactsForRelation(Collection<Atom> discoveredFacts, String predicateName) {
+		int number = 0;
+		for (Atom a: discoveredFacts) if (a.getPredicate().getName().equalsIgnoreCase(predicateName)) number++;
+		return number;
+	}
+
 	@Test
 	public void testCardinalities() {
 		Properties properties = new Properties();
