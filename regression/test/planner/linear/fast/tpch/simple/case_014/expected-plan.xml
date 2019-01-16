@@ -1,21 +1,62 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RelationalTermWithCost type="JoinTerm">
+<RelationalTermWithCost type="DependentJoinTerm">
+    <RelationalTerm type="JoinTerm">
+        <RelationalTerm type="RenameTerm">
+            <renamings name="k5" type="java.lang.Integer"/>
+            <renamings name="k17" type="java.lang.String"/>
+            <renamings name="k18" type="java.lang.Integer"/>
+            <renamings name="k20" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="m0"/>
+                <relation name="region_nation">
+                    <attribute name="nation_key" type="java.lang.Integer"/>
+                    <attribute name="nation_name" type="java.lang.String"/>
+                    <attribute name="region_key" type="java.lang.Integer"/>
+                    <attribute name="region_name" type="java.lang.String"/>
+                    <access-method name="m0"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="SelectionTerm">
+            <predicate type="ConjunctiveCondition">
+                <predicates position="3" type="ConstantEqualityCondition">
+                    <constant value="AMERICA"/>
+                </predicates>
+            </predicate>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="v_cnation2047178808" type="java.lang.Integer"/>
+                <renamings name="fv_nname2047178808" type="java.lang.String"/>
+                <renamings name="v_nregion2047178808" type="java.lang.Integer"/>
+                <renamings name="AMERICA" type="java.lang.String"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="m0"/>
+                    <relation name="region_nation">
+                        <attribute name="nation_key" type="java.lang.Integer"/>
+                        <attribute name="nation_name" type="java.lang.String"/>
+                        <attribute name="region_key" type="java.lang.Integer"/>
+                        <attribute name="region_name" type="java.lang.String"/>
+                        <access-method name="m0"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
     <RelationalTerm type="RenameTerm">
-        <renamings name="fv_cname814874964" type="java.lang.String"/>
-        <renamings name="fv_caddress814874964" type="java.lang.String"/>
-        <renamings name="v_cnation814874964" type="java.lang.Integer"/>
-        <renamings name="v_cacctbal814874964" type="java.math.BigDecimal"/>
-        <renamings name="v_opriority814874964" type="java.lang.String"/>
-        <renamings name="v_oclerk814874964" type="java.lang.String"/>
+        <renamings name="fv_cname2047178808" type="java.lang.String"/>
+        <renamings name="fv_caddress2047178808" type="java.lang.String"/>
+        <renamings name="v_cnation2047178808" type="java.lang.Integer"/>
+        <renamings name="v_cacctbal2047178808" type="java.math.BigDecimal"/>
+        <renamings name="v_opriority2047178808" type="java.lang.String"/>
+        <renamings name="v_oclerk2047178808" type="java.lang.String"/>
         <renamings name="k9" type="java.lang.String"/>
         <renamings name="k11" type="java.lang.String"/>
         <renamings name="k12" type="java.lang.String"/>
-        <renamings name="v_lextendedprice814874964" type="java.math.BigDecimal"/>
-        <renamings name="v_ldiscount814874964" type="java.math.BigDecimal"/>
-        <renamings name="v_ltax814874964" type="java.math.BigDecimal"/>
-        <renamings name="v_lflag814874964" type="java.lang.String"/>
+        <renamings name="v_lextendedprice2047178808" type="java.math.BigDecimal"/>
+        <renamings name="v_ldiscount2047178808" type="java.math.BigDecimal"/>
+        <renamings name="v_ltax2047178808" type="java.math.BigDecimal"/>
+        <renamings name="v_lflag2047178808" type="java.lang.String"/>
         <RelationalTerm type="AccessTerm">
-            <accessMethod name="m3"/>
+            <accessMethod name="m1" inputs="2"/>
             <relation name="order_customer">
                 <attribute name="cname" type="java.lang.String"/>
                 <attribute name="caddress" type="java.lang.String"/>
@@ -36,46 +77,5 @@
             </relation>
         </RelationalTerm>
     </RelationalTerm>
-    <RelationalTerm type="JoinTerm">
-        <RelationalTerm type="SelectionTerm">
-            <predicate type="ConjunctiveCondition">
-                <predicates position="3" type="ConstantEqualityCondition">
-                    <constant value="AMERICA"/>
-                </predicates>
-            </predicate>
-            <RelationalTerm type="RenameTerm">
-                <renamings name="v_cnation814874964" type="java.lang.Integer"/>
-                <renamings name="fv_nname814874964" type="java.lang.String"/>
-                <renamings name="v_nregion814874964" type="java.lang.Integer"/>
-                <renamings name="AMERICA" type="java.lang.String"/>
-                <RelationalTerm type="AccessTerm">
-                    <accessMethod name="m0"/>
-                    <relation name="region_nation">
-                        <attribute name="nation_key" type="java.lang.Integer"/>
-                        <attribute name="nation_name" type="java.lang.String"/>
-                        <attribute name="region_key" type="java.lang.Integer"/>
-                        <attribute name="region_name" type="java.lang.String"/>
-                        <access-method name="m0"/>
-                    </relation>
-                </RelationalTerm>
-            </RelationalTerm>
-        </RelationalTerm>
-        <RelationalTerm type="RenameTerm">
-            <renamings name="k5" type="java.lang.Integer"/>
-            <renamings name="k17" type="java.lang.String"/>
-            <renamings name="k18" type="java.lang.Integer"/>
-            <renamings name="k20" type="java.lang.String"/>
-            <RelationalTerm type="AccessTerm">
-                <accessMethod name="m0"/>
-                <relation name="region_nation">
-                    <attribute name="nation_key" type="java.lang.Integer"/>
-                    <attribute name="nation_name" type="java.lang.String"/>
-                    <attribute name="region_key" type="java.lang.Integer"/>
-                    <attribute name="region_name" type="java.lang.String"/>
-                    <access-method name="m0"/>
-                </relation>
-            </RelationalTerm>
-        </RelationalTerm>
-    </RelationalTerm>
-    <cost value="2.0" type="DoubleCost"/>
+    <cost value="20.0" type="DoubleCost"/>
 </RelationalTermWithCost>

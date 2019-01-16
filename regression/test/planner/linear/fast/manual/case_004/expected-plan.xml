@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="RenameTerm">
-    <renamings name="fv_x1502929574" type="java.lang.String"/>
-    <renamings name="fv_x2502929574" type="java.lang.String"/>
+    <renamings name="fv_x1605946828" type="java.lang.String"/>
+    <renamings name="fv_x2605946828" type="java.lang.String"/>
     <RelationalTerm type="AccessTerm">
         <accessMethod name="m1"/>
         <relation name="V3">
@@ -10,5 +10,5 @@
             <access-method name="m1"/>
         </relation>
     </RelationalTerm>
-    <cost value="1.0" type="DoubleCost"/>
+    <cost value="5.0" type="DoubleCost"/>
 </RelationalTermWithCost>

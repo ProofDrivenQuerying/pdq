@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="RenameTerm">
-    <renamings name="v_woeid956337311" type="java.lang.Integer"/>
+    <renamings name="v_woeid1322554079" type="java.lang.Integer"/>
     <renamings name="Eiffel Tower" type="java.lang.String"/>
-    <renamings name="v_type956337311" type="java.lang.Integer"/>
-    <renamings name="v_placeTypeName956337311" type="java.lang.String"/>
-    <renamings name="fv_country956337311" type="java.lang.String"/>
-    <renamings name="v_admin1956337311" type="java.lang.String"/>
-    <renamings name="v_admin2956337311" type="java.lang.String"/>
-    <renamings name="v_admin3956337311" type="java.lang.String"/>
-    <renamings name="v_locality1956337311" type="java.lang.String"/>
-    <renamings name="v_locality2956337311" type="java.lang.String"/>
-    <renamings name="v_postal956337311" type="java.lang.String"/>
-    <renamings name="v_latitude956337311" type="java.lang.Double"/>
-    <renamings name="v_longitude956337311" type="java.lang.Double"/>
-    <renamings name="v_bboxNorth956337311" type="java.lang.Double"/>
-    <renamings name="v_bboxSouth956337311" type="java.lang.Double"/>
-    <renamings name="v_bboxEast956337311" type="java.lang.Double"/>
-    <renamings name="v_bboxWest956337311" type="java.lang.Double"/>
-    <renamings name="v_timezone956337311" type="java.lang.String"/>
+    <renamings name="v_type1322554079" type="java.lang.Integer"/>
+    <renamings name="v_placeTypeName1322554079" type="java.lang.String"/>
+    <renamings name="fv_country1322554079" type="java.lang.String"/>
+    <renamings name="v_admin11322554079" type="java.lang.String"/>
+    <renamings name="v_admin21322554079" type="java.lang.String"/>
+    <renamings name="v_admin31322554079" type="java.lang.String"/>
+    <renamings name="v_locality11322554079" type="java.lang.String"/>
+    <renamings name="v_locality21322554079" type="java.lang.String"/>
+    <renamings name="v_postal1322554079" type="java.lang.String"/>
+    <renamings name="v_latitude1322554079" type="java.lang.Double"/>
+    <renamings name="v_longitude1322554079" type="java.lang.Double"/>
+    <renamings name="v_bboxNorth1322554079" type="java.lang.Double"/>
+    <renamings name="v_bboxSouth1322554079" type="java.lang.Double"/>
+    <renamings name="v_bboxEast1322554079" type="java.lang.Double"/>
+    <renamings name="v_bboxWest1322554079" type="java.lang.Double"/>
+    <renamings name="v_timezone1322554079" type="java.lang.String"/>
     <RelationalTerm type="AccessTerm">
         <accessMethod name="yh_geo_name" inputs="1"/>
         <relation name="YahooPlaces">
@@ -44,5 +44,5 @@
             <access-method name="yh_geo_type" inputs="1,2"/>
         </relation>
     </RelationalTerm>
-    <cost value="2.0823265836946413E7" type="DoubleCost"/>
+    <cost value="2.4967919004335693E8" type="DoubleCost"/>
 </RelationalTermWithCost>
