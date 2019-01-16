@@ -69,7 +69,7 @@ public class DatabaseParameters extends Parameters {
 	private boolean factsAreUnique = false;
 
 
-	private boolean createNewDatabase;
+	private boolean createNewDatabase = true;
 	
 	/**
 	 * Constructor for DatabaseParameters using default configuration file path.
