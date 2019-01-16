@@ -539,26 +539,15 @@ public abstract class Parameters extends Properties {
 	)
 	protected Integer seed = 0;
 
-	/** The timeout. */
 	@Parameter(
 			description = "Time limit (in ms).",
 			defaultValue = "Infinity")
-	protected Double timeout = Double.POSITIVE_INFINITY;
+	protected Double timeout = 2*60*1000d;
 
-	/**
-	 * Gets the timeout.
-	 *
-	 * @return Double
-	 */
 	public Double getTimeout() {
 		return this.timeout;
 	}
-
-	/**
-	 * Sets the timeout.
-	 *
-	 * @param timeout Number
-	 */
+	
 	public void setTimeout(Number timeout) {
 		this.timeout = timeout.doubleValue();
 	}

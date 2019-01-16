@@ -55,12 +55,16 @@ public class AdaptedConstant extends AdaptedVariable {
 			}catch (NumberFormatException e) {
 				ret = TypedConstant.create(value);
 			}
-		} else if (type!=null && type == java.sql.Date.class) {
+		} else if (type!=null && (type == java.sql.Date.class || type == java.util.Date.class)) {
 			SimpleDateFormat sdfmt1 = new SimpleDateFormat("yyyy-MM-dd");
 			java.util.Date dDate;
 			try {
 				dDate = sdfmt1.parse( value );
-				ret = TypedConstant.create(new java.sql.Date(dDate.getTime()));
+				if (type == java.sql.Date.class ) {
+					ret = TypedConstant.create(new java.sql.Date(dDate.getTime()));
+				} else if (type == java.util.Date.class ) {
+					ret = TypedConstant.create(new java.util.Date(dDate.getTime()));
+				}
 			} catch (ParseException e) {
 				// ignored, could be user's incorrect xml file.
 				e.printStackTrace();
@@ -84,7 +88,7 @@ public class AdaptedConstant extends AdaptedVariable {
 				ret = TypedConstant.create(value);
 		}
 		if (type!=null && ret.getType() != type) {
-			throw new IllegalArgumentException("Type should match!");
+			throw new IllegalArgumentException("Type should match! Expected type:" + type + " generated value's type:" + ret.getType() );
 		}
 		return ret;
 	}

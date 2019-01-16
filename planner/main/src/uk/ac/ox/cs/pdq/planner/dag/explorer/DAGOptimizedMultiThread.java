@@ -285,7 +285,7 @@ public class DAGOptimizedMultiThread extends DAGOptimized {
 				// in case the thread is interrupted we ignore it, and return.
 			}
 			if (!finished) {
-				throw new PlannerException("Worker thread read error at createBinaryConfigurations. ");
+				throw new PlannerException("Worker thread read error (probably timeout) at createBinaryConfigurations. ");
 			}
 			if (t != null) {
 				if (t instanceof PlannerException)
