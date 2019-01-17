@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearConfigurationNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.plancreation.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.planner.plantree.PlanTree;
 
 /**
@@ -93,7 +94,7 @@ public class OrderDependentCostPropagator extends CostPropagator<LinearConfigura
 		if (node.equals(planTree.getRoot())) {
 			List<Integer> path = node.getPathToSuccess();
 			if (path != null) {
-				RelationalTerm plan = CostPropagatorUtility.createLeftDeepPlan(planTree, path);
+				RelationalTerm plan = PlanCreationUtility.createLeftDeepPlan(planTree, path);
 				Cost cost = this.costEstimator.cost(plan);
 				Preconditions.checkState(plan != null);
 				if (this.bestPlan == null || cost.lessThan(this.bestCost)) {

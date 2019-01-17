@@ -34,9 +34,9 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultPairValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
 import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
+import uk.ac.ox.cs.pdq.planner.plancreation.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 

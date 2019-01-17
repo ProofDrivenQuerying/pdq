@@ -4,7 +4,7 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
-import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
+import uk.ac.ox.cs.pdq.planner.plancreation.PlanCreationUtility;
 
 /**
  * Transforms linear chase configurations to left-deep plans. 

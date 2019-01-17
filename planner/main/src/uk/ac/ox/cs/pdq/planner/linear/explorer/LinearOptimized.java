@@ -30,7 +30,6 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
-import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
@@ -363,7 +362,7 @@ public class LinearOptimized extends LinearExplorer {
 		// check if we need to prune this new node.
 		if (this.postPruning != null && !this.prunedPaths.contains(newPath)) {
 			this.prunedPaths.add(newPath);
-			List<SearchNode> path = LinearUtility.createPath(this.planTree, newPath);
+			List<SearchNode> path = this.planTree.createPath(newPath);
 			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.fol.Formula
 					.applySubstitution(this.accessibleQuery, match.getMapping()).getAtoms();
 			boolean isPruned = this.postPruning.pruneSearchNodePath(this.planTree.getRoot(), path, factsInQueryMatch);

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.util;
+package uk.ac.ox.cs.pdq.planner.plancreation;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -39,6 +39,9 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
+import uk.ac.ox.cs.pdq.planner.linear.LeftDeepPlanGenerator;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
+import uk.ac.ox.cs.pdq.planner.plantree.IndexedDirectedGraph;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
@@ -269,6 +272,24 @@ public class PlanCreationUtility {
 			projections.add(attribute);
 		}
 		return ProjectionTerm.create(projections.toArray(new Attribute[projections.size()]), plan);
+	}
+
+	/**
+	 * Creates the left deep plan.
+	 *
+	 * @param <T> the generic type
+	 * @param nodesSet            The nodes of the plan tree
+	 * @param path            A successful path (sequence of nodes). The corresponding nodes must
+	 *            correspond to a successful path (a path from the root to a
+	 *            success node)
+	 * @param costEstimator CostEstimator<LeftDeepPlan>
+	 * @return a linear plan that corresponds to the input path to success
+	 */
+	public static <T extends SearchNode> RelationalTerm createLeftDeepPlan(IndexedDirectedGraph<T> nodesSet, List<Integer> path) {
+		Preconditions.checkArgument(path != null && !path.isEmpty());
+		List<T> nodes = nodesSet.createPath(path);
+		RelationalTerm plan = LeftDeepPlanGenerator.createLeftDeepPlan(nodes);
+		return plan;
 	}
 
 }

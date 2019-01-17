@@ -41,7 +41,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidatorFactory;
 import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.DominanceFactory;
-import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
+import uk.ac.ox.cs.pdq.planner.plancreation.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 

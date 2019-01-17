@@ -6,8 +6,8 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.planner.plancreation.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
-import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 

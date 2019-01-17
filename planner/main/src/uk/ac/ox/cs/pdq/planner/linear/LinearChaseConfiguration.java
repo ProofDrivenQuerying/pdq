@@ -20,10 +20,11 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
+import uk.ac.ox.cs.pdq.planner.plancreation.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Type of configurations met in the linear world.
@@ -60,7 +61,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		this(parent, candidatesToExpose, parent.getState().clone());
 	}
 	public LinearChaseConfiguration(LinearChaseConfiguration parent, Set<Candidate> candidatesToExpose, AccessibleChaseInstance state) {
-		super(state, new LinkedHashSet<Constant>(), LinearUtility.getOutputConstants(candidatesToExpose));
+		super(state, new LinkedHashSet<Constant>(), LinearChaseConfiguration.getOutputConstants(candidatesToExpose));
 		Assert.assertNotNull(parent);
 		Assert.assertTrue(candidatesToExpose!= null && !candidatesToExpose.isEmpty());
 		Assert.assertTrue(this.getInput() != null && this.getInput().isEmpty());
@@ -231,4 +232,18 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	public Set<Candidate> getExposedCandidates() {
 		return this.newlyExposedCandidates;
 	}
+	
+	/**
+	 *
+	 * @param candidates a set of Candidates (facts whose input constants are accessible)
+	 * @return 		the output constants of the input candidate facts
+	 */
+	public static Collection<Constant> getOutputConstants(Set<Candidate> candidates) {
+		Set<Atom> facts = new HashSet<>();
+		for(Candidate candidate:candidates) {
+			facts.add(candidate.getFact());
+		}
+		return Utility.getUntypedConstants(facts);
+	}
+	
 }

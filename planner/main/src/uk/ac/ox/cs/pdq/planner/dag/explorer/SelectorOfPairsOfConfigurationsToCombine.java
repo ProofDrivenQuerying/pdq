@@ -12,8 +12,8 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
+import uk.ac.ox.cs.pdq.planner.plancreation.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
-import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 
 /**
  * Returns pairs of configurations to combine.

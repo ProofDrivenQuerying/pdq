@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleQuery;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
+import uk.ac.ox.cs.pdq.planner.plancreation.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 /**

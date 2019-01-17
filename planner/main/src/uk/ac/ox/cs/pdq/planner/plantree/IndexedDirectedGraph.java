@@ -7,6 +7,8 @@ import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
+import com.google.common.base.Preconditions;
+
 /**
  * Directed graph that allows reaching any node by its ID.
  *
@@ -63,4 +65,23 @@ public abstract class IndexedDirectedGraph<N> extends DefaultDirectedGraph<N, De
 		}
 		return null;
 	}
+	
+	/**
+	 *
+	 * @param <T> the generic type
+	 * @param tree 		the input node tree
+	 * @param ids a set of numbers that should be ids of nodes in the tree
+	 * @return 		a sequence of nodes having the input node ids
+	 */
+	public List<N> createPath(List<Integer> ids){
+		Preconditions.checkArgument(ids != null && !ids.isEmpty());
+		List<N> nodes = new ArrayList<>();
+		for (Integer n: ids) {
+			N node = this.getVertex(n);
+			Preconditions.checkNotNull(node);
+			nodes.add(node);
+		}
+		return nodes;
+	}
+	
 }

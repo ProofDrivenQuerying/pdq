@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearConfigurationNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.plancreation.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.planner.plantree.PlanTree;
 
 /**
@@ -62,7 +63,7 @@ public class OrderIndependentCostPropagator extends CostPropagator<LinearConfigu
 			RelationalTerm plan = null;
 			Cost currentCost = null;
 			if(node.getPathToSuccess() != null) {
-				plan = CostPropagatorUtility.createLeftDeepPlan(planTree, node.getPathToSuccess());
+				plan = PlanCreationUtility.createLeftDeepPlan(planTree, node.getPathToSuccess());
 				currentCost = this.costEstimator.cost(plan);
 			}
 			// Iterate over all children of the given node.
@@ -71,7 +72,7 @@ public class OrderIndependentCostPropagator extends CostPropagator<LinearConfigu
 				if (child.getPathToSuccess() != null) {
 					List<Integer> sequence = Lists.newArrayList(child.getId());
 					sequence.addAll(child.getPathToSuccess());
-					plan = CostPropagatorUtility.createLeftDeepPlan(planTree, sequence);
+					plan = PlanCreationUtility.createLeftDeepPlan(planTree, sequence);
 					Cost childCost = this.costEstimator.cost(plan);
 					if (currentCost == null || childCost.lessThan(currentCost)) {
 						node.setPathToSuccess(sequence);
@@ -83,7 +84,7 @@ public class OrderIndependentCostPropagator extends CostPropagator<LinearConfigu
 
 		// Update the best plan at the root if necessary
 		if (node.equals(planTree.getRoot()) && node.getPathToSuccess() != null) {
-			this.bestPlan = CostPropagatorUtility.createLeftDeepPlan(planTree, node.getPathToSuccess());
+			this.bestPlan = PlanCreationUtility.createLeftDeepPlan(planTree, node.getPathToSuccess());
 			this.bestCost = this.costEstimator.cost(bestPlan);
 			this.bestPath = node.getPathToSuccess();
 			Preconditions.checkState(this.bestPlan != null);
