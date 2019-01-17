@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.reasoning.utility;
+package uk.ac.ox.cs.pdq.reasoning.chase.dependencyAssessor;
 
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;

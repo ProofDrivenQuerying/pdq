@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -23,7 +24,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
-import uk.ac.ox.cs.pdq.reasoning.chase.Utility;
 
 /**
  * Type of configurations met in the linear world.
@@ -131,7 +131,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		Map<AccessibilityAxiom, List<Match>> nonFiredAxioms = this.getState().getUnexposedFacts(accessibleSchema);
 		for (AccessibilityAxiom axiom:nonFiredAxioms.keySet()) {
 			for (Match match:nonFiredAxioms.get(axiom)) {
-				Atom fact = (Atom) Utility.applySubstitution(axiom.getGuard(), match.getMapping());
+				Atom fact = (Atom) Formula.applySubstitution(axiom.getGuard(), match.getMapping());
 				result.add(new Candidate(axiom, fact, match));
 			}
 		}

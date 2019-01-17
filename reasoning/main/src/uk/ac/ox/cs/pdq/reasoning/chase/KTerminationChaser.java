@@ -6,9 +6,9 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
-import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 
 /**
@@ -46,7 +46,7 @@ public class KTerminationChaser extends RestrictedChaser {
 	@Override
 	public <S extends ChaseInstance> void reasonUntilTermination(S instance, Dependency[] dependencies) {
 		Preconditions.checkArgument(instance instanceof ChaseInstance);
-		Preconditions.checkArgument(!ReasonerUtility.checkEGDs(dependencies), "KTerminationChaser is not allowed with EGDs");
+		Preconditions.checkArgument(!KTerminationChaser.checkEGDs(dependencies), "KTerminationChaser is not allowed with EGDs");
 		int rounds = 0;
 		boolean appliedStep = true;
 		while (rounds < this.k && appliedStep) {
@@ -58,6 +58,21 @@ public class KTerminationChaser extends RestrictedChaser {
 			}
 			++rounds;
 		}
+	}
+	
+	/**
+	 * 
+	 * @param dependencies
+	 * @return
+	 * 		true if the input set of dependencies containts EGDs
+	 */
+	private static boolean checkEGDs(Dependency[] dependencies) {
+		for(Dependency dependency:dependencies) {
+			if(dependency instanceof EGD) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

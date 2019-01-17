@@ -40,9 +40,8 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.MatchFactory;
 import uk.ac.ox.cs.pdq.planner.util.FiringGraph;
 import uk.ac.ox.cs.pdq.planner.util.MapFiringGraph;
+import uk.ac.ox.cs.pdq.reasoning.chase.schemaconstantequality.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
-import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 /**
  * The Class AccessibleDatabaseListState.
@@ -66,9 +65,6 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	 *  the inferred accessible facts. */
 	private final Collection<Atom> inferredAccessibleAtoms;
 
-	/** The inferred accessible facts that were derived when chasing this.state **/
-	protected final Collection<Atom> derivedInferredAccessibleAtoms;
-
 	/**  Maps each schema signature (relation) to its chase facts. */
 	private final Multimap<Predicate, Atom> atomsMap;
 
@@ -88,9 +84,8 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 				createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema), 
 				maintainProvenance == true ? new MapFiringGraph() : null,
 				new EqualConstantsClasses(),
-				ReasonerUtility.createdConstantsMap(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
+				DatabaseChaseInstance.createdConstantsMap(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
 				AccessibleStateUtility.getInferredAccessibleAtoms(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
-				new LinkedHashSet<Atom>(),
 				AccessibleStateUtility.createAtomsMap(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
 				AccessibleStateUtility.getAllTermsAppearingInAccessibleFacts(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
 				connection);
@@ -101,9 +96,8 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 		this(	facts, 
 				maintainProvenance == true ? new MapFiringGraph() : null,
 				new EqualConstantsClasses(),
-				ReasonerUtility.createdConstantsMap(facts),
+				DatabaseChaseInstance.createdConstantsMap(facts),
 				AccessibleStateUtility.getInferredAccessibleAtoms(facts),
-				new LinkedHashSet<Atom>(),
 				AccessibleStateUtility.createAtomsMap(facts),
 				AccessibleStateUtility.getAllTermsAppearingInAccessibleFacts(facts),
 				connection);
@@ -120,7 +114,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	private static Collection<Atom> createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(ConjunctiveQuery query, Schema schema) {
 		// Gets the canonical database of the query
 		List<Atom> facts = new ArrayList<>(); 
-		facts.addAll(Arrays.asList(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, ExplorationSetUp.getCanonicalSubstitution().get(query)).getAtoms()));
+		facts.addAll(Arrays.asList(uk.ac.ox.cs.pdq.fol.Formula.applySubstitution(query, ExplorationSetUp.getCanonicalSubstitution().get(query)).getAtoms()));
 		// Create the Accessible(.) facts
 		// One Accessible(.) is being created for every schema constant
 		for (TypedConstant constant:uk.ac.ox.cs.pdq.util.Utility.getTypedConstants(query)) 
@@ -147,7 +141,6 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 			EqualConstantsClasses constantClasses,
 			Multimap<Constant,Atom> constants,
 			Collection<Atom> inferredAccessibleAtoms,
-			Collection<Atom> derivedInferredAccessibleAtoms,
 			Multimap<Predicate, Atom> atomsMap,
 			Multimap<Term,Atom> accessibleTerms, 
 			DatabaseManager connection
@@ -155,12 +148,10 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 		super(facts, constantClasses, constants, connection);
 		
 		Preconditions.checkNotNull(inferredAccessibleAtoms);
-		Preconditions.checkNotNull(derivedInferredAccessibleAtoms);
 		Preconditions.checkNotNull(atomsMap);
 		Preconditions.checkNotNull(accessibleTerms);
 		this.graph = graph;
 		this.inferredAccessibleAtoms = inferredAccessibleAtoms;
-		this.derivedInferredAccessibleAtoms = derivedInferredAccessibleAtoms;
 		this.atomsMap = atomsMap;
 		this.accessibleTerms = accessibleTerms;
 	}
@@ -177,43 +168,12 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	}
 
 	/**
-	 * TOCOMMENT: FIX THIS!
-	 *
-	 * @return Collection<PredicateFormula>
-	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance#getDerivedInferredAccessibleFacts()
-	 */
-	@Override
-	public Collection<Atom> getDerivedInferredAccessibleFacts() {
-		return this.derivedInferredAccessibleAtoms;
-	}
-
-//	/**
-//	 * Gets the signature groups.
-//	 *
-//	 * @return Multimap<Predicate,PredicateFormula>
-//	 */
-//	protected Multimap<Predicate, Atom> getAtomsMap() {
-//		return this.atomsMap;
-//	}
-
-	/**
 	 *
 	 * @return Multimap<Term,PredicateFormula>
 	 */
 	protected Multimap<Term,Atom> getAccessibleTerms() {
 		return this.accessibleTerms;
 	}
-
-//	/**
-//	 * Updates this.state
-//	 *
-//	 * @param match the match
-//	 * @return true, if successful
-//	 */
-//	@Override
-//	public boolean chaseStep(Match match) {
-//		return this.chaseStep(Sets.newHashSet(match));
-//	}
 
 	/* 
 	 * This method applies chase steps and keeps facts derivation information. 
@@ -234,12 +194,11 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 			Dependency dependency = (Dependency) match.getFormula();
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
-			Implication grounded = uk.ac.ox.cs.pdq.reasoning.chase.Utility.ground(dependency, mapping, true);
+			Implication grounded = DatabaseChaseInstance.ground(dependency, mapping, true);
 			Formula left = grounded.getChild(0);
 			Formula right = grounded.getChild(1);
 			for(Atom fact:right.getAtoms()) {
 				if(fact.getPredicate().getName().startsWith(AccessibleSchema.inferredAccessiblePrefix)) {
-					this.derivedInferredAccessibleAtoms.add(fact);
 					this.inferredAccessibleAtoms.add(fact);
 				}
 				else if (fact.getPredicate().getName().equals(AccessibleSchema.accessibleRelation.getName())) 
@@ -303,7 +262,6 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 			Atom inferredAccessibleFact = Atom.create(predicate, fact.getTerms());
 			createdFacts.add(inferredAccessibleFact);
 			this.inferredAccessibleAtoms.add(inferredAccessibleFact);
-			this.derivedInferredAccessibleAtoms.add(inferredAccessibleFact);
 			if(this.graph != null) 
 				this.graph.put(axiom, accessedFact, inferredAccessibleFact);
 			for(Term term:fact.getTerms()) 
@@ -393,7 +351,6 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 					this.classes.clone(),
 					constantsToAtoms,
 					new LinkedHashSet<>(this.inferredAccessibleAtoms),
-					new LinkedHashSet<>(this.derivedInferredAccessibleAtoms), 
 					LinkedHashMultimap.create(this.atomsMap), 
 					LinkedHashMultimap.create(this.accessibleTerms),databaseInstance);
 		} catch (SQLException e) {
@@ -411,7 +368,6 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 		facts.addAll(s.getFacts());
 		
 		Collection<Atom> inferred = CollectionUtils.union(this.inferredAccessibleAtoms, ((AccessibleDatabaseChaseInstance)s).inferredAccessibleAtoms);
-		Collection<Atom> derivedInferred = CollectionUtils.union(this.derivedInferredAccessibleAtoms, ((AccessibleDatabaseChaseInstance)s).derivedInferredAccessibleAtoms);
 		Multimap<Predicate, Atom> map = LinkedHashMultimap.create(this.atomsMap);
 		map.putAll(((AccessibleDatabaseChaseInstance)s).atomsMap);
 		Multimap<Term,Atom> accessibleTerms = LinkedHashMultimap.create(this.accessibleTerms);
@@ -433,7 +389,6 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 					classes,
 					constantsToAtoms,
 					inferred,
-					derivedInferred, 
 					map, 
 					accessibleTerms,
 					databaseInstance);
@@ -443,5 +398,5 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 				throw new RuntimeException("Merging of AccessibleDatabaseListState failed due to an SQL exception "+e);
 			}
 	}
-	
+
 }

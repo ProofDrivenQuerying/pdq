@@ -55,20 +55,6 @@ public interface ChaseInstance extends Instance{
 	 */
 	boolean isFailed();
 		
-//	/**
-//	 * Performs a chase step.
-//	 * 	(From modern dependency theory notes) Given trigger h for a dependency \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
-//	 * 		in I, a chase step appends to I additional facts for every atom R(\vec{x}, \vec{y}) in \tau ,
-//	 * 		with a position containing a variable x_i filled with h(x_i), a position containing a
-//	 * 		variable y_i filled with a value c_i that is distinct from each value in I and from
-//	 * 		each other c_j, and a position containing the constant using the corresponding
-//	 * 		constant.
-//	 *
-//	 * @param trigger the trigger
-//	 * @return 		true if the step has been applied successfully
-//	 */
-//	boolean chaseStep(Match trigger);
-	
 	/**
 	 * Performs multiple chase steps.
 	 * 	(From modern dependency theory notes) Given trigger h for a dependency \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})

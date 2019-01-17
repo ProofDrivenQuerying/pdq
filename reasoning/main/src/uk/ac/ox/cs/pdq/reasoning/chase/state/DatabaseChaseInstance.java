@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQueryWithInequality;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -37,10 +39,11 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
-import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
-import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
+import uk.ac.ox.cs.pdq.reasoning.chase.ChaseConstantGenerator;
+import uk.ac.ox.cs.pdq.reasoning.chase.schemaconstantequality.EqualConstantsClass;
+import uk.ac.ox.cs.pdq.reasoning.chase.schemaconstantequality.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
@@ -106,10 +109,10 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		} catch (DatabaseException e) {
 			throw new RuntimeException("database failure", e);
 		}
-		this.addFacts(Sets.newHashSet(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, uk.ac.ox.cs.pdq.reasoning.chase.Utility.generateCanonicalMapping(query)).getAtoms()));
+		this.addFacts(Sets.newHashSet(Formula.applySubstitution(query, generateCanonicalMapping(query)).getAtoms()));
 		this.classes = new EqualConstantsClasses();
 		try {
-			this.constantsToAtoms = ReasonerUtility.createdConstantsMap(databaseInstance.getCachedFacts());
+			this.constantsToAtoms = DatabaseChaseInstance.createdConstantsMap(databaseInstance.getCachedFacts());
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -144,7 +147,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		this.addFacts(facts);
 		this.classes = new EqualConstantsClasses();
 		try {
-			this.constantsToAtoms = ReasonerUtility.createdConstantsMap(databaseInstance.getCachedFacts());
+			this.constantsToAtoms = DatabaseChaseInstance.createdConstantsMap(databaseInstance.getCachedFacts());
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -264,7 +267,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			Dependency dependency = (Dependency) match.getFormula();
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
-			Implication grounded = uk.ac.ox.cs.pdq.reasoning.chase.Utility.ground(dependency, mapping, true);
+			Implication grounded = DatabaseChaseInstance.ground(dependency, mapping, true);
 			Formula right = grounded.getChild(1);
 			// Add information about new facts to constantsToAtoms
 			for (Atom atom : right.getAtoms()) {
@@ -302,7 +305,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			Dependency dependency = (Dependency) match.getFormula();
 			Preconditions.checkArgument(dependency instanceof EGD, "TGDs are not allowed inside EGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
-			Implication grounded = uk.ac.ox.cs.pdq.reasoning.chase.Utility.fire(dependency, mapping);
+			Implication grounded = DatabaseChaseInstance.ground(dependency, mapping,false);
 			Formula right = grounded.getChild(1);
 			for (Atom atom : right.getAtoms()) {
 				// Find all the constants that each constant in the equality is representing
@@ -666,6 +669,92 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			databaseInstance.dropDatabase();
 			databaseInstance.shutdown();
 		}
+	}
+	/**
+	 * 
+	 * Generate canonical mapping.
+	 *
+	 * @param body the body
+	 * @return 		a mapping of variables of the input conjunction to constants. 
+	 * 		A fresh constant is created for each variable of the conjunction. 
+	 * 		This method is invoked by the conjunctive query constructor when the constructor is called with empty input canonical mapping.
+	 */
+	public static Map<Variable, Constant> generateCanonicalMapping(ConjunctiveQuery query) {
+		Map<Variable, Constant> canonicalMapping = new LinkedHashMap<>();
+		for (Atom p: query.getAtoms()) {
+			for (Term t: p.getTerms()) {
+				if (t.isVariable()) {
+					Constant c = canonicalMapping.get(t);
+					if (c == null) {
+						c = UntypedConstant.create(ChaseConstantGenerator.getName());
+						canonicalMapping.put((Variable) t, c);
+					}
+				}
+			}
+		}
+		return canonicalMapping;
+	}
+	/**
+	 * Fire.
+	 *
+	 * @param substitution Map<Variable,Term>
+	 * @param skolemize boolean
+	 * @return TGD<L,R>
+	 * @see uk.ac.ox.cs.pdq.ics.IC#fire(Map<Variable,Term>, boolean)
+	 */
+	protected static Implication ground(Dependency dependency, Map<Variable, Constant> substitution, boolean skolemize) {
+		Map<Variable, Constant> skolemizedMapping = substitution;
+		if(skolemize) 
+			skolemizedMapping = DatabaseChaseInstance.skolemizeMapping(dependency, substitution);
+		Formula[] bodyAtoms = new Formula[dependency.getNumberOfBodyAtoms()];
+		for(int bodyAtomIndex = 0; bodyAtomIndex < dependency.getNumberOfBodyAtoms(); ++bodyAtomIndex) 
+			bodyAtoms[bodyAtomIndex] = Formula.applySubstitution(dependency.getBodyAtom(bodyAtomIndex), skolemizedMapping);
+
+		Formula[] headAtoms = new Formula[dependency.getNumberOfHeadAtoms()];
+		for(int headAtomIndex = 0; headAtomIndex < dependency.getNumberOfHeadAtoms(); ++headAtomIndex) 
+			headAtoms[headAtomIndex] = Formula.applySubstitution(dependency.getHeadAtom(headAtomIndex), skolemizedMapping);
+		
+		Formula bodyConjunction = Conjunction.create(bodyAtoms);
+		Formula headConjunction = Conjunction.create(headAtoms);
+		return Implication.of(bodyConjunction, headConjunction);
+	}
+
+	/**
+	 * Skolemize mapping.
+	 *
+	 * @param mapping the mapping
+	 * @return 		If canonicalNames is TRUE returns a copy of the input mapping
+	 * 		augmented such that Skolem constants are produced for
+	 *      the existentially quantified variables
+	 */
+	private static Map<Variable, Constant> skolemizeMapping(Dependency dependency, Map<Variable, Constant> mapping) {
+		Map<Variable, Constant> result = new LinkedHashMap<>(mapping);
+		for(Variable variable:dependency.getExistential()) {
+			if (!result.containsKey(variable)) {
+				result.put(variable, 
+						UntypedConstant.create(ChaseConstantGenerator.getTriggerWitness(dependency, mapping, variable)));
+			}
+		}
+
+		return result;
+	}
+	
+	/**
+	 * Extracts all constants from the terms of the given facts.
+	 * 
+	 * @param facts
+	 * @return a map of each constant to the atom and the position inside this atom
+	 *         where it appears. An exception is thrown when there is an equality in
+	 *         the input
+	 */
+	public static Multimap<Constant, Atom> createdConstantsMap(Collection<Atom> facts) {
+		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
+		for (Atom fact : facts) {
+			Preconditions.checkArgument(!fact.isEquality());
+			for (Term term : fact.getTerms())
+				constantsToAtoms.put((Constant) term, fact);
+		}
+		return constantsToAtoms;
 	}
 
 }

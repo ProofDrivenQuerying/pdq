@@ -57,12 +57,6 @@ public interface AccessibleChaseInstance extends ChaseInstance {
 
 	/**
 	 *
-	 * @return 		the inferred accessible facts that were derived when chasing the state
-	 */
-	Collection<Atom> getDerivedInferredAccessibleFacts();
-	
-	/**
-	 *
 	 * @return 		the rule firings that took place.
 	 */
 	Map<Atom, Pair<Dependency, Collection<Atom>>> getProvenance();

@@ -19,7 +19,6 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.chase.Utility;
 
 import com.google.common.collect.Lists;
 
@@ -54,7 +53,7 @@ public class TestUtility {
 		m.put(Variable.create("x2"), TypedConstant.create("c2"));
 		m.put(Variable.create("x4"), TypedConstant.create("c4"));
 		Formula i = Conjunction.create(p1, p2);
-		Assert.assertEquals("Grounded conjunction must comply to mapping ", g, Arrays.asList(Utility.applySubstitution(i, m).getTerms()));
+		Assert.assertEquals("Grounded conjunction must comply to mapping ", g, Arrays.asList(Formula.applySubstitution(i, m).getTerms()));
 	}
 
 	/**
@@ -76,7 +75,7 @@ public class TestUtility {
 		m.put(Variable.create("x2"), TypedConstant.create("c2"));
 		m.put(Variable.create("x4"), TypedConstant.create("c4"));
 		Atom p = Atom.create(s, t);
-		Assert.assertArrayEquals("Grounded negation must comply to mapping ",g, Utility.applySubstitution(p, m).getTerms());
+		Assert.assertArrayEquals("Grounded negation must comply to mapping ",g, Formula.applySubstitution(p, m).getTerms());
 	}
 
 	/**
@@ -110,7 +109,7 @@ public class TestUtility {
 		m.put(Variable.create("x2"), TypedConstant.create("c2"));
 		m.put(Variable.create("x4"), TypedConstant.create("c4"));
 		Formula i = Disjunction.of(p1, p2);
-		Assert.assertArrayEquals("Grounded disjunction must comply to mapping ", g, Utility.applySubstitution(i, m).getTerms());
+		Assert.assertArrayEquals("Grounded disjunction must comply to mapping ", g, Formula.applySubstitution(i, m).getTerms());
 	}
 
 	/**
@@ -144,7 +143,7 @@ public class TestUtility {
 		m.put(Variable.create("x2"), TypedConstant.create("c2"));
 		m.put(Variable.create("x4"), TypedConstant.create("c4"));
 		Formula i = Implication.of(p1, p2);
-		Assert.assertArrayEquals("Grounded negation must comply to mapping ", g, Utility.applySubstitution(i, m).getTerms());
+		Assert.assertArrayEquals("Grounded negation must comply to mapping ", g, Formula.applySubstitution(i, m).getTerms());
 	}
 
 
@@ -292,6 +291,6 @@ public class TestUtility {
 		m.put(Variable.create("x2"), TypedConstant.create("c2"));
 		m.put(Variable.create("x4"), TypedConstant.create("c4"));
 		Conjunction i = (Conjunction) Conjunction.create(p1, p2);
-		Assert.assertEquals("Grounded conjunction must comply to mapping ", g, Arrays.asList(Utility.applySubstitution(i, m).getTerms()));
+		Assert.assertEquals("Grounded conjunction must comply to mapping ", g, Arrays.asList(Formula.applySubstitution(i, m).getTerms()));
 	}
 }

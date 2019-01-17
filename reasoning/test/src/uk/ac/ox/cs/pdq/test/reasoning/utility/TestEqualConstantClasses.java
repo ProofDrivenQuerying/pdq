@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
+import uk.ac.ox.cs.pdq.reasoning.chase.schemaconstantequality.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**

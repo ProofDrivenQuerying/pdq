@@ -364,7 +364,7 @@ public class LinearOptimized extends LinearExplorer {
 		if (this.postPruning != null && !this.prunedPaths.contains(newPath)) {
 			this.prunedPaths.add(newPath);
 			List<SearchNode> path = LinearUtility.createPath(this.planTree, newPath);
-			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
+			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.fol.Formula
 					.applySubstitution(this.accessibleQuery, match.getMapping()).getAtoms();
 			boolean isPruned = this.postPruning.pruneSearchNodePath(this.planTree.getRoot(), path, factsInQueryMatch);
 			if (isPruned) {

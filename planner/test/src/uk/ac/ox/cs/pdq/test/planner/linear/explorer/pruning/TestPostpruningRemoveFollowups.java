@@ -155,7 +155,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 			List<Match> matches = explorer.getBestNode().getConfiguration().getState().getMatches(accessibleQuery,
 					new HashMap<>());
 			
-			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
+			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.fol.Formula
 					.applySubstitution(accessibleQuery, matches.get(0).getMapping()).getAtoms();
 
 			// attempt pruning.
@@ -260,7 +260,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 			// get query matches
 			List<Match> matches = explorer.getBestNode().getConfiguration().getState().getMatches(accessibleQuery,
 					new HashMap<>());
-			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
+			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.fol.Formula
 					.applySubstitution(accessibleQuery, matches.get(0).getMapping()).getAtoms();
 
 			// attempt pruning the plan with the two accesses.
@@ -365,7 +365,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 			// get query matches
 			List<Match> matches = newNode.getConfiguration().getState().getMatches(accessibleQuery,
 					new HashMap<>());
-			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
+			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.fol.Formula
 					.applySubstitution(accessibleQuery, matches.get(0).getMapping()).getAtoms();
 
 			// attempt pruning the plan with the two accesses.
@@ -473,7 +473,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 			// get query matches
 			List<Match> matches = newNode.getConfiguration().getState().getMatches(accessibleQuery,
 					new HashMap<>());
-			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
+			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.fol.Formula
 					.applySubstitution(accessibleQuery, matches.get(0).getMapping()).getAtoms();
 
 			// attempt pruning the plan with the two accesses.
@@ -599,7 +599,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 //					.get(bestNode.getBestPathFromRoot().size() - 1).getConfiguration().getState()
 //					.getMatches(accessibleQuery, new HashMap<>());
 
-			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
+			Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.fol.Formula
 					.applySubstitution(accessibleQuery, matches.get(0).getMapping()).getAtoms();
 
 			// Attempt pruning the best node, we know it cannot be pruned.

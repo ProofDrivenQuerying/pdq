@@ -12,10 +12,10 @@ import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.reasoning.chase.Utility;
 
 
 /**
@@ -112,7 +112,7 @@ public class Candidate implements Cloneable{
 	}
 	
 	public Atom getInferredAccessibleFact() {
-		Atom accessed = (Atom) Utility.applySubstitution(this.rule.getGuard(),this.match.getMapping());
+		Atom accessed = (Atom) Formula.applySubstitution(this.rule.getGuard(),this.match.getMapping());
 		Relation relation = this.rule.getBaseRelation();
 		return Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethodDescriptor[]{}, relation.isEquality()), accessed.getTerms());
 	}

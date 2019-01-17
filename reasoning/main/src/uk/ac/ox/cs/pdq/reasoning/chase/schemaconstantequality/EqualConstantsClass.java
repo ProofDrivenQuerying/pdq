@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.reasoning.utility;
+package uk.ac.ox.cs.pdq.reasoning.chase.schemaconstantequality;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;

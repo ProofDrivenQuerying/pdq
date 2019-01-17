@@ -33,11 +33,4 @@ public interface Instance {
 	 */
 	Collection<Atom> getFacts();
 	
-//	/**
-//	 * Answers queries on this instance's facts.
-//	 *
-//	 * @param
-//	 */
-//	List<Match> answerQuery(ConjunctiveQuery q);
-
 }
