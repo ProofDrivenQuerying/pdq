@@ -12,7 +12,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
-import uk.ac.ox.cs.pdq.planner.util.IndexedDirectedGraph;
+import uk.ac.ox.cs.pdq.planner.plantree.IndexedDirectedGraph;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**

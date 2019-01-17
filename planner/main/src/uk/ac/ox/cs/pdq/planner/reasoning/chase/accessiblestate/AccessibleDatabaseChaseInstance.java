@@ -37,9 +37,9 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.plantree.FiringGraph;
+import uk.ac.ox.cs.pdq.planner.plantree.MapFiringGraph;
 import uk.ac.ox.cs.pdq.planner.reasoning.MatchFactory;
-import uk.ac.ox.cs.pdq.planner.util.FiringGraph;
-import uk.ac.ox.cs.pdq.planner.util.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.chase.schemaconstantequality.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 

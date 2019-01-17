@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.planner.linear.LeftDeepPlanGenerator;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
-import uk.ac.ox.cs.pdq.planner.util.IndexedDirectedGraph;
+import uk.ac.ox.cs.pdq.planner.plantree.IndexedDirectedGraph;
 
 
 /**

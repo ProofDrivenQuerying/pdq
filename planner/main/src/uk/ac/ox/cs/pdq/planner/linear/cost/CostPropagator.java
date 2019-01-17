@@ -6,7 +6,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
-import uk.ac.ox.cs.pdq.planner.util.PlanTree;
+import uk.ac.ox.cs.pdq.planner.plantree.PlanTree;
 
 /**
  * Abstract path-to-success propagation. Propagation takes place either when a
