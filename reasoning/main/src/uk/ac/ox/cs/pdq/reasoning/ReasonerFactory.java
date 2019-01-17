@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.KTerminationChaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.ParallelEGDChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 
 /**
@@ -80,7 +80,7 @@ public class ReasonerFactory {
 		case RESTRICTED_CHASE:
 			return new RestrictedChaser();
 		case PARALLEL_EGD_CHASE:
-			return new ParallelEGDChaser();			
+			return new ParallelChaser();			
 		case KTERMINATION_CHASE:
 			return new KTerminationChaser(this.terminationK);
 		default:

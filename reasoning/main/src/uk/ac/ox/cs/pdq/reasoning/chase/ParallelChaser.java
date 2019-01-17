@@ -34,7 +34,7 @@ import uk.ac.ox.cs.pdq.reasoning.utility.ParallelEGDChaseDependencyAssessor.EGDR
  * @author Efthymia Tsamoura
  *
  */
-public class ParallelEGDChaser extends Chaser {
+public class ParallelChaser extends Chaser {
 
 	/**
 	 * Chases the input state until termination.
@@ -91,8 +91,8 @@ public class ParallelEGDChaser extends Chaser {
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.Chaser#clone()
 	 */
 	@Override
-	public ParallelEGDChaser clone() {
-		return new ParallelEGDChaser();
+	public ParallelChaser clone() {
+		return new ParallelChaser();
 	}
 
 }
