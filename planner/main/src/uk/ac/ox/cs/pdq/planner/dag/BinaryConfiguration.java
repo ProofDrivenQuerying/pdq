@@ -1,10 +1,14 @@
 package uk.ac.ox.cs.pdq.planner.dag;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.plancreation.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
@@ -45,8 +49,8 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 			DAGChaseConfiguration right
 			) {
 		super(left.getState().merge(right.getState()),
-				ConfigurationUtility.getInput(left, right),
-				ConfigurationUtility.getOutput(left, right),
+				BinaryConfiguration.getInput(left, right),
+				BinaryConfiguration.getOutput(left, right),
 				left.getHeight() + right.getHeight()
 				);
 		Preconditions.checkNotNull(left);
@@ -54,7 +58,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 		this.left = left;
 		this.right = right;
 		this.plan = PlanCreationUtility.createJoinPlan(left.getPlan(), right.getPlan());
-		this.rules = ConfigurationUtility.getApplyRules(this);
+		this.rules = BinaryConfiguration.getApplyRules(this);
 	}
 	
 	/**
@@ -70,8 +74,8 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 			AccessibleChaseInstance state
 			) {
 		super(state,
-				ConfigurationUtility.getInput(left, right),
-				ConfigurationUtility.getOutput(left, right),
+				BinaryConfiguration.getInput(left, right),
+				BinaryConfiguration.getOutput(left, right),
 				left.getHeight() + right.getHeight()
 				);
 		Preconditions.checkNotNull(left);
@@ -79,7 +83,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 		this.left = left;
 		this.right = right;
 		this.plan = PlanCreationUtility.createJoinPlan(left.getPlan(), right.getPlan());
-		this.rules = ConfigurationUtility.getApplyRules(this);
+		this.rules = BinaryConfiguration.getApplyRules(this);
 	}
 
 	/**
@@ -140,5 +144,49 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	 */
 	public Collection<ApplyRule> getApplyRules() {
 		return this.rules;
+	}
+
+	/**
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @return the output constants of the binary configuration composed from the left and right input configurations
+	 */
+	public static List<Constant> getOutput(DAGChaseConfiguration left, DAGChaseConfiguration right) {
+		List<Constant> output = Lists.newArrayList(left.getOutput());
+		output.addAll(right.getOutput());
+		return output;
+	}
+
+	/**
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @return the input constants of the binary configuration composed from the left and right input configurations
+	 */
+	public static List<Constant> getInput(DAGChaseConfiguration left, DAGChaseConfiguration right) {
+		List<Constant> input = Lists.newArrayList();
+		input.addAll(left.getInput());
+		List<Constant> in2 = Lists.newArrayList(right.getInput());
+		in2.removeAll(left.getOutput());
+		input.addAll(in2);
+		return input;
+	}
+
+	/**
+	 * Gets the apply rule configurations that lie within a given configuration.
+	 *
+	 * @param configuration the configuration
+	 * @return 		the ApplyRule sub-configurations of the input configuration
+	 */
+	public static Collection<ApplyRule> getApplyRules(DAGConfiguration configuration) {
+		Collection<ApplyRule> ret = new LinkedHashSet<>();
+		if(configuration instanceof BinaryConfiguration) {
+			ret.addAll(getApplyRules(((BinaryConfiguration) configuration).getLeft()));
+			ret.addAll(getApplyRules(((BinaryConfiguration) configuration).getRight()));
+		}
+		else 
+			ret.add((ApplyRule) configuration);
+		return ret;
 	}
 }

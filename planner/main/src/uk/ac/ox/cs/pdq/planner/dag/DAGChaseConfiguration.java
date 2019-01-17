@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.planner.dag;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
 
 import com.google.common.base.Preconditions;
 
@@ -73,7 +74,7 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 	@Override
 	public Collection<DAGConfiguration> getSubconfigurations() {
 		if(this.subconfigurations == null) {
-			this.subconfigurations = ConfigurationUtility.getSubconfigurations(this);
+			this.subconfigurations = DAGChaseConfiguration.getSubconfigurations(this);
 		}
 		return this.subconfigurations;
 	}
@@ -109,6 +110,24 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 	@Override
 	public int compareTo(Configuration o) {
 		return this.getCost().compareTo(o.getCost());
+	}
+
+	/**
+	 * 
+	 *
+	 * @param configuration the configuration
+	 * @return 		the subconfigurations of the input configuration
+	 */
+	public static Collection<DAGConfiguration> getSubconfigurations(DAGConfiguration configuration) {
+		Collection<DAGConfiguration> ret = new LinkedHashSet<>();
+		if(configuration instanceof BinaryConfiguration) {
+			ret.add(configuration);
+			ret.addAll(getSubconfigurations(((BinaryConfiguration) configuration).getLeft()));
+			ret.addAll(getSubconfigurations(((BinaryConfiguration) configuration).getRight()));
+		}
+		else 
+			ret.add(configuration);
+		return ret;
 	}
 
 }

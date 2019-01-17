@@ -29,12 +29,13 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
-import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.SynchronizedEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DagChaseConfigurationValidation;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultPairValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidatorFactory;
@@ -103,7 +104,7 @@ public class DAGOptimizedExperimental extends DAGExplorer {
 		super(eventBus, parameters, query, accessibleSchema, chaser, connection, costEstimator);
 		this.filter = filter;
 		this.maxDepth = maxDepth;
-		List<DAGChaseConfiguration> initialConfigurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(
+		List<DAGChaseConfiguration> initialConfigurations = ApplyRule.createInitialApplyRuleConfigurations(
 				this.parameters, this.query, this.accessibleSchema, this.chaser, this.connection);
 		if (this.filter != null) {
 			Collection<DAGChaseConfiguration> toDelete = this.filter.filter(initialConfigurations);
@@ -233,7 +234,7 @@ public class DAGOptimizedExperimental extends DAGExplorer {
 				for (DAGChaseConfiguration configuration : rightInput) {
 					Preconditions.checkNotNull(equivalenceClasses.getEquivalenceClass(configuration));
 					Preconditions.checkState(!equivalenceClasses.getEquivalenceClass(configuration).isEmpty());
-					if (ConfigurationUtility.validate(left, configuration,
+					if (DagChaseConfigurationValidation.validate(left, configuration,
 									Arrays.asList(this.validator), depth)
 							&& isPotentialBestPlan(left, configuration,
 									bestConfiguration == null ? null : bestConfiguration.getPlan(),

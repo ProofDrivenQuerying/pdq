@@ -36,7 +36,6 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGExplorerUtilities;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.SelectorOfPairsOfConfigurationsToCombine;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultPairValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
@@ -109,7 +108,7 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 
 		try {
 			
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleSchema, chaser,
+			List<DAGChaseConfiguration> configurations = ApplyRule.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleSchema, chaser,
 					connection);
 			Set<String> predicateNames = new HashSet<>();
 			for (DAGChaseConfiguration c : configurations) {
@@ -254,7 +253,7 @@ public class TestSelectorOfPairsOfConfigurationsToCombine extends PdqTest {
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
 		try {
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleSchema, chaser,
+			List<DAGChaseConfiguration> configurations = ApplyRule.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleSchema, chaser,
 					connection);
 
 			Set<String> predicateNames = new HashSet<>();

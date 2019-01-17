@@ -24,8 +24,8 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleQuery;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGExplorerUtilities;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
@@ -83,7 +83,7 @@ public class TestDAGExplorerUtilities extends PdqTest {
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
 		try {
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleSchema,
+			List<DAGChaseConfiguration> configurations = ApplyRule.createInitialApplyRuleConfigurations(parameters, ts.getQuery(), accessibleSchema,
 					chaser, connection);
 			Set<DAGChaseConfiguration> uniqueConfigs = new HashSet<>();
 			int index = 0;

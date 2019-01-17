@@ -9,8 +9,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DagChaseConfigurationValidation;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
 import uk.ac.ox.cs.pdq.planner.plancreation.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
@@ -93,10 +93,10 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 			RelationalTerm leftToRightPlan = PlanCreationUtility.createJoinPlan(l.getPlan(), r.getPlan());
 			RelationalTerm rightToleftPlan = PlanCreationUtility.createJoinPlan(r.getPlan(), l.getPlan());
 			if (!this.plansOfConfigurationPairsReturnedInThePast.contains(leftToRightPlan)
-					&& ConfigurationUtility.validate(l, r, this.validators, depth)) {
+					&& DagChaseConfigurationValidation.validate(l, r, this.validators, depth)) {
 				// check if we can return the inverse next time
 				if (!this.plansOfConfigurationPairsReturnedInThePast.contains(rightToleftPlan)
-						&& ConfigurationUtility.validate(r, l, this.validators, depth)) {
+						&& DagChaseConfigurationValidation.validate(r, l, this.validators, depth)) {
 					this.inverseBinaryConfiguration = Pair.of(r, l);
 					this.inverseBinaryPlan = rightToleftPlan;
 					this.returnInverseBinaryConfiguration = true;
@@ -105,7 +105,7 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 				return Pair.of(l, r);
 				// in case (l,r) is not new and valid we check the r,l combination
 			} else if (!this.plansOfConfigurationPairsReturnedInThePast.contains(leftToRightPlan)
-					&& ConfigurationUtility.validate(r, l, this.validators, depth)) {
+					&& DagChaseConfigurationValidation.validate(r, l, this.validators, depth)) {
 				this.plansOfConfigurationPairsReturnedInThePast.add(leftToRightPlan);
 				return Pair.of(l, r);
 			}

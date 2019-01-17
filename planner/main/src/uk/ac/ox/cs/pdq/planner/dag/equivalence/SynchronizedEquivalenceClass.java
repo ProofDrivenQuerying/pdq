@@ -11,7 +11,6 @@ import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
-import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.equivalence.FastStructuralEquivalence;
@@ -195,11 +194,11 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 			Collection<DAGChaseConfiguration> dominated = new LinkedHashSet<>();
 			if (!this.isEmpty()){
 				for (DAGChaseConfiguration configuration: this.nonRepresentatives) {
-					if(ConfigurationUtility.isDominatedBy(dominance, input, configuration)) {
+					if(isDominatedBy(dominance, input, configuration)) {
 						dominated.add(configuration);
 					}
 				}
-				if(ConfigurationUtility.isDominatedBy(dominance, input, this.representative)) {
+				if(isDominatedBy(dominance, input, this.representative)) {
 					dominated.add(this.representative);
 				}
 			}
@@ -238,11 +237,11 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 		try {
 			if (!this.isEmpty()){
 				for (DAGChaseConfiguration configuration: this.nonRepresentatives) {
-					if (ConfigurationUtility.isDominatedBy(dominance, configuration, input)) {
+					if (isDominatedBy(dominance, configuration, input)) {
 						return configuration;
 					}
 				}
-				if (ConfigurationUtility.isDominatedBy(dominance, this.representative, input)) {
+				if (isDominatedBy(dominance, this.representative, input)) {
 					return this.representative;
 				}
 			}
@@ -332,4 +331,21 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 				"\nISSLEEPING" + "\n\t" + this.isSleeping();
 		return ret;
 	}
+
+	/**
+	 *
+	 * @param dominance the detector of dominance
+	 * @param target the target
+	 * @param source the source
+	 * @return true if the source configuration is dominated by the target one
+	 */
+	public static boolean isDominatedBy(Dominance[] dominance, DAGChaseConfiguration target, DAGChaseConfiguration source) {
+		for(Dominance detector:dominance) {
+			if(detector.isDominated(source, target)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }
