@@ -14,10 +14,10 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleQuery;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
-import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 /**
@@ -98,12 +98,12 @@ public abstract class DAGExplorer extends Explorer {
 	}
 	
 	private static ConjunctiveQuery generateAccessibleQuery(ConjunctiveQuery query) {
-		Map<Variable, Constant> canonicalMapping = PlannerUtility.generateCanonicalMappingForQuery(query);
+		Map<Variable, Constant> canonicalMapping = AccessibleQuery.generateCanonicalMappingForQuery(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
 		substitutionFiltered.putAll(canonicalMapping);
 		for (Variable variable : query.getBoundVariables())
 			substitutionFiltered.remove(variable);
-		return PlannerUtility.createAccessibleQuery(query);
+		return new AccessibleQuery(query);
 	}
 
 	/**

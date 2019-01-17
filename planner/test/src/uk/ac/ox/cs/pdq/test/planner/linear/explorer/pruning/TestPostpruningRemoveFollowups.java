@@ -44,6 +44,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleQuery;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
@@ -55,7 +56,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
-import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
@@ -100,7 +100,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(scenario1.getSchema());
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(scenario1.getQuery());
+		ConjunctiveQuery accessibleQuery = new AccessibleQuery(scenario1.getQuery());
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
 		substitutionFiltered.putAll(substitution);
@@ -210,7 +210,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
+		ConjunctiveQuery accessibleQuery = new AccessibleQuery(query);
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
 		substitutionFiltered.putAll(substitution);
@@ -316,7 +316,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
+		ConjunctiveQuery accessibleQuery = new AccessibleQuery(query);
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
 		substitutionFiltered.putAll(substitution);
@@ -421,7 +421,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
+		ConjunctiveQuery accessibleQuery = new AccessibleQuery(query);
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
 		substitutionFiltered.putAll(substitution);
@@ -536,7 +536,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
+		ConjunctiveQuery accessibleQuery = new AccessibleQuery(query);
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
 		substitutionFiltered.putAll(substitution);

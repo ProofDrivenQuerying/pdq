@@ -52,13 +52,13 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleQuery;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
-import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
@@ -107,7 +107,7 @@ public class TestLinearGeneric extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, scenario1.getSchema(), 3);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(scenario1.getQuery());
+		ConjunctiveQuery accessibleQuery = new AccessibleQuery(scenario1.getQuery());
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
 		substitutionFiltered.putAll(substitution);
@@ -222,7 +222,7 @@ public class TestLinearGeneric extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, scenario2.getSchema(), 3);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(scenario2.getQuery());
+		ConjunctiveQuery accessibleQuery = new AccessibleQuery(scenario2.getQuery());
 		ConjunctiveQuery query = scenario2.getQuery();
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
@@ -295,7 +295,7 @@ public class TestLinearGeneric extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, scenario3.getSchema(), 4);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(scenario3.getQuery());
+		ConjunctiveQuery accessibleQuery = new AccessibleQuery(scenario3.getQuery());
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(scenario3.getQuery());
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
 		substitutionFiltered.putAll(substitution);
@@ -481,7 +481,7 @@ public class TestLinearGeneric extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(ts.getQuery());
+		ConjunctiveQuery accessibleQuery = new AccessibleQuery(ts.getQuery());
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(ts.getQuery());
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
 		substitutionFiltered.putAll(substitution);

@@ -51,9 +51,9 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleQuery;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimizedMultiThread;
-import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
@@ -410,14 +410,14 @@ public class ExplorationSetUp {
 	 *         is called with empty input canonical mapping.
 	 */
 	public static ConjunctiveQuery generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(ConjunctiveQuery query) {
-		Map<Variable, Constant> canonicalMapping = PlannerUtility.generateCanonicalMappingForQuery(query);
+		Map<Variable, Constant> canonicalMapping = AccessibleQuery.generateCanonicalMappingForQuery(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
 		substitutionFiltered.putAll(canonicalMapping);
 		for (Variable variable : query.getBoundVariables())
 			substitutionFiltered.remove(variable);
 		canonicalSubstitution.put(query, canonicalMapping);
 		canonicalSubstitutionOfFreeVariables.put(query, substitutionFiltered);
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query);
+		ConjunctiveQuery accessibleQuery = new AccessibleQuery(query);
 		canonicalSubstitution.put(accessibleQuery, canonicalMapping);
 		canonicalSubstitutionOfFreeVariables.put(accessibleQuery, substitutionFiltered);
 		return accessibleQuery;

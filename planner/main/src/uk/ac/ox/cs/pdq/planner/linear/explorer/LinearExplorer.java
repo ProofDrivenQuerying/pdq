@@ -13,13 +13,13 @@ import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleQuery;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
-import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 
@@ -104,7 +104,7 @@ public abstract class LinearExplorer extends Explorer {
 		Assert.assertNotNull(costEstimator);
 
 		this.query = query;
-		this.accessibleQuery = PlannerUtility.createAccessibleQuery(query);
+		this.accessibleQuery = new AccessibleQuery(query);
 		this.accessibleSchema = accessibleSchema;
 		this.chaser = chaser;
 		this.connection = connection;
