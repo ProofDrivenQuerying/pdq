@@ -343,7 +343,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	}
 
 	/**
-	 * Parses the constant.
+	 * Parses the constant of an SQL query string.
 	 *
 	 * @param token String
 	 * @param atoms the predicates
