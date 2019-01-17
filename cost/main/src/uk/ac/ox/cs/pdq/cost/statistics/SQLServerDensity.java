@@ -3,10 +3,10 @@ package uk.ac.ox.cs.pdq.cost.statistics;
 import java.util.List;
 import java.util.Objects;
 
-import uk.ac.ox.cs.pdq.db.Attribute;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+
+import uk.ac.ox.cs.pdq.db.Attribute;
 
 /**
  * Density vectors for SQL Server 2014.

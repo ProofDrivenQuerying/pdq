@@ -36,6 +36,7 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleQuery;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.plantree.FiringGraph;
 import uk.ac.ox.cs.pdq.planner.plantree.MapFiringGraph;
@@ -85,9 +86,9 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 				maintainProvenance == true ? new MapFiringGraph() : null,
 				new EqualConstantsClasses(),
 				DatabaseChaseInstance.createdConstantsMap(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
-				AccessibleStateUtility.getInferredAccessibleAtoms(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
-				AccessibleStateUtility.createAtomsMap(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
-				AccessibleStateUtility.getAllTermsAppearingInAccessibleFacts(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
+				AccessibleQuery.getInferredAccessibleAtoms(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
+				AccessibleQuery.createAtomsMap(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
+				AccessibleQuery.getAllTermsAppearingInAccessibleFacts(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
 				connection);
 
 	}
@@ -97,9 +98,9 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 				maintainProvenance == true ? new MapFiringGraph() : null,
 				new EqualConstantsClasses(),
 				DatabaseChaseInstance.createdConstantsMap(facts),
-				AccessibleStateUtility.getInferredAccessibleAtoms(facts),
-				AccessibleStateUtility.createAtomsMap(facts),
-				AccessibleStateUtility.getAllTermsAppearingInAccessibleFacts(facts),
+				AccessibleQuery.getInferredAccessibleAtoms(facts),
+				AccessibleQuery.createAtomsMap(facts),
+				AccessibleQuery.getAllTermsAppearingInAccessibleFacts(facts),
 				connection);
 		this.addFacts(facts);
 	}
@@ -232,7 +233,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	 * When there are multiple inputs it will create groups for each unique input configuration. 
 	 */
 	public List<Pair<AccessibilityAxiom, Collection<Atom>>> groupFactsByAccessMethods(AccessibilityAxiom[] axioms) {
-		return AccessibleStateUtility.groupFactsByAccessMethods(axioms, this.atomsMap);
+		return AccessibleQuery.groupFactsByAccessMethods(axioms, this.atomsMap);
 	}
 
 	/**
@@ -286,7 +287,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 			Collection<Atom> facts) {
 		Map<AccessibilityAxiom, List<Match>> ret = new LinkedHashMap<>();
 		List<Pair<AccessibilityAxiom,Collection<Atom>>> groups = 
-				AccessibleStateUtility.groupFactsByAccessMethods(accessibleSchema.getAccessibilityAxioms(), atomsMap);
+				AccessibleQuery.groupFactsByAccessMethods(accessibleSchema.getAccessibilityAxioms(), atomsMap);
 		for(Pair<AccessibilityAxiom, Collection<Atom>> pair: groups) {
 			AccessibilityAxiom axiom = pair.getLeft();
 			Iterator<Atom> iterator = pair.getRight().iterator();

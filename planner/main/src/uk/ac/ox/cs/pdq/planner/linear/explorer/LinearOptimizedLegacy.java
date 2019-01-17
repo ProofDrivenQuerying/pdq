@@ -15,7 +15,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
@@ -342,7 +341,7 @@ public class LinearOptimizedLegacy extends LinearExplorer {
 			this.bestCost = costOfSuccessfulPlan;
 			this.eventBus.post(this.getBestPlan());
 			this.eventBus.post(this.getBestPlan());
-			log.trace("\t+++BEST PLAN: " + AlgebraUtilities.getAccesses(this.bestPlan) + " " + this.bestCost);
+			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestCost);
 		}
 	}
 

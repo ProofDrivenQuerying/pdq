@@ -5,7 +5,6 @@ import static uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion.Acceptan
 
 import java.util.Map.Entry;
 
-import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
@@ -42,14 +41,14 @@ public class ApproximateCostAcceptanceCheck implements AcceptanceCriterion<Entry
 				double oc = observedCost.getValue().doubleValue();
 				if (ec * .1 <= oc && oc <= ec * 10.) {
 					return new AcceptanceResult(PASS,
-						"expected: " + expectedPlan.getValue() + " - " + AlgebraUtilities.getAccesses(expectedPlan.getKey()),
-						"observed: " + observedPlan.getValue() + " - " + AlgebraUtilities.getAccesses(observedPlan.getKey()));
+						"expected: " + expectedPlan.getValue() + " - " + expectedPlan.getKey().getAccesses(),
+						"observed: " + observedPlan.getValue() + " - " + observedPlan.getKey().getAccesses());
 				}
 			}
 		}
 		return new AcceptanceResult(FAIL,
-				"expected: " + expectedPlan.getValue() + " - " + AlgebraUtilities.getAccesses(expectedPlan.getKey()),
-				"observed: " + (observedPlan != null ?  observedPlan.getValue() + " - " + AlgebraUtilities.getAccesses(observedPlan.getKey()): null));
+				"expected: " + expectedPlan.getValue() + " - " + expectedPlan.getKey().getAccesses(),
+				"observed: " + (observedPlan != null ?  observedPlan.getValue() + " - " + observedPlan.getKey().getAccesses(): null));
 	}
 
 }

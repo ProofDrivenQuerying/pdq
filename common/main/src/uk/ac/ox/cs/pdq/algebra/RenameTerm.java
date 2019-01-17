@@ -36,7 +36,7 @@ public class RenameTerm extends RelationalTerm {
 	private String toString = null;
 
 	private RenameTerm(Attribute[] renamings, RelationalTerm child) {
-		super(AlgebraUtilities.computeRenamedInputAttributes(renamings, child), renamings);
+		super(RenameTerm.computeRenamedInputAttributes(renamings, child), renamings);
 		Assert.assertNotNull(renamings);
 		Assert.assertNotNull(child);
 		Assert.assertTrue(renamings.length == child.getOutputAttributes().length);
@@ -129,6 +129,28 @@ public class RenameTerm extends RelationalTerm {
 			int indexInputAttribute = Arrays.asList(oldOutputAttributes).indexOf(child.getInputAttributes()[i]);
 			Preconditions.checkArgument(indexInputAttribute >= 0, "Input attribute not found");
 			newInputAttributes[i] = renamings[indexInputAttribute];
+		}
+		return newInputAttributes;
+	}
+
+	/**
+	 * Since every input attribute is also an output of any relational term, it is
+	 * possible to map the renamings from the output to the inputs. This function
+	 * for each input attribute will find out the index of this attribute in the
+	 * output list, and using this index will map it to an Attribute in the given
+	 * renamings parameter.
+	 * 
+	 * @param renamings
+	 * @param child
+	 * @return
+	 */
+	public static Attribute[] computeRenamedInputAttributes(Attribute[] renamings, RelationalTerm child) {
+		Attribute[] newInputAttributes = new Attribute[child.getNumberOfInputAttributes()];
+		Attribute[] oldOutputAttributes = child.getOutputAttributes();
+		for (int index = 0; index < child.getNumberOfInputAttributes(); ++index) {
+			int indexInputAttribute = Arrays.asList(oldOutputAttributes).indexOf(child.getInputAttribute(index));
+			Preconditions.checkArgument(indexInputAttribute >= 0, "Input attribute not found");
+			newInputAttributes[index] = renamings[indexInputAttribute];
 		}
 		return newInputAttributes;
 	}

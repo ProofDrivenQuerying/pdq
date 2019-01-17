@@ -4,11 +4,11 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 
-import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+
+import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 
 /**
  * Histograms for SQL Server 2014.

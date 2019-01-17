@@ -11,9 +11,9 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 
-public class PlaanPrinterTest {
+public class PlanPrinterTest {
 
-	public PlaanPrinterTest() {
+	public PlanPrinterTest() {
 	}
 
 	public static void main(String[] args) throws IOException, InterruptedException, JAXBException {

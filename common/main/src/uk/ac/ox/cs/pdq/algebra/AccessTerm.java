@@ -1,8 +1,10 @@
 package uk.ac.ox.cs.pdq.algebra;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -38,7 +40,7 @@ public class AccessTerm extends RelationalTerm {
 	protected String toString = null;
 
 	private AccessTerm(Relation relation, AccessMethodDescriptor accessMethod) {
-		super(AlgebraUtilities.computeInputAttributes(relation, accessMethod), relation.getAttributes());
+		super(AccessTerm.computeInputAttributes(relation, accessMethod), relation.getAttributes());
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
 		this.relation = relation;
@@ -47,7 +49,7 @@ public class AccessTerm extends RelationalTerm {
 	}
 
 	private AccessTerm(Relation relation, AccessMethodDescriptor accessMethod, Map<Integer, TypedConstant> inputConstants) {
-		super(AlgebraUtilities.computeInputAttributes(relation, accessMethod, inputConstants),
+		super(AccessTerm.computeInputAttributes(relation, accessMethod, inputConstants),
 				relation.getAttributes());
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
@@ -183,4 +185,58 @@ public class AccessTerm extends RelationalTerm {
 		Formula phi = Atom.create(R, tau);
 		return new RelationalTermAsLogic(phi, mapping);
 	}
+
+	/**
+	 * The access method descriptor contains the index of the attribute only. This
+	 * method maps those indexes to the actual Attribute objects.
+	 * 
+	 * @param relation
+	 * @param accessMethod
+	 * @return
+	 */
+	public static Attribute[] computeInputAttributes(Relation relation, AccessMethodDescriptor accessMethod) {
+		Assert.assertNotNull(relation);
+		Assert.assertNotNull(accessMethod);
+		if (accessMethod.getInputs().length == 0) {
+			return new Attribute[] {};
+		}
+		List<Attribute> inputs = new ArrayList<>();
+		for (Integer i : accessMethod.getInputs()) {
+			inputs.add(relation.getAttributes()[i]);
+		}
+		return inputs.toArray(new Attribute[inputs.size()]);
+	}
+
+	/**
+	 * Tests if the given access method and relation is compatible or not. Generates
+	 * a list of attributes by filtering out the provided input constants from the
+	 * accessMethod's inputs.
+	 * 
+	 * @param relation
+	 * @param accessMethod
+	 * @param inputConstants
+	 * @return
+	 */
+	public static Attribute[] computeInputAttributes(Relation relation, AccessMethodDescriptor accessMethod,
+			Map<Integer, TypedConstant> inputConstants) {
+		Assert.assertNotNull(relation);
+		if (!(accessMethod != null && accessMethod.getInputs().length > 0)
+				&& (inputConstants == null || inputConstants.isEmpty())) {
+			return new Attribute[0];
+		}
+		Assert.assertTrue(accessMethod != null && accessMethod.getInputs().length > 0);
+		Assert.assertNotNull(inputConstants);
+		for (Integer position : inputConstants.keySet()) {
+			Assert.assertTrue(position < relation.getAttributes().length);
+			Assert.assertTrue(Arrays.asList(accessMethod.getInputs()).contains(position));
+		}
+		List<Attribute> inputs = new ArrayList<>();
+		for (Integer i : accessMethod.getInputs()) {
+			if (!inputConstants.containsKey(i)) {
+				inputs.add(relation.getAttributes()[i]);
+			}
+		}
+		return inputs.toArray(new Attribute[inputs.size()]);
+	}
+	
 }

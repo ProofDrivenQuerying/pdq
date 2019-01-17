@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 
@@ -36,7 +35,7 @@ public class CountNumberOfAccessedRelationsCostEstimator implements OrderIndepen
 	 */
 	@Override
 	public DoubleCost cost(RelationalTerm plan) {
-		DoubleCost result = this.cost(AlgebraUtilities.getAccesses(plan));
+		DoubleCost result = this.cost(plan.getAccesses());
 		return result;
 	}
 

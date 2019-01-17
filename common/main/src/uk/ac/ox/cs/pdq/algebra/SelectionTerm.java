@@ -8,6 +8,8 @@ import org.junit.Assert;
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
@@ -33,7 +35,7 @@ public class SelectionTerm extends RelationalTerm {
 		super(child.getInputAttributes(), child.getOutputAttributes());
 		Preconditions.checkNotNull(selectionCondition);
 		Preconditions.checkNotNull(child);
-		Preconditions.checkArgument(AlgebraUtilities.assertSelectionCondition(selectionCondition, child.getOutputAttributes()));
+		Preconditions.checkArgument(SelectionTerm.assertSelectionCondition(selectionCondition, child.getOutputAttributes()));
 		this.selectionCondition = selectionCondition;
 		this.child = child;
 	}
@@ -113,7 +115,7 @@ public class SelectionTerm extends RelationalTerm {
 					int position = ((ConstantEqualityCondition)s).getPosition();
 					Attribute a = this.getOutputAttribute(position);
 					if (T1logic.getMapping().get(a)!=null)
-						phiNew = AlgebraUtilities.replaceTerm(phiNew,T1logic.getMapping().get(a),constant);
+						phiNew = SelectionTerm.replaceTerm(phiNew,T1logic.getMapping().get(a),constant);
 					mapNew.put(a, constant);
 				}
 			}
@@ -122,6 +124,87 @@ public class SelectionTerm extends RelationalTerm {
 			return T1logic;
 		}
 		
+	}
+
+	/**
+	 * Asserts that the given condition can be applied to the given attribute types.
+	 * Returns false when there are mismatching types.
+	 * 
+	 * @param selectionCondition
+	 * @param outputAttributes
+	 * @return
+	 */
+	public static boolean assertSelectionCondition(Condition selectionCondition, Attribute[] outputAttributes) {
+		if (selectionCondition instanceof ConjunctiveCondition) {
+			for (SimpleCondition conjunct : ((ConjunctiveCondition) selectionCondition).getSimpleConditions()) {
+				if (assertSelectionCondition(conjunct, outputAttributes) == false)
+					return false;
+			}
+			return true;
+		} else
+			return assertSelectionCondition((SimpleCondition) selectionCondition, outputAttributes);
+	}
+
+	/**
+	 * Asserts that the given condition can be applied to the given attribute types.
+	 * Returns false when there are mismatching types.
+	 * 
+	 * @param selectionCondition
+	 * @param outputAttributes
+	 * @return
+	 */
+	public static boolean assertSelectionCondition(SimpleCondition selectionCondition, Attribute[] outputAttributes) {
+		if (selectionCondition instanceof ConstantInequalityCondition) {
+			int position = ((ConstantInequalityCondition) selectionCondition).getPosition();
+			if (position > outputAttributes.length || !((ConstantInequalityCondition) selectionCondition).getConstant()
+					.getType().equals(outputAttributes[position].getType()))
+				return false;
+			else
+				return true;
+		} else if (selectionCondition instanceof ConstantEqualityCondition) {
+			int position = ((ConstantEqualityCondition) selectionCondition).getPosition();
+			if (position > outputAttributes.length || !((ConstantEqualityCondition) selectionCondition).getConstant()
+					.getType().equals(outputAttributes[position].getType()))
+				return false;
+			else
+				return true;
+		} else if (selectionCondition instanceof AttributeEqualityCondition) {
+			int position = ((AttributeEqualityCondition) selectionCondition).getPosition();
+			int other = ((AttributeEqualityCondition) selectionCondition).getOther();
+			if (position > outputAttributes.length || other > outputAttributes.length)
+				return false;
+			else
+				return true;
+		} else
+			throw new RuntimeException("Unknown operator type");
+	}
+
+
+	/**
+	 * Replaces a term (Variable or constant) with a new term in a formula.
+	 * 
+	 * @param phiNew
+	 * @param term
+	 * @param constant
+	 * @return
+	 */
+	public static Formula replaceTerm(Formula phi, Term old, Term newTerm) {
+		if (phi instanceof Atom) {
+			Term[] terms = phi.getTerms();
+			for (int i = 0; i < terms.length; i++) {
+				if (terms[i].equals(old)) {
+					terms[i] = newTerm;
+				}
+			}
+			return Atom.create(((Atom) phi).getPredicate(), terms);
+		} else {
+			Atom[] atoms = ((Conjunction) phi).getAtoms();
+			Atom[] newAtoms = new Atom[atoms.length];
+			for (int i = 0; i < atoms.length; i++) {
+				newAtoms[i] = (Atom) replaceTerm(atoms[i], old, newTerm);
+			}
+			return Conjunction.create(newAtoms);
+		}
 	}
 
 }

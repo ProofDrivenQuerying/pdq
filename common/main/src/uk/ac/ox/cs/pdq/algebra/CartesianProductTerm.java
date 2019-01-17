@@ -1,6 +1,18 @@
 package uk.ac.ox.cs.pdq.algebra;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Assert;
+
+import com.google.common.collect.Lists;
+
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Term;
 
 
 /**
@@ -17,7 +29,7 @@ public class CartesianProductTerm extends RelationalTerm {
 
 	
 	protected CartesianProductTerm(RelationalTerm child1, RelationalTerm child2, boolean isDependentJoin) {
-		super(AlgebraUtilities.computeInputAttributes(child1, child2,isDependentJoin), AlgebraUtilities.computeOutputAttributes(child1, child2));
+		super(CartesianProductTerm.computeInputAttributes(child1, child2,isDependentJoin), CartesianProductTerm.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		this.children[0] = child1;
@@ -86,6 +98,80 @@ public class CartesianProductTerm extends RelationalTerm {
 		RelationalTerm T2 = getChildren()[1];
 		RelationalTermAsLogic t1Logic = T1.toLogic();
 		RelationalTermAsLogic t2Logic = T2.toLogic();
-		return AlgebraUtilities.merge(t1Logic,t2Logic);
+		return CartesianProductTerm.merge(t1Logic,t2Logic);
 	}
+
+	/**
+	 * Creates a list that contains both left and right side output attributes. No
+	 * filtering, duplication is allowed.
+	 * 
+	 * @param child1
+	 * @param child2
+	 * @return
+	 */
+	public static Attribute[] computeOutputAttributes(RelationalTerm child1, RelationalTerm child2) {
+		Assert.assertNotNull(child1);
+		Assert.assertNotNull(child2);
+		Attribute[] input = new Attribute[child1.getNumberOfOutputAttributes() + child2.getNumberOfOutputAttributes()];
+		System.arraycopy(child1.getOutputAttributes(), 0, input, 0, child1.getNumberOfOutputAttributes());
+		System.arraycopy(child2.getOutputAttributes(), 0, input, child1.getNumberOfOutputAttributes(),
+				child2.getNumberOfOutputAttributes());
+		return input;
+	}
+
+	/**
+	 * Generates a list of attributes by adding the left and right inputs. In case
+	 * of dependent join it will not return the right-inputs that are provided as an
+	 * output from the left side. accessMethod's inputs.
+	 * 
+	 * @param left
+	 * @param right
+	 * @param isDependentJoinTerm
+	 * @return
+	 */
+	public static Attribute[] computeInputAttributes(RelationalTerm left, RelationalTerm right,
+			boolean isDependentJoinTerm) {
+		Assert.assertNotNull(left);
+		Assert.assertNotNull(right);
+		Attribute[] leftInputs = left.getInputAttributes();
+		Attribute[] leftOutputs = left.getOutputAttributes();
+		Attribute[] rightInputs = right.getInputAttributes();
+		List<Attribute> result = Lists.newArrayList(leftInputs);
+		for (int attributeIndex = 0; attributeIndex < right.getNumberOfInputAttributes(); attributeIndex++) {
+			Attribute inputAttribute = right.getInputAttribute(attributeIndex);
+
+			if (!isDependentJoinTerm || !Arrays.asList(leftOutputs).contains(inputAttribute)) {
+				// only dependent join maps attribute from left to right.
+				result.add(rightInputs[attributeIndex]);
+			}
+		}
+		return result.toArray(new Attribute[result.size()]);
+
+	}
+
+	/**
+	 * Merges two RelationalTermAsLogic object into one that contains the
+	 * conjunction formula of the two source formulas.
+	 * 
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	public static RelationalTermAsLogic merge(RelationalTermAsLogic left, RelationalTermAsLogic right) {
+		if (left == null && right == null)
+			return null;
+		if (left == null)
+			return right;
+		Formula phi_1 = left.getFormula();
+		Formula phi_2 = right.getFormula();
+		Formula phi = Conjunction.create(phi_1, phi_2);
+
+		Map<Attribute, Term> map_1 = left.getMapping();
+		Map<Attribute, Term> map_2 = right.getMapping();
+		Map<Attribute, Term> map = new HashMap<>();
+		map.putAll(map_1);
+		map.putAll(map_2);
+
+		return new RelationalTermAsLogic(phi, map);
+	}	
 }

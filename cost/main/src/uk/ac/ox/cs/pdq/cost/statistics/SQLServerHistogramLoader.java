@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.util.Utility;

@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 
-import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
@@ -62,13 +61,13 @@ public class PlannerTestUtilities {
 		StringBuilder result = new StringBuilder();
 		result.append("\n\tCosts: ").append(sCost).append(" <-> ").append(oCost);
 		result.append("\n\tLeaves:\n\t\t");
-		String accessesS = "" + AlgebraUtilities.getAccesses(s);
-		String accessesO = "" + AlgebraUtilities.getAccesses(o);
+		String accessesS = "" + s.getAccesses();
+		String accessesO = "" + o.getAccesses();
 		if (accessesS.equals(accessesO)) {
 			result.append("Same accesses, but plan differs.");
 		} else {
-			result.append(AlgebraUtilities.getAccesses(s)).append("\n\t\t");
-			result.append(AlgebraUtilities.getAccesses(o)).append("\n\t");
+			result.append(s.getAccesses()).append("\n\t\t");
+			result.append(o.getAccesses()).append("\n\t");
 		}
 		return result.toString();
 	}

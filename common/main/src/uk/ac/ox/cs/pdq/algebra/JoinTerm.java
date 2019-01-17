@@ -1,14 +1,28 @@
 package uk.ac.ox.cs.pdq.algebra;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
 /**
  *
@@ -26,7 +40,7 @@ public class JoinTerm extends CartesianProductTerm {
 	protected String toString = null;
 	
 	protected JoinTerm(RelationalTerm child1, RelationalTerm child2) {
-		this(child1, child2,AlgebraUtilities.computeJoinConditions(new RelationalTerm[] {child1,child2}));
+		this(child1, child2,JoinTerm.computeJoinConditions(new RelationalTerm[] {child1,child2}));
 	}
 	
 	protected JoinTerm(RelationalTerm child1, RelationalTerm child2, Condition joinConditions) {
@@ -35,7 +49,7 @@ public class JoinTerm extends CartesianProductTerm {
 	
 	protected JoinTerm(RelationalTerm child1, RelationalTerm child2, Condition joinConditions, boolean isDependentJoin) {
 		super(child1, child2, isDependentJoin);
-		AlgebraUtilities.assertJoinCondition(joinConditions, child1, child2);
+		JoinTerm.assertJoinCondition(joinConditions, child1, child2);
 		this.joinConditions = joinConditions;
 	}
 
@@ -140,12 +154,172 @@ public class JoinTerm extends CartesianProductTerm {
 		RelationalTermAsLogic T1logic = getChildren()[0].toLogic();
 		RelationalTermAsLogic T2logic = getChildren()[1].toLogic();
 		if (getConditions().isEmpty()) { 
-			RelationalTermAsLogic TNewlogic = AlgebraUtilities.merge(T1logic,T2logic);
+			RelationalTermAsLogic TNewlogic = CartesianProductTerm.merge(T1logic,T2logic);
 			// no conditions, simple join.
 			return TNewlogic;
 		} else {
 			// this case deals with different joins conditions.
-			return AlgebraUtilities.applyConditions(T1logic,T2logic,this);
+			return JoinTerm.applyConditions(T1logic,T2logic,this);
 		}
 	}
+
+	/**
+	 * Asserts that the given condition can be applied to the given attribute types.
+	 * Returns false when there are mismatching types.
+	 * 
+	 * @param joinConditions
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	public static boolean assertJoinCondition(Condition joinConditions, RelationalTerm left, RelationalTerm right) {
+		if (joinConditions instanceof ConjunctiveCondition) {
+			for (SimpleCondition conjunct : ((ConjunctiveCondition) joinConditions).getSimpleConditions()) {
+				if (conjunct instanceof AttributeEqualityCondition
+						&& !assertJoinCondition((AttributeEqualityCondition) conjunct, left, right))
+					return false;
+			}
+			return true;
+		} else if (joinConditions instanceof AttributeEqualityCondition)
+			return assertJoinCondition((AttributeEqualityCondition) joinConditions, left, right);
+		else
+			return false;
+	}
+
+	/**
+	 * Asserts that the given condition can be applied to the given attribute types.
+	 * Returns false when there are mismatching types.
+	 * 
+	 * @param joinCondition
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	public static boolean assertJoinCondition(AttributeEqualityCondition joinCondition, RelationalTerm left,
+			RelationalTerm right) {
+		int numberOfAttributesLeftChild = left.getNumberOfOutputAttributes();
+		if (joinCondition.getPosition() >= left.getNumberOfOutputAttributes()
+				|| joinCondition.getOther() - numberOfAttributesLeftChild >= right.getNumberOfOutputAttributes())
+			return false;
+		Type typeOfLeftAttribute = left.getOutputAttribute(joinCondition.getPosition()).getType();
+		Type typeOfRightAttribute = right.getOutputAttribute(joinCondition.getOther() - numberOfAttributesLeftChild)
+				.getType();
+		if (!typeOfLeftAttribute.equals(typeOfRightAttribute))
+			return false;
+		return true;
+	}
+
+	/**
+	 * Finds the position pairs for the dependent join's tunnelled variables.
+	 * 
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	protected static Map<Integer, Integer> computePositionsInRightChildThatAreBoundFromLeftChild(RelationalTerm left,
+			RelationalTerm right) {
+		Map<Integer, Integer> result = new LinkedHashMap<>();
+		for (int index = 0; index < right.getNumberOfInputAttributes(); ++index) {
+			Attribute attribute = right.getInputAttribute(index);
+			int indexOf = Arrays.asList(left.getOutputAttributes()).indexOf(attribute);
+			if (indexOf >= 0)
+				result.put(index, indexOf);
+		}
+		return result;
+	}
+
+	/**
+	 * Finds all variables in the given relational terms, and computes attribute
+	 * equality conditions. Using these conditions creates and returns the
+	 * ConjunctiveCondition
+	 * 
+	 * @param children
+	 * @return
+	 */
+	protected static ConjunctiveCondition computeJoinConditions(RelationalTerm[] children) {
+		Multimap<Attribute, Integer> joinVariables = LinkedHashMultimap.create();
+		int totalCol = 0;
+		// Cluster patterns by variables
+		Set<Attribute> inChild = new LinkedHashSet<>();
+		for (RelationalTerm child : children) {
+			inChild.clear();
+			for (int i = 0, l = child.getNumberOfOutputAttributes(); i < l; i++) {
+				Attribute col = child.getOutputAttributes()[i];
+				if (!inChild.contains(col)) {
+					joinVariables.put(col, totalCol);
+					inChild.add(col);
+				}
+				totalCol++;
+			}
+		}
+
+		List<SimpleCondition> equalities = new ArrayList<>();
+		// Remove clusters containing only one pattern
+		for (Iterator<Attribute> keys = joinVariables.keySet().iterator(); keys.hasNext();) {
+			Collection<Integer> cluster = joinVariables.get(keys.next());
+			if (cluster.size() < 2) {
+				keys.remove();
+			} else {
+				Iterator<Integer> i = cluster.iterator();
+				Integer left = i.next();
+				while (i.hasNext()) {
+					Integer right = i.next();
+					equalities.add(AttributeEqualityCondition.create(left, right));
+				}
+			}
+		}
+		return ConjunctiveCondition.create(equalities.toArray(new SimpleCondition[equalities.size()]));
+	}
+
+
+	/**
+	 * Converts the input joinTerm (or DependentJoinTerm) to logic by applying
+	 * conditions.
+	 * 
+	 * @param t1logic
+	 *            toLogic result from the left side
+	 * @param t2logic
+	 *            toLogic result from the right side of the join
+	 * @param joinTerm
+	 *            join or dependent join term
+	 * @return
+	 */
+	public static RelationalTermAsLogic applyConditions(RelationalTermAsLogic t1logic, RelationalTermAsLogic t2logic,
+			RelationalTerm joinTerm) {
+		List<SimpleCondition> conditions = joinTerm.getConditions();
+		RelationalTermAsLogic TNewlogic = CartesianProductTerm.merge(t1logic, t2logic);
+		Formula phiNew = TNewlogic.getFormula();
+		Map<Attribute, Term> mapNew = TNewlogic.getMapping();
+
+		// Apply conditions
+		for (SimpleCondition s : conditions) {
+			if (s instanceof AttributeEqualityCondition) {
+				int position = ((AttributeEqualityCondition) s).getPosition();
+				int other = ((AttributeEqualityCondition) s).getOther();
+				Attribute a = joinTerm.getOutputAttribute(position);
+				Attribute b = joinTerm.getOutputAttribute(other);
+				Preconditions.checkState(a.equals(b));
+				if (t1logic.getMapping().get(b) instanceof Constant) {
+					phiNew = SelectionTerm.replaceTerm(phiNew, t2logic.getMapping().get(a),
+							t1logic.getMapping().get(b));
+					mapNew.put(b, t1logic.getMapping().get(b));
+				} else {
+					phiNew = SelectionTerm.replaceTerm(phiNew, t1logic.getMapping().get(b),
+							t2logic.getMapping().get(a));
+					mapNew.put(b, t2logic.getMapping().get(a));
+				}
+			} else if (s instanceof ConstantEqualityCondition) {
+				TypedConstant constant = ((ConstantEqualityCondition) s).getConstant();
+				int position = ((ConstantEqualityCondition) s).getPosition();
+				Attribute a = joinTerm.getOutputAttribute(position);
+				if (t1logic.getMapping().get(a) != null)
+					phiNew = SelectionTerm.replaceTerm(phiNew, t1logic.getMapping().get(a), constant);
+				if (t2logic.getMapping().get(a) != null)
+					phiNew = SelectionTerm.replaceTerm(phiNew, t2logic.getMapping().get(a), constant);
+				mapNew.put(a, constant);
+			}
+		}
+		return new RelationalTermAsLogic(phiNew, mapNew);
+	}
+
 }

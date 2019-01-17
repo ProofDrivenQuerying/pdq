@@ -11,7 +11,6 @@ import org.jgrapht.graph.DefaultEdge;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
@@ -256,7 +255,7 @@ public class LinearKChase extends LinearExplorer {
 			this.bestPlan = successfulPlan;
 			this.bestCost = costOfSuccessfulPlan;
 			this.eventBus.post(this.getBestPlan());
-			log.trace("\t+++BEST PLAN: " + AlgebraUtilities.getAccesses(this.bestPlan) + " " + this.bestCost);
+			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestCost);
 		}
 	}
 }

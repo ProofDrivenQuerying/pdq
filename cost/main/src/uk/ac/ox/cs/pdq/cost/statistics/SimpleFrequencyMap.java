@@ -10,12 +10,12 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.tuple.Triple;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 
 /**
  * Frequency histograms.

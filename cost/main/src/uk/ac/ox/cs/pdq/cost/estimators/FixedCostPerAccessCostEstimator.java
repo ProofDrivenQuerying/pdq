@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
@@ -51,7 +50,7 @@ public class FixedCostPerAccessCostEstimator implements OrderIndependentCostEsti
 	 */
 	@Override
 	public DoubleCost cost(RelationalTerm term) {
-		DoubleCost result = this.cost(AlgebraUtilities.getAccesses(term));
+		DoubleCost result = this.cost(term.getAccesses());
 		return result;
 	}
 

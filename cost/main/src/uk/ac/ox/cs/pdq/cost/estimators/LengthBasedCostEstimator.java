@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 
@@ -38,7 +37,7 @@ public class LengthBasedCostEstimator implements OrderDependentCostEstimator {
 	@Override
 	public DoubleCost cost(RelationalTerm term) {
 		List<AccessTerm> accesses = new ArrayList<>();
-		for (AccessTerm access:AlgebraUtilities.getAccesses(term)) {
+		for (AccessTerm access:term.getAccesses()) {
 			if (!accesses.contains(access)) 
 				accesses.add(access);
 		}

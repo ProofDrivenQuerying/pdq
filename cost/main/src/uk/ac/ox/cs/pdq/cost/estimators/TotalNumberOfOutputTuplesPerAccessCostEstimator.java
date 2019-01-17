@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
@@ -45,7 +44,7 @@ public class TotalNumberOfOutputTuplesPerAccessCostEstimator implements OrderInd
 	 */
 	@Override
 	public DoubleCost cost(RelationalTerm plan) {
-		DoubleCost result = this.cost(AlgebraUtilities.getAccesses(plan));
+		DoubleCost result = this.cost(plan.getAccesses());
 		return result;
 	}
 
