@@ -122,7 +122,7 @@ public class LinearKChase extends LinearExplorer {
 	 * @throws LimitReachedException
 	 */
 	private void _performSingleExplorationStepWithChasing() throws PlannerException, LimitReachedException {
-		Collection<SearchNode> leaves = ExplorerUtility.getLeafNodesThatAreNotFullyChased(this.planTree);
+		Collection<SearchNode> leaves = SearchNode.getLeafNodesThatAreNotFullyChased(this.planTree);
 		log.debug("Number of partially generated leaves " + leaves.size());
 		for(SearchNode leaf:leaves) {
 			leaf.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
@@ -131,7 +131,7 @@ public class LinearKChase extends LinearExplorer {
 
 		// Perform global equivalence checks
 		for(SearchNode leaf: leaves) {
-			SearchNode parentEquivalent = ExplorerUtility.isEquivalent(leaves, leaf);
+			SearchNode parentEquivalent = SearchNode.isEquivalent(leaves, leaf);
 
 			/*
 			 * If such a node exists then
@@ -223,7 +223,7 @@ public class LinearKChase extends LinearExplorer {
 
 		/* If at least one node in the plan tree dominates the newly created node, then kill the newly created node   */
 		if (!domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
-			SearchNode dominatingNode = ExplorerUtility.isCostAndFactDominated(ExplorerUtility.getNodesThatAreFullyChased(this.planTree), freshNode);
+			SearchNode dominatingNode = SearchNode.isCostAndFactDominated(SearchNode.getNodesThatAreFullyChased(this.planTree), freshNode);
 			if(dominatingNode != null) {
 				domination = true;
 				freshNode.setDominatingPlan(dominatingNode.getConfiguration().getPlan());

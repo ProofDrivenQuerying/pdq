@@ -38,7 +38,7 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
  * @author Efthymia Tsamoura
  * @author Gabor
  */
-public class TestDAGExplorerUtilities extends PdqTest {
+public class TestApplyRule extends PdqTest {
 
 	/**
 	 * Uses test scenario4 as input.

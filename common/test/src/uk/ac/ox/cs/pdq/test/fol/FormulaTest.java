@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.reasoning.chase;
+package uk.ac.ox.cs.pdq.test.fol;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -27,7 +27,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-public class TestUtility {
+public class FormulaTest {
 
 	/**
 	 * Test ground.

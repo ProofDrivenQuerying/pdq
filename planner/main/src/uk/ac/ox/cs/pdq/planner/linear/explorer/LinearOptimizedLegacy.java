@@ -244,7 +244,7 @@ public class LinearOptimizedLegacy extends LinearExplorer {
 
 		// set dominating plan if there is one
 		if (!isRepresented && !domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
-			SearchNode dominatingNode = ExplorerUtility.isCostAndFactDominated(this.planTree.vertexSet(), freshNode);
+			SearchNode dominatingNode = SearchNode.isCostAndFactDominated(this.planTree.vertexSet(), freshNode);
 			if (dominatingNode != null) {
 				domination = true;
 				freshNode.setDominatingPlan(dominatingNode.getConfiguration().getPlan());
