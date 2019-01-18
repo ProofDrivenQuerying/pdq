@@ -20,6 +20,8 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 
+import uk.ac.ox.cs.pdq.cost.sqlserverhistogram.SQLServerHistogram;
+import uk.ac.ox.cs.pdq.cost.sqlserverhistogram.SQLServerHistogramLoader;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;

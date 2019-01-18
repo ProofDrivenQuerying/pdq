@@ -1,7 +1,9 @@
-package uk.ac.ox.cs.pdq.cost.statistics;
+package uk.ac.ox.cs.pdq.cost.sqlserverhistogram;
 
 import java.math.BigInteger;
 import java.util.Objects;
+
+import uk.ac.ox.cs.pdq.cost.statistics.Bucket;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.cost.statistics;
+package uk.ac.ox.cs.pdq.cost.sqlserverhistogram;
 
 import java.util.List;
 import java.util.Objects;

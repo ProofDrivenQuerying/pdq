@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.cost.statistics;
+package uk.ac.ox.cs.pdq.cost.sqlserverhistogram;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -9,6 +9,7 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
+import uk.ac.ox.cs.pdq.cost.statistics.Histogram;
 
 /**
  * Histograms for SQL Server 2014.

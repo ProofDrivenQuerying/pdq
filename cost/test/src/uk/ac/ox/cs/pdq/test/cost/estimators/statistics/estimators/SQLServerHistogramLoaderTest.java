@@ -3,8 +3,8 @@ package uk.ac.ox.cs.pdq.test.cost.estimators.statistics.estimators;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.cost.statistics.SQLServerHistogram;
-import uk.ac.ox.cs.pdq.cost.statistics.SQLServerHistogramLoader;
+import uk.ac.ox.cs.pdq.cost.sqlserverhistogram.SQLServerHistogram;
+import uk.ac.ox.cs.pdq.cost.sqlserverhistogram.SQLServerHistogramLoader;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
