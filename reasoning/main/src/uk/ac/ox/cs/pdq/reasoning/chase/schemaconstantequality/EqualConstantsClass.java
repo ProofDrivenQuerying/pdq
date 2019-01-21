@@ -46,6 +46,10 @@ public class EqualConstantsClass {
 	public EqualConstantsClass(Atom equality) throws ChaseException{
 		this.constants = new TreeSet<>();
 		Term[] terms = equality.getTerms();
+		Preconditions.checkArgument(equality.isEquality());
+		Preconditions.checkArgument(terms.length == 2);
+		Preconditions.checkArgument(terms[0]!=null);
+		Preconditions.checkArgument(terms[1]!=null);
 		Preconditions.checkArgument(terms[0] instanceof Constant && terms[1] instanceof Constant);
 		//If both inputs are schema constants
 		if(terms[0] instanceof TypedConstant && terms[1] instanceof TypedConstant) {
@@ -58,21 +62,20 @@ public class EqualConstantsClass {
 				this.constants.add(terms[0]);
 			}
 		}
-		//If only one of the inputs is schema constant
-		else if(terms[0] instanceof TypedConstant) {
-			this.schemaConstant = (TypedConstant) terms[0];
-			this.constants.add(terms[0]);
-			this.constants.add(terms[1]);
-		}
-		else if(terms[1] instanceof TypedConstant) {
-			this.schemaConstant = (TypedConstant) terms[1];
-			this.constants.add(terms[0]);
-			this.constants.add(terms[1]);
-		}
 		else {
-			//If both inputs are chase constants
+			//If only one or none of the inputs is schema constant
 			this.constants.add(terms[0]);
 			this.constants.add(terms[1]);
+			
+			if(terms[0] instanceof TypedConstant) {
+				this.schemaConstant = (TypedConstant) terms[0];
+			}
+			else if(terms[1] instanceof TypedConstant) {
+				this.schemaConstant = (TypedConstant) terms[1];
+			}
+			else {
+				//If both inputs are chase constants we can't set the schema constant field.
+			}
 		}
 		//Find out the representative. 
 		this.setRepresentative();
@@ -246,19 +249,19 @@ public class EqualConstantsClass {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.constants.equals(((EqualConstantsClass) o).constants)
-				&& this.schemaConstant.equals(((EqualConstantsClass) o).schemaConstant)
+		// trivials
+		if (this == o) return true;
+		if (o == null) return false;
+		if (!this.getClass().isInstance(o)) return false;
+		
+		// Schema Constant can be null, needs to be checked.
+		if (this.schemaConstant == null && ((EqualConstantsClass) o).schemaConstant != null) return false;
+		if (this.schemaConstant != null && ((EqualConstantsClass) o).schemaConstant == null) return false;
+		if (this.schemaConstant.equals(((EqualConstantsClass) o).schemaConstant)) return false;
+		
+		//rest
+		return this.constants.equals(((EqualConstantsClass) o).constants)
 				&& this.representative.equals(((EqualConstantsClass) o).representative);
-//				&& ( (this.schemaConstant == null && ((EqualConstantsClass) o).schemaConstant == null) ||
-//						this.schemaConstant != null && ((EqualConstantsClass) o).schemaConstant != null &&
-//						this.schemaConstant.equals(((EqualConstantsClass) o).schemaConstant) );
 	}
 
 	/**
