@@ -64,7 +64,7 @@ public class KTerminationChaser extends RestrictedChaser {
 	 * 
 	 * @param dependencies
 	 * @return
-	 * 		true if the input set of dependencies containts EGDs
+	 * 		true if the input set of dependencies contains EGDs
 	 */
 	private static boolean checkEGDs(Dependency[] dependencies) {
 		for(Dependency dependency:dependencies) {
