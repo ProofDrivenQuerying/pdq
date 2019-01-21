@@ -171,8 +171,8 @@ public class PlanCreationUtility {
 	}
 
 	/**
-	 * renames tha attributes in the first list based on the names of terms in the
-	 * second lists
+	 * renames the attributes in the first list based on the names of terms in the
+	 * second list
 	 */
 	private static Attribute[] computeRenamedAttributes(Attribute[] attributes, Term[] terms) {
 		Preconditions.checkArgument(attributes.length == terms.length);
