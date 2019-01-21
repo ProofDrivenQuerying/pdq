@@ -7,6 +7,7 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
@@ -21,14 +22,6 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
  */
 
 public final class ChaseConstantGenerator {
-
-	/**
-	 * The DEFAULT_PREFIX for canonical names. Used for example to create cannonicalQuerries. 
-	 */
-	private static final String CANONICAL_CONSTANT_PREFIX = "c";
-
-	/** The . */
-	private static final String NON_CANONICAL_CONSTANT_PREFIX = "k";
 
 	/**
 	 * Index storing all canonical name stored so far (value) and the canonical
@@ -60,7 +53,7 @@ public final class ChaseConstantGenerator {
 		String key = "TGD" + dependency.getId() + existentialVariable.getSymbol() + namesAndValuesOfUniversalVariables;
 		String result = cachedLabelledNulls.get(key);
 		if (result == null) {
-			result = getName(NON_CANONICAL_CONSTANT_PREFIX);
+			result = getName(UntypedConstant.NON_CANONICAL_CONSTANT_PREFIX);
 			cachedLabelledNulls.put(key, result);
 		}
 		return result;
@@ -83,6 +76,6 @@ public final class ChaseConstantGenerator {
 	 * @return a fresh constant name with the default prefix.
 	 */
 	public static String getName() {
-		return getName(CANONICAL_CONSTANT_PREFIX);
+		return getName(UntypedConstant.CANONICAL_CONSTANT_PREFIX);
 	}
 }

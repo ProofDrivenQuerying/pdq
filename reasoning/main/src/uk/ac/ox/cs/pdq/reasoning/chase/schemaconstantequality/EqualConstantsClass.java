@@ -172,9 +172,9 @@ public class EqualConstantsClass {
 			this.representative = this.schemaConstant;
 		}
 		else {
-			if(this.representative == null || this.representative instanceof UntypedConstant && !((UntypedConstant) this.representative).getSymbol().startsWith("c")) {
+			if(this.representative == null || this.representative instanceof UntypedConstant && !((UntypedConstant) this.representative).isCannonicalConstant()) {
 				for(Term constant:this.constants) {
-					if(constant instanceof UntypedConstant && ((UntypedConstant) constant).getSymbol().startsWith("c")) {
+					if(constant instanceof UntypedConstant && ((UntypedConstant) constant).isCannonicalConstant()) {
 						this.representative = constant;
 						break;
 					}
@@ -182,7 +182,7 @@ public class EqualConstantsClass {
 			}
 			if(this.representative == null) {
 				for(Term constant:this.constants) {
-					if(constant instanceof UntypedConstant && ((UntypedConstant) constant).getSymbol().startsWith("k")) {
+					if(constant instanceof UntypedConstant && ((UntypedConstant) constant).isNonCannonicalConstant()) {
 						this.representative = constant;
 						break;
 					}
@@ -257,7 +257,8 @@ public class EqualConstantsClass {
 		// Schema Constant can be null, needs to be checked.
 		if (this.schemaConstant == null && ((EqualConstantsClass) o).schemaConstant != null) return false;
 		if (this.schemaConstant != null && ((EqualConstantsClass) o).schemaConstant == null) return false;
-		if (this.schemaConstant.equals(((EqualConstantsClass) o).schemaConstant)) return false;
+		
+		if (this.schemaConstant != null && !this.schemaConstant.equals(((EqualConstantsClass) o).schemaConstant)) return false;
 		
 		//rest
 		return this.constants.equals(((EqualConstantsClass) o).constants)
