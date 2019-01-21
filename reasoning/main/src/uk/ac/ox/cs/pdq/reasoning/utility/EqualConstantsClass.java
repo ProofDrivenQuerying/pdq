@@ -17,7 +17,12 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.reasoning.chase.ChaseException;
 
 /**
- * Class of chase constants that are equal under the schema constraints.
+ * Class of chase constants (i.e. nulls) that are inferred to be equal under the schema 
+ * constraints.
+ * For each such class, we pick one constant as the representative of the class; if a fact
+ * F(...n...) holds of a constant n, then the fact will be propagated to
+ * F(...r....) where r is the representative of the equivalence class of n.
+ * 
  * @author Efthymia Tsamoura
  *
  */
@@ -33,7 +38,7 @@ public class EqualConstantsClass {
 	private Term representative;
 
 	/**
-	 * Instantiates a new equal constants class.
+	 * Instantiates a new constant equality class.
 	 *
 	 * @param equality the equality
 	 * @throws ChaseException the chase exception
@@ -74,7 +79,7 @@ public class EqualConstantsClass {
 	}
 
 	/**
-	 * Instantiates a new equal constants class.
+	 * Instantiates a new constant equality class.
 	 *
 	 * @param constants the constants
 	 * @param representative the representative
@@ -89,7 +94,10 @@ public class EqualConstantsClass {
 	}
 
 	/**
-	 * Adds the.
+	 * Tries to add a constant to an equivalence class. Equivalence classes
+	 * are not allowed to contain two schema constants (since we assume the
+	 * Unique Name Assumption); thus the add will fail if it would result
+	 * in two such constants being equivalent.
 	 *
 	 * @param input the input
 	 * @param inputClass 		The class of the input constant
@@ -151,7 +159,7 @@ public class EqualConstantsClass {
 	/**
 	 * Picks the representative of this class
 	 * 		The representatives are picked in the following priority:
-	 * 		Schema constants
+	 * 		Schema constant in the class, if there is one
 	 * 		Constants from the canonical database
 	 * 		Other labelled nulls not produced after firing EGDs.
 	 */
@@ -184,10 +192,10 @@ public class EqualConstantsClass {
 	}
 	
 	/**
-	 * Contains.
+	 * 
 	 *
 	 * @param constant the constant
-	 * @return true, if successful
+	 * @return true, if class contains this constant
 	 */
 	public boolean contains(Term constant) {
 		return (this.schemaConstant!= null && this.schemaConstant.equals(constant)) 
@@ -195,7 +203,7 @@ public class EqualConstantsClass {
 	}
 
 	/**
-	 * Gets the schema constant.
+	 * Gets the schema constant that is in the class, if there is one (otherwise will return null)
 	 *
 	 * @return the schema constant
 	 */
@@ -224,9 +232,9 @@ public class EqualConstantsClass {
 	}
 
 	/**
-	 * Gets the constants.
+	 * Gets all members of the class.
 	 *
-	 * @return the constants
+	 * @return the constants in the class
 	 */
 	public Collection<Term> getConstants() {
 		return this.constants;
