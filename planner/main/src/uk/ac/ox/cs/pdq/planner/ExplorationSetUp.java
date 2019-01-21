@@ -417,7 +417,7 @@ public class ExplorationSetUp {
 			substitutionFiltered.remove(variable);
 		canonicalSubstitution.put(query, canonicalMapping);
 		canonicalSubstitutionOfFreeVariables.put(query, substitutionFiltered);
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(query);
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(query);
 		canonicalSubstitution.put(accessibleQuery, canonicalMapping);
 		canonicalSubstitutionOfFreeVariables.put(accessibleQuery, substitutionFiltered);
 		return accessibleQuery;

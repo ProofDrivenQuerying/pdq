@@ -52,7 +52,7 @@ public class TestApplyRule extends PdqTest {
 		// Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(ts.getQuery());
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(ts.getQuery());
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(ts.getQuery());
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
 		substitutionFiltered.putAll(substitution);

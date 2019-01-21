@@ -103,7 +103,7 @@ public abstract class DAGExplorer extends Explorer {
 		substitutionFiltered.putAll(canonicalMapping);
 		for (Variable variable : query.getBoundVariables())
 			substitutionFiltered.remove(variable);
-		return new AccessibleQuery(query);
+		return AccessibleQuery.createAccessibleQuery(query);
 	}
 
 	/**

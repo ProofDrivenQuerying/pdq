@@ -122,7 +122,7 @@ public class TestLinearKchase extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(ts.getQuery());
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(ts.getQuery());
 		ConjunctiveQuery query = ts.getQuery();
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 

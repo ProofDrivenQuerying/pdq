@@ -104,7 +104,7 @@ public class TestLinearOptimizedExperiment extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, ts.getSchema(), 3);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(ts.getQuery());
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(ts.getQuery());
 		Map<Variable, Constant> substitution = ChaseConfiguration
 				.generateSubstitutionToCanonicalVariables(ts.getQuery());
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
@@ -222,7 +222,7 @@ public class TestLinearOptimizedExperiment extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, ts.getSchema(), 3);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(ts.getQuery());
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(ts.getQuery());
 		Map<Variable, Constant> substitution = ChaseConfiguration
 				.generateSubstitutionToCanonicalVariables(ts.getQuery());
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
@@ -306,7 +306,7 @@ public class TestLinearOptimizedExperiment extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, ts.getSchema(), 4);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(ts.getQuery());
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(ts.getQuery());
 		Map<Variable, Constant> substitution = ChaseConfiguration
 				.generateSubstitutionToCanonicalVariables(ts.getQuery());
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
@@ -539,7 +539,7 @@ public class TestLinearOptimizedExperiment extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(s);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(cq);
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(cq);
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(cq);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>();
 		substitutionFiltered.putAll(substitution);

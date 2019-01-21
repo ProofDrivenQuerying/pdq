@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.planner.accessibleschema;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -30,13 +31,10 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  */
 public class AccessibleQuery extends ConjunctiveQuery {
 	private static final long serialVersionUID = 1L;
+	private static Map<ConjunctiveQuery, AccessibleQuery> cache = new HashMap<>();
 	
-	public AccessibleQuery(Variable[] freeVariables, Atom[] children) {
+	private AccessibleQuery(Variable[] freeVariables, Atom[] children) {
 		super(freeVariables, children);
-	}
-	
-	public AccessibleQuery(ConjunctiveQuery cq) {
-		super(cq.getFreeVariables(), getAccessibleAtoms(cq));
 	}
 	
 	/**
@@ -48,8 +46,12 @@ public class AccessibleQuery extends ConjunctiveQuery {
 	 * @see uk.ac.ox.cs.pdq.fol.Query#createAccessibleQuery(AccessibleSchema)
 	 */
 	public static AccessibleQuery createAccessibleQuery(ConjunctiveQuery query) {
+		if (cache.containsKey(query))
+			return cache.get(query);
 		Atom[] atoms = getAccessibleAtoms(query);
-		return new AccessibleQuery(query.getFreeVariables(), atoms);
+		AccessibleQuery acq = new AccessibleQuery(query.getFreeVariables(), atoms);
+		cache.put(query, acq);
+		return acq;
 	}
 	
 	private static Atom[] getAccessibleAtoms(ConjunctiveQuery query) {

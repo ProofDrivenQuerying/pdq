@@ -79,7 +79,7 @@ public class TestDAGGeneric extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(ts.getQuery());
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(ts.getQuery());
 		ConjunctiveQuery query = ts.getQuery();
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
@@ -186,7 +186,7 @@ public class TestDAGGeneric extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(query);
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(query);
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
 		substitutionFiltered.putAll(substitution);

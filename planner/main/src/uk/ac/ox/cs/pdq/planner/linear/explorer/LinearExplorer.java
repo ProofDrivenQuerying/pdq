@@ -104,7 +104,7 @@ public abstract class LinearExplorer extends Explorer {
 		Assert.assertNotNull(costEstimator);
 
 		this.query = query;
-		this.accessibleQuery = new AccessibleQuery(query);
+		this.accessibleQuery = AccessibleQuery.createAccessibleQuery(query);
 		this.accessibleSchema = accessibleSchema;
 		this.chaser = chaser;
 		this.connection = connection;

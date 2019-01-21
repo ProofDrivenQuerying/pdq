@@ -92,7 +92,7 @@ public class TestLinearOptimized extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, ts.getSchema(),3);
 		
 		//Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(ts.getQuery());
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(ts.getQuery());
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(ts.getQuery());
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
 		substitutionFiltered.putAll(substitution);
@@ -214,7 +214,7 @@ public class TestLinearOptimized extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, ts.getSchema(),3);
 		
 		//Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(ts.getQuery());
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(ts.getQuery());
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(ts.getQuery());
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
 		substitutionFiltered.putAll(substitution);
@@ -305,7 +305,7 @@ public class TestLinearOptimized extends PdqTest {
 		
 		
 		//Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(ts.getQuery());
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(ts.getQuery());
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(ts.getQuery());
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
 		substitutionFiltered.putAll(substitution);

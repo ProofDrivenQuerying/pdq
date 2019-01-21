@@ -107,7 +107,7 @@ public class TestLinearGeneric extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, scenario1.getSchema(), 3);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(scenario1.getQuery());
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(scenario1.getQuery());
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
 		substitutionFiltered.putAll(substitution);
@@ -222,7 +222,7 @@ public class TestLinearGeneric extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, scenario2.getSchema(), 3);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(scenario2.getQuery());
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(scenario2.getQuery());
 		ConjunctiveQuery query = scenario2.getQuery();
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(query);
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
@@ -295,7 +295,7 @@ public class TestLinearGeneric extends PdqTest {
 		assertAccessibleSchema(accessibleSchema, scenario3.getSchema(), 4);
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(scenario3.getQuery());
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(scenario3.getQuery());
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(scenario3.getQuery());
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
 		substitutionFiltered.putAll(substitution);
@@ -481,7 +481,7 @@ public class TestLinearGeneric extends PdqTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(ts.getSchema());
 
 		// Create accessible query
-		ConjunctiveQuery accessibleQuery = new AccessibleQuery(ts.getQuery());
+		ConjunctiveQuery accessibleQuery = AccessibleQuery.createAccessibleQuery(ts.getQuery());
 		Map<Variable, Constant> substitution = ChaseConfiguration.generateSubstitutionToCanonicalVariables(ts.getQuery());
 		Map<Variable, Constant> substitutionFiltered = new HashMap<>(); 
 		substitutionFiltered.putAll(substitution);
