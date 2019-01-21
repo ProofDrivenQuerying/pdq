@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.fol;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +11,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTermAsLogic;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.QueryAdapter;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * A conjunctive query (CQ) is a first order formula of the form \exists x_1, \ldots, x_n \Wedge A_i,
@@ -172,6 +176,36 @@ public class ConjunctiveQuery extends Formula {
 			flatFormula = formula;
 		}
 		return create(freeVariables.toArray(new Variable[freeVariables.size()]),flatFormula.getAtoms());
+	}
+
+	/**
+	 * Gets the types of a query's free variables
+	 *
+	 * @param query
+	 *            the q
+	 * @return a list of types for each free variable of the query
+	 */
+	public Type[] computeVariableTypes(Schema schema) {
+		Variable[] freeVariables = this.getFreeVariables();
+		Type[] types = new Type[this.getFreeVariables().length];
+		boolean assigned = false;
+		for (int i = 0, l = types.length; i < l; i++) {
+			assigned = false;
+			Variable t = freeVariables[i];
+			Atom[] atoms = this.getAtoms();
+			for (Atom atom : atoms) {
+				Relation s = schema.getRelation(atom.getPredicate().getName());
+				List<Integer> pos = Utility.search(atom.getTerms(), t);
+				if (!pos.isEmpty()) {
+					types[i] = s.getAttribute(pos.get(0)).getType();
+					assigned = true;
+					break;
+				}
+			}
+			if (!assigned)
+				throw new IllegalStateException("Could not infer query type.");
+		}
+		return types;
 	}
 
 }

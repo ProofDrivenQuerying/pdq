@@ -1,7 +1,11 @@
 package uk.ac.ox.cs.pdq.fol;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.Lists;
 
 /**
  * Top-level FO formula.
@@ -80,4 +84,31 @@ public abstract class Formula implements Serializable{
 		}
 		throw new java.lang.RuntimeException("Unsupported formula type");
 	}
+	
+	public List<Variable> getVariablesRecursive() {
+		List<Variable> variables = Lists.newArrayList();
+		if(this instanceof Conjunction) {
+			variables.addAll(((Conjunction)this).getChildren()[0].getVariablesRecursive());
+			variables.addAll(((Conjunction)this).getChildren()[1].getVariablesRecursive());
+		}
+		else if(this instanceof Disjunction) {
+			variables.addAll(((Disjunction)this).getChildren()[0].getVariablesRecursive());
+			variables.addAll(((Disjunction)this).getChildren()[1].getVariablesRecursive());
+		}
+		else if(this instanceof Negation) {
+			variables.addAll(((Negation)this).getChildren()[0].getVariablesRecursive());
+		}
+		else if(this instanceof Atom) {
+			variables.addAll(Arrays.asList(((Atom)this).getVariables()));
+		}
+		else if(this instanceof Implication) {
+			variables.addAll(((Implication)this).getChildren()[0].getVariablesRecursive());
+			variables.addAll(((Implication)this).getChildren()[0].getVariablesRecursive());
+		}
+		else if(this instanceof QuantifiedFormula) {
+			variables.addAll(((QuantifiedFormula)this).getChildren()[0].getVariablesRecursive());
+		}
+		return variables;
+	}
+	
 }

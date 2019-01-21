@@ -22,15 +22,9 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Disjunction;
-import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Implication;
-import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -204,79 +198,6 @@ public class Utility {
 		if (!assertsEnabled)
 			throw new RuntimeException("Assertions must be enabled in the VM");
 
-	}
-
-	public static List<Variable> getVariables(Formula formula) {
-		List<Variable> variables = Lists.newArrayList();
-		if(formula instanceof Conjunction) {
-			variables.addAll(getVariables(((Conjunction)formula).getChildren()[0]));
-			variables.addAll(getVariables(((Conjunction)formula).getChildren()[1]));
-		}
-		else if(formula instanceof Disjunction) {
-			variables.addAll(getVariables(((Disjunction)formula).getChildren()[0]));
-			variables.addAll(getVariables(((Disjunction)formula).getChildren()[1]));
-		}
-		else if(formula instanceof Negation) {
-			variables.addAll(getVariables(((Negation)formula).getChildren()[0]));
-		}
-		else if(formula instanceof Atom) {
-			variables.addAll(Arrays.asList(((Atom)formula).getVariables()));
-		}
-		else if(formula instanceof Implication) {
-			variables.addAll(getVariables(((Implication)formula).getChildren()[0]));
-			variables.addAll(getVariables(((Implication)formula).getChildren()[0]));
-		}
-		else if(formula instanceof QuantifiedFormula) {
-			variables.addAll(getVariables(((QuantifiedFormula)formula).getChildren()[0]));
-		}
-		return variables;
-	}
-
-	/**
-	 * Let R be a relation of arity n and x_k be its key.
-	 * The EGD that captures the EGD dependency is given by
-	 * R(x_1,...,x_k,...x_n) ^ R(x_1',...,x_k,...x_n') --> \Wedge_{i \neq k} x_i=x_i'
-	 *
-	 * @param predicate the signature
-	 * @param attributes the attributes
-	 * @param keys the keys
-	 * @return 		a collection of EGDs for the input relation and keys
-	 */
-	public static EGD getEGD(Predicate predicate, Attribute[] attributes, Attribute[] keys) {
-		Term[] leftTerms = Utility.typedToTerms(attributes);
-		Term[] copiedTerms = leftTerms.clone();
-		//Keeps the terms that should be equal
-		Map<Term,Term> tobeEqual = com.google.common.collect.Maps.newHashMap();
-		int i = 0;
-		for(Attribute typed:attributes) {
-			if(!Arrays.asList(keys).contains(typed)) {
-				// the ? is a naming convention, could be anything.
-				Term term = Variable.create(String.valueOf("?" + typed));
-				copiedTerms[i] = term;
-				tobeEqual.put(leftTerms[i], term);
-			}
-			i++;
-		}
-		Predicate equality = Predicate.create("EQUALITY", 2, true);
-		//Create the constant equality predicates
-		int index = 0;
-		Atom[] equalities = new Atom[tobeEqual.entrySet().size()];
-		for(java.util.Map.Entry<Term, Term> pair:tobeEqual.entrySet()) 
-			equalities[index++] = Atom.create(equality, pair.getKey(), pair.getValue());
-		Atom body[] = new Atom[]{Atom.create(Predicate.create(predicate.getName(), leftTerms.length), leftTerms), 
-						Atom.create(Predicate.create(predicate.getName(), copiedTerms.length), copiedTerms)};
-		return EGD.create(body, equalities, true);
-	}
-
-	/**
-	 * Constructs an EGD for the given relation and key attibutes.
-	 *
-	 * @param relation the relation
-	 * @param keys the key attirbutes
-	 * @return the EGD representing the primary key
-	 */
-	public static EGD getEGD(Relation relation, Attribute[] keys) {
-		return getEGD(Predicate.create(relation.getName(), relation.getArity()), relation.getAttributes(), keys);
 	}
 
 	public static List<TypedConstant> getTypedConstants(Formula formula) {

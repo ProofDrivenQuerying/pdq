@@ -4,7 +4,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -111,8 +110,7 @@ public class PlanCreationUtility {
 				System.arraycopy(relation.getAttributes(), 0, attributes, 0, attributes.length);
 				planRelation = Relation.create(relation.getName(), attributes, relation.getAccessMethods());
 				// Compute the input constants
-				Map<Integer, TypedConstant> inputConstants = computeInputConstants(accessMethod,
-						exposedFact.getTerms());
+				Map<Integer, TypedConstant> inputConstants = accessMethod.computeInputConstants(exposedFact.getTerms());
 				// Create an access operator
 				access = AccessTerm.create(planRelation, accessMethod, inputConstants);
 			}
@@ -162,19 +160,7 @@ public class PlanCreationUtility {
 	}
 
 	/**
-	 * Look for constants in the input positions
-	 */
-	private static Map<Integer, TypedConstant> computeInputConstants(AccessMethodDescriptor method, Term[] terms) {
-		Map<Integer, TypedConstant> ret = new HashMap<>();
-		for (Integer i : method.getInputs()) {
-			if (terms[i] instanceof TypedConstant)
-				ret.put(i, (TypedConstant) terms[i]);
-		}
-		return ret;
-	}
-
-	/**
-	 * renames tha attributes in the first list based on the names of terms in the
+	 * renames the attributes in the first list based on the names of terms in the
 	 * second lists
 	 */
 	private static Attribute[] computeRenamedAttributes(Attribute[] attributes, Term[] terms) {
@@ -222,36 +208,6 @@ public class PlanCreationUtility {
 	}
 
 	/**
-	 * Gets the types of a query's free variables
-	 *
-	 * @param query
-	 *            the q
-	 * @return a list of types for each free variable of the query
-	 */
-	private static Type[] computeVariableTypes(ConjunctiveQuery query, Schema schema) {
-		Variable[] freeVariables = query.getFreeVariables();
-		Type[] types = new Type[query.getFreeVariables().length];
-		boolean assigned = false;
-		for (int i = 0, l = types.length; i < l; i++) {
-			assigned = false;
-			Variable t = freeVariables[i];
-			Atom[] atoms = query.getAtoms();
-			for (Atom atom : atoms) {
-				Relation s = schema.getRelation(atom.getPredicate().getName());
-				List<Integer> pos = Utility.search(atom.getTerms(), t);
-				if (!pos.isEmpty()) {
-					types[i] = s.getAttribute(pos.get(0)).getType();
-					assigned = true;
-					break;
-				}
-			}
-			if (!assigned)
-				throw new IllegalStateException("Could not infer query type.");
-		}
-		return types;
-	}
-
-	/**
 	 * Creates the final projection, based on the free variables of the query
 	 *
 	 * @param query
@@ -262,7 +218,7 @@ public class PlanCreationUtility {
 	 */
 	public static ProjectionTerm createFinalProjection(ConjunctiveQuery query, RelationalTerm plan, Schema schema) {
 		List<Attribute> projections = new ArrayList<>();
-		Type[] variableTypes = computeVariableTypes(query, schema);
+		Type[] variableTypes = query.computeVariableTypes(schema);
 		Variable[] freeVariables = query.getFreeVariables();
 		for (int index = 0; index < freeVariables.length; ++index) {
 			Constant constant = ExplorationSetUp.getCanonicalSubstitutionOfFreeVariables().get(query)

@@ -1,11 +1,15 @@
 package uk.ac.ox.cs.pdq.db;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.junit.Assert;
 
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.AccessMethodAdapter;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
@@ -88,5 +92,19 @@ public class AccessMethodDescriptor implements Serializable {
 			this.toString = result.toString();
 		}
 		return this.toString;
+	}
+
+	/**
+	 * Looks for constants in the input positions
+	 * @param terms constants or variables
+	 * @return the found position index and input constant pairs
+	 */
+	public Map<Integer, TypedConstant> computeInputConstants(Term[] terms) {
+		Map<Integer, TypedConstant> ret = new HashMap<>();
+		for (Integer i : this.getInputs()) {
+			if (terms[i] instanceof TypedConstant)
+				ret.put(i, (TypedConstant) terms[i]);
+		}
+		return ret;
 	}
 }
