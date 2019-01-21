@@ -174,8 +174,8 @@ public class PlanCreationUtility {
 	}
 
 	/**
-	 * renames tha attributes in the first list based on the names of terms in the
-	 * second lists
+	 * renames the attributes in the first list based on the names of terms in the
+	 * second list
 	 */
 	private static Attribute[] computeRenamedAttributes(Attribute[] attributes, Term[] terms) {
 		Preconditions.checkArgument(attributes.length == terms.length);
@@ -190,12 +190,15 @@ public class PlanCreationUtility {
 	 *
 	 * @param terms
 	 *            List<Term>
-	 * @return a conjunction of selectioin conditions that the output values of a
+	 * @return a conjunction of selection conditions that the output values of a
 	 *         source must satisfy based on the exposed fact's terms. The selection
 	 *         conditions enforce value equality when two terms are equal and
 	 *         equality to a constant when an exposed fact's term is mapped to a
 	 *         schema constant. The returned list is null if there does not exist
 	 *         any select condition
+	 *         For example, if we have the list y,x,x then we will create a condition saying
+	 *         that position 2= position 3
+	 *         
 	 */
 	public static Condition createFilteringConditions(Term[] terms) {
 		Set<SimpleCondition> result = new LinkedHashSet<>();
@@ -275,7 +278,7 @@ public class PlanCreationUtility {
 	}
 
 	/**
-	 * Creates the left deep plan.
+	 * Creates a left deep plan.
 	 *
 	 * @param <T> the generic type
 	 * @param nodesSet            The nodes of the plan tree
