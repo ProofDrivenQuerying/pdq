@@ -42,7 +42,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGenericSimple;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultPairValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
 import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;

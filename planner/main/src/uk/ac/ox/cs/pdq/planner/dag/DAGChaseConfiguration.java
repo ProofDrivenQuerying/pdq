@@ -7,8 +7,8 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 
 /**
  *  Configurations represent a partial proof and also a corresponding plan

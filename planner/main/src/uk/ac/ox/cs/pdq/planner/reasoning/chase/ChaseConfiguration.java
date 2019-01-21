@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration;
+package uk.ac.ox.cs.pdq.planner.reasoning.chase;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;

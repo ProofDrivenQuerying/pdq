@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.equivalence;
 
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.ChaseConfiguration;
 
 /**
  * Fact equivalence.
