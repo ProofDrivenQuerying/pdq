@@ -40,7 +40,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.linear.LeftDeepPlanGenerator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
-import uk.ac.ox.cs.pdq.planner.plantree.IndexedDirectedGraph;
+import uk.ac.ox.cs.pdq.planner.linear.plantree.IndexedDirectedGraph;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**

@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleQuery;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.plantree.PlanTree;
+import uk.ac.ox.cs.pdq.planner.linear.plantree.PlanTree;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
