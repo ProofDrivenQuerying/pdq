@@ -163,19 +163,6 @@ public class PlanCreationUtility {
 	 * renames the attributes in the first list based on the names of terms in the
 	 * second list
 	 */
-	private static Map<Integer, TypedConstant> computeInputConstants(AccessMethodDescriptor method, Term[] terms) {
-		Map<Integer, TypedConstant> ret = new HashMap<>();
-		for (Integer i : method.getInputs()) {
-			if (terms[i] instanceof TypedConstant)
-				ret.put(i, (TypedConstant) terms[i]);
-		}
-		return ret;
-	}
-
-	/**
-	 * renames the attributes in the first list based on the names of terms in the
-	 * second list
-	 */
 	private static Attribute[] computeRenamedAttributes(Attribute[] attributes, Term[] terms) {
 		Preconditions.checkArgument(attributes.length == terms.length);
 		Attribute[] renamings = new Attribute[terms.length];
