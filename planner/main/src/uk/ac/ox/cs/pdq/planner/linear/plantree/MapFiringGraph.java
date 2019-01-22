@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.plantree;
+package uk.ac.ox.cs.pdq.planner.linear.plantree;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -96,7 +96,7 @@ public class MapFiringGraph implements FiringGraph{
 	 * @param dependency IC
 	 * @param source PredicateFormula
 	 * @param target PredicateFormula
-	 * @see uk.ac.ox.cs.pdq.planner.plantree.FiringGraph#put(Dependency, Atom, Atom)
+	 * @see uk.ac.ox.cs.pdq.planner.linear.plantree.FiringGraph#put(Dependency, Atom, Atom)
 	 */
 	@Override
 	public void put(Dependency dependency, Atom source, Atom target) {
@@ -107,7 +107,7 @@ public class MapFiringGraph implements FiringGraph{
 	 * Clone.
 	 *
 	 * @return MapFiringGraph
-	 * @see uk.ac.ox.cs.pdq.planner.plantree.FiringGraph#clone()
+	 * @see uk.ac.ox.cs.pdq.planner.linear.plantree.FiringGraph#clone()
 	 */
 	@Override
 	public MapFiringGraph clone() {
@@ -121,7 +121,7 @@ public class MapFiringGraph implements FiringGraph{
 	 * Gets the graph.
 	 *
 	 * @return Graph<PredicateFormula,DefaultEdge>
-	 * @see uk.ac.ox.cs.pdq.planner.plantree.FiringGraph#getGraph()
+	 * @see uk.ac.ox.cs.pdq.planner.linear.plantree.FiringGraph#getGraph()
 	 */
 	@Override
 	public Graph<Atom, DefaultEdge> getGraph() {
@@ -196,7 +196,7 @@ public class MapFiringGraph implements FiringGraph{
 	 *
 	 * @param fact PredicateFormula
 	 * @return Pair<IC,Collection<PredicateFormula>>
-	 * @see uk.ac.ox.cs.pdq.planner.plantree.FiringGraph#getFactProvenance(Atom)
+	 * @see uk.ac.ox.cs.pdq.planner.linear.plantree.FiringGraph#getFactProvenance(Atom)
 	 */
 	@Override
 	public Pair<Dependency, Collection<Atom>> getFactProvenance(Atom fact) {
@@ -221,7 +221,7 @@ public class MapFiringGraph implements FiringGraph{
 	 *
 	 * @param source FiringGraph
 	 * @return FiringGraph
-	 * @see uk.ac.ox.cs.pdq.planner.plantree.chase.FiringGraph#merge(FiringGraph)
+	 * @see uk.ac.ox.cs.pdq.planner.linear.plantree.chase.FiringGraph#merge(FiringGraph)
 	 */
 	@Override
 	public FiringGraph merge(FiringGraph source) {
@@ -250,7 +250,7 @@ public class MapFiringGraph implements FiringGraph{
 	 * Gets the fact's provenance.
 	 *
 	 * @return Map<PredicateFormula,Pair<IC,Collection<PredicateFormula>>>
-	 * @see uk.ac.ox.cs.pdq.planner.plantree.FiringGraph#getFactProvenance()
+	 * @see uk.ac.ox.cs.pdq.planner.linear.plantree.FiringGraph#getFactProvenance()
 	 */
 	@Override
 	public Map<Atom, Pair<Dependency, Collection<Atom>>> getFactProvenance() {

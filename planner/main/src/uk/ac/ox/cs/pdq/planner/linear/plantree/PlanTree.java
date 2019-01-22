@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.plantree;
+package uk.ac.ox.cs.pdq.planner.linear.plantree;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

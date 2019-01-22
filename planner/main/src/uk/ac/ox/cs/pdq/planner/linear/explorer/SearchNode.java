@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.equivalence.FactEquivalence;
 import uk.ac.ox.cs.pdq.planner.equivalence.FastFactEquivalence;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.plantree.PlanTree;
+import uk.ac.ox.cs.pdq.planner.linear.plantree.PlanTree;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;

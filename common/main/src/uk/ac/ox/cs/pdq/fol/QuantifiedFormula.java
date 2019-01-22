@@ -9,8 +9,6 @@ import java.util.Set;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.util.Utility;
-
 /**
  * 
  * @author Efthymia Tsamoura
@@ -56,7 +54,7 @@ public class QuantifiedFormula extends Formula {
 		Assert.assertTrue(operator == UNIVERSAL || operator == EXISTENTIAL);
 		Assert.assertNotNull(child);
 		Assert.assertNotNull(variables);
-		Assert.assertTrue(Utility.getVariables(child).containsAll(Arrays.asList(variables)));
+		Assert.assertTrue(child.getVariablesRecursive().containsAll(Arrays.asList(variables)));
 		this.child = child;
 		this.operator = operator;
 		this.variables = variables.clone();

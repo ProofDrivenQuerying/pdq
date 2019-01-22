@@ -17,7 +17,12 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.reasoning.chase.ChaseException;
 
 /**
- * Class of chase constants that are equal under the schema constraints.
+ * Class of chase constants (i.e. nulls) that are inferred to be equal under the schema 
+ * constraints.
+ * For each such class, we pick one constant as the representative of the class; if a fact
+ * F(...n...) holds of a constant n, then the fact will be propagated to
+ * F(...r....) where r is the representative of the equivalence class of n.
+ * 
  * @author Efthymia Tsamoura
  *
  */
@@ -33,7 +38,7 @@ public class EqualConstantsClass {
 	private Term representative;
 
 	/**
-	 * Instantiates a new equal constants class.
+	 * Instantiates a new constant equality class.
 	 *
 	 * @param equality the equality
 	 * @throws ChaseException the chase exception
@@ -41,6 +46,10 @@ public class EqualConstantsClass {
 	public EqualConstantsClass(Atom equality) throws ChaseException{
 		this.constants = new TreeSet<>();
 		Term[] terms = equality.getTerms();
+		Preconditions.checkArgument(equality.isEquality());
+		Preconditions.checkArgument(terms.length == 2);
+		Preconditions.checkArgument(terms[0]!=null);
+		Preconditions.checkArgument(terms[1]!=null);
 		Preconditions.checkArgument(terms[0] instanceof Constant && terms[1] instanceof Constant);
 		//If both inputs are schema constants
 		if(terms[0] instanceof TypedConstant && terms[1] instanceof TypedConstant) {
@@ -53,28 +62,27 @@ public class EqualConstantsClass {
 				this.constants.add(terms[0]);
 			}
 		}
-		//If only one of the inputs is schema constant
-		else if(terms[0] instanceof TypedConstant) {
-			this.schemaConstant = (TypedConstant) terms[0];
-			this.constants.add(terms[0]);
-			this.constants.add(terms[1]);
-		}
-		else if(terms[1] instanceof TypedConstant) {
-			this.schemaConstant = (TypedConstant) terms[1];
-			this.constants.add(terms[0]);
-			this.constants.add(terms[1]);
-		}
 		else {
-			//If both inputs are chase constants
+			//If only one or none of the inputs is schema constant
 			this.constants.add(terms[0]);
 			this.constants.add(terms[1]);
+			
+			if(terms[0] instanceof TypedConstant) {
+				this.schemaConstant = (TypedConstant) terms[0];
+			}
+			else if(terms[1] instanceof TypedConstant) {
+				this.schemaConstant = (TypedConstant) terms[1];
+			}
+			else {
+				//If both inputs are chase constants we can't set the schema constant field.
+			}
 		}
 		//Find out the representative. 
 		this.setRepresentative();
 	}
 
 	/**
-	 * Instantiates a new equal constants class.
+	 * Instantiates a new constant equality class.
 	 *
 	 * @param constants the constants
 	 * @param representative the representative
@@ -89,7 +97,10 @@ public class EqualConstantsClass {
 	}
 
 	/**
-	 * Adds the.
+	 * Tries to add a constant to an equivalence class. Equivalence classes
+	 * are not allowed to contain two schema constants (since we assume the
+	 * Unique Name Assumption); thus the add will fail if it would result
+	 * in two such constants being equivalent.
 	 *
 	 * @param input the input
 	 * @param inputClass 		The class of the input constant
@@ -151,7 +162,7 @@ public class EqualConstantsClass {
 	/**
 	 * Picks the representative of this class
 	 * 		The representatives are picked in the following priority:
-	 * 		Schema constants
+	 * 		Schema constant in the class, if there is one
 	 * 		Constants from the canonical database
 	 * 		Other labelled nulls not produced after firing EGDs.
 	 */
@@ -161,9 +172,9 @@ public class EqualConstantsClass {
 			this.representative = this.schemaConstant;
 		}
 		else {
-			if(this.representative == null || this.representative instanceof UntypedConstant && !((UntypedConstant) this.representative).getSymbol().startsWith("c")) {
+			if(this.representative == null || this.representative instanceof UntypedConstant && !((UntypedConstant) this.representative).isCannonicalConstant()) {
 				for(Term constant:this.constants) {
-					if(constant instanceof UntypedConstant && ((UntypedConstant) constant).getSymbol().startsWith("c")) {
+					if(constant instanceof UntypedConstant && ((UntypedConstant) constant).isCannonicalConstant()) {
 						this.representative = constant;
 						break;
 					}
@@ -171,7 +182,7 @@ public class EqualConstantsClass {
 			}
 			if(this.representative == null) {
 				for(Term constant:this.constants) {
-					if(constant instanceof UntypedConstant && ((UntypedConstant) constant).getSymbol().startsWith("k")) {
+					if(constant instanceof UntypedConstant && ((UntypedConstant) constant).isNonCannonicalConstant()) {
 						this.representative = constant;
 						break;
 					}
@@ -184,10 +195,8 @@ public class EqualConstantsClass {
 	}
 	
 	/**
-	 * Contains.
-	 *
 	 * @param constant the constant
-	 * @return true, if successful
+	 * @return true, if class contains this constant
 	 */
 	public boolean contains(Term constant) {
 		return (this.schemaConstant!= null && this.schemaConstant.equals(constant)) 
@@ -195,7 +204,7 @@ public class EqualConstantsClass {
 	}
 
 	/**
-	 * Gets the schema constant.
+	 * Gets the schema constant that is in the class, if there is one (otherwise will return null)
 	 *
 	 * @return the schema constant
 	 */
@@ -224,9 +233,9 @@ public class EqualConstantsClass {
 	}
 
 	/**
-	 * Gets the constants.
+	 * Gets all members of the class.
 	 *
-	 * @return the constants
+	 * @return the constants in the class
 	 */
 	public Collection<Term> getConstants() {
 		return this.constants;
@@ -240,19 +249,20 @@ public class EqualConstantsClass {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.constants.equals(((EqualConstantsClass) o).constants)
-				&& this.schemaConstant.equals(((EqualConstantsClass) o).schemaConstant)
+		// trivials
+		if (this == o) return true;
+		if (o == null) return false;
+		if (!this.getClass().isInstance(o)) return false;
+		
+		// Schema Constant can be null, needs to be checked.
+		if (this.schemaConstant == null && ((EqualConstantsClass) o).schemaConstant != null) return false;
+		if (this.schemaConstant != null && ((EqualConstantsClass) o).schemaConstant == null) return false;
+		
+		if (this.schemaConstant != null && !this.schemaConstant.equals(((EqualConstantsClass) o).schemaConstant)) return false;
+		
+		//rest
+		return this.constants.equals(((EqualConstantsClass) o).constants)
 				&& this.representative.equals(((EqualConstantsClass) o).representative);
-//				&& ( (this.schemaConstant == null && ((EqualConstantsClass) o).schemaConstant == null) ||
-//						this.schemaConstant != null && ((EqualConstantsClass) o).schemaConstant != null &&
-//						this.schemaConstant.equals(((EqualConstantsClass) o).schemaConstant) );
 	}
 
 	/**

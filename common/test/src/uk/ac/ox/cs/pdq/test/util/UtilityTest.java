@@ -55,7 +55,7 @@ public class UtilityTest {
 	// Create EGD then test atoms
 	@Test
 	public void testGetEGDs1() {
-		EGD egds = Utility.getEGD(this.R, this.R.getPrimaryKey().getAttributes());
+		EGD egds = EGD.create(this.R, this.R.getPrimaryKey().getAttributes());
 		Assert.assertNotNull(egds);
 		Assert.assertNotNull(egds.getAtoms());
 		Assert.assertEquals(3, egds.getAtoms().length);
@@ -72,13 +72,13 @@ public class UtilityTest {
 	// Create EGD to fail
 	@Test(expected = RuntimeException.class)
 	public void testGetEGDs2() {
-		Utility.getEGD(this.S, this.S.getPrimaryKey().getAttributes());
+		EGD.create(this.S, this.S.getPrimaryKey().getAttributes());
 	}
 
 	// Create EGD then test atoms
 	@Test
 	public void testGetEGDs3() {
-		EGD egds = Utility.getEGD(this.T, this.T.getPrimaryKey().getAttributes());
+		EGD egds = EGD.create(this.T, this.T.getPrimaryKey().getAttributes());
 		Assert.assertNotNull(egds);
 		Assert.assertNotNull(egds.getAtoms());
 		Assert.assertEquals(3, egds.getAtoms().length);

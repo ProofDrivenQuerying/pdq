@@ -15,13 +15,21 @@ public final class UntypedConstant extends Constant implements Comparable<Consta
 	/**  The constant's name. */
 	protected final String symbol;
 
-	/**  The default prefix of the constant terms. */
-	public static final String DEFAULT_CONSTANT_PREFIX = "c";
+	/**
+	 * The DEFAULT_PREFIX for canonical names. Used for example to create cannonicalQuerries. 
+	 */
+	public static final String CANONICAL_CONSTANT_PREFIX = "c";
+
+	/** The . */
+	public static final String NON_CANONICAL_CONSTANT_PREFIX = "k";
 	
 	private UntypedConstant(String name) {
 		Preconditions.checkArgument(name!=null);
 		Preconditions.checkArgument(!name.isEmpty());
 		this.symbol = name;
+		if (getSymbol().startsWith("k")) {
+			System.out.println();
+		}
 	}
 
 	@Override
@@ -38,11 +46,18 @@ public final class UntypedConstant extends Constant implements Comparable<Consta
 		return true;
 	}
 
+	public boolean isCannonicalConstant() {
+		return symbol!=null && symbol.startsWith(CANONICAL_CONSTANT_PREFIX);
+	}
+	
+	public boolean isNonCannonicalConstant() {
+		return symbol!=null && symbol.startsWith(NON_CANONICAL_CONSTANT_PREFIX);
+	}
 	/**
 	 * Creates a new Constant that was never used or existed before.
 	 */
 	public static UntypedConstant getFreshConstant() {
-		return new UntypedConstant(DEFAULT_CONSTANT_PREFIX + GlobalCounterProvider.getNext("ConstantName"));
+		return new UntypedConstant(CANONICAL_CONSTANT_PREFIX + GlobalCounterProvider.getNext("ConstantName"));
 	}
 	
     public static UntypedConstant create(String symbol) {

@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 import uk.ac.ox.cs.pdq.planner.dominance.FactDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.ChaseConfiguration;
 
 /**
  * Requires the input pair of configurations to be non trivial.
