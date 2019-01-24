@@ -48,6 +48,7 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 		DAGChaseConfiguration equivalent = this.structurallyEquivalentTo(configuration);
 		if(equivalent != null) {
 			e = this.configurationToEquivalenceClass.get(equivalent);
+			Preconditions.checkArgument(e!=null);
 			e.addEntry(configuration);
 		}
 		else {
