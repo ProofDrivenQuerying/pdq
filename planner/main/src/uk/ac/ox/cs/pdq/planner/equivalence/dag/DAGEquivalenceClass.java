@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.dag.equivalence;
+package uk.ac.ox.cs.pdq.planner.equivalence.dag;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -24,7 +24,12 @@ import uk.ac.ox.cs.pdq.planner.equivalence.StructuralEquivalence;
  * @author Efthymia Tsamoura
  *
  */
-public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
+public class DAGEquivalenceClass {
+	/**  The representative of this class. */
+	private DAGChaseConfiguration representative;
+
+	/**  The minimum depth configuration of this class. */
+	protected Integer minHeight;
 
 	/**  The non-representative configurations. */
 	Collection<DAGChaseConfiguration> nonRepresentatives = new LinkedHashSet<>();
@@ -54,7 +59,7 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 * Constructor for SynchronizedEquivalenceClass.
 	 * @param configuration DAGChaseConfiguration
 	 */
-	public SynchronizedEquivalenceClass(DAGChaseConfiguration configuration) {
+	public DAGEquivalenceClass(DAGChaseConfiguration configuration) {
 		this.representative = configuration;
 		this.minHeight = configuration.getHeight();
 		if(configuration.isClosed()) {
@@ -70,8 +75,7 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 *
 	 * @param configuration DAGChaseConfiguration
 	 */
-	@Override
-	public void addEntry(DAGChaseConfiguration configuration) {
+	protected void addEntry(DAGChaseConfiguration configuration) {
 		this.write.lock();
 		try {
 			if(!this.isEmpty()) {
@@ -101,7 +105,6 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 *
 	 * @param configuration DAGChaseConfiguration
 	 */
-	@Override
 	public void removeEntry(DAGChaseConfiguration configuration) {
 		this.removeAll(Lists.newArrayList(configuration));
 	}
@@ -111,7 +114,6 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 *
 	 * @param configurations Collection<DAGChaseConfiguration>
 	 */
-	@Override
 	public void removeAll(Collection<DAGChaseConfiguration> configurations) {
 		this.write.lock();
 		try {
@@ -165,7 +167,6 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 *
 	 * @return Collection<DAGChaseConfiguration>
 	 */
-	@Override
 	public Collection<DAGChaseConfiguration> getAll() {
 		this.read.lock();
 		try {
@@ -187,7 +188,6 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 * @param input DAGChaseConfiguration
 	 * @return Collection<DAGChaseConfiguration>
 	 */
-	@Override
 	public Collection<DAGChaseConfiguration> dominatedBy(Dominance[] dominance, DAGChaseConfiguration input) {
 		this.read.lock();
 		try {
@@ -214,7 +214,6 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 * @param configuration DAGChaseConfiguration
 	 * @return boolean
 	 */
-	@Override
 	public boolean structurallyEquivalentTo(DAGChaseConfiguration configuration) {
 		this.read.lock();
 		try {
@@ -231,7 +230,6 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 * @param input DAGChaseConfiguration
 	 * @return DAGChaseConfiguration
 	 */
-	@Override
 	public DAGChaseConfiguration dominate(Dominance[] dominance, DAGChaseConfiguration input) {
 		this.read.lock();
 		try {
@@ -256,7 +254,6 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 *
 	 * @return boolean
 	 */
-	@Override
 	public boolean isSleeping() {
 		this.read.lock();
 		try {
@@ -289,7 +286,6 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 *
 	 * @return boolean
 	 */
-	@Override
 	public boolean isEmpty() {
 		this.read.lock();
 		try {
@@ -304,7 +300,6 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 *
 	 * @return int
 	 */
-	@Override
 	public int size() {
 		this.read.lock();
 		try {
@@ -323,7 +318,6 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 *
 	 * @return String
 	 */
-	@Override
 	public String toString() {
 		String ret = "REPRESENTATIVE" + "\n\t" + this.representative +
 				"\nMINCOST" + "\n\t" + this.minCostConfiguration +
@@ -346,6 +340,23 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 			}
 		}
 		return false;
+	}
+	/**
+	 * Gets the representative.
+	 *
+	 * @return DAGChaseConfiguration
+	 */
+	public DAGChaseConfiguration getRepresentative() {
+		return this.representative;
+	}
+
+	/**
+	 * Gets the min height.
+	 *
+	 * @return Integer
+	 */
+	public Integer getMinHeight() {
+		return this.minHeight;
 	}
 	
 }

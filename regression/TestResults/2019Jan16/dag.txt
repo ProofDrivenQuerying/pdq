@@ -1,0 +1,20 @@
+Start running regression test: planner in folder: test/planner/dag/MandatoryPass
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/SIMPLE_CONSTANT_rel_5x3_1_bindings+0.5_freeacc_dep_3x3_query_GUARDED_3 :  SUCCESS  SUCCESS PASSCost: 5.0Finished,  Duration: 0.21s.PASSCost: 5.0Finished,  Duration: 0.12s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/SIMPLE_CONSTANT_rel_5x3_1_bindings+1.0_freeacc_dep_3x3_query_GUARDED_3 :  SUCCESS  SUCCESS PASSCost: 5.0Finished,  Duration: 0.01s.PASSCost: 5.0Finished,  Duration: 0.11s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/benchmark_case_002 :  SUCCESS  SUCCESS PASSCost: 61394.5336050903Finished,  Duration: 3.84s.PASSCost: 76314.80706077814Finished,  Duration: 0.69s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/benchmark_case_003 :  NOT ACCEPTED  SUCCESS PASSCost: 4334.32091928001Finished,  Duration: 2.88s.FAILCost: 4369.32091928001Finished,  Duration: 0.25s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/example_01 :  SUCCESS  SUCCESS PASSCost: 7286.72124178452Finished,  Duration: 0.02s.PASSCost: 7286.72124178452Finished,  Duration: 0.07s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/example_02 :  SUCCESS  SUCCESS PASSCost: 1981.5510557964276Finished,  Duration: 0.01s.PASSCost: 1981.5510557964276Finished,  Duration: 0.2s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/example_03 :  SUCCESS  SUCCESS PASSCost: 1541.5510557964276Finished,  Duration: 0.01s.PASSCost: 1541.5510557964276Finished,  Duration: 0.42s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/manual/case_000 :  SUCCESS  SUCCESS No previous plan found.Finished,  Duration: 0.21s.No previous plan found.Finished,  Duration: 0.6s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/manual/case_001 :  SUCCESS  SUCCESS PASSCost: 3.0Finished,  Duration: 0.65s.PASSCost: 3.0Finished,  Duration: 0.94s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/manual/case_002 :  SUCCESS  SUCCESS No previous plan found.Finished,  Duration: 0s.No previous plan found.Finished,  Duration: 0.07s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/manual/case_003 :  SUCCESS  SUCCESS PASSCost: 3.0Finished,  Duration: 2.65s.PASSCost: 3.0Finished,  Duration: 0.45s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/manual/case_004 :  SUCCESS  SUCCESS PASSCost: 1.0Finished,  Duration: 0.01s.PASSCost: 1.0Finished,  Duration: 0.03s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/manual/case_005 :  SUCCESS  SUCCESS PASSCost: 1.0Finished,  Duration: 0s.PASSCost: 1.0Finished,  Duration: 0.02s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/profinfo/example_01 :  SUCCESS  SUCCESS PASSCost: 2.0Finished,  Duration: 0.01s.PASSCost: 2.0Finished,  Duration: 0.02s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/profinfo/example_01b :  SUCCESS  SUCCESS PASSCost: 2.0Finished,  Duration: 0.01s.PASSCost: 2.0Finished,  Duration: 0.11s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/profinfo/example_02 :  SUCCESS  SUCCESS PASSCost: 4.0Finished,  Duration: 0.1s.PASSCost: 4.0Finished,  Duration: 0.12s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/profinfo/example_03 :  SUCCESS  SUCCESS PASSCost: 2.0Finished,  Duration: 0s.PASSCost: 2.0Finished,  Duration: 0.04s.
+/home/gabor/git/pdq/regression/test/planner/dag/MandatoryPass/profinfo/example_03b :  SUCCESS  SUCCESS PASSCost: 2.0Finished,  Duration: 0s.PASSCost: 2.0Finished,  Duration: 0.01s.
+regression test finished successfully

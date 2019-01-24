@@ -32,8 +32,6 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
-import uk.ac.ox.cs.pdq.planner.dag.equivalence.SynchronizedEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DagChaseConfigurationValidation;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultPairValidator;
@@ -42,6 +40,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidatorFactory;
 import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.DominanceFactory;
+import uk.ac.ox.cs.pdq.planner.equivalence.dag.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.plancreation.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
@@ -111,7 +110,7 @@ public class DAGOptimized extends DAGExplorer {
 			initialConfigurations.removeAll(toDelete);
 		}
 		this.leftSideConfigurations = new ConcurrentLinkedQueue<>();
-		this.equivalenceClasses = new SynchronizedEquivalenceClasses();
+		this.equivalenceClasses = new DAGEquivalenceClasses();
 		this.leftSideConfigurations.addAll(initialConfigurations);
 		for (DAGChaseConfiguration initialConfiguration : initialConfigurations) {
 			this.equivalenceClasses.addEntry(initialConfiguration);

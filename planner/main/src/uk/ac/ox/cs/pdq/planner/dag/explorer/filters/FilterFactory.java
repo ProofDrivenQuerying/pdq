@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer.filters;
 
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FilterTypes;
 import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
-import uk.ac.ox.cs.pdq.planner.dominance.NumericalFactDominance;
 
 /**
  * Creates filters based on the input arguments.
@@ -36,7 +35,8 @@ public class FilterFactory {
 		case FACT_DOMINATED_FILTER:
 			return new DominationFilter(new FastFactDominance(false));
 		case NUMERICALLY_DOMINATED_FILTER:
-			return new DominationFilter(new NumericalFactDominance());
+			System.out.println("This filter is not available any more.");
+			throw new java.lang.IllegalArgumentException();
 		default:
 			throw new java.lang.IllegalArgumentException();
 		}

@@ -6,8 +6,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClass;
-import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
+import uk.ac.ox.cs.pdq.planner.equivalence.dag.DAGEquivalenceClass;
+import uk.ac.ox.cs.pdq.planner.equivalence.dag.DAGEquivalenceClasses;
 
 /**
  * Map of representatives. For each configuration c = BinConfiguration(c_1,c_2) we create a map from the

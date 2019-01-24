@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.dag.equivalence;
+package uk.ac.ox.cs.pdq.planner.equivalence.dag;
 
 /**
  * This package contains classes that store fact-equivalent configurations. 

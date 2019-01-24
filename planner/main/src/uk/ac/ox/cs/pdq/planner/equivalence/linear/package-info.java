@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.linear.explorer.equivalence;
+package uk.ac.ox.cs.pdq.planner.equivalence.linear;
 
 /**
  * This package contains the equivalence class used in linearOptimized. The

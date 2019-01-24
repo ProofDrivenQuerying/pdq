@@ -23,9 +23,9 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.dag.equivalence.SynchronizedEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.DominanceFactory;
+import uk.ac.ox.cs.pdq.planner.equivalence.dag.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
@@ -35,12 +35,12 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * @author gabor
  *
  */
-public class TestSynchronizedEquivalenceClasses extends PdqTest {
+public class TestDAGEquivalenceClasses extends PdqTest {
 	private AccessibleChaseInstance state;
 	protected Relation T =  Relation.create("T", new Attribute[] { b_s, c_s, d_s }, new AccessMethodDescriptor[] { this.method0, this.method1, this.method2 });
 	private Dominance[] dominance;
 	
-	public TestSynchronizedEquivalenceClasses() {
+	public TestDAGEquivalenceClasses() {
 		try {
 			this.state = new AccessibleDatabaseChaseInstance(getFacts(), new InternalDatabaseManager(), false);
 			this.dominance = new DominanceFactory(DominanceTypes.OPEN).getInstance();
@@ -53,7 +53,7 @@ public class TestSynchronizedEquivalenceClasses extends PdqTest {
 	
 	@Test
 	public void test() {
-		SynchronizedEquivalenceClasses se = new SynchronizedEquivalenceClasses();
+		DAGEquivalenceClasses se = new DAGEquivalenceClasses();
 		// create facts
 		Set<Atom> factsT = new HashSet<>();
 		factsT.add(Atom.create(T, new Term[] { TypedConstant.create("A" + 1),TypedConstant.create("C" + 1),TypedConstant.create("B" + 1)}));
@@ -81,7 +81,7 @@ public class TestSynchronizedEquivalenceClasses extends PdqTest {
 		se.addEntry(testConfig);
 		
 		Assert.assertEquals(1, (int)se.averageClassSize());
-		Assert.assertEquals(2, se.size());
+		Assert.assertEquals(2, se.numberOfConfigurations());
 		shouldBeDominated.setCost(new DoubleCost(5));
 		shouldNotBeDominated.setCost(new DoubleCost(25));
 		
