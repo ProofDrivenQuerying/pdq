@@ -27,9 +27,6 @@ public final class UntypedConstant extends Constant implements Comparable<Consta
 		Preconditions.checkArgument(name!=null);
 		Preconditions.checkArgument(!name.isEmpty());
 		this.symbol = name;
-		if (getSymbol().startsWith("k")) {
-			System.out.println();
-		}
 	}
 
 	@Override
