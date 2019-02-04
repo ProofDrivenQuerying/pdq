@@ -5,7 +5,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -43,17 +42,10 @@ public class DAGEquivalenceClasses {
 		DAGChaseConfiguration equivalent = this.structurallyEquivalentTo(configuration);
 		if(equivalent != null) {
 			e = this.configurationToEquivalenceClass.get(equivalent);
-			if (e==null) {
-				System.out.println();
-				DAGChaseConfiguration equivalent2 = this.structurallyEquivalentTo(configuration);
-				System.out.println(equivalent2);
-				
-			}
-			Preconditions.checkArgument(e!=null);
 			DAGChaseConfiguration oldRep = e.getRepresentative();
 			e.addEntry(configuration);
 			if (oldRep!=e.getRepresentative()) {
-				configurationToEquivalenceClass.remove(oldRep);
+				configurationToEquivalenceClass.remove(oldRep); 
 				configurationToEquivalenceClass.put(e.getRepresentative(),e);
 			}
 		}

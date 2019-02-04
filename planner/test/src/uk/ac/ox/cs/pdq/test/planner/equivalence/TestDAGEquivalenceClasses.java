@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.planner.dag.equivalence;
+package uk.ac.ox.cs.pdq.test.planner.equivalence;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -95,5 +95,35 @@ public class TestDAGEquivalenceClasses extends PdqTest {
 		for (int i = 0 ; i < 10; i++) 
 			atoms.add(Atom.create(T, new Term[] { TypedConstant.create("A" + i),TypedConstant.create("C" + i),TypedConstant.create("B" + i)}));
 		return atoms;
+	}
+	
+	@Test
+	public void testUpdatingRepresentatives() {
+		DAGEquivalenceClasses se = new DAGEquivalenceClasses();
+		// create facts
+		Set<Atom> factsT = new HashSet<>();
+		Set<Atom> factsT2 = new HashSet<>();
+		factsT.add(Atom.create(T, new Term[] { TypedConstant.create("A" + 1),TypedConstant.create("C" + 1),TypedConstant.create("B" + 1)}));
+		factsT2.add(Atom.create(T, new Term[] { TypedConstant.create("A" + 1),TypedConstant.create("C" + 1),TypedConstant.create("B" + 1)}));
+		Set<Atom> factsS = new HashSet<>();
+		factsS.add(Atom.create(S_s, new Term[] { TypedConstant.create("sA" + 1),TypedConstant.create("sC" + 1)}));
+		AccessibilityAxiom ruleT = new AccessibilityAxiom(T, this.method0);
+		AccessibilityAxiom ruleS = new AccessibilityAxiom(S_s, this.method1); 
+		
+		// create apply rules
+		DAGChaseConfiguration configuration = new ApplyRule(state, ruleT, factsT);
+		DAGChaseConfiguration configuration2 = new ApplyRule(state, ruleS, factsS);
+		configuration.setCost(new DoubleCost(10));
+		// add apply rules and binary configurations
+		se.addEntry(configuration);
+		DAGChaseConfiguration representative1 = se.getEquivalenceClasses().iterator().next().getRepresentative();
+		
+		//remove entries (including the representative
+		se.removeEntry(configuration);
+		// add new entries
+		se.addEntry(configuration2);
+		DAGChaseConfiguration representative2 = se.getEquivalenceClasses().iterator().next().getRepresentative();
+		// check if the representative got updated
+		Assert.assertFalse(representative1.equals(representative2));
 	}
 }

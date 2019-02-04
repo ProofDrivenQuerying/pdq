@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.planner.linear.explorer.equivalence;
+package uk.ac.ox.cs.pdq.test.planner.equivalence;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
