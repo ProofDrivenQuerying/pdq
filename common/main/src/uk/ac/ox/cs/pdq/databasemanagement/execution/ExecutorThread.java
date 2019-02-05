@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.databasemanagement.execution;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -501,13 +502,9 @@ public class ExecutorThread extends Thread {
 	private static Connection getConnection(String driver, String url, String database, String username, String password) throws SQLException {
 		if (!Strings.isNullOrEmpty(driver)) {
 			try {
-				Class.forName(driver).newInstance();
-			} catch (ClassNotFoundException e) {
-				throw new IllegalStateException("Could not load chase database driver '" + driver + "'");
-			} catch (InstantiationException e) {
-				throw new RuntimeException(e);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
+				Class.forName(driver).getConstructor().newInstance();
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				throw new IllegalStateException("Could not load chase database driver '" + driver + "'",e);
 			}
 		}
 		String u = null;

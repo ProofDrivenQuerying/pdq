@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.datasources.io.jaxb.adapted;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -63,7 +64,7 @@ public class AdaptedDbSchema {
 		setDependencies(s.getNonEgdDependencies());
 	}
 
-	public Schema toSchema(Properties properties) throws  ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public Schema toSchema(Properties properties) throws  Exception {
 		try {
 			if (sources==null) {
 				List<Dependency> discoveredDependencies = new ArrayList<>();
@@ -107,7 +108,7 @@ public class AdaptedDbSchema {
 				if (s.getPassword()!=null) propertiesClone.setProperty("password", s.getPassword());
 				if (s.getName()!=null) propertiesClone.setProperty("name", s.getName());
 				if (s.getFile()!=null) propertiesClone.setProperty("file", s.getFile());
-				SchemaDiscoverer sd = (SchemaDiscoverer) Class.forName(discoverer).newInstance();
+				SchemaDiscoverer sd = (SchemaDiscoverer) Class.forName(discoverer).getConstructor().newInstance();
 				sd.setProperties(propertiesClone);
 				Schema discoveredPartialSchema = sd.discover();
 				if (discoveredPartialSchema.getNonEgdDependencies() != null && discoveredPartialSchema.getNonEgdDependencies().length!=0) {
@@ -173,7 +174,7 @@ public class AdaptedDbSchema {
 				return new Schema(discoveredRelations.values().toArray(new Relation[discoveredRelations.size()]), discoveredDependencies.toArray(new Dependency[discoveredDependencies.size()]));
 			}
 			return new Schema(discoveredRelations.values().toArray(new Relation[discoveredRelations.size()])); 
-		} catch ( ClassNotFoundException t) {
+		} catch ( ClassNotFoundException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException t) {
 			t.printStackTrace();
 			throw t;
 		}
@@ -407,7 +408,7 @@ public class AdaptedDbSchema {
 				if (s!=null) {
 					relations = s.getRelations();
 				}
-			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

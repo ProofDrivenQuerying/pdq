@@ -133,7 +133,7 @@ public class RelationalTermIOTest {
 			File schemaFile = new File("test/src/uk/ac/ox/cs/pdq/test/io/jaxb/schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
-			Condition predicate = ConstantEqualityCondition.create(0, TypedConstant.create(new Integer(1)));
+			Condition predicate = ConstantEqualityCondition.create(0, TypedConstant.create(1));
 			SelectionTerm selectionTerm = SelectionTerm.create(predicate, access);
 			testIO(selectionTerm);
 		} catch (Exception e) {
@@ -149,7 +149,7 @@ public class RelationalTermIOTest {
 			File schemaFile = new File("test/src/uk/ac/ox/cs/pdq/test/io/jaxb/schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
-			ConstantEqualityCondition concon = ConstantEqualityCondition.create(0, TypedConstant.create(new Integer(1)));
+			ConstantEqualityCondition concon = ConstantEqualityCondition.create(0, TypedConstant.create(1));
 			SelectionTerm selectionTerm = SelectionTerm.create(concon, access);
 
 			testIO(selectionTerm);
@@ -166,14 +166,14 @@ public class RelationalTermIOTest {
 			File schemaFile = new File("test/src/uk/ac/ox/cs/pdq/test/io/jaxb/schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
-			Condition predicate = ConstantEqualityCondition.create(0, TypedConstant.create(new Integer(1)));
+			Condition predicate = ConstantEqualityCondition.create(0, TypedConstant.create(1));
 			ProjectionTerm p = ProjectionTerm.create(access.getInputAttributes(), access);
 			ProjectionTerm p1 = ProjectionTerm.create(p.getInputAttributes(), p);
 			SelectionTerm selectionTerm = SelectionTerm.create(predicate, p1);
 			ProjectionTerm p2 = ProjectionTerm.create(selectionTerm.getInputAttributes(), selectionTerm);
 
 			RelationalTerm accessX = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
-			Condition predicateX = ConstantEqualityCondition.create(0, TypedConstant.create(new Integer(1)));
+			Condition predicateX = ConstantEqualityCondition.create(0, TypedConstant.create(1));
 			ProjectionTerm pX = ProjectionTerm.create(accessX.getInputAttributes(), accessX);
 			ProjectionTerm p1X = ProjectionTerm.create(pX.getInputAttributes(), pX);
 			SelectionTerm selectionTermX = SelectionTerm.create(predicateX, p1X);

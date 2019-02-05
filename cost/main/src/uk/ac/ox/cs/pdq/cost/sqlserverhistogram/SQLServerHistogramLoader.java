@@ -76,7 +76,7 @@ public class SQLServerHistogramLoader {
 					range_rows = new BigDecimal(elements[1]).toBigInteger();
 					BigInteger eq_rows = new BigDecimal(elements[2]).toBigInteger();
 					BigInteger distinct_range_rows = new BigDecimal(elements[3]).toBigInteger();
-					double avg_range_rows = new Double(elements[4]); 
+					double avg_range_rows = Double.parseDouble(elements[4]); 
 					SQLServerBucket bucket = new SQLServerBucket(range_hi_key, range_rows, eq_rows, distinct_range_rows, avg_range_rows);
 					buckets.add(bucket);
 				}

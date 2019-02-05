@@ -133,8 +133,7 @@ public class PDQ {
 				uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 				uk.ac.ox.cs.pdq.db.Cache.reStartCaches();
 				uk.ac.ox.cs.pdq.algebra.Cache.reStartCaches();
-				this.out.println("\nStarting case '" + directory.getAbsolutePath() + "'");
-
+				this.out.println("\nStarting case '" + directory.getAbsolutePath() + "' using java: " + System.getProperty("java.version"));
 				// Loading schema 
 				Schema schema = DbIOManager.importSchema(new File(directory, SCHEMA_FILE));
 

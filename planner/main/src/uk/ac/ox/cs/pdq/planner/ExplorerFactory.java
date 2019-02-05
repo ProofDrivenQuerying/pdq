@@ -129,12 +129,16 @@ public class ExplorerFactory {
 			System.out.println("LINEAR_GENERIC");
 			return new LinearGeneric(eventBus, query, accessibleSchema, chaser, connection,
 					costEstimator, parameters.getMaxDepth());
+		case LINEAR_OPTIMIZED:
+			System.out.println("LINEAR_OPTIMIZED");
+			return new LinearOptimized(eventBus, query, accessibleSchema, chaser, connection,
+					costEstimator, costPropagator, parameters.getMaxDepth(),
+					parameters.getQueryMatchInterval());
 		case LINEAR_KCHASE:
 			System.out.println("LINEAR_KCHASE");
 			return new LinearKChase(eventBus, query, accessibleSchema, chaser, connection,
 					costEstimator, costPropagator, parameters.getMaxDepth(),
 					parameters.getChaseInterval());
-
 		case DAG_GENERIC:
 			System.out.println("DAG_GENERIC");
 			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGenericSimple(eventBus, parameters, query,
@@ -145,13 +149,6 @@ public class ExplorerFactory {
 			System.out.println("DAG_OPTIMIZED");
 			return new DAGOptimizedMultiThread(eventBus, parameters, query, accessibleSchema, chaser, connection,
 					costEstimator, filter, parameters.getMaxDepth());
-
-		case LINEAR_OPTIMIZED:
-			System.out.println("LINEAR_OPTIMIZED");
-			return new LinearOptimized(eventBus, query, accessibleSchema, chaser, connection,
-					costEstimator, costPropagator, parameters.getMaxDepth(),
-					parameters.getQueryMatchInterval());
-
 		default:
 			throw new IllegalStateException("Unsupported planner type " + parameters.getPlannerType());
 		}

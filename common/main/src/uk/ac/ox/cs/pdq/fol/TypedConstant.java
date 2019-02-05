@@ -142,10 +142,10 @@ public class TypedConstant extends Constant implements Typed, Serializable, Comp
 			return value;
 		}
 		if (type == Double.class) {
-			return new Double(Double.parseDouble(value));
+			return (Double)(Double.parseDouble(value));
 		} else if (type == Integer.class) {
 			try {
-				return new Integer(Integer.parseInt(value));
+				return (Integer)(Integer.parseInt(value));
 			} catch (NumberFormatException e) {
 				return value;
 			}

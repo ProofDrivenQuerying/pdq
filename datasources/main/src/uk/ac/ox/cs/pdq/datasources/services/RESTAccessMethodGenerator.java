@@ -52,11 +52,11 @@ public class RESTAccessMethodGenerator {
 			accessMethodAttributes[j] = Attribute.create(typeType(attrspec.getType()), attrspec.getName());
 			if((attrspec.getInput() != null) && (attrspec.getInput().equals("true")))
 			{
-				integerinputs[j] = new Integer(j);
+				integerinputs[j] = j;
 			}
 			else
 			{
-				integerinputs[j] = new Integer(-1);
+				integerinputs[j] = -1;
 			}
 			if (attrspec.getRelationAttribute()!=null) {
 				Attribute a = Attribute.create(typeType(attrspec.getType()), (attrspec.getRelationAttribute() == null) ? "" : attrspec.getRelationAttribute());

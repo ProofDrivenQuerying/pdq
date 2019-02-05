@@ -188,14 +188,14 @@ public class TestNaiveCardinalityEstimator extends PdqTest {
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
 		cardinalityEstimator.estimateCardinalityIfNeeded(plan1);
 
-		Assert.assertEquals(new Double(0.0), cardinalityEstimator.getCardinalityMetadata(access1).getInputCardinality());
-		Assert.assertEquals(new Double(100.0), cardinalityEstimator.getCardinalityMetadata(access1).getOutputCardinality());
+		Assert.assertEquals((Double)(0.0), cardinalityEstimator.getCardinalityMetadata(access1).getInputCardinality());
+		Assert.assertEquals((Double)(100.0), cardinalityEstimator.getCardinalityMetadata(access1).getOutputCardinality());
 
-		Assert.assertEquals(new Double(100.0), cardinalityEstimator.getCardinalityMetadata(access2).getInputCardinality());
-		Assert.assertEquals(new Double(10.0), cardinalityEstimator.getCardinalityMetadata(access2).getOutputCardinality());
+		Assert.assertEquals((Double)(100.0), cardinalityEstimator.getCardinalityMetadata(access2).getInputCardinality());
+		Assert.assertEquals((Double)(10.0), cardinalityEstimator.getCardinalityMetadata(access2).getOutputCardinality());
 
-		Assert.assertEquals(new Double(0.0), cardinalityEstimator.getCardinalityMetadata(plan1).getInputCardinality());
-		Assert.assertEquals(new Double(100.0), cardinalityEstimator.getCardinalityMetadata(plan1).getOutputCardinality());
+		Assert.assertEquals((Double)(0.0), cardinalityEstimator.getCardinalityMetadata(plan1).getInputCardinality());
+		Assert.assertEquals((Double)(100.0), cardinalityEstimator.getCardinalityMetadata(plan1).getOutputCardinality());
 	}
 
 	/**
@@ -217,14 +217,14 @@ public class TestNaiveCardinalityEstimator extends PdqTest {
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
 		cardinalityEstimator.estimateCardinalityIfNeeded(plan1);
 
-		Assert.assertEquals(new Double(0.0), cardinalityEstimator.getCardinalityMetadata(access1).getInputCardinality());
-		Assert.assertEquals(new Double(100.0), cardinalityEstimator.getCardinalityMetadata(access1).getOutputCardinality());
+		Assert.assertEquals((Double)(0.0), cardinalityEstimator.getCardinalityMetadata(access1).getInputCardinality());
+		Assert.assertEquals((Double)(100.0), cardinalityEstimator.getCardinalityMetadata(access1).getOutputCardinality());
 
-		Assert.assertEquals(new Double(100.0), cardinalityEstimator.getCardinalityMetadata(access2).getInputCardinality());
-		Assert.assertEquals(new Double(1.0), cardinalityEstimator.getCardinalityMetadata(access2).getOutputCardinality());
+		Assert.assertEquals((Double)(100.0), cardinalityEstimator.getCardinalityMetadata(access2).getInputCardinality());
+		Assert.assertEquals((Double)(1.0), cardinalityEstimator.getCardinalityMetadata(access2).getOutputCardinality());
 
-		Assert.assertEquals(new Double(0.0), cardinalityEstimator.getCardinalityMetadata(plan1).getInputCardinality());
-		Assert.assertEquals(new Double(100.0), cardinalityEstimator.getCardinalityMetadata(plan1).getOutputCardinality());
+		Assert.assertEquals((Double)(0.0), cardinalityEstimator.getCardinalityMetadata(plan1).getInputCardinality());
+		Assert.assertEquals((Double)(100.0), cardinalityEstimator.getCardinalityMetadata(plan1).getOutputCardinality());
 	}
 
 	/**
@@ -242,23 +242,23 @@ public class TestNaiveCardinalityEstimator extends PdqTest {
 	public void test5() {
 		AccessTerm access1 = AccessTerm.create(this.R, this.method0);
 		AccessTerm access2 = AccessTerm.create(this.S, this.method2);
-		SelectionTerm selectionTerm = SelectionTerm.create(ConstantEqualityCondition.create(0, TypedConstant.create(new Integer(1))), access1);
+		SelectionTerm selectionTerm = SelectionTerm.create(ConstantEqualityCondition.create(0, TypedConstant.create(1)), access1);
 		DependentJoinTerm plan1 = DependentJoinTerm.create(selectionTerm, access2);
 
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
 		cardinalityEstimator.estimateCardinalityIfNeeded(plan1);
 
-		Assert.assertEquals(new Double(0.0), cardinalityEstimator.getCardinalityMetadata(access1).getInputCardinality());
-		Assert.assertEquals(new Double(100.0), cardinalityEstimator.getCardinalityMetadata(access1).getOutputCardinality());
+		Assert.assertEquals((Double)(0.0), cardinalityEstimator.getCardinalityMetadata(access1).getInputCardinality());
+		Assert.assertEquals((Double)(100.0), cardinalityEstimator.getCardinalityMetadata(access1).getOutputCardinality());
 
-		Assert.assertEquals(new Double(0.0), cardinalityEstimator.getCardinalityMetadata(selectionTerm).getInputCardinality());
-		Assert.assertEquals(new Double(10.0), cardinalityEstimator.getCardinalityMetadata(selectionTerm).getOutputCardinality());
+		Assert.assertEquals((Double)(0.0), cardinalityEstimator.getCardinalityMetadata(selectionTerm).getInputCardinality());
+		Assert.assertEquals((Double)(10.0), cardinalityEstimator.getCardinalityMetadata(selectionTerm).getOutputCardinality());
 
-		Assert.assertEquals(new Double(10.0), cardinalityEstimator.getCardinalityMetadata(access2).getInputCardinality());
-		Assert.assertEquals(new Double(1.0), cardinalityEstimator.getCardinalityMetadata(access2).getOutputCardinality());
+		Assert.assertEquals((Double)(10.0), cardinalityEstimator.getCardinalityMetadata(access2).getInputCardinality());
+		Assert.assertEquals((Double)(1.0), cardinalityEstimator.getCardinalityMetadata(access2).getOutputCardinality());
 
-		Assert.assertEquals(new Double(0.0), cardinalityEstimator.getCardinalityMetadata(plan1).getInputCardinality());
-		Assert.assertEquals(new Double(10.0), cardinalityEstimator.getCardinalityMetadata(plan1).getOutputCardinality());
+		Assert.assertEquals((Double)(0.0), cardinalityEstimator.getCardinalityMetadata(plan1).getInputCardinality());
+		Assert.assertEquals((Double)(10.0), cardinalityEstimator.getCardinalityMetadata(plan1).getOutputCardinality());
 	}
 
 	/**
@@ -272,7 +272,7 @@ public class TestNaiveCardinalityEstimator extends PdqTest {
 	@Test
 	public void test6() {
 		Map<Integer, TypedConstant> inputConstants1 = new HashMap<>();
-		inputConstants1.put(0, TypedConstant.create(TypedConstant.create(new Integer(1))));
+		inputConstants1.put(0, TypedConstant.create(TypedConstant.create(1)));
 		AccessTerm access1 = AccessTerm.create(this.R, this.method1, inputConstants1);
 		AccessTerm access2 = AccessTerm.create(this.S, this.method1);
 		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
@@ -280,8 +280,8 @@ public class TestNaiveCardinalityEstimator extends PdqTest {
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
 		cardinalityEstimator.estimateCardinalityIfNeeded(plan1);
 
-		Assert.assertEquals(new Double(0.0), cardinalityEstimator.getCardinalityMetadata(access1).getInputCardinality());
-		Assert.assertEquals(new Double(10.0), cardinalityEstimator.getCardinalityMetadata(access1).getOutputCardinality());
+		Assert.assertEquals((Double)(0.0), cardinalityEstimator.getCardinalityMetadata(access1).getInputCardinality());
+		Assert.assertEquals((Double)(10.0), cardinalityEstimator.getCardinalityMetadata(access1).getOutputCardinality());
 	}
 
 	/**
@@ -303,8 +303,8 @@ public class TestNaiveCardinalityEstimator extends PdqTest {
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
 		cardinalityEstimator.estimateCardinalityIfNeeded(plan1);
 
-		Assert.assertEquals(new Double(0.0), cardinalityEstimator.getCardinalityMetadata(plan1).getInputCardinality());
-		Assert.assertEquals(new Double(100.0), cardinalityEstimator.getCardinalityMetadata(plan1).getOutputCardinality());
+		Assert.assertEquals((Double)(0.0), cardinalityEstimator.getCardinalityMetadata(plan1).getInputCardinality());
+		Assert.assertEquals((Double)(100.0), cardinalityEstimator.getCardinalityMetadata(plan1).getOutputCardinality());
 	}
 
 }

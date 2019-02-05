@@ -48,10 +48,10 @@ public class AdaptedConstant extends AdaptedVariable {
 		}
 		TypedConstant ret = null;
 		if (type != null && type == Double.class) {
-			ret = TypedConstant.create(new Double(Double.parseDouble(value)));
+			ret = TypedConstant.create((Double)(Double.parseDouble(value)));
 		} else if (type != null && type == Integer.class) {
 			try {
-				ret = TypedConstant.create(new Integer(Integer.parseInt(value)));
+				ret = TypedConstant.create((Integer)(Integer.parseInt(value)));
 			}catch (NumberFormatException e) {
 				ret = TypedConstant.create(value);
 			}

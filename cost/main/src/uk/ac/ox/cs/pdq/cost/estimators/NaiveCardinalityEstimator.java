@@ -262,7 +262,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 		AccessMethodDescriptor binding = o.getAccessMethod();
 		Relation relation = o.getRelation();
 		if (binding.getNumberOfInputs() == 0) 
-			return new Double(this.catalog.getCardinality(relation));
+			return (double)(this.catalog.getCardinality(relation));
 		else 
 			return Math.max(1.0, (long) (this.catalog.getCardinality(relation) / Math.pow(SELECTIVITY_REDUCTION, binding.getNumberOfInputs())));
 	}

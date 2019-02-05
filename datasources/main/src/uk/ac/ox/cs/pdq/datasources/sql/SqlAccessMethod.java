@@ -182,7 +182,7 @@ public class SqlAccessMethod extends ExecutableAccessMethod {
 				for (int index = 0; index < ndata.length; ++index) {
 					Type columnType = result.getType().getType(index);
 					if (columnType == Integer.class) {
-						ndata[index] = new Integer(rs.getInt(index + 1));
+						ndata[index] = (Integer)(rs.getInt(index + 1));
 
 					} else if (columnType == String.class) {
 						ndata[index] = rs.getString(index + 1).trim();

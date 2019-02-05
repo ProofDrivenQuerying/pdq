@@ -248,8 +248,8 @@ public class RelationalTermTest extends PdqTest {
 		
 		
 		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild());
-		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild().get(new Integer(0)));
-		Assert.assertEquals(new Integer(1),(Integer)plan1.getPositionsInLeftChildThatAreInputToRightChild().get(0));
+		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild().get((Integer)0));
+		Assert.assertEquals((Integer)1,(Integer)plan1.getPositionsInLeftChildThatAreInputToRightChild().get(0));
 		
 		Assert.assertEquals(2,plan1.getChildren().length);
 		Assert.assertTrue(plan1.getChildren()[0] instanceof AccessTerm);
@@ -279,8 +279,8 @@ public class RelationalTermTest extends PdqTest {
 
 		
 		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild());
-		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild().get(new Integer(0)));
-		Assert.assertEquals(new Integer(1),(Integer)plan1.getPositionsInLeftChildThatAreInputToRightChild().get(0));
+		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild().get((Integer)0));
+		Assert.assertEquals((Integer)1,(Integer)plan1.getPositionsInLeftChildThatAreInputToRightChild().get(0));
 		
 		Assert.assertEquals(2,plan1.getChildren().length);
 		Assert.assertTrue(plan1.getChildren()[0] instanceof AccessTerm);
@@ -291,7 +291,7 @@ public class RelationalTermTest extends PdqTest {
 	@Test public void test5() {
 		AccessTerm access1 = AccessTerm.create(this.R, this.method0);
 		AccessTerm access2 = AccessTerm.create(this.S, this.method2);
-		SelectionTerm selectionTerm = SelectionTerm.create(ConstantEqualityCondition.create(0, TypedConstant.create(new Integer(1))), access1);
+		SelectionTerm selectionTerm = SelectionTerm.create(ConstantEqualityCondition.create(0, TypedConstant.create(1)), access1);
 		DependentJoinTerm plan1 = DependentJoinTerm.create(selectionTerm, access2);
 		
 		Assert.assertArrayEquals(new Attribute[] {a,b,c,b,c}, plan1.getOutputAttributes());
@@ -311,8 +311,8 @@ public class RelationalTermTest extends PdqTest {
 		
 		
 		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild());
-		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild().get(new Integer(0)));
-		Assert.assertEquals(new Integer(1),(Integer)plan1.getPositionsInLeftChildThatAreInputToRightChild().get(0));
+		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild().get((Integer)0));
+		Assert.assertEquals((Integer)1,(Integer)plan1.getPositionsInLeftChildThatAreInputToRightChild().get(0));
 		
 		Assert.assertEquals(2,plan1.getChildren().length);
 		Assert.assertTrue(plan1.getChildren()[0] instanceof SelectionTerm);
@@ -322,7 +322,7 @@ public class RelationalTermTest extends PdqTest {
 	// Create 2 access terms and a dependent join term, then test input and output attributes and conjunctive join conditions
 	@Test public void test6() {
 		Map<Integer, TypedConstant> inputConstants1 = new HashMap<>();
-		inputConstants1.put(0, TypedConstant.create(TypedConstant.create(new Integer(1))));
+		inputConstants1.put(0, TypedConstant.create(TypedConstant.create(1)));
 		AccessTerm access1 = AccessTerm.create(this.R, this.method1, inputConstants1);
 		AccessTerm access2 = AccessTerm.create(this.S, this.method1);
 		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
@@ -344,8 +344,8 @@ public class RelationalTermTest extends PdqTest {
 	
 		
 		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild());
-		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild().get(new Integer(0)));
-		Assert.assertEquals(new Integer(1),(Integer)plan1.getPositionsInLeftChildThatAreInputToRightChild().get(0));
+		Assert.assertNotNull(plan1.getPositionsInLeftChildThatAreInputToRightChild().get((Integer)0));
+		Assert.assertEquals((Integer)1,(Integer)plan1.getPositionsInLeftChildThatAreInputToRightChild().get(0));
 		
 		Assert.assertEquals(2,plan1.getChildren().length);
 		Assert.assertTrue(plan1.getChildren()[0] instanceof AccessTerm);

@@ -64,15 +64,9 @@ public class DbIOManager extends IOManager {
 	 * @param schema
 	 *            File pointer to the xml file.
 	 * @return parsed Schema object
-	 * @throws JAXBException
-	 *             In case importing fails.
-	 * @throws FileNotFoundException
-	 * @throws ClassNotFoundException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
+	 * @throws Exception 
 	 */
-	public static Schema importSchema(File schema, Properties props) throws JAXBException, FileNotFoundException,
-			ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public static Schema importSchema(File schema, Properties props) throws Exception {
 		if (!schema.exists())
 			throw new FileNotFoundException(schema.getAbsolutePath());
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedDbSchema.class);

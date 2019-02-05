@@ -219,7 +219,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 	public void test5() {
 		AccessTerm access1 = AccessTerm.create(this.R, this.method0);
 		AccessTerm access2 = AccessTerm.create(this.S, this.method2);
-		SelectionTerm selectionTerm = SelectionTerm.create(ConstantEqualityCondition.create(0, TypedConstant.create(new Integer(1))), access1);
+		SelectionTerm selectionTerm = SelectionTerm.create(ConstantEqualityCondition.create(0, TypedConstant.create(1)), access1);
 		DependentJoinTerm plan1 = DependentJoinTerm.create(selectionTerm, access2);
 
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
@@ -242,7 +242,7 @@ public class TestTextBookCostEstimator extends PdqTest {
 	@Test
 	public void test6() {
 		Map<Integer, TypedConstant> inputConstants1 = new HashMap<>();
-		inputConstants1.put(0, TypedConstant.create(TypedConstant.create(new Integer(1))));
+		inputConstants1.put(0, TypedConstant.create(TypedConstant.create(1)));
 		AccessTerm access1 = AccessTerm.create(this.R, this.method1, inputConstants1);
 		AccessTerm access2 = AccessTerm.create(this.S, this.method1);
 		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
