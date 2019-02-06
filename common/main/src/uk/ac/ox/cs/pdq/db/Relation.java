@@ -44,10 +44,10 @@ public class Relation implements Serializable {
 
 	protected PrimaryKey primaryKey;
 	
-	/**  Predicate name. */
+	/**  Relation name. */
 	protected final String name;
 
-	/**  Predicate arity. */
+	/**  Relation arity. */
 	protected final Integer arity;
 
 	/**  true, if this is the signature for an equality predicate. */
@@ -106,9 +106,9 @@ public class Relation implements Serializable {
 	}
 
 	/**
-	 * Gets the name of the predicate.
+	 * Gets the name of the Relation.
 	 *
-	 * @return the name of the predicate.
+	 * @return the name of the relation.
 	 */
 	public String getName() {
 		return this.name;
@@ -158,17 +158,17 @@ public class Relation implements Serializable {
 		return this.accessMethods.clone();
 	}
 	
-	public AccessMethodDescriptor getAccessMethod(String acceessMethodName) {
-		return this.accessMethodsMap.get(acceessMethodName);
+	public AccessMethodDescriptor getAccessMethod(String accessMethodName) {
+		return this.accessMethodsMap.get(accessMethodName);
 	}
 
-	public void addForeignKey(ForeignKey foreingKey) {
+	public void addForeignKey(ForeignKey foreignKey) {
 		if(this.foreignKeys.length == 0)
-			this.foreignKeys = new ForeignKey[]{foreingKey};
+			this.foreignKeys = new ForeignKey[]{foreignKey};
 		else {
 			ForeignKey[] destination = new ForeignKey[this.foreignKeys.length + 1];
 			System.arraycopy(this.foreignKeys, 0, destination, 0, this.foreignKeys.length);
-			destination[this.foreignKeys.length] = foreingKey;
+			destination[this.foreignKeys.length] = foreignKey;
 			this.foreignKeys = destination;
 		}
 	}
