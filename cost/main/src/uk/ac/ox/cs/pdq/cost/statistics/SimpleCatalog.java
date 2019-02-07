@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.cost.statistics;
 
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -26,9 +25,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 
 /**
  * Holds unconditional statistics.
@@ -705,32 +702,5 @@ public class SimpleCatalog implements Catalog{
 						"\n==============COLUMN HISTOGRAMS=============\n" + 
 						Joiner.on("\n").join(this.frequencyMaps.entrySet()) );
 	}
-
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String... args) {
-		String PATH = "SCHEMA AND QUERY PATH";
-		String schemafile = "SCHEMA FILE";
-		String queryfile = "QUERY FILE";
-		String catalogfile = "CATALOG FILE";
-		try {
-			Schema schema = IOManager.importSchema(new File(PATH + schemafile));
-			ConjunctiveQuery query = IOManager.importQuery(new File(PATH + queryfile));
-			if (schema == null || query == null) {
-				throw new IllegalStateException("Schema and query must be provided.");
-			}
-			SimpleCatalog catalog = new SimpleCatalog(schema, catalogfile);
-			log.trace(catalog.toString());
-		} catch (FileNotFoundException e) {
-			log.error("Cannot find input files");
-		} catch (Exception e) {
-			log.error("EXCEPTION: " + e.getClass().getSimpleName() + " " + e.getMessage());
-		} catch (Error e) {
-			log.error("ERROR: " + e.getClass().getSimpleName() + " " + e.getMessage());
-			System.exit(-1);
-		}
-	}
+	
 }

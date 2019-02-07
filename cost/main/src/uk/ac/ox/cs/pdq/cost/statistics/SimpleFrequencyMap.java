@@ -153,12 +153,4 @@ public class SimpleFrequencyMap {
 	public String toString() {
 		return Joiner.on("\t").join(this.frequencies.entrySet());
 	}
-	
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String... args) {
-	}
 }
