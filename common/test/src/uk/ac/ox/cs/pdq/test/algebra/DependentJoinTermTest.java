@@ -159,7 +159,26 @@ public class DependentJoinTermTest extends PdqTest {
 		Assert.assertEquals(0, result.length);
 		//Assert.assertEquals(Attribute.create(Integer.class, "b"), result[0]);
 		//Assert.assertEquals(Attribute.create(Integer.class, "e"), result[1]);
+		
 	}
+	
+	@Test
+	public void testInputOnBothLeftAndRight() { 
+		Relation relation1 = Relation.create("relation1", new Attribute[] {
+				Attribute.create(String.class, "attribute1"),
+				Attribute.create(String.class, "attribute2")
+				});
+		Relation relation2 = Relation.create("relation2", new Attribute[] {
+				Attribute.create(String.class, "attribute2"),Attribute.create(String.class, "attribute3")});
+		RelationalTerm child1 = AccessTerm.create(relation1, AccessMethodDescriptor.create(new Integer[] {0})); 
+		RelationalTerm child2 = AccessTerm.create(relation2, AccessMethodDescriptor.create(new Integer[] {0,1}));
+	
+		// Constructor tests invariant
+		DependentJoinTerm target = DependentJoinTerm.create(child1, child2);
+		Attribute[] result = target.getInputAttributes();
+		Assert.assertEquals(2, result.length);
+	}
+	
 	/*
 	 * Tests the DependentJoinTerm class by calling every method.
 	 * Other classes are used as required.
