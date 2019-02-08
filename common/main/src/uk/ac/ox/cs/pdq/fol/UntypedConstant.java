@@ -20,7 +20,7 @@ public final class UntypedConstant extends Constant implements Comparable<Consta
 	 */
 	public static final String CANONICAL_CONSTANT_PREFIX = "c";
 
-	/** The . */
+	/** The DEFAULT_PREFIX for non canonical constants (labelled nulls). */
 	public static final String NON_CANONICAL_CONSTANT_PREFIX = "k";
 	
 	private UntypedConstant(String name) {
