@@ -57,7 +57,7 @@ public class LinearOptimizedLegacy extends LinearExplorer {
 	/** Performs plan post-pruning. */
 	private final PostPruningRemoveFollowUps postPruning;
 
-	/** TOCOMMENT: WHAT IS IT . */
+	/** Cache of pathes that have been postpruned. */
 	private final Set<List<Integer>> prunedPaths = new HashSet<>();
 
 	/** Classes of equivalent configurations. */

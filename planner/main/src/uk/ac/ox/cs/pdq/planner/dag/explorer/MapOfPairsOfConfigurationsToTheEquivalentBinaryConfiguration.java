@@ -27,13 +27,12 @@ public class MapOfPairsOfConfigurationsToTheEquivalentBinaryConfiguration {
 
 	/**
 	 * Gets the representative of the composition of left and right, if there is one, otherwise null
-	 *TOCOMMENT: RENAME TO SOMETHING MORE MEANINGFULL, INDICATING a compoisiton
 	 * @param equivalenceClasses the eclasses
 	 * @param left the left
 	 * @param right the right
 	 * @return the representative
 	 */
-	public DAGChaseConfiguration getRepresentative(DAGEquivalenceClasses equivalenceClasses, DAGChaseConfiguration left, DAGChaseConfiguration right) {
+	public DAGChaseConfiguration getRepresentativeForLeftRightComposition(DAGEquivalenceClasses equivalenceClasses, DAGChaseConfiguration left, DAGChaseConfiguration right) {
 		//The equivalence class of the left input configuration
 		DAGEquivalenceClass rep0 = equivalenceClasses.getEquivalenceClass(left);
 		//The equivalence class of the left input configuration

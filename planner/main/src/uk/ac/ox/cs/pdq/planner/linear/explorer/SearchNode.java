@@ -6,7 +6,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
 import com.google.common.base.Preconditions;
@@ -391,38 +390,6 @@ public abstract class SearchNode implements Cloneable{
 		Collection<N> result = new LinkedHashSet<>(planTree.vertexSet());
 		result.removeAll(SearchNode.ancestorsOf(planTree, node));
 		return result;
-	}
-
-	/**
-	 *TOCOMMENT: WHAT ARE THESE!!! 
-	 *
-	 * @param <N> the number type
-	 * @param planTree the plan tree
-	 * @return the partially generated leaves
-	 */
-	public static <N extends SearchNode> Collection<N> getLeafNodesThatAreNotFullyChased(DirectedGraph<N, DefaultEdge> planTree) {
-		Collection<N> partiallyGenerated = new LinkedHashSet<>();
-		for (N node:planTree.vertexSet()) {
-			if (planTree.outDegreeOf(node) == 0 && !node.isFullyChased()) 
-				partiallyGenerated.add(node);
-		}
-		return partiallyGenerated;
-	}
-
-	/**
-	 * Gets the fully generated nodes.
-	 *
-	 * @param <N> the number type
-	 * @param planTree the plan tree
-	 * @return the fully generate nodes
-	 */
-	public static <N extends SearchNode> Collection<N> getNodesThatAreFullyChased(DirectedGraph<N, DefaultEdge> planTree) {
-		Collection<N> fullyGenerated = new LinkedHashSet<>();
-		for (N node: planTree.vertexSet()) {
-			if (node.isFullyChased()) 
-				fullyGenerated.add(node);
-		}
-		return fullyGenerated;
 	}
 
 	/**

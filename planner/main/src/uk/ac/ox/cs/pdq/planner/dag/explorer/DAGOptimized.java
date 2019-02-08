@@ -249,9 +249,9 @@ public class DAGOptimized extends DAGExplorer {
 						// A configuration BinConfiguration(c,c'), where c and c' belong to the
 						// equivalence classes of
 						// the left and right input configuration, respectively.
-						DAGChaseConfiguration representative = representatives.getRepresentative(this.equivalenceClasses, left, entry);
+						DAGChaseConfiguration representative = representatives.getRepresentativeForLeftRightComposition(this.equivalenceClasses, left, entry);
 						if (representative == null) {
-							representative = representatives.getRepresentative(this.equivalenceClasses, entry, left);
+							representative = representatives.getRepresentativeForLeftRightComposition(this.equivalenceClasses, entry, left);
 						}
 						// If the representative of composition is null, then create a binary configuration
 						// from scratch by fully chasing its state

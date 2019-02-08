@@ -2,10 +2,12 @@ package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
 import com.google.common.base.Preconditions;
@@ -122,7 +124,7 @@ public class LinearKChase extends LinearExplorer {
 	 * @throws LimitReachedException
 	 */
 	private void _performSingleExplorationStepWithChasing() throws PlannerException, LimitReachedException {
-		Collection<SearchNode> leaves = SearchNode.getLeafNodesThatAreNotFullyChased(this.planTree);
+		Collection<SearchNode> leaves = getLeafNodesThatAreNotFullyChased(this.planTree);
 		log.debug("Number of partially generated leaves " + leaves.size());
 		for(SearchNode leaf:leaves) {
 			leaf.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
@@ -223,7 +225,7 @@ public class LinearKChase extends LinearExplorer {
 
 		/* If at least one node in the plan tree dominates the newly created node, then kill the newly created node   */
 		if (!domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
-			SearchNode dominatingNode = SearchNode.isCostAndFactDominated(SearchNode.getNodesThatAreFullyChased(this.planTree), freshNode);
+			SearchNode dominatingNode = SearchNode.isCostAndFactDominated(getNodesThatAreFullyChased(this.planTree), freshNode);
 			if(dominatingNode != null) {
 				domination = true;
 				freshNode.setDominatingPlan(dominatingNode.getConfiguration().getPlan());
@@ -258,4 +260,38 @@ public class LinearKChase extends LinearExplorer {
 			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestCost);
 		}
 	}
+	
+
+	/**
+	 * Searches through the planTree to find candidate nodes that haven't been fully chased. 
+	 *
+	 * @param <N> the number type
+	 * @param planTree the plan tree
+	 * @return the partially generated leaves
+	 */
+	private static <N extends SearchNode> Collection<N> getLeafNodesThatAreNotFullyChased(DirectedGraph<N, DefaultEdge> planTree) {
+		Collection<N> partiallyGenerated = new LinkedHashSet<>();
+		for (N node:planTree.vertexSet()) {
+			if (planTree.outDegreeOf(node) == 0 && !node.isFullyChased()) 
+				partiallyGenerated.add(node);
+		}
+		return partiallyGenerated;
+	}
+
+	/**
+	 * Gets the fully generated nodes.
+	 *
+	 * @param <N> the number type
+	 * @param planTree the plan tree
+	 * @return the fully generate nodes
+	 */
+	private static <N extends SearchNode> Collection<N> getNodesThatAreFullyChased(DirectedGraph<N, DefaultEdge> planTree) {
+		Collection<N> fullyGenerated = new LinkedHashSet<>();
+		for (N node: planTree.vertexSet()) {
+			if (node.isFullyChased()) 
+				fullyGenerated.add(node);
+		}
+		return fullyGenerated;
+	}
+	
 }

@@ -66,15 +66,13 @@ public class DefaultPairValidator implements PairValidator{
 	}
 
 	/**
-	 * TOCOMMENT: THE COMMENT AND THE CODE DO NOT MATCH, SO SOMETHING HAS TO CHANGE
-	 *
 	 * @param left the left
 	 * @param right the right
 	 * @return 		true if the input pair of configurations is non trivial.
 	 * 		An ordered pair of configurations (left, right)
 	 * 			is non-trivial if the output facts of the right configuration are not included in
 	 * 			the output facts of left configuration and vice versa, and if the ApplyRule
-	 * 			subconfigurations of left and right do not overlap.
+	 * 			subconfigurations of left and right do not overlap, and the two configuration does not dominate each other.
 	 */
 	public static Boolean isNonTrivial(DAGChaseConfiguration left, DAGChaseConfiguration right) {
 		if (left.equals(right))

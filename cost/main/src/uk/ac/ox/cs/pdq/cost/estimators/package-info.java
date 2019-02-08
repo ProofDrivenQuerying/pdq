@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 
 /**
 	@author Efthymia Tsamoura
-TOCOMMENT: 
 	This package contains classes related to plan cost estimation.
 	The top level class CostParameters holds the parameters to initiate a cost estimation object. 
 	The package estimators contains classes that accept in the input plans and return the cost of these plans. 
@@ -19,7 +18,5 @@ TOCOMMENT:
 	The Catalog interface answers statistical queries, like the cardinality of a given column or relation,
 	the selectivity of a given filtering predicates or the cost of a specific access.
 	The class SimpleCatalog implements the Catalog interface and supports SQL Server 2014 histograms   
-	
-		
 	
 **/
