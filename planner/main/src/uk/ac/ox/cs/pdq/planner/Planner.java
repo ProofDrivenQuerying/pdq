@@ -27,10 +27,10 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
  * 
  * @author Julien Leblay
  */
-public class Bootstrap {
+public class Planner {
 
 	/** Logger. */
-	private static Logger log = Logger.getLogger(Bootstrap.class); 
+	private static Logger log = Logger.getLogger(Planner.class); 
 	
 	/** The Constant PROGRAM_NAME. */
 	private static final String PROGRAM_NAME = "pdq-planner-<version>.jar";
@@ -115,7 +115,7 @@ public class Bootstrap {
 	 * the planner on them.
 	 * @param args String[]
 	 */
-	private Bootstrap(String... args) {
+	private Planner(String... args) {
 		JCommander jc = new JCommander(this);
 		jc.setProgramName(PROGRAM_NAME);
 		try {
@@ -180,6 +180,6 @@ public class Bootstrap {
 	 * @param args String[]
 	 */
 	public static void main(String... args) {
-		new Bootstrap(args);
+		new Planner(args);
 	}
 }
