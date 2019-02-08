@@ -160,34 +160,6 @@ public class Utility {
 		}
 		return result;
 	}
-	
-	/**
-	 * Format the given value so as to call the proper type conversion function.
-	 *
-	 * @param <T> the generic type
-	 * @param c TypedConstant<T>
-	 * @return a string representation a call to the given target type
-	 * conversion function onto the given value;
-	 */
-	public static <T> String format(TypedConstant c) {
-		return format(c, c.getType());
-	}
-
-	/**
-	 * Format the given value so as to call the proper type conversion function.
-	 *
-	 * @param <T> the generic type
-	 * @param o Object
-	 * @param target Class<T>
-	 * @return a string representation a call to the given target type
-	 * conversion function onto the given value;
-	 */
-	public static <T> String format(Object o, Type target) {
-		if (target instanceof Class && Number.class.isAssignableFrom((Class<?>) target)) {
-			return String.valueOf(o);
-		}
-		return "'" + o + "'";
-	}
 
 	/**
 	 * Asserts enabled.

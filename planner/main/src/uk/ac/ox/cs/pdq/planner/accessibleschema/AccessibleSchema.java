@@ -94,7 +94,9 @@ public class AccessibleSchema extends Schema {
 		return this.accessibilityAxioms.clone();
 	}
 
-	//TOCOMMENT maybe original and inffacc?
+	/**
+	 * @return The unchanged list of dependencies that was used to initialize this schema.
+	 */
 	public Dependency[] getOriginalDependencies() {
 		return this.originalDependencies.clone();
 	}

@@ -64,7 +64,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	private static Logger log = Logger.getLogger(RESTRelation.class);
 
 	/**
- * TOCOMMENT:??????
 	 * All list of attributes the including the relations actual attributes,
 	 * plus additional, possibly interleaved static attributes.
 	 */
@@ -430,7 +429,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
- * TOCOMMENT:???? NOT ENGLISH
 	 * Processes an access request and response events in a row.
 	 *
 	 * @param requestEvent the request event
@@ -453,7 +451,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
- * TOCOMMENT: ??? NOT ENGLISH
 	 * Parse the response of a service call, so as to fit it is a dynamic table
 	 * according to the output methods defined externally.
 	 *
@@ -494,7 +491,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
- * TOCOMMENT: ??? NOT ENGLISH
 	 * Parse the response of a service call, assuming it is Json-formatted,
 	 * so as to fit it is a dynamic table according to the output methods 
 	 * defined externally.
@@ -535,7 +531,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
- * TOCOMMENT: NOT ENGLISH
 	 * Parse the response of a service call, assuming it is XML-formatted,
 	 * so as to fit it is a dynamic table according to the output methods 
 	 * defined externally.
@@ -596,7 +591,6 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
- * TOCOMMENT: AGAIN, NOT PARSEABLE ENGLISH
 	 * Converts a collection of a loosely-typed maps to a collection of tuples.
 	 *
 	 * @param delimiters List<String>

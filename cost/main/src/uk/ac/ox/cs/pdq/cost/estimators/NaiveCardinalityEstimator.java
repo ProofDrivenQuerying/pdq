@@ -55,8 +55,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * TOCOMMENT: What is this?
-	 *
+	 * Cardinality estimations are cached, this will execute the estimation only if we have a 0 cached value.
 	 * @param term LogicalOperator
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimateCardinalityIfNeeded(RelationalOperator)
 	 */

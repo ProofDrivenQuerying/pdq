@@ -73,7 +73,6 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 * constant in order to update them with the new representative constant. 
 	 * Could be replaced with a query.
 	 **/
-	// TOCOMMENT discuss constantsToAtoms 
 	protected final Multimap<Constant, Atom> constantsToAtoms;
 
 	/**

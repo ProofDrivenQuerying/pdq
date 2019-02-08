@@ -203,9 +203,6 @@ public class ApplyRule extends DAGChaseConfiguration {
 	 * Given a set of facts F=F1.... on the same relation R,
 	 * and an accessibility axiom on R, corresponding to performing a particular access method mt
 	 * on R; find the constants that lie within the input positions of each Fi for mt 
-	 *
-	 * TOCOMMENT: It seems like we only get untyped constants. Why?
-	 * TOCOMMENT: should we have an assert that checks that all facts use the correct relation
 	 *  
 	 * @param rule the accessibility axiom for some method being fired
 	 * @param facts the facts
@@ -216,6 +213,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 		for(Atom fact:facts) {
 			List<Constant> constants = Utility.getTypedAndUntypedConstants(fact,rule.getAccessMethod().getInputs());
 			for(Constant constant:constants) {
+				// only untyped constants can be inputs.
 				if(constant.isUntypedConstant()) {
 					inputs.add(constant);
 				}

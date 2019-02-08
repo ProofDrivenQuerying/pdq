@@ -120,12 +120,6 @@ public class AccessibleQuery extends ConjunctiveQuery {
 		return ret;
 	}
 
-	/**
-	 * TOCOMMENT: FIX THIS
-	 *
-	 * @param facts the facts
-	 * @return the collection
-	 */
 	public static Collection<Atom> getInferredAccessibleAtoms(Collection<Atom> facts) {
 		Collection<Atom> inferred = new LinkedHashSet<>();
 		for(Atom fact:facts) {

@@ -24,7 +24,9 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseIn
  */
 public abstract class DAGChaseConfiguration extends ChaseConfiguration implements DAGConfiguration {
 
-	/**  TOCOMMENT: WHAT*/
+	/**
+	 * ApplyRules have height 1, other configurations height is the sum of the height of their children.
+	 */
 	private final Integer height;
 	
 	/**  True if the configuration is a left-deep one. */

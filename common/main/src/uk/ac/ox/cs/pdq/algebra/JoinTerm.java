@@ -25,8 +25,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
 /**
- *
- * TOCOMMENT: IS THIS A NATURAL JOIN? IF SO EXPLAIN 
+ * CartesianProduct with simple conditions.
  * @author Efthymia Tsamoura
  *
  */

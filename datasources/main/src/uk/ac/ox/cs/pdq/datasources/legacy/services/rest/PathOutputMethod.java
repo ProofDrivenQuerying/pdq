@@ -23,13 +23,13 @@ public class PathOutputMethod implements OutputMethod {
 	/**  Path separator. */
 	public static final String PATH_SEPARATOR = "(?<!\\\\)/";
 
-	/**  Path element regexp named group. TOCOMMENT:?*/
+	/**  Path element regexp named group. */
 	public static final String PATHELEMENT_GROUP = "path";
 
-	/**  Index regexp named group. TOCOMMENT:? */
+	/**  Index regexp named group. */
 	public static final String INDEX_GROUP = "index";
 
-	/**  indexed path element regexp. TOCOMMENT:?*/
+	/**  indexed path element regexp. */
 	public static final Pattern INDEXED_PARAM = Pattern.compile("(?<" + PATHELEMENT_GROUP + ">[ /\\w]+)(\\[(?<" + INDEX_GROUP + ">[=\\w]+)\\])?");
 
 	public static final Pattern VALUE = Pattern.compile("\\(([^)]+)\\)");

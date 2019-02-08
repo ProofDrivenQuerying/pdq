@@ -259,7 +259,6 @@ public class EqualConstantsClass {
 		if (this.schemaConstant != null && ((EqualConstantsClass) o).schemaConstant == null) return false;
 		
 		if (this.schemaConstant != null && !this.schemaConstant.equals(((EqualConstantsClass) o).schemaConstant)) return false;
-		
 		//rest
 		return this.constants.equals(((EqualConstantsClass) o).constants)
 				&& this.representative.equals(((EqualConstantsClass) o).representative);
