@@ -32,8 +32,28 @@ public class DependentJoinTerm extends JoinTerm {
 	/** Cached string representation. */
 	protected String toString = null;
 
+	/**
+	 * Will create a dependent join term based on the left and right child's input
+	 * and output attributes. A connection between these are made when an output
+	 * attribute on the left (child1) has the same name as an input attribute on the
+	 * right (child2)
+	 * 
+	 * @param child1
+	 * @param child2
+	 */
 	private DependentJoinTerm(RelationalTerm child1, RelationalTerm child2) {
-		super(child1, child2, JoinTerm.computeJoinConditions(new RelationalTerm[] { child1, child2 }), true);
+		this(child1, child2, JoinTerm.computeJoinConditions(new RelationalTerm[] { child1, child2 }));
+	}
+	
+	/**
+	 * This constructor can be used when the left and right side attribute names does not match. The join condition computed externally.
+	 *  
+	 * @param child1
+	 * @param child2
+	 * @param joinConditions
+	 */
+	private DependentJoinTerm(RelationalTerm child1, RelationalTerm child2,Condition joinConditions) {
+		super(child1, child2,joinConditions, true);
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		// The first child most have at least one output that can be used as an input
@@ -109,6 +129,10 @@ public class DependentJoinTerm extends JoinTerm {
 	public static DependentJoinTerm create(RelationalTerm child1, RelationalTerm child2) {
 		return Cache.dependentJoinTerm.retrieve(new DependentJoinTerm(child1, child2));
 	}
+	
+    public static JoinTerm create(RelationalTerm child1, RelationalTerm child2, Condition joinConditions) {
+        return Cache.dependentJoinTerm.retrieve(new DependentJoinTerm(child1, child2, joinConditions));
+    }
 
 	@Override
 	public RelationalTerm getChild(int childIndex) {
