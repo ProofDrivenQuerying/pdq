@@ -39,20 +39,30 @@ public class Planner {
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
 	private boolean help;
 	
-	/**
-	 * Checks if this is called with help as an argument.
-	 *
-	 * @return true, if it is called with help
-	 */
-	public boolean isHelp() {
-		return this.help;
-	}
-	
 	/** The schema path. */
 	@Parameter(names = { "-s", "--schema" }, required = true,
 			 validateWith=FileValidator.class,
 		description ="Path to the input schema definition file.")
 	private String schemaPath;
+	
+	/** The query path. */
+	@Parameter(names = { "-q", "--query" }, required = true,
+			 validateWith=FileValidator.class,
+		description ="Path to the input query definition file.")
+	private String queryPath;
+	
+	/** The config file. */
+	@Parameter(names = { "-c", "--config" }, validateWith=FileValidator.class,
+			description = "Directory where to look for configuration files. "
+			+ "Default is the current directory.")
+	private File configFile;
+	
+	@Parameter(names = { "-v", "--verbose" }, required = false,
+			description ="Path to the input query definition file.")
+	private boolean verbose = false;
+	
+	@DynamicParameter(names = "-D", description = "Dynamic parameters. Override values defined in the configuration files.")
+	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 	
 	/**
 	 * Gets the schema path.
@@ -63,11 +73,6 @@ public class Planner {
 		return this.schemaPath;
 	}
 	
-	/** The query path. */
-	@Parameter(names = { "-q", "--query" }, required = true,
-			 validateWith=FileValidator.class,
-		description ="Path to the input query definition file.")
-	private String queryPath;
 	
 	/**
 	 * Gets the query path.
@@ -78,12 +83,6 @@ public class Planner {
 		return this.queryPath;
 	}
 	
-	/** The config file. */
-	@Parameter(names = { "-c", "--config" }, validateWith=FileValidator.class,
-			description = "Directory where to look for configuration files. "
-			+ "Default is the current directory.")
-	private File configFile;
-	
 	/**
 	 * Gets the config file.
 	 *
@@ -93,10 +92,6 @@ public class Planner {
 		return this.configFile;
 	}
 	
-	/**  */
-	@Parameter(names = { "-v", "--verbose" }, required = false,
-		description ="Path to the input query definition file.")
-	private boolean verbose = false;
 	
 	/**
 	 * Checks if  verbose is set.
@@ -107,8 +102,6 @@ public class Planner {
 		return this.verbose;
 	}
 
-	@DynamicParameter(names = "-D", description = "Dynamic parameters. Override values defined in the configuration files.")
-	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 
 	/**
 	 * Initialize the Bootstrap by reading command line parameters, and running
@@ -173,7 +166,14 @@ public class Planner {
 			System.exit(-1);
 		}
 	}
-
+	/**
+	 * Checks if this is called with help as an argument.
+	 *
+	 * @return true, if it is called with help
+	 */
+	public boolean isHelp() {
+		return this.help;
+	}
 	/**
 	 * Instantiates the bootstrap.
 	 *
@@ -182,4 +182,5 @@ public class Planner {
 	public static void main(String... args) {
 		new Planner(args);
 	}
+	
 }
