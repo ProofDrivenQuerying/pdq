@@ -130,7 +130,6 @@ public class CartesianProduct extends BinaryExecutablePlan {
 
 		@Override
 		public Spliterator<Tuple> trySplit() {
-			// TODO: For parallelism benefit, implement this method by splitting the leftChildSpliterator.
 			return null;
 		}
 	}

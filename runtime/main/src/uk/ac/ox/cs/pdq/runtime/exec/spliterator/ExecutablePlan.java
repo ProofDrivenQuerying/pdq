@@ -64,8 +64,6 @@ public abstract class ExecutablePlan implements Plan, AutoCloseable {
 		return StreamSupport.stream(this.spliterator(), false);
 	}
 	
-	// TODO: add parallelStream() method (as in Collection).
-	
 	/**
 	 * Creates a spliterator over the tuples in this plan.
 	 * 

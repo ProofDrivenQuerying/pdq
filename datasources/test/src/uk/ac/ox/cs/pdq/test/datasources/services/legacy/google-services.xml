@@ -52,7 +52,6 @@
 		<attribute name="place_of_birth" type="java.lang.String"  path="output/\/people\/person\/place_of_birth/\/people\/person\/place_of_birth[0]/name"/>
 
 	<!--
-	TODO 
 		<access-method type="LIMITED" name="by_location" inputs="1,2"   cost="1.0" />
 	 -->
 

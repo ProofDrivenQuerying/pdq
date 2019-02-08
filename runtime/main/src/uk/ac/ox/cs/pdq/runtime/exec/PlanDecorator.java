@@ -93,7 +93,7 @@ public class PlanDecorator {
 		else if (plan instanceof DependentJoinTerm)
 			return new DependentJoin(plan, this);
 		else if (plan instanceof JoinTerm)
-			return new SymmetricMemoryHashJoin(plan, this); // IMP TODO: support other join implementations - how?
+			return new SymmetricMemoryHashJoin(plan, this);
 		else if (plan instanceof CartesianProductTerm)
 			return new CartesianProduct(plan, this);
 		else

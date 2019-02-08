@@ -78,10 +78,6 @@ public class DependentJoin extends BinaryExecutablePlan {
 		this.clearCache();
 		Spliterator<Tuple> leftChildSpliterator = this.leftChild.spliterator();
 
-		// TODO: reduce the number of passes over the left child tuples by assigning
-		// the (projected, N-limited) left child spliterator directly to the dynamic 
-		// input on the right child, with an action to populate the batch.
-
 		// Initialise the batch of tuples from the left child. 
 		this.replenishBatch(leftChildSpliterator);
 
@@ -117,13 +113,6 @@ public class DependentJoin extends BinaryExecutablePlan {
 
 		if (this.leftTuplesBatch.isEmpty()) 
 			return false;
-
-		// IMP TODO: INCLUDE THIS CHECK IFF IT IS VALID AND NECESSARY
-		//			// There should be at most one incomplete batch.
-		//			if (this.leftTuplesBatch.size() != this.batchSize) {
-		//				Preconditions.checkState(!this.incompleteBatchDetected);
-		//				this.incompleteBatchDetected = true;
-		//			}
 
 		this.batchIterator = this.leftTuplesBatch.iterator();
 		return true;
@@ -290,10 +279,6 @@ public class DependentJoin extends BinaryExecutablePlan {
 				advance = false;
 				boolean rightIsExhausted = !rightChildSpliterator.tryAdvance(this.rightTupleAction);
 	
-				//			// TODO: RE-INCLUDE THIS (OR EXPLAIN WHY IT'S NOT A VALID CHECK): 
-				//			// It should never be the case that right was exhausted and still is.
-				//			Preconditions.checkState(!(rightWasExhausted && rightIsExhausted));
-	
 				if (rightIsExhausted) {
 					if (!useAccessedRightTuplesCache && !useMatchingRightTuplesCache)
 						updateMatchingRightTuplesCache();
@@ -324,7 +309,6 @@ public class DependentJoin extends BinaryExecutablePlan {
 
 		@Override
 		public Spliterator<Tuple> trySplit() {
-			// TODO: For parallelism benefit, implement this method by splitting the leftChildSpliterator.
 			return null;
 		}
 	}
