@@ -22,7 +22,8 @@ import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
 import uk.ac.ox.cs.pdq.util.Table;
 
 /**
- *  Decorates a plan, and executes queries or the plan itself. 
+ *  Decorates a plan, and executes queries or the plan itself.
+ *  Main entry point for the runtime. 
  * @author gabor
  *
  */

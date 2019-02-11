@@ -23,9 +23,10 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 
 /**
- * Bootstrapping class for starting the planner. 
+ * Entry point for the planner. 
  * 
  * @author Julien Leblay
+ * @author Gabor
  */
 public class Planner {
 
