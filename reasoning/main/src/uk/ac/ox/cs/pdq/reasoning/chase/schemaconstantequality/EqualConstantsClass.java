@@ -24,6 +24,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.ChaseException;
  * F(...r....) where r is the representative of the equivalence class of n.
  * 
  * @author Efthymia Tsamoura
+ * @author Gabor
  *
  */
 public class EqualConstantsClass {
@@ -284,9 +285,6 @@ public class EqualConstantsClass {
 		return "[" + Joiner.on(",").join(this.constants) + " =" + this.schemaConstant + "]";
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#clone()
-	 */
 	@Override
 	public EqualConstantsClass clone() {
 		return new EqualConstantsClass(Sets.newHashSet(this.constants), this.representative, this.schemaConstant);
