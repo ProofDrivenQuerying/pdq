@@ -20,6 +20,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.ChaseException;
  * Keeps the multiple classes of equal constants created during EGD chasing.
  *
  * @author Efthymia Tsamoura
+ * @author Gabor
  */
 public class EqualConstantsClasses {
 
