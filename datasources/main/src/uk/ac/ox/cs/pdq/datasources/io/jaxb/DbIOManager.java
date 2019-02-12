@@ -33,6 +33,8 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedAccessMethod;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedRelation;
@@ -223,7 +225,7 @@ public class DbIOManager extends IOManager {
 				String[] tuple = line.split(",");
 				List<Term> constants = Lists.newArrayList();
 				for (int i = 0; i < tuple.length; ++i) {
-					constants.add(TypedConstant.create(tuple[i].replace("\"", "")));
+					constants.add(TypedConstant.deSerializeTypedConstant(tuple[i].replace("\"", "")));
 				}
 				facts.add(Atom.create(r, constants.toArray(new Term[constants.size()])));
 			}
@@ -242,6 +244,26 @@ public class DbIOManager extends IOManager {
 			}
 		}
 		return facts;
+	}
+	public static File exportFacts(String datafileName, File folder, Collection<Atom> atoms) throws IOException {
+		File target = new File(folder, datafileName + ".csv");
+		try (FileWriter fw = new FileWriter(target)) {
+			for (Atom a : atoms) {
+				StringBuilder builder = null;
+				for (Term value : a.getTerms()) {
+					if (builder == null) {
+						builder = new StringBuilder();
+					} else {
+						builder.append(",");
+					}
+					builder.append(encodeTermToCsv(value));
+				}
+				builder.append("\r\n");
+				fw.write(builder.toString());
+			}
+			fw.close();
+		}
+		return target;
 	}
 
 	/**
@@ -275,6 +297,24 @@ public class DbIOManager extends IOManager {
 		return target;
 	}
 
+	private static String encodeTermToCsv(Term value) {
+		if (value==null)
+			return null;
+		if (value instanceof Variable) {
+			String s = "Variable[" + value+ "]";
+			return s;
+		}
+		if (value instanceof TypedConstant) {
+			String s = ((TypedConstant)value).serializeToString();
+			return s;
+		}
+		if (value instanceof UntypedConstant) {
+			String s = ((UntypedConstant)value).getSymbol();
+			return s;
+		}
+		return value.toString().replaceAll(",", "/c");
+	}
+	
 	private static String encodeValue(Object value) {
 		if (value==null)
 			return null;
