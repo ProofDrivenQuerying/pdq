@@ -3,5 +3,5 @@
     <attribute name="r_regionkey" type="java.lang.Integer" input="false" mapsToRelationAttribute="r_regionkey"/>
     <attribute name="r_comment" type="java.lang.String" input="false" mapsToRelationAttribute="r_comment"/>
     <attribute name="r_name" type="java.lang.String" input="false" mapsToRelationAttribute="r_name"/>
-    <data-scv-file>/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/mysql/simple/case_005/accessesMem/data/region_m12.csv</data-scv-file>
+    <data-scv-file>/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_005/accessesMem/data/region_m12.csv</data-scv-file>
 </Access>

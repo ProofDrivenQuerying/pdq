@@ -37,13 +37,15 @@ Two JARs will be built and placed in the project's "target/" directory.
 	
 The JAR will be built and placed in the project's "target/" directory under the
 name pdq-runtime-<version>.jar.
-
-To run the runtime, type:
+How to get the command line parameters:
 
 	java -jar /path/to/JAR/file --help
-	
 This will printout all required command line arguments.
 
+A simple example how to run the runtime:
+
+	java -jar /path/to/JAR/file --schema path/to/schema.xml --config path/to/config.properties 
+	
 Runtime parameters can be passed through the command line, however, you 
 may want to set those parameters in a separate file.
 See pdq-runtime.properties for an overview of all parameters that can be used.

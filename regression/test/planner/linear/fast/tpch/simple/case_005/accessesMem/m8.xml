@@ -5,5 +5,5 @@
     <attribute name="ps_comment" type="java.lang.String" input="false" mapsToRelationAttribute="ps_comment"/>
     <attribute name="ps_supplycost" type="java.math.BigDecimal" input="false" mapsToRelationAttribute="ps_supplycost"/>
     <attribute name="ps_partkey" type="java.lang.Integer" input="false" mapsToRelationAttribute="ps_partkey"/>
-    <data-scv-file>/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/mysql/simple/case_005/accessesMem/data/partsupp_m8.csv</data-scv-file>
+    <data-scv-file>/home/gabor/git/pdq/regression/test/planner/linear/fast/tpch/simple/case_005/accessesMem/data/partsupp_m8.csv</data-scv-file>
 </Access>
