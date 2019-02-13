@@ -15,8 +15,6 @@ import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -29,6 +27,7 @@ import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
@@ -65,6 +64,15 @@ public class Doctors {
 		dbm.initialiseDatabaseForSchema(s);
 		reasonTest(dbm);
 	}
+	
+	@Test
+	public void testDoctorsPostgresDb() throws DatabaseException, SQLException, IOException {
+		DatabaseManager dbm = getExternalDatabaseManager();
+		Schema dbSchema = ExplorationSetUp.convertTypesToString(s);
+		dbm.initialiseDatabaseForSchema(dbSchema);
+		reasonTest(dbm);
+	}
+	
 	//@Test
 	public void testDoctorsExternalDb() throws DatabaseException, SQLException, IOException {
 		DatabaseManager dbm = getExternalDatabaseManager();
@@ -75,17 +83,11 @@ public class Doctors {
 	
 	private void reasonTest(DatabaseManager dbm) throws SQLException, IOException, DatabaseException {
 		DatabaseChaseInstance state = new DatabaseChaseInstance(getTestFacts(), dbm);
-		Collection<Atom> res = state.getFacts();
-		System.out.println("INITIAL STATE contains " + res.size() + " facts.");
-		printStats(res);
 		RestrictedChaser chaser = new RestrictedChaser();
 		long start = System.currentTimeMillis();
 		chaser.reasonUntilTermination(state, s.getAllDependencies());
 		long duration = System.currentTimeMillis() - start;
 		System.out.println("reasonUntilTermination took " + (duration/1000.0) + " seconds.");
-		res = state.getFacts();
-		System.out.println("Final state contains " + res.size() + " facts.");
-		printStats(res);
 		runTestQueries(state);
 	}
 	
@@ -98,7 +100,7 @@ public class Doctors {
 		}
 	}
 	
-	private void printStats(Collection<Atom> res) {
+	protected void printStats(Collection<Atom> res) {
 		Map<String,Integer> dataMap = new HashMap<>();
 		for (Atom a: res) {
 			String name = a.getPredicate().getName();
@@ -120,7 +122,7 @@ public class Doctors {
 	}
 	private DatabaseManager getExternalDatabaseManager() throws DatabaseException {
 		ExternalDatabaseManager dbm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
-		return new LogicalDatabaseInstance(new MultiInstanceFactCache(), dbm, 0);
+		return dbm; //new LogicalDatabaseInstance(new MultiInstanceFactCache(), dbm, 0);
 	}
 
 	private Schema createSchema() {
