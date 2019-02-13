@@ -356,7 +356,7 @@ public class ExplorationSetUp {
 		}
 	}
 
-	private Schema convertTypesToString(Schema schema) {
+	public static Schema convertTypesToString(Schema schema) {
 		List<Dependency> dep = new ArrayList<>();
 		dep.addAll(Arrays.asList(schema.getNonEgdDependencies()));
 		dep.addAll(Arrays.asList(schema.getKeyDependencies()));
@@ -375,7 +375,7 @@ public class ExplorationSetUp {
 	 * @return a new database relation with attributes x0,x1,...,x_{N-1}, Fact where
 	 *         x_i maps to the i-th relation's attribute
 	 */
-	private Relation createDatabaseRelation(Relation relation) {
+	private static Relation createDatabaseRelation(Relation relation) {
 		Attribute[] attributes = new Attribute[relation.getArity()];
 		for (int index = 0; index < relation.getArity(); index++) {
 			Attribute attribute = relation.getAttribute(index);

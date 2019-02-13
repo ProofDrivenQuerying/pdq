@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 
 /**
  * Main class of this package. It is the superclass of all database commands. It
@@ -142,6 +143,8 @@ public class Command {
 
 			if (a.getType() == String.class && term instanceof TypedConstant && !"DatabaseInstanceID".equals(a.getName()) && !"FactId".equals(a.getName()))
 				termInSqlString += "'" + ((TypedConstant) term).serializeToString() + "'";
+			else if (term instanceof UntypedConstant)
+				termInSqlString += "'" + term + "'";
 			else if (String.class.isAssignableFrom((Class<?>) a.getType()))
 				termInSqlString += "'" + term + "'";
 			else if (Integer.class.isAssignableFrom((Class<?>) a.getType()))
