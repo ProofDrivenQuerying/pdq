@@ -6,8 +6,8 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.reasoning.chase.dependencyAssessor.DefaultTGDDependencyAssessor;
-import uk.ac.ox.cs.pdq.reasoning.chase.dependencyAssessor.TGDDependencyAssessor;
+import uk.ac.ox.cs.pdq.reasoning.chase.dependencyAssessor.DependencyAssessor;
+import uk.ac.ox.cs.pdq.reasoning.chase.dependencyAssessor.DependencyAssessor.EGDROUND;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 
@@ -40,7 +40,7 @@ public class RestrictedChaser extends Chaser {
 	@Override
 	public <S extends ChaseInstance> void reasonUntilTermination(S instance,  Dependency[] dependencies) {
 		Preconditions.checkArgument(instance instanceof ChaseInstance);
-		TGDDependencyAssessor accessor = new DefaultTGDDependencyAssessor(dependencies);
+		DependencyAssessor accessor = new DependencyAssessor(dependencies);
 		boolean appliedStep = false;
 		Dependency[] d = dependencies;
 		do {
@@ -50,9 +50,10 @@ public class RestrictedChaser extends Chaser {
 				if(!matches.isEmpty()) {
 					appliedStep = true;
 					instance.chaseStep(matches);
+					accessor.addNewFacts(instance.getNewFacts());
 				}
 			}
-			d = accessor.getDependencies(instance);	
+			d = accessor.getDependencies(EGDROUND.BOTH);	
 		} while (appliedStep);
 	}
 

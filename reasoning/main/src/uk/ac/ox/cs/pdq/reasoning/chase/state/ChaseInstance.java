@@ -7,6 +7,7 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.Instance;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
@@ -79,4 +80,9 @@ public interface ChaseInstance extends Instance{
 	ChaseInstance merge(ChaseInstance s) throws SQLException;
 	
 	ChaseInstance clone();
+
+	/**
+	 * @return the new facts generated in the last chase step
+	 */
+	Collection<Atom> getNewFacts();
 }

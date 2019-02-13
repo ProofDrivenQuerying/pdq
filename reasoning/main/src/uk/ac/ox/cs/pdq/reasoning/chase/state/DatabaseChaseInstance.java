@@ -81,6 +81,10 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 * 
 	 */
 	private Integer hash = null;
+	/**
+	 * Cache of facts created in the last chase step.
+	 */
+	private LinkedHashSet<Atom> newFacts;
 
 	/**
 	 * Instantiates a new DatabaseChaseInstance in order to chase a (canonical
@@ -118,16 +122,6 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		this.initDatabase();
 	}
 
-	@Override
-	public void deleteFacts(Collection<Atom> facts) {
-		try {
-			databaseInstance.deleteFacts(facts);
-		} catch (DatabaseException e) {
-			System.err.println("Could not delete facts (" + facts + ") from this: " + this);
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * Instantiates a new database list state.
 	 *
@@ -137,11 +131,11 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 *            the facts
 	 */
 	public DatabaseChaseInstance(Collection<Atom> facts, DatabaseManager connection) throws SQLException {
-		try {
-			databaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
-		} catch (DatabaseException e) {
-			throw new RuntimeException("database failure", e);
-		}
+//		try {
+			databaseInstance = connection; // .clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
+	//	} catch (DatabaseException e) {
+	//		throw new RuntimeException("database failure", e);
+	//	}
 		Preconditions.checkNotNull(facts);
 		this.addFacts(facts);
 		this.classes = new EqualConstantsClasses();
@@ -261,7 +255,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 */
 	public boolean TGDchaseStep(Collection<Match> matches) {
 		Preconditions.checkNotNull(matches);
-		Collection<Atom> newFacts = new LinkedHashSet<>();
+		newFacts = new LinkedHashSet<>();
 		for (Match match : matches) {
 			Dependency dependency = (Dependency) match.getFormula();
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
@@ -295,7 +289,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 */
 	public boolean EGDchaseStep(Collection<Match> matches) {
 		Preconditions.checkNotNull(matches);
-		Collection<Atom> newFacts = new LinkedHashSet<>();
+		newFacts = new LinkedHashSet<>();
 		// For each fired EGD update the classes of equal constants
 		// and find all constants with updated representatives
 		// Maps each constant to its new representative
@@ -628,6 +622,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 					List<Match> queryResults = databaseInstance.answerQueryDifferences(leftQuery, rightQuery);
 					results.addAll(replaceFormulaInMatches(source, queryResults));
 				} catch (DatabaseException e) {
+					e.printStackTrace();
 					throw new RuntimeException("getTriggers error: ", e);
 				}
 			} else {
@@ -755,5 +750,21 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		}
 		return constantsToAtoms;
 	}
+	
+	@Override
+	public void deleteFacts(Collection<Atom> facts) {
+		try {
+			databaseInstance.deleteFacts(facts);
+		} catch (DatabaseException e) {
+			System.err.println("Could not delete facts (" + facts + ") from this: " + this);
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public Collection<Atom> getNewFacts() {
+		return newFacts;
+	}
+
 
 }

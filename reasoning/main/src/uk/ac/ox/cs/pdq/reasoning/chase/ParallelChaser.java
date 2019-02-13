@@ -6,9 +6,8 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.reasoning.chase.dependencyAssessor.DefaultParallelEGDChaseDependencyAssessor;
-import uk.ac.ox.cs.pdq.reasoning.chase.dependencyAssessor.ParallelEGDChaseDependencyAssessor;
-import uk.ac.ox.cs.pdq.reasoning.chase.dependencyAssessor.ParallelEGDChaseDependencyAssessor.EGDROUND;
+import uk.ac.ox.cs.pdq.reasoning.chase.dependencyAssessor.DependencyAssessor;
+import uk.ac.ox.cs.pdq.reasoning.chase.dependencyAssessor.DependencyAssessor.EGDROUND;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 
@@ -49,7 +48,7 @@ public class ParallelChaser extends Chaser {
 	@Override
 	public <S extends ChaseInstance> void reasonUntilTermination(S instance,  Dependency[] dependencies) {
 		Preconditions.checkArgument(instance instanceof ChaseInstance);
-		ParallelEGDChaseDependencyAssessor accessor = new DefaultParallelEGDChaseDependencyAssessor(dependencies);
+		DependencyAssessor accessor = new DependencyAssessor(dependencies);
 
 		int step = 0;
 		//True if at the end of the internal for loop at least one dependency has been fired
@@ -59,12 +58,14 @@ public class ParallelChaser extends Chaser {
 		do {
 			++step;
 			//Find all active triggers
-			Dependency[] d = step % 2 == 0 ? accessor.getDependencies(instance, EGDROUND.TGD):accessor.getDependencies(instance, EGDROUND.EGD);
+			Dependency[] d = step % 2 == 0 ? accessor.getDependencies(EGDROUND.TGD):accessor.getDependencies(EGDROUND.EGD);
 			List<Match> activeTriggers = instance.getTriggers(d, TriggerProperty.ACTIVE);
 			boolean succeeds = instance.chaseStep(activeTriggers);
 			if(failedLast && ! succeeds ) {
 				break;
 			}
+			accessor.addNewFacts(instance.getNewFacts());
+			
 			failedLast = !succeeds;
 			if(succeeds && !activeTriggers.isEmpty()) {
 				if(step % 2 == 0) {
