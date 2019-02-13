@@ -55,7 +55,7 @@ public final class DependencyAssessor {
 	}
 
 	public void addNewFacts(Collection<Atom> facts) {
-		this.newFacts.addAll(facts);
+		if (facts!=null) this.newFacts.addAll(facts);
 	}
 
 	/**
@@ -77,12 +77,18 @@ public final class DependencyAssessor {
 			if (round.equals(EGDROUND.BOTH)
 					|| (dependency instanceof TGD && round.equals(EGDROUND.TGD)) 
 					|| (dependency instanceof EGD && round.equals(EGDROUND.EGD))) {
-				for (Atom atom : dependency.getBody().getAtoms()) {
-					// check if there is a match between the new facts and the left side of the dependency.
-					Predicate s = atom.getPredicate();
-					if (dependency instanceof Dependency && newFactsMap.keySet().contains(s.getName())) {
-						constraints.add(dependency);
-						break;
+				
+				if (newFacts.isEmpty()) {
+					// this can only happen when we are in the first round
+					constraints.add(dependency);
+				} else {
+					for (Atom atom : dependency.getBody().getAtoms()) {
+						// check if there is a match between the new facts and the left side of the dependency.
+						Predicate s = atom.getPredicate();
+						if (dependency instanceof Dependency && newFactsMap.keySet().contains(s.getName())) {
+							constraints.add(dependency);
+							break;
+						}
 					}
 				}
 			}

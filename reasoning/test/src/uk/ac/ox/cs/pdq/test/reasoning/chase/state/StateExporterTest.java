@@ -123,6 +123,7 @@ public class StateExporterTest extends PdqTest {
 		}
 
 		this.chaser.reasonUntilTermination(this.state, new Dependency[] { this.tgd });
+		Collection<Atom> originalFacts = state.getFacts();
 		File dir = new File("test/src/uk/ac/ox/cs/pdq/test/reasoning/chase/state/tmp");
 		if (dir.exists()) deleteDir(dir);
 		dir.mkdir();
@@ -138,11 +139,10 @@ public class StateExporterTest extends PdqTest {
 		se = new StateExporter(newState);
 		se.importFrom(dir, s);
 		
-		Assert.assertEquals(newState.getFacts().size(), state.getFacts().size());
+		Assert.assertEquals(newState.getFacts().size(),originalFacts.size());
 		for (Atom f: newState.getFacts()) {
-			Assert.assertTrue(state.getFacts().contains(f));
+			Assert.assertTrue(originalFacts.contains(f));
 		}
-		
 		deleteDir(dir);
 	}
 	
