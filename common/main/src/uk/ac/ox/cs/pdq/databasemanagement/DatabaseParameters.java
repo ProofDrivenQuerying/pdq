@@ -39,6 +39,10 @@ public class DatabaseParameters extends Parameters {
 	@Parameter(description="Canonical name of the driver class for the internal"
 			+ " database used by the reasoner")
 	protected String databaseDriver;
+	
+	/** internal cache should not be allowed for very large data sets. */
+	@Parameter(description="The cache stores every facts if it is enabled. Do not use it with large data sets.")
+	protected boolean isCacheAllowed = true;
 
 	/** The connection url. */
 	@Parameter(description="Connection URL for the internal database used by the reasoner")
@@ -250,6 +254,12 @@ public class DatabaseParameters extends Parameters {
 		this.useInternalDatabaseManager = useInternalDatabaseManager;
 	}
 
+	public boolean isCacheAllowed() {
+		return isCacheAllowed;
+	}
+	public void setCacheAllowed(boolean isAllowed) {
+		isCacheAllowed = isAllowed;
+	}
 	public boolean isFactsAreUnique() {
 		return factsAreUnique;
 	}
