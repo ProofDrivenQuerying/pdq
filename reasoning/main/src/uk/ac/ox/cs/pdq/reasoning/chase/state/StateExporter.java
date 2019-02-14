@@ -24,7 +24,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 public class StateExporter {
 
 	private Instance instance;
-
+	private boolean verbose = true;
 	public StateExporter(Instance instance) {
 		Preconditions.checkNotNull(instance);
 		this.instance = instance;
@@ -70,11 +70,9 @@ public class StateExporter {
 		for (Relation r : schema.getRelations()) {
 			File csvFile = new File(directory, r.getName()+".csv");
 			if (csvFile.exists()) {
-				Collection<Atom> facts = DbIOManager.importFacts(r, csvFile);
-				System.out.println("Imported " + facts.size() + " facts fpr relation " + r.getName());
-				instance.addFacts(facts);
+				DbIOManager.importFacts(r, csvFile, instance, verbose);
 			} else {
-				System.out.println("No data found for relation " + r.getName());
+				if (verbose) System.out.println("No data found for relation " + r.getName());
 			}
 		}
 	}

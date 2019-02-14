@@ -28,6 +28,7 @@ import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Instance;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -214,13 +215,19 @@ public class DbIOManager extends IOManager {
 	public static Collection<Atom> importFacts(Relation r, String csvFile) {
 		return importFacts(r, new File(csvFile));
 	}
+	
 	public static Collection<Atom> importFacts(Relation r, File csvFile) {
+		return importFacts(r, csvFile, null, false);
+	}
+
+	public static Collection<Atom> importFacts(Relation r, File csvFile, Instance instance, boolean verbose) {
 		Collection<Atom> facts = Sets.newHashSet();
 		BufferedReader reader = null;
 		try {
 			// Open the csv file for reading
 			reader = new BufferedReader(new FileReader(csvFile));
 			String line;
+			long recordCounter = 0;
 			while ((line = reader.readLine()) != null) {
 				String[] tuple = line.split(",");
 				List<Term> constants = Lists.newArrayList();
@@ -228,7 +235,17 @@ public class DbIOManager extends IOManager {
 					constants.add(TypedConstant.deSerializeTypedConstant(tuple[i].replace("\"", "")));
 				}
 				facts.add(Atom.create(r, constants.toArray(new Term[constants.size()])));
+				recordCounter++;
+				if (instance!=null && recordCounter%100==0) {
+					instance.addFacts(facts);
+					facts.clear();
+				}
 			}
+			if (instance!=null && !facts.isEmpty()) {
+				instance.addFacts(facts);
+				facts.clear();
+			}
+			if (verbose) System.out.println("Imported " + recordCounter + " facts for relation " + r.getName());
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

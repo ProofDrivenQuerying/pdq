@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -121,6 +122,34 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		}
 		this.initDatabase();
 	}
+	/**
+	 * Instantiates a new database list state using a directory that contains facts in csv data files.
+	 *
+	 * @param connection 
+	 * @param csvFactDirectory
+	 */
+	public DatabaseChaseInstance(File csvFactDirectory, DatabaseManager connection) throws SQLException {
+		try {
+			if (connection instanceof LogicalDatabaseInstance)
+				databaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
+			else
+				databaseInstance = connection; 
+		} catch (DatabaseException e) {
+			throw new RuntimeException("database failure", e);
+		}
+		Preconditions.checkNotNull(csvFactDirectory);
+		StateExporter se = new StateExporter(this);
+		se.importFrom(csvFactDirectory, connection.getSchema());
+		
+		this.classes = new EqualConstantsClasses();
+		try {
+			this.constantsToAtoms = DatabaseChaseInstance.createdConstantsMap(databaseInstance.getCachedFacts());
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
+
+		this.initDatabase();
+	}
 
 	/**
 	 * Instantiates a new database list state.
@@ -131,11 +160,14 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 *            the facts
 	 */
 	public DatabaseChaseInstance(Collection<Atom> facts, DatabaseManager connection) throws SQLException {
-//		try {
-			databaseInstance = connection; // .clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
-	//	} catch (DatabaseException e) {
-	//		throw new RuntimeException("database failure", e);
-	//	}
+		try {
+			if (connection instanceof LogicalDatabaseInstance)
+				databaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
+			else
+				databaseInstance = connection; 
+		} catch (DatabaseException e) {
+			throw new RuntimeException("database failure", e);
+		}
 		Preconditions.checkNotNull(facts);
 		this.addFacts(facts);
 		this.classes = new EqualConstantsClasses();
