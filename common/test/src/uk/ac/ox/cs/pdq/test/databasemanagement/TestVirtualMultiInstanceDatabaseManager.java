@@ -137,7 +137,9 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 			IllegalArgumentException, InvocationTargetException {
 		virtualDatabaseCreationInt(DatabaseParameters.Postgres);
 		virtualDatabaseCreationString(DatabaseParameters.Postgres);
+		System.out.println("start postgres");
 		largeTableQueryDifferenceEGD(DatabaseParameters.Postgres);
+		System.out.println("done postgres");
 	}
 
 

@@ -367,7 +367,7 @@ public class TestLinearGeneric extends PdqTest {
 	@Test
 	public void test1ExplorationThreeRelationsPostgres() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3, DatabaseParameters.Postgres);
-		Assert.assertEquals(274, exploredPlans.size());
+		Assert.assertEquals(244, exploredPlans.size());
 	}
 
 	/**
