@@ -51,8 +51,9 @@ public class AdaptedSchema {
 			if (r.getForeignKeys() != null && r.getForeignKeys().length > 0) {
 				ForeignKey[] keys = new ForeignKey[r.getForeignKeys().length];
 				for (int j = 0; j < keys.length; j++) {
-					if (keys[i] instanceof AdaptedForeignKey) {
-						keys[i] = ((AdaptedForeignKey)keys[i]).convertToForeignKey(r, relations);
+					keys[j] = r.getForeignKeys()[j];
+					if (keys[j] instanceof AdaptedForeignKey) {
+						keys[j] = ((AdaptedForeignKey)keys[j]).convertToForeignKey(r, relations);
 					}
 				}
 				relations[i] = Relation.create(r.getName(), r.getAttributes(), r.getAccessMethods(), keys, r.isEquality(), r.getIndexedAttributes());

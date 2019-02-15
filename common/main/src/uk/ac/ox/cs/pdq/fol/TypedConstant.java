@@ -126,7 +126,7 @@ public class TypedConstant extends Constant implements Typed, Serializable, Comp
 			String value = typeAndValue.substring(typeAndValue.indexOf('_') + 1);
 			return TypedConstant.create(convertStringToType(value, convertStringToType(type)));
 		}
-		return null;
+		return TypedConstant.create(serializedTypedConstant);
 	}
 
 	/**
