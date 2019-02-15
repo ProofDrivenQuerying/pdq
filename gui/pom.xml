@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.ox.cs.pdq</groupId>
-	<artifactId>pdq-demo</artifactId>
+	<artifactId>pdq-gui</artifactId>
 	<version>1.0.0-Beta</version>
-	<name>PDQ demo application</name>
+	<name>PDQ GUI application</name>
 	<url>http://www.cs.ox.ac.uk/pdq/</url>
 	<description>This library features packages and classes PDQ's user interface.</description>
 	<build>
