@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Delete;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DifferenceQuery;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.ExplainSelect;
+import uk.ac.ox.cs.pdq.db.DataSink;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -202,6 +203,14 @@ public class ExternalDatabaseManager implements DatabaseManager {
 		}
 		return convertMatchesToAtoms(executor.execute(queries), queries);
 	}
+	
+	public void getFactsFromPhysicalDatabase(List<Relation> relations, DataSink sink) throws DatabaseException {
+		List<Command> queries = new ArrayList<>();
+		for (Relation r : relations) {
+			queries.add(new BasicSelect(r, sink)); 
+		}
+		executor.execute(queries);
+	}
 
 	/**
 	 * A list of CQs to be executed parallel. All results are gathered and added to
@@ -367,5 +376,7 @@ public class ExternalDatabaseManager implements DatabaseManager {
 		return executor.executeGeneric(new ExplainSelect(this.schema, cq));
 	}
 
-	
+	public List<String> execute(Command select) throws DatabaseException {
+		return executor.executeGeneric(select);
+	}
 }

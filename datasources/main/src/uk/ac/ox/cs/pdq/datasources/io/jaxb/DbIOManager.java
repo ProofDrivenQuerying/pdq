@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.datasources.io.jaxb;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Scanner;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -211,60 +213,68 @@ public class DbIOManager extends IOManager {
 	 * @param r
 	 * @param csvFile
 	 * @return
+	 * @throws IOException 
 	 */
-	public static Collection<Atom> importFacts(Relation r, String csvFile) {
+	public static Collection<Atom> importFacts(Relation r, String csvFile) throws IOException {
 		return importFacts(r, new File(csvFile));
 	}
 	
-	public static Collection<Atom> importFacts(Relation r, File csvFile) {
+	public static Collection<Atom> importFacts(Relation r, File csvFile) throws IOException {
 		return importFacts(r, csvFile, null, false);
 	}
 
-	public static Collection<Atom> importFacts(Relation r, File csvFile, Instance instance, boolean verbose) {
+	public static Collection<Atom> importFacts(Relation r, File csvFile, Instance instance, boolean verbose) throws IOException {
 		Collection<Atom> facts = Sets.newHashSet();
-		BufferedReader reader = null;
+		FileInputStream inputStream = null;
+		Scanner sc = null;
 		try {
-			// Open the csv file for reading
-			reader = new BufferedReader(new FileReader(csvFile));
-			String line;
-			long recordCounter = 0;
-			while ((line = reader.readLine()) != null) {
-				String[] tuple = line.split(",");
-				List<Term> constants = Lists.newArrayList();
-				for (int i = 0; i < tuple.length; ++i) {
-					constants.add(TypedConstant.deSerializeTypedConstant(tuple[i].replace("\"", "")));
-				}
-				facts.add(Atom.create(r, constants.toArray(new Term[constants.size()])));
-				recordCounter++;
-				if (instance!=null && recordCounter%100==0) {
-					instance.addFacts(facts);
-					facts.clear();
-				}
-			}
+		    inputStream = new FileInputStream(csvFile);
+		    sc = new Scanner(inputStream, "UTF-8");
+		    // Open the csv file for reading
+		    long recordCounter = 0;
+		    if (verbose) System.out.println("Importing " + r.getName());
+		    while (sc.hasNextLine()) {
+		        String line = sc.nextLine();
+		        String[] tuple = line.split(",");
+		        List<Term> constants = Lists.newArrayList();
+		        for (int i = 0; i < tuple.length; ++i) {
+		        	constants.add(TypedConstant.deSerializeTypedConstant(tuple[i].replace("\"", "")));
+		        }
+		        facts.add(Atom.create(r, constants.toArray(new Term[constants.size()])));
+		        recordCounter++;
+		        if (instance!=null && recordCounter%1000==0) {
+		        	System.out.print(".");
+		        	instance.addFacts(facts);
+		        	facts.clear();
+		        }
+		    }
+		    // note that Scanner suppresses exceptions
+		    if (sc.ioException() != null) {
+		        throw sc.ioException();
+		    }		
 			if (instance!=null && !facts.isEmpty()) {
 				instance.addFacts(facts);
 				facts.clear();
 			}
-			if (verbose) System.out.println("Imported " + recordCounter + " facts for relation " + r.getName());
+			if (verbose) System.out.println("\nImported " + recordCounter + " facts for relation " + r.getName());
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			  if (inputStream != null) {
+			        inputStream.close();
+			    }
+			    if (sc != null) {
+			        sc.close();
+			    }
 		}
 		return facts;
 	}
 	public static File exportFacts(String datafileName, File folder, Collection<Atom> atoms) throws IOException {
 		File target = new File(folder, datafileName + ".csv");
-		try (FileWriter fw = new FileWriter(target)) {
+		try (FileWriter fw = new FileWriter(target,true)) {
 			for (Atom a : atoms) {
 				StringBuilder builder = null;
 				for (Term value : a.getTerms()) {
@@ -327,7 +337,7 @@ public class DbIOManager extends IOManager {
 		}
 		if (value instanceof UntypedConstant) {
 			String s = ((UntypedConstant)value).getSymbol();
-			return s;
+			return s.toString().replaceAll(",", "/c");
 		}
 		return value.toString().replaceAll(",", "/c");
 	}

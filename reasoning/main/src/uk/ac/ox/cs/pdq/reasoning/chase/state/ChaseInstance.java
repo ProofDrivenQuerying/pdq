@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  * @author Efthymia Tsamoura
  *
  */
-public interface ChaseInstance extends Instance{
+public interface ChaseInstance extends Instance {
 
 	/**
 	 *

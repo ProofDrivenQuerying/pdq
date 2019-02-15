@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<schema>
+    <relations>
+        <relation name="customer">
+            <attribute name="c_custkey" type="java.lang.Integer"/>
+            <attribute name="c_name" type="java.lang.String"/>
+            <attribute name="c_address" type="java.lang.String"/>
+            <attribute name="c_nationkey" type="java.lang.Long"/>
+            <attribute name="c_phone" type="java.lang.String"/>
+            <attribute name="c_acctbal" type="java.math.BigDecimal"/>
+            <attribute name="c_mktsegment" type="java.lang.String"/>
+            <attribute name="c_comment" type="java.lang.String"/>
+            <access-method name="mt_0"/>
+            <foreign-key autoIndexPresent="false" foreignRelationName="nation">
+                <References ForeignAttributeName="n_nationkey" LocalAttributeName="c_nationkey"/>
+            </foreign-key>
+        </relation>
+        <relation name="lineitem">
+            <attribute name="l_orderkey" type="java.lang.Long"/>
+            <attribute name="l_partkey" type="java.lang.Long"/>
+            <attribute name="l_suppkey" type="java.lang.Long"/>
+            <attribute name="l_linenumber" type="java.lang.Integer"/>
+            <attribute name="l_quantity" type="java.math.BigDecimal"/>
+            <attribute name="l_extendedprice" type="java.math.BigDecimal"/>
+            <attribute name="l_discount" type="java.math.BigDecimal"/>
+            <attribute name="l_tax" type="java.math.BigDecimal"/>
+            <attribute name="l_returnflag" type="java.lang.String"/>
+            <attribute name="l_linestatus" type="java.lang.String"/>
+            <attribute name="l_shipdate" type="java.sql.Date"/>
+            <attribute name="l_commitdate" type="java.sql.Date"/>
+            <attribute name="l_receiptdate" type="java.sql.Date"/>
+            <attribute name="l_shipinstruct" type="java.lang.String"/>
+            <attribute name="l_shipmode" type="java.lang.String"/>
+            <attribute name="l_comment" type="java.lang.String"/>
+            <access-method name="mt_1"/>
+            <foreign-key autoIndexPresent="false" foreignRelationName="orders">
+                <References ForeignAttributeName="o_orderkey" LocalAttributeName="l_orderkey"/>
+            </foreign-key>
+            <foreign-key autoIndexPresent="false" foreignRelationName="partsupp">
+                <References ForeignAttributeName="ps_partkey" LocalAttributeName="l_partkey"/>
+                <References ForeignAttributeName="ps_suppkey" LocalAttributeName="l_suppkey"/>
+            </foreign-key>
+        </relation>
+        <relation name="nation">
+            <attribute name="n_nationkey" type="java.lang.Integer"/>
+            <attribute name="n_name" type="java.lang.String"/>
+            <attribute name="n_regionkey" type="java.lang.Long"/>
+            <attribute name="n_comment" type="java.lang.String"/>
+            <access-method name="mt_2"/>
+            <foreign-key autoIndexPresent="false" foreignRelationName="region">
+                <References ForeignAttributeName="r_regionkey" LocalAttributeName="n_regionkey"/>
+            </foreign-key>
+        </relation>
+        <relation name="orders">
+            <attribute name="o_orderkey" type="java.lang.Integer"/>
+            <attribute name="o_custkey" type="java.lang.Long"/>
+            <attribute name="o_orderstatus" type="java.lang.String"/>
+            <attribute name="o_totalprice" type="java.math.BigDecimal"/>
+            <attribute name="o_orderdate" type="java.sql.Date"/>
+            <attribute name="o_orderpriority" type="java.lang.String"/>
+            <attribute name="o_clerk" type="java.lang.String"/>
+            <attribute name="o_shippriority" type="java.lang.Integer"/>
+            <attribute name="o_comment" type="java.lang.String"/>
+            <access-method name="mt_3"/>
+            <foreign-key autoIndexPresent="false" foreignRelationName="customer">
+                <References ForeignAttributeName="c_custkey" LocalAttributeName="o_custkey"/>
+            </foreign-key>
+        </relation>
+        <relation name="part">
+            <attribute name="p_partkey" type="java.lang.Integer"/>
+            <attribute name="p_name" type="java.lang.String"/>
+            <attribute name="p_mfgr" type="java.lang.String"/>
+            <attribute name="p_brand" type="java.lang.String"/>
+            <attribute name="p_type" type="java.lang.String"/>
+            <attribute name="p_size" type="java.lang.Integer"/>
+            <attribute name="p_container" type="java.lang.String"/>
+            <attribute name="p_retailprice" type="java.math.BigDecimal"/>
+            <attribute name="p_comment" type="java.lang.String"/>
+            <access-method name="mt_4"/>
+        </relation>
+        <relation name="partsupp">
+            <attribute name="ps_partkey" type="java.lang.Long"/>
+            <attribute name="ps_suppkey" type="java.lang.Long"/>
+            <attribute name="ps_availqty" type="java.lang.Integer"/>
+            <attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+            <attribute name="ps_comment" type="java.lang.String"/>
+            <access-method name="mt_5"/>
+            <foreign-key autoIndexPresent="false" foreignRelationName="part">
+                <References ForeignAttributeName="p_partkey" LocalAttributeName="ps_partkey"/>
+            </foreign-key>
+            <foreign-key autoIndexPresent="false" foreignRelationName="supplier">
+                <References ForeignAttributeName="s_suppkey" LocalAttributeName="ps_suppkey"/>
+            </foreign-key>
+        </relation>
+        <relation name="region">
+            <attribute name="r_regionkey" type="java.lang.Integer"/>
+            <attribute name="r_name" type="java.lang.String"/>
+            <attribute name="r_comment" type="java.lang.String"/>
+            <access-method name="mt_6"/>
+        </relation>
+        <relation name="supplier">
+            <attribute name="s_suppkey" type="java.lang.Integer"/>
+            <attribute name="s_name" type="java.lang.String"/>
+            <attribute name="s_address" type="java.lang.String"/>
+            <attribute name="s_nationkey" type="java.lang.Long"/>
+            <attribute name="s_phone" type="java.lang.String"/>
+            <attribute name="s_acctbal" type="java.math.BigDecimal"/>
+            <attribute name="s_comment" type="java.lang.String"/>
+            <access-method name="mt_7"/>
+            <foreign-key autoIndexPresent="false" foreignRelationName="nation">
+                <References ForeignAttributeName="n_nationkey" LocalAttributeName="s_nationkey"/>
+            </foreign-key>
+        </relation>
+    </relations>
+    <dependencies/>
+</schema>

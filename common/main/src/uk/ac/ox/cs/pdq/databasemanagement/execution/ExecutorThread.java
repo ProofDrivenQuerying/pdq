@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.databasemanagement.execution;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +20,9 @@ import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
+import uk.ac.ox.cs.pdq.db.DataSink;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
@@ -237,7 +241,11 @@ public class ExecutorThread extends Thread {
 			for (String statement : statements) {
 				// queries one by one.
 				try {
-					results.addAll(executeQuery(statement, (BasicSelect) command));
+					if (((BasicSelect) command).getSink()!=null) {
+						executeQuery(statement, (BasicSelect) command, ((BasicSelect) command).getSink());
+					} else {
+						results.addAll(executeQuery(statement, (BasicSelect) command));
+					}
 				} catch (Throwable t) {
 					if (ignoreErrors)
 						t.printStackTrace();
@@ -280,12 +288,12 @@ public class ExecutorThread extends Thread {
 		// executeUpdate function. Everything that extends BasicSelect will be executed
 		// as a query, one by one. Updates can be batch executed.
 		
-		if (command instanceof BasicSelect) {
+		if (command instanceof BasicSelect || command.toPostgresStatement(databaseName).get(0).toLowerCase().startsWith("select ")) {
 			List<String> results = new ArrayList<>();
 			for (String statement : statements) {
 				// queries one by one.
 				try {
-					results.addAll(executeGenericQuery(statement, (BasicSelect) command));
+					results.addAll(executeGenericQuery(statement, command));
 				} catch (Throwable t) {
 					if (ignoreErrors)
 						t.printStackTrace();
@@ -380,18 +388,25 @@ public class ExecutorThread extends Thread {
 	 */
 	
 	private List<Match> executeQuery(String statements, BasicSelect command) throws DatabaseException, SQLException {
+		return this.executeQuery(statements, command, null);
+	}
+	private List<Match> executeQuery(String statements, BasicSelect command, DataSink sink) throws DatabaseException, SQLException {
 		List<Match> results = new ArrayList<>();
 		ResultSet resultSet = null;
 		Statement sqlStmt = null;
 		try {
-			sqlStmt = connection.createStatement();
+			connection.setAutoCommit(false);
+			sqlStmt = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+	                   ResultSet.CONCUR_READ_ONLY);
 			// execute the query
+			sqlStmt.setFetchSize(1000);
 			resultSet = sqlStmt.executeQuery(statements);
 		} catch (Throwable t) {
 			throw new DatabaseException("Error while executing query: " + statements, t);
 		}
 		try {
 			// parse results
+			Collection<Atom> readBuffer = new ArrayList<>();
 			while (resultSet.next()) {
 				int f = 1;
 				Map<Variable, Constant> map = new LinkedHashMap<>();
@@ -408,19 +423,42 @@ public class ExecutorThread extends Thread {
 						f++;
 					}
 				}
-				// create the match object for this record (fact)
-				results.add(Match.create(command.getFormula(), map));
+				if (sink == null) {
+					// create the match object for this record (fact)
+					results.add(Match.create(command.getFormula(), map));
+				} else {
+					Atom queriedTable = command.getFormula().getAtoms()[0];
+					List<Term> terms = new ArrayList<>();
+					for (Term t : command.getFormula().getTerms()) {
+						Term newTerm = map.get(t);
+						if (newTerm != null)
+							terms.add(newTerm);
+					}
+					readBuffer.add(Atom.create(queriedTable.getPredicate(), terms.toArray(new Term[terms.size()])));
+					if (readBuffer.size()>1000) {
+						sink.addFacts(readBuffer);
+						readBuffer.clear();
+					}
+				}
 			}
+			if (readBuffer.size()>0) {
+				sink.addFacts(readBuffer);
+				readBuffer.clear();
+			}
+			
+		}catch(IOException e) {
+			throw new DatabaseException("Write error while reading data!",e);
 		} finally {
 			if (resultSet != null)
 				resultSet.close();
 			if (sqlStmt != null)
 				sqlStmt.close();
+			connection.setAutoCommit(true);
 		}
 		return results;
 	}
 	
-	private List<String> executeGenericQuery(String statements, BasicSelect command) throws DatabaseException, SQLException {
+	private List<String> executeGenericQuery(String statements, Command command) throws DatabaseException, SQLException {
 		List<String> results = new ArrayList<>();
 		ResultSet resultSet = null;
 		Statement sqlStmt = null;

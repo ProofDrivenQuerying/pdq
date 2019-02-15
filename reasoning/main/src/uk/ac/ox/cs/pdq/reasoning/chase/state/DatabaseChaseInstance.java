@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -127,8 +128,9 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 *
 	 * @param connection 
 	 * @param csvFactDirectory
+	 * @throws IOException 
 	 */
-	public DatabaseChaseInstance(File csvFactDirectory, DatabaseManager connection) throws SQLException {
+	public DatabaseChaseInstance(File csvFactDirectory, DatabaseManager connection) throws SQLException, IOException {
 		try {
 			if (connection instanceof LogicalDatabaseInstance)
 				databaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
@@ -143,6 +145,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		
 		this.classes = new EqualConstantsClasses();
 		try {
+			//TOCOMMENT this map should be eliminated to support chasing large data sets
 			this.constantsToAtoms = DatabaseChaseInstance.createdConstantsMap(databaseInstance.getCachedFacts());
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);

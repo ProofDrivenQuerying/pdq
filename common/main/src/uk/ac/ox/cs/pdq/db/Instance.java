@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
  * 
  *
  */
-public interface Instance {
+public interface Instance extends DataSink {
 
 	
 	/**

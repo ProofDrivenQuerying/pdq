@@ -16,6 +16,7 @@ import com.google.common.base.Joiner;
 
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.DataSink;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -85,6 +86,8 @@ public class BasicSelect extends Command {
 	 */
 	protected List<String> select = new ArrayList<>();
 
+	private DataSink sink;
+
 	/**
 	 * Default constructor is only protected since it shouldn't be used externally,
 	 * it is only needed for extending this class.
@@ -128,6 +131,11 @@ public class BasicSelect extends Command {
 		if (!whereConditions.isEmpty())
 			sqlQueryString += " WHERE " + Joiner.on(" AND ").join(whereConditions);
 		statements.add(sqlQueryString);
+	}
+
+	public BasicSelect(Relation r, DataSink sink) {
+		this(r);
+		this.sink = sink;
 	}
 
 	/**
@@ -347,6 +355,13 @@ public class BasicSelect extends Command {
 	 */
 	public Formula getFormula() {
 		return formula;
+	}
+
+	/** Data sink for buffered reading
+	 * @return
+	 */
+	public DataSink getSink() {
+		return sink;
 	}
 
 	public class TableAlias {

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -13,7 +14,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
+import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
+import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
+import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
+import uk.ac.ox.cs.pdq.datasources.schemabuilder.PostgresqlSchemaDiscoverer;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -21,6 +27,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoning.chase.KTerminationChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
@@ -145,6 +152,105 @@ public class StateExporterTest extends PdqTest {
 		}
 		deleteDir(dir);
 	}
+	
+	/** This test will attempt to export the whole 1Gb tpch database into csv files.
+	 * @throws IOException
+	 * @throws DatabaseException
+	 */
+	@Test
+	public void exportTpcHDatabaseToFolder() throws IOException, DatabaseException {
+		try {
+			File dir = new File("test/src/uk/ac/ox/cs/pdq/test/reasoning/chase/state/tmp");
+			if (dir.exists()) deleteDir(dir);
+			dir.mkdir();
+			PostgresqlSchemaDiscoverer dicovery = new PostgresqlSchemaDiscoverer();
+			dicovery.setProperties(getTpchProperties());
+			Schema tpch = dicovery.discover();
+			StateExporter.exportFromDatabaseToDirectory(dir, getTpcHParameters(), tpch);
+			File f1 = new File(dir,"customer.csv");
+			File f2 = new File(dir,"lineitem.csv");
+			File f3 = new File(dir,"orders.csv");
+			File f4 = new File(dir,"partsupp.csv");
+			File f5 = new File(dir,"part.csv");
+			File f6 = new File(dir,"supplier.csv");
+			File f7 = new File(dir,"region.csv");
+			File f8 = new File(dir,"nation.csv");
+			Assert.assertEquals(24496534,f1.length());
+			Assert.assertEquals(872182369,f2.length());
+			Assert.assertEquals(181852332,f3.length());
+			Assert.assertEquals(118984616,f4.length());
+			Assert.assertEquals(27220154,f5.length());
+			Assert.assertEquals(1479184,f6.length());
+			Assert.assertEquals(480,f7.length());
+			Assert.assertEquals(2672,f8.length());
+			if (dir.exists()) deleteDir(dir);
+		}catch(Throwable t) {
+			t.printStackTrace();
+			Assert.fail();
+		}
+	}
+	
+	
+	/** This test will attempt to export the whole 1Gb tpch database into csv files.
+	 * @throws IOException
+	 * @throws DatabaseException
+	 */
+	@Test
+	public void exportTpcHDatabaseToFolderAndImportItToChaser() throws IOException, DatabaseException {
+		try {
+			File dir = new File("test/src/uk/ac/ox/cs/pdq/test/reasoning/chase/state/tmp");
+			if (dir.exists()) deleteDir(dir);
+			dir.mkdir();
+			File schmeXml = new File(dir,"../schema/tpchSchema.xml");
+			//tpch schema
+			Schema tpch = IOManager.importSchema(schmeXml);
+			
+			// read the tpch database, and save everything into the tmp folder.
+			StateExporter.exportFromDatabaseToDirectory(dir, getTpcHParameters(), tpch);
+			
+			// create string only schema
+			Schema tpchStrings = IOManager.convertTypesToString(tpch);
+			
+			// write csv files from tmp folder to chase
+			DatabaseParameters dbParam = (DatabaseParameters) DatabaseParameters.Postgres.clone();
+			dbParam.setNumberOfThreads(1);
+			ExternalDatabaseManager dm = new ExternalDatabaseManager(dbParam);
+			dm.initialiseDatabaseForSchema(tpchStrings);
+			DatabaseChaseInstance chaser = new DatabaseChaseInstance(dir, dm);
+			
+			// validate the data exists in the chase database.
+			Object ret = dm.execute(new Command("Select count(*) from lineitem"));
+			System.out.println(chaser + " has " + ret);
+		}catch(Throwable t) {
+			t.printStackTrace();
+			Assert.fail();
+		}
+	}
+	
+	public static DatabaseParameters getTpcHParameters() {
+		DatabaseParameters dbParam = DatabaseParameters.Empty;
+		dbParam.setConnectionUrl("jdbc:postgresql://localhost:5432/");
+		dbParam.setDatabaseDriver("org.postgresql.Driver");
+		dbParam.setDatabaseName("tpch");
+		dbParam.setDatabaseUser("postgres");
+		dbParam.setDatabasePassword("root");
+		dbParam.setCreateNewDatabase(false);
+		dbParam.setNumberOfThreads(10);
+		return dbParam;
+	}
+
+	public static Properties getTpchProperties() {
+		Properties properties = new Properties();
+		properties.setProperty("url", "jdbc:postgresql://localhost:5432/");
+		properties.setProperty("driver","org.postgresql.Driver");
+		properties.setProperty("database", "tpch");
+//		properties.setProperty("username", "admin");
+//		properties.setProperty("password", "admin");
+		properties.setProperty("username", "postgres");
+		properties.setProperty("password", "root");
+		return(properties);
+	}
+
 	
 	private void deleteDir(File dir) {
 		for (File f: dir.listFiles())
