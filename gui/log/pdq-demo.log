@@ -1,9 +1,0 @@
-2018-10-29 12:17:20,852 FATAL [JavaFX Application Thread] (PDQApplication.java:112) - javafx.fxml.LoadException: 
-/auto/users/marler/git/pdq/demo/target/classes/resources/layouts/root-window.fxml
-
-2018-10-29 13:20:55,412 FATAL [JavaFX Application Thread] (PDQApplication.java:112) - javafx.fxml.LoadException: 
-/auto/users/marler/git/pdq/demo/target/classes/resources/layouts/root-window.fxml
-
-2018-10-29 15:32:52,118 FATAL [JavaFX Application Thread] (PDQApplication.java:112) - javafx.fxml.LoadException: 
-/auto/users/marler/git/pdq/demo/target/classes/resources/layouts/root-window.fxml
-
