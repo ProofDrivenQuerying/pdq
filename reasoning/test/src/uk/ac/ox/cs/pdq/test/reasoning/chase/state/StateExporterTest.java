@@ -11,6 +11,7 @@ import java.util.Properties;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
@@ -157,6 +158,7 @@ public class StateExporterTest extends PdqTest {
 	 * @throws IOException
 	 * @throws DatabaseException
 	 */
+	@Ignore //this test is too slow
 	@Test
 	public void exportTpcHDatabaseToFolder() throws IOException, DatabaseException {
 		try {
@@ -195,6 +197,7 @@ public class StateExporterTest extends PdqTest {
 	 * @throws IOException
 	 * @throws DatabaseException
 	 */
+	@Ignore //this test is too slow
 	@Test
 	public void exportTpcHDatabaseToFolderAndImportItToChaser() throws IOException, DatabaseException {
 		try {
@@ -244,8 +247,6 @@ public class StateExporterTest extends PdqTest {
 		properties.setProperty("url", "jdbc:postgresql://localhost:5432/");
 		properties.setProperty("driver","org.postgresql.Driver");
 		properties.setProperty("database", "tpch");
-//		properties.setProperty("username", "admin");
-//		properties.setProperty("password", "admin");
 		properties.setProperty("username", "postgres");
 		properties.setProperty("password", "root");
 		return(properties);
