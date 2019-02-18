@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
@@ -133,6 +134,7 @@ public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
 	 * This case test the Postgres driver.
 	 */
 	@Test
+	@Ignore // too slow
 	public void virtualDatabaseCreationPostgres() throws DatabaseException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 		virtualDatabaseCreationInt(DatabaseParameters.Postgres);
