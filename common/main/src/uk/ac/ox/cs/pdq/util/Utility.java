@@ -13,13 +13,9 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import com.google.common.collect.Lists;
-
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
 /**
  * Provide utility function, that don't fit anywhere else.
@@ -30,17 +26,17 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
  */
 public class Utility {
 
-	/**  The logger. */
+	/** The logger. */
 	public static Logger log = Logger.getLogger(Utility.class);
 
 	/**
 	 * Search.
 	 *
-	 * @param <T> the generic type
+	 * @param            <T> the generic type
 	 * @param collection the collection
-	 * @param object the object
-	 * @return 		the positions where the input object appears in collection.
-	 * 		If object does not appear in source, then an empty list is returned
+	 * @param object     the object
+	 * @return the positions where the input object appears in collection. If object
+	 *         does not appear in source, then an empty list is returned
 	 */
 	public static <T> List<Integer> search(T[] collection, T object) {
 		List<Integer> result = new ArrayList<>();
@@ -53,54 +49,14 @@ public class Utility {
 		}
 		return result;
 	}
-	
-	public static Set<Constant> getTypedAndUntypedConstants(Atom atom) {
-		Set<Constant> result = new LinkedHashSet<>();
-		for (Term term:atom.getTerms()) {
-			if (!term.isVariable()) {
-				result.add((Constant) term);
-			}
-		}
-		return result;
-	}
 
 	public static Set<Constant> getUntypedConstants(Collection<Atom> atoms) {
 		Set<Constant> result = new LinkedHashSet<>();
-		for(Atom atom:atoms) {
-			for (Term term:atom.getTerms()) {
-				if (term.isUntypedConstant()) 
+		for (Atom atom : atoms) {
+			for (Term term : atom.getTerms()) {
+				if (term.isUntypedConstant())
 					result.add((Constant) term);
 			}
-		}
-		return result;
-	}
-
-	public static List<TypedConstant> getTypedConstants(Formula formula) {
-		List<TypedConstant> typedConstants = Lists.newArrayList();
-		for(Atom atom:formula.getAtoms()) {
-			for(Term term:atom.getTerms()) {
-				if(term instanceof TypedConstant) {
-					typedConstants.add((TypedConstant)term);
-				}
-			}
-		}
-		return typedConstants;
-	}
-
-	/**
-	 * Gets the constants lying at the input positions.
-	 *
-	 * @throws IllegalArgumentException if there is a non-constant at one of the input positions
-	 * @param positions List<Integer>
-	 * @return the List<Constant> at the given positions.
-	 */
-	public static List<Constant> getTypedAndUntypedConstants(Atom atom, Integer[] positions) {
-		List<Constant> result = new ArrayList<>();
-		for(Integer i: positions) {
-			if(i < atom.getNumberOfTerms() && !atom.getTerm(i).isVariable()) 
-				result.add((Constant) atom.getTerm(i));
-			else 
-				throw new java.lang.IllegalArgumentException();
 		}
 		return result;
 	}
@@ -109,9 +65,9 @@ public class Utility {
 	 * Attempts to cast the given string to given class. If the class is not
 	 * supported, the return object is the same as s.
 	 *
-	 * @param <T> the generic type
+	 * @param      <T> the generic type
 	 * @param type the type
-	 * @param o the o
+	 * @param o    the o
 	 * @return a representation of s cast to the given class.
 	 */
 	@SuppressWarnings("unchecked")

@@ -14,7 +14,6 @@ import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Approximate formula equivalence checking utility. It is used in the schema
@@ -164,7 +163,7 @@ public class FormulaEquivalence {
 		if (!left.getPredicate().equals(right.getPredicate())) {
 			return false;
 		}
-		if (!Utility.getTypedAndUntypedConstants(left).equals(Utility.getTypedAndUntypedConstants(right))) {
+		if (!left.getTypedAndUntypedConstants().equals(right.getTypedAndUntypedConstants())) {
 			return false;
 		}
 		return true;

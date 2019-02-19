@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.fol;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -230,6 +231,36 @@ public class Atom extends Formula {
 		for(Integer index: positions) 
 			t.add(this.getTerm(index));
 		return t;
+	}
+	
+	public Set<Constant> getTypedAndUntypedConstants() {
+		Set<Constant> result = new LinkedHashSet<>();
+		for (Term term : this.getTerms()) {
+			if (!term.isVariable()) {
+				result.add((Constant) term);
+			}
+		}
+		return result;
+	}
+	
+
+	/**
+	 * Gets the constants lying at the input positions.
+	 *
+	 * @throws IllegalArgumentException if there is a non-constant at one of the
+	 *                                  input positions
+	 * @param positions List<Integer>
+	 * @return the List<Constant> at the given positions.
+	 */
+	public List<Constant> getTypedAndUntypedConstants(Integer[] positions) {
+		List<Constant> result = new ArrayList<>();
+		for (Integer i : positions) {
+			if (i < this.getNumberOfTerms() && !this.getTerm(i).isVariable())
+				result.add((Constant) this.getTerm(i));
+			else
+				throw new java.lang.IllegalArgumentException();
+		}
+		return result;
 	}
 	
 }

@@ -274,7 +274,7 @@ public class AtomTest {
 		list.add(TypedConstant.create("x5"));
 		Assert.assertEquals("Atom terms subset must match",
 				list,
-				Utility.getTypedAndUntypedConstants(p, new Integer[]{3, 4}));
+				p.getTypedAndUntypedConstants(new Integer[]{3, 4}));
 	}
 
 	// Creates an atom from predicate and 5 terms then calls Utility.getTypedAndUntypedConstants
@@ -284,7 +284,7 @@ public class AtomTest {
 		Term[] t = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
 				UntypedConstant.create("x4"), TypedConstant.create("x5")};
-		Utility.getTypedAndUntypedConstants(Atom.create(s, t),new Integer[]{0, 1});
+				Atom.create(s, t).getTypedAndUntypedConstants(new Integer[]{0, 1});
 	}
 
 	// Creates an atom from predicate and 5 terms then compares variables subset
@@ -312,7 +312,7 @@ public class AtomTest {
 		
 		Assert.assertEquals("Atom variables subset must match",
 				list,
-				Utility.getTypedAndUntypedConstants(p));
+				p.getTypedAndUntypedConstants());
 	}
 
 	// Creates an atom from predicate and 5 terms then compares typed constants subset
@@ -324,7 +324,7 @@ public class AtomTest {
 		Atom p = Atom.create(s, t);
 		Assert.assertEquals("Atom variables subset must match",
 				Lists.newArrayList(TypedConstant.create("x2"), TypedConstant.create("x5")), 
-				Utility.getTypedConstants(p));
+				p.getTypedConstants());
 	}
 
 	// Creates an atom from predicate and 5 terms then compares atom lists

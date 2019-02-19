@@ -302,7 +302,7 @@ public final class PostPruningRemoveFollowUps {
 					inputAccessibleFacts.add(fact);
 				}
 			} else {
-				outputTerms.addAll(Utility.getTypedAndUntypedConstants(fact));
+				outputTerms.addAll(fact.getTypedAndUntypedConstants());
 				Predicate predicate = Predicate.create(
 						AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(),
 						fact.getPredicate().getArity());

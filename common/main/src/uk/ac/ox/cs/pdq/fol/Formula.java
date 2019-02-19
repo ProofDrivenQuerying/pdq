@@ -111,4 +111,16 @@ public abstract class Formula implements Serializable{
 		return variables;
 	}
 	
+	public List<TypedConstant> getTypedConstants() {
+		List<TypedConstant> typedConstants = Lists.newArrayList();
+		for(Atom atom:this.getAtoms()) {
+			for(Term term:atom.getTerms()) {
+				if(term instanceof TypedConstant) {
+					typedConstants.add((TypedConstant)term);
+				}
+			}
+		}
+		return typedConstants;
+	}
+	
 }

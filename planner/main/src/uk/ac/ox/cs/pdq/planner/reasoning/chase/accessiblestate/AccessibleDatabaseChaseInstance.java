@@ -118,7 +118,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 		facts.addAll(Arrays.asList(uk.ac.ox.cs.pdq.fol.Formula.applySubstitution(query, ExplorationSetUp.getCanonicalSubstitution().get(query)).getAtoms()));
 		// Create the Accessible(.) facts
 		// One Accessible(.) is being created for every schema constant
-		for (TypedConstant constant:uk.ac.ox.cs.pdq.util.Utility.getTypedConstants(query)) 
+		for (TypedConstant constant:query.getTypedConstants()) 
 			facts.add(Atom.create(AccessibleSchema.accessibleRelation, constant));
 		return facts;
 	}

@@ -211,7 +211,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 	public static Collection<Constant> getInputConstants(AccessibilityAxiom rule, Set<Atom> facts) {
 		Collection<Constant> inputs = new LinkedHashSet<>();
 		for(Atom fact:facts) {
-			List<Constant> constants = Utility.getTypedAndUntypedConstants(fact,rule.getAccessMethod().getInputs());
+			List<Constant> constants = fact.getTypedAndUntypedConstants(rule.getAccessMethod().getInputs());
 			for(Constant constant:constants) {
 				// only untyped constants can be inputs.
 				if(constant.isUntypedConstant()) {

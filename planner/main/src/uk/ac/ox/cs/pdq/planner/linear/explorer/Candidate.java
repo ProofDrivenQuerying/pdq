@@ -65,9 +65,9 @@ public class Candidate implements Cloneable{
 		this.rule = rule;
 		this.fact = fact;
 		this.match = match;
-		List<Constant> allConstants  = uk.ac.ox.cs.pdq.util.Utility.getTypedAndUntypedConstants(fact,rule.getAccessMethod().getInputs());
+		List<Constant> allConstants  = fact.getTypedAndUntypedConstants(rule.getAccessMethod().getInputs());
 		this.input = Lists.newArrayList(new LinkedHashSet<>(allConstants));
-		this.output = Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.getTypedAndUntypedConstants(fact));
+		this.output = Lists.newArrayList(fact.getTypedAndUntypedConstants());
 		this.properOutput = Lists.newArrayList(this.output);
 		this.properOutput.removeAll(this.input);
 	}
