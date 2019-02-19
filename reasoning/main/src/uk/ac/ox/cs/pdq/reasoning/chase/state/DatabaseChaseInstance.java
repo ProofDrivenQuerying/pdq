@@ -75,7 +75,8 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 * constant in order to update them with the new representative constant. 
 	 * Could be replaced with a query.
 	 **/
-	protected final Multimap<Constant, Atom> constantsToAtoms;
+	protected Multimap<Constant, Atom> constantsToAtoms;
+	protected boolean constantsToAtomsAllowed = true;
 
 	/**
 	 * The hashcode of this class. used to create an "instanceID" unique per
@@ -116,12 +117,22 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		}
 		this.addFacts(Sets.newHashSet(Formula.applySubstitution(query, generateCanonicalMapping(query)).getAtoms()));
 		this.classes = new EqualConstantsClasses();
+		initalizeConstantToAtomsCache(connection);
+		this.initDatabase();
+	}
+	private void initalizeConstantToAtomsCache(DatabaseManager connection) {
+		if (connection instanceof LogicalDatabaseInstance) 
+			constantsToAtomsAllowed = true; 
+		else
+			constantsToAtomsAllowed = false;
 		try {
-			this.constantsToAtoms = DatabaseChaseInstance.createdConstantsMap(databaseInstance.getCachedFacts());
+			if (constantsToAtomsAllowed)
+				this.constantsToAtoms = DatabaseChaseInstance.createdConstantsMap(databaseInstance.getCachedFacts());
+			else
+				this.constantsToAtoms = HashMultimap.create();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
-		this.initDatabase();
 	}
 	/**
 	 * Instantiates a new database list state using a directory that contains facts in csv data files.
@@ -144,13 +155,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		se.importFrom(csvFactDirectory, connection.getSchema());
 		
 		this.classes = new EqualConstantsClasses();
-		try {
-			//TOCOMMENT this map should be eliminated to support chasing large data sets
-			this.constantsToAtoms = DatabaseChaseInstance.createdConstantsMap(databaseInstance.getCachedFacts());
-		} catch (DatabaseException e) {
-			throw new RuntimeException(e);
-		}
-
+		initalizeConstantToAtomsCache(connection);
 		this.initDatabase();
 	}
 
@@ -174,12 +179,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		Preconditions.checkNotNull(facts);
 		this.addFacts(facts);
 		this.classes = new EqualConstantsClasses();
-		try {
-			this.constantsToAtoms = DatabaseChaseInstance.createdConstantsMap(databaseInstance.getCachedFacts());
-		} catch (DatabaseException e) {
-			throw new RuntimeException(e);
-		}
-
+		initalizeConstantToAtomsCache(connection);
 		this.initDatabase();
 	}
 
@@ -351,7 +351,11 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		Collection<Atom> obsoleteFacts = Sets.newHashSet();
 		// Find the facts with the obsolete constant
 		for (Constant obsoleteConstant : obsoleteToRepresentative.keySet()) {
-			obsoleteFacts.addAll((Collection<? extends Atom>) this.constantsToAtoms.get(obsoleteConstant));
+			if (constantsToAtomsAllowed) {
+				obsoleteFacts.addAll((Collection<? extends Atom>) this.constantsToAtoms.get(obsoleteConstant));
+			} else {
+				
+			}
 		}
 
 		for (Atom fact : obsoleteFacts) {

@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -65,7 +66,7 @@ public class Candidate implements Cloneable{
 		this.fact = fact;
 		this.match = match;
 		List<Constant> allConstants  = uk.ac.ox.cs.pdq.util.Utility.getTypedAndUntypedConstants(fact,rule.getAccessMethod().getInputs());
-		this.input = Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.removeDuplicates(allConstants));
+		this.input = Lists.newArrayList(new LinkedHashSet<>(allConstants));
 		this.output = Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.getTypedAndUntypedConstants(fact));
 		this.properOutput = Lists.newArrayList(this.output);
 		this.properOutput.removeAll(this.input);

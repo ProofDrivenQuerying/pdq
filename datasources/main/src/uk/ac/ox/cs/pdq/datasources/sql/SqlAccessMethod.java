@@ -16,10 +16,10 @@ import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.apache.log4j.Logger;
+
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-
-import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
@@ -28,7 +28,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.util.DistinctIterator;
 import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * An access method providing access to relation in an SQL database. 
@@ -139,7 +138,12 @@ public class SqlAccessMethod extends ExecutableAccessMethod {
 				Preconditions.checkArgument(attr.getType().equals(tuple.getType().getType(i)));
 				
 				strBuilder.append(attr.getName()).append("=");
-				boolean isNumeric = Utility.isNumeric(tuple.getType().getType(i)); 
+				
+				boolean isNumeric = false;
+				Type type = tuple.getType().getType(i);
+				if (type instanceof Class) {
+					isNumeric = Number.class.isAssignableFrom((Class<?>) type);
+				}
 				if (!isNumeric)
 					strBuilder.append(apostrophe);
 				strBuilder.append((Object) tuple.getValue(i));
@@ -188,7 +192,13 @@ public class SqlAccessMethod extends ExecutableAccessMethod {
 						ndata[index] = rs.getString(index + 1).trim();
 
 					} else {
-						Method m = ResultSet.class.getMethod("get" + Utility.simpleName(columnType), int.class);
+						String simpleName = null;
+						if (columnType instanceof Class) {
+							simpleName =  ((Class<?>) columnType).getSimpleName();
+						}
+						simpleName =  columnType.toString();
+						
+						Method m = ResultSet.class.getMethod("get" + simpleName, int.class);
 						ndata[index] = m.invoke(rs, index + 1);
 					}
 				}

@@ -222,8 +222,14 @@ public class StateExporterTest extends PdqTest {
 			DatabaseChaseInstance chaser = new DatabaseChaseInstance(dir, dm);
 			
 			// validate the data exists in the chase database.
-			Object ret = dm.execute(new Command("Select count(*) from lineitem"));
+			List<String> ret = dm.execute(new Command("Select count(*) from lineitem"));
+			Assert.assertTrue(ret!=null);
+			Assert.assertTrue(!ret.isEmpty());
+			Assert.assertEquals(ret.size(),1);
+			Assert.assertTrue("6001215".equals(ret.get(0)));
 			System.out.println(chaser + " has " + ret);
+			
+			new RestrictedChaser().reasonUntilTermination(chaser, tpchStrings.getAllDependencies());
 		}catch(Throwable t) {
 			t.printStackTrace();
 			Assert.fail();

@@ -1,14 +1,16 @@
 package uk.ac.ox.cs.pdq.fol;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.DependencyAdapter;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * A universally quantified implication where the body is a quantifier-free formula and 
@@ -49,9 +51,24 @@ public class Dependency extends QuantifiedFormula {
 		this(Conjunction.create(body), createHead(body, head));
 	}
 	
+	/**
+	 * Gets the variables.
+	 *
+	 * @param formulas the atoms
+	 * @return the variables of the input atoms
+	 */
+	private static List<Variable> getVariables(Formula[] formulas) {
+		Set<Variable> result = new LinkedHashSet<>();
+		for (Formula formula: formulas) {
+			for(Atom atom:formula.getAtoms()) 
+				result.addAll(Arrays.asList(atom.getVariables()));
+		}
+		return new ArrayList<>(result);
+	}
+	
 	private static Formula createHead(Atom[] body, Atom[] head) {
-		List<Variable> bodyVariables = Utility.getVariables(body);
-		List<Variable> headVariables = Utility.getVariables(head);
+		List<Variable> bodyVariables = getVariables(body);
+		List<Variable> headVariables = getVariables(head);
 		if(bodyVariables.containsAll(headVariables)) 
 			return Conjunction.create(head);
 		else {

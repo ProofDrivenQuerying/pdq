@@ -22,6 +22,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -295,7 +296,7 @@ public final class PostPruningRemoveFollowUps {
 		Atom inferredAccessibleFact = null;
 		for (Atom fact : facts) {
 			if (fact.getPredicate().getName().equals(AccessibleSchema.accessibleRelation.getName())) {
-				Set<Constant> constants = Utility.getUntypedConstants(fact);
+				Set<Constant> constants = getUntypedConstants(fact);
 				if (!constants.isEmpty()) {
 					inputTerms.addAll(constants);
 					inputAccessibleFacts.add(fact);
@@ -310,6 +311,16 @@ public final class PostPruningRemoveFollowUps {
 		}
 		outputTerms.removeAll(inputTerms);
 		return new Element(inputTerms, outputTerms, inputAccessibleFacts, inferredAccessibleFact);
+	}
+
+	private static Set<Constant> getUntypedConstants(Atom atom) {
+		Set<Constant> result = new LinkedHashSet<>();
+		for (Term term:atom.getTerms()) {
+			if (term.isUntypedConstant()) {
+				result.add((Constant) term);
+			}
+		}
+		return result;
 	}
 
 	/**

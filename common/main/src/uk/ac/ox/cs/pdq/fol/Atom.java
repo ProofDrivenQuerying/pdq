@@ -218,4 +218,18 @@ public class Atom extends Formula {
 	public int getTermPosition(Term term) {
 		return Arrays.asList(this.terms).indexOf(term);
 	}
+	
+	/**
+	 * Gets only the terms at the specified input positions.
+	 *
+	 * @param positions List<Integer>
+	 * @return the Set<Term> at the given positions.
+	 */
+	public Set<Term> getTerms(Integer[] positions) {
+		Set<Term> t = new LinkedHashSet<>();
+		for(Integer index: positions) 
+			t.add(this.getTerm(index));
+		return t;
+	}
+	
 }

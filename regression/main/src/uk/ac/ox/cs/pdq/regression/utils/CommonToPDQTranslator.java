@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,12 +25,12 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * @author Efi & Gabor
@@ -287,7 +290,12 @@ public class CommonToPDQTranslator {
 				}
 				if (line.contains(".")) {
 					if (headAtom != null) { 
-						List<Variable> v = Utility.getVariables(bodyAtoms);
+						Set<Variable> v = new LinkedHashSet<>();
+						for (Formula formula: bodyAtoms) {
+							for(Atom atom:formula.getAtoms()) { 
+								v.addAll(Arrays.asList(atom.getVariables()));
+							}
+						}
 						return ConjunctiveQuery.create(v.toArray(new Variable[v.size()]), bodyAtoms.toArray(new Atom[bodyAtoms.size()]));
 					}
 				}

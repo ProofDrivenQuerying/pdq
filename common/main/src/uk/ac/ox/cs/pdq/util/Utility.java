@@ -6,17 +6,14 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -24,10 +21,8 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
  * Provide utility function, that don't fit anywhere else.
@@ -61,80 +56,11 @@ public class Utility {
 		}
 		return result;
 	}
-
-	/**
-	 * Removes the duplicates.
-	 *
-	 * @param <T> the generic type
-	 * @param l the l
-	 * @return a duplicate-free list
-	 */
-	public static <T> Collection<T> removeDuplicates(Collection<T> l) {
-		return new LinkedHashSet<>(l);
-	}
-
-	/**
-	 * Typed to terms.
-	 *
-	 * @param typed the typed
-	 * @return List<Term>
-	 */
-	public static Term[] typedToTerms(Attribute[] typed) {
-		Term[] result = new Term[typed.length];
-		for (int index = 0; index < typed.length; ++index) {
-			result[index] = Variable.create(String.valueOf(typed[index].getName()));
-		}
-		return result;
-	}
-
-	/**
-	 * Gets the variables.
-	 *
-	 * @param formulas the atoms
-	 * @return the variables of the input atoms
-	 */
-	public static List<Variable> getVariables(Formula[] formulas) {
-		Set<Variable> result = new LinkedHashSet<>();
-		for (Formula formula: formulas) {
-			for(Atom atom:formula.getAtoms()) 
-				result.addAll(Arrays.asList(atom.getVariables()));
-		}
-		return new ArrayList<>(result);
-	}
 	
-	/** Same as above but works with lists
-	 * @param formulas
-	 * @return
-	 */
-	public static List<Variable> getVariables(List<Atom> formulas) {
-		return getVariables(formulas.toArray(new Formula[formulas.size()]));
-	}
-
-	public static Collection<Constant> getTypedConstants(Collection<Atom> atoms) {
-		Collection<Constant> result = new LinkedHashSet<>();
-		for (Atom atom:atoms) {
-			for (Term term:atom.getTerms()) {
-				if (term instanceof Constant && ((Constant) term).isUntypedConstant()) 
-					result.add((Constant) term);
-			}
-		}
-		return result;
-	}
-
 	public static Set<Constant> getTypedAndUntypedConstants(Atom atom) {
 		Set<Constant> result = new LinkedHashSet<>();
 		for (Term term:atom.getTerms()) {
 			if (!term.isVariable()) {
-				result.add((Constant) term);
-			}
-		}
-		return result;
-	}
-
-	public static Set<Constant> getUntypedConstants(Atom atom) {
-		Set<Constant> result = new LinkedHashSet<>();
-		for (Term term:atom.getTerms()) {
-			if (term.isUntypedConstant()) {
 				result.add((Constant) term);
 			}
 		}
@@ -148,15 +74,6 @@ public class Utility {
 				if (term.isUntypedConstant()) 
 					result.add((Constant) term);
 			}
-		}
-		return result;
-	}
-
-	public static Collection<Term> getTerms(Atom[] atoms) {
-		Set<Term> result = new LinkedHashSet<>();
-		for (Atom atom:atoms) {
-			for (Term term:atom.getTerms()) 
-				result.add(term);
 		}
 		return result;
 	}
@@ -200,85 +117,6 @@ public class Utility {
 				throw new java.lang.IllegalArgumentException();
 		}
 		return result;
-	}
-
-	/**
-	 * Clusters the input atoms based on their signature
-	 * @param atoms
-	 * @return
-	 */
-	public static Map<Predicate, List<Atom>> clusterAtomsWithSamePredicateName(Collection<? extends Atom> atoms) {
-		//Cluster the input facts based on their predicate
-		Map<Predicate, List<Atom>> clusters = Maps.newHashMap();
-		for (Atom atom:atoms) {
-			if(clusters.containsKey(atom.getPredicate())) {
-				clusters.get(atom.getPredicate()).add(atom);
-			}
-			else {
-				ArrayList<Atom> new_list  = new ArrayList<Atom>();
-				new_list.add(atom);
-				clusters.put(atom.getPredicate(), new_list);
-			}
-		}
-		return clusters;
-	}
-
-	/**
-	 * Simple name.
-	 *
-	 * @param type the type
-	 * @return the shortest know name of the given type.
-	 */
-	public static String simpleName(Type type) {
-		if (type instanceof Class) {
-			return ((Class<?>) type).getSimpleName();
-		}
-		return type.toString();
-
-	}
-
-	/**
-	 * Canonical name.
-	 *
-	 * @param type the type
-	 * @return the canonical name of the given type. By default, toString() is
-	 * used. If the type is a conventional class, then getCanonicalName is used,
-	 * if it is a DataType, then getName() is used.
-	 */
-	public static String canonicalName(Type type) {
-		if (type instanceof Class) {
-			return ((Class<?>) type).getCanonicalName();
-		}
-		return type.toString();
-
-	}
-
-	/**
-	 * Equals.
-	 *
-	 * @param o1 the o1
-	 * @param o2 the o2
-	 * @return if o1 and o2 are the same type
-	 */
-	public static boolean equals(Type o1, Type o2) {
-		if (o1 == null) {
-			return o2 == null;
-		}
-		return o1.equals(o2);
-	}
-
-	/**
-	 * Checks if is numeric.
-	 *
-	 * @param type the type
-	 * @return true if the given is numeric, false otherwise
-	 */
-	public static boolean isNumeric(Type type) {
-		if (type instanceof Class) {
-			return Number.class.isAssignableFrom((Class<?>) type);
-		}
-		return false;
-
 	}
 
 	/**
@@ -354,45 +192,4 @@ public class Utility {
 		return schema.getRelation(fact.getPredicate().getName()).getAttributes();
 	}
 
-//	/**
-//	 * Creates a new foreign key object.
-//	 *
-//	 * @param dependency LinearGuarded
-//	 */
-//	public static ForeignKey createForeignKey(LinearGuarded dependency) {
-//		ForeignKey foreignKey = new ForeignKey();
-//		Atom left = dependency.getBodyAtom(0);
-//		Atom right = dependency.getHeadAtom(0);
-//		Relation leftRel = (Relation) left.getPredicate();
-//		Relation rightRel = (Relation) right.getPredicate();
-//		foreignKey.setForeignRelation(rightRel);
-//		foreignKey.setForeignRelationName(rightRel.getName());
-//		for (Variable v:CollectionUtils.intersection(Arrays.asList(left.getVariables()), Arrays.asList(right.getVariables()))) {
-//			foreignKey.addReference(new Reference(leftRel.getAttribute(Arrays.asList(left.getTerms()).indexOf(v)), rightRel.getAttribute(Arrays.asList(right.getTerms()).indexOf(v))));
-//		}
-//		return foreignKey;
-//	}
-	
-	/**
-	 * Gets the term positions.
-	 *
-	 * @param term Term
-	 * @return List<Integer>
-	 */
-	public static List<Integer> getTermPositions(Atom atom, Term term) {
-		return Utility.search(atom.getTerms(), term);
-	}
-
-	/**
-	 * Gets only the terms at the specified input positions.
-	 *
-	 * @param positions List<Integer>
-	 * @return the Set<Term> at the given positions.
-	 */
-	public static Set<Term> getTerms(Atom atom, Integer[] positions) {
-		Set<Term> t = new LinkedHashSet<>();
-		for(Integer index: positions) 
-			t.add(atom.getTerm(index));
-		return t;
-	}
 }

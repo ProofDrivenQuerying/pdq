@@ -7,7 +7,6 @@ import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  *
@@ -101,7 +100,7 @@ public class EGD extends Dependency {
 	 * @return 		a collection of EGDs for the input relation and keys
 	 */
 	public static EGD create(Predicate predicate, Attribute[] attributes, Attribute[] keys) {
-		Term[] leftTerms = Utility.typedToTerms(attributes);
+		Term[] leftTerms = typedToTerms(attributes);
 		Term[] copiedTerms = leftTerms.clone();
 		//Keeps the terms that should be equal
 		Map<Term,Term> tobeEqual = com.google.common.collect.Maps.newHashMap();
@@ -125,5 +124,18 @@ public class EGD extends Dependency {
 						Atom.create(Predicate.create(predicate.getName(), copiedTerms.length), copiedTerms)};
 		return create(body, equalities, true);
 	}
-	
+
+	/**
+	 * Typed to terms.
+	 *
+	 * @param typed the typed
+	 * @return List<Term>
+	 */
+	private static Term[] typedToTerms(Attribute[] typed) {
+		Term[] result = new Term[typed.length];
+		for (int index = 0; index < typed.length; ++index) {
+			result[index] = Variable.create(String.valueOf(typed[index].getName()));
+		}
+		return result;
+	}	
 }

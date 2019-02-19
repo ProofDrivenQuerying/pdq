@@ -344,21 +344,19 @@ public class AtomTest {
 				Variable.create("x1"), TypedConstant.create("x4")
 		};
 		Atom p = Atom.create(s, t);
-		Assert.assertEquals("Atom x1 term positions must match", Lists.newArrayList(0, 3), Utility.getTermPositions(p,Variable.create("x1")));
-		Assert.assertEquals("Atom x2 term positions must match", Lists.newArrayList(1), Utility.getTermPositions(p,Variable.create("x2")));
-		Assert.assertEquals("Atom x3 term positions must match", Lists.newArrayList(2), Utility.getTermPositions(p,UntypedConstant.create("x3")));
-		Assert.assertEquals("Atom x4 term positions must match", Lists.newArrayList(4), Utility.getTermPositions(p,TypedConstant.create("x4")));
+		Assert.assertEquals("Atom x1 term positions must match", Lists.newArrayList(0, 3), Utility.search(p.getTerms(),Variable.create("x1")));
+		Assert.assertEquals("Atom x2 term positions must match", Lists.newArrayList(1), Utility.search(p.getTerms(),Variable.create("x2")));
+		Assert.assertEquals("Atom x3 term positions must match", Lists.newArrayList(2), Utility.search(p.getTerms(),UntypedConstant.create("x3")));
+		Assert.assertEquals("Atom x4 term positions must match", Lists.newArrayList(4), Utility.search(p.getTerms(),TypedConstant.create("x4")));
 	}
 
 	// Creates an atom from predicate and 5 terms then checks atom term positions list is empty
 	@Test public void getTermPositionsNotFound() {
-		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), UntypedConstant.create("x3"),
 				Variable.create("x1"), TypedConstant.create("x4")
 		};
-		Assert.assertTrue("Atom term positions list must be empty", Utility.getTermPositions(Atom.create(s, t),Variable.create("x5")).isEmpty());
-
+		Assert.assertTrue("Atom term positions list must be empty", Utility.search(t,Variable.create("x5")).isEmpty());
 	}
 
 	// Creates an atom from predicate and 5 constant terms then checks atom is ground
