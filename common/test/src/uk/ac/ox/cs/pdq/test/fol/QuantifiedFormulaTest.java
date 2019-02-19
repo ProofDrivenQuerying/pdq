@@ -12,13 +12,13 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 public class QuantifiedFormulaTest {
 	
 	@Before 
 	public void setup() {
-		Utility.assertsEnabled();
+		PdqTest.assertsEnabled();
 	}
 	
 	// Creates a quantified formula from atom with predicate and 5 terms, then checks children

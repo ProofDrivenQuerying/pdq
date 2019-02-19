@@ -23,6 +23,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 public class AtomTest {
@@ -31,7 +32,7 @@ public class AtomTest {
 	
 	@Before 
 	public void setup() {
-		Utility.assertsEnabled();
+		PdqTest.assertsEnabled();
 	}
 
 	// Create a linked hash set with terms of random arity, variables and predicates

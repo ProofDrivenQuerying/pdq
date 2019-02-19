@@ -9,13 +9,13 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 // @author Mark Ridler
 public class DependencyPrettyPrintTest {
 	@Before
 	public void setup() {
-		Utility.assertsEnabled();
+		PdqTest.assertsEnabled();
 	}
 
 	// Calls Dependency.toString(), TGD.toString()

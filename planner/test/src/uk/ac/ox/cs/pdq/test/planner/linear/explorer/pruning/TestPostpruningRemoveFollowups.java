@@ -76,7 +76,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 
 	@Before
 	public void setup() {
-		uk.ac.ox.cs.pdq.util.Utility.assertsEnabled();
+		uk.ac.ox.cs.pdq.test.util.PdqTest.assertsEnabled();
 		MockitoAnnotations.initMocks(this);
 		GlobalCounterProvider.resetCounters();
 		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();

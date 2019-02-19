@@ -25,7 +25,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * 
@@ -57,7 +57,7 @@ public class TestOrderDependentCostEstimators {
 	protected SimpleCatalog catalog;
     
 	@Before public void setup() {
-		Utility.assertsEnabled();
+		PdqTest.assertsEnabled();
         MockitoAnnotations.initMocks(this);                
 	}
 	

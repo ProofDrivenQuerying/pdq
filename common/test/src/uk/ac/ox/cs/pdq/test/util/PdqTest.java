@@ -27,7 +27,6 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Creates the most commonly used objects for testing purposes. Also able to
@@ -125,7 +124,7 @@ public class PdqTest {
 	}
 
 	public static void reInitalize(Object o) {
-		Utility.assertsEnabled();
+		PdqTest.assertsEnabled();
 		if (o != null)
 			MockitoAnnotations.initMocks(o);
 		GlobalCounterProvider.resetCounters();
@@ -554,6 +553,17 @@ public class PdqTest {
 		int ret=0;
 		for (int i=0;i < plan.getChildren().length; ret += countDependentJoinsInPlan(plan.getChildren()[i++]));
 		return ret + ((plan instanceof DependentJoinTerm)?1:0);
+	}
+
+	/**
+	 * Asserts enabled.
+	 */
+	public static void assertsEnabled() {
+		boolean assertsEnabled = false;
+		assert assertsEnabled = true; // Intentional side effect!!!
+		if (!assertsEnabled)
+			throw new RuntimeException("Assertions must be enabled in the VM");
+	
 	}
 
 }

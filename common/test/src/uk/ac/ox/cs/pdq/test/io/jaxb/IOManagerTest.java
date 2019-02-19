@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * @author Gabor
@@ -26,7 +25,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 public class IOManagerTest extends PdqTest {
 	@Before
 	public void setup() {
-		Utility.assertsEnabled();
+		PdqTest.assertsEnabled();
 	}
 
 	// Calls IOManager.importQuery then asserts everything expected about the query

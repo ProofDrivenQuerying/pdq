@@ -4,8 +4,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.util.Utility;
-
 /**
  * The Class TypesTest.
  */
@@ -18,7 +16,7 @@ public class TypesTest {
 	 */
 	@Before 
 	public void setup() {
-		Utility.assertsEnabled();
+		PdqTest.assertsEnabled();
 	}
 	
 	/**

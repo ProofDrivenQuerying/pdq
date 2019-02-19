@@ -23,7 +23,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 
 /**
@@ -116,7 +115,7 @@ public class PostgresqlSchemaDiscoveryTest extends PdqTest {
 	 */
 	@Before 
 	public void setup() {
-		Utility.assertsEnabled();
+		PdqTest.assertsEnabled();
 	}
 	
 	@Test

@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 
 // @author Julien Leblay
@@ -19,7 +19,7 @@ public final class UntypedConstantTest {
 	
 	@Before 
 	public void setup() {
-		Utility.assertsEnabled();
+		PdqTest.assertsEnabled();
 	}
 
 	// Assert that 2 consecutively generated constants are not the same

@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.logging.Periods;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * The Class PeriodsTest.
@@ -17,7 +16,7 @@ public class PeriodsTest {
 	 */
 	@Before 
 	public void setup() {
-		Utility.assertsEnabled();
+		PdqTest.assertsEnabled();
 	}
 
 	/**

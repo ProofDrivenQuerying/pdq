@@ -24,7 +24,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  *
@@ -82,7 +82,7 @@ public class FastFactDominanceTest {
 	 * @see uk.ac.ox.cs.pdq.test.planner.TestObjects1#setup()
 	 */
 	@Before public void setup() {
-		Utility.assertsEnabled();
+		PdqTest.assertsEnabled();
 		MockitoAnnotations.initMocks(this);
 	}
 	

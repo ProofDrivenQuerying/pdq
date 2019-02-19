@@ -12,7 +12,6 @@ import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Utility unit test for the uk.ac.ox.cs.pdq.util.Utility class.
@@ -38,7 +37,7 @@ public class UtilityTest {
 	// Create 3 relations, set primary keys, add a foreign key with 2 references
 	@Before
 	public void setup() {
-		Utility.assertsEnabled();
+		PdqTest.assertsEnabled();
 		this.R = Relation.create("R", new Attribute[] { a, b, c }, new AccessMethodDescriptor[] { this.method0, this.method2 });
 		this.S = Relation.create("S", new Attribute[] { a, c }, new AccessMethodDescriptor[] { this.method0, this.method1, this.method2 });
 		this.T = Relation.create("T", new Attribute[] { a, b, c, d }, new AccessMethodDescriptor[] { this.method0, this.method1, this.method2 });

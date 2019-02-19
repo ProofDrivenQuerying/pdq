@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.ViewAdapter;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * @author Efthymia Tsamoura
@@ -49,7 +48,7 @@ public class View extends Relation {
 	 *            default, a view has free access
 	 */
 	public View(LinearGuarded dependency, AccessMethodDescriptor[] accessMethods,Schema schema) {
-		super(dependency.getBodyAtom(0).getPredicate().getName(), Utility.getAttributes(dependency.getGuard(), schema), accessMethods);
+		super(dependency.getBodyAtom(0).getPredicate().getName(), schema.getRelation(dependency.getGuard().getPredicate().getName()).getAttributes(), accessMethods);
 		this.viewToRelationDependency = dependency;
 		this.relationToViewDependency = TGD.create(this.viewToRelationDependency.getBody().getAtoms(), this.viewToRelationDependency.getHead().getAtoms());
 	}

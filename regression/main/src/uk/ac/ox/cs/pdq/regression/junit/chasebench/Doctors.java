@@ -31,7 +31,6 @@ import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
-import uk.ac.ox.cs.pdq.util.Utility;
 /**
  * The test case called "Doctors" from the chasebench project.
  * <pre>
@@ -76,11 +75,30 @@ public class Doctors {
 	//@Test
 	public void testDoctorsExternalDb() throws DatabaseException, SQLException, IOException {
 		DatabaseManager dbm = getExternalDatabaseManager();
-		s = Utility.convertToStringAttributeOnly(s);
+		s = convertToStringAttributeOnly(s);
 		dbm.initialiseDatabaseForSchema(s);
 		reasonTest(dbm);
 	}
-	
+	private static Schema convertToStringAttributeOnly(Schema s) {
+		Relation relations[] = new Relation[s.getRelations().length];
+		for (int i = 0; i < relations.length; i++) {
+			relations[i] = convertToStringAttributeOnly(s.getRelation(i));
+		}
+		return new Schema(relations,s.getAllDependencies());
+	}
+
+	private static Relation convertToStringAttributeOnly(Relation r) {
+		Attribute[] attributes = new Attribute[r.getAttributes().length];
+		for (int i = 0; i < attributes.length; i++) {
+			if (r.getAttribute(i).getType().equals(String.class)) {
+				attributes[i] = r.getAttribute(i);
+			} else {
+				attributes[i] = Attribute.create(String.class, r.getAttribute(i).getName());
+			}
+		}
+		return Relation.create(r.getName(), attributes,r.getAccessMethods(),r.getForeignKeys(),r.isEquality());
+	}
+
 	private void reasonTest(DatabaseManager dbm) throws SQLException, IOException, DatabaseException {
 		DatabaseChaseInstance state = new DatabaseChaseInstance(getTestFacts(), dbm);
 		RestrictedChaser chaser = new RestrictedChaser();

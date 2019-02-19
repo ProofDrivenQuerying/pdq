@@ -15,9 +15,6 @@ import org.apache.log4j.Logger;
 
 import com.google.common.collect.Lists;
 
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Formula;
@@ -76,17 +73,6 @@ public class Utility {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * Asserts enabled.
-	 */
-	public static void assertsEnabled() {
-		boolean assertsEnabled = false;
-		assert assertsEnabled = true; // Intentional side effect!!!
-		if (!assertsEnabled)
-			throw new RuntimeException("Assertions must be enabled in the VM");
-
 	}
 
 	public static List<TypedConstant> getTypedConstants(Formula formula) {
@@ -162,34 +148,6 @@ public class Utility {
 			log.error(e);
 		}
 		throw new ClassCastException(o + " could not be cast to " + type);
-	}
-	public static Schema convertToStringAttributeOnly(Schema s) {
-		Relation relations[] = new Relation[s.getRelations().length];
-		for (int i = 0; i < relations.length; i++) {
-			relations[i] = convertToStringAttributeOnly(s.getRelation(i));
-		}
-		return new Schema(relations,s.getAllDependencies());
-	}
-
-	public static Relation convertToStringAttributeOnly(Relation r) {
-		Attribute[] attributes = new Attribute[r.getAttributes().length];
-		for (int i = 0; i < attributes.length; i++) {
-			if (r.getAttribute(i).getType().equals(String.class)) {
-				attributes[i] = r.getAttribute(i);
-			} else {
-				attributes[i] = Attribute.create(String.class, r.getAttribute(i).getName());
-			}
-		}
-		return Relation.create(r.getName(), attributes,r.getAccessMethods(),r.getForeignKeys(),r.isEquality());
-	}
-
-	/**
-	 * @param fact An input fact
-	 * @return The list of attributes coming from this fact
-	 */
-	public static Attribute[] getAttributes(Atom fact, Schema schema) {
-		
-		return schema.getRelation(fact.getPredicate().getName()).getAttributes();
 	}
 
 }
