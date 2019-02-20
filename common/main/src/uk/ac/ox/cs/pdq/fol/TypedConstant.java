@@ -187,6 +187,10 @@ public class TypedConstant extends Constant implements Typed, Serializable, Comp
 	 */
 	public static Type convertStringToType(String typeString) {
 		Type type = null;
+		if (typeString==null)
+			return null;
+		if (typeString.toLowerCase().startsWith("class "))
+			typeString = typeString.substring(5).trim();
 		if (typeString != null && typeString.equalsIgnoreCase("String.class"))
 			type = String.class;
 		else if (typeString != null && typeString.equalsIgnoreCase("Integer.class"))

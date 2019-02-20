@@ -25,6 +25,7 @@ import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.util.DistinctIterator;
 import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
@@ -196,10 +197,12 @@ public class SqlAccessMethod extends ExecutableAccessMethod {
 						if (columnType instanceof Class) {
 							simpleName =  ((Class<?>) columnType).getSimpleName();
 						}
-						simpleName =  columnType.toString();
-						
-						Method m = ResultSet.class.getMethod("get" + simpleName, int.class);
-						ndata[index] = m.invoke(rs, index + 1);
+						try {
+							Method m = ResultSet.class.getMethod("get" + simpleName, int.class);
+							ndata[index] = m.invoke(rs, index + 1);
+						} catch(NoSuchMethodException e) {
+							ndata[index] = TypedConstant.convertStringToType(rs.getString(index+1), columnType);
+						}
 					}
 				}
 				result.appendRow(result.getType().createTuple(ndata));

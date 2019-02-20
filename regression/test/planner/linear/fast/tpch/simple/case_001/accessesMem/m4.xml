@@ -9,5 +9,5 @@
     <attribute name="p_comment" type="java.lang.String" input="false" mapsToRelationAttribute="p_comment"/>
     <attribute name="p_mfgr" type="java.lang.String" input="false" mapsToRelationAttribute="p_mfgr"/>
     <attribute name="p_container" type="java.lang.String" input="false" mapsToRelationAttribute="p_container"/>
-    <data-scv-file>test/planner/linear/fast/tpch/mysql/simple/case_001/accessesMem/data/part_m4.csv</data-scv-file>
+    <data-scv-file>test/planner/linear/fast/tpch/simple/case_001/accessesMem/data/part_m4.csv</data-scv-file>
 </Access>
