@@ -343,14 +343,12 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	 */
 	@Override
 	public AccessibleDatabaseChaseInstance clone() {
-		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
-		constantsToAtoms.putAll(this.constantsToAtoms);
 		try {
 			return new AccessibleDatabaseChaseInstance(
 					Sets.newHashSet(this.getFacts()), 
 					this.graph == null ? null : this.graph.clone(),
 					this.classes.clone(),
-					constantsToAtoms,
+					null,
 					new LinkedHashSet<>(this.inferredAccessibleAtoms),
 					LinkedHashMultimap.create(this.atomsMap), 
 					LinkedHashMultimap.create(this.accessibleTerms),databaseInstance);
@@ -379,25 +377,22 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 			return null;
 		}
 		
-		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
-		constantsToAtoms.putAll(this.constantsToAtoms);
-		constantsToAtoms.putAll(((AccessibleDatabaseChaseInstance)s).constantsToAtoms);
-
 		try {
 			AccessibleDatabaseChaseInstance ret = new AccessibleDatabaseChaseInstance(
 					facts, 
 					this.graph == null ? null : this.graph.merge(((AccessibleDatabaseChaseInstance)s).graph),
 					classes,
-					constantsToAtoms,
+					HashMultimap.create(),
 					inferred,
 					map, 
 					accessibleTerms,
 					databaseInstance);
+			
 			ret.addFacts(facts);
 			return ret;
 		} catch (SQLException e) {
 				throw new RuntimeException("Merging of AccessibleDatabaseListState failed due to an SQL exception "+e);
-			}
+		}
 	}
 
 }

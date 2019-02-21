@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
 import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateTable;
@@ -53,7 +56,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	protected MultiInstanceFactCache multiCache;
 	private ExternalDatabaseManager edm;
 	protected int databaseInstanceID;
-
+	protected Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 	/**
 	 * This constructor creates a logical instance over an existing remote database
 	 * manager with the given instanceID. Creating multiple logical databases over
@@ -464,4 +467,34 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		return null;
 	}
 
+	private boolean constantsInitialized=false;
+	@Override
+	public void addToConstantsToAtoms(Constant term, Atom atom) {
+		constantsToAtoms.put(term,atom);
+	}
+
+	@Override
+	public Collection<Atom> getAtomsContainingConstant(Constant obsoleteConstant) throws DatabaseException {
+		if (!constantsInitialized) {
+			constantsInitialized=true;
+			for(Atom a: getCachedFacts()) {
+				for (Term t: a.getTypedAndUntypedConstants()) {
+					if (t instanceof Constant) {
+						constantsToAtoms.put((Constant)t, a);
+					}
+				}
+			}
+		}
+		return constantsToAtoms.get(obsoleteConstant);
+	}
+
+	@Override
+	public void removeConstantFromMap(Constant obsoleteConstant) {
+		constantsToAtoms.removeAll(obsoleteConstant);
+	}
+
+	@Override
+	public void mergeConstantsToAtomsMap(DatabaseManager from) {
+		this.constantsToAtoms.putAll(((LogicalDatabaseInstance)from).constantsToAtoms);
+	}
 }

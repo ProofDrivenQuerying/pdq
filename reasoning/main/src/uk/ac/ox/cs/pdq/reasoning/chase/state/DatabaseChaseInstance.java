@@ -70,15 +70,6 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	protected EqualConstantsClasses classes;
 
 	/**
-	 * Maps each constant to a list of atoms that have the same constant.
-	 * We need this table when we are applying an EGD chase step, to easily find all facts that has an obsolete
-	 * constant in order to update them with the new representative constant. 
-	 * Could be replaced with a query.
-	 **/
-	protected Multimap<Constant, Atom> constantsToAtoms;
-	protected boolean constantsToAtomsAllowed = true;
-
-	/**
 	 * The hashcode of this class. used to create an "instanceID" unique per
 	 * instance
 	 * 
@@ -117,22 +108,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		}
 		this.addFacts(Sets.newHashSet(Formula.applySubstitution(query, generateCanonicalMapping(query)).getAtoms()));
 		this.classes = new EqualConstantsClasses();
-		initalizeConstantToAtomsCache(connection);
 		this.initDatabase();
-	}
-	private void initalizeConstantToAtomsCache(DatabaseManager connection) {
-		if (connection instanceof LogicalDatabaseInstance) 
-			constantsToAtomsAllowed = true; 
-		else
-			constantsToAtomsAllowed = false;
-		try {
-			if (constantsToAtomsAllowed)
-				this.constantsToAtoms = DatabaseChaseInstance.createdConstantsMap(databaseInstance.getCachedFacts());
-			else
-				this.constantsToAtoms = HashMultimap.create();
-		} catch (DatabaseException e) {
-			throw new RuntimeException(e);
-		}
 	}
 	/**
 	 * Instantiates a new database list state using a directory that contains facts in csv data files.
@@ -155,7 +131,6 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		se.importFrom(csvFactDirectory, connection.getSchema());
 		
 		this.classes = new EqualConstantsClasses();
-		initalizeConstantToAtomsCache(connection);
 		this.initDatabase();
 	}
 
@@ -179,7 +154,6 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		Preconditions.checkNotNull(facts);
 		this.addFacts(facts);
 		this.classes = new EqualConstantsClasses();
-		initalizeConstantToAtomsCache(connection);
 		this.initDatabase();
 	}
 
@@ -192,13 +166,16 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	private DatabaseChaseInstance(EqualConstantsClasses classes, Multimap<Constant, Atom> constants, DatabaseManager connection) {
 		try {
 			databaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
+			Preconditions.checkNotNull(classes);
+			Preconditions.checkNotNull(constants);
+			this.classes = classes;
+			for (Constant constant:constants.keySet()) {
+				for (Atom a: constants.get(constant))
+					databaseInstance.addToConstantsToAtoms((Constant)constant, a);
+			}
 		} catch (DatabaseException e) {
 			throw new RuntimeException("database failure", e);
 		}
-		Preconditions.checkNotNull(classes);
-		Preconditions.checkNotNull(constants);
-		this.classes = classes;
-		this.constantsToAtoms = constants;
 	}
 
 	/**
@@ -228,14 +205,22 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		}
 		Preconditions.checkNotNull(facts);
 		Preconditions.checkNotNull(classes);
-		Preconditions.checkNotNull(constants);
 		try {
 			databaseInstance.addFacts(facts);
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 		this.classes = classes;
-		this.constantsToAtoms = constants;
+		if (constants!=null)
+			for (Constant constant:constants.keySet()) {
+				for (Atom a: constants.get(constant))
+					try {
+						databaseInstance.addToConstantsToAtoms((Constant)constant, a);
+					} catch (DatabaseException e) {
+						throw new RuntimeException("database failure", e);
+					}
+			}
+		
 	}
 
 	private void initDatabase() throws SQLException {
@@ -300,7 +285,11 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			// Add information about new facts to constantsToAtoms
 			for (Atom atom : right.getAtoms()) {
 				for (Term term : atom.getTerms())
-					this.constantsToAtoms.put((Constant) term, atom);
+					try {
+						databaseInstance.addToConstantsToAtoms((Constant)term, atom);
+					} catch (DatabaseException e) {
+						throw new RuntimeException("database failure", e);
+					}
 			}
 			newFacts.addAll(Arrays.asList(right.getAtoms()));
 		}
@@ -351,11 +340,12 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		Collection<Atom> obsoleteFacts = Sets.newHashSet();
 		// Find the facts with the obsolete constant
 		for (Constant obsoleteConstant : obsoleteToRepresentative.keySet()) {
-			if (constantsToAtomsAllowed) {
-				obsoleteFacts.addAll((Collection<? extends Atom>) this.constantsToAtoms.get(obsoleteConstant));
-			} else {
-				
+			try {
+				obsoleteFacts.addAll(databaseInstance.getAtomsContainingConstant(obsoleteConstant));
+			} catch (DatabaseException e) {
+				throw new RuntimeException("database failure", e);
 			}
+			
 		}
 
 		for (Atom fact : obsoleteFacts) {
@@ -369,13 +359,17 @@ public class DatabaseChaseInstance implements ChaseInstance {
 
 			// Add information about new facts to constantsToAtoms
 			for (Term term : newTerms) {
-				this.constantsToAtoms.put((Constant) term, newFact);
+				try {
+					databaseInstance.addToConstantsToAtoms((Constant)term, newFact);
+				} catch (DatabaseException e) {
+					throw new RuntimeException("database failure", e);
+				}
 			}
 		}
 
 		// Delete all obsolete constants from constantsToAtoms
 		for (Constant obsoleteConstant : obsoleteToRepresentative.keySet()) {
-			this.constantsToAtoms.removeAll(obsoleteConstant);
+			databaseInstance.removeConstantFromMap(obsoleteConstant);
 		}
 
 		obsoleteFacts.removeAll(newFacts); // do not delete what we will add back anyway.
@@ -541,9 +535,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 */
 	@Override
 	public DatabaseChaseInstance clone() {
-		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
-		constantsToAtoms.putAll(this.constantsToAtoms);
-		return new DatabaseChaseInstance(classes.clone(), constantsToAtoms, databaseInstance);
+		return new DatabaseChaseInstance(classes.clone(), null , databaseInstance);
 	}
 
 	@Override
@@ -570,11 +562,9 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		if (!classes.merge(((DatabaseChaseInstance) s).classes))
 			return null;
 
-		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
-		constantsToAtoms.putAll(this.constantsToAtoms);
-		constantsToAtoms.putAll(((DatabaseChaseInstance) s).constantsToAtoms);
-
-		return new DatabaseChaseInstance(classes, constantsToAtoms, databaseInstance);
+		DatabaseChaseInstance newInstance = new DatabaseChaseInstance(classes, null, databaseInstance);
+		newInstance.databaseInstance.mergeConstantsToAtomsMap(databaseInstance);
+		return newInstance;
 	}
 
 	/**

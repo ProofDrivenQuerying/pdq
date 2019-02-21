@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 
 /**
  * This interface describes the public functions of any Database Manager. The
@@ -165,4 +166,18 @@ public interface DatabaseManager {
 	 * @return
 	 */
 	public List<String> executeQueryExplain(ConjunctiveQuery cq) throws DatabaseException;
+
+	/**
+	 * Maps each constant to a list of atoms that have the same constant.
+	 * We need this table when we are applying an EGD chase step, to easily find all facts that has an obsolete
+	 * constant in order to update them with the new representative constant. 
+	 * Could be replaced with a query.
+	 **/
+	public void addToConstantsToAtoms(Constant term, Atom atom) throws DatabaseException ;
+
+	public Collection<Atom> getAtomsContainingConstant(Constant obsoleteConstant) throws DatabaseException ;
+
+	public void removeConstantFromMap(Constant obsoleteConstant);
+	
+	public void mergeConstantsToAtomsMap(DatabaseManager from);
 }

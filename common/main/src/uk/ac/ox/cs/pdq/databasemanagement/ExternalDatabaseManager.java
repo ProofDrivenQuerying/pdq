@@ -24,6 +24,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Term;
 
@@ -378,5 +379,25 @@ public class ExternalDatabaseManager implements DatabaseManager {
 
 	public List<String> execute(Command select) throws DatabaseException {
 		return executor.executeGeneric(select);
+	}
+
+	@Override
+	public void addToConstantsToAtoms(Constant term, Atom atom) {
+		throw new RuntimeException("Not implemented yet!");
+	}
+
+	@Override
+	public Collection<Atom> getAtomsContainingConstant(Constant obsoleteConstant) {
+		throw new RuntimeException("Not implemented yet!");
+	}
+
+	@Override
+	public void removeConstantFromMap(Constant obsoleteConstant) {
+		throw new RuntimeException("Not implemented yet!");
+	}
+
+	@Override
+	public void mergeConstantsToAtomsMap(DatabaseManager from) {
+		throw new RuntimeException("Not implemented yet!");
 	}
 }
