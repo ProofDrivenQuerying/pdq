@@ -13,9 +13,9 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
-import uk.ac.ox.cs.pdq.util.Table;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.tuple.Table;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
+import uk.ac.ox.cs.pdq.tuple.TupleType;
 
 /**
  * An executable query plan. A logical plan is decorated to make it executable. 

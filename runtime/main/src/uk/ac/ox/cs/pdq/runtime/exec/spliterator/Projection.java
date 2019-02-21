@@ -9,7 +9,7 @@ import jersey.repackaged.com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 /**
  * An executable projection plan. 

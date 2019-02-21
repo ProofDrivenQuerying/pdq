@@ -8,8 +8,8 @@ import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.util.LimitReachedException;
-import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
+import uk.ac.ox.cs.pdq.exceptions.LimitReachedException;
+import uk.ac.ox.cs.pdq.exceptions.LimitReachedException.Reasons;
 
 /**
  * Searches for a feasible plan w.r.t. the relations' bindings and the schema dependencies.

@@ -10,7 +10,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 
 /**

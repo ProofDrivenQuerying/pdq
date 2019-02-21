@@ -20,6 +20,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
+import uk.ac.ox.cs.pdq.exceptions.LimitReachedException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -38,7 +39,6 @@ import uk.ac.ox.cs.pdq.planner.plancreation.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 /**
  * Simple dag explorer. It searches the space of binary configurations

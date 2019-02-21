@@ -51,8 +51,8 @@ import uk.ac.ox.cs.pdq.regression.acceptance.ExpectedCardinalityAcceptanceCheck;
 import uk.ac.ox.cs.pdq.regression.acceptance.SameCostAcceptanceCheck;
 import uk.ac.ox.cs.pdq.runtime.Runtime;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
+import uk.ac.ox.cs.pdq.tuple.Table;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
-import uk.ac.ox.cs.pdq.util.Table;
 
 /**
  * Main entry point to use PDQ. Runs regression tests or other folders with schema and query xml files.<br>

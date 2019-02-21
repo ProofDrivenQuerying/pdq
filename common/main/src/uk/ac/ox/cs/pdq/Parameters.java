@@ -27,6 +27,8 @@ import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 
+import uk.ac.ox.cs.pdq.exceptions.ParametersException;
+
 /**
  * A general parameters utility class, which allows getting and setting typed
  * properties, either through the loose properties methods, or stricter

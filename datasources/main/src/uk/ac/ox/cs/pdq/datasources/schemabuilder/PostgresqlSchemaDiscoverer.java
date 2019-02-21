@@ -25,13 +25,13 @@ import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Triple;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.util.Triple;
 
 /**
  * PostgresqlTranslator-specific class for automatically discovering a schema.

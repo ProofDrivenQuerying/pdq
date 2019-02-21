@@ -15,12 +15,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.datasources.schemabuilder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.schemabuilder.MySQLSchemaDiscoverer;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 

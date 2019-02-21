@@ -2,10 +2,10 @@ package uk.ac.ox.cs.pdq.databasemanagement.execution;
 
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 
 /**
  * A Task is a Command that will be executed by an ExecutorThread. This object

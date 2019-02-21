@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.exceptions.LimitReachedException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -26,7 +27,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseIn
 import uk.ac.ox.cs.pdq.reasoning.chase.ChaseConstantGenerator;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
-import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 /**
  * Proof configurations or configurations are associated with (i) a collection

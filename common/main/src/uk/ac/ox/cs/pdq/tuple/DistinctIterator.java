@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.util;
+package uk.ac.ox.cs.pdq.tuple;
 
 import java.util.ArrayList;
 import java.util.Iterator;

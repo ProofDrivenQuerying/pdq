@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 
 /**
  * This class is responsible for executing database requests. The request have

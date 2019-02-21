@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 public class ConstantInequalityCondition extends ConstantComparisonCondition {
 

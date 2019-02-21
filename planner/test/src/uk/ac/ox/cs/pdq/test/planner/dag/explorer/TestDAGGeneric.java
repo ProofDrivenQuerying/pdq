@@ -25,6 +25,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.exceptions.LimitReachedException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -45,7 +46,6 @@ import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
-import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 /**
  * Tests the DAGGenericSimple class. Makes sure we have all possible plans explored.

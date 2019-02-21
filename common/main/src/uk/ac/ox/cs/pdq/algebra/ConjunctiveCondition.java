@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.algebra;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 /**
  * Represents a condition, that can be used to create -for example- a

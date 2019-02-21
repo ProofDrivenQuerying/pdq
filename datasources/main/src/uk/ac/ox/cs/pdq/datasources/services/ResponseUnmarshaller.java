@@ -8,9 +8,9 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Table;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.tuple.Table;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
+import uk.ac.ox.cs.pdq.tuple.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 import uk.ac.ox.cs.pdq.util.Utility;
 

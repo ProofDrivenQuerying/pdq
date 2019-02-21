@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 public class ProjectionTermTest extends PdqTest {
 

@@ -41,8 +41,8 @@ import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.BinaryExecutablePlan;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.DependentJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.NestedLoopJoin;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
+import uk.ac.ox.cs.pdq.tuple.TupleType;
 
 /*
  * TODO: add integration tests with dynamic input.

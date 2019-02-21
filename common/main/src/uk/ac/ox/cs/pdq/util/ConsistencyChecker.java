@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.util;
 
-import uk.ac.ox.cs.pdq.InconsistentParametersException;
 import uk.ac.ox.cs.pdq.Parameters;
+import uk.ac.ox.cs.pdq.exceptions.InconsistentParametersException;
 
 /**
  * A generic interface to check the consistency of the input parameters.

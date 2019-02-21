@@ -26,9 +26,9 @@ import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.util.DistinctIterator;
-import uk.ac.ox.cs.pdq.util.Table;
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.tuple.DistinctIterator;
+import uk.ac.ox.cs.pdq.tuple.Table;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 /**
  * An access method providing access to relation in an SQL database. 

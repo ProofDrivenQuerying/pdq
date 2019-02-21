@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.ResponseEvent;
-import uk.ac.ox.cs.pdq.util.Table;
+import uk.ac.ox.cs.pdq.tuple.Table;
 
 /**
  * The event of a RESTAccess response. Holds the requestEvent itself, 

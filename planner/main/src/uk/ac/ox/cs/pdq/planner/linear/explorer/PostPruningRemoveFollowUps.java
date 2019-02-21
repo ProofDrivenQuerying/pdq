@@ -17,6 +17,7 @@ import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.exceptions.LimitReachedException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -30,7 +31,6 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.plantree.PlanTree;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.util.LimitReachedException;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**

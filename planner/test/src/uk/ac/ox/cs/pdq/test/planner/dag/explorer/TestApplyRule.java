@@ -15,7 +15,7 @@ import org.mockito.Mockito;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Variable;

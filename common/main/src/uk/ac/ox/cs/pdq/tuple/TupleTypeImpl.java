@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.util;
+package uk.ac.ox.cs.pdq.tuple;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -11,6 +11,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
+import uk.ac.ox.cs.pdq.util.Typed;
 
 /**
  * A tuple type implementation.
@@ -62,7 +63,7 @@ class TupleTypeImpl implements TupleType {
 	 * Size.
 	 *
 	 * @return the number of sub-typed in the tuple type.
-	 * @see uk.ac.ox.cs.pdq.util.TupleType#size()
+	 * @see uk.ac.ox.cs.pdq.tuple.TupleType#size()
 	 */
 	@Override
 	public int size() {
@@ -74,7 +75,7 @@ class TupleTypeImpl implements TupleType {
 	 *
 	 * @param i int
 	 * @return the type of the ith element in the tuple type.
-	 * @see uk.ac.ox.cs.pdq.util.TupleType#getType(int)
+	 * @see uk.ac.ox.cs.pdq.tuple.TupleType#getType(int)
 	 */
 	@Override
 	public Type getType(int i) {
@@ -85,7 +86,7 @@ class TupleTypeImpl implements TupleType {
 	 * Gets the types.
 	 *
 	 * @return the underlying array of types.
-	 * @see uk.ac.ox.cs.pdq.util.TupleType#getTypes()
+	 * @see uk.ac.ox.cs.pdq.tuple.TupleType#getTypes()
 	 */
 	@Override
 	public Type[] getTypes() {
@@ -98,7 +99,7 @@ class TupleTypeImpl implements TupleType {
 	 * @param values Object[]
 	 * @return a fresh tuple, with this tuple type as type, from the give array
 	 *  of objects.
-	 * @see uk.ac.ox.cs.pdq.util.TupleType#createTuple(Object[])
+	 * @see uk.ac.ox.cs.pdq.tuple.TupleType#createTuple(Object[])
 	 */
 	@Override
 	public Tuple createTuple(Object... values) {
@@ -142,7 +143,7 @@ class TupleTypeImpl implements TupleType {
 	 * @param left Tuple
 	 * @param right Tuple
 	 * @return a fresh tuple, made by appending the given left and right tuples.
-	 * @see uk.ac.ox.cs.pdq.util.TupleType#appendTuples(Tuple, Tuple)
+	 * @see uk.ac.ox.cs.pdq.tuple.TupleType#appendTuples(Tuple, Tuple)
 	 */
 	@Override
 	public Tuple appendTuples(Tuple left, Tuple right) {
@@ -158,7 +159,7 @@ class TupleTypeImpl implements TupleType {
 	 *
 	 * @param right TupleType
 	 * @return a fresh tuple type, made by appending the given left and right sub-types.
-	 * @see uk.ac.ox.cs.pdq.util.TupleType#append(TupleType)
+	 * @see uk.ac.ox.cs.pdq.tuple.TupleType#append(TupleType)
 	 */
 	@Override
 	public TupleType append(TupleType right) {
@@ -173,7 +174,7 @@ class TupleTypeImpl implements TupleType {
 	 *
 	 * @param other TupleType
 	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.util.TupleType#isAssignableFrom(TupleType)
+	 * @see uk.ac.ox.cs.pdq.tuple.TupleType#isAssignableFrom(TupleType)
 	 */
 	@Override
 	public boolean isAssignableFrom(TupleType other) {
@@ -199,7 +200,7 @@ class TupleTypeImpl implements TupleType {
 	 *
 	 * @param other Tuple
 	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.util.TupleType#isInstance(Tuple)
+	 * @see uk.ac.ox.cs.pdq.tuple.TupleType#isInstance(Tuple)
 	 */
 	@Override
 	public boolean isInstance(Tuple other) {
@@ -211,7 +212,7 @@ class TupleTypeImpl implements TupleType {
 	 *
 	 * @param values Object[]
 	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.util.TupleType#isInstance(Object[])
+	 * @see uk.ac.ox.cs.pdq.tuple.TupleType#isInstance(Object[])
 	 */
 	@Override
 	public boolean isInstance(Object... values) {

@@ -5,7 +5,7 @@ import org.junit.Assert;
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 /**
  * Represents a constant equality condition, that can be used to create -for example- a SelectionTerm.

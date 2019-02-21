@@ -12,7 +12,6 @@ package uk.ac.ox.cs.pdq.util;
 	-- GlobalCounterProvider, which provides an auto-incremented number.
 	-- LimitReachedException, which is an exception that occurs when a task's timeout is reached.
 	-- Triple, which is a triple of elements.
-	-- Tuple, which is a database tuple. Tuples are immutable objects.
 	-- Utility, which is a collection of functions that don't fit anywhere else
 *
 **/

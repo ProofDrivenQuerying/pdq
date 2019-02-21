@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 /**
  * An executable plan implementing the symmetric memory hash join algorithm. 

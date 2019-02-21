@@ -41,8 +41,8 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedAccessMethod;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedRelation;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
+import uk.ac.ox.cs.pdq.tuple.TupleType;
 
 /**
  * Reads a Schema that contains external (database) sources, such as: <code>

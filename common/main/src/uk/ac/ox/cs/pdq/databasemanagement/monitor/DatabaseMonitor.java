@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 
 /**
  * All external connections are registered here. By calling shutdownAll it is

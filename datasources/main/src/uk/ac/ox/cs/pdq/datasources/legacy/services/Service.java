@@ -3,8 +3,8 @@ package uk.ac.ox.cs.pdq.datasources.legacy.services;
 import uk.ac.ox.cs.pdq.datasources.legacy.ResetableIterator;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Table;
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.tuple.Table;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 /**
  * General interface to online services

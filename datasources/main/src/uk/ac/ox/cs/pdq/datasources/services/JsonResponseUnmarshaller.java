@@ -11,8 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Table;
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.tuple.Table;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 /**
  * @author Mark Ridler

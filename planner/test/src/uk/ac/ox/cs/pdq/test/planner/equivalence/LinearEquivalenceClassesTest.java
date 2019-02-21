@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.planner.PlannerException;

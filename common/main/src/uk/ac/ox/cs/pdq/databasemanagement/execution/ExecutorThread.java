@@ -16,12 +16,12 @@ import java.util.Map;
 import com.google.common.base.Strings;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
 import uk.ac.ox.cs.pdq.db.DataSink;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;

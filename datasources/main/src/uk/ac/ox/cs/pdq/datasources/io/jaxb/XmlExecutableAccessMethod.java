@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 /**
  * This class represents all executable access methods as xml files. Its main

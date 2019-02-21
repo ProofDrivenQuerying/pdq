@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.databasemanagement.exception;
+package uk.ac.ox.cs.pdq.exceptions;
 
 /**
  * This exception class is used for any kind of error or exception in the

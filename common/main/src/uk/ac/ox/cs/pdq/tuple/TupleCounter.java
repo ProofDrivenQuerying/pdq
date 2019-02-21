@@ -1,10 +1,12 @@
-package uk.ac.ox.cs.pdq.util;
+package uk.ac.ox.cs.pdq.tuple;
 
 import java.io.PrintStream;
 
 import org.apache.log4j.Logger;
 
 import com.google.common.eventbus.Subscribe;
+
+import uk.ac.ox.cs.pdq.util.EventHandler;
 
 
 /**

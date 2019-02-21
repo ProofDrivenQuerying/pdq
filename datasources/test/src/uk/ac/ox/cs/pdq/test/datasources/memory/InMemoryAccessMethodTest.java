@@ -19,8 +19,8 @@ import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Cache;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
+import uk.ac.ox.cs.pdq.tuple.TupleType;
 
 public class InMemoryAccessMethodTest {
 

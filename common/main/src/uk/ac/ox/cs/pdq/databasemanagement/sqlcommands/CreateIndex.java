@@ -2,8 +2,8 @@ package uk.ac.ox.cs.pdq.databasemanagement.sqlcommands;
 
 import com.google.common.base.Joiner;
 
-import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 
 /**
  * This class represents a CREATE INDEX sql command.

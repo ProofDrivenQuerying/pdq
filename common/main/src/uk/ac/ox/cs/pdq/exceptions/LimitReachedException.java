@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.util;
+package uk.ac.ox.cs.pdq.exceptions;
 
 /**
  * Exception that occurrs when a task's timeout is reached.

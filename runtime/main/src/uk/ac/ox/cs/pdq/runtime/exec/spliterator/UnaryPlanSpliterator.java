@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.runtime.exec.spliterator;
 
 import java.util.Spliterator;
 
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 public abstract class UnaryPlanSpliterator implements Spliterator<Tuple> {
 

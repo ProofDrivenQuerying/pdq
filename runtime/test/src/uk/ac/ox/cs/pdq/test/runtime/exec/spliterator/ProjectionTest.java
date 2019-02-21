@@ -34,8 +34,8 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.Projection;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
+import uk.ac.ox.cs.pdq.tuple.TupleType;
 
 public class ProjectionTest {
 	PlanDecorator decor = null;

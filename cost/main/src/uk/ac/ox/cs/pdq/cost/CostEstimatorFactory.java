@@ -19,8 +19,8 @@ import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 
 /**
  * A factory of cost estimation objects.

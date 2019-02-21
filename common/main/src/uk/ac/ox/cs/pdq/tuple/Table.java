@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.util;
+package uk.ac.ox.cs.pdq.tuple;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,6 +16,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.util.Typed;
 
 /**
  * Implementation of a database table, whose tuples are fully loaded in memory.

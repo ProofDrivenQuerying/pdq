@@ -32,8 +32,8 @@ import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.io.ReaderException;
-import uk.ac.ox.cs.pdq.util.Table;
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.tuple.Table;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 /**
  * @author Mark Ridler

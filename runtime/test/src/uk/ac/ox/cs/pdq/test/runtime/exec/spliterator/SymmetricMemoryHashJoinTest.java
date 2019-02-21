@@ -45,8 +45,8 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.BinaryExecutablePlan;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.SymmetricMemoryHashJoin;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
+import uk.ac.ox.cs.pdq.tuple.TupleType;
 
 public class SymmetricMemoryHashJoinTest {
 	PlanDecorator decor = null;

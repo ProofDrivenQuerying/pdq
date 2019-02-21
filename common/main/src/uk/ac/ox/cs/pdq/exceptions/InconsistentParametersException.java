@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq;
+package uk.ac.ox.cs.pdq.exceptions;
 
 
 

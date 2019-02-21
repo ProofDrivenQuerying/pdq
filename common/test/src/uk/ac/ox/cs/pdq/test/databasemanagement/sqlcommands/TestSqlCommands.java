@@ -7,7 +7,6 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BulkInsert;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
@@ -18,6 +17,7 @@ import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DifferenceQuery;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
 import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Insert;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;

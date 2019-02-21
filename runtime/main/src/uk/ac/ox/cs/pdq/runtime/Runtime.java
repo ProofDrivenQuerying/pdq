@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
-import uk.ac.ox.cs.pdq.util.Table;
+import uk.ac.ox.cs.pdq.tuple.Table;
 
 /**
  *  Decorates a plan, and executes queries or the plan itself.

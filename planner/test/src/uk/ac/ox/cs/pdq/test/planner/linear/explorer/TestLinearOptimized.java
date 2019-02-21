@@ -24,8 +24,9 @@ import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
+import uk.ac.ox.cs.pdq.exceptions.LimitReachedException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -49,7 +50,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
-import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 /**
  * Tests the TestLinearOptimized explorer class. Uses the same 3 scenario as the other two linear chaser test does.

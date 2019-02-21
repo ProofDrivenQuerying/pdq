@@ -21,13 +21,13 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;

@@ -7,7 +7,7 @@ import org.junit.Assert;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 
 /**

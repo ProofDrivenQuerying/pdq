@@ -3,10 +3,10 @@ package uk.ac.ox.cs.pdq.databasemanagement.sqlcommands;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import uk.ac.ox.cs.pdq.databasemanagement.exception.DatabaseException;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 
 /**
  * This class represents a CREATE TABLE sql command.

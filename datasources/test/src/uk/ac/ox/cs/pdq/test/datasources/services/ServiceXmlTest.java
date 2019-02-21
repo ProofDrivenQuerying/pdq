@@ -11,9 +11,9 @@ import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSp
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Table;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.tuple.Table;
+import uk.ac.ox.cs.pdq.tuple.Tuple;
+import uk.ac.ox.cs.pdq.tuple.TupleType;
 
 // @author Mark Ridler
 
