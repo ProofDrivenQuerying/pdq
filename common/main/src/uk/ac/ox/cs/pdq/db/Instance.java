@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.db;
 import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.reasoningdatabase.DataSink;
 /**
  * Models a relational database instance. An Instance is a set of Atoms. 
  * 

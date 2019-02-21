@@ -23,8 +23,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -46,6 +44,8 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.chase.ChaseConstantGenerator;
 import uk.ac.ox.cs.pdq.reasoning.chase.schemaconstantequality.EqualConstantsClass;
 import uk.ac.ox.cs.pdq.reasoning.chase.schemaconstantequality.EqualConstantsClasses;
+import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
+import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**

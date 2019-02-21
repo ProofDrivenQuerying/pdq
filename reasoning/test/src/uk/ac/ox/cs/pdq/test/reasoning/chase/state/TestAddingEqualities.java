@@ -10,8 +10,6 @@ import org.junit.Test;
 
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -19,6 +17,8 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
+import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**

@@ -1,25 +1,25 @@
 package uk.ac.ox.cs.pdq.test.databasemanagement.sqlcommands;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BasicSelect;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.BulkInsert;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Command;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateDatabase;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.CreateTable;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Delete;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DifferenceQuery;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.DropDatabase;
-import uk.ac.ox.cs.pdq.databasemanagement.sqlcommands.Insert;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
+import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.BasicSelect;
+import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.BulkInsert;
+import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.Command;
+import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.CreateDatabase;
+import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.CreateTable;
+import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.Delete;
+import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.DifferenceQuery;
+import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.DropDatabase;
+import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.Insert;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /** This class has a test case for each command object in the sqlcommands package.

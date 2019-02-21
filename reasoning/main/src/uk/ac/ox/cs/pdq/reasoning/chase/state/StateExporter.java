@@ -10,15 +10,15 @@ import java.util.Map;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
-import uk.ac.ox.cs.pdq.db.DataSink;
 import uk.ac.ox.cs.pdq.db.Instance;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.reasoningdatabase.DataSink;
+import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
+import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 
 /**
  * Imports or exports a chase state. Normally we export the final state of the

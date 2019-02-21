@@ -14,10 +14,6 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 
 import uk.ac.ox.cs.pdq.FileValidator;
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -27,6 +23,10 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
+import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**

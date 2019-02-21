@@ -30,13 +30,6 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.databasemanagement.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.databasemanagement.cache.MultiInstanceFactCache;
-import uk.ac.ox.cs.pdq.databasemanagement.monitor.DatabaseMonitor;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -57,6 +50,13 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimizedMultiThread;
 import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
+import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
+import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
+import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.reasoningdatabase.monitor.DatabaseMonitor;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
