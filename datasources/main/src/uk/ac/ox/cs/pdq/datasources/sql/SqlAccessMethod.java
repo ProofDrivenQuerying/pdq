@@ -23,11 +23,11 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.tuple.DistinctIterator;
+import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.tuple.DistinctIterator;
-import uk.ac.ox.cs.pdq.tuple.Table;
 import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 /**

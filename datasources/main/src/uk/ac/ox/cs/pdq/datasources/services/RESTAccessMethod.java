@@ -29,10 +29,10 @@ import uk.ac.ox.cs.pdq.datasources.services.service.StaticAttribute;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.AttributeEncoding;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.GroupUsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
+import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.io.ReaderException;
-import uk.ac.ox.cs.pdq.tuple.Table;
 import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 /**

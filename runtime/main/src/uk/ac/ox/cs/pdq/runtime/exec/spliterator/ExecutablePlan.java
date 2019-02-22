@@ -11,9 +11,9 @@ import java.util.stream.StreamSupport;
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
-import uk.ac.ox.cs.pdq.tuple.Table;
 import uk.ac.ox.cs.pdq.tuple.Tuple;
 import uk.ac.ox.cs.pdq.tuple.TupleType;
 

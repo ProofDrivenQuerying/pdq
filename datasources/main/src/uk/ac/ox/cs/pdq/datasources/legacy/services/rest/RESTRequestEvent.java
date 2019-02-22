@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.RequestEvent;
-import uk.ac.ox.cs.pdq.tuple.Table;
+import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 
 /**
  * The event occurring directly before a RESTAccess request. Holds the access 

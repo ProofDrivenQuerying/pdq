@@ -15,11 +15,11 @@ import com.beust.jcommander.ParameterException;
 import uk.ac.ox.cs.pdq.FileValidator;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
+import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
-import uk.ac.ox.cs.pdq.tuple.Table;
 
 /**
  *  Decorates a plan, and executes queries or the plan itself.

@@ -18,11 +18,11 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
+import uk.ac.ox.cs.pdq.datasources.tuple.DistinctIterator;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.tuple.DistinctIterator;
 import uk.ac.ox.cs.pdq.tuple.Tuple;
 import uk.ac.ox.cs.pdq.tuple.TupleType;
 

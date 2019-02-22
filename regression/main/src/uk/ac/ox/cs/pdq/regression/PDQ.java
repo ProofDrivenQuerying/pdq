@@ -31,6 +31,7 @@ import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
+import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.PlanPrinter;
@@ -51,7 +52,6 @@ import uk.ac.ox.cs.pdq.regression.acceptance.ExpectedCardinalityAcceptanceCheck;
 import uk.ac.ox.cs.pdq.regression.acceptance.SameCostAcceptanceCheck;
 import uk.ac.ox.cs.pdq.runtime.Runtime;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
-import uk.ac.ox.cs.pdq.tuple.Table;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
