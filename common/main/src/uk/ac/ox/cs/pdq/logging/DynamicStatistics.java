@@ -6,8 +6,6 @@ import java.util.Map;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
 
-import uk.ac.ox.cs.pdq.util.EventHandler;
-
 /**
  * A logger that allows logging data point as key-value pair,
  * Dynamice in the sense that it is ithout prior knowledge of what is to be logged.
@@ -16,7 +14,7 @@ import uk.ac.ox.cs.pdq.util.EventHandler;
  * @author Julien Leblay
  *
  */
-public class DynamicStatistics extends StatisticsLogger implements EventHandler {
+public class DynamicStatistics extends StatisticsLogger {
 
 	/** Map of keys to numeric data points. */
 	private final Map<StatKey, Object> values = new LinkedHashMap<>();

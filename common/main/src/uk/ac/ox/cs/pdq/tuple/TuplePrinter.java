@@ -6,15 +6,13 @@ import org.apache.log4j.Logger;
 
 import com.google.common.eventbus.Subscribe;
 
-import uk.ac.ox.cs.pdq.util.EventHandler;
-
 
 /**
  * Prints tuple to the given print stream, if provided, log.info otherwise.
  * 
  * @author Julien Leblay
  */
-public class TuplePrinter implements EventHandler {
+public class TuplePrinter {
 
 	/** TuplePrinterTest logger. */
 	private static Logger log = Logger.getLogger(TuplePrinter.class);
