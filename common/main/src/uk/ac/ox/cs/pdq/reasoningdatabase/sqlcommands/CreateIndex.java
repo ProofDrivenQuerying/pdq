@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands;
+package uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands;
 
 import com.google.common.base.Joiner;
 

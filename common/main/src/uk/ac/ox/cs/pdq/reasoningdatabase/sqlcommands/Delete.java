@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands;
+package uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;

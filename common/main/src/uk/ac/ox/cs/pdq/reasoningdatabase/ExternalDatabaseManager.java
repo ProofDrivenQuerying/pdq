@@ -16,16 +16,16 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.reasoningdatabase.execution.ExecutionManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.monitor.DatabaseMonitor;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.BasicSelect;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.BulkInsert;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.Command;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.CreateDatabase;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.CreateIndex;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.CreateTable;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.Delete;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.DifferenceQuery;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.DropDatabase;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.ExplainSelect;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.BasicSelect;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.BulkInsert;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.Command;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.CreateDatabase;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.CreateIndex;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.CreateTable;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.Delete;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.DifferenceQuery;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.DropDatabase;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.ExplainSelect;
 
 /**
  * Simplest external database manager. Creates and manages connections,

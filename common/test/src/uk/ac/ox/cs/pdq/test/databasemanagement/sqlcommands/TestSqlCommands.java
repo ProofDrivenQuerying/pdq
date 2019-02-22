@@ -11,15 +11,15 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.BasicSelect;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.BulkInsert;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.Command;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.CreateDatabase;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.CreateTable;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.Delete;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.DifferenceQuery;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.DropDatabase;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.Insert;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.BasicSelect;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.BulkInsert;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.Command;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.CreateDatabase;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.CreateTable;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.Delete;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.DifferenceQuery;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.DropDatabase;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.Insert;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /** This class has a test case for each command object in the sqlcommands package.

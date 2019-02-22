@@ -4,8 +4,8 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.BasicSelect;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.Command;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.BasicSelect;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.Command;
 
 /**
  * A Task is a Command that will be executed by an ExecutorThread. This object

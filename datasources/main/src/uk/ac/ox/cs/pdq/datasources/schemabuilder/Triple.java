@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.db;
+package uk.ac.ox.cs.pdq.datasources.schemabuilder;
 
 /**
  * A triple of elements.

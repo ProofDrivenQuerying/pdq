@@ -32,7 +32,7 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.Command;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**

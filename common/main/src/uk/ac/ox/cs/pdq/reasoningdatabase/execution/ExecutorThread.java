@@ -25,9 +25,9 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DataSink;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.BasicSelect;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.Command;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.DropDatabase;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.BasicSelect;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.Command;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.DropDatabase;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**

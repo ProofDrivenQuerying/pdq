@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.Command;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.Command;
 
 /**
  * This class is responsible for executing database requests. The request have

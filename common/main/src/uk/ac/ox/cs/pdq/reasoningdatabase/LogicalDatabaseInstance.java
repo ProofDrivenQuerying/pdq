@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
-import uk.ac.ox.cs.pdq.resoningdatabase.sqlcommands.CreateTable;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.CreateTable;
 
 /**
  * Each instance of this LogicalDatabase class will create a logical database
