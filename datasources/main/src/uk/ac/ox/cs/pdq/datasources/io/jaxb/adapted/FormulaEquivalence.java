@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.utility;
+package uk.ac.ox.cs.pdq.datasources.io.jaxb.adapted;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;

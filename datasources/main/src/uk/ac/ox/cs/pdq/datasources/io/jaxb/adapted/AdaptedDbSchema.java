@@ -21,7 +21,6 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.Source;
 import uk.ac.ox.cs.pdq.datasources.schemabuilder.SchemaDiscoverer;
-import uk.ac.ox.cs.pdq.datasources.utility.FormulaEquivalence;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Cache;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
