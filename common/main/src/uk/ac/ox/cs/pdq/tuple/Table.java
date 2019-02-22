@@ -16,7 +16,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Typed;
 
 /**
  * Implementation of a database table, whose tuples are fully loaded in memory.
@@ -27,7 +26,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
 public class Table implements Iterable<Tuple> {
 
 	/**  The table's header. */
-	private Typed[] header;
+	private Attribute[] header;
 
 	/**  The table's tuples. */
 	private List<Tuple> data = new ArrayList<>();
@@ -50,7 +49,7 @@ public class Table implements Iterable<Tuple> {
 	 * @param intern boolean
 	 * @param attributes 		The table's header
 	 */
-	public Table(boolean intern, Typed[] attributes) {
+	public Table(boolean intern, Attribute[] attributes) {
 		Preconditions.checkArgument(attributes != null && attributes.length >= 0, "Invalid dynamic table type");
 		this.type = TupleType.DefaultFactory.createFromTyped(attributes);
 		this.header = attributes;
@@ -62,7 +61,7 @@ public class Table implements Iterable<Tuple> {
 	 *
 	 * @param attributes 		The table's header
 	 */
-	public Table(Typed... attributes) {
+	public Table(Attribute... attributes) {
 		this(false, attributes);
 	}
 
@@ -247,7 +246,7 @@ public class Table implements Iterable<Tuple> {
 	 *
 	 * @return the table header
 	 */
-	public Typed[] getHeader() {
+	public Attribute[] getHeader() {
 		return this.header;
 	}
 

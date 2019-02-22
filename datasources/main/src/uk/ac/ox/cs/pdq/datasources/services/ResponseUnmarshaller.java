@@ -11,7 +11,6 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.tuple.Table;
 import uk.ac.ox.cs.pdq.tuple.Tuple;
 import uk.ac.ox.cs.pdq.tuple.TupleType;
-import uk.ac.ox.cs.pdq.util.Typed;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
@@ -66,7 +65,7 @@ public class ResponseUnmarshaller {
 		Object[] result = new Object[type.size()];
 		int i = 0, j = 0;
 		boolean hasValue = false;
-		Typed[] inputHeader = inputTable.getHeader();
+		Attribute[] inputHeader = inputTable.getHeader();
 		Tuple first = inputTable.isEmpty() ? null: inputTable.iterator().next();
 		for (Attribute column: this.attributes) {
 			if (!Arrays.asList(inputHeader).contains(column) || inputTable.size() > 1) {

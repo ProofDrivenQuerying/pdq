@@ -10,8 +10,8 @@ import org.apache.commons.lang3.NotImplementedException;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.util.Typed;
 
 /**
  * A tuple type implementation.
@@ -39,7 +39,7 @@ class TupleTypeImpl implements TupleType {
 	 *
 	 * @param items the items
 	 */
-	TupleTypeImpl(Typed... items) {
+	TupleTypeImpl(Attribute... items) {
 		this(toClassArray(items));
 	}
 
@@ -49,12 +49,12 @@ class TupleTypeImpl implements TupleType {
 	 * @param items the items
 	 * @return an array of Class corresponding to the given list of typed objects.
 	 */
-	private static Type[] toClassArray(Typed[] items) {
+	private static Type[] toClassArray(Attribute[] items) {
 		if (items == null) 
 			return null;
 		Type[] result = new Type[items.length];
 		int i = 0;
-		for (Typed a : items) 
+		for (Attribute a : items) 
 			result[i++] = a.getType();
 		return result;
 	}

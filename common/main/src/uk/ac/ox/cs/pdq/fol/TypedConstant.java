@@ -9,8 +9,6 @@ import java.util.Date;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.util.Typed;
-
 /**
  * Schema constant.
  *
@@ -18,7 +16,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
  * @author Julien Leblay
  * @author Gabor
  */
-public class TypedConstant extends Constant implements Typed, Serializable, Comparable<Constant> {
+public class TypedConstant extends Constant implements Serializable, Comparable<Constant> {
 	private static final long serialVersionUID = 314066835619901611L;
 
 	/**
@@ -36,7 +34,6 @@ public class TypedConstant extends Constant implements Typed, Serializable, Comp
 		this.value = value;
 	}
 
-	@Override
 	public Type getType() {
 		return this.type;
 	}

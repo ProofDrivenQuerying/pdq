@@ -6,13 +6,12 @@ import java.lang.reflect.Type;
 import javax.xml.bind.annotation.XmlAttribute;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Typed;
 
 /**
  * @author Gabor
  *
  */
-public class AdaptedAttribute implements Typed, Serializable {
+public class AdaptedAttribute implements Serializable {
 	private static final long serialVersionUID = -2103116468417078713L;
 
 	/** The attribute's name. */
@@ -29,7 +28,6 @@ public class AdaptedAttribute implements Typed, Serializable {
 		type = v.getType();
 	}
 
-	@Override
 	public Type getType() {
 		return this.type;
 	}

@@ -4,12 +4,11 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.util.Typed;
-
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
+
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
 /**
  * Represents a type of tuple. Used to define a type of tuple and then create
@@ -144,21 +143,8 @@ public interface TupleType extends Serializable{
 		 * @param typed List<? extends Typed>
 		 * @return TupleType
 		 */
-		public static TupleType createFromTyped(final Typed... typed) {
+		public static TupleType createFromTyped(final Attribute... typed) {
 			return interner.intern(new TupleTypeImpl(typed));
-		}
-		
-		/**
-		 * Creates a new Default object.
-		 *
-		 * @param attributes List<? extends Typed>
-		 * @return TupleType
-		 */
-		public static TupleType createFromTyped(final Attribute[] attributes) {
-			Type[] types = new Type[attributes.length];
-			for(int index = 0; index < attributes.length; ++index) 
-				types[index] = attributes[index].getType();
-			return interner.intern(new TupleTypeImpl(types));
 		}
 	}
 }

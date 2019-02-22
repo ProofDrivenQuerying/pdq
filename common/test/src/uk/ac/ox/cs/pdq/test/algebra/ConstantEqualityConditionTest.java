@@ -9,7 +9,6 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.tuple.Tuple;
 import uk.ac.ox.cs.pdq.tuple.TupleType;
-import uk.ac.ox.cs.pdq.util.Typed;
 
 public class ConstantEqualityConditionTest {
 
@@ -27,7 +26,7 @@ public class ConstantEqualityConditionTest {
 		// Condition: the value at index 0 must be equal to 1.
 		ConstantEqualityCondition.create(0, TypedConstant.create(1));
 		
-		Typed[] typed = new Attribute[] {Attribute.create(Integer.class, "a"),
+		Attribute[] typed = new Attribute[] {Attribute.create(Integer.class, "a"),
 				Attribute.create(Integer.class, "b"), Attribute.create(String.class, "c")};
 
 		// When the condition is evaluated on a Typed[] object, only the types are compared.
