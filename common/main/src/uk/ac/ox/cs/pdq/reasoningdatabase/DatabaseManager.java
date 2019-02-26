@@ -173,11 +173,11 @@ public interface DatabaseManager {
 	 * constant in order to update them with the new representative constant. 
 	 * Could be replaced with a query.
 	 **/
-	public void addToConstantsToAtoms(Constant term, Atom atom) throws DatabaseException ;
+	public void addToConstantsToAtoms(Constant term, Atom atom) throws DatabaseException;
 
-	public Collection<Atom> getAtomsContainingConstant(Constant obsoleteConstant) throws DatabaseException ;
+	public Collection<Atom> getAtomsContainingConstant(Constant obsoleteConstant) throws DatabaseException;
 
-	public void removeConstantFromMap(Constant obsoleteConstant);
+	public void removeConstantFromMap(Constant obsoleteConstant) throws DatabaseException;
 	
-	public void mergeConstantsToAtomsMap(DatabaseManager from);
+	public void mergeConstantsToAtomsMap(DatabaseManager from) throws DatabaseException;
 }

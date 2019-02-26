@@ -369,7 +369,11 @@ public class DatabaseChaseInstance implements ChaseInstance {
 
 		// Delete all obsolete constants from constantsToAtoms
 		for (Constant obsoleteConstant : obsoleteToRepresentative.keySet()) {
-			databaseInstance.removeConstantFromMap(obsoleteConstant);
+			try {
+				databaseInstance.removeConstantFromMap(obsoleteConstant);
+			} catch (DatabaseException e) {
+				throw new RuntimeException("database failure", e);
+			}
 		}
 
 		obsoleteFacts.removeAll(newFacts); // do not delete what we will add back anyway.
@@ -563,7 +567,12 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			return null;
 
 		DatabaseChaseInstance newInstance = new DatabaseChaseInstance(classes, null, databaseInstance);
-		newInstance.databaseInstance.mergeConstantsToAtomsMap(databaseInstance);
+		try {
+			newInstance.databaseInstance.mergeConstantsToAtomsMap(databaseInstance);
+		} catch (DatabaseException e) {
+			throw new RuntimeException("database failure", e);
+		}
+		
 		return newInstance;
 	}
 

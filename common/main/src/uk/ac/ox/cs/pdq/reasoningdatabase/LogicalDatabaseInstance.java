@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
@@ -25,8 +27,10 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.CreateTable;
 
 /**
@@ -49,14 +53,29 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	protected Schema originalSchema;
 	protected static final String FACT_ID_TABLE_NAME = "DBFactID";
 	protected static final String FACT_ID_ATTRIBUTE_NAME = "FactId";
+	protected static final String INSTANCE_ID_ATTRIBUTE_NAME = "DatabaseInstanceID";
+	protected static final String MAPPING_TABLE_NAME = "InstanceIdMapping";
 	protected static final Attribute FACT_ID_ATTRIBUTE = Attribute.create(Integer.class, FACT_ID_ATTRIBUTE_NAME);
-	protected static final Relation factIdInstanceIdMappingTable = Relation.create("InstanceIdMapping",
-			new Attribute[] { FACT_ID_ATTRIBUTE, Attribute.create(Integer.class, "DatabaseInstanceID") }, new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
+	protected static final Relation factIdInstanceIdMappingTable = Relation.create(MAPPING_TABLE_NAME,
+			new Attribute[] { FACT_ID_ATTRIBUTE, Attribute.create(Integer.class, INSTANCE_ID_ATTRIBUTE_NAME) },
+			new AccessMethodDescriptor[] { AccessMethodDescriptor.create(new Integer[] {}) });
 
 	protected MultiInstanceFactCache multiCache;
 	private ExternalDatabaseManager edm;
 	protected int databaseInstanceID;
+	/**
+	 * Maps every constant to the atom it appears in. This is used for EGD chase,
+	 * and the map is late initialized, it will be populated on the first time it is
+	 * used, or in case the cache size grows latger then the maximum allowed size.
+	 * 
+	 * This cache can be externally stored or there is a memory only mode
+	 * implemented in the InternalDatabaseManager.
+	 */
 	protected Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
+	protected boolean constantsInitialized = false;
+	private final int maxSizeForConstantsToAtoms = 100000;
+	private Relation constToAtomsRelation;
+
 	/**
 	 * This constructor creates a logical instance over an existing remote database
 	 * manager with the given instanceID. Creating multiple logical databases over
@@ -70,7 +89,8 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	 * @param parameters
 	 * @throws DatabaseException
 	 */
-	public LogicalDatabaseInstance(MultiInstanceFactCache cache, ExternalDatabaseManager edm, int databaseInstanceID) throws DatabaseException {
+	public LogicalDatabaseInstance(MultiInstanceFactCache cache, ExternalDatabaseManager edm, int databaseInstanceID)
+			throws DatabaseException {
 		this.edm = edm;
 		multiCache = cache;
 		this.databaseInstanceID = databaseInstanceID;
@@ -139,7 +159,8 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		// not.
 		List<Atom> extendedFacts = new ArrayList<>();
 		Collection<Atom> newFactsInThisInstance = multiCache.addFacts(facts, databaseInstanceID);
-		Collection<Atom> newFactsInAllInstances = multiCache.checkExistsInOtherInstances(newFactsInThisInstance, databaseInstanceID);
+		Collection<Atom> newFactsInAllInstances = multiCache.checkExistsInOtherInstances(newFactsInThisInstance,
+				databaseInstanceID);
 		// we need to add new facts only if they are new to all instances
 		extendedFacts.addAll(extendFactsWithFactID(newFactsInAllInstances));
 		// add mapping for new facts
@@ -233,7 +254,8 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	 * @return
 	 * @throws DatabaseException
 	 */
-	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
+	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery)
+			throws DatabaseException {
 		ConjunctiveQuery extendedLQ = extendQuery(leftQuery, this.databaseInstanceID);
 		ConjunctiveQuery extendedRQ = extendQuery(rightQuery, this.databaseInstanceID);
 		Map<ConjunctiveQuery, ConjunctiveQuery> oldAndNewQueries = new HashMap<>();
@@ -263,7 +285,8 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		factIdNameCounter = 0;
 		Conjunction newConjunction = addFactIdToConjunction(formula.getBody(), databaseInstanceID);
 		if (formula instanceof ConjunctiveQueryWithInequality) {
-			return ConjunctiveQueryWithInequality.create(formula.getFreeVariables(), newConjunction.getAtoms(), ((ConjunctiveQueryWithInequality) formula).getInequalities());
+			return ConjunctiveQueryWithInequality.create(formula.getFreeVariables(), newConjunction.getAtoms(),
+					((ConjunctiveQueryWithInequality) formula).getInequalities());
 		}
 		return ConjunctiveQuery.create(formula.getFreeVariables(), newConjunction.getAtoms());
 	}
@@ -275,8 +298,11 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 			Variable factId = Variable.create(FACT_ID_ATTRIBUTE_NAME + "_" + factIdNameCounter++);
 			terms.add(factId);
 			Predicate originalPredicate = ((Atom) body).getPredicate();
-			return (Conjunction)Conjunction.create(Atom.create(Predicate.create(originalPredicate.getName(), originalPredicate.getArity() + 1), terms.toArray(new Term[terms.size()])),
-					Atom.create(LogicalDatabaseInstance.factIdInstanceIdMappingTable, new Term[] { factId, TypedConstant.create(databaseInstanceID) }));
+			return (Conjunction) Conjunction.create(
+					Atom.create(Predicate.create(originalPredicate.getName(), originalPredicate.getArity() + 1),
+							terms.toArray(new Term[terms.size()])),
+					Atom.create(LogicalDatabaseInstance.factIdInstanceIdMappingTable,
+							new Term[] { factId, TypedConstant.create(databaseInstanceID) }));
 
 		} else {
 			Conjunction con = (Conjunction) body;
@@ -284,7 +310,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 			for (Formula child : con.getChildren()) {
 				newChildren.add(addFactIdToConjunction(child, databaseInstanceID));
 			}
-			return (Conjunction)Conjunction.create(newChildren.toArray(new Formula[newChildren.size()]));
+			return (Conjunction) Conjunction.create(newChildren.toArray(new Formula[newChildren.size()]));
 		}
 	}
 
@@ -305,7 +331,9 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	private static Collection<Atom> extendFactsWithFactID(Collection<Atom> facts) {
 		List<Atom> extendedFacts = new ArrayList<>();
 		for (Atom fact : facts) {
-			Atom extendedAtom = Atom.create(Predicate.create(fact.getPredicate().getName(), fact.getPredicate().getArity() + 1), extendTerms(fact.getTerms(), fact.hashCode()));
+			Atom extendedAtom = Atom.create(
+					Predicate.create(fact.getPredicate().getName(), fact.getPredicate().getArity() + 1),
+					extendTerms(fact.getTerms(), fact.hashCode()));
 			extendedFacts.add(extendedAtom);
 		}
 		return extendedFacts;
@@ -314,7 +342,8 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	private static Collection<Atom> getFactsMapping(Collection<Atom> facts, int databaseInstanceID) {
 		List<Atom> extendedFacts = new ArrayList<>();
 		for (Atom fact : facts) {
-			Atom atomMapping = Atom.create(factIdInstanceIdMappingTable, TypedConstant.create(fact.hashCode()), TypedConstant.create(databaseInstanceID));
+			Atom atomMapping = Atom.create(factIdInstanceIdMappingTable, TypedConstant.create(fact.hashCode()),
+					TypedConstant.create(databaseInstanceID));
 			extendedFacts.add(atomMapping);
 		}
 		return extendedFacts;
@@ -324,8 +353,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	 * Takes a collection of facts and extends them (returns facts with all the same
 	 * plus an extra term) with the id of this instance.
 	 * 
-	 * @param terms
-	 *            the collection of facts to be changed
+	 * @param terms the collection of facts to be changed
 	 * @return the input facts each one extended by one term: the instance id
 	 */
 	private static Term[] extendTerms(Term[] terms, int factID) {
@@ -342,7 +370,8 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 				continue;
 			if (originalSchema.getRelation(fact.getPredicate().getName()).getArity() < fact.getTerms().length) {
 				// SQL database query returns the factID, we need to remove it.
-				newFacts.add(Atom.create(originalSchema.getRelation(fact.getPredicate().getName()), removeFactIdFromTerms(fact.getTerms())));
+				newFacts.add(Atom.create(originalSchema.getRelation(fact.getPredicate().getName()),
+						removeFactIdFromTerms(fact.getTerms())));
 			} else {
 				// memory DB will return exactly the free variables we needed.
 				newFacts.add(Atom.create(originalSchema.getRelation(fact.getPredicate().getName()), fact.getTerms()));
@@ -367,9 +396,11 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		}
 		Variable factID = Variable.create(FACT_ID_TABLE_NAME);
 		body.add(factID);
-		Conjunction conjunction = (Conjunction)Conjunction.create(Atom.create(r, body.toArray(new Term[body.size()])),
-				Atom.create(LogicalDatabaseInstance.factIdInstanceIdMappingTable, new Term[] { factID, TypedConstant.create(databaseInstanceID) }));
-		return ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]), conjunction.getAtoms());
+		Conjunction conjunction = (Conjunction) Conjunction.create(Atom.create(r, body.toArray(new Term[body.size()])),
+				Atom.create(LogicalDatabaseInstance.factIdInstanceIdMappingTable,
+						new Term[] { factID, TypedConstant.create(databaseInstanceID) }));
+		return ConjunctiveQuery.create(freeVariables.toArray(new Variable[freeVariables.size()]),
+				conjunction.getAtoms());
 	}
 
 	/**
@@ -457,7 +488,8 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		this.originalSchema = new Schema(newRelations, this.originalSchema.getAllDependencies());
 		this.setSchema(originalSchema);
 		if (edm != null)
-			edm.executeUpdateCommand(new CreateTable(this.extendedSchema.getRelation(newRelation.getName()), edm.parameters.isFactsAreUnique()));
+			edm.executeUpdateCommand(new CreateTable(this.extendedSchema.getRelation(newRelation.getName()),
+					edm.parameters.isFactsAreUnique()));
 	}
 
 	@Override
@@ -467,34 +499,142 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		return null;
 	}
 
-	private boolean constantsInitialized=false;
 	@Override
-	public void addToConstantsToAtoms(Constant term, Atom atom) {
-		constantsToAtoms.put(term,atom);
+	public void addToConstantsToAtoms(Constant term, Atom atom) throws DatabaseException {
+		constantsToAtoms.put(term, atom);
+		if (constantsToAtoms.size() >= maxSizeForConstantsToAtoms) {
+			initConstantsToAtoms();
+		}
 	}
 
-	@Override
-	public Collection<Atom> getAtomsContainingConstant(Constant obsoleteConstant) throws DatabaseException {
+	/**
+	 * @throws DatabaseException
+	 */
+	private void initConstantsToAtoms() throws DatabaseException {
 		if (!constantsInitialized) {
-			constantsInitialized=true;
-			for(Atom a: getCachedFacts()) {
-				for (Term t: a.getTypedAndUntypedConstants()) {
-					if (t instanceof Constant) {
-						constantsToAtoms.put((Constant)t, a);
-					}
+			constantsInitialized = true;
+			constToAtomsRelation = Relation.create("ConstantsToAtoms",
+					new Attribute[] { Attribute.create(String.class, "Constant"),
+							Attribute.create(Integer.class, LogicalDatabaseInstance.INSTANCE_ID_ATTRIBUTE_NAME) });
+			this.addRelation(constToAtomsRelation);
+			List<Atom> toWrite = new ArrayList<>();
+			for (Constant c : constantsToAtoms.keySet()) {
+				toWrite.add(
+						Atom.create(constToAtomsRelation, new Term[] { c, TypedConstant.create(this.databaseInstanceID),
+								TypedConstant.create(constantsToAtoms.get(c).hashCode()) }));
+			}
+			constantsToAtoms.clear();
+			this.addFacts(toWrite);
+		}
+	}
+
+	/** 
+	 * Returns a hashSet (in order to remove duplicates) of Atoms that at some attribute(s) contains the constant.
+	 * The search is executed in both inmemory and external.
+	 * 
+	 */
+	@Override
+	public Collection<Atom> getAtomsContainingConstant(Constant constantToFind) throws DatabaseException {
+		initConstantsToAtoms();
+		Collection<Atom> results = new HashSet<>();
+		results.addAll(constantsToAtoms.get(constantToFind));
+
+		for (Relation r : edm.schema.getRelations()) {
+			// these tables we do not search
+			if ("ConstantsToAtoms".equals(r.getName()) || MAPPING_TABLE_NAME.equals(r.getName()))
+				continue;
+			// if the table doesn't have a factId we do not need to search it.
+			if (r.getAttribute(FACT_ID_ATTRIBUTE_NAME) == null)
+				continue;
+			results.addAll(getFactsFromTableContainingConstant(r, constantToFind));
+		}
+		return results;
+	}
+
+	/**
+	 * Creates as many queries as many attributes R has, and executes a search for
+	 * the given constant. Retrurns the whole fact for each match. Does not filter
+	 * duplicates.
+	 * 
+	 * @param r
+	 * @param constantToFind
+	 * @return
+	 * @throws DatabaseException
+	 */
+	private List<Atom> getFactsFromTableContainingConstant(Relation r, Constant constantToFind)
+			throws DatabaseException {
+		List<Atom> results = new ArrayList<>();
+		for (int attributeIndex = 0; attributeIndex < r.getArity(); attributeIndex++) {
+			if (r.getAttribute(attributeIndex).getName().equals(FACT_ID_ATTRIBUTE_NAME))
+				continue;
+			// SELECT r (attributes) FROM r, mappingTable WHERE r.factID=mappingTable.factID
+			// AND mappingTable.InstanceId=instanceid AND r.[currentAttribute] =
+			// constantToFind;
+			String cmd = "SELECT " + r.getName() + "." + Joiner.on("," + r.getName() + ".").join(r.getAttributes())
+					+ " FROM " + Command.DATABASENAME + "." + r.getName() + ", " + Command.DATABASENAME + "."
+					+ MAPPING_TABLE_NAME + " WHERE " + r.getName() + "." + FACT_ID_ATTRIBUTE_NAME + "="
+					+ MAPPING_TABLE_NAME + "." + FACT_ID_ATTRIBUTE_NAME + " AND " + MAPPING_TABLE_NAME + "."
+					+ INSTANCE_ID_ATTRIBUTE_NAME + " = " + this.databaseInstanceID + " AND " + r.getName() + "."
+					+ r.getAttribute(attributeIndex).getName() + " = '" + ((UntypedConstant) constantToFind).getSymbol()
+					+ "'";
+			try {
+				List<String> ret = this.edm.execute(new Command(cmd));
+				// first r.getArity() elements are the column names, the second group is the
+				// types. We have actual data from the third group of r.getArity() elements.
+				for (int i = 2 * r.getArity(); i < ret.size(); i += r.getArity()) {
+					Term[] terms = new Term[r.getArity() - 1];
+					for (int t = 0; t < r.getArity() - 1; t++)
+						terms[t] = UntypedConstant.create(ret.get(i + t));
+					results.add(Atom.create(Predicate.create(r.getName(), r.getArity() - 1), terms));
 				}
+			} catch (Throwable t) {
+				t.printStackTrace();
+				throw t;
 			}
 		}
-		return constantsToAtoms.get(obsoleteConstant);
+		return results;
 	}
 
+	/** Attempts to remove the constant from the memory cache as well as from the external db. 
+	 * 
+	 */
 	@Override
-	public void removeConstantFromMap(Constant obsoleteConstant) {
+	public void removeConstantFromMap(Constant obsoleteConstant) throws DatabaseException {
 		constantsToAtoms.removeAll(obsoleteConstant);
+		if (constantsInitialized) {
+			String sqlCommand = "Delete from " + Command.DATABASENAME + ".ConstantsToAtoms where Constant = '"
+					+ obsoleteConstant + "' AND " + LogicalDatabaseInstance.INSTANCE_ID_ATTRIBUTE_NAME + " = "
+					+ this.databaseInstanceID;
+			edm.execute(new Command(sqlCommand));
+		}
 	}
 
+	/**
+	 * Will copy the memory cache and the external data as well to the new instance (this)
+	 */
 	@Override
-	public void mergeConstantsToAtomsMap(DatabaseManager from) {
-		this.constantsToAtoms.putAll(((LogicalDatabaseInstance)from).constantsToAtoms);
+	public void mergeConstantsToAtomsMap(DatabaseManager from) throws DatabaseException {
+		if (!(from instanceof LogicalDatabaseInstance)) {
+			throw new RuntimeException("LogicalDatabaseInstance cannot be merged into " + from);
+		}
+		/*
+		 * This will use the SQL insert into select statement INSERT INTO table-name
+		 * (column-names) SELECT column-names FROM table-name WHERE condition
+		 */
+		int fromDbInstanceId = ((LogicalDatabaseInstance) from).databaseInstanceID;
+		this.constantsInitialized = ((LogicalDatabaseInstance) from).constantsInitialized;
+		if (constantsInitialized) {
+			String sqlCommand = "INSERT INTO " + Command.DATABASENAME + ".ConstantsToAtoms (Constant,"
+					+ this.databaseInstanceID + ", " + LogicalDatabaseInstance.FACT_ID_ATTRIBUTE_NAME
+					+ ") SELECT Constant, " + LogicalDatabaseInstance.FACT_ID_ATTRIBUTE_NAME + " FROM "
+					+ Command.DATABASENAME + ".ConstantsToAtoms WHERE "
+					+ LogicalDatabaseInstance.INSTANCE_ID_ATTRIBUTE_NAME + " = " + fromDbInstanceId;
+			// copy database data
+			edm.execute(new Command(sqlCommand));
+		}
+		// copy cached data
+		this.constantsToAtoms.putAll(((LogicalDatabaseInstance) from).constantsToAtoms);
+
 	}
+
 }

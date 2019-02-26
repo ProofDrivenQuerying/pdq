@@ -470,6 +470,12 @@ public class ExecutorThread extends Thread {
 			throw new DatabaseException("Error while executing query: " + statements, t);
 		}
 		try {
+			for (int index = 1; index <= resultSet.getMetaData().getColumnCount(); index++) {
+				results.add(resultSet.getMetaData().getColumnName(index));
+			}
+			for (int index = 1; index <= resultSet.getMetaData().getColumnCount(); index++) {
+				results.add(resultSet.getMetaData().getColumnClassName(index));
+			}
 			// parse results
 			while (resultSet.next()) {
 				for (int index = 1; index <= resultSet.getMetaData().getColumnCount(); index++) {

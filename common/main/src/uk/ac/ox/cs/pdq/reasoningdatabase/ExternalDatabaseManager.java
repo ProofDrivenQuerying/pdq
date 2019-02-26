@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.NotImplementedException;
+
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -38,7 +40,7 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.ExplainSelect;
  * exception when the addFacts is called with a record that already exists in
  * the database. <br>
  * 
- *  Main features: <br>
+ * Main features: <br>
  * <li>- add/delete facts
  * <li>- answer queries
  * <li>- it can be used without knowing what is the underlying database
@@ -59,7 +61,8 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	protected DatabaseParameters parameters;
 	protected String databaseName; // formal name, mainly for debugging purposes, default is "PdqTest"
 	/**
-	 * Flag to show that we are after initialisation but before dropping the database. 
+	 * Flag to show that we are after initialisation but before dropping the
+	 * database.
 	 */
 	protected boolean databaseExists = false;
 	/**
@@ -93,10 +96,9 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	 *    	(unless the database provider is a memory database)
 	 * </pre>
 	 * 
-	 * @param parameters
-	 *            database parameters, URLs, login names etc.
-	 * @throws DatabaseException
-	 *             - in case connection to the database provider fails.
+	 * @param parameters database parameters, URLs, login names etc.
+	 * @throws DatabaseException - in case connection to the database provider
+	 *                           fails.
 	 */
 	public ExternalDatabaseManager(DatabaseParameters parameters) throws DatabaseException {
 		this.parameters = (DatabaseParameters) parameters.clone();
@@ -195,19 +197,19 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	public Collection<Atom> getFactsFromPhysicalDatabase() throws DatabaseException {
 		return getFactsFromPhysicalDatabase(Arrays.asList(schema.getRelations()));
 	}
-	
+
 	public Collection<Atom> getFactsFromPhysicalDatabase(List<Relation> relations) throws DatabaseException {
 		List<Command> queries = new ArrayList<>();
 		for (Relation r : relations) {
 			queries.add(new BasicSelect(r));
 		}
-		return convertMatchesToAtoms(executor.execute(queries), queries);
+		return convertMatchesToAtoms(executor.execute(queries));
 	}
-	
+
 	public void getFactsFromPhysicalDatabase(List<Relation> relations, DataSink sink) throws DatabaseException {
 		List<Command> queries = new ArrayList<>();
 		for (Relation r : relations) {
-			queries.add(new BasicSelect(r, sink)); 
+			queries.add(new BasicSelect(r, sink));
 		}
 		executor.execute(queries);
 	}
@@ -230,11 +232,16 @@ public class ExternalDatabaseManager implements DatabaseManager {
 		// execute the SQL command
 		return executor.execute(commands);
 	}
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager#answerConjunctiveQuery(uk.ac.ox.cs.pdq.fol.ConjunctiveQuery)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * uk.ac.ox.cs.pdq.databasemanagement.DatabaseManager#answerConjunctiveQuery(uk.
+	 * ac.ox.cs.pdq.fol.ConjunctiveQuery)
 	 */
 	public List<Match> answerConjunctiveQuery(ConjunctiveQuery query) throws DatabaseException {
-		return answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] {query}));
+		return answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { query }));
 	}
 
 	/**
@@ -255,7 +262,8 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	 * @return
 	 * @throws DatabaseException
 	 */
-	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
+	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery)
+			throws DatabaseException {
 		DifferenceQuery diff = new DifferenceQuery(leftQuery, rightQuery, schema);
 		return executor.execute(Arrays.asList(new Command[] { diff }));
 	}
@@ -268,7 +276,8 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	 * system.
 	 */
 	public void dropDatabase() throws DatabaseException {
-		if (databaseExists) executor.execute(new DropDatabase(schema));
+		if (databaseExists)
+			executor.execute(new DropDatabase(schema));
 		databaseExists = false;
 	}
 
@@ -278,7 +287,8 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	 */
 	public void shutdown() throws DatabaseException {
 		if (databaseExists) {
-			new Exception("Warning, database manager is shutting down, but the database is not dropped yet.").printStackTrace();
+			new Exception("Warning, database manager is shutting down, but the database is not dropped yet.")
+					.printStackTrace();
 		}
 		executor.shutdown();
 		DatabaseMonitor.unRegister(this);
@@ -319,7 +329,8 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	 * @return
 	 * @throws DatabaseException
 	 */
-	protected static List<Atom> convertMatchesToAtoms(List<Match> matches, List<Command> queries) throws DatabaseException {
+	protected static List<Atom> convertMatchesToAtoms(List<Match> matches)
+			throws DatabaseException {
 		List<Atom> ret = new ArrayList<>();
 		for (Match m : matches) {
 			if (m.getFormula().getAtoms().length > 1) {
@@ -367,7 +378,8 @@ public class ExternalDatabaseManager implements DatabaseManager {
 		deps.addAll(Arrays.asList(this.schema.getKeyDependencies()));
 		deps.addAll(Arrays.asList(this.schema.getNonEgdDependencies()));
 		this.schema = new Schema(newRelations, deps.toArray(new Dependency[deps.size()]));
-		executeUpdateCommand(new CreateTable(this.schema.getRelation(newRelation.getName()), parameters.isFactsAreUnique()));
+		executeUpdateCommand(
+				new CreateTable(this.schema.getRelation(newRelation.getName()), parameters.isFactsAreUnique()));
 	}
 
 	@Override
@@ -381,22 +393,22 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	}
 
 	@Override
-	public void addToConstantsToAtoms(Constant term, Atom atom) {
-		throw new RuntimeException("Not implemented yet!");
+	public void addToConstantsToAtoms(Constant term, Atom atom) throws DatabaseException {
+		throw new NotImplementedException("This function is only available in LogicalDatabaseManager and InternalDatabaseManager");
 	}
 
 	@Override
-	public Collection<Atom> getAtomsContainingConstant(Constant obsoleteConstant) {
-		throw new RuntimeException("Not implemented yet!");
+	public Collection<Atom> getAtomsContainingConstant(Constant obsoleteConstant) throws DatabaseException {
+		throw new NotImplementedException("This function is only available in LogicalDatabaseManager and InternalDatabaseManager");
 	}
 
 	@Override
-	public void removeConstantFromMap(Constant obsoleteConstant) {
-		throw new RuntimeException("Not implemented yet!");
+	public void removeConstantFromMap(Constant obsoleteConstant) throws DatabaseException {
+		throw new NotImplementedException("This function is only available in LogicalDatabaseManager and InternalDatabaseManager");
 	}
 
 	@Override
-	public void mergeConstantsToAtomsMap(DatabaseManager from) {
-		throw new RuntimeException("Not implemented yet!");
+	public void mergeConstantsToAtomsMap(DatabaseManager from) throws DatabaseException {
+		throw new NotImplementedException("This function is only available in LogicalDatabaseManager and InternalDatabaseManager");
 	}
 }

@@ -30,8 +30,11 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
+import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
+import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
@@ -52,6 +55,10 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  *
  */
 public class TestEGDChaseStep extends PdqTest {
+	private Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
+	private Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
+	private Relation r[] = new Relation[] { A,B };
+	private Schema s = new Schema(r,new Dependency[0]);
 
 
 	/**
@@ -63,20 +70,26 @@ public class TestEGDChaseStep extends PdqTest {
 	 * one A fact. 
 	 * 
 	 * Should have one in the database as a result.
+	 * @param conn 
 	 * @param sqlType
+	 * @throws DatabaseException 
 	 * @throws SQLException 
 	 * @throws SQLException, DatabaseException
 	 */
 	@Test
-	public void testA() throws SQLException, DatabaseException {
-		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
-		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
-		Relation r[] = new Relation[] { A,B };
-		Schema s = new Schema(r,new Dependency[0]);
+	public void testA_InMemory() throws SQLException, DatabaseException {
+		testA(getDatabaseConnectionInMem(s));
+	}
+	@Test
+	public void testA_External() throws SQLException, DatabaseException {
+		testA(getDatabaseConnectionExternal(s));
+	}
+	
+	public void testA(DatabaseManager conn) throws SQLException, DatabaseException {
 		List<Atom> facts = new ArrayList<>();
 		for (int i=2; i <= 1000; i++) facts.add(Atom.create(A, new Term[]{UntypedConstant.create("c_"+(i-1)),UntypedConstant.create("c_"+i)}));
 		
-		DatabaseChaseInstance state = new DatabaseChaseInstance(facts, getDatabaseConnection(s));
+		DatabaseChaseInstance state = new DatabaseChaseInstance(facts, conn);
 		Dependency d[] = new Dependency[] {
 				EGD.create(new Atom[]{ Atom.create(B, Variable.create("x"),Variable.create("y1")),
 										Atom.create(B, Variable.create("x"), Variable.create("y2"))}, 
@@ -91,7 +104,7 @@ public class TestEGDChaseStep extends PdqTest {
 			matches.add(Match.create(d[0], mapping));
 		}
 		state.EGDchaseStep(matches );
-		System.out.println("1000 equalities processed in : "+ (System.currentTimeMillis()-start)/1000.0 +" sec. Using: Inmemory");
+		System.out.println("1000 equalities processed in : "+ (System.currentTimeMillis()-start)/1000.0 +" sec. ");
 		Set<Atom> facts2 = Sets.newHashSet(state.getFacts());
 		Iterator<Atom> iterator2 = facts2.iterator();
 		while(iterator2.hasNext()) {
@@ -109,8 +122,14 @@ public class TestEGDChaseStep extends PdqTest {
 		}
 	}
 
-	private DatabaseManager getDatabaseConnection(Schema s) throws SQLException, DatabaseException{
+	private DatabaseManager getDatabaseConnectionInMem(Schema s) throws SQLException, DatabaseException{
 		LogicalDatabaseInstance connection = new InternalDatabaseManager();
+		connection.initialiseDatabaseForSchema(s);
+		return connection;
+	}
+	private DatabaseManager getDatabaseConnectionExternal(Schema s) throws SQLException, DatabaseException{
+		LogicalDatabaseInstance connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), 
+				new ExternalDatabaseManager(DatabaseParameters.Postgres),13);
 		connection.initialiseDatabaseForSchema(s);
 		return connection;
 	}
@@ -129,15 +148,19 @@ public class TestEGDChaseStep extends PdqTest {
 	 * @throws SQLException, DatabaseException
 	 */
 	@Test
-	public void testB() throws SQLException, DatabaseException {
-		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
-		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
-		Relation r[] = new Relation[] { A,B };
-		Schema s = new Schema(r,new Dependency[0]);
+	public void testB_InMemory() throws SQLException, DatabaseException {
+		testB(getDatabaseConnectionInMem(s));
+	}
+	@Test
+	public void testB_External() throws SQLException, DatabaseException {
+		testB(getDatabaseConnectionExternal(s));
+	}
+	
+	public void testB(DatabaseManager conn) throws SQLException, DatabaseException {
 		List<Atom> facts = new ArrayList<>();
 		for (int i=2; i <= 1000; i++) facts.add(Atom.create(A, new Term[]{UntypedConstant.create("c_"+(i-1)),UntypedConstant.create("c_"+i)}));
 		
-		DatabaseChaseInstance state = new DatabaseChaseInstance(facts, getDatabaseConnection(s));
+		DatabaseChaseInstance state = new DatabaseChaseInstance(facts, conn);
 		Dependency d[] = new Dependency[] {
 				EGD.create(new Atom[]{ Atom.create(B, Variable.create("x"),Variable.create("y1")),
 										Atom.create(B, Variable.create("x"), Variable.create("y2"))}, 

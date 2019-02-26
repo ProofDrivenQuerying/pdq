@@ -509,5 +509,34 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 		this.originalSchema = new Schema(newRelations, this.originalSchema.getAllDependencies());
 		this.setSchema(originalSchema);
 	}
+	@Override
+	public void addToConstantsToAtoms(Constant term, Atom atom) {
+		constantsToAtoms.put(term, atom);
+	}
+
+	@Override
+	public Collection<Atom> getAtomsContainingConstant(Constant obsoleteConstant) throws DatabaseException {
+		if (!constantsInitialized) {
+			constantsInitialized = true;
+			for (Atom a : getCachedFacts()) {
+				for (Term t : a.getTypedAndUntypedConstants()) {
+					if (t instanceof Constant) {
+						constantsToAtoms.put((Constant) t, a);
+					}
+				}
+			}
+		}
+		return constantsToAtoms.get(obsoleteConstant);
+	}
+
+	@Override
+	public void removeConstantFromMap(Constant obsoleteConstant) {
+		constantsToAtoms.removeAll(obsoleteConstant);
+	}
+
+	@Override
+	public void mergeConstantsToAtomsMap(DatabaseManager from) {
+		this.constantsToAtoms.putAll(((LogicalDatabaseInstance) from).constantsToAtoms);
+	}
 
 }
