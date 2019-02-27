@@ -10,9 +10,9 @@ import jersey.repackaged.com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
+import uk.ac.ox.cs.pdq.db.tuple.TupleType;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
-import uk.ac.ox.cs.pdq.tuple.Tuple;
-import uk.ac.ox.cs.pdq.tuple.TupleType;
 
 /**
  * Base class for executable plans having two children. 

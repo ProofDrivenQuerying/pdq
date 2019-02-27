@@ -36,12 +36,12 @@ import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
+import uk.ac.ox.cs.pdq.db.tuple.TupleType;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.Access;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.DependentJoin;
-import uk.ac.ox.cs.pdq.tuple.Tuple;
-import uk.ac.ox.cs.pdq.tuple.TupleType;
 
 public class DependentJoinTest {
 	PlanDecorator decor = null;

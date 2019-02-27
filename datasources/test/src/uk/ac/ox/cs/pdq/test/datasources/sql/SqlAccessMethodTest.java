@@ -22,8 +22,8 @@ import com.google.common.collect.ImmutableMap;
 import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.tuple.Tuple;
-import uk.ac.ox.cs.pdq.tuple.TupleType;
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
+import uk.ac.ox.cs.pdq.db.tuple.TupleType;
 
 public class SqlAccessMethodTest {
 

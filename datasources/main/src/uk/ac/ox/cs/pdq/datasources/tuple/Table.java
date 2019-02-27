@@ -16,8 +16,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.tuple.Tuple;
-import uk.ac.ox.cs.pdq.tuple.TupleType;
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
+import uk.ac.ox.cs.pdq.db.tuple.TupleType;
 
 /**
  * Implementation of a database table, whose tuples are fully loaded in memory.

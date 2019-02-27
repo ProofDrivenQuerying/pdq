@@ -46,6 +46,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.schemaconstantequality.EqualConstantsClas
 import uk.ac.ox.cs.pdq.reasoning.chase.schemaconstantequality.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.reasoningdatabase.StateExporter;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
@@ -116,8 +117,9 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 * @param connection 
 	 * @param csvFactDirectory
 	 * @throws IOException 
+	 * @throws DatabaseException 
 	 */
-	public DatabaseChaseInstance(File csvFactDirectory, DatabaseManager connection) throws SQLException, IOException {
+	public DatabaseChaseInstance(File csvFactDirectory, DatabaseManager connection) throws SQLException, IOException, DatabaseException {
 		try {
 			if (connection instanceof LogicalDatabaseInstance)
 				databaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
@@ -127,7 +129,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 			throw new RuntimeException("database failure", e);
 		}
 		Preconditions.checkNotNull(csvFactDirectory);
-		StateExporter se = new StateExporter(this);
+		StateExporter se = new StateExporter(this.databaseInstance);
 		se.importFrom(csvFactDirectory, connection.getSchema());
 		
 		this.classes = new EqualConstantsClasses();

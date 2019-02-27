@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.datasources.legacy;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.tuple.Tuple;
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 
 /**
  * Common interface to pipelinable iterators, i.e. iterators that iterate over

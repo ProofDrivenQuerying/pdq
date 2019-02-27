@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.tuple.Tuple;
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 
 /**
  * This class represents all executable access methods as xml files. Its main
@@ -102,7 +102,7 @@ public class XmlExecutableAccessMethod {
 		return r;
 	}
 
-	public ExecutableAccessMethod toExecutableAccessMethod(Schema s) {
+	public ExecutableAccessMethod toExecutableAccessMethod(Schema s) throws IOException {
 		Relation r = getRelationObject(s);
 		switch (accessType) {
 		case IN_MEMORY_ACCESS_METHOD:

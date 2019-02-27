@@ -30,6 +30,8 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
+import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
 /**
  * The test case called "Doctors" from the chasebench project.
@@ -140,7 +142,7 @@ public class Doctors {
 	}
 	private DatabaseManager getExternalDatabaseManager() throws DatabaseException {
 		ExternalDatabaseManager dbm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
-		return dbm; //new LogicalDatabaseInstance(new MultiInstanceFactCache(), dbm, 0);
+		return new LogicalDatabaseInstance(new MultiInstanceFactCache(), dbm, 0);
 	}
 
 	private Schema createSchema() {

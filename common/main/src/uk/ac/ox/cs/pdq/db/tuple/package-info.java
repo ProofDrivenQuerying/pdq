@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.tuple;
+package uk.ac.ox.cs.pdq.db.tuple;
 
 /**
 	@author Efthymia Tsamoura and Mark Ridler and Gabor

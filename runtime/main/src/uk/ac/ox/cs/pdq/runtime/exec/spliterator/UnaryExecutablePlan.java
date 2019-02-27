@@ -3,8 +3,8 @@ package uk.ac.ox.cs.pdq.runtime.exec.spliterator;
 import java.util.Iterator;
 
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
-import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 /**
  * Base class for executable plans having a single child.

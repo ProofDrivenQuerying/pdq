@@ -5,8 +5,8 @@ import java.util.function.Predicate;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.ConditionAdapter;
-import uk.ac.ox.cs.pdq.tuple.Tuple;
 
 /**
  * Represents a condition, that can be used to create -for example- a SelectionTerm, or a dependent join term. 

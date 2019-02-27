@@ -1,7 +1,10 @@
 package uk.ac.ox.cs.pdq.io.jaxb;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -9,7 +12,9 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -19,10 +24,14 @@ import javax.xml.bind.Unmarshaller;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -31,9 +40,11 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedRelationalTerm;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedSchema;
+import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 
 /**
  * Main class for the jaxb xml parser. It can export RelationalTerms, Schemas
@@ -355,6 +366,94 @@ public class IOManager {
 			Formula right = ((Conjunction)body).getChildren()[1];
 			return Conjunction.create(convertQueryAtomConstantToString(left),convertQueryAtomConstantToString(right));
 		}
+	}
+	public static File exportFacts(String datafileName, File folder, Collection<Atom> atoms) throws IOException {
+		File target = new File(folder, datafileName + ".csv");
+		try (FileWriter fw = new FileWriter(target,true)) {
+			for (Atom a : atoms) {
+				StringBuilder builder = null;
+				for (Term value : a.getTerms()) {
+					if (builder == null) {
+						builder = new StringBuilder();
+					} else {
+						builder.append(",");
+					}
+					builder.append(encodeTermToCsv(value));
+				}
+				builder.append("\r\n");
+				fw.write(builder.toString());
+			}
+			fw.close();
+		}
+		return target;
+	}
+	private static String encodeTermToCsv(Term value) {
+		if (value==null)
+			return null;
+		if (value instanceof Variable) {
+			String s = "Variable[" + value+ "]";
+			return s;
+		}
+		if (value instanceof TypedConstant) {
+			String s = ((TypedConstant)value).serializeToString();
+			return s;
+		}
+		if (value instanceof UntypedConstant) {
+			String s = ((UntypedConstant)value).getSymbol();
+			return s.toString().replaceAll(",", "/c");
+		}
+		return value.toString().replaceAll(",", "/c");
+	}
+	public static Collection<Atom> importFacts(Relation r, File csvFile, DatabaseManager instance, boolean verbose) throws IOException, DatabaseException {
+		Collection<Atom> facts = Sets.newHashSet();
+		FileInputStream inputStream = null;
+		Scanner sc = null;
+		try {
+		    inputStream = new FileInputStream(csvFile);
+		    sc = new Scanner(inputStream, "UTF-8");
+		    // Open the csv file for reading
+		    long recordCounter = 0;
+		    if (verbose) System.out.println("Importing " + r.getName());
+		    while (sc.hasNextLine()) {
+		        String line = sc.nextLine();
+		        String[] tuple = line.split(",");
+		        List<Term> constants = Lists.newArrayList();
+		        for (int i = 0; i < tuple.length; ++i) {
+		        	constants.add(TypedConstant.deSerializeTypedConstant(tuple[i].replace("\"", "")));
+		        }
+		        facts.add(Atom.create(r, constants.toArray(new Term[constants.size()])));
+		        recordCounter++;
+		        if (instance!=null && recordCounter%1000==0) {
+		        	System.out.print(".");
+		        	instance.addFacts(facts);
+		        	facts.clear();
+		        }
+		    }
+		    // note that Scanner suppresses exceptions
+		    if (sc.ioException() != null) {
+		        throw sc.ioException();
+		    }		
+			if (instance!=null && !facts.isEmpty()) {
+				instance.addFacts(facts);
+				facts.clear();
+			}
+			if (verbose) System.out.println("\nImported " + recordCounter + " facts for relation " + r.getName());
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			  if (inputStream != null) {
+			        inputStream.close();
+			    }
+			    if (sc != null) {
+			        sc.close();
+			    }
+		}
+		return facts;
 	}
 
 }

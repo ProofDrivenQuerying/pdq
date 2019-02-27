@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.reasoning.chase.state;
+package uk.ac.ox.cs.pdq.reasoningdatabase;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,15 +10,11 @@ import java.util.Map;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
-import uk.ac.ox.cs.pdq.db.Instance;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.reasoningdatabase.DataSink;
-import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
-import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 
 /**
  * Imports or exports a chase state. Normally we export the final state of the
@@ -28,9 +24,9 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
  */
 public class StateExporter {
 
-	private Instance instance;
+	private DatabaseManager instance;
 	private boolean verbose = true;
-	public StateExporter(Instance instance) {
+	public StateExporter(DatabaseManager instance) {
 		Preconditions.checkNotNull(instance);
 		this.instance = instance;
 	}
@@ -40,13 +36,14 @@ public class StateExporter {
 	 * 
 	 * @param directory
 	 * @throws IOException
+	 * @throws DatabaseException 
 	 */
-	public void exportTo(File directory) throws IOException {
+	public void exportTo(File directory) throws IOException, DatabaseException {
 		Preconditions.checkArgument(directory.exists());
 		Preconditions.checkArgument(directory.isDirectory());
-		Map<String, Collection<Atom>> factsPerPredicate = sortPerPredicate(instance.getFacts());
+		Map<String, Collection<Atom>> factsPerPredicate = sortPerPredicate(instance.getCachedFacts());
 		for (String predicateName : factsPerPredicate.keySet()) {
-			DbIOManager.exportFacts(predicateName, directory, factsPerPredicate.get(predicateName));
+			IOManager.exportFacts(predicateName, directory, factsPerPredicate.get(predicateName));
 		}
 	}
 
@@ -82,15 +79,16 @@ public class StateExporter {
 	 * @param directory
 	 * @param schema
 	 * @throws IOException 
+	 * @throws DatabaseException 
 	 */
-	public void importFrom(File directory, Schema schema) throws IOException {
+	public void importFrom(File directory, Schema schema) throws IOException, DatabaseException {
 		Preconditions.checkArgument(directory.exists());
 		Preconditions.checkArgument(directory.isDirectory());
 
 		for (Relation r : schema.getRelations()) {
 			File csvFile = new File(directory, r.getName()+".csv");
 			if (csvFile.exists()) {
-				DbIOManager.importFacts(r, csvFile, instance, verbose);
+				IOManager.importFacts(r, csvFile, instance, verbose);
 			} else {
 				if (verbose) System.out.println("No data found for relation " + r.getName());
 			}
@@ -107,7 +105,7 @@ public class StateExporter {
 		public void addFacts(Collection<Atom> facts) throws IOException {
 			Map<String, Collection<Atom>> factsPerPredicate = sortPerPredicate(facts);
 			for (String predicateName : factsPerPredicate.keySet()) {
-				DbIOManager.exportFacts(predicateName, directory, factsPerPredicate.get(predicateName));
+				IOManager.exportFacts(predicateName, directory, factsPerPredicate.get(predicateName));
 			}
 		}
 		

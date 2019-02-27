@@ -27,11 +27,11 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoning.chase.KTerminationChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.StateExporter;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
+import uk.ac.ox.cs.pdq.reasoningdatabase.StateExporter;
 import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
@@ -39,7 +39,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * @author gabor
  *
  */
-public class StateExporterTest extends PdqTest {
+public class DatabaseChaseStateExporterTest extends PdqTest {
 
 	public DatabaseChaseInstance state;
 	private RestrictedChaser chaser;
@@ -76,9 +76,10 @@ public class StateExporterTest extends PdqTest {
 	 * 
 	 * @param dbParam
 	 * @throws IOException 
+	 * @throws DatabaseException 
 	 */
 	@Test
-	public void test() throws IOException {
+	public void test() throws IOException, DatabaseException {
 
 		Relation A = Relation.create("A",
 				new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1") });
@@ -124,8 +125,9 @@ public class StateExporterTest extends PdqTest {
 		for (int i = 1; i <= 5; i++)
 			facts.add(Atom.create(D, new Term[] { TypedConstant.create("z" + i), TypedConstant.create("z" + i) }));
 
+		DatabaseManager dbm = createConnection(s);
 		try {
-			this.state = new DatabaseChaseInstance(facts, createConnection(s));
+			this.state = new DatabaseChaseInstance(facts, dbm);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -135,16 +137,17 @@ public class StateExporterTest extends PdqTest {
 		File dir = new File("test/src/uk/ac/ox/cs/pdq/test/reasoning/chase/state/tmp");
 		if (dir.exists()) deleteDir(dir);
 		dir.mkdir();
-		StateExporter se = new StateExporter(this.state);
+		StateExporter se = new StateExporter(dbm);
 		se.exportTo(dir);
 		Assert.assertTrue(dir.listFiles().length == 5);
 		DatabaseChaseInstance newState = null;
+		DatabaseManager newDbm = createConnection(s);
 		try {
-			newState = new DatabaseChaseInstance(new ArrayList<>(), createConnection(s));
+			newState = new DatabaseChaseInstance(new ArrayList<>(), newDbm);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-		se = new StateExporter(newState);
+		se = new StateExporter(newDbm);
 		se.importFrom(dir, s);
 		
 		Assert.assertEquals(newState.getFacts().size(),originalFacts.size());

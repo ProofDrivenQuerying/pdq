@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 
 import com.google.common.eventbus.Subscribe;
 
-import uk.ac.ox.cs.pdq.tuple.Tuple;
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 
 
 /**

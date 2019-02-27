@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.tuple;
+package uk.ac.ox.cs.pdq.db.tuple;
 
 import java.io.Serializable;
 

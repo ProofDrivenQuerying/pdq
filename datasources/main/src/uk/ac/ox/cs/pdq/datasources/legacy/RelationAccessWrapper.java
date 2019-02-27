@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.datasources.legacy;
 import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.tuple.Tuple;
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 
 /**
  * 

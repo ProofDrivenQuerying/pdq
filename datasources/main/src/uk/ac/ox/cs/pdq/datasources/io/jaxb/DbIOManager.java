@@ -3,23 +3,19 @@ package uk.ac.ox.cs.pdq.datasources.io.jaxb;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Scanner;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
@@ -30,19 +26,16 @@ import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Instance;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
+import uk.ac.ox.cs.pdq.db.tuple.TupleType;
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedAccessMethod;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedRelation;
-import uk.ac.ox.cs.pdq.tuple.Tuple;
-import uk.ac.ox.cs.pdq.tuple.TupleType;
 
 /**
  * Reads a Schema that contains external (database) sources, such as: <code>
@@ -214,84 +207,16 @@ public class DbIOManager extends IOManager {
 	 * @param csvFile
 	 * @return
 	 * @throws IOException 
+	 * @throws DatabaseException 
 	 */
-	public static Collection<Atom> importFacts(Relation r, String csvFile) throws IOException {
+	public static Collection<Atom> importFacts(Relation r, String csvFile) throws IOException, DatabaseException {
 		return importFacts(r, new File(csvFile));
 	}
 	
-	public static Collection<Atom> importFacts(Relation r, File csvFile) throws IOException {
+	public static Collection<Atom> importFacts(Relation r, File csvFile) throws IOException, DatabaseException {
 		return importFacts(r, csvFile, null, false);
 	}
 
-	public static Collection<Atom> importFacts(Relation r, File csvFile, Instance instance, boolean verbose) throws IOException {
-		Collection<Atom> facts = Sets.newHashSet();
-		FileInputStream inputStream = null;
-		Scanner sc = null;
-		try {
-		    inputStream = new FileInputStream(csvFile);
-		    sc = new Scanner(inputStream, "UTF-8");
-		    // Open the csv file for reading
-		    long recordCounter = 0;
-		    if (verbose) System.out.println("Importing " + r.getName());
-		    while (sc.hasNextLine()) {
-		        String line = sc.nextLine();
-		        String[] tuple = line.split(",");
-		        List<Term> constants = Lists.newArrayList();
-		        for (int i = 0; i < tuple.length; ++i) {
-		        	constants.add(TypedConstant.deSerializeTypedConstant(tuple[i].replace("\"", "")));
-		        }
-		        facts.add(Atom.create(r, constants.toArray(new Term[constants.size()])));
-		        recordCounter++;
-		        if (instance!=null && recordCounter%1000==0) {
-		        	System.out.print(".");
-		        	instance.addFacts(facts);
-		        	facts.clear();
-		        }
-		    }
-		    // note that Scanner suppresses exceptions
-		    if (sc.ioException() != null) {
-		        throw sc.ioException();
-		    }		
-			if (instance!=null && !facts.isEmpty()) {
-				instance.addFacts(facts);
-				facts.clear();
-			}
-			if (verbose) System.out.println("\nImported " + recordCounter + " facts for relation " + r.getName());
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			  if (inputStream != null) {
-			        inputStream.close();
-			    }
-			    if (sc != null) {
-			        sc.close();
-			    }
-		}
-		return facts;
-	}
-	public static File exportFacts(String datafileName, File folder, Collection<Atom> atoms) throws IOException {
-		File target = new File(folder, datafileName + ".csv");
-		try (FileWriter fw = new FileWriter(target,true)) {
-			for (Atom a : atoms) {
-				StringBuilder builder = null;
-				for (Term value : a.getTerms()) {
-					if (builder == null) {
-						builder = new StringBuilder();
-					} else {
-						builder.append(",");
-					}
-					builder.append(encodeTermToCsv(value));
-				}
-				builder.append("\r\n");
-				fw.write(builder.toString());
-			}
-			fw.close();
-		}
-		return target;
-	}
 
 	/**
 	 * Creates a file called relationName.csv in the given folder containing all
@@ -324,24 +249,6 @@ public class DbIOManager extends IOManager {
 		return target;
 	}
 
-	private static String encodeTermToCsv(Term value) {
-		if (value==null)
-			return null;
-		if (value instanceof Variable) {
-			String s = "Variable[" + value+ "]";
-			return s;
-		}
-		if (value instanceof TypedConstant) {
-			String s = ((TypedConstant)value).serializeToString();
-			return s;
-		}
-		if (value instanceof UntypedConstant) {
-			String s = ((UntypedConstant)value).getSymbol();
-			return s.toString().replaceAll(",", "/c");
-		}
-		return value.toString().replaceAll(",", "/c");
-	}
-	
 	private static String encodeValue(Object value) {
 		if (value==null)
 			return null;
@@ -358,7 +265,7 @@ public class DbIOManager extends IOManager {
 		return s.replaceAll("//", "/");
 	}
 
-	public static Collection<Tuple> importTuples(Attribute[] attributes, String csvFile) {
+	public static Collection<Tuple> importTuples(Attribute[] attributes, String csvFile) throws IOException {
 		Collection<Tuple> facts = Sets.newHashSet();
 		BufferedReader reader = null;
 		TupleType tt = TupleType.DefaultFactory.createFromTyped(attributes);
@@ -382,8 +289,10 @@ public class DbIOManager extends IOManager {
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			throw e;
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw e;
 		} finally {
 			if (reader != null) {
 				try {
