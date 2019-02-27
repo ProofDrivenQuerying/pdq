@@ -7,5 +7,5 @@
     <attribute name="s_phone" type="java.lang.String" input="false" mapsToRelationAttribute="s_phone"/>
     <attribute name="s_acctbal" type="java.math.BigDecimal" input="false" mapsToRelationAttribute="s_acctbal"/>
     <attribute name="s_suppkey" type="java.lang.Integer" input="false" mapsToRelationAttribute="s_suppkey"/>
-    <data-scv-file>test/planner/linear/fast/tpch/simple/case_005/accessesMem/data/supplier_m6.csv</data-scv-file>
+    <data-scv-file>./data/supplier_m6.csv</data-scv-file>
 </Access>

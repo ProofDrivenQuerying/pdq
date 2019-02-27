@@ -125,19 +125,17 @@ public class DatabaseChaseStateExporterTest extends PdqTest {
 		for (int i = 1; i <= 5; i++)
 			facts.add(Atom.create(D, new Term[] { TypedConstant.create("z" + i), TypedConstant.create("z" + i) }));
 
-		DatabaseManager dbm = createConnection(s);
 		try {
-			this.state = new DatabaseChaseInstance(facts, dbm);
+			this.state = new DatabaseChaseInstance(facts, createConnection(s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-
 		this.chaser.reasonUntilTermination(this.state, new Dependency[] { this.tgd });
 		Collection<Atom> originalFacts = state.getFacts();
 		File dir = new File("test/src/uk/ac/ox/cs/pdq/test/reasoning/chase/state/tmp");
 		if (dir.exists()) deleteDir(dir);
 		dir.mkdir();
-		StateExporter se = new StateExporter(dbm);
+		StateExporter se = new StateExporter(state.getDatabaseManager());
 		se.exportTo(dir);
 		Assert.assertTrue(dir.listFiles().length == 5);
 		DatabaseChaseInstance newState = null;

@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.datasources.io.jaxb;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,8 +103,14 @@ public class XmlExecutableAccessMethod {
 		return r;
 	}
 
-	public ExecutableAccessMethod toExecutableAccessMethod(Schema s) throws IOException {
+	public ExecutableAccessMethod toExecutableAccessMethod(Schema s, File parentDir) throws IOException {
 		Relation r = getRelationObject(s);
+		if (!new File(dataFileName).exists()) {
+			dataFileName = new File(parentDir,dataFileName).getAbsolutePath();
+		}
+		if (!new File(dataFileName).exists()) {
+			throw new FileNotFoundException("Data file: " + dataFileName + " not found!" );
+		}
 		switch (accessType) {
 		case IN_MEMORY_ACCESS_METHOD:
 			InMemoryAccessMethod am = new InMemoryAccessMethod(accessMethodName,

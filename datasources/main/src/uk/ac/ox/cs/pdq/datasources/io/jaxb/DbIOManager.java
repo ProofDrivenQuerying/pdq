@@ -160,7 +160,7 @@ public class DbIOManager extends IOManager {
 			JAXBContext jaxbContext = JAXBContext.newInstance(XmlExecutableAccessMethod.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			XmlExecutableAccessMethod xmlAccessMethod = (XmlExecutableAccessMethod) jaxbUnmarshaller.unmarshal(xmlFile);
-			return xmlAccessMethod.toExecutableAccessMethod(null);
+			return xmlAccessMethod.toExecutableAccessMethod(null,xmlFile.getParentFile());
 		} catch (Throwable t) {
 			// the xml was not a SqlAccessMethod or a InMemoryAccessMethod, so assume it is a RESTAccessMethod.
 			JAXBContext jaxbContext = JAXBContext.newInstance(Service.class);
@@ -286,7 +286,6 @@ public class DbIOManager extends IOManager {
 				}
 				facts.add(tt.createTuple(constants));
 			}
-
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			throw e;

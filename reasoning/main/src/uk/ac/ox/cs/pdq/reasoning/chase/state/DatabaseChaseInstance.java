@@ -805,6 +805,9 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	public Collection<Atom> getNewFacts() {
 		return newFacts;
 	}
+	public DatabaseManager getDatabaseManager() {
+		return databaseInstance;
+	}
 
 
 }
