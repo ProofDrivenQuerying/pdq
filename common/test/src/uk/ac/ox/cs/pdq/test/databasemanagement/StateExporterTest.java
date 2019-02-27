@@ -117,8 +117,9 @@ public class StateExporterTest extends PdqTest {
 			facts.add(Atom.create(D, new Term[] { TypedConstant.create("z" + i), TypedConstant.create("z" + i) }));
 
 		DatabaseManager dbm = createConnection(s);
+		dbm.addFacts(facts);
 		Collection<Atom> originalFacts = dbm.getCachedFacts();
-		File dir = new File("test/src/uk/ac/ox/cs/pdq/test/reasoning/chase/state/tmp");
+		File dir = new File("test/src/uk/ac/ox/cs/pdq/test/databasemanagement/tmp");
 		if (dir.exists()) deleteDir(dir);
 		dir.mkdir();
 		StateExporter se = new StateExporter(dbm);
@@ -143,7 +144,7 @@ public class StateExporterTest extends PdqTest {
 	@Test
 	public void exportTpcHDatabaseToFolderAndImportItToChaser() throws IOException, DatabaseException {
 		try {
-			File dir = new File("test/src/uk/ac/ox/cs/pdq/test/reasoning/chase/state/tmp");
+			File dir = new File("test/src/uk/ac/ox/cs/pdq/test/databasemanagement/tmp");
 			if (dir.exists()) deleteDir(dir);
 			dir.mkdir();
 			File schmeXml = new File(dir,"../schema/tpchSchema.xml");
