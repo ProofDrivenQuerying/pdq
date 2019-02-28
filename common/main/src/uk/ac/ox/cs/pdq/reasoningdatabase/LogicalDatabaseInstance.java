@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
@@ -55,6 +54,8 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	protected static final String FACT_ID_ATTRIBUTE_NAME = "FactId";
 	protected static final String INSTANCE_ID_ATTRIBUTE_NAME = "DatabaseInstanceID";
 	protected static final String MAPPING_TABLE_NAME = "InstanceIdMapping";
+	protected static final String CONSTANTS_TO_ATOMS_TABLE_NAME = "ConstantsToAtoms";
+	protected static final String[] CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES = {"Constant","TableName",FACT_ID_ATTRIBUTE_NAME,INSTANCE_ID_ATTRIBUTE_NAME};
 	protected static final Attribute FACT_ID_ATTRIBUTE = Attribute.create(Integer.class, FACT_ID_ATTRIBUTE_NAME);
 	protected static final Relation factIdInstanceIdMappingTable = Relation.create(MAPPING_TABLE_NAME,
 			new Attribute[] { FACT_ID_ATTRIBUTE, Attribute.create(Integer.class, INSTANCE_ID_ATTRIBUTE_NAME) },
@@ -503,31 +504,59 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	public void addToConstantsToAtoms(Constant term, Atom atom) throws DatabaseException {
 		constantsToAtoms.put(term, atom);
 		if (constantsToAtoms.size() >= maxSizeForConstantsToAtoms) {
-			initConstantsToAtoms();
+			flushConstantsToAtomsToDb();
 		}
 	}
 
 	/**
 	 * @throws DatabaseException
 	 */
-	private void initConstantsToAtoms() throws DatabaseException {
+	private void flushConstantsToAtomsToDb() throws DatabaseException {
 		if (!constantsInitialized) {
+			// Create the table in the database
 			constantsInitialized = true;
-			constToAtomsRelation = Relation.create("ConstantsToAtoms",
-					new Attribute[] { Attribute.create(String.class, "Constant"),
+			// create relation to store constants to atoms cache.
+			constToAtomsRelation = Relation.create(CONSTANTS_TO_ATOMS_TABLE_NAME,
+					new Attribute[] { Attribute.create(String.class, CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0]),Attribute.create(String.class, CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[1]),
 							Attribute.create(Integer.class, LogicalDatabaseInstance.INSTANCE_ID_ATTRIBUTE_NAME) });
 			this.addRelation(constToAtomsRelation);
-			List<Atom> toWrite = new ArrayList<>();
-			for (Constant c : constantsToAtoms.keySet()) {
-				toWrite.add(
-						Atom.create(constToAtomsRelation, new Term[] { c, TypedConstant.create(this.databaseInstanceID),
-								TypedConstant.create(constantsToAtoms.get(c).hashCode()) }));
+			// populate the new relation from all stored facts. This step is very slow, but will accelerate EGD chase in a long run.
+			for (Relation r : getFactRelations()) {
+				populateConstantsTableFromFactsOfRelation(r);
 			}
-			constantsToAtoms.clear();
-			this.addFacts(toWrite);
 		}
+		List<Atom> toWrite = new ArrayList<>();
+		// populate the new relation from the memory cache
+		for (Constant c : constantsToAtoms.keySet()) {
+			for (Atom a : constantsToAtoms.get(c)) {
+				toWrite.add(
+					Atom.create(constToAtomsRelation, new Term[] { c, TypedConstant.create(this.databaseInstanceID),
+							TypedConstant.create(a.getPredicate().getName()),
+							TypedConstant.create(a.hashCode())}));
+			}
+		}
+		constantsToAtoms.clear();
+		edm.addFacts(toWrite);
 	}
 
+	/**
+	 * @return a list of relations that contains facts (a table that contains a factID attribute and is not the mapping table, neither the constantsToAtoms table
+	 */
+	private List<Relation> getFactRelations() {
+		List<Relation> ret = new ArrayList<>();
+		for (Relation r : edm.schema.getRelations()) {
+			// these tables we do not search
+			if (CONSTANTS_TO_ATOMS_TABLE_NAME.equals(r.getName()))
+				continue;
+			if (MAPPING_TABLE_NAME.equals(r.getName()))
+				continue;
+			// if the table doesn't have a factId we do not need to search it.
+			if (r.getAttribute(FACT_ID_ATTRIBUTE_NAME) == null)
+				continue;
+			ret.add(r);
+		}
+		return ret;
+	}
 	/** 
 	 * Returns a hashSet (in order to remove duplicates) of Atoms that at some attribute(s) contains the constant.
 	 * The search is executed in both inmemory and external.
@@ -535,22 +564,29 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	 */
 	@Override
 	public Collection<Atom> getAtomsContainingConstant(Constant constantToFind) throws DatabaseException {
-		initConstantsToAtoms();
+		flushConstantsToAtomsToDb();
 		Collection<Atom> results = new HashSet<>();
 		results.addAll(constantsToAtoms.get(constantToFind));
-
-		for (Relation r : edm.schema.getRelations()) {
-			// these tables we do not search
-			if ("ConstantsToAtoms".equals(r.getName()) || MAPPING_TABLE_NAME.equals(r.getName()))
-				continue;
-			// if the table doesn't have a factId we do not need to search it.
-			if (r.getAttribute(FACT_ID_ATTRIBUTE_NAME) == null)
-				continue;
-			results.addAll(getFactsFromTableContainingConstant(r, constantToFind));
+		String constantStr = "'" + constantToFind.toString() + "'"; 
+		for (Relation r : getFactRelations()) {
+			//select all from currentTable where constant=toFind AND instanceId=currentInstanceId AND tableName=CurrentTable. 
+			String cmd = "SELECT * FROM " + Command.DATABASENAME + "." + r.getName() + " WHERE " + FACT_ID_ATTRIBUTE_NAME + " IN ("
+					+ "SELECT "+FACT_ID_ATTRIBUTE_NAME+" FROM "+Command.DATABASENAME+"." + CONSTANTS_TO_ATOMS_TABLE_NAME 
+					+ " WHERE "+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0]+"=" + constantStr + " AND "+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[3]
+					+ "=" + this.databaseInstanceID + "AND "+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[1]+"='" +r.getName() +"')";
+			List<String> retFacts = this.edm.execute(new Command(cmd));
+			for (int index = 2 * r.getArity(); index < retFacts.size(); index += r.getArity()) {
+				// first two r.getArity() elements are the column headers and types.
+				Term[] terms = new Term[r.getArity() - 1];
+				for (int t = 0; t < r.getArity() - 1; t++)
+					terms[t] = UntypedConstant.create(retFacts.get(index + t));
+				results.add(Atom.create(Predicate.create(r.getName(), r.getArity() - 1), terms));
+			}
+			
 		}
 		return results;
 	}
-
+	
 	/**
 	 * Creates as many queries as many attributes R has, and executes a search for
 	 * the given constant. Retrurns the whole fact for each match. Does not filter
@@ -561,32 +597,25 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	 * @return
 	 * @throws DatabaseException
 	 */
-	private List<Atom> getFactsFromTableContainingConstant(Relation r, Constant constantToFind)
+	private List<Atom> populateConstantsTableFromFactsOfRelation(Relation r)
 			throws DatabaseException {
 		List<Atom> results = new ArrayList<>();
 		for (int attributeIndex = 0; attributeIndex < r.getArity(); attributeIndex++) {
-			if (r.getAttribute(attributeIndex).getName().equals(FACT_ID_ATTRIBUTE_NAME))
+			String currentAttr = r.getAttribute(attributeIndex).getName();
+			if (currentAttr.equals(FACT_ID_ATTRIBUTE_NAME))
 				continue;
-			// SELECT r (attributes) FROM r, mappingTable WHERE r.factID=mappingTable.factID
-			// AND mappingTable.InstanceId=instanceid AND r.[currentAttribute] =
-			// constantToFind;
-			String cmd = "SELECT " + r.getName() + "." + Joiner.on("," + r.getName() + ".").join(r.getAttributes())
-					+ " FROM " + Command.DATABASENAME + "." + r.getName() + ", " + Command.DATABASENAME + "."
-					+ MAPPING_TABLE_NAME + " WHERE " + r.getName() + "." + FACT_ID_ATTRIBUTE_NAME + "="
-					+ MAPPING_TABLE_NAME + "." + FACT_ID_ATTRIBUTE_NAME + " AND " + MAPPING_TABLE_NAME + "."
-					+ INSTANCE_ID_ATTRIBUTE_NAME + " = " + this.databaseInstanceID + " AND " + r.getName() + "."
-					+ r.getAttribute(attributeIndex).getName() + " = '" + ((UntypedConstant) constantToFind).getSymbol()
-					+ "'";
+			// INSERT INTO ConstantsToAtoms Select attribute0,r.getName(), FactID from r.getName() 
+			
+			String cmd = "INSERT INTO " + Command.DATABASENAME + "." + CONSTANTS_TO_ATOMS_TABLE_NAME + " SELECT " 
+					+ currentAttr + " AS "+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0]+", '"+ r.getName() + "' AS "+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[1]+", "
+					+ this.databaseInstanceID + " AS " + CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[3] + ","
+					+ r.getName()+"." + FACT_ID_ATTRIBUTE_NAME + " As " + FACT_ID_ATTRIBUTE_NAME + " FROM " + Command.DATABASENAME + "." + r.getName() + ","
+					+ Command.DATABASENAME + "." + MAPPING_TABLE_NAME + " WHERE " +r.getName() + "." + FACT_ID_ATTRIBUTE_NAME 
+					+ "=" +MAPPING_TABLE_NAME+"."+FACT_ID_ATTRIBUTE_NAME+" AND " 
+					+ MAPPING_TABLE_NAME + "." + INSTANCE_ID_ATTRIBUTE_NAME + " = " + this.databaseInstanceID;
 			try {
 				List<String> ret = this.edm.execute(new Command(cmd));
-				// first r.getArity() elements are the column names, the second group is the
-				// types. We have actual data from the third group of r.getArity() elements.
-				for (int i = 2 * r.getArity(); i < ret.size(); i += r.getArity()) {
-					Term[] terms = new Term[r.getArity() - 1];
-					for (int t = 0; t < r.getArity() - 1; t++)
-						terms[t] = UntypedConstant.create(ret.get(i + t));
-					results.add(Atom.create(Predicate.create(r.getName(), r.getArity() - 1), terms));
-				}
+				System.out.println("debug point 1" + ret);
 			} catch (Throwable t) {
 				t.printStackTrace();
 				throw t;
@@ -602,7 +631,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	public void removeConstantFromMap(Constant obsoleteConstant) throws DatabaseException {
 		constantsToAtoms.removeAll(obsoleteConstant);
 		if (constantsInitialized) {
-			String sqlCommand = "Delete from " + Command.DATABASENAME + ".ConstantsToAtoms where Constant = '"
+			String sqlCommand = "DELETE FROM " + Command.DATABASENAME + "." + CONSTANTS_TO_ATOMS_TABLE_NAME + " WHERE " + CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0] + " = '"
 					+ obsoleteConstant + "' AND " + LogicalDatabaseInstance.INSTANCE_ID_ATTRIBUTE_NAME + " = "
 					+ this.databaseInstanceID;
 			edm.execute(new Command(sqlCommand));
@@ -618,16 +647,18 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 			throw new RuntimeException("LogicalDatabaseInstance cannot be merged into " + from);
 		}
 		/*
-		 * This will use the SQL insert into select statement INSERT INTO table-name
-		 * (column-names) SELECT column-names FROM table-name WHERE condition
+		 * This will use the SQL insert into select statement 
+		 * INSERT INTO table-name (column-names) 
+		 * 		SELECT column-names FROM table-name WHERE condition
 		 */
 		int fromDbInstanceId = ((LogicalDatabaseInstance) from).databaseInstanceID;
 		this.constantsInitialized = ((LogicalDatabaseInstance) from).constantsInitialized;
 		if (constantsInitialized) {
-			String sqlCommand = "INSERT INTO " + Command.DATABASENAME + ".ConstantsToAtoms (Constant,"
-					+ this.databaseInstanceID + ", " + LogicalDatabaseInstance.FACT_ID_ATTRIBUTE_NAME
-					+ ") SELECT Constant, " + LogicalDatabaseInstance.FACT_ID_ATTRIBUTE_NAME + " FROM "
-					+ Command.DATABASENAME + ".ConstantsToAtoms WHERE "
+			String sqlCommand = "INSERT INTO " + Command.DATABASENAME + "." + CONSTANTS_TO_ATOMS_TABLE_NAME + " ("+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0] + ","
+					+ this.databaseInstanceID + ", " + LogicalDatabaseInstance.FACT_ID_ATTRIBUTE_NAME + ", TableName " 
+					+ ") SELECT "+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0]+", " + LogicalDatabaseInstance.FACT_ID_ATTRIBUTE_NAME + "," 
+					+ CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[1]+ " FROM "
+					+ Command.DATABASENAME + "." + CONSTANTS_TO_ATOMS_TABLE_NAME + " WHERE "
 					+ LogicalDatabaseInstance.INSTANCE_ID_ATTRIBUTE_NAME + " = " + fromDbInstanceId;
 			// copy database data
 			edm.execute(new Command(sqlCommand));
