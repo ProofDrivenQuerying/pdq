@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -280,7 +282,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 			// single atom case
 			List<Atom> facts = answerSingleAtomQuery((Atom) formula, instanceId, formulaCache);
 			facts = filterEqualities(facts, (Atom) formula);
-			List<Atom> res = filterInequalities(facts, cq, formulaCache);
+			List<Atom> res = filterInequalities(new HashSet<>(facts), cq, formulaCache);
 			return res;
 
 		} else {
@@ -327,7 +329,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 				rightName = factsRight.get(0).getPredicate().getName();
 				rightTerms = formulaCache.get(rightName);
 			}
-			List<Atom> results = new ArrayList<>();
+			Set<Atom> results = new HashSet<>();
 			// now we have both left and right side atoms so we
 			// have to create a cross join, accounting with attribute equalities.
 			// first the new cross join predicate needs to be created
@@ -352,7 +354,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	}
 
 	private void computeCrossJoin(List<Atom> factsLeft, List<Atom> factsRight, List<Pair<Integer, Integer>> equalities,
-			Predicate joint, List<Atom> results) {
+			Predicate joint, Set<Atom> results) {
 		if (factsLeft.size() < 1000 && factsRight.size() < 1000) {
 			for (Atom lf : factsLeft) {
 				for (Atom rf : factsRight) {
@@ -409,15 +411,6 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 						}
 					}
 				}
-//				for (Atom leftAtom:left.values())
-//				for (Atom rightAtom:right.values())
-//						if (checkAttributeEqualities(leftAtom, rightAtom, equalities)) { 
-//							List<Term> terms = new ArrayList<>();
-//							terms.addAll(Arrays.asList(leftAtom.getTerms()));
-//							terms.addAll(Arrays.asList(rightAtom.getTerms()));
-//							results.add(Atom.create(joint, terms.toArray(new Term[terms.size()])));
-//						}
-					
 			}
 		}
 		
@@ -457,12 +450,12 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	 * @param formulaCache
 	 * @return
 	 */
-	private List<Atom> filterInequalities(List<Atom> facts, ConjunctiveQuery cq, Map<String, Term[]> formulaCache) {
+	private List<Atom> filterInequalities(Set<Atom> facts, ConjunctiveQuery cq, Map<String, Term[]> formulaCache) {
 		if (!(cq instanceof ConjunctiveQueryWithInequality))
-			return facts;
+			return new ArrayList<>(facts);
 		ConjunctiveQueryWithInequality cqw = (ConjunctiveQueryWithInequality) cq;
 		if (cqw.getInequalities() == null || cqw.getInequalities().isEmpty())
-			return facts;
+			return new ArrayList<>(facts);
 		List<Atom> results = new ArrayList<>();
 		for (Atom f : facts) {
 			List<Term> terms = Arrays.asList(formulaCache.get(f.getPredicate().getName()));
