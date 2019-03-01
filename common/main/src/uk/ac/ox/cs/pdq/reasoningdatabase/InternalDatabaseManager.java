@@ -9,6 +9,9 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -341,20 +344,83 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 			if (factsLeft.size() > 0 && factsRight.size() > 0) {
 				List<Pair<Integer, Integer>> equalities = getAttributeEqualities(factsLeft.get(0), factsRight.get(0), (Conjunction) formula, formulaCache);
 				// the actual cross join
-				for (Atom lf : factsLeft) {
-					for (Atom rf : factsRight) {
-						if (checkAttributeEqualities(lf, rf, equalities)) {
-							List<Term> terms = new ArrayList<>();
-							terms.addAll(Arrays.asList(lf.getTerms()));
-							terms.addAll(Arrays.asList(rf.getTerms()));
-							results.add(Atom.create(joint, terms.toArray(new Term[terms.size()])));
-						}
-					}
-				}
+				computeCrossJoin(factsLeft,factsRight, equalities, joint, results);
 			}
 			List<Atom> res = filterInequalities(results, cq, formulaCache);
 			return res;
 		}
+	}
+
+	private void computeCrossJoin(List<Atom> factsLeft, List<Atom> factsRight, List<Pair<Integer, Integer>> equalities,
+			Predicate joint, List<Atom> results) {
+		if (factsLeft.size() < 1000 && factsRight.size() < 1000) {
+			for (Atom lf : factsLeft) {
+				for (Atom rf : factsRight) {
+					if (checkAttributeEqualities(lf, rf, equalities)) { //factsLeft.size() factsRight.size()
+						List<Term> terms = new ArrayList<>();
+						terms.addAll(Arrays.asList(lf.getTerms()));
+						terms.addAll(Arrays.asList(rf.getTerms()));
+						results.add(Atom.create(joint, terms.toArray(new Term[terms.size()])));
+					}
+				}
+			}
+		} else {
+			List<Atom> factsShort = factsLeft;
+			List<Atom> factsLong = factsRight;
+			if (factsLeft.size() >factsRight.size() ) {
+				factsShort = factsRight;
+				factsLong = factsLeft;
+			}
+			
+			for (Pair<Integer, Integer> e : equalities) {
+				Multimap<Term, Atom> left = LinkedHashMultimap.create();
+				for (Atom lf : factsShort) {
+					left.put(lf.getTerm(e.getLeft()),lf);
+				}
+				Multimap<Term, Atom> right = LinkedHashMultimap.create();
+				for (Atom rf : factsLong) {
+					Term currentTerm  = rf.getTerm(e.getRight());
+					if (left.containsKey(currentTerm)) {
+						right.put(currentTerm,rf);
+					}
+				}
+				if (equalities.size() == 1) {
+					for (Term leftKey:left.keySet()) {
+						for (Atom rightAtom: right.get(leftKey)) {
+							for (Atom leftAtom:left.get(leftKey)) {
+								List<Term> terms = new ArrayList<>();
+								terms.addAll(Arrays.asList(leftAtom.getTerms()));
+								terms.addAll(Arrays.asList(rightAtom.getTerms()));
+								results.add(Atom.create(joint, terms.toArray(new Term[terms.size()])));
+							}
+						}
+					}
+				} else {
+					for (Term leftKey:left.keySet()) {
+						for (Atom rightAtom: right.get(leftKey)) {
+							for (Atom leftAtom:left.get(leftKey)) {
+								if (checkAttributeEqualities(leftAtom, rightAtom, equalities)) { 
+									List<Term> terms = new ArrayList<>();
+									terms.addAll(Arrays.asList(leftAtom.getTerms()));
+									terms.addAll(Arrays.asList(rightAtom.getTerms()));
+									results.add(Atom.create(joint, terms.toArray(new Term[terms.size()])));
+								}
+							}
+						}
+					}
+				}
+//				for (Atom leftAtom:left.values())
+//				for (Atom rightAtom:right.values())
+//						if (checkAttributeEqualities(leftAtom, rightAtom, equalities)) { 
+//							List<Term> terms = new ArrayList<>();
+//							terms.addAll(Arrays.asList(leftAtom.getTerms()));
+//							terms.addAll(Arrays.asList(rightAtom.getTerms()));
+//							results.add(Atom.create(joint, terms.toArray(new Term[terms.size()])));
+//						}
+					
+			}
+		}
+		
 	}
 
 	private List<Atom> filterEqualities(List<Atom> facts, Atom formula) {
