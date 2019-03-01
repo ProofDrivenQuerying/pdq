@@ -650,6 +650,8 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		 * This will use the SQL insert into select statement 
 		 * INSERT INTO table-name (column-names) 
 		 * 		SELECT column-names FROM table-name WHERE condition
+		 * The statement will copy all data from the constantsToAtoms table where the instanceID=sorceInstanceID, 
+		 * creating new records with the new this.instanceid
 		 */
 		int fromDbInstanceId = ((LogicalDatabaseInstance) from).databaseInstanceID;
 		this.constantsInitialized = ((LogicalDatabaseInstance) from).constantsInitialized;
