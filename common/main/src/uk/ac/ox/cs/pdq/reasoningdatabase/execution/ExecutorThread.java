@@ -28,6 +28,7 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.BasicSelect;
 import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.DropDatabase;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.InsertSelect;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
@@ -287,8 +288,10 @@ public class ExecutorThread extends Thread {
 		// while inserts and other SQL commands have to be executed by calling the
 		// executeUpdate function. Everything that extends BasicSelect will be executed
 		// as a query, one by one. Updates can be batch executed.
-		
-		if (command instanceof BasicSelect || command.toPostgresStatement(databaseName).get(0).toLowerCase().startsWith("select ")) {
+		if (command instanceof InsertSelect) {
+			executeUpdate(statements, ignoreErrors);
+			return new ArrayList<>();
+		} else if (command instanceof BasicSelect || command.toPostgresStatement(databaseName).get(0).toLowerCase().startsWith("select ")) {
 			List<String> results = new ArrayList<>();
 			for (String statement : statements) {
 				// queries one by one.

@@ -520,6 +520,9 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 					new Attribute[] { Attribute.create(String.class, CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0]),Attribute.create(String.class, CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[1]),
 							Attribute.create(Integer.class, LogicalDatabaseInstance.INSTANCE_ID_ATTRIBUTE_NAME) });
 			this.addRelation(constToAtomsRelation);
+			constToAtomsRelation = Relation.create(CONSTANTS_TO_ATOMS_TABLE_NAME,
+					new Attribute[] { Attribute.create(String.class, CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0]),Attribute.create(String.class, CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[1]),
+							FACT_ID_ATTRIBUTE, Attribute.create(Integer.class, LogicalDatabaseInstance.INSTANCE_ID_ATTRIBUTE_NAME) });
 			// populate the new relation from all stored facts. This step is very slow, but will accelerate EGD chase in a long run.
 			for (Relation r : getFactRelations()) {
 				populateConstantsTableFromFactsOfRelation(r);
@@ -530,9 +533,10 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		for (Constant c : constantsToAtoms.keySet()) {
 			for (Atom a : constantsToAtoms.get(c)) {
 				toWrite.add(
-					Atom.create(constToAtomsRelation, new Term[] { c, TypedConstant.create(this.databaseInstanceID),
+					Atom.create(constToAtomsRelation, new Term[] { c, 
 							TypedConstant.create(a.getPredicate().getName()),
-							TypedConstant.create(a.hashCode())}));
+							TypedConstant.create(a.hashCode()),
+							TypedConstant.create(this.databaseInstanceID)}));
 			}
 		}
 		constantsToAtoms.clear();
@@ -562,31 +566,39 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	 * The search is executed in both inmemory and external.
 	 * 
 	 */
-	@Override
 	public Collection<Atom> getAtomsContainingConstant(Constant constantToFind) throws DatabaseException {
 		flushConstantsToAtomsToDb();
 		Collection<Atom> results = new HashSet<>();
 		results.addAll(constantsToAtoms.get(constantToFind));
-		String constantStr = "'" + constantToFind.toString() + "'"; 
+		Variable factidVar = Variable.create("V" + FACT_ID_ATTRIBUTE_NAME);
 		for (Relation r : getFactRelations()) {
-			//select all from currentTable where constant=toFind AND instanceId=currentInstanceId AND tableName=CurrentTable. 
-			String cmd = "SELECT * FROM " + Command.DATABASENAME + "." + r.getName() + " WHERE " + FACT_ID_ATTRIBUTE_NAME + " IN ("
-					+ "SELECT "+FACT_ID_ATTRIBUTE_NAME+" FROM "+Command.DATABASENAME+"." + CONSTANTS_TO_ATOMS_TABLE_NAME 
-					+ " WHERE "+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0]+"=" + constantStr + " AND "+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[3]
-					+ "=" + this.databaseInstanceID + "AND "+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[1]+"='" +r.getName() +"')";
-			List<String> retFacts = this.edm.execute(new Command(cmd));
-			for (int index = 2 * r.getArity(); index < retFacts.size(); index += r.getArity()) {
-				// first two r.getArity() elements are the column headers and types.
-				Term[] terms = new Term[r.getArity() - 1];
-				for (int t = 0; t < r.getArity() - 1; t++)
-					terms[t] = UntypedConstant.create(retFacts.get(index + t));
-				results.add(Atom.create(Predicate.create(r.getName(), r.getArity() - 1), terms));
+			Variable freeVariables[] = new Variable[r.getArity()];
+			for (int i = 0; i < r.getArity(); i++) {
+				if (r.getAttribute(i).equals(FACT_ID_ATTRIBUTE)) {
+					freeVariables[i] = factidVar;
+				} else {
+					freeVariables[i] = Variable.create("V"+r.getAttribute(i).getName());
+				}
 			}
-			
+			Atom rAtom = Atom.create(r, freeVariables);
+			Atom mapAtom = Atom.create(constToAtomsRelation, new Term[] {constantToFind,UntypedConstant.create(r.getName()),
+																		 TypedConstant.create(this.databaseInstanceID),factidVar});
+			ConjunctiveQuery cq =ConjunctiveQuery.create(freeVariables, new Atom[] {rAtom,mapAtom}); 
+			List<Match> ret = edm.answerConjunctiveQuery(cq);
+			for (Match m:ret) {
+				List<Term> terms = new ArrayList<>();
+				for (Attribute a:r.getAttributes()) {
+					if (LogicalDatabaseInstance.FACT_ID_ATTRIBUTE.equals(a))
+						continue;
+					terms.add(m.getMapping().get(Variable.create("V"+a.getName())));
+				}
+				results.add(Atom.create(this.originalSchema.getRelation(r.getName()), terms.toArray(new Term[terms.size()])));
+			}
 		}
 		return results;
 	}
-	
+
+
 	/**
 	 * Creates as many queries as many attributes R has, and executes a search for
 	 * the given constant. Retrurns the whole fact for each match. Does not filter
@@ -597,31 +609,28 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	 * @return
 	 * @throws DatabaseException
 	 */
-	private List<Atom> populateConstantsTableFromFactsOfRelation(Relation r)
+	private void populateConstantsTableFromFactsOfRelation(Relation r)
 			throws DatabaseException {
-		List<Atom> results = new ArrayList<>();
 		for (int attributeIndex = 0; attributeIndex < r.getArity(); attributeIndex++) {
 			String currentAttr = r.getAttribute(attributeIndex).getName();
 			if (currentAttr.equals(FACT_ID_ATTRIBUTE_NAME))
 				continue;
 			// INSERT INTO ConstantsToAtoms Select attribute0,r.getName(), FactID from r.getName() 
-			
 			String cmd = "INSERT INTO " + Command.DATABASENAME + "." + CONSTANTS_TO_ATOMS_TABLE_NAME + " SELECT " 
 					+ currentAttr + " AS "+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0]+", '"+ r.getName() + "' AS "+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[1]+", "
-					+ this.databaseInstanceID + " AS " + CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[3] + ","
-					+ r.getName()+"." + FACT_ID_ATTRIBUTE_NAME + " As " + FACT_ID_ATTRIBUTE_NAME + " FROM " + Command.DATABASENAME + "." + r.getName() + ","
+					+ this.databaseInstanceID + " AS " + CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[3] + ", "
+					+ r.getName()+"." + FACT_ID_ATTRIBUTE_NAME + " AS " + FACT_ID_ATTRIBUTE_NAME + " "  
+					+ " FROM " + Command.DATABASENAME + "." + r.getName() + ","
 					+ Command.DATABASENAME + "." + MAPPING_TABLE_NAME + " WHERE " +r.getName() + "." + FACT_ID_ATTRIBUTE_NAME 
 					+ "=" +MAPPING_TABLE_NAME+"."+FACT_ID_ATTRIBUTE_NAME+" AND " 
 					+ MAPPING_TABLE_NAME + "." + INSTANCE_ID_ATTRIBUTE_NAME + " = " + this.databaseInstanceID;
 			try {
-				List<String> ret = this.edm.execute(new Command(cmd));
-				System.out.println("debug point 1" + ret);
+				this.edm.execute(new Command(cmd));
 			} catch (Throwable t) {
 				t.printStackTrace();
 				throw t;
 			}
 		}
-		return results;
 	}
 
 	/** Attempts to remove the constant from the memory cache as well as from the external db. 
@@ -631,10 +640,10 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	public void removeConstantFromMap(Constant obsoleteConstant) throws DatabaseException {
 		constantsToAtoms.removeAll(obsoleteConstant);
 		if (constantsInitialized) {
-			String sqlCommand = "DELETE FROM " + Command.DATABASENAME + "." + CONSTANTS_TO_ATOMS_TABLE_NAME + " WHERE " + CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0] + " = '"
-					+ obsoleteConstant + "' AND " + LogicalDatabaseInstance.INSTANCE_ID_ATTRIBUTE_NAME + " = "
-					+ this.databaseInstanceID;
-			edm.execute(new Command(sqlCommand));
+			Atom toDelete = Atom.create(Predicate.create(CONSTANTS_TO_ATOMS_TABLE_NAME,4),new Term[] {
+					obsoleteConstant, Variable.create("VTableName"), TypedConstant.create(this.databaseInstanceID),Variable.create("VFactId")
+			});
+			edm.deleteFacts(Arrays.asList(new Atom[] {toDelete}));
 		}
 	}
 

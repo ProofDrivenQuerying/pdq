@@ -57,12 +57,19 @@ public class Delete extends Command {
 			throw new DatabaseException("Fact have different number of terms then the attributes of the relation: " + fact + ", relation " + r);
 
 		int index = 0;
+		boolean firstAdded=false;
+		
 		// condition
 		for (Attribute a : r.getAttributes()) {
-			if (index != 0)
-				deleteFrom += " AND ";
-			deleteFrom += a.getName() + " = " + convertTermToSQLString(a, fact.getTerm(index)) + " ";
-			index++;
+			if (fact.getTerm(index).isVariable()) {
+				index++;
+			} else {
+				if (firstAdded)
+					deleteFrom += " AND ";
+				deleteFrom += a.getName() + " = " + convertTermToSQLString(a, fact.getTerm(index)) + " ";
+				firstAdded=true;
+				index++;
+			}
 		}
 		deleteFrom += "\n";
 		return deleteFrom;
