@@ -176,7 +176,7 @@ public class TestEGDChaseStep extends PdqTest {
 			matches.add(Match.create(d[0], mapping));
 		}
 		state.EGDchaseStep(matches );
-		System.out.println("500 equalities processed in : "+ (System.currentTimeMillis()-start)/1000.0 +" sec. Using: InMemory");
+		System.out.println("500 equalities processed in : "+ (System.currentTimeMillis()-start)/1000.0 +" sec.");
 		Set<Atom> facts2 = Sets.newHashSet(state.getFacts());
 		Iterator<Atom> iterator2 = facts2.iterator();
 		while(iterator2.hasNext()) {
