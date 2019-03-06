@@ -29,8 +29,8 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
-import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.Command;
 import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.CreateTable;
+import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.InsertSelect;
 
 /**
  * Each instance of this LogicalDatabase class will create a logical database
@@ -522,7 +522,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 			this.addRelation(constToAtomsRelation);
 			constToAtomsRelation = Relation.create(CONSTANTS_TO_ATOMS_TABLE_NAME,
 					new Attribute[] { Attribute.create(String.class, CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0]),Attribute.create(String.class, CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[1]),
-							FACT_ID_ATTRIBUTE, Attribute.create(Integer.class, LogicalDatabaseInstance.INSTANCE_ID_ATTRIBUTE_NAME) });
+							Attribute.create(Integer.class, LogicalDatabaseInstance.INSTANCE_ID_ATTRIBUTE_NAME),FACT_ID_ATTRIBUTE });
 			// populate the new relation from all stored facts. This step is very slow, but will accelerate EGD chase in a long run.
 			for (Relation r : getFactRelations()) {
 				populateConstantsTableFromFactsOfRelation(r);
@@ -535,8 +535,8 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 				toWrite.add(
 					Atom.create(constToAtomsRelation, new Term[] { c, 
 							TypedConstant.create(a.getPredicate().getName()),
-							TypedConstant.create(a.hashCode()),
-							TypedConstant.create(this.databaseInstanceID)}));
+							TypedConstant.create(this.databaseInstanceID),
+							TypedConstant.create(a.hashCode())}));
 			}
 		}
 		constantsToAtoms.clear();
@@ -615,17 +615,28 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 			String currentAttr = r.getAttribute(attributeIndex).getName();
 			if (currentAttr.equals(FACT_ID_ATTRIBUTE_NAME))
 				continue;
-			// INSERT INTO ConstantsToAtoms Select attribute0,r.getName(), FactID from r.getName() 
-			String cmd = "INSERT INTO " + Command.DATABASENAME + "." + CONSTANTS_TO_ATOMS_TABLE_NAME + " SELECT " 
-					+ currentAttr + " AS "+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0]+", '"+ r.getName() + "' AS "+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[1]+", "
-					+ this.databaseInstanceID + " AS " + CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[3] + ", "
-					+ r.getName()+"." + FACT_ID_ATTRIBUTE_NAME + " AS " + FACT_ID_ATTRIBUTE_NAME + " "  
-					+ " FROM " + Command.DATABASENAME + "." + r.getName() + ","
-					+ Command.DATABASENAME + "." + MAPPING_TABLE_NAME + " WHERE " +r.getName() + "." + FACT_ID_ATTRIBUTE_NAME 
-					+ "=" +MAPPING_TABLE_NAME+"."+FACT_ID_ATTRIBUTE_NAME+" AND " 
-					+ MAPPING_TABLE_NAME + "." + INSTANCE_ID_ATTRIBUTE_NAME + " = " + this.databaseInstanceID;
 			try {
-				this.edm.execute(new Command(cmd));
+				Variable factidVar = Variable.create("V" + FACT_ID_ATTRIBUTE_NAME);
+				List<Term> insertVars = new ArrayList<>();
+				Variable freeVariables[] = new Variable[r.getArity()];
+				for (int i = 0; i < r.getArity(); i++) {
+					if (r.getAttribute(i).equals(FACT_ID_ATTRIBUTE)) {
+						freeVariables[i] = factidVar;
+					} else {
+						if (i==attributeIndex)
+							insertVars.add(Variable.create("V"+r.getAttribute(i).getName())); // this will be the constant
+						freeVariables[i] = Variable.create("V"+r.getAttribute(i).getName());
+					}
+				}
+				insertVars.add(UntypedConstant.create(r.getName()));
+				insertVars.add(TypedConstant.create(this.databaseInstanceID));
+				insertVars.add(factidVar);
+				Atom rAtom = Atom.create(r, freeVariables); 
+				Atom mapAtom = Atom.create(factIdInstanceIdMappingTable, new Term[] {factidVar,TypedConstant.create(this.databaseInstanceID)});
+				ConjunctiveQuery cq =ConjunctiveQuery.create(freeVariables, new Atom[] {rAtom,mapAtom}); 
+				
+				InsertSelect is = new InsertSelect(constToAtomsRelation,insertVars,cq, edm.schema);
+				this.edm.execute(is);
 			} catch (Throwable t) {
 				t.printStackTrace();
 				throw t;
@@ -655,28 +666,31 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 		if (!(from instanceof LogicalDatabaseInstance)) {
 			throw new RuntimeException("LogicalDatabaseInstance cannot be merged into " + from);
 		}
-		/*
-		 * This will use the SQL insert into select statement 
-		 * INSERT INTO table-name (column-names) 
-		 * 		SELECT column-names FROM table-name WHERE condition
-		 * The statement will copy all data from the constantsToAtoms table where the instanceID=sorceInstanceID, 
-		 * creating new records with the new this.instanceid
-		 */
 		int fromDbInstanceId = ((LogicalDatabaseInstance) from).databaseInstanceID;
 		this.constantsInitialized = ((LogicalDatabaseInstance) from).constantsInitialized;
 		if (constantsInitialized) {
-			String sqlCommand = "INSERT INTO " + Command.DATABASENAME + "." + CONSTANTS_TO_ATOMS_TABLE_NAME + " ("+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0] + ","
-					+ this.databaseInstanceID + ", " + LogicalDatabaseInstance.FACT_ID_ATTRIBUTE_NAME + ", TableName " 
-					+ ") SELECT "+CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[0]+", " + LogicalDatabaseInstance.FACT_ID_ATTRIBUTE_NAME + "," 
-					+ CONSTANTS_TO_ATOMS_ATTRIBUTE_NAMES[1]+ " FROM "
-					+ Command.DATABASENAME + "." + CONSTANTS_TO_ATOMS_TABLE_NAME + " WHERE "
-					+ LogicalDatabaseInstance.INSTANCE_ID_ATTRIBUTE_NAME + " = " + fromDbInstanceId;
-			// copy database data
-			edm.execute(new Command(sqlCommand));
+			try {
+				Variable Vfactid = Variable.create("V" + FACT_ID_ATTRIBUTE_NAME);
+				Variable Vconstant = Variable.create("VConstant");
+				Variable VtableName = Variable.create("VTableName");
+				
+				Atom rAtom = Atom.create(constToAtomsRelation, new Term[] { Vconstant, VtableName, TypedConstant.create(fromDbInstanceId), Vfactid}); 
+				ConjunctiveQuery cq =ConjunctiveQuery.create(new Variable[] {Vconstant, VtableName, Vfactid}, new Atom[] {rAtom}); 
+				List<Term> insertVars = new ArrayList<>();
+				insertVars.add(Vconstant);
+				insertVars.add(VtableName);
+				insertVars.add(TypedConstant.create(this.databaseInstanceID));
+				insertVars.add(Vfactid);
+				InsertSelect is = new InsertSelect(constToAtomsRelation,insertVars,cq, edm.schema);
+				// copy database data
+				this.edm.execute(is);
+			} catch (Throwable t) {
+				t.printStackTrace();
+				throw t;
+			}
 		}
 		// copy cached data
 		this.constantsToAtoms.putAll(((LogicalDatabaseInstance) from).constantsToAtoms);
 
 	}
-
 }

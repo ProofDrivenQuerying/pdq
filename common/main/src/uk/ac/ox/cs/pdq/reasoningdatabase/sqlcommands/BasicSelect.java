@@ -41,7 +41,7 @@ public class BasicSelect extends Command {
 	 * Alias provider for this Query instance. The content aliases are globally
 	 * unique.
 	 */
-	private Set<TableAlias> aliases = new HashSet<>();
+	protected Set<TableAlias> aliases = new HashSet<>();
 
 	/**
 	 * The query will produce a JDBC result set, this array will show how to process
