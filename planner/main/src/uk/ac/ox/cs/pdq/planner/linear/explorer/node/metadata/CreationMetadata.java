@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata;
 
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 
 
 // TODO: Auto-generated Javadoc

@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.util.EventHandler;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.algebra.Condition;
@@ -145,7 +144,7 @@ public class ExplorationSetUp {
 	 *
 	 * @param handler EventHandler
 	 */
-	public void registerEventHandler(EventHandler handler) {
+	public void registerEventHandler(Object handler) {
 		this.eventBus.register(handler);
 	}
 
@@ -154,7 +153,7 @@ public class ExplorationSetUp {
 	 *
 	 * @param handler EventHandler
 	 */
-	public void unregisterEventHandler(EventHandler handler) {
+	public void unregisterEventHandler(Object handler) {
 		this.eventBus.unregister(handler);
 	}
 

@@ -24,14 +24,11 @@ import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.tuple.Tuple;
-import uk.ac.ox.cs.pdq.db.tuple.TupleType;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
-import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
+import uk.ac.ox.cs.pdq.db.tuple.TupleType;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
 
 /**
  * Tests the access repository

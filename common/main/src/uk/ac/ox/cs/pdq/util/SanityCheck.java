@@ -17,7 +17,7 @@ public class SanityCheck {
 	 * Sanity checks a schema.
 	 */
 	public static void sanityCheck(Schema schema) throws Exception {
-		Relation[] relations = schema.getRelations();
+	//	Relation[] relations = schema.getRelations();
 		Dependency[] dependencies = schema.getAllDependencies();
 		for(Dependency dependency : dependencies)
 		{

@@ -30,10 +30,8 @@ import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.StatusUpdateMetadata;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
@@ -278,6 +276,11 @@ public class LinearKChase extends LinearExplorer {
 			this.bestCost = costOfSuccessfulPlan;
 			this.eventBus.post(this.getBestPlan());
 			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestCost);
+			// MR			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), 
+			//			this.getConfigurations(this.costPropagator.getBestPath()), this.getElapsedTime());
+			//	freshNode.setMetadata(successMetadata);
+			this.eventBus.post(freshNode);
+
 		}
 	}
 	
@@ -310,10 +313,6 @@ public class LinearKChase extends LinearExplorer {
 		for (N node: planTree.vertexSet()) {
 			if (node.isFullyChased()) 
 				fullyGenerated.add(node);
-// MR			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), 
-//					this.getConfigurations(this.costPropagator.getBestPath()), this.getElapsedTime());
-//			freshNode.setMetadata(successMetadata);
-			this.eventBus.post(freshNode);
 		}
 		return fullyGenerated;
 	}

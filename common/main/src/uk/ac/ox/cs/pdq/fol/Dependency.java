@@ -63,6 +63,10 @@ public class Dependency extends QuantifiedFormula {
 	protected Dependency(Atom[] body, Atom[] head) {
 		this(Conjunction.create(body), createHead(body, head));
 	}
+
+	protected Dependency(Atom[] body, Atom[] head, String name) {
+		this(Conjunction.create(body), createHead(body, head), name);
+	}
 	
 	/**
 	 * Gets the variables.
