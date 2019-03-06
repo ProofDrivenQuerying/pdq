@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.ui;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -13,6 +12,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import javax.swing.SwingUtilities;
+
+import org.apache.log4j.Logger;
+
+import com.google.common.base.Preconditions;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
@@ -43,27 +48,20 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-
-import javax.swing.SwingUtilities;
-
-import org.apache.log4j.Logger;
-
 import prefuse.controls.FocusControl;
 import prefuse.controls.WheelZoomControl;
-import uk.ac.ox.cs.pdq.cost.CostParameters;
-import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
+import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
-import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
-import uk.ac.ox.cs.pdq.databasemanagement.DatabaseParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
@@ -71,6 +69,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 //import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
 //import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
+import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.ui.event.PlanSearchVisualizer;
 import uk.ac.ox.cs.pdq.ui.event.PrefuseEventHandler;
 import uk.ac.ox.cs.pdq.ui.model.ObservablePlan;
@@ -84,8 +83,6 @@ import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 import uk.ac.ox.cs.pdq.ui.util.DecimalConverter;
 import uk.ac.ox.cs.pdq.ui.util.LogarithmicAxis;
-
-import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -346,13 +343,13 @@ public class PlannerController {
 			this.params = new PlannerParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
 			this.costParams = new CostParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
 			this.reasoningParams = new ReasoningParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
-			this.databaseParams = new DatabaseParameters();
+			this.databaseParams = DatabaseParameters.Empty;
 		} else {
 			log.info("No default configuration file. Initializing demo environment...");
 			this.params = new PlannerParameters();
 			this.costParams = new CostParameters();
 			this.reasoningParams = new ReasoningParameters();
-			this.databaseParams = new DatabaseParameters();
+			this.databaseParams = DatabaseParameters.Empty;
 		}
 		this.plan = plan;
 		this.params.setSeed(1);

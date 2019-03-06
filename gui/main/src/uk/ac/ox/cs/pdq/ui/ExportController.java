@@ -1,12 +1,12 @@
 package uk.ac.ox.cs.pdq.ui;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.PrintStream;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.apache.log4j.Logger;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -20,14 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-
-import org.apache.log4j.Logger;
-
-import uk.ac.ox.cs.pdq.ui.io.ObservableQueryReader;
-import uk.ac.ox.cs.pdq.ui.io.ObservableQueryWriter;
-import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaReader;
 import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaWriter;
-import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
 // TODO: Auto-generated Javadoc

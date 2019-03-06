@@ -7,6 +7,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.apache.log4j.Logger;
+
+import com.google.common.base.Preconditions;
+
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
@@ -23,30 +27,21 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
-
-import org.apache.log4j.Logger;
-
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.fol.Atom;
 //import uk.ac.ox.cs.pdq.fol.Query;
 //import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
 //import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Variable;
 //import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
-//import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
-//import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.Semantics;
-import uk.ac.ox.cs.pdq.ui.event.ResultVisualizer;
 import uk.ac.ox.cs.pdq.ui.model.ObservablePlan;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
-import uk.ac.ox.cs.pdq.util.Tuple;
-
-import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**

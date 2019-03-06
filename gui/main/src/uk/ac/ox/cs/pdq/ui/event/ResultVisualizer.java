@@ -4,11 +4,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.util.EventHandler;
-import uk.ac.ox.cs.pdq.util.Tuple;
-
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
+
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -18,7 +17,7 @@ import com.google.common.eventbus.Subscribe;
  * @author Julien Leblay
  *
  */
-public class ResultVisualizer implements EventHandler {
+public class ResultVisualizer {
 	
 	/** The log. */
 	private static Logger log = Logger.getLogger(ResultVisualizer.class);

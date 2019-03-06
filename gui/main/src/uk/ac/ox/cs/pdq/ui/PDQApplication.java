@@ -7,14 +7,14 @@ import java.util.ResourceBundle;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.apache.log4j.Logger;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
-import org.apache.log4j.Logger;
 
 // TODO: Auto-generated Javadoc
 /**

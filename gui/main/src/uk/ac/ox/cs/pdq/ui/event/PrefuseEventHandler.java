@@ -14,13 +14,14 @@ import javax.swing.JSlider;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.base.Joiner;
+import com.google.common.eventbus.Subscribe;
+
 import prefuse.Visualization;
 import prefuse.data.Graph;
 import prefuse.visual.AggregateTable;
-import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.util.EventHandler;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
@@ -32,16 +33,13 @@ import uk.ac.ox.cs.pdq.ui.prefuse.utils.Path;
 import uk.ac.ox.cs.pdq.ui.prefuse.utils.PathComparator;
 import uk.ac.ox.cs.pdq.ui.prefuse.utils.Utils;
 
-import com.google.common.base.Joiner;
-import com.google.common.eventbus.Subscribe;
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class PrefuseEventHandler.
  *
  * @author Efi Tsamoura
  */
-public class PrefuseEventHandler implements EventHandler {
+public class PrefuseEventHandler {
 
 	/** Class' logger. */
 	private static Logger log = Logger.getLogger(PrefuseEventHandler.class);

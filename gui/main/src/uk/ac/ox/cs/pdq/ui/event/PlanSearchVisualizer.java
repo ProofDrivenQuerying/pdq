@@ -5,15 +5,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.util.EventHandler;
+import com.google.common.base.Preconditions;
+import com.google.common.eventbus.Subscribe;
+
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearExplorer;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSearchState;
-import uk.ac.ox.cs.pdq.ui.util.LogarithmicAxis;
-
-import com.google.common.base.Preconditions;
-import com.google.common.eventbus.Subscribe;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -23,7 +21,7 @@ import com.google.common.eventbus.Subscribe;
  * @author Julien Leblay
  *
  */
-public class PlanSearchVisualizer implements EventHandler {
+public class PlanSearchVisualizer {
 
 	/** The log. */
 	private static Logger log = Logger.getLogger(PlanSearchVisualizer.class);

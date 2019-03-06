@@ -5,16 +5,13 @@ import java.util.Collection;
 
 import javax.swing.JPopupMenu;
 
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import prefuse.controls.ControlAdapter;
 import prefuse.util.ColorLib;
 import prefuse.visual.NodeItem;
 import prefuse.visual.VisualItem;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
-
-import com.google.common.base.Preconditions;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 
 // TODO: Auto-generated Javadoc
 /**

@@ -3,10 +3,11 @@ package uk.ac.ox.cs.pdq.db;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.util.Typed;
+import org.apache.commons.lang3.reflect.Typed;
 
 import com.google.common.base.Preconditions;
+
+import uk.ac.ox.cs.pdq.fol.Constant;
 
 // TODO: Auto-generated Javadoc
 /**

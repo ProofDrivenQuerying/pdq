@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.ui;
 
+import org.apache.log4j.Logger;
+
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,11 +12,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import org.apache.log4j.Logger;
-
-//import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
