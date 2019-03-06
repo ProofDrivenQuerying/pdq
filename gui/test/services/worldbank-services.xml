@@ -1,0 +1,134 @@
+<services name="WorldBank">
+	<input-methods>
+		<input-method name="format"     type="url-param"    value="json"/>
+		<input-method name="country"    type="path-element" template="/{1}" batch=","/>
+		<input-method name="indicator"  type="path-element" template="/indicators/{1}"/>
+		<input-method name="indByTopic" type="path-element" template="/topics/{1}/indicators"/>
+		<input-method name="id"         type="path-element" template="/{1}"/>
+	</input-methods>
+	<usage-policies>
+		<policy name="2000_request_per_day"
+				type="uk.ac.ox.cs.pdq.services.policies.RequestAllowance"
+				limit="5" period="1s" wait="true"/>
+		<policy name="50_items_per_page"
+				type="uk.ac.ox.cs.pdq.services.policies.PagingLimit"
+				limit="250" start-index="1" page-size="per_page" page-index="page" total-items="total"/>
+	</usage-policies>
+	<service
+		protocol="REST"
+		name="WBData"
+		url="http://api.worldbank.org/countries/" 
+		documentation="http://data.worldbank.org/node/11">
+
+		<policy name="50_items_per_page" />
+		<policy name="2000_request_per_day" />
+
+		<static-input name="format"   input-method="format" />
+
+		<attribute name="country"     type="java.lang.String"  input-method="country.1"   path="country/id"/>
+		<attribute name="indicator"   type="java.lang.String"  input-method="indicator.1" />
+		<attribute name="date"        type="java.lang.Integer" path="date"/>
+		<attribute name="countryName" type="java.lang.String"  path="country/value"/>
+		<attribute name="value"       type="java.lang.Double"  path="value"/>
+
+		<access-method type="LIMITED" name="wb_i"   inputs="2"     cost="100.0" />
+		<access-method type="LIMITED" name="wb_id"  inputs="2,3"   cost="10.0" />
+		<access-method type="LIMITED" name="wb_ci"  inputs="1,2"   cost="10.0" />
+		<access-method type="LIMITED" name="wb_cid" inputs="1,2,3" cost="1.0" />
+	</service>
+	<service
+		protocol="REST"
+		name="WBIndicators"
+		url="http://api.worldbank.org/indicators" 
+		documentation="http://data.worldbank.org/node/203">
+
+		<policy name="2000_request_per_day" />
+		<policy type="uk.ac.ox.cs.pdq.services.policies.PagingLimit"
+				limit="250" start-index="1" page-size="per_page" page-index="page" total-items="total"/>
+
+		<static-input name="format"  input-method="format" />
+
+		<attribute name="id"         type="java.lang.String"  input-method="indicator.1" path="id"/>
+		<attribute name="topicId"    type="java.lang.Integer" input-method="indByTopic.1" />
+		<attribute name="name"       type="java.lang.String"  path="name"/>
+		<attribute name="sourceId"   type="java.lang.Integer" path="source/id"/>
+		<attribute name="sourceNote" type="java.lang.String"  path="sourceNote"/>
+
+		<access-method type="FREE"    name="i_free"    cost="15.0" />
+		<access-method type="LIMITED" name="i_id"      inputs="1" cost="1.0" />
+		<access-method type="LIMITED" name="i_topicid" inputs="2" cost="15.0" />
+	</service>
+	<service
+		protocol="REST"
+		name="WBIncomeLevels"
+		url="http://api.worldbank.org/incomeLevels" 
+		documentation="http://data.worldbank.org/node/207">
+
+		<policy name="2000_request_per_day" />
+
+		<static-input name="format" input-method="format" />
+
+		<attribute name="id"   type="java.lang.String" path="id"/>
+		<attribute name="name" type="java.lang.String" path="value"/>
+
+		<access-method type="FREE"    name="il_free" cost="1.0" />
+		<access-method type="LIMITED" name="il_id"   inputs="1" cost="1.0"/>
+	</service>
+	<service
+		name="WBLendingTypes"
+		protocol="REST"
+		url="http://api.worldbank.org/lendingTypes" 
+		documentation="http://data.worldbank.org/node/208">
+
+		<policy name="2000_request_per_day" />
+
+		<static-input name="format" input-method="format" />
+
+		<attribute name="id"   type="java.lang.String" path="id" />
+		<attribute name="name" type="java.lang.String" path="value" />
+
+		<access-method type="FREE"    name="lt_free" cost="1.0" />
+		<access-method type="LIMITED" name="lt_id"   inputs="1" cost="1.0" />
+	</service>
+	<service
+		protocol="REST"
+		name="WBTopics"
+		url="http://api.worldbank.org/topics" 
+		documentation="http://data.worldbank.org/node/209">
+
+		<policy name="2000_request_per_day" />
+
+		<static-input name="format"  input-method="format" />
+
+		<attribute name="id"         type="java.lang.Integer" path="id" input-method="id.1"/>
+		<attribute name="name"       type="java.lang.String"  path="value"/>
+		<attribute name="sourceNote" type="java.lang.String"  path="sourceNote"/>
+
+		<access-method type="FREE"    name="t_free" cost="2.0" />
+		<access-method type="LIMITED" name="t_id"   inputs="1" cost="1.0" />
+	</service>
+	<service
+		protocol="REST"
+		name="WBCountries"
+		url="http://api.worldbank.org/countries/" 
+		documentation="http://data.worldbank.org/node/18">
+
+		<policy name="2000_request_per_day" />
+		<policy type="uk.ac.ox.cs.pdq.services.policies.PagingLimit"
+				limit="250" start-index="1" page-size="per_page" page-index="page" total-items="total"/>
+
+		<static-input name="format"   input-method="format" />
+
+		<attribute name="id"          type="java.lang.String" path="id"/>
+		<attribute name="iso2"        type="java.lang.String" path="iso2Code"/>
+		<attribute name="name"        type="java.lang.String" path="name"/>
+		<attribute name="incomeLevel" type="java.lang.String" path="incomeLevel/id"/>
+		<attribute name="lendingType" type="java.lang.String" path="lendingType/id"/>
+		<attribute name="capitalCity" type="java.lang.String" path="capitalCity"/>
+		<attribute name="latitude"    type="java.lang.Double" path="latitude"/>
+		<attribute name="longitude"   type="java.lang.Double" path="longitude"/>
+
+		<access-method type="FREE"    name="c_free" cost="1.0" />
+		<access-method type="LIMITED" name="c_il"   inputs="4" cost="1.0" />
+	</service>
+</services>

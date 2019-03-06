@@ -85,7 +85,7 @@ public class QuantifiedFormula extends Formula {
 		if(this.toString == null) {
 			this.toString = "";
 			String op = this.operator.equals(LogicalSymbols.UNIVERSAL) ? "forall" : "exists";
-			this.toString += "(" + op;
+			this.toString +=  op;
 			this.toString += "[";
             for (int index = 0; index < variables.length; index++) {
                 if (index > 0)
@@ -93,7 +93,7 @@ public class QuantifiedFormula extends Formula {
                 this.toString += variables[index].toString();
             }
             this.toString += "]";
-            this.toString += this.child.toString() + ")";
+            this.toString += " " + this.child.toString();
 		}
 		return this.toString;
 	}

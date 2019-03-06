@@ -1,0 +1,31 @@
+<service
+	name="Google Direction"
+	documentation="https://developers.google.com/maps/documentation/directions/"
+	cost-type="TBD">
+	<usage-policies>
+		<pricing>free</pricing>
+		<frequency max="2500" period="24h"/>
+		<!-- Some request count for more than one -->
+		<api-key required="false"/>
+	</usage-policies>
+	<protocol type="REST" url="http://maps.googleapis.com/maps/api/directions/json?">
+		<input name="origin"      type="uk.ac.ox.cs.pdq.type.GeoCoordinates" />
+		<input name="destination" type="uk.ac.ox.cs.pdq.type.GeoCoordinates" />
+		<input name="sensor"      type="java.lang.Boolean" />
+
+		<input name="mode"           type="java.lang.String"   optional="true" range="driving|walking|bicycling"/>
+		<input name="waypoints"      type="uk.ac.ox.cs.pdq.type.GeoCoordinates[]" optional="true" />
+		<input name="alternatives"   type="java.lang.Boolean"  optional="true" />
+		<input name="avoid"          type="java.lang.String"   optional="true" range="tolls|highways"/>
+		<input name="language"       type="java.lang.String"   optional="true" />
+		<input name="units"          type="java.lang.String"   optional="true" range="metric|imperial" />
+		<input name="departure_time" type="java.sql.Timestamp" optional="true" />
+		<input name="arrival_time"   type="java.sql.Timestamp" optional="true" />
+
+
+		<output name="status"         type="java.lang.String" range="OK|INVALID_REQUEST|OVER_QUERY_LIMIT|REQUEST_DENIED|UNKNOWN_ERROR|ZERO_RESULTS"/>
+		<output name="error_message"  type="java.lang.String" />
+
+		<access-method type="BOOLEAN" inputs="1,2,3" cost="1.0"/>
+	</protocol>
+</service>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <children>
+    <AnchorPane prefHeight="109.99990000000253" prefWidth="640.0" VBox.vgrow="NEVER">
+      <children>
+        <TextArea prefWidth="200.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      </children>
+    </AnchorPane>
+    <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+      <children>
+        <Accordion>
+          <expandedPane>
+            <TitledPane fx:id="x1" animated="false" text="Existing plans">
+              <content>
+                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  <children>
+                    <TableView prefHeight="180.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                      <columns>
+                        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="47.0" text="Plan" />
+                        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="62.0" text="Cost" />
+                        <TableColumn prefWidth="75.0" text="Run" />
+                      </columns>
+                    </TableView>
+                  </children>
+                </AnchorPane>
+              </content>
+            </TitledPane>
+          </expandedPane>
+          <panes>
+            <fx:reference source="x1" />
+            <TitledPane animated="false" text="New search">
+              <content>
+                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  <children>
+                    <CheckBox layoutX="15.0" layoutY="15.0" mnemonicParsing="false" text="CheckBox" />
+                    <ComboBox layoutX="14.0" layoutY="44.0">
+                      <items>
+                        <FXCollections fx:factory="observableArrayList">
+                          <String fx:value="Item 1" />
+                          <String fx:value="Item 2" />
+                          <String fx:value="Item 3" />
+                        </FXCollections>
+                      </items>
+                    </ComboBox>
+                    <RadioButton layoutX="15.0" layoutY="78.0" mnemonicParsing="false" text="RadioButton" />
+                    <Button layoutX="137.0" layoutY="210.0" mnemonicParsing="false" text="Play" />
+                    <Button layoutX="76.0" layoutY="210.0" mnemonicParsing="false" text="Stop" />
+                  </children>
+                </AnchorPane>
+              </content>
+            </TitledPane>
+          </panes>
+        </Accordion>
+        <StackPane prefHeight="150.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+          <children>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+              <children>
+                <Pane prefHeight="44.0" prefWidth="435.0">
+                  <children>
+                    <Label layoutX="0.0" layoutY="0.0" prefHeight="44.0" prefWidth="435.0" text="Runtime visualizer" />
+                  </children>
+                </Pane>
+                <TableView prefHeight="200.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
+                  <columns>
+                    <TableColumn prefWidth="75.0" text="Column X" />
+                    <TableColumn prefWidth="75.0" text="Column X" />
+                  </columns>
+                </TableView>
+              </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+              <children>
+                <Pane prefHeight="44.0" prefWidth="435.0">
+                  <children>
+                    <Label layoutX="0.0" layoutY="0.0" prefHeight="44.0" prefWidth="201.0" text="Planning visualizer" />
+                  </children>
+                </Pane>
+                <Pane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+              </children>
+            </VBox>
+          </children>
+        </StackPane>
+      </children>
+    </HBox>
+  </children>
+</VBox>

@@ -1,0 +1,29 @@
+<service
+	name="Google Direction"
+	documentation="https://developers.google.com/maps/documentation/directions/"
+	cost-type="TBD">
+	<usage-policies>
+		<pricing>free</pricing>
+		<frequency max="2500" period="24h"/>
+		<!-- Some request count for more than one -->
+		<api-key required="false"/>
+	</usage-policies>
+	<protocol type="REST" baseurl="http://maps.googleapis.com/maps/api/directions/json?">
+		<input name="origin"      type="coords" />
+		<input name="destination" type="coords" />
+		<input name="sensor"      type="boolean" />
+
+		<output name="mode"           type="string"      range="driving|walking|bicycling"/>
+		<output name="waypoints"      type="array_coords" />
+		<output name="alternatives"   type="boolean" />
+		<output name="avoid"          type="string"      range="tolls|highways"/>
+		<output name="language"       type="string" />
+		<output name="units"          type="string"      range="metric|imperial" />
+		<output name="departure_time" type="timestamp" />
+		<output name="arrival_time"   type="timestamp" />
+		<output name="status"         type="string"      range="OK|INVALID_REQUEST|OVER_QUERY_LIMIT|REQUEST_DENIED|UNKNOWN_ERROR|ZERO_RESULTS"/>
+		<output name="error_message"  type="string"/>
+
+		<access-method type="BOOLEAN" inputs="1,2,3" cost="1.0"/>
+	</protocol>
+</service>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan cost="2000050.0">
+	<command type="static-input">
+		<relation name="T">
+			<attribute name="Eiffel Tower" type="java.lang.String" />
+		</relation>
+		<constant value="Eiffel Tower" type="java.lang.String" />
+	</command>
+	<command type="access" relation="YahooPlaces" access-method="yh_geo_keyword">
+		<relation name="T">
+			<attribute name="Eiffel Tower" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Integer" />
+			<attribute name="c2" type="java.lang.Integer" />
+			<attribute name="c3" type="java.lang.String" />
+			<attribute name="c4" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="c8" type="java.lang.String" />
+			<attribute name="c9" type="java.lang.String" />
+			<attribute name="c10" type="java.lang.String" />
+			<attribute name="c11" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.Double" />
+			<attribute name="c13" type="java.lang.Double" />
+			<attribute name="c14" type="java.lang.String" />
+		</relation>
+		<input source="keywords" target="Eiffel Tower" />
+		<input source="woeid" target="c1" />
+		<input source="type" target="c2" />
+		<input source="placeTypeName" target="c3" />
+		<input source="name" target="c4" />
+		<input source="country" target="c5" />
+		<input source="admin1" target="c6" />
+		<input source="admin2" target="c7" />
+		<input source="admin3" target="c8" />
+		<input source="locality1" target="c9" />
+		<input source="locality2" target="c10" />
+		<input source="postal" target="c11" />
+		<input source="centroid_lat" target="c12" />
+		<input source="centroid_lng" target="c13" />
+		<input source="timezone" target="c14" />
+	</command>
+	<command type="rename">
+		<relation name="T">
+			<attribute name="Eiffel Tower" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Integer" />
+			<attribute name="c2" type="java.lang.Integer" />
+			<attribute name="c3" type="java.lang.String" />
+			<attribute name="c4" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="c8" type="java.lang.String" />
+			<attribute name="c9" type="java.lang.String" />
+			<attribute name="c10" type="java.lang.String" />
+			<attribute name="c11" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.Double" />
+			<attribute name="c13" type="java.lang.Double" />
+			<attribute name="c14" type="java.lang.String" />
+		</relation>
+		<attribute name="Eiffel Tower" />
+		<attribute name="c1" />
+		<attribute name="c2" />
+		<attribute name="c3" />
+		<attribute name="c4" />
+		<attribute name="c5" />
+		<attribute name="c6" />
+		<attribute name="c7" />
+		<attribute name="c8" />
+		<attribute name="c9" />
+		<attribute name="c10" />
+		<attribute name="c11" />
+		<attribute name="c12" />
+		<attribute name="c13" />
+		<attribute name="c14" />
+	</command>
+	<command type="select">
+		<relation name="T">
+			<attribute name="Eiffel Tower" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Integer" />
+			<attribute name="c2" type="java.lang.Integer" />
+			<attribute name="c3" type="java.lang.String" />
+			<attribute name="c4" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="c8" type="java.lang.String" />
+			<attribute name="c9" type="java.lang.String" />
+			<attribute name="c10" type="java.lang.String" />
+			<attribute name="c11" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.Double" />
+			<attribute name="c13" type="java.lang.Double" />
+			<attribute name="c14" type="java.lang.String" />
+		</relation>
+		<predicate type="equality" left="0" value="Eiffel Tower" />
+	</command>
+	<command type="assign">
+		<relation name="T">
+			<attribute name="Eiffel Tower" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Integer" />
+			<attribute name="c2" type="java.lang.Integer" />
+			<attribute name="c3" type="java.lang.String" />
+			<attribute name="c4" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="c8" type="java.lang.String" />
+			<attribute name="c9" type="java.lang.String" />
+			<attribute name="c10" type="java.lang.String" />
+			<attribute name="c11" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.Double" />
+			<attribute name="c13" type="java.lang.Double" />
+			<attribute name="c14" type="java.lang.String" />
+		</relation>
+		<relation name="target">
+			<attribute name="Eiffel Tower" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Integer" />
+			<attribute name="c2" type="java.lang.Integer" />
+			<attribute name="c3" type="java.lang.String" />
+			<attribute name="c4" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="c8" type="java.lang.String" />
+			<attribute name="c9" type="java.lang.String" />
+			<attribute name="c10" type="java.lang.String" />
+			<attribute name="c11" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.Double" />
+			<attribute name="c13" type="java.lang.Double" />
+			<attribute name="c14" type="java.lang.String" />
+		</relation>
+	</command>
+	<command type="project">
+		<relation name="T">
+			<attribute name="c5" type="java.lang.String" />
+		</relation>
+		<attribute name="c5" />
+	</command>
+</plan>

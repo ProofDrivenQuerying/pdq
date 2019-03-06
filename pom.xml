@@ -11,12 +11,14 @@
   	<name>Oxford University - Department of Computer Science</name>
   	<url>http://www.cs.ox.ac.uk/</url>
   </organization>
+  
   <modules>
   	<module>common</module>
   	<module>reasoning</module>
   	<module>cost</module>
   	<module>planner</module>
   	<module>runtime</module>
+  	<module>gui</module>
   	
   	
   	<module>datasources</module>

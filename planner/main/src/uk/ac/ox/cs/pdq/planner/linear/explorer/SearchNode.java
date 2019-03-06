@@ -22,6 +22,7 @@ import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.equivalence.FactEquivalence;
 import uk.ac.ox.cs.pdq.planner.equivalence.FastFactEquivalence;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.planner.linear.plantree.PlanTree;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
@@ -84,7 +85,11 @@ public abstract class SearchNode implements Cloneable{
 	/**  The plan that cost dominates the node. */
 	private RelationalTerm dominatingPlan = null;
 	
+	/**  The cost dominating plan. */
 	private Cost costOfDominatingPlan = null;
+	
+	/** The metadata. */
+	private Metadata metadata = null;
 
 	/**
 	 * Instantiates a new search node.
@@ -443,4 +448,23 @@ public abstract class SearchNode implements Cloneable{
 		return equivalent;
 	}
 
+	/**
+	 * Gets the metadata.
+	 *
+	 * @return the metadata
+	 */
+	public Metadata getMetadata() {
+		return this.metadata;
+	}
+
+
+	/**
+	 * Sets the metadata.
+	 *
+	 * @param metadata the new metadata
+	 */
+	public void setMetadata(Metadata metadata) {
+		this.metadata = metadata;
+	}
+	
 }

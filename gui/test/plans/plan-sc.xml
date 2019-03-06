@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan cost="113.0">
+<command type="access" relation="YahooCountries" access-method="yh_geo_country">
+<relation name="T">
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c24" type="java.lang.Integer"/>
+<attribute name="Country" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+</relation>
+<input source="woeid" target="c20"/>
+<input source="placeType" target="c24"/>
+<input source="placeTypeName" target="Country"/>
+<input source="name" target="c6"/>
+</command>
+<command type="rename">
+<relation name="T">
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c24" type="java.lang.Integer"/>
+<attribute name="Country" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+</relation>
+<attribute name="c20"/>
+<attribute name="c24"/>
+<attribute name="Country"/>
+<attribute name="c6"/>
+</command>
+<command type="select">
+<relation name="T">
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c24" type="java.lang.Integer"/>
+<attribute name="Country" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+</relation>
+<predicate type="equality" left="2" value="Country"/>
+</command>
+<command type="assign">
+<relation name="T">
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c24" type="java.lang.Integer"/>
+<attribute name="Country" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+</relation>
+<relation name="target">
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c24" type="java.lang.Integer"/>
+<attribute name="Country" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+</relation>
+</command>
+<command type="access" relation="YahooContinents" access-method="yh_geo_continent">
+<relation name="T">
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+</relation>
+<input source="woeid" target="c8"/>
+<input source="placeType" target="c9"/>
+<input source="placeTypeName" target="Continent"/>
+<input source="name" target="Asia"/>
+</command>
+<command type="rename">
+<relation name="T">
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+</relation>
+<attribute name="c8"/>
+<attribute name="c9"/>
+<attribute name="Continent"/>
+<attribute name="Asia"/>
+</command>
+<command type="select">
+<relation name="T">
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+</relation>
+<predicate type="equality" left="2" value="Continent"/>
+<predicate type="equality" left="3" value="Asia"/>
+</command>
+<command type="join">
+<relation name="T">
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c24" type="java.lang.Integer"/>
+<attribute name="Country" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+</relation>
+<relation name="left">
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c24" type="java.lang.Integer"/>
+<attribute name="Country" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+</relation>
+<relation name="right">
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+</relation>
+</command>
+<command type="project">
+<relation name="T">
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.Integer"/>
+</relation>
+<constant value="belongtos"/>
+<attribute name="c20"/>
+</command>
+<command type="access" relation="YahooPlaceRelationship" access-method="yh_geo_rel">
+<relation name="T">
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+</relation>
+<input source="relation" target="belongtos"/>
+<input source="of" target="c20"/>
+<input source="woeid" target="c8"/>
+<input source="placeTypeName" target="c21"/>
+<input source="name" target="c22"/>
+<input source="uri" target="c23"/>
+</command>
+<command type="rename">
+<relation name="T">
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+</relation>
+<attribute name="belongtos"/>
+<attribute name="c20"/>
+<attribute name="c8"/>
+<attribute name="c21"/>
+<attribute name="c22"/>
+<attribute name="c23"/>
+</command>
+<command type="select">
+<relation name="T">
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+</relation>
+<predicate type="equality" left="0" value="belongtos"/>
+</command>
+<command type="join">
+<relation name="T">
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c24" type="java.lang.Integer"/>
+<attribute name="Country" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+</relation>
+<relation name="left">
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c24" type="java.lang.Integer"/>
+<attribute name="Country" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+</relation>
+<relation name="right">
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+</relation>
+<predicate type="equality" left="0" right="9"/>
+<predicate type="equality" left="4" right="10"/>
+</command>
+<command type="access" relation="WBIndicators" access-method="i_free">
+<relation name="T">
+<attribute name="c1" type="java.lang.String"/>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="Population (Total)" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.Integer"/>
+<attribute name="c4" type="java.lang.String"/>
+</relation>
+<input source="id" target="c1"/>
+<input source="topicId" target="c2"/>
+<input source="name" target="Population (Total)"/>
+<input source="sourceId" target="c3"/>
+<input source="sourceNote" target="c4"/>
+</command>
+<command type="rename">
+<relation name="T">
+<attribute name="c1" type="java.lang.String"/>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="Population (Total)" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.Integer"/>
+<attribute name="c4" type="java.lang.String"/>
+</relation>
+<attribute name="c1"/>
+<attribute name="c2"/>
+<attribute name="Population (Total)"/>
+<attribute name="c3"/>
+<attribute name="c4"/>
+</command>
+<command type="select">
+<relation name="T">
+<attribute name="c1" type="java.lang.String"/>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="Population (Total)" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.Integer"/>
+<attribute name="c4" type="java.lang.String"/>
+</relation>
+<predicate type="equality" left="2" value="Population (Total)"/>
+</command>
+<command type="join">
+<relation name="T">
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c24" type="java.lang.Integer"/>
+<attribute name="Country" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c1" type="java.lang.String"/>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="Population (Total)" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.Integer"/>
+<attribute name="c4" type="java.lang.String"/>
+</relation>
+<relation name="left">
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c24" type="java.lang.Integer"/>
+<attribute name="Country" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+</relation>
+<relation name="right">
+<attribute name="c1" type="java.lang.String"/>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="Population (Total)" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.Integer"/>
+<attribute name="c4" type="java.lang.String"/>
+</relation>
+</command>
+<command type="project">
+<relation name="T">
+<attribute name="c1" type="java.lang.String"/>
+<attribute name="2000" type="java.lang.Integer"/>
+</relation>
+<attribute name="c1"/>
+<constant value="2000"/>
+</command>
+<command type="access" relation="WBData" access-method="wb_id">
+<relation name="T">
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c1" type="java.lang.String"/>
+<attribute name="2000" type="java.lang.Integer"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.Double"/>
+</relation>
+<input source="country" target="c5"/>
+<input source="indicator" target="c1"/>
+<input source="date" target="2000"/>
+<input source="countryName" target="c6"/>
+<input source="value" target="c7"/>
+</command>
+<command type="rename">
+<relation name="T">
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c1" type="java.lang.String"/>
+<attribute name="2000" type="java.lang.Integer"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.Double"/>
+</relation>
+<attribute name="c5"/>
+<attribute name="c1"/>
+<attribute name="2000"/>
+<attribute name="c6"/>
+<attribute name="c7"/>
+</command>
+<command type="select">
+<relation name="T">
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c1" type="java.lang.String"/>
+<attribute name="2000" type="java.lang.Integer"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.Double"/>
+</relation>
+<predicate type="equality" left="2" value="2000"/>
+</command>
+<command type="join">
+<relation name="T">
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c24" type="java.lang.Integer"/>
+<attribute name="Country" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c1" type="java.lang.String"/>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="Population (Total)" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.Integer"/>
+<attribute name="c4" type="java.lang.String"/>
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c1" type="java.lang.String"/>
+<attribute name="2000" type="java.lang.Integer"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.Double"/>
+</relation>
+<relation name="left">
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c24" type="java.lang.Integer"/>
+<attribute name="Country" type="java.lang.String"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c9" type="java.lang.Integer"/>
+<attribute name="Continent" type="java.lang.String"/>
+<attribute name="Asia" type="java.lang.String"/>
+<attribute name="belongtos" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c8" type="java.lang.Integer"/>
+<attribute name="c21" type="java.lang.String"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c1" type="java.lang.String"/>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="Population (Total)" type="java.lang.String"/>
+<attribute name="c3" type="java.lang.Integer"/>
+<attribute name="c4" type="java.lang.String"/>
+</relation>
+<relation name="right">
+<attribute name="c5" type="java.lang.String"/>
+<attribute name="c1" type="java.lang.String"/>
+<attribute name="2000" type="java.lang.Integer"/>
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.Double"/>
+</relation>
+<predicate type="equality" left="3" right="22"/>
+<predicate type="equality" left="14" right="20"/>
+</command>
+<command type="project">
+<relation name="T">
+<attribute name="c6" type="java.lang.String"/>
+<attribute name="c7" type="java.lang.Double"/>
+</relation>
+<attribute name="c6"/>
+<attribute name="c7"/>
+</command>
+</plan>

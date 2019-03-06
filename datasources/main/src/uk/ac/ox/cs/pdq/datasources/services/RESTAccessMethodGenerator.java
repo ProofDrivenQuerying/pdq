@@ -69,7 +69,7 @@ public class RESTAccessMethodGenerator {
 	}
 	
 	// Conversion from string to type ... there may be a better way of doing this
-	private Type typeType(String type)
+	public static Type typeType(String type)
 	{
 		if(type.equals("String"))
 		{

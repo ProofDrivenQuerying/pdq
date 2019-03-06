@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query>
+	<!--
+	Elevation of all possible geo coordinates. (not answerable without dependencies, infinite input domains) 
+	 -->
+	<body>
+		<atom name="GoogleElevation">
+			<variable name="latitude" />
+			<variable name="longitude" />
+			<variable name="elevation" />
+			<variable name="resolution" />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="elevation" />
+	</head>
+</query>

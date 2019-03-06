@@ -18,7 +18,7 @@ public class DependencyPrettyPrintTest {
 		PdqTest.assertsEnabled();
 	}
 
-	// Calls Dependency.toString(), TGD.toString()
+	// Calls Dependency.toString
 	@Test
 	public void testDependencyPrettyPrint() {
 		

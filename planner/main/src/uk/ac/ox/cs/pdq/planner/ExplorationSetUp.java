@@ -140,6 +140,24 @@ public class ExplorationSetUp {
 	}
 
 	/**
+	 * Register event handler.
+	 *
+	 * @param handler EventHandler
+	 */
+	public void registerEventHandler(Object handler) {
+		this.eventBus.register(handler);
+	}
+
+	/**
+	 * Register the given event homoChecker.
+	 *
+	 * @param handler EventHandler
+	 */
+	public void unregisterEventHandler(Object handler) {
+		this.eventBus.unregister(handler);
+	}
+
+	/**
 	 * Search for a best plan for the given schema and query.
 	 *
 	 * @param query
