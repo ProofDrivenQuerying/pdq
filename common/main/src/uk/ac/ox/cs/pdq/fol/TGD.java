@@ -14,9 +14,13 @@ public class TGD extends Dependency {
 		super(body,head);
 	}
 	
+	protected TGD(Atom[] body, Atom[] head, String name) {
+		super(body,head, name);
+	}
+	
 	@Override
 	public String toString() {
-		return this.body.toString() + LogicalSymbols.IMPLIES + this.head.toString();
+		return this.body.toString() + " " + LogicalSymbols.IMPLIES + " " + this.head.toString();
 	}
 	
 	public boolean isLinear() {
@@ -39,5 +43,9 @@ public class TGD extends Dependency {
 	
     public static TGD create(Atom[] body, Atom[] head) {
         return Cache.tgd.retrieve(new TGD(body, head));
+    }
+
+    public static TGD create(Atom[] body, Atom[] head, String name) {
+        return Cache.tgd.retrieve(new TGD(body, head, name));
     }
 }

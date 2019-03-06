@@ -20,6 +20,21 @@ import uk.ac.ox.cs.pdq.db.tuple.TupleType;
 public class ServiceXmlTest {
 	
 	// chembl-activityFree test requires a null input tuple due to free status (no inputs)
+ 
+	// This service has:
+	//   name="ActivityFree"
+	//   protocol="REST"
+	//   url="https://www.ebi.ac.uk/chembl/api/data/activity.json" 
+	//   media-type="application/json"
+	//   documentation=""
+	//   result-delimiter="activities"
+	
+	// The schema describes an Access Method:
+	//   type="FREE"
+	//   name="chembl_activity_free"
+	// with 30 attributes such as "activity_comment" and "molecule_chembl_id"
+	// There are 30 output attributes and no input attributes, hence the FREE marker
+
 	@Test
 	public void test1() {
 		
@@ -48,6 +63,21 @@ public class ServiceXmlTest {
 	}
 	
 	// chembl-assayFree test requires a null input tuple due to free status (no inputs)
+	
+	// This service has:
+	//   name="AssayFree"
+	//   protocol="REST"
+	//   url="https://www.ebi.ac.uk/chembl/api/data/assay.json" 
+	//   media-type="application/json"
+	//   documentation=""
+	//   result-delimiter="assays"
+	
+	// The schema describes an Access Method:
+	//   type="FREE"
+	//   name="chembl_assay_free"
+	// with 22 attributes such as "assay_category" and "document_chembl_id"
+	// There are 22 output attributes and no input attributes, hence the FREE marker
+
 	@Test
 	public void test2() {
 		
@@ -76,6 +106,21 @@ public class ServiceXmlTest {
 	}
 	
 	// ebeye-uniprot-protein test requires a 4-way input tuple due to defined input
+
+	// This service has:
+	//   name="EBEYEProtein"
+	//   protocol="REST"
+	//   url="http://www.ebi.ac.uk/ebisearch/ws/rest/uniprotkb" 
+	//   media-type="application/json"
+	//   documentation="http://www.uniprot.org/help/programmatic_access"
+	//   result-delimiter="domains"
+	
+	// The schema describes an Access Method:
+	//   type="LIMITED"
+	//   name="ebeye_uniprot_protein_3"
+	// with 4 attributes such as "id" and "status"
+	// There are 4 output attributes and 4 input attributes, hence the LIMITED marker
+
 	@Test
 	public void test3() {
 		
@@ -108,6 +153,17 @@ public class ServiceXmlTest {
 	
 	// reactome-biopaxExporter test requires a 1-way input tuple due to defined input
 
+	// This service has:
+	//   url="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/RESTfulWS/biopaxExporter" 
+	//   media-type="text/plain"
+	//   documentation="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/ReactomeRESTFulAPI.html"
+	
+	// The schema describes an Access Method:
+	//   type="FREE"
+	//   name="reactome_species_1"
+	// with 5 attributes such as "ORGANISM" and "COMMENT"
+	// There are 5 output attributes and no input attributes, hence the FREE marker
+	
 	@Test
 	public void test4() {
 		
@@ -136,6 +192,20 @@ public class ServiceXmlTest {
 	}
 
 	// reactome-speciesList test requires a 6-way input due to defined inputs
+	
+	// This service has:
+	//   name="reactome-speciesList"
+	//	 url="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/RESTfulWS/speciesList" 
+	//	 media-type="application/xml"
+    //	 documentation="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/ReactomeRESTFulAPI.html"
+	//   result-delimiter="places/place"
+	
+	// The schema describes an Access Method:
+	//   type="LIMITED"
+	//   name="reactome_species_1"
+	// with 2 attributes such as "displayName" and "schemaClass"
+	// There are 2 output attributes and 1 input attributes, hence the LIMITED marker
+	
 	@Test
 	public void test5() {
 		
@@ -169,6 +239,20 @@ public class ServiceXmlTest {
 	}
 
 	// pdq webapp nation input
+
+	// This service has:
+	//   name="pdgWebappNationInput"
+    //   protocol="REST"
+	//   url="http://localhost:8080/webapp/servlets/servlet/NationInput" 
+	//   media-type="application/xml"
+	//   documentation=""
+	//   result-delimiter="places/place"
+	
+	// The schema describes an Access Method:
+	//   name="pdqWebappNationInput"
+	// with 4 attributes such as "n_nationkey" and "n_comment"
+	// There are 4 output attributes and 1 input attribute
+	
 	@Test
 	public void test6() {
 		
@@ -196,6 +280,21 @@ public class ServiceXmlTest {
 		}
 	}
 	// pdq webapp country free
+
+	// This service has:
+	//   name="pdgWebappCountryFree"
+	//   protocol="REST"
+	//   url="http://localhost:8080/webapp/servlets/servlet/CountryFree" 
+	//   media-type="application/xml"
+	//   documentation=""
+	//   result-delimiter="places/place"
+	
+	// The schema describes an Access Method:
+	//   type="FREE"
+	//   name="pdqWebappNationInput"
+	// with 2 attributes such as "c_nationkey" and "c_area"
+	// There are 2 output attributes and no input attributes, hence the FREE marker
+	
 	@Test
 	public void test7() {
 		

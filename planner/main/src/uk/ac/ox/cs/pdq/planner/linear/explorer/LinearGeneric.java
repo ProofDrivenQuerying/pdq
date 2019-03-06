@@ -22,6 +22,9 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 
@@ -118,6 +121,10 @@ public class LinearGeneric extends LinearExplorer {
 		
 		freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
 		
+		Metadata metadata = new CreationMetadata(selectedNode, this.getElapsedTime());
+		freshNode.setMetadata(metadata);
+		this.eventBus.post(freshNode);
+		
 		this.planTree.addVertex(freshNode);
 		this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
 
@@ -132,7 +139,12 @@ public class LinearGeneric extends LinearExplorer {
 			if (this.bestPlan == null || (this.bestPlan != null && freshNode.getConfiguration().getCost().lessThan(this.bestCost))) {
 				this.bestPlan =  freshNode.getConfiguration().getPlan();
 				this.bestCost = freshNode.getConfiguration().getCost();
+				this.bestConfigurationsList = this.getConfigurations(freshNode.getBestPathFromRoot());
 				this.bestNode = freshNode;
+				metadata = new BestPlanMetadata(selectedNode, this.bestPlan, freshNode.getBestPathFromRoot(), 
+						this.bestConfigurationsList, this.getElapsedTime());
+				freshNode.setMetadata(metadata);
+				this.eventBus.post(freshNode);
 			}
 		}
 		this.rounds++;

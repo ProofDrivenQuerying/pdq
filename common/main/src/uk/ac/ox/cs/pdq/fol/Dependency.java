@@ -22,6 +22,7 @@ import uk.ac.ox.cs.pdq.io.jaxb.adapters.DependencyAdapter;
 public class Dependency extends QuantifiedFormula {
 
 	private static final long serialVersionUID = 6522148218362709983L;
+	protected String name;
 	protected final Formula body;
 	protected final Formula head;
 	
@@ -40,12 +41,24 @@ public class Dependency extends QuantifiedFormula {
 		Assert.assertTrue(isUnquantified(body));
 		Assert.assertTrue(isExistentiallyQuantified(head) || isUnquantified(head));
 		Assert.assertTrue(Arrays.asList(body.getFreeVariables()).containsAll(Arrays.asList(head.getFreeVariables())));
+		this.name = "dependency";
 		this.body = body;
 		this.head = head;
 		this.bodyAtoms = this.body.getAtoms();
 		this.headAtoms = this.head.getAtoms();
 	}
 	
+	protected Dependency(Formula body, Formula head, String name) {
+		super(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), Implication.create(body,head));
+		Assert.assertTrue(isUnquantified(body));
+		Assert.assertTrue(isExistentiallyQuantified(head) || isUnquantified(head));
+		Assert.assertTrue(Arrays.asList(body.getFreeVariables()).containsAll(Arrays.asList(head.getFreeVariables())));
+		this.name = name;
+		this.body = body;
+		this.head = head;
+		this.bodyAtoms = this.body.getAtoms();
+		this.headAtoms = this.head.getAtoms();
+	}
 	
 	protected Dependency(Atom[] body, Atom[] head) {
 		this(Conjunction.create(body), createHead(body, head));
@@ -151,6 +164,9 @@ public class Dependency extends QuantifiedFormula {
 		return this.existential.clone();
 	}
 	
+	public String getName() {
+		return name;
+	}
 	
 	public int getNumberOfBodyAtoms() {
 		return this.bodyAtoms.length;
@@ -178,5 +194,9 @@ public class Dependency extends QuantifiedFormula {
 	
     public static Dependency create(Atom[] body, Atom[] head) {
         return Cache.dependency.retrieve(new Dependency(body, head));
+    }
+
+    public static Dependency create(Atom[] body, Atom[] head, String name) {
+        return Cache.dependency.retrieve(new Dependency(body, head, name));
     }
 }

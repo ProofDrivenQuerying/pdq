@@ -1,11 +1,14 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
 import org.junit.Assert;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
@@ -15,8 +18,10 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleQuery;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.plantree.PlanTree;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
@@ -62,6 +67,9 @@ public abstract class LinearExplorer extends Explorer {
 	/**  Maximum exploration depth. */
 	protected final int depth;
 	
+	/** The best configurations list. */
+	protected List<LinearChaseConfiguration> bestConfigurationsList;
+
 	/**
 	 * The tree of plans.
 	 * A new node is appended to this tree at the end of each iteration.
@@ -131,6 +139,8 @@ public abstract class LinearExplorer extends Explorer {
 		if (!root.getConfiguration().hasCandidates()) 
 			root.setStatus(NodeStatus.TERMINAL);
 		this.elapsedTime += System.nanoTime() - this.tick;
+		CreationMetadata metadata = new CreationMetadata(null, this.getElapsedTime());
+		root.setMetadata(metadata);
 		this.eventBus.post(root);
 		this.planTree.addVertex(root);
 	}
@@ -180,4 +190,23 @@ public abstract class LinearExplorer extends Explorer {
 	public SearchNode getBestNode() {
 		return bestNode;
 	}
+
+	/**
+	 * Gets the configurations.
+	 *
+	 * @param path the path
+	 * @return 		the configuration of each node in the input path.
+	 * 		The nodes are indexed using their ids.
+	 */
+	protected List<LinearChaseConfiguration> getConfigurations(List<Integer> path) {
+		Preconditions.checkArgument(path != null && !path.isEmpty());
+		List<LinearChaseConfiguration> configurations = Lists.newArrayList();
+		for (Integer n: path) {
+			SearchNode node = this.planTree.getVertex(n);
+			Preconditions.checkNotNull(node);
+			configurations.add(node.getConfiguration());
+		}
+		return configurations;
+	}
+	
 }

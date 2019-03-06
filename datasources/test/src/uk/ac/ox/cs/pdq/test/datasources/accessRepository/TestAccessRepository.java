@@ -26,7 +26,12 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 import uk.ac.ox.cs.pdq.db.tuple.TupleType;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.View;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
+import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.util.TupleType;
 
 /**
  * Tests the access repository
@@ -44,6 +49,17 @@ public class TestAccessRepository extends PdqTest {
 		properties.setProperty("database", "tpch");
 		properties.setProperty("username", "admin");
 		properties.setProperty("password", "admin");
+	}
+	@Test
+	public void schemaWithView() {
+		try {													 
+			Schema s = DbIOManager.importSchema(new File("/auto/users/marler/.pdq/schemas/0.s"));
+			System.out.println(((View)s.getRelation("order_customer")).getRelationToViewDependency());
+			System.out.println(s);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
 	}
 
 	// NATION relation

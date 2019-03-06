@@ -26,7 +26,7 @@ public class Variable extends Term {
 	 * @param name
 	 *            The name of this variable
 	 */
-	private Variable(String name) {
+	public Variable(String name) {
 		Preconditions.checkArgument(name != null);
 		Preconditions.checkArgument(!name.isEmpty());
 		this.symbol = name;

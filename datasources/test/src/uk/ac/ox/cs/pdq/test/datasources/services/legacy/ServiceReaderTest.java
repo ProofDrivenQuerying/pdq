@@ -17,7 +17,9 @@ import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 
 /**
  * 
- * Tests the service reader class by parsing some of the xml files in the services folder. 
+ * Tests the service reader class by parsing some of the xml files in the services folder. Also
+ * generates an access and prints the results.
+ * 
  * @author gabor
  *
  */

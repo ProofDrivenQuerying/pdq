@@ -17,6 +17,7 @@
   	<module>cost</module>
   	<module>planner</module>
   	<module>runtime</module>
+  	<module>demo</module>
   	
   	
   	<module>datasources</module>

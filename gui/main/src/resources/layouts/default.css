@@ -1,0 +1,17 @@
+/* Description textArea */
+
+
+.formula-editor {
+    -fx-background-color: white;
+    -fx-font: 1.2em "Terminal";
+ }
+
+.section-title {
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 15px;
+    -fx-font-weight: Bold;
+ }
+
+.cost-reduction-series {
+    -fx-stroke: red;
+}

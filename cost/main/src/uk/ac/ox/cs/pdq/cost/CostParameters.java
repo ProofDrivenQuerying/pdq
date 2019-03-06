@@ -339,7 +339,9 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 		
 		/** The simple erspi. */
 		@EnumParameterValue(description = "Estimates the cost as the sum of the estimated result size per invocation associated to each access method used in a plan")
-		NUMBER_OF_OUTPUT_TUPLES_PER_ACCESS
+		NUMBER_OF_OUTPUT_TUPLES_PER_ACCESS,
+		
+		SIMPLE_CONSTANT
 	}
 
 	/**
