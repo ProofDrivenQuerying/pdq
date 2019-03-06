@@ -1,35 +1,12 @@
 package uk.ac.ox.cs.pdq.ui.io.sql;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.apache.log4j.Logger;
-
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.builder.ConjunctiveQueryBodyBuilder;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteLexer;
-import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteParser;
-import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteParser.Column_nameContext;
-import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteParser.Compound_select_stmtContext;
-
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.Interval;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.antlr.v4.runtime.ANTLRErrorListener;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import org.junit.Assert;
+import org.apache.log4j.Logger;
 
 /**
  * The Class SQLLikeQueryParser.

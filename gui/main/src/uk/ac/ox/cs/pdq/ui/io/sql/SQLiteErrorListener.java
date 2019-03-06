@@ -1,26 +1,14 @@
 package uk.ac.ox.cs.pdq.ui.io.sql;
 
 import java.util.BitSet;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.ANTLRErrorListener;
+import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.apache.log4j.Logger;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-
-import org.antlr.v4.runtime.Parser;
-import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteBaseListener;
-import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteParser;
-import org.antlr.v4.runtime.ANTLRErrorListener;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

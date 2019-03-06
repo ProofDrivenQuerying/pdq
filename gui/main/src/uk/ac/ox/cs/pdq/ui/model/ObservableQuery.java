@@ -8,12 +8,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableStringValue;
 import javafx.beans.value.ObservableValue;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Formula;
 //import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.ui.UserInterfaceException;
 import uk.ac.ox.cs.pdq.ui.io.ObservableQueryWriter;
-import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 
 // TODO: Auto-generated Javadoc
 /**

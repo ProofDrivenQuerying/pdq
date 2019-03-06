@@ -8,11 +8,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableStringValue;
 import javafx.beans.value.ObservableValue;
+import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.ui.UserInterfaceException;
 import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaWriter;
-import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
-import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 // TODO: Auto-generated Javadoc
 /**
  * The Class ObservableSchema.

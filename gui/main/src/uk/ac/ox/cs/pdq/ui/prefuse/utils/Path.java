@@ -2,12 +2,12 @@ package uk.ac.ox.cs.pdq.ui.prefuse.utils;
 
 import java.util.List;
 
+import com.google.common.base.Joiner;
+
 import prefuse.visual.NodeItem;
 //import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.cost.Cost;
-
-import com.google.common.base.Joiner;
 
 // TODO: Auto-generated Javadoc
 /**

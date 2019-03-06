@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.ui.io;
 
-import static uk.ac.ox.cs.pdq.ui.PDQApplication.SCHEMA_FILENAME_SUFFIX;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,30 +11,18 @@ import java.util.ArrayList;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.log4j.Logger;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 
 import com.google.common.base.Preconditions;
 
-//import uk.ac.ox.cs.pdq.SchemaReader;
-import uk.ac.ox.cs.pdq.io.ReaderException;
-import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLReader;
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
+import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
 import uk.ac.ox.cs.pdq.datasources.utility.SanityCheck;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodAttributeSpecification;
-import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
-import uk.ac.ox.cs.pdq.datasources.services.service.Service;
+//import uk.ac.ox.cs.pdq.SchemaReader;
+import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.ui.UserInterfaceException;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
@@ -98,7 +84,8 @@ public class ObservableSchemaReader {
 			for(int i = 0; i < list.size(); i++) services[i] = list.get(i);
 			try
 			{
-				SanityCheck.sanityCheck(schema, services);
+				//TOCOMMENT fix this
+				//SanityCheck.sanityCheck(schema, services);
 			}
 			catch(Exception e)
 			{

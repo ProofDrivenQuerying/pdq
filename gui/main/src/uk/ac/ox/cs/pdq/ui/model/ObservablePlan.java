@@ -6,15 +6,17 @@ import java.io.PrintStream;
 
 import javax.xml.bind.JAXBException;
 
+import com.google.common.base.Preconditions;
+
 import javafx.beans.property.SimpleObjectProperty;
-import uk.ac.ox.cs.pdq.cost.CostParameters;
-import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
-import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
-//import uk.ac.ox.cs.pdq.io.xml.PlanWriter;
-import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+//import uk.ac.ox.cs.pdq.io.xml.PlanWriter;
+import uk.ac.ox.cs.pdq.cost.Cost;
+import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
+import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -22,8 +24,6 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.ui.UserInterfaceException;
 import uk.ac.ox.cs.pdq.ui.io.xml.ProofWriter;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
-
-import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**

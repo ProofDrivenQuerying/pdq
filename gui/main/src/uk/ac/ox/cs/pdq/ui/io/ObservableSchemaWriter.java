@@ -9,22 +9,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
 
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLWriter;
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
-import uk.ac.ox.cs.pdq.datasources.services.service.Service;
-import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 //import uk.ac.ox.cs.pdq.io.xml.SchemaWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;

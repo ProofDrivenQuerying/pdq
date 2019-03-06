@@ -2,8 +2,6 @@ package uk.ac.ox.cs.pdq.ui.model;
 
 import java.util.List;
 
-import com.beust.jcommander.internal.Maps;
-
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;

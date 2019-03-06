@@ -1,22 +1,5 @@
 package uk.ac.ox.cs.pdq.ui.io.xml;
 
-import java.io.PrintStream;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-//import uk.ac.ox.cs.pdq.db.TGD;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Atom;
-//import uk.ac.ox.cs.pdq.fol.Skolem;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Variable;
-//import uk.ac.ox.cs.pdq.io.xml.AbstractXMLWriter;
-//import uk.ac.ox.cs.pdq.io.xml.QNames;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
-import uk.ac.ox.cs.pdq.ui.proof.Proof;
-//import uk.ac.ox.cs.pdq.util.CanonicalNameGenerator;
-
 // TODO: Auto-generated Javadoc
 /**
  * Writes proofs to XML.

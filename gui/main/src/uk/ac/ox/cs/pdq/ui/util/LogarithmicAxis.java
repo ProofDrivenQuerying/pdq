@@ -3,6 +3,8 @@ package uk.ac.ox.cs.pdq.ui.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -11,7 +13,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.chart.ValueAxis;
 import javafx.util.Duration;
-import org.apache.log4j.Logger;
 
 // TODO: Auto-generated Javadoc
 /**

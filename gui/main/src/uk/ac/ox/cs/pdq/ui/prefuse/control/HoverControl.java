@@ -5,13 +5,13 @@ import java.util.Collection;
 
 import javax.swing.JPopupMenu;
 
-import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import prefuse.controls.ControlAdapter;
 import prefuse.util.ColorLib;
 import prefuse.visual.NodeItem;
 import prefuse.visual.VisualItem;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 
 // TODO: Auto-generated Javadoc
 /**

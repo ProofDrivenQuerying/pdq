@@ -13,6 +13,8 @@ import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLReader;
+import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -20,8 +22,6 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 //import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.ReaderException;
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLReader;
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 //import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;

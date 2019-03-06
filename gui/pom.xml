@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.ox.cs.pdq</groupId>
@@ -72,74 +73,105 @@
 		<name>Oxford University - Department of Computer Science</name>
 		<url>http://www.cs.ox.ac.uk/</url>
 	</organization>
-	
-  <repositories>
-    <repository>
-      <id>mavenlocal</id>
-      <name>mavenlocal repository</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </repository>
-  </repositories>
-	
-	<dependencies>
-		<dependency>
-			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>pdq-common</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>pdq-runtime</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>pdq-planner</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>pdq-reasoning</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.jolira</groupId>
-			<artifactId>onejar-maven-plugin</artifactId>
-			<version>1.4.4</version>
-			<type>maven-plugin</type>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.prefuse</groupId>
-			<artifactId>prefuse</artifactId>
-			<version>beta-20071021</version>
-		</dependency>
-		<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>antlr4</artifactId>
-			<version>4.3</version>
-		</dependency>
-		<dependency>
-			<groupId>com.beust</groupId>
-			<artifactId>jcommander</artifactId>
-			<version>1.35</version>
-		</dependency>
-		<dependency>
-			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>pdq-datasources</artifactId>
-		</dependency>
-	</dependencies>
-	<dependencyManagement>
+
+	<repositories>
+		<repository>
+			<id>mavenlocal</id>
+			<name>mavenlocal repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</repository>
+	</repositories>
 		<dependencies>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
 				<artifactId>pdq-common</artifactId>
-				<version>1.0.0-Beta</version>
+			</dependency>
+			<dependency>
+				<groupId>uk.ac.ox.cs.pdq</groupId>
+				<artifactId>pdq-datasources</artifactId>
+			</dependency>
+		
+			<dependency>
+				<groupId>com.jolira</groupId>
+				<artifactId>onejar-maven-plugin</artifactId>
+				<version>1.4.4</version>
+				<type>maven-plugin</type>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.prefuse</groupId>
+				<artifactId>prefuse</artifactId>
+				<version>beta-20071021</version>
+			</dependency>
+			<dependency>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4</artifactId>
+				<version>4.3</version>
+			</dependency>
+			<dependency>
+				<groupId>com.beust</groupId>
+				<artifactId>jcommander</artifactId>
+				<version>1.35</version>
 			</dependency>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
 				<artifactId>pdq-runtime</artifactId>
-				<version>1.0.0-Beta</version>
 			</dependency>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
 				<artifactId>pdq-planner</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>uk.ac.ox.cs.pdq</groupId>
+				<artifactId>pdq-datasources</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>uk.ac.ox.cs.pdq</groupId>
+				<artifactId>pdq-reasoning</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-base</artifactId>
+				<version>11.0.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-controls</artifactId>
+				<version>11.0.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-graphics</artifactId>
+				<version>11.0.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-fxml</artifactId>
+				<version>11.0.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-web</artifactId>
+				<version>11.0.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-swing</artifactId>
+				<version>11.0.2</version>
+			</dependency>
+		</dependencies>
+	<dependencyManagement>
+		<dependencies>
+		 	<dependency>
+		        <groupId>uk.ac.ox.cs.pdq</groupId>
+		        <artifactId>pdq-common</artifactId>
+		        <type>test-jar</type>
+		        <version>1.0.0-Beta</version>
+		        <scope>test</scope>
+		    </dependency>		
+			<dependency>
+				<groupId>uk.ac.ox.cs.pdq</groupId>
+				<artifactId>pdq-common</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
 			<dependency>
@@ -149,15 +181,21 @@
 			</dependency>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
+				<artifactId>pdq-planner</artifactId>
+				<version>1.0.0-Beta</version>
+			</dependency>
+			<dependency>
+				<groupId>uk.ac.ox.cs.pdq</groupId>
+				<artifactId>pdq-runtime</artifactId>
+				<version>1.0.0-Beta</version>
+			</dependency>
+			<dependency>
+				<groupId>uk.ac.ox.cs.pdq</groupId>
 				<artifactId>pdq-reasoning</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
-			 <dependency>
-      			<groupId>org.openjfx</groupId>
-      			<artifactId>javafx.controls</artifactId>
-      			<version>11-ea+25</version>
-	    </dependency>
+			
 		</dependencies>
-	</dependencyManagement>
+	</dependencyManagement>		
 	<packaging>jar</packaging>
 </project>
