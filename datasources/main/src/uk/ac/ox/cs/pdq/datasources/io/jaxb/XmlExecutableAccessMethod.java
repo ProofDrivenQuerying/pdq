@@ -105,14 +105,16 @@ public class XmlExecutableAccessMethod {
 
 	public ExecutableAccessMethod toExecutableAccessMethod(Schema s, File parentDir) throws IOException {
 		Relation r = getRelationObject(s);
-		if (!new File(dataFileName).exists()) {
-			dataFileName = new File(parentDir,dataFileName).getAbsolutePath();
-		}
-		if (!new File(dataFileName).exists()) {
-			throw new FileNotFoundException("Data file: " + dataFileName + " not found!" );
-		}
 		switch (accessType) {
 		case IN_MEMORY_ACCESS_METHOD:
+			if (dataFileName==null)
+				dataFileName = this.getRelationName() + "_" + this.getAccessMethodName() + ".csv";
+			if (!new File(dataFileName).exists()) {
+				dataFileName = new File(parentDir,dataFileName).getAbsolutePath();
+			}
+			if (!new File(dataFileName).exists()) {
+				throw new FileNotFoundException("Data file: " + dataFileName + " not found!" );
+			}
 			InMemoryAccessMethod am = new InMemoryAccessMethod(accessMethodName,
 					attributes.toArray(new Attribute[attributes.size()]), inputAttributes, r, attributeMapping);
 			am.load(DbIOManager.importTuples(attributes.toArray(new Attribute[attributes.size()]), dataFileName));

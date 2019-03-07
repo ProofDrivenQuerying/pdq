@@ -28,6 +28,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 import uk.ac.ox.cs.pdq.db.tuple.TupleType;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
@@ -50,9 +51,10 @@ public class TestAccessRepository extends PdqTest {
 	@Test
 	public void schemaWithView() {
 		try {													 
-			Schema s = DbIOManager.importSchema(new File("/auto/users/marler/.pdq/schemas/0.s"));
-			System.out.println(((View)s.getRelation("order_customer")).getRelationToViewDependency());
-			System.out.println(s);
+			Schema s = DbIOManager.importSchema(new File(System.getProperty("user.home") + "/.pdq/schemas/0.s"));
+			TGD tgd = ((View)s.getRelation("region_nation")).getRelationToViewDependency();
+			Assert.assertNotNull(tgd);
+			System.out.println(tgd);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
@@ -212,7 +214,7 @@ public class TestAccessRepository extends PdqTest {
 					"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethod.xml"));
 		} catch (Throwable t) {
 			t.printStackTrace();
-			t.printStackTrace();
+			throw t;
 		}
 		Iterable<Tuple> data = target.access();
 		Assert.assertNotNull(data);
