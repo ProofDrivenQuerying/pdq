@@ -23,11 +23,12 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
+import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
-import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
  * Bootstrapping class for starting the reasoner.
@@ -52,7 +53,7 @@ public class Reason {
 	private String queryPath;
 
 	@Parameter(names = { "-f",
-			"--facts" }, required = false, validateWith = FileValidator.class, description = "Path to the folder containing [RelationName].csv files containing data for the given relation. Either facts or a query is mandatory.")
+			"--facts" }, required = false, description = "Path to the folder containing [RelationName].csv files containing data for the given relation. Either facts or a query is mandatory.")
 	private String factsPath;
 
 	@Parameter(names = { "-c",
@@ -104,12 +105,11 @@ public class Reason {
 	 * Runs the resoner from the input parameters, schema, and query or facts.
 	 */
 	public void run() {
+		long start = System.currentTimeMillis();
 		ReasoningParameters reasoningParams = this.getConfigFile() != null
 				? new ReasoningParameters(this.getConfigFile())
 				: new ReasoningParameters();
 
-		DatabaseParameters dbParams = this.getConfigFile() != null ? new DatabaseParameters(this.getConfigFile())
-				: DatabaseParameters.Postgres;
 
 		for (String k : this.dynamicParams.keySet()) {
 			reasoningParams.set(k, this.dynamicParams.get(k));
@@ -122,7 +122,7 @@ public class Reason {
 			List<Atom> facts = new ArrayList<>();
 			if (this.getFactsPath() != null) {
 				for (Relation r : schema.getRelations()) {
-					File rXml = new File(this.getQueryPath());
+					File rXml = new File(this.getFactsPath(),r.getName() + ".csv");
 					if (rXml.exists())
 						facts.addAll(DbIOManager.importFacts(r, rXml));
 				}
@@ -140,9 +140,13 @@ public class Reason {
 			ReasonerFactory reasonerFactory = new ReasonerFactory(reasoningParams);
 
 			Chaser reasoner = reasonerFactory.getInstance();
-			ExternalDatabaseManager edm = new ExternalDatabaseManager(dbParams);
-			LogicalDatabaseInstance manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), edm,
-					GlobalCounterProvider.getNext("DatabaseInstanceID"));
+			DatabaseParameters dbParams = this.getConfigFile() != null ? new DatabaseParameters(this.getConfigFile())
+				: DatabaseParameters.Postgres;
+			
+			DatabaseManager manager = null;
+			if (dbParams.getUseInternalDatabaseManager())
+				manager = new InternalDatabaseManager();
+			else manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(dbParams), 0);
 			manager.initialiseDatabaseForSchema(schema);
 			ChaseInstance state;
 			if (query != null) {
@@ -154,6 +158,10 @@ public class Reason {
 				state = new DatabaseChaseInstance(facts, manager);
 			}
 			reasoner.reasonUntilTermination(state, schema.getAllDependencies());
+			System.out.println("Reasoning results generated in " + (System.currentTimeMillis() - start)/1000.0 + " sec.");
+			for (Atom a: state.getFacts())
+				System.out.println(a);
+			
 		} catch (Throwable e) {
 			log.error("Reasoning aborted: " + e.getMessage(), e);
 			System.exit(-1);
