@@ -43,13 +43,23 @@ public class RestrictedChaser extends Chaser {
 		DependencyAssessor accessor = new DependencyAssessor(dependencies);
 		boolean appliedStep = false;
 		Dependency[] d = dependencies;
+		boolean previousFalied = false;
 		do {
 			appliedStep = false;
 			for(Dependency dependency:d) {
 				List<Match> matches = instance.getTriggers(new Dependency[]{dependency}, TriggerProperty.ACTIVE);
 				if(!matches.isEmpty()) {
 					appliedStep = true;
-					instance.chaseStep(matches);
+					boolean failed = instance.chaseStep(matches);
+					if (failed && previousFalied) {
+						return;
+					}
+					if (failed && !previousFalied) {
+						previousFalied = true;
+					}
+					if (!failed) {
+						previousFalied = false;
+					}
 					accessor.addNewFacts(instance.getNewFacts());
 				}
 			}
