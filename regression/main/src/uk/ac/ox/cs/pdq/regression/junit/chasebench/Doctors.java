@@ -9,10 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
@@ -66,7 +68,7 @@ public class Doctors {
 		reasonTest(dbm);
 	}
 	
-	@Test
+	//@Test
 	public void testDoctorsPostgresDb() throws DatabaseException, SQLException, IOException {
 		DatabaseManager dbm = getExternalDatabaseManager();
 		Schema dbSchema = ExplorationSetUp.convertTypesToString(s);
@@ -116,7 +118,12 @@ public class Doctors {
 		int counter = 0;
 		for (ConjunctiveQuery q:queries) {
 			counter++;
-			System.out.println(counter + " query:\n\t" + state.getMatches(q, new HashMap<>()));
+			List<Match> matches = state.getMatches(q, new HashMap<>());
+			if (counter == 6 || counter ==9)
+				Assert.assertEquals(0, matches.size());
+			else 
+				Assert.assertEquals(1, matches.size());
+			System.out.println(counter + " query:\n\t" + matches);
 		}
 	}
 	
