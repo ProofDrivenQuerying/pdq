@@ -10,23 +10,32 @@ Check our [Wiki](https://github.com/michaelbenedikt/pdq/wiki) for more informati
 
 Please check our [Wiki](https://github.com/michaelbenedikt/pdq/wiki)
 
-| 💻 [User Guides]() | 📃 [Development guidelines]() | 👩‍💻 [Developer Guides]() |
+| 💻 [User Guides](https://github.com/michaelbenedikt/pdq/wiki/User-Guides) | 📃 [Development guidelines](https://github.com/michaelbenedikt/pdq/wiki/Development-guidelines) | 👩‍💻 [Developer Guides](https://github.com/michaelbenedikt/pdq/wiki/Developer-Guides) |
 | :---------: | :---------: | :---------: |
 
 ## Contributing
 
-[[TODO]] See https://github.com/michaelbenedikt/pdq/issues/305
+[[TODO]] See [this issue](https://github.com/michaelbenedikt/pdq/issues/305)
 
 ## Credits
 
 **[Information Systems Group](https://www.cs.ox.ac.uk/isg) - [Department of Computer Science](http://www.cs.ox.ac.uk) - [University of Oxford](www.ox.ac.uk)**
 
-- [Michael Benedikt](http://www.cs.ox.ac.uk/people/michael.benedikt)
-- [Pierre Bourhis](https://www.cs.ox.ac.uk/people/pierre.bourhis)
-- [Stefano Germano](http://www.cs.ox.ac.uk/people/stefano.germano)
-- [Gabor Gyorkei](http://www.cs.ox.ac.uk/people/gabor.gyorkei)
-- [Mark Ridler](http://www.cs.ox.ac.uk/people/mark.ridler)
-- [Efthymia Tsamoura](http://www.cs.ox.ac.uk/people/efthymia.tsamoura)
+### Current members
+
+- [Michael Benedikt](http://www.cs.ox.ac.uk/people/michael.benedikt/home.html)
+- [Stefano Germano](https://www.cs.ox.ac.uk/people/stefano.germano)
+- [Gabor Gyorkei](https://www.cs.ox.ac.uk/people/gabor.gyorkei)
+
+<!-- - [Mark Ridler](https://www.cs.ox.ac.uk/people/mark.ridler) -->
+
+### Former members
+
+- [George Konstantinidis](https://www.cs.ox.ac.uk/people/george.konstantinidis) [2016-2017]
+- [Julien Leblay](https://staff.aist.go.jp/julien.leblay) [2014-2015]
+- [Efthymia Tsamoura](https://www.cs.ox.ac.uk/people/efthymia.tsamoura) [2014-2018]
+
+<!-- - [Pierre Bourhis](https://www.cs.ox.ac.uk/people/pierre.bourhis) -->
 
 ## License
 
