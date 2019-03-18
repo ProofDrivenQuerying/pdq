@@ -210,24 +210,4 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implemen
 		}	
 		return baos.toString();
 	}
-	
-//	public static void main(String... args) {
-//		System.setProperty("user.dir", "/auto/users/leblay/.pdq/");
-//		try(InputStream sin = new FileInputStream("/auto/users/leblay/.pdq/schemas/3.s");
-//			InputStream qin = new FileInputStream("/auto/users/leblay/.pdq/queries/3_1.q");
-//			InputStream pin = new FileInputStream("/auto/users/leblay/.pdq/plans/3_1_1.p")) {
-//			Schema s = Readers.from(sin).read();
-//			ConjunctiveQuery q = Readers.from(qin).with(s).read();
-//			Plan p = Readers.from(pin).with(s).read();
-//			RuntimeParameters params = new RuntimeParameters("/auto/users/leblay/.pdq/plans/3_1_1.properties");
-//			params.setExecutorType(ExecutorTypes.PIPELINED);
-//			uk.ac.ox.cs.pdq.runtime.Runtime runtime = new uk.ac.ox.cs.pdq.runtime.Runtime(params, s);
-//			runtime.registerEventHandler(new TuplePrinterTest(System.out));
-//			runtime.evaluatePlan(p, q);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (EvaluationException e) {
-//			e.printStackTrace();
-//		}
-//	}
 }
