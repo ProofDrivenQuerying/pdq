@@ -59,7 +59,7 @@ public class Planner {
 	private File configFile;
 	
 	@Parameter(names = { "-v", "--verbose" }, required = false,
-			description ="Path to the input query definition file.")
+			description ="Activates verbose mode.")
 	private boolean verbose = false;
 	
 	@DynamicParameter(names = "-D", description = "Dynamic parameters. Override values defined in the configuration files.")
