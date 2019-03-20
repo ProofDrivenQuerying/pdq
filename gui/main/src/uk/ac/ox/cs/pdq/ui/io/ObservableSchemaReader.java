@@ -19,7 +19,6 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
-import uk.ac.ox.cs.pdq.datasources.utility.SanityCheck;
 import uk.ac.ox.cs.pdq.db.Schema;
 //import uk.ac.ox.cs.pdq.SchemaReader;
 import uk.ac.ox.cs.pdq.io.ReaderException;
@@ -111,18 +110,5 @@ public class ObservableSchemaReader {
 				return name.startsWith(prefix) && name.endsWith(suffix);
 			}
 		});
-	}
-	/**
-	 * For test purpose only.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String... args) {
-		try (InputStream in = new FileInputStream("test/input/schema-mysql-tpch.xml")) {
-/* MR			ObservableSchema s = new ObservableSchemaReader().read(in);
-			new ObservableSchemaWriter().write(System.out, s); */
-		} catch (IOException e) {
-			log.error(e.getMessage(),e);
-		}
 	}
 }

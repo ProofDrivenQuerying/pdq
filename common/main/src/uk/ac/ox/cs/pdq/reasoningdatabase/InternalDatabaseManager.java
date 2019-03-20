@@ -570,7 +570,10 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	}
 	@Override
 	public void addToConstantsToAtoms(Constant term, Atom atom) {
-		constantsToAtoms.put(term, atom);
+		if (constantsInitialized) {
+			// when the initialization takes place the constants to atom table will be populated from the actual data, we don't need to cache them.
+			constantsToAtoms.put(term, atom);
+		}
 	}
 
 	@Override

@@ -67,16 +67,4 @@ public class ObservableQueryReader {
 		return path.replace(home, "");
 	}
 
-	/**
-	 * For test purpose only.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String... args) {
-		File sin = new File("test/input/minimal-schema.xml");
-		File qin = new File("test/input/query.xml");
-		ObservableSchema s = new ObservableSchemaReader().read(sin);
-		ObservableQuery q = new ObservableQueryReader(s.getSchema()).read(qin);
-		new ObservableQueryWriter().write(System.out, q);
-	}
 }

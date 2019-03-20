@@ -220,6 +220,7 @@ public class BasicSelect extends Command {
 		}
 		ta.aliasName = "A" + GlobalCounterProvider.getNext("TableNameAlias");
 		aliases.add(ta);
+		storeReplacementKeyValuePairs(ta.toKey(), ta.aliasName);		
 		return ta;
 	}
 

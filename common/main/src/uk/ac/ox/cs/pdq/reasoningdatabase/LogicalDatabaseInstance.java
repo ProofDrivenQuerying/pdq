@@ -74,7 +74,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 	 */
 	protected Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 	protected boolean constantsInitialized = false;
-	private final int maxSizeForConstantsToAtoms = 100000;
+	private final int maxSizeForConstantsToAtoms = 10000;
 	private Relation constToAtomsRelation;
 
 	/**
@@ -502,9 +502,12 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 
 	@Override
 	public void addToConstantsToAtoms(Constant term, Atom atom) throws DatabaseException {
-		constantsToAtoms.put(term, atom);
-		if (constantsToAtoms.size() >= maxSizeForConstantsToAtoms) {
-			flushConstantsToAtomsToDb();
+		if (constantsInitialized) {
+			// when the initialization takes place the constants to atom table will be populated from the actual data, we don't need to cache them.
+			constantsToAtoms.put(term, atom);
+			if (constantsToAtoms.size() >= maxSizeForConstantsToAtoms) {
+				flushConstantsToAtomsToDb();
+			}
 		}
 	}
 

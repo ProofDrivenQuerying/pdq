@@ -9,8 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
 
+import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
@@ -69,7 +71,15 @@ public class Deep {
 		int counter = 0;
 		for (ConjunctiveQuery q:queries) {
 			counter++;
-			System.out.println(counter + " query:\n\t" + state.getMatches(q, new HashMap<>()));
+			List<Match> matches = state.getMatches(q, new HashMap<>());
+			System.out.println(counter + " query:\n\t" + matches);
+			if (counter == 1 )
+				Assert.assertEquals(19, matches.size());
+			if (counter == 2 )
+				Assert.assertEquals(96, matches.size());
+			if (counter == 3 )
+				Assert.assertEquals(16, matches.size());
+			
 		}
 	}
 	

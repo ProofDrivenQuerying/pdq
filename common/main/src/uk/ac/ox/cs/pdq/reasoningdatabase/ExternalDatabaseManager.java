@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang3.NotImplementedException;
-
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -16,6 +14,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoningdatabase.execution.ExecutionManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.monitor.DatabaseMonitor;
 import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.BasicSelect;
@@ -394,21 +393,56 @@ public class ExternalDatabaseManager implements DatabaseManager {
 
 	@Override
 	public void addToConstantsToAtoms(Constant term, Atom atom) throws DatabaseException {
-		throw new NotImplementedException("This function is only available in LogicalDatabaseManager and InternalDatabaseManager");
+		// we can't cache the constant to facts table since atom's don't have a fact ID here.
 	}
 
 	@Override
 	public Collection<Atom> getAtomsContainingConstant(Constant obsoleteConstant) throws DatabaseException {
-		throw new NotImplementedException("This function is only available in LogicalDatabaseManager and InternalDatabaseManager");
+		ArrayList<Atom> results = new ArrayList<>();
+		for (Relation r: this.schema.getRelations()) {
+			for (int attributeIndex = 0; attributeIndex < r.getArity(); attributeIndex++) {
+				try {
+					Variable freeVariables[] = new Variable[r.getArity()-1];
+					Term searchTerms[] = new Term[r.getArity()];
+					int freeVarIndex=0;
+					for (int i = 0; i < r.getArity(); i++) {
+						if (i==attributeIndex) {
+							searchTerms[i] = obsoleteConstant;
+						} else {
+							freeVariables[freeVarIndex++] = Variable.create("V"+r.getAttribute(i).getName());
+							searchTerms[i] = Variable.create("V"+r.getAttribute(i).getName());
+						}
+					}
+					Atom rAtom = Atom.create(r, searchTerms); 
+					ConjunctiveQuery cq =ConjunctiveQuery.create(freeVariables, new Atom[] {rAtom}); 
+					List<Match> matches = answerConjunctiveQuery(cq);
+					for (Match m : matches) {
+						List<Term> terms = new ArrayList<>();
+						for (Term t : searchTerms) {
+							if (t.isVariable() && m.getMapping().get(t)!=null)
+								terms.add(m.getMapping().get(t));
+							else
+								terms.add(obsoleteConstant);
+						}
+						results.add(Atom.create(r, terms.toArray(new Term[terms.size()])));
+					}
+					
+				} catch (Throwable t) {
+					t.printStackTrace();
+					throw t;
+				}
+			}
+		}
+		return results;
 	}
 
 	@Override
 	public void removeConstantFromMap(Constant obsoleteConstant) throws DatabaseException {
-		throw new NotImplementedException("This function is only available in LogicalDatabaseManager and InternalDatabaseManager");
+		// there is no map, nothing to remove.
 	}
 
 	@Override
 	public void mergeConstantsToAtomsMap(DatabaseManager from) throws DatabaseException {
-		throw new NotImplementedException("This function is only available in LogicalDatabaseManager and InternalDatabaseManager");
+		throw new RuntimeException("Merging databases without databaseID and factIDs is not allowed. This function is only possible using LogicalDatabaseManager or InternalDatabaseManager. ");
 	}
 }
