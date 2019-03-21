@@ -1,7 +1,7 @@
 	<service
 		name="pdqWebappCountryFree"
 		protocol="REST"
-		url="http://localhost:8080/webapp/servlets/servlet/CountryFree" 
+		url="http://clpc463:8080/webapp/servlets/servlet/CountryFree" 
 		media-type="application/xml"
 		documentation=""
 		result-delimiter="country"
