@@ -117,6 +117,7 @@ public class TypedConstant extends Constant implements Serializable, Comparable<
 	 * @return
 	 */
 	public static TypedConstant deSerializeTypedConstant(String serializedTypedConstant) {
+		serializedTypedConstant = serializedTypedConstant.trim();
 		if (serializedTypedConstant != null && serializedTypedConstant.startsWith("_Typed")) {
 			String typeAndValue = serializedTypedConstant.substring(6);
 			String type = typeAndValue.substring(6, typeAndValue.indexOf('_'));
