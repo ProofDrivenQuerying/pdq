@@ -1,7 +1,9 @@
 package uk.ac.ox.cs.pdq.planner.equivalence.dag;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,6 +44,20 @@ public class DAGEquivalenceClasses {
 		DAGChaseConfiguration equivalent = this.structurallyEquivalentTo(configuration);
 		if(equivalent != null) {
 			e = this.configurationToEquivalenceClass.get(equivalent);
+			if (e==null) {
+				List<DAGChaseConfiguration> toUpdate = new ArrayList<>();
+				for (DAGChaseConfiguration oldKey:this.configurationToEquivalenceClass.keySet()) {
+					if (!this.configurationToEquivalenceClass.get(oldKey).getRepresentative().equals(oldKey)) {
+						toUpdate.add(oldKey);
+					}
+				}
+				for (DAGChaseConfiguration oldKey:toUpdate) {
+					DAGEquivalenceClass oldClass = this.configurationToEquivalenceClass.get(oldKey);
+					this.configurationToEquivalenceClass.remove(oldKey);
+					this.configurationToEquivalenceClass.put(oldClass.getRepresentative(), oldClass);
+				}
+				e = this.configurationToEquivalenceClass.get(equivalent);
+			}
 			DAGChaseConfiguration oldRep = e.getRepresentative();
 			e.addEntry(configuration);
 			if (oldRep!=e.getRepresentative()) {

@@ -30,7 +30,7 @@
 			<variable name="l_tax" />
 			<variable name="l_returnflag" />
 			<variable name="l_linestatus" />
-			<constant value="1998-01-01" type="java.util.Date"/>
+			<constant value="1998-01-01" type="java.sql.Date"/>
 			<variable name="l_commitdate" />
 			<variable name="l_receiptdate" />
 			<variable name="l_shipinstruct" />

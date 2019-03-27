@@ -35,7 +35,11 @@ public class SelectionTerm extends RelationalTerm {
 		super(child.getInputAttributes(), child.getOutputAttributes());
 		Preconditions.checkNotNull(selectionCondition);
 		Preconditions.checkNotNull(child);
-		Preconditions.checkArgument(SelectionTerm.assertSelectionCondition(selectionCondition, child.getOutputAttributes()));
+		try {
+			Preconditions.checkArgument(SelectionTerm.assertSelectionCondition(selectionCondition, child.getOutputAttributes()));
+		}catch(Exception e) {
+			throw e;
+		}
 		this.selectionCondition = selectionCondition;
 		this.child = child;
 	}
