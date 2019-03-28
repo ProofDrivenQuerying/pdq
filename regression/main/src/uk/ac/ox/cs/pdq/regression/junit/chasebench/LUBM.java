@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -41,7 +40,6 @@ import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
  * @author Gabor
  *
  */
-@Ignore
 public class LUBM {
 	String TEST_DATA[] = {"001","010","100", "01k"}; // test data folders;
 	String testDataFolder = TEST_DATA[0];

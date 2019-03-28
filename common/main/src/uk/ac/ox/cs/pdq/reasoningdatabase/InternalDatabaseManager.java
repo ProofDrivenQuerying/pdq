@@ -369,19 +369,30 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 		} else {
 			List<Atom> factsShort = factsLeft;
 			List<Atom> factsLong = factsRight;
+			boolean changeOrder= false;
 			if (factsLeft.size() >factsRight.size() ) {
 				factsShort = factsRight;
 				factsLong = factsLeft;
+				changeOrder= true;
 			}
 			
 			for (Pair<Integer, Integer> e : equalities) {
+				Integer leftEq;
+				Integer rightEq;
+				if (changeOrder) {
+					leftEq = e.getRight();
+					rightEq = e.getLeft();
+				} else {
+					leftEq = e.getLeft();
+					rightEq = e.getRight();
+				}
 				Multimap<Term, Atom> left = LinkedHashMultimap.create();
 				for (Atom lf : factsShort) {
-					left.put(lf.getTerm(e.getLeft()),lf);
+					left.put(lf.getTerm(leftEq),lf);
 				}
 				Multimap<Term, Atom> right = LinkedHashMultimap.create();
 				for (Atom rf : factsLong) {
-					Term currentTerm  = rf.getTerm(e.getRight());
+					Term currentTerm  = rf.getTerm(rightEq);
 					if (left.containsKey(currentTerm)) {
 						right.put(currentTerm,rf);
 					}

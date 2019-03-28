@@ -142,6 +142,7 @@ public class AccessibleSchema extends Schema {
 		output.addAll(Arrays.asList(relations));
 		for(Relation relation:relations) 
 			output.add(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethodDescriptor[]{}, relation.isEquality()));
+		output.add(accessibleRelation);
 		return output.toArray(new Relation[output.size()]);
 	}
 

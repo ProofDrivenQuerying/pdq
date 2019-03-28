@@ -125,6 +125,25 @@ public class DatabaseParameters extends Parameters {
 	 */
 	public DatabaseParameters(File config) {
 		super(config, false, false);
+		if (this.getConnectionUrl() == null && !this.getUseInternalDatabaseManager()) {
+			this.setConnectionUrl("jdbc:postgresql://localhost/");
+		}
+		if (this.getDatabaseDriver() == null && !this.getUseInternalDatabaseManager()) {
+			this.setDatabaseDriver("org.postgresql.Driver");
+		}
+		if (this.getDatabaseName() == null && !this.getUseInternalDatabaseManager()) {
+			this.setDatabaseName("pdq");
+		}
+		if (this.getDatabaseUser() == null && !this.getUseInternalDatabaseManager()) {
+			this.setDatabaseUser("postgres");
+		}
+		if (this.getDatabasePassword() == null && !this.getUseInternalDatabaseManager()) {
+			this.setDatabasePassword("root");
+		}
+		if (this.getNumberOfThreads() == 0 && !this.getUseInternalDatabaseManager()) {
+			this.setNumberOfThreads(DEFAULT_NUMBER_OF_THREADS);
+		}
+		
 	}
 
 	/**
