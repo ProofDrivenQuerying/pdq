@@ -1,6 +1,6 @@
 <service name="pdgWebappNatiosInput"
 			protocol="REST"
-			url="http://localhost:8080/webapp/servlets/servlet/NationInput" 
+			url="http://clpc463:8080/webapp/servlets/servlet/NationInput" 
 			media-type="application/xml"
 			documentation=""
 			result-delimiter="places/place">
