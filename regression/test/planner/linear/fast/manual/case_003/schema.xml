@@ -2,24 +2,24 @@
 <schema>
     <relations>
         <relation name="r1">
-            <attribute name="r1.1" type="java.lang.Integer"/>
-            <attribute name="r1.2" type="java.lang.Integer"/>
+            <attribute name="r1_1" type="java.lang.Integer"/>
+            <attribute name="r1_2" type="java.lang.Integer"/>
             <access-method name="m1"/>
             <access-method name="m2" inputs="0,1"/>
         </relation>
         <relation name="r2">
-            <attribute name="r2.1" type="java.lang.Integer"/>
+            <attribute name="r2_1" type="java.lang.Integer"/>
             <access-method name="m3"/>
         </relation>
         <relation name="r3">
-            <attribute name="r3.1" type="java.lang.Integer"/>
-            <attribute name="r3.2" type="java.lang.Integer"/>
-            <attribute name="r3.3" type="java.lang.Integer"/>
+            <attribute name="r3_1" type="java.lang.Integer"/>
+            <attribute name="r3_2" type="java.lang.Integer"/>
+            <attribute name="r3_3" type="java.lang.Integer"/>
             <access-method name="m4" inputs="1,2"/>
         </relation>
         <relation name="r4">
-            <attribute name="r4.1" type="java.lang.Integer"/>
-            <attribute name="r4.2" type="java.lang.Integer"/>
+            <attribute name="r4_1" type="java.lang.Integer"/>
+            <attribute name="r4_2" type="java.lang.Integer"/>
             <access-method name="m5"/>
         </relation>
     </relations>
