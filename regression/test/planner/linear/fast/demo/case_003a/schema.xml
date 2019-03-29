@@ -63,7 +63,6 @@
             <attribute name="isbn_10" type="java.lang.String"/>
             <attribute name="isbn_13" type="java.lang.String"/>
             <attribute name="pageCount" type="java.lang.Integer"/>
-            <attribute name="pageCount" type="java.lang.Integer"/>
             <attribute name="printType" type="java.lang.String"/>
             <attribute name="category1" type="java.lang.String"/>
             <attribute name="category2" type="java.lang.String"/>
@@ -72,7 +71,6 @@
             <attribute name="ratingsCount" type="java.lang.Integer"/>
             <attribute name="contentVersion" type="java.lang.String"/>
             <attribute name="thumbnailLinks" type="java.lang.String"/>
-            <attribute name="printType" type="java.lang.String"/>
             <attribute name="language" type="java.lang.String"/>
             <attribute name="previewLink" type="java.lang.String"/>
             <attribute name="infoLink" type="java.lang.String"/>
