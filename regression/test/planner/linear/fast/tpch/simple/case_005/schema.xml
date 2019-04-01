@@ -97,9 +97,6 @@
             <access-method name="m2" inputs="0"/>
             <access-method name="m3" inputs="3"/>
         </relation>
-        <relation name="Accessible">
-            <attribute name="name" type="java.lang.String"/>
-        </relation>
     </relations>
     <dependencies>
         <dependency type="TGD">
