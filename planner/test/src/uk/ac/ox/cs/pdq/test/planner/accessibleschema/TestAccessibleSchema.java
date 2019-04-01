@@ -89,7 +89,7 @@ public class TestAccessibleSchema extends PdqTest {
 		Assert.assertEquals(3, bcd);
 
 		Assert.assertNotNull(accessibleSchema.getRelations());
-		Assert.assertEquals(6, accessibleSchema.getRelations().length);
+		Assert.assertEquals(7, accessibleSchema.getRelations().length);
 		Dependency[] infAccAxioms = accessibleSchema.getInferredAccessibilityAxioms();
 		Assert.assertNotNull(infAccAxioms);
 		Assert.assertEquals(1, infAccAxioms.length);

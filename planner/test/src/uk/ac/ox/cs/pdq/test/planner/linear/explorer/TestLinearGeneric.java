@@ -567,7 +567,7 @@ public class TestLinearGeneric extends PdqTest {
 		Assert.assertEquals(1, bac);
 
 		Assert.assertNotNull(accessibleSchema.getRelations());
-		Assert.assertEquals(8, accessibleSchema.getRelations().length);
+		Assert.assertEquals(9, accessibleSchema.getRelations().length);
 		Dependency[] infAccAxioms = accessibleSchema.getInferredAccessibilityAxioms();
 		Assert.assertNotNull(infAccAxioms);
 		Assert.assertEquals(0, infAccAxioms.length);
