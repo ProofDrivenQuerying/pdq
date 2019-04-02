@@ -51,7 +51,8 @@ public class TestAccessRepository extends PdqTest {
 	@Test
 	public void schemaWithView() {
 		try {													 
-			Schema s = DbIOManager.importSchema(new File(System.getProperty("user.home") + "/.pdq/schemas/0.s"));
+			Schema s = DbIOManager.importSchema(new File(".." + File.separator + "regression" + File.separator + "test"
+					+ File.separator + "gui" + File.separator + "0" + File.separator + "schema.xml"));
 			TGD tgd = ((View)s.getRelation("region_nation")).getRelationToViewDependency();
 			Assert.assertNotNull(tgd);
 			System.out.println(tgd);
