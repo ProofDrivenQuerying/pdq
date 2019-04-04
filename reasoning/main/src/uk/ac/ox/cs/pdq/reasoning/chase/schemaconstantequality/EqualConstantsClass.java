@@ -250,7 +250,7 @@ public class EqualConstantsClass {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		// trivials
+		// trivially equal, do not need to check further
 		if (this == o) return true;
 		if (o == null) return false;
 		if (!this.getClass().isInstance(o)) return false;
@@ -260,7 +260,7 @@ public class EqualConstantsClass {
 		if (this.schemaConstant != null && ((EqualConstantsClass) o).schemaConstant == null) return false;
 		
 		if (this.schemaConstant != null && !this.schemaConstant.equals(((EqualConstantsClass) o).schemaConstant)) return false;
-		//rest
+		//everything is not null, so check whether they have exactly the same members, and the same representative
 		return this.constants.equals(((EqualConstantsClass) o).constants)
 				&& this.representative.equals(((EqualConstantsClass) o).representative);
 	}
