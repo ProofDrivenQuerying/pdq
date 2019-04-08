@@ -24,7 +24,7 @@ import uk.ac.ox.cs.pdq.ui.model.ObservableAttribute;
 
 // TODO: Auto-generated Javadoc
 /**
- * Controller class for the relation's viewer/editor window.
+ * Controller class for the service's viewer/editor window.
  * @author Julien Leblay, Mark Ridler
  *
  */
