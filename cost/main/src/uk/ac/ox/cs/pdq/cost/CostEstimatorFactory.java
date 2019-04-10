@@ -79,7 +79,9 @@ public class CostEstimatorFactory {
 				System.out.println("Error with "+costParams.getCatalog() + " : " + e.getMessage());
 			}
 		} else {
-			costParams.setCostType(CostTypes.SIMPLE_CONSTANT);
+			if (CostTypes.TEXTBOOK.equals(costParams.getCostType())) {
+				costParams.setCostType(CostTypes.SIMPLE_CONSTANT);
+			}
 		}
 		
 		switch (costParams.getCostType()) {
