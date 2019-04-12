@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
@@ -96,6 +98,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -1610,7 +1613,7 @@ public class PDQController {
 			{
 				try
 				{
-					SanityCheck.sanityCheck(q.getQuery(), s.getSchema());
+//					SanityCheck.sanityCheck(q.getQuery(), s.getSchema());
 				} catch (Exception e) {
 					throw new UserInterfaceException(q.getName() + "; " + e.getMessage(), e);
 				}
@@ -1794,14 +1797,14 @@ public class PDQController {
 								{
 									// This is a new variable so name it after the attribute
 									
-									map.put(tc.toString(), attribute.getName());
-									terms2[t] = Variable.create(attribute.getName());
+									map.put(tc.toString(),  attribute.getName());
+									terms2[t] = tc;
 								}
 								else
 								{
 									// Reuse the existing variable name
 									
-									terms2[t] = Variable.create(value);									
+									terms2[t] = tc;													
 								}
 							}
 						}
