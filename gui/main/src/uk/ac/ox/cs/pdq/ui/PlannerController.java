@@ -410,6 +410,13 @@ public class PlannerController {
 			this.setSearchSpaceVisualizer(planner);
 
 			planner.registerEventHandler(new PlanSearchVisualizer(this.dataQueue, 1));
+			try
+			{
+				Thread.sleep(500);
+			}
+			catch(InterruptedException e)
+			{
+			}
 			this.pauser = new Pauser(this.dataQueue, 99999);
 			ExecutorService executor = Executors.newFixedThreadPool(2);
 			executor.execute(this.pauser);
