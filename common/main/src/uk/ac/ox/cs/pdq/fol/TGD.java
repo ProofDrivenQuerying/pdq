@@ -29,11 +29,10 @@ public class TGD extends Dependency {
 	}
 
 	public boolean isGuarded() {
-		List<Variable> universalList = Arrays.asList(this.universal);
-		for (Atom atom : this.bodyAtoms)
+		List<Variable> universalList = Arrays.asList(getUniversal());
+		for (Atom atom : getBodyAtoms())
 			if (Arrays.asList(atom.getTerms()).containsAll(universalList))
 				return true;
-
 		return false;
 	}
 
