@@ -407,16 +407,7 @@ public class PlannerController {
 		if (this.pauser == null) {
 
 			final ExplorationSetUp planner = new ExplorationSetUp(this.params, this.costParams, this.reasoningParams, this.databaseParams, this.schema);
-			this.setSearchSpaceVisualizer(planner);
-
-			planner.registerEventHandler(new PlanSearchVisualizer(this.dataQueue, 1));
-			try
-			{
-				Thread.sleep(500);
-			}
-			catch(InterruptedException e)
-			{
-			}
+			registerEvents(planner);
 			this.pauser = new Pauser(this.dataQueue, 99999);
 			ExecutorService executor = Executors.newFixedThreadPool(2);
 			executor.execute(this.pauser);
@@ -446,6 +437,23 @@ public class PlannerController {
 		}
 		this.plannerStartButton.setDisable(true);
 		this.plannerPauseButton.setDisable(false);
+	}
+
+	/**
+	 * Registers the 2 event subscribers. And waits for them to finish.
+	 *
+	 * @param planner the planner
+	 */
+private void registerEvents(final ExplorationSetUp planner) {
+		this.setSearchSpaceVisualizer(planner);
+		planner.registerEventHandler(new PlanSearchVisualizer(this.dataQueue, 1));
+		try
+		{
+			Thread.sleep(500);
+		}
+		catch(InterruptedException e)
+		{
+		}
 	}
 
 	/**
