@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import org.junit.Assert;
 
+import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
@@ -76,6 +77,10 @@ public class CostEstimatorFactory {
 				catalog = new SimpleCatalog(schema, costParams.getCatalog());
 			}catch(Exception e) {
 				System.out.println("Error with "+costParams.getCatalog() + " : " + e.getMessage());
+			}
+		} else {
+			if (CostTypes.TEXTBOOK.equals(costParams.getCostType())) {
+				costParams.setCostType(CostTypes.SIMPLE_CONSTANT);
 			}
 		}
 		
