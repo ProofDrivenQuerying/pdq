@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.reasoning;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,11 +16,13 @@ import com.beust.jcommander.ParameterException;
 
 import uk.ac.ox.cs.pdq.FileValidator;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
@@ -151,9 +154,12 @@ public class Reason {
 			DatabaseParameters dbParams = this.getConfigFile() != null ? new DatabaseParameters(this.getConfigFile())
 				: DatabaseParameters.Postgres;
 			
-			if (dbParams.getUseInternalDatabaseManager())
+			if (dbParams.getUseInternalDatabaseManager()) {
 				manager = new InternalDatabaseManager();
-			else manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(dbParams), 0);
+			} else  {
+				schema = convertTypesToString(schema);
+				manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(dbParams), 0);
+			}
 			manager.initialiseDatabaseForSchema(schema);
 			ChaseInstance state;
 			if (query != null) {
@@ -179,6 +185,33 @@ public class Reason {
 				manager.shutdown();
 			}
 		}
+	}
+	public static Schema convertTypesToString(Schema schema) {
+		List<Dependency> dep = new ArrayList<>();
+		dep.addAll(Arrays.asList(schema.getNonEgdDependencies()));
+		dep.addAll(Arrays.asList(schema.getKeyDependencies()));
+		Relation[] rels = schema.getRelations();
+		for (int i = 0; i < rels.length; i++) {
+			rels[i] = createDatabaseRelation(rels[i]);
+		}
+		return new Schema(rels,dep.toArray(new Dependency[dep.size()]));
+	}
+	/**
+	 * Creates the db relation. Currently codes in the position numbers into the
+	 * names, but this should change
+	 *
+	 * @param relation
+	 *            the relation
+	 * @return a new database relation with attributes x0,x1,...,x_{N-1}, Fact where
+	 *         x_i maps to the i-th relation's attribute
+	 */
+	private static Relation createDatabaseRelation(Relation relation) {
+		Attribute[] attributes = new Attribute[relation.getArity()];
+		for (int index = 0; index < relation.getArity(); index++) {
+			Attribute attribute = relation.getAttribute(index);
+			attributes[index] = Attribute.create(String.class, attribute.getName());
+		}
+		return Relation.create(relation.getName(), attributes, relation.getAccessMethods(), relation.isEquality());
 	}
 
 	public boolean isHelp() {
