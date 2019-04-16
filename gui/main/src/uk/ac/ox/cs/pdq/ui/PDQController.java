@@ -1377,8 +1377,7 @@ public class PDQController {
 	void displaySettings(ObservablePlan p) {
 		PDQController.this.settingsTimeoutTextField.setText(PDQController.nullToEmpty(p.getTimeout()));
 		PDQController.this.settingsMaxIterationsTextField.setText(PDQController.nullToEmpty(p.getMaxIterations()));
-		PDQController.this.settingsQueryMatchIntervalTextField
-				.setText(PDQController.nullToEmpty(p.getQueryMatchInterval()));
+		PDQController.this.settingsQueryMatchIntervalTextField.setText(PDQController.nullToEmpty(p.getQueryMatchInterval()));
 		// PDQController.this.settingsBlockingIntervalTextField.setText(PDQController.nullToEmpty(p.getBlockingInterval()));
 		PDQController.this.settingsPlannerTypeList.getSelectionModel().select(p.getPlannerType());
 		PDQController.this.settingsReasoningTypeList.getSelectionModel().select(p.getReasoningType());
@@ -1909,19 +1908,15 @@ public class PDQController {
 								
 				// Process the ViewToRelation dependency
 
-				Dependency viewToRelation = v.getViewToRelationDependency();
+				LinearGuarded viewToRelation = v.getViewToRelationDependency();
 				Atom[] bodyatoms = viewToRelation.getBodyAtoms();
 				Atom[] bodyatoms2 = new Atom[bodyatoms.length];
 				processDependencyBodyOrHeadAtoms(bodyatoms, bodyatoms2, relationz);
 				Atom[] headatoms = viewToRelation.getHeadAtoms();
 				Atom[] headatoms2 = new Atom[headatoms.length];
 				processDependencyBodyOrHeadAtoms(headatoms, headatoms2, relationz);
-				if(viewToRelation instanceof LinearGuarded)
-				{
-					LinearGuarded viewToRelation2;
-					viewToRelation2 = LinearGuarded.create(bodyatoms2, headatoms2, viewToRelation.getName());
-					v.setViewToRelationDependency(viewToRelation2);
-				}
+				LinearGuarded viewToRelation2 = LinearGuarded.create(bodyatoms2, headatoms2, viewToRelation.getName());
+				v.setViewToRelationDependency(viewToRelation2);
 				
 			} else {
 				imageView = new ImageView(this.dbRelationIcon);
