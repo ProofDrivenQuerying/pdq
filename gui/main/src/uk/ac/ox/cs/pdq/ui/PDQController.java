@@ -1845,7 +1845,6 @@ public class PDQController {
 			}
 			if(ch == '(' || ch == '[') on = false;
 		}
-		System.out.println(s3 + " " + s4);
 		return s3.equals(s4);
 	}
 	
