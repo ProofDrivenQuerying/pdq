@@ -1817,6 +1817,62 @@ public class PDQController {
 	}
 	
 	/**
+	 * Checks to see if 2 strings are equal subject to variable substitution.
+	 */
+	private boolean equalsWithoutVariables(String s1, String s2)
+	{
+		String s3 = new String();
+		boolean on = true;
+		for(int i = 0; i < s1.length(); i++)
+		{
+			char ch = s1.charAt(i);
+			if(ch == ')' || ch == ']') on = true;
+			if(on)
+			{
+				s3 = s3 + ch;
+			}
+			if(ch == '(' || ch == '[') on = false;
+		}
+		String s4 = new String();
+		on = true;
+		for(int i = 0; i < s2.length(); i++)
+		{
+			char ch = s2.charAt(i);
+			if(ch == ')' || ch == ']') on = true;
+			if(on)
+			{
+				s4 = s4 + ch;
+			}
+			if(ch == '(' || ch == '[') on = false;
+		}
+		return s3.equals(s4);
+	}
+	
+	/**
+	 * Checks to see if a dependency is of the form related to a view.
+	 */
+	private int isViewDependency(ObservableSchema s, Dependency d)
+	{
+		Relation[] rels = s.getSchema().getRelations();
+		for(Relation r : rels)
+		{
+			if(r instanceof View)
+			{
+				View v = (View) r;
+				if(equalsWithoutVariables(d.toString(), v.getRelationToViewDependency().toString()))
+				{
+					return +1;
+				}
+				else if(equalsWithoutVariables(d.toString(), v.getViewToRelationDependency().toString()))
+				{
+					return -1;
+				}
+			}
+		}
+		return 0;
+	}
+		
+	/**
 	 * Reloads the schema into the left-hand side tree view.
 	 *
 	 * @param item
@@ -1924,7 +1980,7 @@ public class PDQController {
 		
 		Dependency[] dependencys = s.getSchema().getAllDependencies();
 		Dependency[] dependencys2 = new Dependency[dependencys.length];
-		
+	
 		// For all dependencies 
 		
 		for (int d = 0; d < dependencys.length; d++) {
@@ -1933,10 +1989,15 @@ public class PDQController {
 			// Choose the icon based on TGD and isGuarded()
 			
 			ImageView imageView = null;
-			if (ic instanceof TGD && ((TGD) ic).isGuarded()) {
+			int is = isViewDependency(s, ic);
+			if (is == +1) {
 				imageView = new ImageView(this.fkIcon);
-			} else {
+			} else if(is == -1) {
 				imageView = new ImageView(this.dependencyIcon);
+			}
+			else
+			{
+				imageView = new ImageView(this.dependencyIcon);				
 			}
 			
 			// Replace symbol _x with attribute name for every variable in the body atoms
@@ -1951,11 +2012,16 @@ public class PDQController {
 			Atom[] headatoms2 = new Atom[headatoms.length];
 			processDependencyBodyOrHeadAtoms(headatoms, headatoms2, relationz);
 		
+			// Decide whether to create LinearGuarded or TGD depending on view to relation etc
 			Dependency ic2;
-			if (ic instanceof TGD && ((TGD) ic).isGuarded()) {
+			if (is == +1) {
 				ic2 = LinearGuarded.create(bodyatoms2, headatoms2, ic.getName());
-			} else {
+			} else if(is == -1) {
 				ic2 = TGD.create(bodyatoms2, headatoms2, ic.getName());
+			}
+			else
+			{
+				ic2 = TGD.create(bodyatoms2, headatoms2, ic.getName());				
 			}
 			dependencys2[d] = ic2;
 			
