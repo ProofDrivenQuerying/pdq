@@ -21,8 +21,12 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
@@ -159,6 +163,9 @@ public class Reason {
 			} else  {
 				schema = convertTypesToString(schema);
 				manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(dbParams), 0);
+				if (query !=null) {
+					query = convertQueryConstantsToString(query);
+				}
 			}
 			manager.initialiseDatabaseForSchema(schema);
 			ChaseInstance state;
@@ -214,6 +221,39 @@ public class Reason {
 		return Relation.create(relation.getName(), attributes, relation.getAccessMethods(), relation.isEquality());
 	}
 
+	/** Converts all constants of the query to strings
+	 * @param query
+	 * @return
+	 */
+	private ConjunctiveQuery convertQueryConstantsToString(ConjunctiveQuery query) {
+		
+		Formula newAtom = convertQueryAtomConstantToString(query.getBody());
+		if (newAtom instanceof Atom) {
+			return ConjunctiveQuery.create(query.getFreeVariables(), new Atom[] {(Atom)newAtom});
+		} else {
+			return ConjunctiveQuery.create(query.getFreeVariables(), ((Conjunction)newAtom).getAtoms());
+		}
+	}
+
+	/** converts all constants to strings.
+	 * @param body
+	 * @return
+	 */
+	private Formula convertQueryAtomConstantToString(Formula body) {
+		if (body instanceof Atom) { 
+			Term terms[] = body.getTerms();
+			for (int i = 0; i < terms.length; i++) {
+				if (terms[i] instanceof TypedConstant) {
+					terms[i] = TypedConstant.create("" + ((TypedConstant)terms[i]).value);
+				}
+			}
+			return Atom.create(((Atom) body).getPredicate(), terms);
+		} else {
+			Formula left = ((Conjunction)body).getChildren()[0];
+			Formula right = ((Conjunction)body).getChildren()[1];
+			return Conjunction.create(convertQueryAtomConstantToString(left),convertQueryAtomConstantToString(right));
+		}
+	}
 	public boolean isHelp() {
 		return this.help;
 	}
