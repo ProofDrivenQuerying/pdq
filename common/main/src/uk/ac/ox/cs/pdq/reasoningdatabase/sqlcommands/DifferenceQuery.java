@@ -86,9 +86,13 @@ public class DifferenceQuery extends BasicSelect {
 		for (String s : differentTableNames) {
 			nestedQueryTableNames.add(right.fromTableName.get(right.fromTableNameNoAliases.indexOf(s)));
 		}
-		for (String fromPart:right.fromTableName) {
-			if (!left.statements.get(0).contains(fromPart) && !nestedQueryTableNames.contains(fromPart)) {
-				nestedQueryTableNames.add(fromPart);
+		for (String fromPart:right.fromTableNameNoAliases) {
+			String statementPart = right.fromTableName.get(right.fromTableNameNoAliases.indexOf(fromPart));
+			if (left.fromTableNameNoAliases.indexOf(fromPart)>=0)
+				statementPart = left.fromTableName.get(left.fromTableNameNoAliases.indexOf(fromPart));
+			
+			if (!nestedQueryTableNames.contains(statementPart) && left.fromTableNameNoAliases.indexOf(fromPart)==-1) {
+				nestedQueryTableNames.add(statementPart);
 			}
 		}
 		// now we can put together the sql statement string.

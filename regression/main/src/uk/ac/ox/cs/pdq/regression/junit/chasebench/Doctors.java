@@ -76,7 +76,7 @@ public class Doctors {
 		reasonTest(dbm);
 	}
 	
-	//@Test
+	@Test
 	public void testDoctorsExternalDb() throws DatabaseException, SQLException, IOException {
 		DatabaseManager dbm = getExternalDatabaseManager();
 		s = convertToStringAttributeOnly(s);

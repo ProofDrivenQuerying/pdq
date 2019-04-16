@@ -113,7 +113,6 @@ public class TestQueryDifferences extends PdqTest {
 		Assert.assertEquals(2, leftFacts.size());
 		List<Match> rightFacts = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { right }));
 		Assert.assertEquals(1, rightFacts.size());
-		// Assert.assertNull(rightFacts.get(0).getMapping().get(Variable.create("z")));
 
 		List<Match> diffFacts = manager.answerQueryDifferences(left, right);
 		Assert.assertEquals(1, diffFacts.size());

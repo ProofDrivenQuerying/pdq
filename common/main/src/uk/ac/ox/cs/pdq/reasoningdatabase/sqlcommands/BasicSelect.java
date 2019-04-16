@@ -126,6 +126,7 @@ public class BasicSelect extends Command {
 		initFrom();
 		initConstantEqualityConditions();
 		initAttributeEqualityConditions();
+		
 		initAttributeInEqualityConditions();
 		String sqlQueryString = "SELECT " + Joiner.on(",").join(select) + " FROM " + Joiner.on(",").join(fromTableName);
 		if (!whereConditions.isEmpty())
@@ -295,7 +296,7 @@ public class BasicSelect extends Command {
 	 */
 	private void initAttributeEqualityConditions() throws DatabaseException {
 		// go over each atom of the CQ.
-		for (int ai = 0; ai < formula.getAtoms().length - 1; ai++) {
+		for (int ai = 0; ai <= formula.getAtoms().length - 1; ai++) {
 			// the current atom is "a", its index is "ai"
 			Atom a = formula.getAtoms()[ai];
 
