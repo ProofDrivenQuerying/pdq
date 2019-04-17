@@ -68,9 +68,9 @@ public class Doctors {
 		reasonTest(dbm);
 	}
 	
-	//@Test
-	public void testDoctorsPostgresDb() throws DatabaseException, SQLException, IOException {
-		DatabaseManager dbm = getExternalDatabaseManager();
+	@Test
+	public void testDoctorsLogicalDb() throws DatabaseException, SQLException, IOException {
+		DatabaseManager dbm = getLogicalDatabaseManager();
 		Schema dbSchema = ExplorationSetUp.convertTypesToString(s);
 		dbm.initialiseDatabaseForSchema(dbSchema);
 		reasonTest(dbm);
@@ -148,6 +148,10 @@ public class Doctors {
 		return dbm;
 	}
 	private DatabaseManager getExternalDatabaseManager() throws DatabaseException {
+		ExternalDatabaseManager dbm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
+		return dbm;
+	}
+	private DatabaseManager getLogicalDatabaseManager() throws DatabaseException {
 		ExternalDatabaseManager dbm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 		return new LogicalDatabaseInstance(new MultiInstanceFactCache(), dbm, 0);
 	}

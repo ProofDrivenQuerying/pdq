@@ -56,6 +56,12 @@ public class TestQueryDifferences extends PdqTest {
 		largeTableQueryDifferenceTGD(null);
 		largeTableQueryDifferenceEGD(null);
 	}
+	
+	@Test
+	public void testComplicatedQueryDifference() throws DatabaseException {
+		complicatedQueryDifference(DatabaseParameters.Postgres);
+		complicatedQueryDifference(null);
+	}
 
 	/**
 	 * In this test: Left query: exists[x,y](R(x,y,z) & S(x,y)) Right
@@ -195,6 +201,58 @@ public class TestQueryDifferences extends PdqTest {
 		} else {
 			Assert.assertEquals(UntypedConstant.create("115"), diffFacts.get(0).getMapping().get(Variable.create("z")));
 		}
+		manager.dropDatabase();
+		manager.shutdown();
+	}
+
+	/**
+	 * 
+	 * @param parameters
+	 * @throws DatabaseException
+	 */
+	private void complicatedQueryDifference(DatabaseParameters parameters) throws DatabaseException {
+		DatabaseManager manager = null;
+		if (parameters!=null)
+			manager = new ExternalDatabaseManager(parameters);
+		else 
+			manager = new InternalDatabaseManager();
+		manager.initialiseDatabaseForSchema(new Schema(new Relation[] { R, T }));
+		List<Atom> facts = new ArrayList<>();
+
+		// add some disjoint test data
+		for (int i = 0; i < 100; i++) {
+			Atom a1 = Atom.create(this.R, new Term[] { TypedConstant.create(10000 + i), TypedConstant.create(20000 + i), TypedConstant.create(30000 + i) });
+			if (i < 90) {
+				Atom c1 = Atom.create(this.T, new Term[] { TypedConstant.create(30000 + i), TypedConstant.create(20000 + i), TypedConstant.create(90000 + i) });
+				facts.add(c1);
+			}
+			facts.add(a1);
+		}
+
+		// add test record that represents a not active dependency
+		Atom a1 = Atom.create(this.R, new Term[] { TypedConstant.create(13), TypedConstant.create(14), TypedConstant.create(15) });
+		Atom c1 = Atom.create(this.T, new Term[] { TypedConstant.create(14), TypedConstant.create(15), TypedConstant.create(20) });
+		facts.add(a1);
+		facts.add(c1);
+		manager.addFacts(facts);
+
+		// form queries
+		Atom q1 = Atom.create(this.R, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
+		Atom q3 = Atom.create(this.T, new Term[] { Variable.create("y"), Variable.create("z"), Variable.create("C1") });
+		ConjunctiveQuery left = ConjunctiveQuery.create(new Variable[] { z }, new Atom[] {q1});
+
+		ConjunctiveQuery right = ConjunctiveQuery.create(new Variable[] { Variable.create("C1") }, new Atom[] {q1, q3});
+		// check left and right queries
+		List<Match> leftFacts = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { left }));
+		Assert.assertEquals(101, leftFacts.size());
+		List<Match> rightFacts = manager.answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { right }));
+		Assert.assertEquals(1, rightFacts.size());
+
+		List<Match> diffFacts = manager.answerQueryDifferences(left, right);
+		System.out.println(diffFacts);
+		Assert.assertEquals(100, diffFacts.size());
+		Assert.assertTrue(diffFacts.get(0).getMapping().containsKey(Variable.create("z")));
+
 		manager.dropDatabase();
 		manager.shutdown();
 	}
