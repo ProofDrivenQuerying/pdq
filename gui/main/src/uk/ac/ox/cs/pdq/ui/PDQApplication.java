@@ -121,16 +121,18 @@ public class PDQApplication extends Application {
 	 * otherwise, existing schema/query/plans are loaded in memory.
 	 * @return a pointer to the work directory
 	 */
+    private static String OS = System.getProperty("os.name").toLowerCase();
+
+     public static boolean isWindows() {
+        return OS.contains("win");
+    }
+
+    public static boolean isUnix() {
+        return (OS.contains("nix") || OS.contains("nux") || OS.contains("aix"));
+    }
+
 	static File setupWorkDirectory() {
-		String homeDir = System.getenv("HOME");
-		// If HOME is not set try HOMEPATH (Windows)
-		if (homeDir == null) {
-			homeDir = System.getenv("HOMEPATH");
-		}
-		if (homeDir == null) {
-			log.warn("No HOME directory defined. Using '.' as default");
-			homeDir = ".";
-		}
+		String homeDir = ".";
 		File workDir = new File(homeDir + '/' + PDQApplication.WORK_DIRECTORY);
 		if (workDir.exists()) {
 			if (!workDir.isDirectory()) {
