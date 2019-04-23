@@ -35,8 +35,6 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
 
 /**
  * Bootstrapping class for starting the reasoner.
@@ -162,7 +160,7 @@ public class Reason {
 				manager = new InternalDatabaseManager();
 			} else  {
 				schema = convertTypesToString(schema);
-				manager = new LogicalDatabaseInstance(new MultiInstanceFactCache(), new ExternalDatabaseManager(dbParams), 0);
+				manager = new ExternalDatabaseManager(dbParams);
 				if (query !=null) {
 					query = convertQueryConstantsToString(query);
 				}
