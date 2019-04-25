@@ -82,7 +82,7 @@ import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
-//import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
+import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -1227,9 +1227,13 @@ public class PDQController {
 		this.settingsReasoningTypeList.getItems().addAll(ReasoningTypes.RESTRICTED_CHASE,
 				ReasoningTypes.KTERMINATION_CHASE);
 		this.settingsCostTypeList.getItems().addAll(CostTypes.values());
-		// MR this.settingsExecutorTypeList.getItems().addAll(ExecutorTypes.values());
-		// MR
-		// this.settingsExecutorTypeList.getSelectionModel().select(ExecutorTypes.PIPELINED);
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(ExecutorTypes.PIPELINED.toString());
+		list.add(ExecutorTypes.SQL_STEP.toString());
+		list.add(ExecutorTypes.SQL_TREE.toString());
+		list.add(ExecutorTypes.SQL_WITH.toString());
+		this.settingsExecutorTypeList.getItems().addAll(list);
+		this.settingsExecutorTypeList.getSelectionModel().select(ExecutorTypes.PIPELINED.toString());
 	}
 
 	/**

@@ -38,6 +38,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Variable;
 //import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
+import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
 import uk.ac.ox.cs.pdq.ui.model.ObservablePlan;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
@@ -254,10 +255,10 @@ public class RuntimeController {
 	 *
 	 * @param type the new executor type
 	 */
-/* MR	void setExecutorType(ExecutorTypes type) {
+	void setExecutorType(ExecutorTypes type) {
 		Preconditions.checkArgument(type != null);
 		this.params.setExecutorType(type);
-	}*/
+	}
     
 
 	/**
