@@ -1,11 +1,8 @@
 package uk.ac.ox.cs.pdq.runtime;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import javax.xml.bind.JAXBException;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.JCommander;
@@ -14,9 +11,12 @@ import com.beust.jcommander.ParameterException;
 
 import uk.ac.ox.cs.pdq.FileValidator;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.tuple.Table;
+import uk.ac.ox.cs.pdq.datasources.tuple.Table.ResetableIterator;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
@@ -48,6 +48,16 @@ public class Runtime {
 			+ "Default is the current directory.")
 	private File configFile;
 	
+	/** The plan to execute in the xml format. */
+	@Parameter(names = { "-p", "--plan" }, validateWith=FileValidator.class, required = true,
+			description = "The plan (xml) to execute.")
+	private File planFile;
+	
+	/** AccessRepository folder for the memory database or web service executable access methods. */
+	@Parameter(names = { "-a", "--accesses" },
+			description = "Directory where to look for executable access method descriptor xml files. ")
+	private File accessRepo;
+	
 	@Parameter(names = { "-v", "--verbose" }, required = false,
 			description ="Path to the input query definition file.")
 	private boolean verbose = false;
@@ -63,6 +73,8 @@ public class Runtime {
 
 	private AccessRepository repository;
 
+	private Table results;
+	private long tupleCount = 0;
 	/**
 	 * Constructor for Runtime.
 	 * 
@@ -77,7 +89,7 @@ public class Runtime {
 		this.schema = schema;
 	}
 
-	public Runtime(String[] args) {
+	public Runtime(String[] args) throws Exception {
 		JCommander jc = new JCommander(this);
 		jc.setProgramName(PROGRAM_NAME);
 		try {
@@ -91,15 +103,24 @@ public class Runtime {
 			jc.usage();
 			return;
 		}
-		Schema s;
-		RuntimeParameters rp = new RuntimeParameters(configFile);
-		try {
-			s = IOManager.importSchema(new File(schemaPath));
-			new Runtime(rp,s);
-		} catch (FileNotFoundException | JAXBException e) {
-			System.err.println("Error while reading schema from file: " + schemaPath);
-			e.printStackTrace();
+		this.params = new RuntimeParameters(configFile);
+		RelationalTerm plan = null;
+		this.schema = IOManager.importSchema(new File(schemaPath));
+		if (accessRepo!=null && accessRepo.isDirectory())
+			this.repository = AccessRepository.getRepository(accessRepo.getAbsolutePath());
+
+		plan = CostIOManager.readRelationalTermFromRelationaltermWithCost(planFile, schema);
+		long start = System.currentTimeMillis();
+		this.results = this.evaluatePlan(plan);
+		ResetableIterator<Tuple> it = getResults().iterator();
+		this.tupleCount = 0;
+		while(it.hasNext()) {
+			this.tupleCount++;
+			Tuple t = it.next();
+			if (verbose) System.out.println(t);
 		}
+		System.out.println();
+		System.out.println("Finished, " + getTupleCount() + " amount of tuples found in " + (System.currentTimeMillis() - start)/1000.0 + " sec.");
 	}
 
 	/**
@@ -144,7 +165,11 @@ public class Runtime {
 	 * @param args String[]
 	 */
 	public static void main(String... args) {
-		new Runtime(args);
+		try {
+			new Runtime(args);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * Checks if this is called with help as an argument.
@@ -154,6 +179,29 @@ public class Runtime {
 	public boolean isHelp() {
 		return this.help;
 	}
-	
-	
+
+	public File getPlanFile() {
+		return planFile;
+	}
+
+	public void setPlanFile(File planFile) {
+		this.planFile = planFile;
+	}
+
+	public File getAccessRepo() {
+		return accessRepo;
+	}
+
+	public void setAccessRepo(File accessRepo) {
+		this.accessRepo = accessRepo;
+	}
+
+	public long getTupleCount() {
+		return tupleCount;
+	}
+
+	public Table getResults() {
+		return results;
+	}
+
 }

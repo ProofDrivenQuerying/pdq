@@ -529,6 +529,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		} catch (Throwable t) {
 			System.err.println("Could not add facts (" + factsToAdd + ") to this: " + this);
 			t.printStackTrace();
+			throw new RuntimeException("Error while adding facts",t);
 		}
 
 	}
