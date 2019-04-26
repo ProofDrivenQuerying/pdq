@@ -153,12 +153,14 @@ public class Runtime {
 			}
 			builder.append("\r\n");
 			fw.write(builder.toString());
+			if (verbose) System.out.println(builder.toString());
 			
 			//Data
 			ResetableIterator<Tuple> it = results.iterator();
 			while(it.hasNext()) {
 				this.tupleCount++;
 				Tuple t = it.next();
+				if (verbose) System.out.println(t);
 				builder = null;
 				int attributeCounter = 0;
 				for (Object value : t.getValues()) {
