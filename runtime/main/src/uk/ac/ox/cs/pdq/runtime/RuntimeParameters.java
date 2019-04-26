@@ -24,6 +24,10 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	/**  Properties file path. */
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;
 	
+	/** The executor type. */
+	@Parameter(description="Type of executor to use in plan evaluation")
+	protected ExecutorTypes executorType;
+
 	/** The tuples limit. */
 	@Parameter(description="The maximum number of output tuples")
 	protected Integer tuplesLimit;
@@ -83,5 +87,98 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	public void setAccessDirectory(String accessDirectory) {
 		this.accessDirectory = accessDirectory;
 	}
+
+	/**
+	 * Gets the executor type.
+	 *
+	 * @return ExecutorTypes
+	 */
+	public ExecutorTypes getExecutorType() {
+		return this.executorType;
+	}
+
+	/**
+	 * Sets the executor type.
+	 *
+	 * @param executorType ExecutorTypes
+	 */
+	public void setExecutorType(ExecutorTypes executorType) {
+		this.executorType = executorType;
+	}
+
+	/**
+	 * Unset executor type.
+	 */
+	public void unsetExecutorType() {
+		this.executorType = null;
+	}
+
+	/**
+	 * Sets the executor type.
+	 *
+	 * @param executorType String
+	 */
+	public void setExecutorType(String executorType) {
+		this.executorType = ExecutorTypes.valueOf(executorType);
+	}
+
+	/**
+	 * Gets the tuples limit.
+	 *
+	 * @return the tuples limit
+	 */
+	public Integer getTuplesLimit() {
+		if (this.tuplesLimit == null) {
+			return Integer.MAX_VALUE;
+		}
+		return this.tuplesLimit;
+	}
+	
+	/**
+	 * Sets the tuples limit.
+	 *
+	 * @param tuples the new tuples limit
+	 */
+	public void setTuplesLimit(Integer tuples) {
+		this.tuplesLimit = tuples;
+	}
+	
+	/**
+	 * Sets the tuples limit.
+	 *
+	 * @param tuples the new tuples limit
+	 */
+	public void setTuplesLimit(Number tuples) {
+		this.tuplesLimit = tuples != null ? tuples.intValue() : null;
+	}
+	
+	/**
+	 *  Executor types.
+	 */
+	public static enum ExecutorTypes {
+		
+		/** The pipelined. */
+		@EnumParameterValue(description="Volcano-style pipelining iterator execution")
+		PIPELINED, 
+		
+		/** The sql tree. */
+		@EnumParameterValue(description=
+		"Executes a query by translating it to a nested SQL query, "
+				+ "and delegating its execution to an external RDBMS.")
+		SQL_TREE, 
+		
+		/** The sql step. */
+		@EnumParameterValue(description=
+		"Executes a query by translating it to a sequence of SQL queries,  "
+				+ "and delegating its execution to an external RDBMS."
+				+ "Each query is materialized and possibly relies on a "
+				+ "previously materialized one.")
+		SQL_STEP, 
+
+		/** The sql with. */
+		@EnumParameterValue(description=
+		"Executes a query by translating it to a SQL WITH query, "
+				+ "and delegating its execution to an external RDBMS.")
+		SQL_WITH}
 
 }
