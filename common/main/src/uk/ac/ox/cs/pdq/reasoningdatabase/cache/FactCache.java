@@ -42,7 +42,8 @@ public class FactCache {
 	/**
 	 * Stores facts in the cache.
 	 * 
-	 * @param toAdd the facts that were added (new facts only)
+	 * @param toAdd 
+	 * @return the facts that were added (new facts only)
 	 */
 	public Collection<Atom> addFacts(Collection<Atom> toAdd) {
 		Collection<Atom> results = new ArrayList<>();
