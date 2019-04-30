@@ -189,7 +189,7 @@ public class Reason {
 			}
 			System.out.println("Reasoning starts on " + this.getSchemaPath());
 			reasoner.reasonUntilTermination(state, schema.getAllDependencies());
-			System.out.println("Reasoning results generated in " + (System.currentTimeMillis() - start)/1000.0 + " sec.");
+			System.out.println("Reasoning finished, processing results.");
 			Collection<Atom> results = null;
 			
 			if (caOnly) {
@@ -208,6 +208,7 @@ public class Reason {
 			} else {
 				results = state.getFacts();	
 			}
+			
 			if (verbose) {
 				for (Atom a: results)
 					System.out.println(a);
@@ -215,6 +216,8 @@ public class Reason {
 			if (output!=null) {
 				writeOutput(results,schema);
 			}
+			System.out.println("Reasoning results generated in " + (System.currentTimeMillis() - start)/1000.0 + " sec.");
+			System.out.println("Found " + results.size() + " amount of tuples.");
 		} catch (Throwable e) {
 			log.error("Reasoning aborted: " + e.getMessage(), e);
 			System.exit(-1);
