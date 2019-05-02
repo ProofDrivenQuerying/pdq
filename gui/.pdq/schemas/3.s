@@ -2,7 +2,7 @@
 <schema>
     <relations>
          <relation name="R">
-            <attribute name="x" type="java.lang.String"/>
+             <attribute name="x" type="java.lang.String"/>
                <access-method name="R_free"/>
         </relation>
          <relation name="S">
@@ -13,6 +13,7 @@
         <relation name="T">
             <attribute name="y" type="java.lang.String"/>
             <attribute name="z" type="java.lang.String"/>
+            <attribute name="w" type="java.lang.String"/>
                <access-method name="T_limited"/>
         </relation>
      </relations>
