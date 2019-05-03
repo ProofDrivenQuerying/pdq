@@ -402,8 +402,13 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 						for (Atom rightAtom: right.get(leftKey)) {
 							for (Atom leftAtom:left.get(leftKey)) {
 								List<Term> terms = new ArrayList<>();
-								terms.addAll(Arrays.asList(leftAtom.getTerms()));
-								terms.addAll(Arrays.asList(rightAtom.getTerms()));
+								if (changeOrder) {
+									terms.addAll(Arrays.asList(rightAtom.getTerms()));
+									terms.addAll(Arrays.asList(leftAtom.getTerms()));
+								} else {
+									terms.addAll(Arrays.asList(leftAtom.getTerms()));
+									terms.addAll(Arrays.asList(rightAtom.getTerms()));
+								}
 								results.add(Atom.create(joint, terms.toArray(new Term[terms.size()])));
 							}
 						}
@@ -414,8 +419,13 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 							for (Atom leftAtom:left.get(leftKey)) {
 								if (checkAttributeEqualities(leftAtom, rightAtom, equalities)) { 
 									List<Term> terms = new ArrayList<>();
-									terms.addAll(Arrays.asList(leftAtom.getTerms()));
-									terms.addAll(Arrays.asList(rightAtom.getTerms()));
+									if (changeOrder) {
+										terms.addAll(Arrays.asList(rightAtom.getTerms()));
+										terms.addAll(Arrays.asList(leftAtom.getTerms()));
+									} else {
+										terms.addAll(Arrays.asList(leftAtom.getTerms()));
+										terms.addAll(Arrays.asList(rightAtom.getTerms()));
+									}
 									results.add(Atom.create(joint, terms.toArray(new Term[terms.size()])));
 								}
 							}

@@ -20,6 +20,8 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
+import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
+import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
 
@@ -27,7 +29,7 @@ import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
  * The test case called "STB-128" from the chasebench project.
  * <pre>
  * Current test result (on a laptop):
- *   - case : Can't parse input files.  
+ *   - case : runs out of memory in both internal and external cases.
  * Old PDQ results were: 
  *   - case :  timeout
  * </pre>
@@ -42,6 +44,25 @@ public class STB128 {
 	public void testDoctorsInternalDb() throws DatabaseException, SQLException, IOException {
 		s = createSchema();
 		DatabaseManager dbm = new InternalDatabaseManager();
+		dbm.initialiseDatabaseForSchema(s);
+		DatabaseChaseInstance state = new DatabaseChaseInstance(getTestFacts(), dbm);
+		Collection<Atom> res = state.getFacts();
+		System.out.println("INITIAL STATE contains " + res.size() + " facts.");
+		printStats(res);
+		RestrictedChaser chaser = new RestrictedChaser();
+		long start = System.currentTimeMillis();
+		chaser.reasonUntilTermination(state, s.getAllDependencies());
+		long duration = System.currentTimeMillis() - start;
+		System.out.println("reasonUntilTermination took " + (duration/1000.0) + " seconds.");
+		res = state.getFacts();
+		System.out.println("Final state contains " + res.size() + " facts.");
+		printStats(res);
+		runTestQueries(state);
+	}
+	@Test
+	public void testDoctorsExternalDb() throws DatabaseException, SQLException, IOException {
+		s = createSchema();
+		DatabaseManager dbm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
 		dbm.initialiseDatabaseForSchema(s);
 		DatabaseChaseInstance state = new DatabaseChaseInstance(getTestFacts(), dbm);
 		Collection<Atom> res = state.getFacts();
