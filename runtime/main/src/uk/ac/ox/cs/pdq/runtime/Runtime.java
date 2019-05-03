@@ -1,6 +1,8 @@
 package uk.ac.ox.cs.pdq.runtime;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -62,6 +64,10 @@ public class Runtime {
 			description ="Path to the input query definition file.")
 	private boolean verbose = false;
 	
+	@Parameter(names = { "-o", "--output" }, required = false,
+			description ="Path to the output csv file.")
+	private File output;
+	
 	@DynamicParameter(names = "-D", description = "Dynamic parameters. Override values defined in the configuration files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 
@@ -75,6 +81,7 @@ public class Runtime {
 
 	private Table results;
 	private long tupleCount = 0;
+
 	/**
 	 * Constructor for Runtime.
 	 * 
@@ -112,15 +119,67 @@ public class Runtime {
 		plan = CostIOManager.readRelationalTermFromRelationaltermWithCost(planFile, schema);
 		long start = System.currentTimeMillis();
 		this.results = this.evaluatePlan(plan);
-		ResetableIterator<Tuple> it = getResults().iterator();
-		this.tupleCount = 0;
-		while(it.hasNext()) {
-			this.tupleCount++;
-			Tuple t = it.next();
-			if (verbose) System.out.println(t);
+		if (output!=null) {
+			writeOutput();
+		} else {
+			ResetableIterator<Tuple> it = getResults().iterator();
+			this.tupleCount = 0;
+			// print output
+			while(it.hasNext()) {
+				this.tupleCount++;
+				Tuple t = it.next();
+				if (verbose) System.out.println(t);
+			}
 		}
 		System.out.println();
 		System.out.println("Finished, " + getTupleCount() + " amount of tuples found in " + (System.currentTimeMillis() - start)/1000.0 + " sec.");
+	}
+
+	private void writeOutput() throws IOException {
+		File target = output;
+		if (output.isDirectory())
+			target = new File(output, "results.csv");
+		this.tupleCount = 0;
+		try (FileWriter fw = new FileWriter(target,true)) {
+			// Header
+			StringBuilder builder = null;
+			for (uk.ac.ox.cs.pdq.db.Attribute attribute : results.getHeader()) {
+				if (builder == null) {
+					builder = new StringBuilder();
+				} else {
+					builder.append(",");
+				}
+				builder.append(attribute.getName());
+			}
+			builder.append("\r\n");
+			fw.write(builder.toString());
+			if (verbose) System.out.println(builder.toString());
+			
+			//Data
+			ResetableIterator<Tuple> it = results.iterator();
+			while(it.hasNext()) {
+				this.tupleCount++;
+				Tuple t = it.next();
+				if (verbose) System.out.println(t);
+				builder = null;
+				int attributeCounter = 0;
+				for (Object value : t.getValues()) {
+					if (builder == null) {
+						builder = new StringBuilder();
+					} else {
+						builder.append(",");
+					}
+					if (results.getHeader()[attributeCounter].getType().equals(String.class))
+						builder.append(value.toString().replaceAll(",", "/c"));
+					else 
+						builder.append(value);
+					attributeCounter++;
+				}
+				builder.append("\r\n");
+				fw.write(builder.toString());
+			}
+			fw.close();
+		}
 	}
 
 	/**
@@ -202,6 +261,14 @@ public class Runtime {
 
 	public Table getResults() {
 		return results;
+	}
+
+	public File getOutput() {
+		return output;
+	}
+
+	public void setOutput(File output) {
+		this.output = output;
 	}
 
 }

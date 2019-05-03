@@ -1,8 +1,11 @@
 package uk.ac.ox.cs.pdq.reasoning;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +30,7 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
@@ -35,6 +39,7 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
+import uk.ac.ox.cs.pdq.reasoningdatabase.cache.FactCache;
 
 /**
  * Bootstrapping class for starting the reasoner.
@@ -68,9 +73,16 @@ public class Reason {
 	private File configFile;
 	
 	@Parameter(names = { "-v",
-			"--verbose" }, required = false, description = "Activates verbose mode.")
+	"--verbose" }, required = false, description = "Activates verbose mode.")
 	private boolean verbose = false;
+	@Parameter(names = { "-ca",
+	"--ca" }, required = false, description = "Certain answers only.")
+	private boolean caOnly = false;
 	
+	@Parameter(names = { "-o", "--output" }, required = false,
+			description ="Path to the output csv file.")
+	private File output;
+
 	@DynamicParameter(names = "-D", description = "Dynamic parameters. Override values defined in the configuration files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 	
@@ -95,7 +107,7 @@ public class Reason {
 	 *            String[]
 	 * @throws DatabaseException 
 	 */
-	private Reason(String... args) throws DatabaseException {
+	public Reason(String... args) throws DatabaseException {
 		JCommander jc = new JCommander(this);
 		jc.setProgramName(PROGRAM_NAME);
 		try {
@@ -177,10 +189,35 @@ public class Reason {
 			}
 			System.out.println("Reasoning starts on " + this.getSchemaPath());
 			reasoner.reasonUntilTermination(state, schema.getAllDependencies());
-			System.out.println("Reasoning results generated in " + (System.currentTimeMillis() - start)/1000.0 + " sec.");
-			for (Atom a: state.getFacts())
-				System.out.println(a);
+			System.out.println("Reasoning finished, processing results.");
+			Collection<Atom> results = null;
 			
+			if (caOnly) {
+				results = new ArrayList<>();
+				for (Atom a: state.getFacts()) {
+					boolean hasLabelledNull = false;
+					for (Term t:a.getTerms()) {
+						if (t.isUntypedConstant() && ((UntypedConstant)t).isNonCannonicalConstant()) {
+							hasLabelledNull = true;
+						}
+					}
+					if (!hasLabelledNull) {
+						results.add(a);
+					}
+				}
+			} else {
+				results = state.getFacts();	
+			}
+			
+			if (verbose) {
+				for (Atom a: results)
+					System.out.println(a);
+			}
+			if (output!=null) {
+				writeOutput(results,schema);
+			}
+			System.out.println("Reasoning results generated in " + (System.currentTimeMillis() - start)/1000.0 + " sec.");
+			System.out.println("Found " + results.size() + " amount of tuples.");
 		} catch (Throwable e) {
 			log.error("Reasoning aborted: " + e.getMessage(), e);
 			System.exit(-1);
@@ -191,6 +228,47 @@ public class Reason {
 			}
 		}
 	}
+	
+	
+	private void writeOutput(Collection<Atom> results, Schema schema) throws IOException {
+
+		FactCache fc = new FactCache(0);
+		fc.addFacts(results);
+		for (Relation r: schema.getRelations()) {
+			List<Atom> data = fc.getFactsOfRelation(r.getName());
+			if (!data.isEmpty()) {
+				if (output.isDirectory()) {
+					writeOutput(new File(output, r.getName()+".csv"),data,r.getAttributes());
+				} else {
+					writeOutput(new File(output.getParentFile(), r.getName()+".csv"),data,r.getAttributes());
+				}
+			}
+		}
+	}
+	private void writeOutput(File output, List<Atom> results, Attribute[] attributes) throws IOException {
+		try (FileWriter fw = new FileWriter(output,true)) {
+			for(Atom a:results) {
+				StringBuilder builder = null;
+				int attributeCounter = 0;
+				for (Term value : a.getTerms()) {
+					if (builder == null) {
+						builder = new StringBuilder();
+					} else {
+						builder.append(",");
+					}
+					if (attributes[attributeCounter].getType().equals(String.class))
+						builder.append(value.toString().replaceAll(",", "/c"));
+					else 
+						builder.append(value);
+					attributeCounter++;
+				}
+				builder.append("\r\n");
+				fw.write(builder.toString());
+			}
+			fw.close();
+		}
+	}
+	
 	public static Schema convertTypesToString(Schema schema) {
 		List<Dependency> dep = new ArrayList<>();
 		dep.addAll(Arrays.asList(schema.getNonEgdDependencies()));
@@ -273,5 +351,13 @@ public class Reason {
 
 	public boolean isVerbose() {
 		return this.verbose;
+	}
+
+	public boolean isCaOnly() {
+		return caOnly;
+	}
+
+	public void setCaOnly(boolean caOnly) {
+		this.caOnly = caOnly;
 	}
 }

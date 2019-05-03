@@ -20,8 +20,14 @@ public class RuntimeTest {
 		File schema = new File(testFolder,"schema.xml");
 		File plan = new File(testFolder,"expected-plan.xml");
 		File access = new File(testFolder,"accessesMem");
+		File output = new File(testFolder,"results.csv");
+		if (output.exists()) output.delete();
 		try {
-			Runtime r = new Runtime(new String[] {"-s",schema.getAbsolutePath(),"-p", plan.getAbsolutePath(), "-a", access.getAbsolutePath()});
+			Runtime r = new Runtime(new String[] {
+					"-s",schema.getAbsolutePath(),
+					"-p", plan.getAbsolutePath(), 
+					"-a", access.getAbsolutePath(),
+					"-o", output.getAbsolutePath()});
 			assertEquals(200000, r.getTupleCount());
 		} catch (Exception e) {
 			e.printStackTrace();

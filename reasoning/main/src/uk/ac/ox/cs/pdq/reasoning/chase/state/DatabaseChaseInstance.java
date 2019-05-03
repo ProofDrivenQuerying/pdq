@@ -102,7 +102,10 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	 */
 	public DatabaseChaseInstance(ConjunctiveQuery query, DatabaseManager connection) throws SQLException {
 		try {
-			databaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
+			if (connection instanceof LogicalDatabaseInstance)
+				databaseInstance = connection.clone(GlobalCounterProvider.getNext("DatabaseInstanceId"));
+			else
+				databaseInstance = connection; 
 		} catch (DatabaseException e) {
 			throw new RuntimeException("database failure", e);
 		}
