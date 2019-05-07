@@ -77,6 +77,33 @@
         <url-pattern>/servlets/servlet/CountryFree/*</url-pattern>
     </servlet-mapping>
  
+     <servlet>
+        <servlet-name>R</servlet-name>
+        <servlet-class>R</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>R</servlet-name>
+        <url-pattern>/servlets/servlet/R/*</url-pattern>
+    </servlet-mapping>
+
+     <servlet>
+        <servlet-name>S</servlet-name>
+        <servlet-class>S</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>S</servlet-name>
+        <url-pattern>/servlets/servlet/S/*</url-pattern>
+    </servlet-mapping>
+    
+     <servlet>
+        <servlet-name>T</servlet-name>
+        <servlet-class>T</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>T</servlet-name>
+        <url-pattern>/servlets/servlet/T/*</url-pattern>
+    </servlet-mapping>
+ 
     <security-constraint>
       <display-name>Example Security Constraint - part 1</display-name>
       <web-resource-collection>
