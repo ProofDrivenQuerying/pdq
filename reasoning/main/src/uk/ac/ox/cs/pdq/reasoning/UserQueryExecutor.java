@@ -19,9 +19,9 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.StateExporter.BufferedFactExport;
 
 /**
- * @author gabor This class allows users to run their queries on a database. It
- *         is useful to define test queries that should be executed after
- *         chasing, this class provides this functionality.
+ * @author gabor This class allows users to find the certain answers for
+ *  queries on a database. This is implemented by taking the chase of the database, executing
+ *  the query as usual, and filtering out nulls
  */
 public class UserQueryExecutor {
 	public static final String DEFAULT_OUTPUT_DIR = "results";
@@ -49,7 +49,7 @@ public class UserQueryExecutor {
 	}
 
 	/**
-	 * Executes a single query and saves the results into a csv file.
+	 * Finds the certain answers to a single query and saves the results into a csv file.
 	 * 
 	 * @param q
 	 * @param outputFile
@@ -79,7 +79,7 @@ public class UserQueryExecutor {
 	}
 
 	/**
-	 * One by one executes all queries in the queryfolder and creates a csv result
+	 * One by one finds certain answers of all queries in the queryfolder and creates a csv result
 	 * file in the output folder. The csv files will be named according to the name
 	 * of the query file.
 	 * 
