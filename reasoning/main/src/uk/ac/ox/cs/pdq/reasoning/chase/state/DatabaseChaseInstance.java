@@ -550,6 +550,10 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	@Override
 	public Collection<Atom> getFacts() {
 		try {
+			if (this.databaseInstance instanceof LogicalDatabaseInstance) {
+				// this might have duplicates, so we need to remove them.
+				return new HashSet<Atom>(this.databaseInstance.getCachedFacts());
+			}
 			return this.databaseInstance.getCachedFacts();
 		} catch (DatabaseException e) {
 			throw new RuntimeException("get cached facts failed." + e);

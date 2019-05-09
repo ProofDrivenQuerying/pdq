@@ -185,14 +185,14 @@ public class TestLinearOptimizedExperiment extends PdqTest {
 			// checking the plan
 			RelationalTerm plan = explorer.getBestPlan();
 			Assert.assertNotNull(plan);
-			Assert.assertTrue(plan instanceof DependentJoinTerm);
-			Assert.assertEquals(0, plan.getInputAttributes().length);
-			Assert.assertEquals(9, plan.getOutputAttributes().length);
-			Assert.assertEquals(2, plan.getChildren().length);
-			Assert.assertTrue(plan.getChildren()[0] instanceof DependentJoinTerm);
-			Assert.assertTrue(plan.getChildren()[1] instanceof RenameTerm);
-			AssertHasAccessTermChild(plan.getChildren()[1]);
-			RelationalTerm subPlan = plan.getChildren()[0];
+			Assert.assertTrue(plan.getChild(0) instanceof DependentJoinTerm);
+			Assert.assertEquals(0, plan.getChild(0).getInputAttributes().length);
+			Assert.assertEquals(9, plan.getChild(0).getOutputAttributes().length);
+			Assert.assertEquals(2, plan.getChild(0).getChildren().length);
+			Assert.assertTrue(plan.getChild(0).getChildren()[0] instanceof DependentJoinTerm);
+			Assert.assertTrue(plan.getChild(0).getChildren()[1] instanceof RenameTerm);
+			AssertHasAccessTermChild(plan.getChild(0).getChildren()[1]);
+			RelationalTerm subPlan = plan.getChild(0).getChildren()[0];
 			Assert.assertTrue(subPlan instanceof DependentJoinTerm);
 			Assert.assertEquals(2, subPlan.getChildren().length);
 
