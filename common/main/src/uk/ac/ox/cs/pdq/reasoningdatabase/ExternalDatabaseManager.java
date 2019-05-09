@@ -242,6 +242,14 @@ public class ExternalDatabaseManager implements DatabaseManager {
 	public List<Match> answerConjunctiveQuery(ConjunctiveQuery query) throws DatabaseException {
 		return answerConjunctiveQueries(Arrays.asList(new ConjunctiveQuery[] { query }));
 	}
+	public List<Match> answerConjunctiveQuery(ConjunctiveQuery query, DataSink sink) throws DatabaseException {
+		BasicSelect q = new BasicSelect(this.schema, query);
+		q.setSink(sink);
+		List<Command> commands = new ArrayList<>();
+		commands.add(q);
+		// execute the SQL command
+		return executor.execute(commands);
+	}
 
 	/**
 	 * Represent a kind of nested select that will tell the difference between two

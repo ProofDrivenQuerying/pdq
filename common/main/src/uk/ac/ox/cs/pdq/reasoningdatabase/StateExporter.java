@@ -96,6 +96,8 @@ public class StateExporter {
 	}
 	public static class BufferedFactExport implements DataSink {
 		private File directory;
+		private String forcedFileName = null;
+		private boolean filterCertainAnswers = false;
 		public BufferedFactExport(File directory) {
 			Preconditions.checkArgument(directory.exists());
 			Preconditions.checkArgument(directory.isDirectory());
@@ -103,10 +105,23 @@ public class StateExporter {
 		}
 		@Override
 		public void addFacts(Collection<Atom> facts) throws IOException {
-			Map<String, Collection<Atom>> factsPerPredicate = sortPerPredicate(facts);
-			for (String predicateName : factsPerPredicate.keySet()) {
-				IOManager.exportFacts(predicateName, directory, factsPerPredicate.get(predicateName));
+			if (forcedFileName!=null) {
+				IOManager.exportFacts(forcedFileName, directory, facts,filterCertainAnswers);
+			} else {
+				Map<String, Collection<Atom>> factsPerPredicate = sortPerPredicate(facts);
+				for (String predicateName : factsPerPredicate.keySet()) {
+					IOManager.exportFacts(predicateName, directory, factsPerPredicate.get(predicateName),filterCertainAnswers);
+				}
 			}
+		}
+		public String getForcedFileName() {
+			return forcedFileName;
+		}
+		public void setForcedFileName(String forcedFileName) {
+			this.forcedFileName = forcedFileName;
+		}
+		public void setFilterCertainAnswers(boolean filterCertainAnswers) {
+			this.filterCertainAnswers = filterCertainAnswers;			
 		}
 		
 	}

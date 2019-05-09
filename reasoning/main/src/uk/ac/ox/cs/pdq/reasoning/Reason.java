@@ -30,7 +30,6 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
@@ -75,9 +74,10 @@ public class Reason {
 	@Parameter(names = { "-v",
 	"--verbose" }, required = false, description = "Activates verbose mode.")
 	private boolean verbose = false;
-	@Parameter(names = { "-ca",
-	"--ca" }, required = false, description = "Certain answers only.")
-	private boolean caOnly = false;
+	
+	@Parameter(names = { "-tq",
+	"--testQueryFolder" }, required = false, description = "Test query folder. After chasing these queries will be executed.")
+	private String testQueryFolder = null;
 	
 	@Parameter(names = { "-o", "--output" }, required = false,
 			description ="Path to the output csv file.")
@@ -190,24 +190,8 @@ public class Reason {
 			System.out.println("Reasoning starts on " + this.getSchemaPath());
 			reasoner.reasonUntilTermination(state, schema.getAllDependencies());
 			System.out.println("Reasoning finished, processing results.");
-			Collection<Atom> results = null;
+			Collection<Atom> results = state.getFacts();	
 			
-			if (caOnly) {
-				results = new ArrayList<>();
-				for (Atom a: state.getFacts()) {
-					boolean hasLabelledNull = false;
-					for (Term t:a.getTerms()) {
-						if (t.isUntypedConstant() && ((UntypedConstant)t).isNonCannonicalConstant()) {
-							hasLabelledNull = true;
-						}
-					}
-					if (!hasLabelledNull) {
-						results.add(a);
-					}
-				}
-			} else {
-				results = state.getFacts();	
-			}
 			
 			if (verbose) {
 				for (Atom a: results)
@@ -218,6 +202,12 @@ public class Reason {
 			}
 			System.out.println("Reasoning results generated in " + (System.currentTimeMillis() - start)/1000.0 + " sec.");
 			System.out.println("Found " + results.size() + " amount of tuples.");
+			if (testQueryFolder!=null) {
+				System.out.println("Executing user defined test queries.");
+				UserQueryExecutor executor = new UserQueryExecutor(manager);
+				executor.executeQueries(new File(testQueryFolder), new File(new File(testQueryFolder).getParentFile(),"UserQueryResults"));
+				System.out.println("User defined queries execution finished.");
+			}
 		} catch (Throwable e) {
 			log.error("Reasoning aborted: " + e.getMessage(), e);
 			System.exit(-1);
@@ -353,11 +343,11 @@ public class Reason {
 		return this.verbose;
 	}
 
-	public boolean isCaOnly() {
-		return caOnly;
+	public String getTestQueryFolder() {
+		return testQueryFolder;
 	}
 
-	public void setCaOnly(boolean caOnly) {
-		this.caOnly = caOnly;
+	public void setTestQueryFolder(String testQueryFolder) {
+		this.testQueryFolder = testQueryFolder;
 	}
 }
