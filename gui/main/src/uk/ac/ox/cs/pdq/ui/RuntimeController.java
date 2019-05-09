@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.ui;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,6 +33,7 @@ import javafx.util.Callback;
 //import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -135,7 +137,12 @@ public class RuntimeController {
 						rt = (RelationalTerm)RuntimeController.this.plan; 
 					else
 						rt = (RelationalTerm)((ExecutablePlan)RuntimeController.this.plan).getDecoratedPlan();
-					runtime.evaluatePlan(rt);
+					Table res = runtime.evaluatePlan(rt);
+					List<Tuple> list = res.getData();
+				   	for(Tuple tuple : list)
+					{
+						this.runtimeResults.getItems().add(tuple);
+					}
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 					throw new IllegalStateException();
@@ -218,7 +225,7 @@ public class RuntimeController {
 	 * @param query the new query
 	 */
 	void setQuery(ObservableQuery query) {
-		this.query = ConjunctiveQuery.create(new Variable[] {}, query.getQuery().getAtoms());
+		this.query = ConjunctiveQuery.create(query.getQuery().getFreeVariables(), query.getQuery().getAtoms());
 		Preconditions.checkNotNull(this.query);
 		Preconditions.checkState(this.query instanceof ConjunctiveQuery); 
 		this.runtimeResults.getColumns().clear();
