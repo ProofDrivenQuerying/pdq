@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.reasoning.UserQueryExecutor;
+import uk.ac.ox.cs.pdq.reasoning.CertainAnswerExecutor;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
@@ -46,10 +46,10 @@ public class UserQueryExecutorTest extends PdqTest {
 		db.initialiseDatabaseForSchema(ts.getSchema());
 		db.addFacts(ts.getExampleAtoms1());
 
-		UserQueryExecutor executor = new UserQueryExecutor(db);
+		CertainAnswerExecutor executor = new CertainAnswerExecutor(db);
 		File outputFile = new File("outputFile.csv").getAbsoluteFile();
 		outputFile.delete();
-		executor.executeQuery(ts.getQuery(), outputFile);
+		executor.findCertainAnswersQuery(ts.getQuery(), outputFile);
 		Assert.assertTrue(outputFile.exists());
 		Assert.assertEquals(404, outputFile.length());
 
@@ -74,10 +74,10 @@ public class UserQueryExecutorTest extends PdqTest {
 		db.addFacts(Arrays.asList(new Atom[] { Atom.create(ts.getSchema().getRelation(2),
 				new Term[] { TypedConstant.create(12), TypedConstant.create(31), UntypedConstant.create("k100") }) }));
 
-		UserQueryExecutor executor = new UserQueryExecutor(db);
+		CertainAnswerExecutor executor = new CertainAnswerExecutor(db);
 		File outputFile = new File("outputFile.csv").getAbsoluteFile();
 		outputFile.delete();
-		executor.executeQuery(ts.getQuery(), outputFile);
+		executor.findCertainAnswersQuery(ts.getQuery(), outputFile);
 		Assert.assertTrue(outputFile.exists());
 		Assert.assertEquals(404, outputFile.length());
 	}

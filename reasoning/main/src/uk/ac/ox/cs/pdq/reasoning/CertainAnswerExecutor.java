@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.StateExporter.BufferedFactExport;
  *  queries on a database. This is implemented by taking the chase of the database, executing
  *  the query as usual, and filtering out nulls
  */
-public class UserQueryExecutor {
+public class CertainAnswerExecutor {
 	public static final String DEFAULT_OUTPUT_DIR = "results";
 
 	private DatabaseManager databaseManager;
@@ -34,7 +34,7 @@ public class UserQueryExecutor {
 	 * @param parameters
 	 * @throws DatabaseException
 	 */
-	public UserQueryExecutor(DatabaseParameters parameters) throws DatabaseException {
+	public CertainAnswerExecutor(DatabaseParameters parameters) throws DatabaseException {
 		this(new ExternalDatabaseManager(parameters));
 	}
 
@@ -44,7 +44,7 @@ public class UserQueryExecutor {
 	 * @param databaseManager
 	 * @throws DatabaseException
 	 */
-	public UserQueryExecutor(DatabaseManager databaseManager) {
+	public CertainAnswerExecutor(DatabaseManager databaseManager) {
 		this.databaseManager = databaseManager;
 	}
 
@@ -56,26 +56,26 @@ public class UserQueryExecutor {
 	 * @throws DatabaseException 
 	 * @throws IOException 
 	 */
-	public void executeQuery(ConjunctiveQuery q, File outputFile) throws DatabaseException, IOException {
+	public void findCertainAnswersQuery(ConjunctiveQuery q, File outputFile) throws DatabaseException, IOException {
 		if (databaseManager instanceof ExternalDatabaseManager) {
 			BufferedFactExport exporter = new BufferedFactExport(outputFile.getAbsoluteFile().getParentFile());
 			exporter.setForcedFileName(outputFile.getName());
-			exporter.setFilterCertainAnswers(true);
+			exporter.setFilterLabelledNull(true);
 			((ExternalDatabaseManager)databaseManager).answerConjunctiveQuery(q,exporter);
 		} else {
 			List<Atom> facts = new ArrayList<>();
 			List<Match> matches = databaseManager.answerConjunctiveQuery(q);
 			for (Match m : matches) {
 				Atom a = m.toAtom();
-				if (a.isCertainAnswer())
+				if (a.isNotANull())
 					facts.add(m.toAtom());
 			}
 			IOManager.exportFacts(outputFile.getName(), outputFile.getAbsoluteFile().getParentFile(), facts);
 		}
 	}
 
-	public void executeQuery(File queryFile, File outputFile) throws JAXBException, DatabaseException, IOException {
-		executeQuery(IOManager.importQuery(queryFile), outputFile);
+	public void findCertainAnswersQuery(File queryFile, File outputFile) throws JAXBException, DatabaseException, IOException {
+		findCertainAnswersQuery(IOManager.importQuery(queryFile), outputFile);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class UserQueryExecutor {
 	 * @throws IOException 
 	 * @throws DatabaseException 
 	 */
-	public void executeQueries(File queryFolder, File outputFolder) throws JAXBException, DatabaseException, IOException {
+	public void findCertainAnswersQueries(File queryFolder, File outputFolder) throws JAXBException, DatabaseException, IOException {
 		if (outputFolder == null)
 			outputFolder = new File(queryFolder, DEFAULT_OUTPUT_DIR);
 		if (!outputFolder.exists())
@@ -110,7 +110,7 @@ public class UserQueryExecutor {
 				ConjunctiveQuery cq = IOManager.importQuery(q);
 				if (cq != null) {
 					foundAny = true;
-					executeQuery(cq, new File(outputFolder, nameWithoutExtension));
+					findCertainAnswersQuery(cq, new File(outputFolder, nameWithoutExtension));
 				}
 			}
 		}

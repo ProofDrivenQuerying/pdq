@@ -75,9 +75,9 @@ public class Reason {
 	"--verbose" }, required = false, description = "Activates verbose mode.")
 	private boolean verbose = false;
 	
-	@Parameter(names = { "-tq",
-	"--testQueryFolder" }, required = false, description = "Test query folder. After chasing these queries will be executed.")
-	private String testQueryFolder = null;
+	@Parameter(names = { "-uq",
+	"--userQueryFolder" }, required = false, description = "User query folder. After chasing these queries will be executed.")
+	private String userQueryFolder = null;
 	
 	@Parameter(names = { "-o", "--output" }, required = false,
 			description ="Path to the output csv file.")
@@ -202,10 +202,10 @@ public class Reason {
 			}
 			System.out.println("Reasoning results generated in " + (System.currentTimeMillis() - start)/1000.0 + " sec.");
 			System.out.println("Found " + results.size() + " amount of tuples.");
-			if (testQueryFolder!=null) {
-				System.out.println("Executing user defined test queries.");
-				UserQueryExecutor executor = new UserQueryExecutor(manager);
-				executor.executeQueries(new File(testQueryFolder), new File(new File(testQueryFolder).getParentFile(),"UserQueryResults"));
+			if (userQueryFolder!=null) {
+				System.out.println("Executing user defined queries.");
+				CertainAnswerExecutor executor = new CertainAnswerExecutor(manager);
+				executor.findCertainAnswersQueries(new File(userQueryFolder), new File(new File(userQueryFolder).getParentFile(),"UserQueryResults"));
 				System.out.println("User defined queries execution finished.");
 			}
 		} catch (Throwable e) {
@@ -343,11 +343,11 @@ public class Reason {
 		return this.verbose;
 	}
 
-	public String getTestQueryFolder() {
-		return testQueryFolder;
+	public String getUserQueryFolder() {
+		return userQueryFolder;
 	}
 
-	public void setTestQueryFolder(String testQueryFolder) {
-		this.testQueryFolder = testQueryFolder;
+	public void setUserQueryFolder(String userQueryFolder) {
+		this.userQueryFolder = userQueryFolder;
 	}
 }

@@ -378,14 +378,14 @@ public class IOManager {
 	}
 
 	public static File exportFacts(String datafileName, File folder, Collection<Atom> atoms,
-			boolean filterCertainAnswers) throws IOException {
+			boolean filterLabelledNulls) throws IOException {
 		if (!datafileName.endsWith(".csv")) {
 			datafileName += ".csv";
 		}
 		File target = new File(folder, datafileName);
 		try (FileWriter fw = new FileWriter(target, true)) {
 			for (Atom a : atoms) {
-				if (filterCertainAnswers && !a.isCertainAnswer()) {
+				if (filterLabelledNulls && !a.isNotANull()) {
 					// when we want certain answers only skip the ones that are not.
 					continue;
 				}

@@ -75,7 +75,7 @@ public class ReasonTest {
 		}
 		try {
 			Reason r = new Reason(new String[] { "-s", schema.getAbsolutePath(), "-q", query.getAbsolutePath(), "-c",
-					config.getAbsolutePath(), "-o", output.getAbsolutePath(),"-tq", query.getAbsolutePath() });
+					config.getAbsolutePath(), "-o", output.getAbsolutePath(),"-uq", query.getAbsolutePath() });
 			Assert.assertFalse(r.isVerbose());
 			testAndDelete(new File(output, "part.csv"));
 			testAndDelete(new File(output, "partsupp.csv"));
