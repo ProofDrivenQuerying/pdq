@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -165,7 +165,7 @@ public class ConjunctiveQueryBodyBuilder {
 		// Prepare left constant term:
 		Relation relation = this.schema.getRelation(rightPredForm.getPredicate().getName());
 
-		TypedConstant<?> leftConstant = new TypedConstant<>(
+		TypedConstant leftConstant = TypedConstant.create(
 				Types.cast(relation.getAttribute(rightAttr).getType(),
 						leftConst.getConstant()));
 

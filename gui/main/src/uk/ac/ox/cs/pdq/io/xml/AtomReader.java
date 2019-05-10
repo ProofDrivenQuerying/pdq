@@ -18,7 +18,7 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -144,7 +144,7 @@ public class AtomReader extends AbstractXMLReader<Atom> {
 				throw new ReaderException("Syntax error. Constant requires a value attribute");
 			}
 			Object o = Types.cast(attribute.getType(), value);
-			this.terms.add(new TypedConstant(o));
+			this.terms.add(TypedConstant.create(o));
 			this.position++;
 			break;
 
