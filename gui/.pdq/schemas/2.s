@@ -21,16 +21,16 @@
 		<attribute name="bboxEast"      type="java.lang.Double" path="northEast/longitude"/>
 		<attribute name="bboxWest"      type="java.lang.Double" path="southWest/longitude"/>
 		<attribute name="timezone"      type="java.lang.String" path="timezone"/>
-<access-method name="yh_geo_name" type="LIMITED" inputs="2" cost="100.0"/>
-<access-method name="yh_geo_woeid" type="LIMITED" inputs="1" cost="1.0"/>
-<access-method name="yh_geo_type" type="LIMITED" inputs="2,3" cost="50.0"/>
+<access-method name="yh_geo_name" type="LIMITED" inputs="1" cost="100.0"/>
+<access-method name="yh_geo_woeid" type="LIMITED" inputs="0" cost="1.0"/>
+<access-method name="yh_geo_type" type="LIMITED" inputs="1,2" cost="50.0"/>
 </relation>
 <relation name="YahooPlaceType" source="yahoo" size="20">
 		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
 		<attribute name="code"          type="java.lang.Integer" path="placeTypeName attrs/code" input-method="type.1"/>
 		<attribute name="uri"           type="java.lang.String"  path="uri"/>
 <access-method name="yh_geo_types" type="FREE" cost="50.0"/>
-<access-method name="yh_geo_types_name" type="LIMITED" inputs="2" cost="5.0"/>
+<access-method name="yh_geo_types_name" type="LIMITED" inputs="1" cost="5.0"/>
 </relation>
 <relation name="YahooPlaceCommonAncestor" source="yahoo" size="10000000">
 		<attribute    name="woeid1"         type="java.lang.Integer" input-method="relation.1" />
@@ -41,7 +41,7 @@
 		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
 		<attribute name="name"          type="java.lang.String"  path="name"/>
 		<attribute name="uri"           type="java.lang.String"  path="uri"/>
-<access-method name="yh_com_anc" type="LIMITED" inputs="1,2" cost="25.0"/>
+<access-method name="yh_com_anc" type="LIMITED" inputs="0,1" cost="25.0"/>
 </relation>
 <relation name="YahooPlaceRelationship" source="yahoo" size="10000000">
 		<attribute name="relation"      type="java.lang.String"  input-method="relation.2"/>
@@ -50,12 +50,13 @@
 		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
 		<attribute name="name"          type="java.lang.String"  path="name"/>
 		<attribute name="uri"           type="java.lang.String"  path="uri"/>
-<access-method name="yh_geo_rel" type="LIMITED" inputs="1,2" cost="50.0"/>
+<access-method name="yh_geo_rel" type="LIMITED" inputs="0,1" cost="50.0"/>
 </relation>
 <relation name="YahooPlaceCode" source="yahoo" size="10000000">
 		<attribute name="namespace" type="java.lang.String"  input-method="relation.1"/>
 		<attribute name="code"      type="java.lang.String"  input-method="relation.2"/>
-		<attribute name="woeid"     type="java.lang.Integer" path="woeid"/><access-method name="yh_geo_code" type="LIMITED" inputs="1,2" cost="1.0"/>
+		<attribute name="woeid"     type="java.lang.Integer" path="woeid"/>
+		<access-method name="yh_geo_code" type="LIMITED" inputs="0,1" cost="1.0"/>
 </relation>
 <relation name="YahooContinents" source="yahoo" size="7">
 		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
@@ -68,7 +69,8 @@
 		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
 		<attribute name="placeType"     type="java.lang.Integer" path="placeTypeName attrs/code"/>
 		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
-		<attribute name="name"          type="java.lang.String"  path="name"/><access-method name="yh_geo_country" type="FREE" cost="1.0"/>
+		<attribute name="name"          type="java.lang.String"  path="name"/>
+		<access-method name="yh_geo_country" type="FREE" cost="1.0"/>
 </relation>
 <relation name="YahooSeas" source="yahoo" size="51">
 		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
@@ -112,7 +114,7 @@
 		<attribute name="temperature"    type="java.lang.Double"  path="item/condition/temp"/>
 		<attribute name="condition"      type="java.lang.String"  path="item/condition/text"/>
 		<attribute name="code"           type="java.lang.Integer" path="item/condition/code"/>
-<access-method name="yh_wtr_woeid" type="LIMITED" inputs="1" cost="10.0"/>
+<access-method name="yh_wtr_woeid" type="LIMITED" inputs="0" cost="10.0"/>
 </relation>
 </relations>
 <dependencies>
