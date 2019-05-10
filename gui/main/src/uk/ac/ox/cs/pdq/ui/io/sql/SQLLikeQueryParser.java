@@ -306,7 +306,6 @@ public class SQLLikeQueryParser {
 		// <select sublist> ::= <derived column> | <qualifier> <period> <asterisk>
 		if((lookahead(1) == IDENTIFIER))
 		{
-			// MR derived_column();
 			Token token = identifier();
 			if(lookahead(1) == DOT)
 			{

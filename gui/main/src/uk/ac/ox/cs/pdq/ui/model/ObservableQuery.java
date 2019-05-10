@@ -201,7 +201,6 @@ public class ObservableQuery {
 	public String toString() {
 		String result = this.getName();
 		if (result == null || result.trim().isEmpty()) {
-// MR			result = SQLLikeQueryWriter.convert(this.getQuery()).substring(0, 30) + "...";
 		}
 		return result;
 	}

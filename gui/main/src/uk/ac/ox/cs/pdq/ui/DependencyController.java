@@ -57,8 +57,6 @@ public class DependencyController {
 				DependencyController.this.dependencyEditorMessage.setText("");
 				if (DependencyController.this.schema != null) {
 					try {
-						/* MR PrettyDependencyReader reader = new PrettyDependencyReader(DependencyController.this.schema.getSchema());
-						DependencyController.this.newDependency = (Dependency) reader.read(new ByteArrayInputStream(newString.getBytes()));*/
 					} catch (ReaderException e) {
 						DependencyController.this.dependencyEditorMessage.setText(e.getMessage());
 						DependencyController.this.invalid.set(true);

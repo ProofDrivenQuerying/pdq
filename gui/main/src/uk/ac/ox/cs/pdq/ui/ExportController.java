@@ -91,13 +91,6 @@ public class ExportController {
 								"application.dialog.import.message.file-required"));
 				return;
 			}
-/* MR			if (new File(ExportController.this.exportFileField.getText()).exists()) {
-				ExportController.this.detailsImage.setImage(ExportController.this.errorIcon);
-				ExportController.this.detailsLabel.setText(
-						ExportController.this.bundle.getString(
-								"application.dialog.import.message.file-exists"));
-				return;
-			}*/
 			ExportController.this.okButton.setDisable(false);
 			ExportController.this.detailsLabel.setText("");
 			ExportController.this.detailsImage.setImage(null);
@@ -118,10 +111,7 @@ public class ExportController {
 				if (this.schema != null) {
 					ObservableSchemaWriter writer = new ObservableSchemaWriter();
 					writer.write(f, this.schema);
-				} /* MR else {
-					ObservableQueryWriter writer = new ObservableQueryWriter(this.schema.getSchema());
-					writer.write(f, this.schema);
-				}*/
+				}
 				ExportController.this.rootPane.getScene().getWindow().hide();
 			} catch (Exception e) {
 				ExportController.this.detailsImage.setImage(ExportController.this.errorIcon);

@@ -119,10 +119,8 @@ public class RuntimeController {
     @FXML void startRunning(ActionEvent event) {
 		Preconditions.checkNotNull(this.plan);
 		if (this.pauser == null) {
-			//this.params.setSemantics(Semantics.SET);
 			final uk.ac.ox.cs.pdq.runtime.Runtime runtime =
 					new uk.ac.ox.cs.pdq.runtime.Runtime(this.params, this.schema);
-			// MR runtime.registerEventHandler(new ResultVisualizer(this.dataQueue));
 			this.configureColumns();
 			
 			ExecutorService executor = Executors.newFixedThreadPool(2);
@@ -275,10 +273,8 @@ public class RuntimeController {
 	 */
 	void setTuplesLimit(Integer limit) {
 		if(limit == null || limit < 0) {
-// MR			this.params.setTuplesLimit(Integer.MAX_VALUE);
 		}
 		else {
-// MR			this.params.setTuplesLimit(limit);
 		}
 	}
 

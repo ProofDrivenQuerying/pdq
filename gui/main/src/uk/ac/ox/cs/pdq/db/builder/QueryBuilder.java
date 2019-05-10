@@ -50,7 +50,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	private Atom unifyVariable(Atom p) {
 		Collection<Term> uniTerms = new ArrayList<>();
 		for (Term t : p.getTerms()) {
-			if (t.isVariable() /* MR || t.isSkolem() */) {
+			if (t.isVariable()) {
 				Term v = this.termIndex.get(((Named) t).getName());
 				if (v == null) {
 					this.termIndex.put(((Named) t).getName(), t);
@@ -108,7 +108,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	 * @return QueryBuilder
 	 */
 	public QueryBuilder addHeadTerm(Term term) {
-		if (term.isVariable() /* MR || term.isSkolem() */) {
+		if (term.isVariable()) {
 			Term v = this.termIndex.get(((Named) term).getName());
 			if (v != null) {
 				this.head.add(v);

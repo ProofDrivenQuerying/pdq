@@ -147,15 +147,6 @@ public class PrefuseVisualizer extends JComponent {
 		this.pathHighlightSlider = new JSlider(JSlider.VERTICAL);
 		this.fish = new FisheyeDistortion(3,3);
 		
-/* MR	graph.addColumn("label", String.class);
-		graph.addColumn("size", int.class);
-		Node a = addNode(graph, "a", 0);
-		Node b = addNode(graph, "b", 1);
-		Node c = addNode(graph, "c", 2);
-		graph.addEdge(a, b);
-		graph.addEdge(b, c);
-		graph.addEdge(c, a);*/
-		
 		this.setupRenderers();
 		this.controls = this.setupControls();
 		this.display = this.setupDisplay();

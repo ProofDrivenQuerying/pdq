@@ -1151,9 +1151,6 @@ public class PDQController {
 		assert this.settingsBlockingIntervalTextField != null : "fx:id=\"settingsBlockingIntervalTextField\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.settingsReasoningTypeList != null : "fx:id=\"settingsReasoningTypeList\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.settingsCostTypeList != null : "fx:id=\"settingsCostTypeList\" was not injected: check your FXML file 'root-window.fxml'.";
-		// MR assert this.settingsExecutorTypeList != null :
-		// "fx:id=\"settingsExecutorTypeList\" was not injected: check your FXML file
-		// 'root-window.fxml'.";
 		assert this.settingsOutputTuplesTextField != null : "fx:id=\"settingsOutputTuplesTextField\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.settingsMaxIterationsTextField != null : "fx:id=\"settingsMaxIterationsTextField\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.settingsPlannerTypeList != null : "fx:id=\"settingsPlannerTypeList\" was not injected: check your FXML file 'root-window.fxml'.";
@@ -1190,11 +1187,6 @@ public class PDQController {
 		this.queriesListView.getSelectionModel().selectedItemProperty().addListener(this.querySelected);
 		this.queryPlanArea.visibleProperty().bind(Bindings.isNotNull(this.currentQuery));
 		this.queriesEditMenuButton.disableProperty().bind(Bindings.isNull(this.currentSchema));
-/* MR		this.queryTextArea.textProperty().bind(Bindings.createStringBinding(() -> {
-			ObservableQuery q = PDQController.this.currentQuery.get();
-			boolean b = this.queryTextArea.textProperty().isBound();
-			return (q != null) ? SQLLikeQueryWriter.convert(q.getFormula()) : "";
-		}, this.currentQuery));*/
 	}
 
 	/**
@@ -1221,7 +1213,6 @@ public class PDQController {
 		this.settingsPlannerTypeList.getItems().clear();
 		this.settingsReasoningTypeList.getItems().clear();
 		this.settingsCostTypeList.getItems().clear();
-		// MR this.settingsExecutorTypeList.getItems().clear();
 		this.settingsPlannerTypeList.getItems().addAll(PlannerTypes.LINEAR_GENERIC, PlannerTypes.LINEAR_OPTIMIZED,
 				PlannerTypes.LINEAR_KCHASE);
 		this.settingsReasoningTypeList.getItems().addAll(ReasoningTypes.RESTRICTED_CHASE,
@@ -1326,7 +1317,6 @@ public class PDQController {
 			PDQController.this.savePlan(newValue);
 
 			Plan plan = newValue.getPlan();
-			// MR PDQController.this.settingsExecutorTypeList.setDisable(plan == null);
 			PDQController.this.runRuntimeButton.setDisable(plan == null);
 			PDQController.this.setSettingsEditable(plan == null);
 			PDQController.this.displayPlan(plan);

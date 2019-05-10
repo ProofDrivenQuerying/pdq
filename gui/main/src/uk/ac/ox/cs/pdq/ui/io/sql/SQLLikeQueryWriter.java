@@ -29,7 +29,7 @@ import uk.ac.ox.cs.pdq.io.Writer;
  *
  * @author Julien Leblay
  */
-public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implements Writer<Formula> {
+public class SQLLikeQueryWriter implements Writer<Formula> {
 
 	/** The Constant ALIAS_PREFIX. */
 	private static final String ALIAS_PREFIX = "a";
@@ -65,7 +65,6 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implemen
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.builder.io.PrettyWriter#write(java.lang.Object)
 	 */
-// MR	@Override
 	public void write(Formula f) {
 		this.write(this.out, f);
 	}
@@ -74,7 +73,6 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implemen
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.provider.io.Writer#write(java.io.PrintStream, java.lang.Object)
 	 */
-// MR	@Override
 	public void write(PrintStream out, Formula f) {
 		out.print(this.toString(f));
 	}
@@ -182,7 +180,7 @@ public class SQLLikeQueryWriter /* MR extends PrettyWriter<Query<?>> */ implemen
 			Atom p = atoms[a];
 			Term[] terms = p.getTerms();
 			for (int i = 0, l = terms.length; i < l; i++) {
-				if (!terms[i].isVariable() /* MR && !terms[i].isSkolem() */) {
+				if (!terms[i].isVariable()) {
 					result.append(sep).append(aliases.get(p)).append('.')
 						.append(this.schema.getRelation(p.getPredicate().getName()).getAttribute(i))
 						.append('=').append("'").append(terms[i]).append("'"); 

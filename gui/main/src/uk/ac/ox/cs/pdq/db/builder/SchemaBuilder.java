@@ -87,7 +87,6 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	public SchemaBuilder setAccessMethods(String name, AccessMethodDescriptor[] am) {
 		Relation existing = this.relations.get(name);
 		if (existing != null) {
-// MR			existing.setAccessMethods(am, true);
 		}
 		return this;
 	}
@@ -125,18 +124,6 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		return result;
 	}
 
-	/**
-	 * Adds the entity relation.
-	 *
-	 * @param name String
-	 * @return the relation built
-	 */
-/* MR	public EntityRelation addEntityRelation(String name) {
-		Preconditions.checkState(this.relations.get(name) == null, "Relation '" + name + "' already exists.");
-		EntityRelation result = new EntityRelation(name, Types.FREE);
-		this.addRelation(result);
-		return result;
-	}*/
 
 	/**
 	 * Adds the dependency.
@@ -146,10 +133,6 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	public SchemaBuilder addDependency(Dependency dep) {
 		for (Dependency ic : this.dependencies.values()) {
-/* MR			if (FormulaEquivalence.approximateEquivalence(
-					(Formula) ic, (Formula) dep) ) {
-				return this;
-			}*/
 		}
 		this.dependencies.put(((TGD) dep).getId(), dep);
 		return this;
@@ -166,10 +149,6 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 			for (Iterator<Entry<Integer, Dependency>> it =
 					this.dependencies.entrySet().iterator();
 					it.hasNext();) {
-/* MR				if (FormulaEquivalence.approximateEquivalence(
-						(Formula) it.next().getValue(), (Formula) ic) ) {
-					it.remove();
-				}*/
 			}
 		};
 		return this;
@@ -310,16 +289,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	private void ensureForeignKeyDefinition(Relation relation) {
 		for (ForeignKey fkey: relation.getForeignKeys()) {
-/* MR			LinearGuarded gd = new LinearGuarded(relation, fkey);
-			if (this.findFKDependency(gd) == null) {
-				this.addDependency(gd);
-			}*/
 		}
 		for (LinearGuarded gd: this.findFKDependency(relation)) {
-/* MR			ForeignKey fk = new ForeignKey(gd);
-			if (!relation.getForeignKeys().contains(fk)) {
-				relation.addForeignKey(fk);
-			}*/
 		}
 	}
 
@@ -392,30 +363,11 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	private TGD findDependency(TGD dep) {
 		if (this.dependencies != null) {
 			for (Dependency ic: this.dependencies.values()) {
-/* MR				if (FormulaEquivalence.approximateEquivalence((Formula) ic, (Formula) dep)) {
-					return (TGD) ic;
-				}*/
 			}
 		}
 		return null;
 	}
 
-	/**
-	 * Find fk dependency.
-	 *
-	 * @param gd the gd
-	 * @return the guarded dependency that is equal to the given one.
-	 */
-/* MR	private GuardedDependency findFKDependency(GuardedDependency gd) {
-		if (this.dependencies != null) {
-			for (Dependency ic:this.dependencies.values()) {
-				if (FormulaEquivalence.approximateEquivalence((Formula) gd, (Formula) ic)) {
-					return (GuardedDependency) ic;
-				}
-			}
-		}
-		return null;
-	}*/
 
 	/**
 	 * Find fk dependency.

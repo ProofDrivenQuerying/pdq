@@ -276,9 +276,6 @@ public class LinearKChase extends LinearExplorer {
 			this.bestCost = costOfSuccessfulPlan;
 			this.eventBus.post(this.getBestPlan());
 			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestCost);
-			// MR			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), 
-			//			this.getConfigurations(this.costPropagator.getBestPath()), this.getElapsedTime());
-			//	freshNode.setMetadata(successMetadata);
 			this.eventBus.post(freshNode);
 
 		}

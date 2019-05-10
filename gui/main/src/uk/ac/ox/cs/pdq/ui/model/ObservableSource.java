@@ -12,10 +12,7 @@ public class ObservableSource {
 
 	/** The name. */
 	private String name;
-	
-	/** The discoverer. */
-// MR	private SchemaDiscoverer discoverer;
-	
+		
 	/** The url. */
 	private String url;
 	

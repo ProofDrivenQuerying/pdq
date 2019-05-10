@@ -139,11 +139,4 @@ public class ObservableAttribute {
 		return this.displayType.get();
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	/* MR @Override
-	public String toString() {
-		return String.valueOf(this.getName() + ":" + Types.simpleName(this.getType()));
-	} */
 }

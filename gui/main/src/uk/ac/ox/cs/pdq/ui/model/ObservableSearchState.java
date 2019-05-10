@@ -71,15 +71,6 @@ public class ObservableSearchState {
 	}
 
 	/**
-	 * Plan property.
-	 *
-	 * @return the observable value
-	 */
-/* MR	public ObservableValue<Plan> planProperty() {
-		return this.plan;
-	}*/
-
-	/**
 	 * Proof property.
 	 *
 	 * @return the observable value
@@ -141,15 +132,6 @@ public class ObservableSearchState {
 	public Number getCost() {
 		return this.cost.get();
 	}
-	
-	/**
-	 * Sets the plan.
-	 *
-	 * @param p the new plan
-	 */
-/* MR	public void setPlan(Plan p) {
-		this.plan.set(p);
-	}*/
 	
 	/**
 	 * Sets the proof.

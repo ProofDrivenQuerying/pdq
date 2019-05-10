@@ -124,20 +124,6 @@ public class QueryEditorController {
 	 * @return true, if successful
 	 */
 	private boolean validateQuery() {
-/* MR		SQLLikeQueryReader queryReader = new SQLLikeQueryReader(this.schema.getSchema());
-		
-		Query<?> outputQuery = null;
-		try {
-			outputQuery = queryReader.fromString(this.queryEditArea.getText());
-		} catch (Exception e) {
-			log.warn("parseButtonPressed: error parsing query " + e.getClass().getSimpleName() + " " + e.getMessage());
-		}
-		
-		if (outputQuery != null) {
-			this.statusLabel.setText("Parse succeeded!");
-			this.query.setQuery(outputQuery);
-			return true;
-		}*/
 		this.statusLabel.setText("Parse failed.");
 		return false;
 	}

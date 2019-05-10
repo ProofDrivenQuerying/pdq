@@ -136,7 +136,6 @@ public class TypedConstant<T> extends Constant implements Typed  {
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.fol.Term#isSkolem()
 	 */
-// MR	@Override
 	public boolean isSkolem() {
 		return false;
 	}

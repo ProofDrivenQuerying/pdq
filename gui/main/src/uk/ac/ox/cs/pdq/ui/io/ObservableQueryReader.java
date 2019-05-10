@@ -50,7 +50,6 @@ public class ObservableQueryReader {
 	 * @param in the in
 	 * @return a conjunctive query read from the given input stream
 	 */
-// MR	@Override 
 	public ObservableQuery read(File query) {
 		try {
 			ConjunctiveQuery cq = IOManager.importQuery(query);

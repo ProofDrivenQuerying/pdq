@@ -118,22 +118,6 @@ public class NodePropertiesDialog extends JFrame {
 		titledBorders.setBorder(border);
 		titledBorders.setLayout(new BoxLayout(titledBorders, BoxLayout.Y_AXIS));
 
-/* MR		Metadata metadata = node.getMetadata();
-		if(metadata instanceof DominanceMetadata) {
-			if(((DominanceMetadata) metadata).getType().equals(PruningTypes.DOMINANCE)) {
-				PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Dominance node"), ((DominanceMetadata) metadata).getDominance().toString());
-			}
-			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Dominated plan"), 
-					((DominanceMetadata) metadata).getDominancePlan().toString());
-			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Dominated plan's cost"), 
-					((DominanceMetadata) metadata).getDominatedPlan().getCost().toString());
-			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Dominance plan"), ((DominanceMetadata) metadata).getDominancePlan().toString());
-			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Dominance plan's cost"), 
-					((DominanceMetadata) metadata).getDominancePlan().getCost().toString());
-		}	
-		else {
-			throw new java.lang.IllegalArgumentException();
-		}*/
 		return titledBorders;
 	}
 
@@ -150,13 +134,6 @@ public class NodePropertiesDialog extends JFrame {
 		titledBorders.setBorder(border);
 		titledBorders.setLayout(new BoxLayout(titledBorders, BoxLayout.Y_AXIS));
 
-/* MR		Metadata metadata = node.getMetadata();
-		if(metadata instanceof EquivalenceMetadata) {
-			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Equivalent node"), node.getPointer().toString());
-		}
-		else {
-			throw new java.lang.IllegalArgumentException();
-		}*/
 		return titledBorders;
 	}
 
@@ -173,15 +150,6 @@ public class NodePropertiesDialog extends JFrame {
 		titledBorders.setBorder(border);
 		titledBorders.setLayout(new BoxLayout(titledBorders, BoxLayout.Y_AXIS));
 
-/* MR		Metadata metadata = node.getMetadata();
-		if(metadata instanceof BestPlanMetadata) {
-			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found proof"), Proof.toProof(((BestPlanMetadata) metadata).getConfigurations()).toString());
-			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found plan"), ((BestPlanMetadata) metadata).getPlan().toString());
-			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found plan's cost"), ((BestPlanMetadata) metadata).getPlan().getCost().toString());
-		}
-		else {
-			throw new java.lang.IllegalArgumentException();
-		}*/
 		return titledBorders;
 	}
 
@@ -199,20 +167,6 @@ public class NodePropertiesDialog extends JFrame {
 		titledBorders.setBorder(border);
 		titledBorders.setLayout(new BoxLayout(titledBorders, BoxLayout.Y_AXIS));
 
-/* MR		Metadata metadata = node.getMetadata();
-
-		if(metadata instanceof DominanceMetadata) {
-			return this.createPruningPanel(node, border);
-		}
-		else if(metadata instanceof EquivalenceMetadata) {
-			return this.createEquivalencePanel(node, border);
-		}
-		else if(metadata instanceof BestPlanMetadata) {
-			return this.createSuccessPanel(node, border);
-		}
-		else {
-			return null;
-		}*/
 		return null;
 	}
 

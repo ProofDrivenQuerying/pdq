@@ -610,19 +610,12 @@ private void registerEvents(final ExplorationSetUp planner) {
 					 */
 					void displayPlan(ListView<Text> area, Plan p) {
 						area.getItems().clear();
-// MR					if (p.isLeftDeepPlan()) {
 							ByteArrayOutputStream bos = new ByteArrayOutputStream();
 							new PrintStream(bos).println(p.toString());
 							for (String line: bos.toString().split("\n")) {
 								Text t = new Text(line);
 								area.getItems().add(t);
 							}
-//						} else if (p != null) {
-//							log.warn("Display of " + p.getClass().getSimpleName() + " plans not yet supported.");
-//							area.getItems().add(new Text("<Non linear plan selected>"));
-//						} else {
-//							area.getItems().add(new Text("<No plan>"));
-//						}
 					}
 
 					/**

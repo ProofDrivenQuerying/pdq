@@ -135,9 +135,8 @@ public class ObservablePlan {
 		this.timeout.set(settings.getTimeout() != null ? settings.getTimeout().doubleValue() : Double.POSITIVE_INFINITY);
 		this.maxIterations.set(settings.getMaxIterations() != null ? settings.getMaxIterations().doubleValue() : Double.POSITIVE_INFINITY);
 		this.queryMatchInterval.set(settings.getQueryMatchInterval());
-		this.cost.set(pl ==  null ? null : new DoubleCost()); // MR pl.getCost();
+		this.cost.set(pl ==  null ? null : new DoubleCost());
 		this.chaserType.set(reasoningParams.getReasoningType() != null ? reasoningParams.getReasoningType() : ReasoningTypes.RESTRICTED_CHASE);
-//		this.blockingInterval.set(reasoningParams.getBlockingInterval());
 	}
 
 	/**
