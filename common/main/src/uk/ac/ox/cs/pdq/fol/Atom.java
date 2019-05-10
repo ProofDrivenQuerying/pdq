@@ -262,5 +262,18 @@ public class Atom extends Formula {
 		}
 		return result;
 	}
-	
+
+	/** In case one or more of the terms contain variable or a labelled null, then this atom is not a certain answer.
+	 * @return
+	 */
+	public boolean isNotANull() {
+		for (Term t:terms) {
+			if (t.isVariable())
+				return false;
+			if (t.isUntypedConstant() && ((UntypedConstant)t).isNonCannonicalConstant()) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

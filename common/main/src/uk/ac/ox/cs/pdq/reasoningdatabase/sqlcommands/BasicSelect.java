@@ -365,6 +365,9 @@ public class BasicSelect extends Command {
 	public DataSink getSink() {
 		return sink;
 	}
+	public void setSink(DataSink s) {
+		sink=s;
+	}
 
 	public class TableAlias {
 		protected String aliasName = "";

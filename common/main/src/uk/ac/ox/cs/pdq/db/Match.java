@@ -6,10 +6,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.google.common.base.Preconditions;
 
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
@@ -44,6 +46,11 @@ public class Match {
 	@Override
 	public String toString() {
 		return this.mapping.toString() + "\n" + this.formula.toString(); 
+	}
+	public Atom toAtom() {
+		Predicate p = Predicate.create("QueryResult", mapping.size());
+		Constant[] terms = mapping.values().toArray(new Constant[mapping.size()]);
+		return Atom.create(p, terms);
 	}
 	
     public static Match create(Formula formula, Map<Variable, Constant> mapping) {
