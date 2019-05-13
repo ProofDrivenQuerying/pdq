@@ -17,8 +17,15 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 
 /**
- * Imports or exports a chase state. Normally we export the final state of the
- * chase, in order to run further queries on it later.
+ * Imports or exports a database state (typically for the chase) 
+ * One usecase is to bulkk export the entire chase state for external
+ * use.
+ * 
+ * Another usecase is to export the answers of a user query 
+ * (e.g. on the chase)
+ * the bufferedexport is a datasink that will be passed to the query 
+ * executor, which will call the addfacts method of it periodically
+ * to add query output facts
  * 
  * @author gabor
  */
@@ -32,7 +39,7 @@ public class StateExporter {
 	}
 
 	/**
-	 * Exports the current chase state to a folder.
+	 * Bulk export the current chase state to a folder.
 	 * 
 	 * @param directory
 	 * @throws IOException
@@ -94,6 +101,12 @@ public class StateExporter {
 			}
 		}
 	}
+	
+	/* This will be attached to a query executor, which will call
+	 * the addfacts method defined below in order to send query ouput t
+	 * to a file
+	 * 
+	 */
 	public static class BufferedFactExport implements DataSink {
 		private File directory;
 		private String forcedFileName = null;
