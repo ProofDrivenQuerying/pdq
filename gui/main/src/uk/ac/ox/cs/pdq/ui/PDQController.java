@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -132,7 +133,7 @@ public class PDQController {
 	 */
 	/** Used to protect selects from competing with each other */
 	private boolean g_lock = true;
-	
+
 	/** A map of View Controllers. */
 	public static HashMap<Stage, ViewController> g_viewControllerMap = new HashMap<>();
 
@@ -269,8 +270,7 @@ public class PDQController {
 	/**
 	 * Delete selected schemas.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void deleteSelectedSchemas(ActionEvent event) {
@@ -310,8 +310,7 @@ public class PDQController {
 	/**
 	 * Delete the schema and all associated query/plans from the system.
 	 *
-	 * @param schema
-	 *            the schema
+	 * @param schema the schema
 	 */
 	private void deleteSchema(ObservableSchema schema) {
 		if (schema != null) {
@@ -331,10 +330,8 @@ public class PDQController {
 	/**
 	 * Delete the given relation from the given schema.
 	 *
-	 * @param schema
-	 *            the schema
-	 * @param relation
-	 *            the relation
+	 * @param schema   the schema
+	 * @param relation the relation
 	 */
 	private void deleteRelation(ObservableSchema schema, Relation relation) {
 		// TODO
@@ -344,10 +341,8 @@ public class PDQController {
 	/**
 	 * Delete the given dependency from the given schema.
 	 *
-	 * @param schema
-	 *            the schema
-	 * @param dependency
-	 *            the dependency
+	 * @param schema     the schema
+	 * @param dependency the dependency
 	 */
 	/*
 	 * private void deleteDependency(ObservableSchema schema, Dependency dependency)
@@ -358,8 +353,7 @@ public class PDQController {
 	/**
 	 * Delete selected queries.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void deleteSelectedQueries(ActionEvent event) {
@@ -376,10 +370,8 @@ public class PDQController {
 	/**
 	 * Delete the query and all associated plans from the system.
 	 *
-	 * @param schema
-	 *            the schema
-	 * @param query
-	 *            the query
+	 * @param schema the schema
+	 * @param query  the query
 	 */
 	private void deleteQuery(ObservableSchema schema, ObservableQuery query) {
 		if (query != null) {
@@ -400,8 +392,7 @@ public class PDQController {
 	/**
 	 * Called from the query list view context menu. Opens an empty query.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void newQueryPressed(ActionEvent event) {
@@ -417,8 +408,7 @@ public class PDQController {
 	/**
 	 * Duplicate selected query pressed.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void duplicateSelectedQueryPressed(ActionEvent event) {
@@ -439,8 +429,7 @@ public class PDQController {
 	/**
 	 * Delete selected plans.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void deleteSelectedPlans(ActionEvent event) {
@@ -459,12 +448,9 @@ public class PDQController {
 	/**
 	 * Delete the plan and associated configuration from the system.
 	 *
-	 * @param schema
-	 *            the schema
-	 * @param query
-	 *            the query
-	 * @param plan
-	 *            the plan
+	 * @param schema the schema
+	 * @param query  the query
+	 * @param plan   the plan
 	 */
 	private void deletePlan(ObservableSchema schema, ObservableQuery query, ObservablePlan plan) {
 		plan.destroy();
@@ -474,8 +460,7 @@ public class PDQController {
 	/**
 	 * Action that open's the planner window and start a new planning session.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void openPlannerWindow(ActionEvent event) {
@@ -521,8 +506,7 @@ public class PDQController {
 	/**
 	 * To double.
 	 *
-	 * @param s
-	 *            the s
+	 * @param s the s
 	 * @return the double
 	 */
 	private static Double toDouble(String s) {
@@ -536,8 +520,7 @@ public class PDQController {
 	/**
 	 * To integer.
 	 *
-	 * @param s
-	 *            the s
+	 * @param s the s
 	 * @return the integer
 	 */
 	private static Integer toInteger(String s) {
@@ -547,42 +530,35 @@ public class PDQController {
 			return null;
 		}
 	}
-	
-	
+
 	private void focusState(Stage dialog, boolean value) {
-	    if (value) {
-	        
-	    	// Focus gained, highlight both dependencies
-	    	
+		if (value) {
+
+			// Focus gained, highlight both dependencies
+
 			MultipleSelectionModel msm = schemasTreeView.getSelectionModel();
 			Dependency[] dependencies = this.currentSchema.get().getSchema().getAllDependencies();
 			int index = 0;
-			for(TreeItem<String> ti : schemasTreeView.getRoot().getChildren())
-			{
-				for(TreeItem<String> ti2 : ti.getChildren())
-				{
-					if(ti2.getValue().equals("Dependencies"))
-					{
-						for(TreeItem<String> ti3 : ti2.getChildren())
-						{
+			for (TreeItem<String> ti : schemasTreeView.getRoot().getChildren()) {
+				for (TreeItem<String> ti2 : ti.getChildren()) {
+					if (ti2.getValue().equals("Dependencies")) {
+						for (TreeItem<String> ti3 : ti2.getChildren()) {
 							int row = schemasTreeView.getRow(ti3);
-							Dependency dependency = dependencies[index]; 
+							Dependency dependency = dependencies[index];
 							index++;
-							
+
 							// Get both dependencies characteristic of a view
-							
+
 							ViewController viewController = g_viewControllerMap.get(dialog);
 							View view = viewController.getView();
-							
+
 							Dependency dependency2 = view.getViewToRelationDependency();
 							Dependency dependency3 = view.getRelationToViewDependency();
-							
-							if((dependency != null) && 
-							   (((dependency2 != null) && dependency2.equals(dependency)) ||
-							     (dependency3 != null) && dependency3.equals(dependency)))
-							{
+
+							if ((dependency != null) && (((dependency2 != null) && dependency2.equals(dependency))
+									|| (dependency3 != null) && dependency3.equals(dependency))) {
 								// Disable select updates with g_lock flag.
-								
+
 								g_lock = false;
 								msm.select(row);
 								g_lock = true;
@@ -591,20 +567,15 @@ public class PDQController {
 					}
 				}
 			}
-			
+
 			// Highlight view
-			
-			for(TreeItem<String> ti : schemasTreeView.getRoot().getChildren())
-			{
-				for(TreeItem<String> ti2 : ti.getChildren())
-				{
-					if(ti2.getValue().equals("Views"))
-					{
-						for(TreeItem<String> ti3 : ti2.getChildren())
-						{
+
+			for (TreeItem<String> ti : schemasTreeView.getRoot().getChildren()) {
+				for (TreeItem<String> ti2 : ti.getChildren()) {
+					if (ti2.getValue().equals("Views")) {
+						for (TreeItem<String> ti3 : ti2.getChildren()) {
 							ViewController viewController = g_viewControllerMap.get(dialog);
-							if(ti3.getValue().contentEquals(viewController.getView().getName()))
-							{
+							if (ti3.getValue().contentEquals(viewController.getView().getName())) {
 								// Disable select updates with g_lock flag.
 
 								g_lock = false;
@@ -614,14 +585,14 @@ public class PDQController {
 						}
 					}
 				}
-			}	
-	    }
+			}
+		}
 	}
+
 	/**
 	 * Action that open's either the relation or dependencies inspector window.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void openSchemaDetails(MouseEvent event) {
@@ -632,29 +603,27 @@ public class PDQController {
 				MultipleSelectionModel msm = schemasTreeView.getSelectionModel();
 				ObservableList<TreeItem<String>> obl = msm.getSelectedItems();
 				this.currentSchemaViewitems = (TreeItem<String>) msm.getSelectedItem();
-				
-				if((currentSchemaViewitems.getParent() == null) ||
-				   (currentSchemaViewitems.getParent().getParent() == null) ||
-				   (currentSchemaViewitems.getParent().getParent().valueProperty().get() == null))
-				{		
+
+				if ((currentSchemaViewitems.getParent() == null)
+						|| (currentSchemaViewitems.getParent().getParent() == null)
+						|| (currentSchemaViewitems.getParent().getParent().valueProperty().get() == null)) {
 					return;
 				}
-					
+
 				ObservableSchema schema = this.schemas.get(this.currentSchemaViewitems.getValue());
 				if (schema == null) {
 					try {
 						Relation relation = this.currentSchema.get().getSchema()
 								.getRelation(this.currentSchemaViewitems.getValue());
-						
+
 						// Check position of the relation in the TreeItem<String> tree view
-						
+
 						if ((currentSchemaViewitems.getParent().valueProperty().get().equals("Relations")
 								|| (currentSchemaViewitems.getParent().getParent().valueProperty().get()
-										.equals("Services"))
-								&& (relation != null))) {
-							
+										.equals("Services")) && (relation != null))) {
+
 							// Open the Stage dialog
-							Stage dialog = new Stage();							
+							Stage dialog = new Stage();
 							dialog.initModality(Modality.NONE);
 							dialog.initStyle(StageStyle.UTILITY);
 							dialog.initOwner(this.getOriginatingWindow(event));
@@ -666,7 +635,7 @@ public class PDQController {
 							Scene scene = new Scene(parent);
 							dialog.setScene(scene);
 							dialog.setTitle(bundle.getString("relation.dialog.title"));
-							
+
 							// Open the relation controller
 							RelationController relationController = loader.getController();
 							relationController.setRelation(relation);
@@ -682,36 +651,31 @@ public class PDQController {
 								.getRelation(this.currentSchemaViewitems.getValue());
 						if (currentSchemaViewitems.getParent().valueProperty().get().equals("Views")
 								&& (view != null)) {
-							
+
 							// Scan through the list of dependencies to see which should be highlighted
-							
+
 							Dependency[] dependencies = this.currentSchema.get().getSchema().getAllDependencies();
 							int index = 0;
-							for(TreeItem<String> ti : schemasTreeView.getRoot().getChildren())
-							{
-								for(TreeItem<String> ti2 : ti.getChildren())
-								{
-									if(ti2.getValue().equals("Dependencies"))
-									{
-										for(TreeItem<String> ti3 : ti2.getChildren())
-										{
+							for (TreeItem<String> ti : schemasTreeView.getRoot().getChildren()) {
+								for (TreeItem<String> ti2 : ti.getChildren()) {
+									if (ti2.getValue().equals("Dependencies")) {
+										for (TreeItem<String> ti3 : ti2.getChildren()) {
 											int row = schemasTreeView.getRow(ti3);
-											if(index < dependencies.length)
-											{
-												Dependency dependency = dependencies[index]; 
+											if (index < dependencies.length) {
+												Dependency dependency = dependencies[index];
 												index++;
-											
+
 												// Get both dependencies characteristic of a view
-											
+
 												Dependency dependency2 = view.getViewToRelationDependency();
 												Dependency dependency3 = view.getRelationToViewDependency();
-											
-												if((dependency != null) && 
-												  (((dependency2 != null) && dependency2.equals(dependency)) ||
-													(dependency3 != null) && dependency3.equals(dependency)))
-												{
+
+												if ((dependency != null)
+														&& (((dependency2 != null) && dependency2.equals(dependency))
+																|| (dependency3 != null)
+																		&& dependency3.equals(dependency))) {
 													// Disable select updates with g_lock flag.
-												
+
 													g_lock = false;
 													msm.select(row);
 													g_lock = true;
@@ -721,12 +685,13 @@ public class PDQController {
 									}
 								}
 							}
-							
+
 							// Open the Stage dialog
 							Stage dialog = new Stage();
 
-							dialog.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-							    focusState(dialog, newValue);
+							dialog.focusedProperty().addListener((ObservableValue<? extends Boolean> observable,
+									Boolean oldValue, Boolean newValue) -> {
+								focusState(dialog, newValue);
 							});
 
 							dialog.initModality(Modality.NONE);
@@ -739,7 +704,7 @@ public class PDQController {
 							Scene scene = new Scene(parent);
 							dialog.setScene(scene);
 							dialog.setTitle(bundle.getString("view.dialog.title"));
-							
+
 							// Open the view controller
 							ViewController viewController = loader.getController();
 							viewController.setView(view);
@@ -759,7 +724,7 @@ public class PDQController {
 					if (currentSchemaViewitems.getParent().valueProperty().get().equals("Dependencies")
 							&& (dependency != null)) {
 						try {
-							
+
 							// Open the Stage dialog
 							Stage dialog = new Stage();
 							dialog.initModality(Modality.NONE);
@@ -797,9 +762,10 @@ public class PDQController {
 							break;
 						}
 					}
-					
-					// Check services in the list of services and when connected to a relation by access method
-					
+
+					// Check services in the list of services and when connected to a relation by
+					// access method
+
 					if ((currentSchemaViewitems.getParent().valueProperty().get().equals("Services")
 							|| currentSchemaViewitems.getParent().getParent().valueProperty().get().equals("Relations"))
 							&& (service != null)) {
@@ -831,8 +797,7 @@ public class PDQController {
 	/**
 	 * Action that open's the query inspector window.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void openQueryDetails(MouseEvent event) {
@@ -876,8 +841,7 @@ public class PDQController {
 	/**
 	 * Action that open's the runtime window and start a new runtime session.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void openRuntimeWindow(ActionEvent event) {
@@ -914,8 +878,7 @@ public class PDQController {
 	/**
 	 * Action that open's the runtime window and start a new runtime session.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void openImportSchemaWindow(ActionEvent event) {
@@ -954,8 +917,7 @@ public class PDQController {
 	/**
 	 * Action that open's the runtime window and start a new runtime session.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void openExportSchemaWindow(ActionEvent event) {
@@ -991,67 +953,57 @@ public class PDQController {
 		}
 	}
 
-
 	/**
 	 * Action that saves the current query.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void saveSelectedQuery(ActionEvent event) {
 		if (!event.isConsumed()) {
 			event.consume();
-			try
-			{
+			try {
 				String str = this.queryTextArea.textProperty().get();
 				SQLLikeQueryReader qr = new SQLLikeQueryReader(this.currentSchema.get().getSchema());
 				ConjunctiveQuery cjq = qr.fromString(str);
 				this.currentQuery.get().setQuery(cjq);
 				saveQuery(this.currentQuery.get());
-		    	Alert alert = new Alert(AlertType.INFORMATION);
-		    	alert.setTitle("Result Dialog");
-		    	alert.setHeaderText(null);
-		    	alert.setContentText("Successfully saved");
-		    	alert.showAndWait();
-			}
-			catch(Exception e)
-			{
-				return;				
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Result Dialog");
+				alert.setHeaderText(null);
+				alert.setContentText("Successfully saved");
+				alert.showAndWait();
+			} catch (Exception e) {
+				return;
 			}
 		}
 	}
-	
+
 	/**
 	 * Action that saves as the current query.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void saveAsSelectedQuery(ActionEvent event) {
 		if (!event.isConsumed()) {
 			event.consume();
-			try
-			{
+			try {
 				String str = this.queryTextArea.textProperty().get();
 				SQLLikeQueryReader qr = new SQLLikeQueryReader(this.currentSchema.get().getSchema());
 				ConjunctiveQuery cjq = qr.fromString(str);
 				this.currentQuery.get().setQuery(cjq);
 				saveAsQuery(this.currentQuery.get());
-			}
-			catch(Exception e)
-			{
-				return;				
+			} catch (Exception e) {
+				return;
 			}
 		}
 	}
-	
+
 	/**
 	 * Action that open's the runtime window and start a new runtime session.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void openImportQueryWindow(ActionEvent event) {
@@ -1090,8 +1042,7 @@ public class PDQController {
 	/**
 	 * Action that create a new planning configuration in the plan table view.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	@FXML
 	void newSettings(ActionEvent event) {
@@ -1112,8 +1063,7 @@ public class PDQController {
 	/**
 	 * Gets the originating window.
 	 *
-	 * @param e
-	 *            the e
+	 * @param e the e
 	 * @return the window the given event was generated from.
 	 */
 	private Window getOriginatingWindow(Event e) {
@@ -1241,8 +1191,7 @@ public class PDQController {
 	/**
 	 * Selects a schema from the UI.
 	 *
-	 * @param newValue
-	 *            the new value
+	 * @param newValue the new value
 	 */
 	void schemaSelected(TreeItem<String> newValue) {
 		String oldName = null;
@@ -1269,9 +1218,8 @@ public class PDQController {
 		}
 		this.currentSchema.set(this.schemas.get(schemaName));
 		this.queriesListView.setItems(this.queries.get(schemaName));
-		if(g_lock)
-		{
-			this.currentSchemaViewitems = newValue;	
+		if (g_lock) {
+			this.currentSchemaViewitems = newValue;
 		}
 		if (!schemaName.equals(oldName)) {
 			this.queriesListView.getSelectionModel().clearSelection();
@@ -1292,10 +1240,9 @@ public class PDQController {
 			ObservableList<ObservablePlan> list = PDQController.this.plans
 					.get(Pair.of(PDQController.this.currentSchema.get(), newValue));
 			PDQController.this.plansTableView.setItems(list);
-			this.queryTextArea.textProperty().set(SQLLikeQueryWriter.convert(this.currentQuery.get().getFormula(), this.currentSchema.get().getSchema()));
-		}
-		else
-		{
+			this.queryTextArea.textProperty().set(SQLLikeQueryWriter.convert(this.currentQuery.get().getFormula(),
+					this.currentSchema.get().getSchema()));
+		} else {
 			this.queryTextArea.textProperty().set("");
 		}
 	};
@@ -1330,17 +1277,14 @@ public class PDQController {
 	/**
 	 * Display plan.
 	 *
-	 * @param p
-	 *            the p
+	 * @param p the p
 	 */
 	void displayPlan(Plan p) {
 		PDQController.this.planViewArea.getItems().clear();
-		if(p != null)
-		{
+		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			new PrintStream(bos).println(p.toString());
-			for (String line: bos.toString().split("\n"))
-			{
+			for (String line : bos.toString().split("\n")) {
 				Text t = new Text(line);
 				PDQController.this.planViewArea.getItems().add(t);
 			}
@@ -1350,8 +1294,7 @@ public class PDQController {
 	/**
 	 * Display proof.
 	 *
-	 * @param p
-	 *            the p
+	 * @param p the p
 	 */
 	void displayProof(Proof p) {
 		PDQController.this.proofViewArea.clear();
@@ -1365,13 +1308,13 @@ public class PDQController {
 	/**
 	 * Display settings.
 	 *
-	 * @param p
-	 *            the p
+	 * @param p the p
 	 */
 	void displaySettings(ObservablePlan p) {
 		PDQController.this.settingsTimeoutTextField.setText(PDQController.nullToEmpty(p.getTimeout()));
 		PDQController.this.settingsMaxIterationsTextField.setText(PDQController.nullToEmpty(p.getMaxIterations()));
-		PDQController.this.settingsQueryMatchIntervalTextField.setText(PDQController.nullToEmpty(p.getQueryMatchInterval()));
+		PDQController.this.settingsQueryMatchIntervalTextField
+				.setText(PDQController.nullToEmpty(p.getQueryMatchInterval()));
 		// PDQController.this.settingsBlockingIntervalTextField.setText(PDQController.nullToEmpty(p.getBlockingInterval()));
 		PDQController.this.settingsPlannerTypeList.getSelectionModel().select(p.getPlannerType());
 		PDQController.this.settingsReasoningTypeList.getSelectionModel().select(p.getReasoningType());
@@ -1381,8 +1324,7 @@ public class PDQController {
 	/**
 	 * Sets the settings editable.
 	 *
-	 * @param editable
-	 *            the new settings editable
+	 * @param editable the new settings editable
 	 */
 	void setSettingsEditable(boolean editable) {
 		PDQController.this.settingsTimeoutTextField.setEditable(editable);
@@ -1420,13 +1362,12 @@ public class PDQController {
 
 	/** A map of old vs new variable names. */
 	HashMap<String, String> map = new HashMap<>();
-	
+
 	/**
 	 * Default construction, sets up the work directory, and loads all of its
 	 * content.
 	 *
-	 * @throws UserInterfaceException
-	 *             the user interface exception
+	 * @throws UserInterfaceException the user interface exception
 	 */
 	public PDQController() throws UserInterfaceException {
 		this.workDirectory = PDQApplication.setupWorkDirectory();
@@ -1436,8 +1377,7 @@ public class PDQController {
 	/**
 	 * Null to empty.
 	 *
-	 * @param o
-	 *            the o
+	 * @param o the o
 	 * @return the string
 	 */
 	private static String nullToEmpty(Object o) {
@@ -1456,24 +1396,20 @@ public class PDQController {
 		for (File schemaFile : listFiles(schemaDir, "", SCHEMA_FILENAME_SUFFIX)) {
 			ObservableSchemaReader schemaReader = new ObservableSchemaReader();
 			ObservableSchema s = schemaReader.read(schemaFile);
-			try
-			{
+			try {
 				SanityCheck.sanityCheck(s.getSchema());
-			}
-			catch(Exception e)
-			{
+			} catch (Exception e) {
 				throw new UserInterfaceException(schemaFile.getName() + "; " + e.getMessage());
 			}
 			s.setFile(schemaFile);
 			this.schemas.put(s.getName(), s);
 		}
 	}
-	
+
 	/**
 	 * Saves a schema.
 	 *
-	 * @param schema
-	 *            the schema
+	 * @param schema the schema
 	 */
 	private void saveSchema(ObservableSchema schema) {
 		File file = schema.getFile();
@@ -1492,8 +1428,7 @@ public class PDQController {
 	/**
 	 * Saves a query.
 	 *
-	 * @param query
-	 *            the query
+	 * @param query the query
 	 */
 	private void saveQuery(ObservableQuery query) {
 		File file = query.getFile();
@@ -1512,15 +1447,14 @@ public class PDQController {
 	/**
 	 * Saves as a query.
 	 *
-	 * @param query
-	 *            the query
+	 * @param query the query
 	 */
 	private void saveAsQuery(ObservableQuery query) {
 		try {
 			final Stage dialog = new Stage();
 			dialog.initModality(Modality.WINDOW_MODAL);
 			dialog.initStyle(StageStyle.UTILITY);
-			//dialog.initOwner(this.getOriginatingWindow(event));
+			// dialog.initOwner(this.getOriginatingWindow(event));
 			ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
 			FXMLLoader loader = new FXMLLoader(
 					PDQApplication.class.getResource("/resources/layouts/saveas-dialog.fxml"), bundle);
@@ -1546,11 +1480,10 @@ public class PDQController {
 		}
 	}
 
-/**
+	/**
 	 * Saves a plan.
 	 *
-	 * @param plan
-	 *            the plan
+	 * @param plan the plan
 	 */
 	void savePlan(ObservablePlan plan) {
 		File file = plan.getPlanFile();
@@ -1577,9 +1510,9 @@ public class PDQController {
 	 * Loads queries present in the work directory.
 	 */
 	private void loadQueries() {
-		
+
 		// Open the query directory
-		
+
 		File queryDir = new File(this.workDirectory.getAbsolutePath() + '/' + QUERY_DIRECTORY);
 		for (ObservableSchema s : this.schemas.values()) {
 			ObservableList<ObservableQuery> qs = this.queries.get(s.getName());
@@ -1587,9 +1520,9 @@ public class PDQController {
 				qs = FXCollections.observableArrayList();
 				this.queries.put(s.getName(), qs);
 			}
-			
+
 			// List files in the query directory
-			
+
 			for (File queryFile : listFiles(queryDir, makePrefix(s), QUERY_FILENAME_SUFFIX)) {
 				try (FileInputStream in = new FileInputStream(queryFile.getAbsolutePath())) {
 					ObservableQueryReader queryReader = new ObservableQueryReader(s.getSchema());
@@ -1600,12 +1533,10 @@ public class PDQController {
 					throw new UserInterfaceException(e.getMessage(), e);
 				}
 			}
-			
+
 			// Sanity check queries against schema
-			for(ObservableQuery q : qs)
-			{
-				try
-				{
+			for (ObservableQuery q : qs) {
+				try {
 //					SanityCheck.sanityCheck(q.getQuery(), s.getSchema());
 				} catch (Exception e) {
 					throw new UserInterfaceException(q.getName() + "; " + e.getMessage(), e);
@@ -1617,8 +1548,7 @@ public class PDQController {
 	/**
 	 * Make prefix.
 	 *
-	 * @param schema
-	 *            the schema
+	 * @param schema the schema
 	 * @return the string
 	 */
 	private static String makePrefix(ObservableSchema schema) {
@@ -1629,9 +1559,9 @@ public class PDQController {
 	 * Loads queries present in the work directory.
 	 */
 	private void loadPlans() {
-		
+
 		// Find plan based on schema and query
-		
+
 		File planDir = new File(this.workDirectory.getAbsolutePath() + '/' + PLAN_DIRECTORY);
 		for (ObservableSchema s : this.schemas.values()) {
 			for (ObservableQuery q : this.queries.get(s.getName())) {
@@ -1640,8 +1570,28 @@ public class PDQController {
 					ps = FXCollections.observableArrayList();
 					this.plans.put(Pair.of(s, q), ps);
 				}
+
+				if(listFiles(planDir, makePrefix(q), PLAN_FILENAME_SUFFIX).length == 0)
+				{
+					File settings = new File(planDir + "/default" + PROPERTIES_SUFFIX);
+					File settings2 = new File(planDir + "/" + makePrefix(q) + "0" + PROPERTIES_SUFFIX);
+					File proof = new File(planDir + "/default" + PLAN_FILENAME_SUFFIX);
+					File proof2 = new File(planDir + "/" + makePrefix(q) + "0" + PLAN_FILENAME_SUFFIX);
+					File plan = new File(planDir + "/default" + PROOF_FILENAME_SUFFIX);
+					File plan2 = new File(planDir + "/" + makePrefix(q) + "0" + PROOF_FILENAME_SUFFIX);
+					System.out.println(settings.getAbsolutePath());
+					try
+					{
+						Files.copy(settings.toPath(), settings2.toPath());
+						Files.copy(proof.toPath(), proof2.toPath());
+						Files.copy(plan.toPath(), plan2.toPath());
+					}
+					catch(IOException e)
+					{
+					}
+				}
 				
-				// For all plan files in the planDir go  to the CostIOManager
+				// For all plan files in the planDir go to the CostIOManager
 				
 				for (File planFile : listFiles(planDir, makePrefix(q), PLAN_FILENAME_SUFFIX)) {
 					try (FileInputStream in = new FileInputStream(planFile.getAbsolutePath())) {
@@ -1659,9 +1609,9 @@ public class PDQController {
 						ObservablePlan p = new ObservablePlan(p1, q1, r1, s1);
 						p.setPlanFile(planFile);
 						p.setSettingsFile(settings);
-						
+
 						// Read the proof file
-						
+
 						File proof = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROOF_FILENAME_SUFFIX));
 						if (proof.exists()) {
 							try (FileInputStream prIn = new FileInputStream(proof.getAbsolutePath())) {
@@ -1682,8 +1632,7 @@ public class PDQController {
 	/**
 	 * Make prefix.
 	 *
-	 * @param query
-	 *            the query
+	 * @param query the query
 	 * @return the string
 	 */
 	private static String makePrefix(ObservableQuery query) {
@@ -1693,12 +1642,9 @@ public class PDQController {
 	/**
 	 * Replace suffix.
 	 *
-	 * @param f
-	 *            the f
-	 * @param oldSuffix
-	 *            the old suffix
-	 * @param newSuffix
-	 *            the new suffix
+	 * @param f         the f
+	 * @param oldSuffix the old suffix
+	 * @param newSuffix the new suffix
 	 * @return the string
 	 */
 	private static String replaceSuffix(File f, String oldSuffix, String newSuffix) {
@@ -1724,8 +1670,7 @@ public class PDQController {
 	/**
 	 * Loads the schema into the left-hand side tree view.
 	 *
-	 * @param s
-	 *            the s
+	 * @param s the s
 	 * @return the tree item
 	 */
 	private TreeItem<String> loadTreeItem(ObservableSchema s) {
@@ -1736,68 +1681,53 @@ public class PDQController {
 	}
 
 	// Replace symbol _x with attribute name for every variable in the atoms
-	
-	private void processDependencyBodyOrHeadAtoms(Atom[] atoms, Atom[] atoms2, Relation[] relations)
-	{
+
+	private void processDependencyBodyOrHeadAtoms(Atom[] atoms, Atom[] atoms2, Relation[] relations) {
 		// Iterate over all atoms
-			
-		for(int a = 0; a < atoms.length; a++)
-		{
+
+		for (int a = 0; a < atoms.length; a++) {
 			Atom atom = atoms[a];
 			Predicate predicate = atom.getPredicate();
 			Term[] terms = atom.getTerms();
 			Term[] terms2 = new Term[terms.length];
-			
+
 			// Check that relation name equals predicate name
-			
-			for (Relation relation : relations)
-			{
-				if(relation.getName().equals(predicate.getName()))
-				{
+
+			for (Relation relation : relations) {
+				if (relation.getName().equals(predicate.getName())) {
 					Attribute[] attributes = relation.getAttributes();
-					
+
 					// Iterate over all terms
-					
-					for(int t = 0; t < terms.length; t++)
-					{
+
+					for (int t = 0; t < terms.length; t++) {
 						Term term = terms[t];
-						if(t < attributes.length)
-						{
+						if (t < attributes.length) {
 							Attribute attribute = attributes[t];
-							if(term instanceof Variable)
-							{
+							if (term instanceof Variable) {
 								Variable variable = (Variable) term;
 								String value = map.get(variable.getSymbol());
-								if(value == null)
-								{
+								if (value == null) {
 									// This is a new variable so name it after the attribute
-									
+
 									map.put(variable.getSymbol(), attribute.getName());
 									terms2[t] = Variable.create(attribute.getName());
-								}
-								else
-								{
+								} else {
 									// Reuse the existing variable name
-									
-									terms2[t] = Variable.create(value);									
+
+									terms2[t] = Variable.create(value);
 								}
-							}
-							else if(term instanceof Constant)
-							{
-								Constant tc =  (Constant) term;
+							} else if (term instanceof Constant) {
+								Constant tc = (Constant) term;
 								String value = map.get(tc.toString());
-								if(value == null)
-								{
+								if (value == null) {
 									// This is a new variable so name it after the attribute
-									
-									map.put(tc.toString(),  attribute.getName());
+
+									map.put(tc.toString(), attribute.getName());
 									terms2[t] = tc;
-								}
-								else
-								{
+								} else {
 									// Reuse the existing variable name
-									
-									terms2[t] = tc;													
+
+									terms2[t] = tc;
 								}
 							}
 						}
@@ -1808,70 +1738,61 @@ public class PDQController {
 			atoms2[a] = atom2;
 		}
 	}
-	
+
 	/**
 	 * Checks to see if 2 strings are equal subject to variable substitution.
 	 */
-	private boolean equalsWithoutVariables(String s1, String s2)
-	{
+	private boolean equalsWithoutVariables(String s1, String s2) {
 		String s3 = new String();
 		boolean on = true;
-		for(int i = 0; i < s1.length(); i++)
-		{
+		for (int i = 0; i < s1.length(); i++) {
 			char ch = s1.charAt(i);
-			if(ch == ')' || ch == ']') on = true;
-			if(on)
-			{
+			if (ch == ')' || ch == ']')
+				on = true;
+			if (on) {
 				s3 = s3 + ch;
 			}
-			if(ch == '(' || ch == '[') on = false;
+			if (ch == '(' || ch == '[')
+				on = false;
 		}
 		String s4 = new String();
 		on = true;
-		for(int i = 0; i < s2.length(); i++)
-		{
+		for (int i = 0; i < s2.length(); i++) {
 			char ch = s2.charAt(i);
-			if(ch == ')' || ch == ']') on = true;
-			if(on)
-			{
+			if (ch == ')' || ch == ']')
+				on = true;
+			if (on) {
 				s4 = s4 + ch;
 			}
-			if(ch == '(' || ch == '[') on = false;
+			if (ch == '(' || ch == '[')
+				on = false;
 		}
 		return s3.equals(s4);
 	}
-	
+
 	/**
 	 * Checks to see if a dependency is of the form related to a view.
 	 */
-	private int isViewDependency(ObservableSchema s, Dependency d)
-	{
+	private int isViewDependency(ObservableSchema s, Dependency d) {
 		Relation[] rels = s.getSchema().getRelations();
-		for(Relation r : rels)
-		{
-			if(r instanceof View)
-			{
+		for (Relation r : rels) {
+			if (r instanceof View) {
 				View v = (View) r;
-				if(equalsWithoutVariables(d.toString(), v.getRelationToViewDependency().toString()))
-				{
+				if (equalsWithoutVariables(d.toString(), v.getRelationToViewDependency().toString())) {
 					return +1;
-				}
-				else if(equalsWithoutVariables(d.toString(), v.getViewToRelationDependency().toString()))
-				{
+				} else if (equalsWithoutVariables(d.toString(), v.getViewToRelationDependency().toString())) {
 					return -1;
 				}
 			}
 		}
 		return 0;
 	}
-		
+
 	/**
 	 * Reloads the schema into the left-hand side tree view.
 	 *
-	 * @param item
-	 *            the item
-	 * @param s
-	 *            the s
+	 * @param item the item
+	 * @param s    the s
 	 */
 	private void reloadTreeItem(TreeItem<String> item, ObservableSchema s) {
 		item.getChildren().clear();
@@ -1887,7 +1808,7 @@ public class PDQController {
 				new ImageView(this.dependencyIcon));
 
 		// For all relations choose an icon depending on view or not
-		
+
 		Relation[] relationz = s.getSchema().getRelations();
 		Relation[] relationz2 = new Relation[relationz.length];
 		for (int z = 0; z < relationz.length; z++) {
@@ -1899,7 +1820,7 @@ public class PDQController {
 				ti = new TreeItem<>(r.getName(), imageView);
 				views.getChildren().add(ti);
 				View v = (View) r;
-								
+
 				// Process the ViewToRelation dependency
 
 				LinearGuarded viewToRelation = v.getViewToRelationDependency();
@@ -1911,15 +1832,15 @@ public class PDQController {
 				processDependencyBodyOrHeadAtoms(headatoms, headatoms2, relationz);
 				LinearGuarded viewToRelation2 = LinearGuarded.create(bodyatoms2, headatoms2, viewToRelation.getName());
 				v.setViewToRelationDependency(viewToRelation2);
-				
+
 			} else {
 				imageView = new ImageView(this.dbRelationIcon);
 				ti = new TreeItem<>(r.getName(), imageView);
 				relations.getChildren().add(ti);
 			}
-			
+
 			// Find the service related to the relation by access method name
-			
+
 			boolean found = false;
 			for (AccessMethodDescriptor a : r.getAccessMethods()) {
 				for (Service sr : s.getServices()) {
@@ -1939,9 +1860,9 @@ public class PDQController {
 					break;
 			}
 		}
-		
+
 		// Find the relation related to the service by access method name
-		
+
 		for (Service sr : s.getServices()) {
 			ImageView imageView = new ImageView(this.webRelationIcon);
 			TreeItem ti = new TreeItem<>(sr.getName(), imageView);
@@ -1965,72 +1886,66 @@ public class PDQController {
 					break;
 			}
 		}
-		
-		
+
 		Dependency[] dependencys = s.getSchema().getAllDependencies();
 		Dependency[] dependencys2 = new Dependency[dependencys.length];
-	
-		// For all dependencies 
-		
+
+		// For all dependencies
+
 		for (int d = 0; d < dependencys.length; d++) {
 			Dependency ic = dependencys[d];
-			
+
 			// Choose the icon based on TGD and isGuarded()
-			
+
 			ImageView imageView = null;
 			int is = isViewDependency(s, ic);
 			if (is == +1) {
 				imageView = new ImageView(this.fkIcon);
-			} else if(is == -1) {
+			} else if (is == -1) {
+				imageView = new ImageView(this.dependencyIcon);
+			} else {
 				imageView = new ImageView(this.dependencyIcon);
 			}
-			else
-			{
-				imageView = new ImageView(this.dependencyIcon);				
-			}
-			
+
 			// Replace symbol _x with attribute name for every variable in the body atoms
-			
+
 			Atom[] bodyatoms = ic.getBodyAtoms();
 			Atom[] bodyatoms2 = new Atom[bodyatoms.length];
 			processDependencyBodyOrHeadAtoms(bodyatoms, bodyatoms2, relationz);
 
 			// Replace symbol _x with attribute name for every variable in the head atoms
-			
+
 			Atom[] headatoms = ic.getHeadAtoms();
 			Atom[] headatoms2 = new Atom[headatoms.length];
 			processDependencyBodyOrHeadAtoms(headatoms, headatoms2, relationz);
-		
-			// Decide whether to create LinearGuarded or TGD depending on view to relation etc
+
+			// Decide whether to create LinearGuarded or TGD depending on view to relation
+			// etc
 			Dependency ic2;
 			if (is == +1) {
 				ic2 = LinearGuarded.create(bodyatoms2, headatoms2, ic.getName());
-			} else if(is == -1) {
+			} else if (is == -1) {
+				ic2 = TGD.create(bodyatoms2, headatoms2, ic.getName());
+			} else {
 				ic2 = TGD.create(bodyatoms2, headatoms2, ic.getName());
 			}
-			else
-			{
-				ic2 = TGD.create(bodyatoms2, headatoms2, ic.getName());				
-			}
 			dependencys2[d] = ic2;
-			
-			TreeItem<String> ti = new TreeItem<>(ic2.getName().equals("dependency") ? ic2.toString() : ic2.getName(), imageView);
+
+			TreeItem<String> ti = new TreeItem<>(ic2.getName().equals("dependency") ? ic2.toString() : ic2.getName(),
+					imageView);
 			dependencies.getChildren().add(ti);
 		}
-		
+
 		// Swap the old schema with the new schema
-		
+
 		Schema schema = new Schema(relationz, dependencys2);
 		ArrayList<ObservableSchema> obslist = new ArrayList<>();
-		for(ObservableSchema obschema : this.schemas.values())
-		{
-			if(obschema.equals(s))
-			{
+		for (ObservableSchema obschema : this.schemas.values()) {
+			if (obschema.equals(s)) {
 				obslist.add(obschema);
 			}
 		}
-		for(ObservableSchema obs : obslist)
-		{
+		for (ObservableSchema obs : obslist) {
 			this.schemas.remove(s.getName(), s);
 			s.setSchema(schema);
 			this.schemas.putIfAbsent(s.getName(), s);
@@ -2057,12 +1972,9 @@ public class PDQController {
 	/**
 	 * List files.
 	 *
-	 * @param directory
-	 *            the directory
-	 * @param prefix
-	 *            the prefix
-	 * @param suffix
-	 *            the suffix
+	 * @param directory the directory
+	 * @param prefix    the prefix
+	 * @param suffix    the suffix
 	 * @return the file[]
 	 */
 	private static File[] listFiles(File directory, final String prefix, final String suffix) {
@@ -2110,7 +2022,7 @@ public class PDQController {
 				this.saveSchema(s);
 				this.schemaSelected(item);
 			}
-			// ObservableQuery: run saveQuery 
+			// ObservableQuery: run saveQuery
 			if (o instanceof ObservableQuery) {
 				ObservableQuery q = (ObservableQuery) o;
 				this.currentQuery.set(q);
