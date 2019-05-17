@@ -547,11 +547,9 @@ private void registerEvents(final ExplorationSetUp planner) {
 						this.planViewArea.getItems().clear();
 						if (pplan != null && pplan instanceof Plan) {
 							ByteArrayOutputStream bos = new ByteArrayOutputStream();
-							new PrintStream(bos).println(pplan.toString());
-							for (String line: bos.toString().split("\n")) {
-								Text t = new Text(line);
-								this.planViewArea.getItems().add(t);
-							}
+							PrintStream pbos = new PrintStream(bos);
+							PDQController.displayPlanSubtype(pbos, pplan, 0);
+							this.planViewArea.getItems().add(new Text(bos.toString()));
 						} else if (pplan != null) {
 							log.warn("Display of " + pplan.getClass().getSimpleName() + " plans not yet supported.");
 							this.planViewArea.getItems().add(new Text("<Non linear plan selected>"));
@@ -611,11 +609,9 @@ private void registerEvents(final ExplorationSetUp planner) {
 					void displayPlan(ListView<Text> area, Plan p) {
 						area.getItems().clear();
 							ByteArrayOutputStream bos = new ByteArrayOutputStream();
-							new PrintStream(bos).println(p.toString());
-							for (String line: bos.toString().split("\n")) {
-								Text t = new Text(line);
-								area.getItems().add(t);
-							}
+							PrintStream pbos = new PrintStream(bos);
+							PDQController.displayPlanSubtype(pbos, p, 0);
+							area.getItems().add(new Text(bos.toString()));
 					}
 
 					/**

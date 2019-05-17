@@ -77,8 +77,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
+import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
+import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.algebra.RenameTerm;
+import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
@@ -1279,15 +1284,94 @@ public class PDQController {
 	 *
 	 * @param p the p
 	 */
+	
+	static public void ident(PrintStream out, int indent)
+	{
+		for(int i = 0; i < indent; i++) out.print("  ");
+	}
+	
+	static public String chop(String input)
+	{
+		String output = "";
+		boolean print = false;
+		for(int i = 0; i < input.length(); i++)
+		{
+			char c = input.charAt(i);
+			if(c == '[') print = true;
+			if(print) output = output + c;
+			if(c == '{') print = true;
+			if(c == ']') break;
+		}
+		return output;
+	}
+	
+	static public void displayPlanSubtype(PrintStream out, Plan p, int indent)
+	{
+		if(p instanceof AccessTerm)
+		{
+			ident(out, indent); out.println("Access");
+			ident(out, indent); out.println("{");
+			ident(out, indent+1); out.println(chop(p.toString()));
+			for(int i = 0; i < p.getChildren().length; i++)
+			{
+				displayPlanSubtype(out, p.getChild(i), indent+1);
+			}
+			ident(out, indent); out.println("}");
+		}
+		if(p instanceof CartesianProductTerm)
+		{
+			ident(out, indent); out.println("Join");
+			ident(out, indent); out.println("{");
+			ident(out, indent+1); out.println(chop(p.toString()));
+			for(int i = 0; i < p.getChildren().length; i++)
+			{
+				displayPlanSubtype(out, p.getChild(i), indent+1);
+			}
+			ident(out, indent); out.println("}");
+		}
+		if(p instanceof ProjectionTerm)
+		{
+			ident(out, indent); out.println("Project");
+			ident(out, indent); out.println("{");
+			ident(out, indent+1); out.println(chop(p.toString()));
+			for(int i = 0; i < p.getChildren().length; i++)
+			{
+				displayPlanSubtype(out, p.getChild(i), indent+1);
+			}
+			ident(out, indent); out.println("}");
+		}
+		if(p instanceof RenameTerm)
+		{
+			ident(out, indent); out.println("Rename");
+			ident(out, indent); out.println("{");
+			ident(out, indent+1); out.println(chop(p.toString()));
+			for(int i = 0; i < p.getChildren().length; i++)
+			{
+				displayPlanSubtype(out, p.getChild(i), indent+1);
+			}
+			ident(out, indent); out.println("}");
+		}
+		if(p instanceof SelectionTerm)
+		{
+			ident(out, indent); out.println("Select");
+			ident(out, indent); out.println("{");
+			ident(out, indent+1); out.println(chop(p.toString()));
+			for(int i = 0; i < p.getChildren().length; i++)
+			{
+				displayPlanSubtype(out, p.getChild(i), indent+1);
+			}
+			ident(out, indent); out.println("}");
+		}
+		
+	}
+	
 	void displayPlan(Plan p) {
 		PDQController.this.planViewArea.getItems().clear();
 		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			new PrintStream(bos).println(p.toString());
-			for (String line : bos.toString().split("\n")) {
-				Text t = new Text(line);
-				PDQController.this.planViewArea.getItems().add(t);
-			}
+			PrintStream pbos = new PrintStream(bos);
+			displayPlanSubtype(pbos, p, 0);
+			PDQController.this.planViewArea.getItems().add(new Text(bos.toString()));
 		}
 	}
 
@@ -1315,7 +1399,6 @@ public class PDQController {
 		PDQController.this.settingsMaxIterationsTextField.setText(PDQController.nullToEmpty(p.getMaxIterations()));
 		PDQController.this.settingsQueryMatchIntervalTextField
 				.setText(PDQController.nullToEmpty(p.getQueryMatchInterval()));
-		// PDQController.this.settingsBlockingIntervalTextField.setText(PDQController.nullToEmpty(p.getBlockingInterval()));
 		PDQController.this.settingsPlannerTypeList.getSelectionModel().select(p.getPlannerType());
 		PDQController.this.settingsReasoningTypeList.getSelectionModel().select(p.getReasoningType());
 		PDQController.this.settingsCostTypeList.getSelectionModel().select(p.getCostType());
@@ -1579,7 +1662,6 @@ public class PDQController {
 					File proof2 = new File(planDir + "/" + makePrefix(q) + "0" + PLAN_FILENAME_SUFFIX);
 					File plan = new File(planDir + "/default" + PROOF_FILENAME_SUFFIX);
 					File plan2 = new File(planDir + "/" + makePrefix(q) + "0" + PROOF_FILENAME_SUFFIX);
-					System.out.println(settings.getAbsolutePath());
 					try
 					{
 						Files.copy(settings.toPath(), settings2.toPath());
