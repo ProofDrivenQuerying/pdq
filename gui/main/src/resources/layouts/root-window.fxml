@@ -224,11 +224,7 @@
                       <panes>
                         <TitledPane fx:id="x3" animated="false" text="%application.plan.plan">
                           <content>
-                            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                              <children>
-                                <ListView fx:id="planViewArea" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              </children>
-                            </AnchorPane>
+                            <TextArea fx:id="planViewArea" prefHeight="200.0" prefWidth="200.0"  wrapText="false" />
                           </content>
                         </TitledPane>
                         <TitledPane fx:id="x4" animated="false" text="%application.plan.proof">

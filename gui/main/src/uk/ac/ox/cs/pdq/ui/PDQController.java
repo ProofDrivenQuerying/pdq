@@ -239,7 +239,7 @@ public class PDQController {
 
 	/** The plan view area. */
 	@FXML
-	private ListView<Text> planViewArea;
+	private TextArea planViewArea;
 
 	/** The proof view area. */
 	@FXML
@@ -1366,12 +1366,12 @@ public class PDQController {
 	}
 	
 	void displayPlan(Plan p) {
-		PDQController.this.planViewArea.getItems().clear();
+		PDQController.this.planViewArea.clear();
 		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			PrintStream pbos = new PrintStream(bos);
 			displayPlanSubtype(pbos, p, 0);
-			PDQController.this.planViewArea.getItems().add(new Text(bos.toString()));
+			PDQController.this.planViewArea.appendText(bos.toString());
 		}
 	}
 
