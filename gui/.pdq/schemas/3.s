@@ -8,13 +8,13 @@
          <relation name="S">
             <attribute name="x" type="java.lang.String"/>
             <attribute name="y" type="java.lang.String"/>
-               <access-method name="S_limited"/>
+               <access-method name="S_free"/>
         </relation>
         <relation name="T">
             <attribute name="y" type="java.lang.String"/>
             <attribute name="z" type="java.lang.String"/>
             <attribute name="w" type="java.lang.String"/>
-               <access-method name="T_limited"/>
+               <access-method name="T_free"/>
         </relation>
      </relations>
     <dependencies>
