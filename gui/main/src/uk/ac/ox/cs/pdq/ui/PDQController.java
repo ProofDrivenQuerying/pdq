@@ -26,8 +26,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
@@ -77,18 +75,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
-import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.algebra.RenameTerm;
-import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
-import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -104,11 +96,11 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
+import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
 import uk.ac.ox.cs.pdq.ui.io.ObservableQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaReader;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryReader;
@@ -1304,65 +1296,14 @@ public class PDQController {
 		}
 		return output;
 	}
-	
 	static public void displayPlanSubtype(PrintStream out, Plan p, int indent)
 	{
-		if(p instanceof AccessTerm)
-		{
-			ident(out, indent); out.println("Access");
-			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
-			for(int i = 0; i < p.getChildren().length; i++)
-			{
-				displayPlanSubtype(out, p.getChild(i), indent+1);
-			}
-			ident(out, indent); out.println("}");
+		try {
+			uk.ac.ox.cs.pdq.io.PlanPrinter.printPlanToText(out, (RelationalTerm) p);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		if(p instanceof CartesianProductTerm)
-		{
-			ident(out, indent); out.println("Join");
-			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
-			for(int i = 0; i < p.getChildren().length; i++)
-			{
-				displayPlanSubtype(out, p.getChild(i), indent+1);
-			}
-			ident(out, indent); out.println("}");
-		}
-		if(p instanceof ProjectionTerm)
-		{
-			ident(out, indent); out.println("Project");
-			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
-			for(int i = 0; i < p.getChildren().length; i++)
-			{
-				displayPlanSubtype(out, p.getChild(i), indent+1);
-			}
-			ident(out, indent); out.println("}");
-		}
-		if(p instanceof RenameTerm)
-		{
-			ident(out, indent); out.println("Rename");
-			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
-			for(int i = 0; i < p.getChildren().length; i++)
-			{
-				displayPlanSubtype(out, p.getChild(i), indent+1);
-			}
-			ident(out, indent); out.println("}");
-		}
-		if(p instanceof SelectionTerm)
-		{
-			ident(out, indent); out.println("Select");
-			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
-			for(int i = 0; i < p.getChildren().length; i++)
-			{
-				displayPlanSubtype(out, p.getChild(i), indent+1);
-			}
-			ident(out, indent); out.println("}");
-		}
-		
 	}
 	
 	void displayPlan(Plan p) {
