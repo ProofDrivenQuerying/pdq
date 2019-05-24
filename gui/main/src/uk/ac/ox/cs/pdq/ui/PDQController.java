@@ -1637,6 +1637,7 @@ public class PDQController {
 
 						File proof = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROOF_FILENAME_SUFFIX));
 						if (proof.exists()) {
+							System.out.println("Reading proof file: " + proof.getAbsolutePath());
 							try (FileInputStream prIn = new FileInputStream(proof.getAbsolutePath())) {
 								p.setProofFile(proof);
 								ProofReader proofReader = new ProofReader(schema);
