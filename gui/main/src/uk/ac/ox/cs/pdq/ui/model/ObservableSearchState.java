@@ -89,45 +89,30 @@ public class ObservableSearchState {
 	}
 	
 	/**
-	 * Gets the plan.
-	 *
-	 * @return the plan
 	 */
 	public Plan getPlan() {
 		return this.plan.get();
 	}
 	
 	/**
-	 * Gets the proof.
-	 *
-	 * @return the proof
 	 */
 	public Proof getProof() {
 		return this.proof.get();
 	}
 
 	/**
-	 * Gets the time.
-	 *
-	 * @return the time
 	 */
 	public Number getTime() {
 		return this.time.get();
 	}
 
 	/**
-	 * Gets the max iterations.
-	 *
-	 * @return the max iterations
 	 */
 	public Integer getMaxIterations() {
 		return this.iterations.get();
 	}
 
 	/**
-	 * Gets the cost.
-	 *
-	 * @return the cost
 	 */
 	public Number getCost() {
 		return this.cost.get();

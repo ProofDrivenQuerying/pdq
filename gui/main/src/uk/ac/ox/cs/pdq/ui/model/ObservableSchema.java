@@ -14,20 +14,20 @@ import uk.ac.ox.cs.pdq.ui.UserInterfaceException;
 import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaWriter;
 // TODO: Auto-generated Javadoc
 /**
- * The Class ObservableSchema.
+ * 
  */
 public class ObservableSchema {
 
-	/** The name. */
+	/**  */
 	private final SimpleStringProperty name =  new SimpleStringProperty(this, "name");
 	
-	/** The description. */
+	/** */
 	private final SimpleStringProperty description =  new SimpleStringProperty(this, "description");
 	
-	/** The file. */
+	/** */
 	private final SimpleObjectProperty<File> file =  new SimpleObjectProperty<>(this, "file");
 	
-	/** The schema */
+	/** */
 	private final SimpleObjectProperty<Schema> schema =  new SimpleObjectProperty<>(this, "schema");
 	
 	private final SimpleObjectProperty<Service[]> services =  new SimpleObjectProperty<>(this, "services");
@@ -60,72 +60,49 @@ public class ObservableSchema {
 	}
 
 	/**
-	 * Name property.
-	 *
-	 * @return the observable string value
 	 */
 	public ObservableStringValue nameProperty() {
 		return this.name;
 	}
 
 	/**
-	 * Description property.
 	 *
-	 * @return the observable string value
 	 */
 	public ObservableStringValue descriptionProperty() {
 		return this.description;
 	}
 
 	/**
-	 * File property.
-	 *
-	 * @return the observable value
 	 */
 	public ObservableValue<File> fileProperty() {
 		return this.file;
 	}
 
 	/**
-	 * File property.
-	 *
-	 * @return the observable value
 	 */
 	public ObservableValue<Schema> schemaProperty() {
 		return this.schema;
 	}
 
 	/**
-	 * Gets the name.
-	 *
-	 * @return the name
 	 */
 	public String getName() {
 		return this.name.getValueSafe();
 	}
 
 	/**
-	 * Gets the description.
-	 *
-	 * @return the description
 	 */
 	public String getDescription() {
 		return this.description.getValueSafe();
 	}
 
 	/**
-	 * Gets the file.
-	 *
-	 * @return the file
 	 */
 	public File getFile() {
 		return this.file.get();
 	}
 
 	/**
-	 * Gets the schema.
-	 *
-	 * @return the schema
 	 */
 	public Schema getSchema()
 	{
@@ -174,7 +151,6 @@ public class ObservableSchema {
 		this.schema.set(schema);
 	}
 /**
-	 * Destroy.
 	 */
 	public void destroy() {
 		if (this.file.isNotNull().get()) {
@@ -183,7 +159,6 @@ public class ObservableSchema {
 	}
 
 	/**
-	 * Store.
 	 */
 	public void store() {
 		if (this.file.isNotNull().get()) {

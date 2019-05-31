@@ -5,14 +5,14 @@ import uk.ac.ox.cs.pdq.fol.TGD;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class ObservableDependency.
+ * 
  */
 public class ObservableDependency extends TGD {
 
-	/** The Constant MAX_LENGTH. */
+	/** */
 	private static final int MAX_LENGTH = 30;
 	
-	/** The dependency. */
+	/**  */
 	private Dependency dependency;
 	
 	/**

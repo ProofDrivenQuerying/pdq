@@ -17,16 +17,16 @@ import uk.ac.ox.cs.pdq.util.Types;
  */
 public class ObservableAttribute {
 	
-	/** The name. */
+	/** */
 	private final SimpleStringProperty name =  new SimpleStringProperty(this, "name");
 	
 	/** The relation attribute name. */
 	private final SimpleStringProperty relationName =  new SimpleStringProperty(this, "relationName");
 	
-	/** The type. */
+	/** The type of the attribute. */
 	private final SimpleObjectProperty<Type> type =  new SimpleObjectProperty<>(this, "type");
 	
-	/** The display type. */
+	/** The display type of the attribute. */
 	private final SimpleStringProperty displayType =  new SimpleStringProperty(this, "displayType");
 	
 	/**
@@ -68,27 +68,20 @@ public class ObservableAttribute {
 	}
 	
 	/**
-	 * Name property.
 	 *
-	 * @return the property
 	 */
 	public Property<String> nameProperty() {
 		return this.name;
 	}
 	
 	/**
-	 * Relation Name property.
-	 *
-	 * @return the property
 	 */
 	public Property<String> relationNameProperty() {
 		return this.relationName;
 	}
 	
 	/**
-	 * Type property.
-	 *
-	 * @return the property
+	 * 
 	 */
 	public Property<Type> typeProperty() {
 		return this.type;
@@ -104,36 +97,26 @@ public class ObservableAttribute {
 	}
 
 	/**
-	 * Gets the name.
-	 *
-	 * @return the name
+	 * 
 	 */
 	public String getName() {
 		return this.name.get();
 	}
 
 	/**
-	 * Gets the relation name.
-	 *
-	 * @return the relation name
 	 */
 	public String getRelationName() {
 		return this.relationName.get();
 	}
 
 	/**
-	 * Gets the type.
-	 *
-	 * @return the type
 	 */
 	public Type getType() {
 		return this.type.get();
 	}
 
 	/**
-	 * Gets the display type.
-	 *
-	 * @return the display type
+
 	 */
 	public String getDisplayType() {
 		return this.displayType.get();
