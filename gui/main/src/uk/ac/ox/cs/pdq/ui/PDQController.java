@@ -455,7 +455,7 @@ public class PDQController {
 	}
 
 	/**
-	 * Action that open's the planner window and start a new planning session.
+	 * Action that opens the planner window and start a new planning session.
 	 *
 	 * @param event the event
 	 */
@@ -485,7 +485,6 @@ public class PDQController {
 				pl.setTimeout(toDouble(this.settingsTimeoutTextField.getText()));
 				pl.setMaxIterations(toDouble(this.settingsMaxIterationsTextField.getText()));
 				pl.setQueryMatchInterval(toInteger(this.settingsQueryMatchIntervalTextField.getText()));
-				// pl.setBlockingInterval(toInteger(this.settingsBlockingIntervalTextField.getText()));
 				plannerController.setPlan(pl);
 				plannerController.setPlanQueue(this.dataQueue);
 				plannerController.setSchema(this.currentSchema.get());
@@ -587,7 +586,7 @@ public class PDQController {
 	}
 
 	/**
-	 * Action that open's either the relation or dependencies inspector window.
+	 * Action that opens either the relation or dependencies inspector window.
 	 *
 	 * @param event the event
 	 */
