@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <RelationalTermWithCost type="ProjectionTerm">
-    <projections name="fv_city1274707035" type="java.lang.String"/>
-    <projections name="fv_country1274707035" type="java.lang.String"/>
-    <projections name="fv_region1274707035" type="java.lang.String"/>
-    <projections name="fv_temperature1274707035" type="java.lang.Double"/>
+    <projections name="fv_city1129221117" type="java.lang.String"/>
+    <projections name="fv_country1129221117" type="java.lang.String"/>
+    <projections name="fv_region1129221117" type="java.lang.String"/>
+    <projections name="fv_temperature1129221117" type="java.lang.Double"/>
     <RelationalTerm type="DependentJoinTerm">
         <RelationalTerm type="DependentJoinTerm">
             <RelationalTerm type="DependentJoinTerm">
@@ -11,7 +11,7 @@
                     <RelationalTerm type="RenameTerm">
                         <renamings name="iso" type="java.lang.String"/>
                         <renamings name="FR" type="java.lang.String"/>
-                        <renamings name="v_homeCountry1274707035" type="java.lang.Integer"/>
+                        <renamings name="v_homeCountry1129221117" type="java.lang.Integer"/>
                         <RelationalTerm type="AccessTerm">
                             <accessMethod name="yh_geo_code" inputs="0,1"/>
                             <relation name="YahooPlaceCode">
@@ -24,11 +24,11 @@
                     </RelationalTerm>
                     <RelationalTerm type="RenameTerm">
                         <renamings name="descendants" type="java.lang.String"/>
-                        <renamings name="v_homeCountry1274707035" type="java.lang.Integer"/>
-                        <renamings name="v_myNextVacationSpot1274707035" type="java.lang.Integer"/>
-                        <renamings name="v_x91274707035" type="java.lang.String"/>
-                        <renamings name="v_x101274707035" type="java.lang.String"/>
-                        <renamings name="v_x111274707035" type="java.lang.String"/>
+                        <renamings name="v_homeCountry1129221117" type="java.lang.Integer"/>
+                        <renamings name="v_myNextVacationSpot1129221117" type="java.lang.Integer"/>
+                        <renamings name="v_x91129221117" type="java.lang.String"/>
+                        <renamings name="v_x101129221117" type="java.lang.String"/>
+                        <renamings name="v_x111129221117" type="java.lang.String"/>
                         <RelationalTerm type="AccessTerm">
                             <accessMethod name="yh_geo_rel" inputs="0,1"/>
                             <relation name="YahooPlaceRelationship">
@@ -50,27 +50,27 @@
                         </predicates>
                     </predicate>
                     <RelationalTerm type="RenameTerm">
-                        <renamings name="v_myNextVacationSpot1274707035" type="java.lang.Integer"/>
-                        <renamings name="fv_city1274707035" type="java.lang.String"/>
-                        <renamings name="fv_country1274707035" type="java.lang.String"/>
-                        <renamings name="fv_region1274707035" type="java.lang.String"/>
-                        <renamings name="v_distance_unit1274707035" type="java.lang.String"/>
-                        <renamings name="v_pressure_unit1274707035" type="java.lang.String"/>
-                        <renamings name="v_speed_unit1274707035" type="java.lang.String"/>
-                        <renamings name="v_temp_unit1274707035" type="java.lang.String"/>
-                        <renamings name="v_wind_chill1274707035" type="java.lang.Integer"/>
-                        <renamings name="v_wind_direction1274707035" type="java.lang.Integer"/>
-                        <renamings name="v_wind_speed1274707035" type="java.lang.String"/>
-                        <renamings name="v_humidity1274707035" type="java.lang.Double"/>
-                        <renamings name="v_pressure1274707035" type="java.lang.Double"/>
-                        <renamings name="v_rising1274707035" type="java.lang.Integer"/>
-                        <renamings name="v_visibility1274707035" type="java.lang.Double"/>
-                        <renamings name="v_sunrise1274707035" type="java.lang.String"/>
-                        <renamings name="v_sunset1274707035" type="java.lang.String"/>
-                        <renamings name="v_date1274707035" type="java.lang.String"/>
-                        <renamings name="fv_temperature1274707035" type="java.lang.Double"/>
+                        <renamings name="v_myNextVacationSpot1129221117" type="java.lang.Integer"/>
+                        <renamings name="fv_city1129221117" type="java.lang.String"/>
+                        <renamings name="fv_country1129221117" type="java.lang.String"/>
+                        <renamings name="fv_region1129221117" type="java.lang.String"/>
+                        <renamings name="v_distance_unit1129221117" type="java.lang.String"/>
+                        <renamings name="v_pressure_unit1129221117" type="java.lang.String"/>
+                        <renamings name="v_speed_unit1129221117" type="java.lang.String"/>
+                        <renamings name="v_temp_unit1129221117" type="java.lang.String"/>
+                        <renamings name="v_wind_chill1129221117" type="java.lang.Integer"/>
+                        <renamings name="v_wind_direction1129221117" type="java.lang.Integer"/>
+                        <renamings name="v_wind_speed1129221117" type="java.lang.String"/>
+                        <renamings name="v_humidity1129221117" type="java.lang.Double"/>
+                        <renamings name="v_pressure1129221117" type="java.lang.Double"/>
+                        <renamings name="v_rising1129221117" type="java.lang.Integer"/>
+                        <renamings name="v_visibility1129221117" type="java.lang.Double"/>
+                        <renamings name="v_sunrise1129221117" type="java.lang.String"/>
+                        <renamings name="v_sunset1129221117" type="java.lang.String"/>
+                        <renamings name="v_date1129221117" type="java.lang.String"/>
+                        <renamings name="fv_temperature1129221117" type="java.lang.Double"/>
                         <renamings name="Sunny" type="java.lang.String"/>
-                        <renamings name="v_code1274707035" type="java.lang.Integer"/>
+                        <renamings name="v_code1129221117" type="java.lang.Integer"/>
                         <RelationalTerm type="AccessTerm">
                             <accessMethod name="yh_wtr_woeid" inputs="0"/>
                             <relation name="YahooWeather">
@@ -102,7 +102,7 @@
                 </RelationalTerm>
             </RelationalTerm>
             <RelationalTerm type="RenameTerm">
-                <renamings name="v_homeCountry1274707035" type="java.lang.Integer"/>
+                <renamings name="v_homeCountry1129221117" type="java.lang.Integer"/>
                 <renamings name="k1" type="java.lang.String"/>
                 <renamings name="k2" type="java.lang.Integer"/>
                 <renamings name="k3" type="java.lang.String"/>
@@ -155,24 +155,24 @@
                 </predicates>
             </predicate>
             <RelationalTerm type="RenameTerm">
-                <renamings name="v_myNextVacationSpot1274707035" type="java.lang.Integer"/>
-                <renamings name="v_name1274707035" type="java.lang.String"/>
-                <renamings name="v_type1274707035" type="java.lang.Integer"/>
+                <renamings name="v_myNextVacationSpot1129221117" type="java.lang.Integer"/>
+                <renamings name="v_name1129221117" type="java.lang.String"/>
+                <renamings name="v_type1129221117" type="java.lang.Integer"/>
                 <renamings name="Point of Interest" type="java.lang.String"/>
-                <renamings name="v_countryName1274707035" type="java.lang.String"/>
-                <renamings name="v_admin11274707035" type="java.lang.String"/>
-                <renamings name="v_admin21274707035" type="java.lang.String"/>
-                <renamings name="v_admin31274707035" type="java.lang.String"/>
-                <renamings name="v_locality11274707035" type="java.lang.String"/>
-                <renamings name="v_locality21274707035" type="java.lang.String"/>
-                <renamings name="v_postal1274707035" type="java.lang.String"/>
-                <renamings name="v_latitude1274707035" type="java.lang.Double"/>
-                <renamings name="v_longitude1274707035" type="java.lang.Double"/>
-                <renamings name="v_bboxNorth1274707035" type="java.lang.Double"/>
-                <renamings name="v_bboxSouth1274707035" type="java.lang.Double"/>
-                <renamings name="v_bboxEast1274707035" type="java.lang.Double"/>
-                <renamings name="v_bboxWest1274707035" type="java.lang.Double"/>
-                <renamings name="v_timezone1274707035" type="java.lang.String"/>
+                <renamings name="v_countryName1129221117" type="java.lang.String"/>
+                <renamings name="v_admin11129221117" type="java.lang.String"/>
+                <renamings name="v_admin21129221117" type="java.lang.String"/>
+                <renamings name="v_admin31129221117" type="java.lang.String"/>
+                <renamings name="v_locality11129221117" type="java.lang.String"/>
+                <renamings name="v_locality21129221117" type="java.lang.String"/>
+                <renamings name="v_postal1129221117" type="java.lang.String"/>
+                <renamings name="v_latitude1129221117" type="java.lang.Double"/>
+                <renamings name="v_longitude1129221117" type="java.lang.Double"/>
+                <renamings name="v_bboxNorth1129221117" type="java.lang.Double"/>
+                <renamings name="v_bboxSouth1129221117" type="java.lang.Double"/>
+                <renamings name="v_bboxEast1129221117" type="java.lang.Double"/>
+                <renamings name="v_bboxWest1129221117" type="java.lang.Double"/>
+                <renamings name="v_timezone1129221117" type="java.lang.String"/>
                 <RelationalTerm type="AccessTerm">
                     <accessMethod name="yh_geo_woeid" inputs="0"/>
                     <relation name="YahooPlaces">
@@ -202,5 +202,5 @@
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="0.0" type="DoubleCost"/>
+    <cost value="4.0" type="DoubleCost"/>
 </RelationalTermWithCost>
