@@ -1759,7 +1759,7 @@ public class PDQController {
 					}
 				}
 			}
-			Atom atom2 = Atom.create(predicate, terms2);
+			Atom atom2 = Atom.create(predicate, terms); // MR: Set to terms or terms2 as required
 			atoms2[a] = atom2;
 		}
 	}
