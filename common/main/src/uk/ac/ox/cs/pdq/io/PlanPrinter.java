@@ -3,17 +3,22 @@ package uk.ac.ox.cs.pdq.io;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.base.Joiner;
+
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
+import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
+import uk.ac.ox.cs.pdq.db.Attribute;
 
 /**
  * Prints a picture of a plan for better readability, and opens it in explorer.
@@ -100,8 +105,8 @@ public class PlanPrinter {
 
 	private static String getLabelFor(RelationalTerm t) {
 		String ret = "label=\"" + t.getClass().getSimpleName() + "\n";
-		ret += "In :" + Arrays.asList(t.getInputAttributes()) + "\n";
-		ret += "Out:" + Arrays.asList(t.getOutputAttributes()) + "\n";
+//		ret += "In :" + Joiner.on(",\n").join(Arrays.asList(t.getInputAttributes())) + "\n";
+//		ret += "Out:" + Joiner.on(",\n").join(Arrays.asList(t.getOutputAttributes())) + "\n";
 		if (t instanceof SelectionTerm) {
 			ret += "SelectionCondition:" + ((SelectionTerm) t).getSelectionCondition() + "\"\n";
 			ret += "shape=polygon,sides=4,distortion=-.3\n";
@@ -110,7 +115,7 @@ public class PlanPrinter {
 			ret += "AccessMethod:" + ((AccessTerm) t).getAccessMethod() + "\n";
 			ret += "InputConstants:" + ((AccessTerm) t).getInputConstants() + "\"\n";
 		} else if (t instanceof RenameTerm) {
-			ret += "Renamings:" + Arrays.asList(((RenameTerm) t).getRenamings()) + "\"\n";
+			ret += /*"Renamings:" + Arrays.asList(((RenameTerm) t).getRenamings()) + */ "\"\n";
 			ret += "shape=polygon,sides=4\n";
 		} else if (t instanceof JoinTerm) {
 			ret += "Conditions:" + ((JoinTerm) t).getJoinConditions() + "\"\n";
@@ -125,4 +130,48 @@ public class PlanPrinter {
 		}
 		return ret;
 	}
+
+	public static void printPlanToText(OutputStream s, RelationalTerm p) throws IOException {
+		s.write(printPlanToString(p).getBytes());
+	}
+	public static String printPlanToString(RelationalTerm p) {
+		if (p instanceof RenameTerm) return printPlanToString(p.getChild(0));
+		if (p instanceof ProjectionTerm) return "Project[" + printAttributeList(((ProjectionTerm)p).getProjections()) + "] {"+printPlanToString(p.getChild(0)) + "}";
+		if (p instanceof SelectionTerm) 
+			return "Selection[" + ((SelectionTerm)p).getSelectionCondition().toString() + "]{" + printPlanToString(p.getChild(0)) + "}";
+		if (p instanceof AccessTerm) 
+			return "Access[" + ((AccessTerm)p).getRelation() + "(" + Joiner.on(',').join((((AccessTerm)p).getAccessMethod().getInputs())) + ")]";
+		if (p instanceof CartesianProductTerm) {
+			StringBuffer ret = new StringBuffer();
+			ret.append(p.getClass().getSimpleName()); 
+			if (p instanceof JoinTerm) {
+				ret.append('[');
+				ret.append(((JoinTerm) p).getJoinConditions().toString()); 
+				ret.append(']');
+			}
+			ret.append('{');
+			ret.append(printPlanToString(p.getChild(1))); 
+			ret.append(',');
+			ret.append(printPlanToString(p.getChild(0)));
+			ret.append('}');
+			return ret.toString();
+		}
+		return "?"+p.getClass().getSimpleName();
+	}
+	private static String printAttributeList(Attribute[] attributes) {
+		StringBuffer ret = new StringBuffer();
+		boolean first = true;
+		for (Attribute a:attributes) {
+			if (first) {
+				first = false;
+			} else {
+				ret.append(",");
+			}
+			ret.append(a.getName());
+		}
+		if (ret.length() > 15) return "...";
+		return ret.toString();
+	}
+	
+	
 }

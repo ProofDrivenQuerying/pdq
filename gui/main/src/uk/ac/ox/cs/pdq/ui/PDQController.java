@@ -77,18 +77,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.algebra.Plan;
-import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.algebra.RenameTerm;
-import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
-import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -104,11 +98,11 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
+import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
 import uk.ac.ox.cs.pdq.ui.io.ObservableQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaReader;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryReader;
@@ -463,7 +457,7 @@ public class PDQController {
 	}
 
 	/**
-	 * Action that open's the planner window and start a new planning session.
+	 * Action that opens the planner window and start a new planning session.
 	 *
 	 * @param event the event
 	 */
@@ -493,7 +487,6 @@ public class PDQController {
 				pl.setTimeout(toDouble(this.settingsTimeoutTextField.getText()));
 				pl.setMaxIterations(toDouble(this.settingsMaxIterationsTextField.getText()));
 				pl.setQueryMatchInterval(toInteger(this.settingsQueryMatchIntervalTextField.getText()));
-				// pl.setBlockingInterval(toInteger(this.settingsBlockingIntervalTextField.getText()));
 				plannerController.setPlan(pl);
 				plannerController.setPlanQueue(this.dataQueue);
 				plannerController.setSchema(this.currentSchema.get());
@@ -595,7 +588,7 @@ public class PDQController {
 	}
 
 	/**
-	 * Action that open's either the relation or dependencies inspector window.
+	 * Action that opens either the relation or dependencies inspector window.
 	 *
 	 * @param event the event
 	 */
@@ -1304,65 +1297,14 @@ public class PDQController {
 		}
 		return output;
 	}
-	
 	static public void displayPlanSubtype(PrintStream out, Plan p, int indent)
 	{
-		if(p instanceof AccessTerm)
-		{
-			ident(out, indent); out.println("Access");
-			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
-			for(int i = 0; i < p.getChildren().length; i++)
-			{
-				displayPlanSubtype(out, p.getChild(i), indent+1);
-			}
-			ident(out, indent); out.println("}");
+		try {
+			uk.ac.ox.cs.pdq.io.PlanPrinter.printPlanToText(out, (RelationalTerm) p);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		if(p instanceof CartesianProductTerm)
-		{
-			ident(out, indent); out.println("Join");
-			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
-			for(int i = 0; i < p.getChildren().length; i++)
-			{
-				displayPlanSubtype(out, p.getChild(i), indent+1);
-			}
-			ident(out, indent); out.println("}");
-		}
-		if(p instanceof ProjectionTerm)
-		{
-			ident(out, indent); out.println("Project");
-			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
-			for(int i = 0; i < p.getChildren().length; i++)
-			{
-				displayPlanSubtype(out, p.getChild(i), indent+1);
-			}
-			ident(out, indent); out.println("}");
-		}
-		if(p instanceof RenameTerm)
-		{
-			ident(out, indent); out.println("Rename");
-			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
-			for(int i = 0; i < p.getChildren().length; i++)
-			{
-				displayPlanSubtype(out, p.getChild(i), indent+1);
-			}
-			ident(out, indent); out.println("}");
-		}
-		if(p instanceof SelectionTerm)
-		{
-			ident(out, indent); out.println("Select");
-			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
-			for(int i = 0; i < p.getChildren().length; i++)
-			{
-				displayPlanSubtype(out, p.getChild(i), indent+1);
-			}
-			ident(out, indent); out.println("}");
-		}
-		
 	}
 	
 	void displayPlan(Plan p) {
@@ -1696,6 +1638,7 @@ public class PDQController {
 
 						File proof = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROOF_FILENAME_SUFFIX));
 						if (proof.exists()) {
+							System.out.println("Reading proof file: " + proof.getAbsolutePath());
 							try (FileInputStream prIn = new FileInputStream(proof.getAbsolutePath())) {
 								p.setProofFile(proof);
 								ProofReader proofReader = new ProofReader(schema);
