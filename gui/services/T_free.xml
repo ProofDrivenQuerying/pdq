@@ -1,7 +1,7 @@
 	<service
 		name="T"
 		protocol="REST"
-		url="http://clpc463:8080/webapp/servlets/servlet/T" 
+		url="http://pdq-webapp.cs.ox.ac.uk:8080/webapp/servlets/servlet/T" 
 		media-type="application/xml"
 		documentation=""
 		result-delimiter="country"
