@@ -78,5 +78,9 @@
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
+<<<<<<< HEAD
     <cost value="4.154853167389282E8" type="DoubleCost"/>
+=======
+    <cost value="0.0" type="DoubleCost"/>
+>>>>>>> branch 'master' of https://github.com/michaelbenedikt/pdq.git
 </RelationalTermWithCost>

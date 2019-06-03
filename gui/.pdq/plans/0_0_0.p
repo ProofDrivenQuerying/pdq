@@ -10,6 +10,7 @@
             </predicates>
         </predicate>
         <RelationalTerm type="RenameTerm">
+<<<<<<< HEAD
             <renamings name="v_activity_comment1325126510" type="java.lang.String"/>
             <renamings name="v_activity_id1325126510" type="java.lang.String"/>
             <renamings name="v_assay_chembl_id1325126510" type="java.lang.String"/>
@@ -38,6 +39,36 @@
             <renamings name="v_standard_value1325126510" type="java.lang.Double"/>
             <renamings name="v_target_chembl_id1325126510" type="java.lang.String"/>
             <renamings name="v_target_organism1325126510" type="java.lang.String"/>
+=======
+            <renamings name="v_activity_comment1147822269" type="java.lang.String"/>
+            <renamings name="v_activity_id1147822269" type="java.lang.String"/>
+            <renamings name="v_assay_chembl_id1147822269" type="java.lang.String"/>
+            <renamings name="v_assay_description1147822269" type="java.lang.String"/>
+            <renamings name="v_assay_type1147822269" type="java.lang.String"/>
+            <renamings name="v_bao_endpoint1147822269" type="java.lang.String"/>
+            <renamings name="v_bao_format1147822269" type="java.lang.String"/>
+            <renamings name="v_canonical_smiles1147822269" type="java.lang.String"/>
+            <renamings name="v_data_validity_comment1147822269" type="java.lang.String"/>
+            <renamings name="v_document_chembl_id1147822269" type="java.lang.String"/>
+            <renamings name="v_document_journal1147822269" type="java.lang.String"/>
+            <renamings name="v_document_year1147822269" type="java.lang.String"/>
+            <renamings name="v_molecule_chembl_id1147822269" type="java.lang.String"/>
+            <renamings name="v_pchembl_value1147822269" type="java.lang.Double"/>
+            <renamings name="v_potential_duplicate1147822269" type="java.lang.String"/>
+            <renamings name="v_published_relation1147822269" type="java.lang.String"/>
+            <renamings name="v_published_type1147822269" type="java.lang.String"/>
+            <renamings name="v_published_units1147822269" type="java.lang.String"/>
+            <renamings name="v_published_value1147822269" type="java.lang.String"/>
+            <renamings name="v_qudt_units1147822269" type="java.lang.String"/>
+            <renamings name="v_record_id1147822269" type="java.lang.String"/>
+            <renamings name="v_standard_flag1147822269" type="java.lang.Boolean"/>
+            <renamings name="v_standard_relation1147822269" type="java.lang.String"/>
+            <renamings name="v_standard_type1147822269" type="java.lang.String"/>
+            <renamings name="v_standard_units1147822269" type="java.lang.String"/>
+            <renamings name="v_standard_value1147822269" type="java.lang.Double"/>
+            <renamings name="v_target_chembl_id1147822269" type="java.lang.String"/>
+            <renamings name="v_target_organism1147822269" type="java.lang.String"/>
+>>>>>>> branch 'master' of https://github.com/michaelbenedikt/pdq.git
             <renamings name="0" type="java.lang.String"/>
             <renamings name="1" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
@@ -78,5 +109,9 @@
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
+<<<<<<< HEAD
     <cost value="4.154853167389282E8" type="DoubleCost"/>
+=======
+    <cost value="0.0" type="DoubleCost"/>
+>>>>>>> branch 'master' of https://github.com/michaelbenedikt/pdq.git
 </RelationalTermWithCost>

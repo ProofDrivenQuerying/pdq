@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
@@ -231,7 +233,7 @@ public class PDQController {
 
 	/** The plan view area. */
 	@FXML
-	private ListView<Text> planViewArea;
+	private TextArea planViewArea;
 
 	/** The proof view area. */
 	@FXML
@@ -1306,12 +1308,12 @@ public class PDQController {
 	}
 	
 	void displayPlan(Plan p) {
-		PDQController.this.planViewArea.getItems().clear();
+		PDQController.this.planViewArea.clear();
 		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			PrintStream pbos = new PrintStream(bos);
 			displayPlanSubtype(pbos, p, 0);
-			PDQController.this.planViewArea.getItems().add(new Text(bos.toString()));
+			PDQController.this.planViewArea.appendText(bos.toString());
 		}
 	}
 
@@ -1636,7 +1638,7 @@ public class PDQController {
 
 						File proof = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROOF_FILENAME_SUFFIX));
 						if (proof.exists()) {
-							System.out.println("Reading proof file: " + proof.getAbsolutePath());
+//							System.out.println("Reading proof file: " + proof.getAbsolutePath());
 							try (FileInputStream prIn = new FileInputStream(proof.getAbsolutePath())) {
 								p.setProofFile(proof);
 								ProofReader proofReader = new ProofReader(schema);

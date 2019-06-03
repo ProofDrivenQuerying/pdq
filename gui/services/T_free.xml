@@ -1,7 +1,7 @@
 	<service
 		name="T"
 		protocol="REST"
-		url="http://clpc463:8080/webapp/servlets/servlet/T" 
+		url="http://pdq-webapp.cs.ox.ac.uk:8080/webapp/servlets/servlet/T" 
 		media-type="application/xml"
 		documentation=""
 		result-delimiter="country"
@@ -9,7 +9,7 @@
 
 		<policy name="1000_items_per_page" />
 
-		<access-method type="FREE" 						name="T_limited" cost="1000.0" relation-name="T">
+		<access-method type="FREE" 						name="T_free" cost="1000.0" relation-name="T">
 			<attribute name="y"    			output="true" type="String"    	relation-attribute="y" path="y"/>
 			<attribute name="z"   		  			output="true" type="String"    	relation-attribute="z" path="z"/>
 			<attribute name="w"   		  			output="true" type="String"    	relation-attribute="w" path="w"/>
