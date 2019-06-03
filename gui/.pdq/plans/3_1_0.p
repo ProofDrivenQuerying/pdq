@@ -41,5 +41,5 @@
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="3.0" type="DoubleCost"/>
+    <cost value="0.0" type="DoubleCost"/>
 </RelationalTermWithCost>
