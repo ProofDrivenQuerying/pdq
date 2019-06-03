@@ -10,34 +10,34 @@
             </predicates>
         </predicate>
         <RelationalTerm type="RenameTerm">
-            <renamings name="v_activity_comment1825467669" type="java.lang.String"/>
-            <renamings name="v_activity_id1825467669" type="java.lang.String"/>
-            <renamings name="v_assay_chembl_id1825467669" type="java.lang.String"/>
-            <renamings name="v_assay_description1825467669" type="java.lang.String"/>
-            <renamings name="v_assay_type1825467669" type="java.lang.String"/>
-            <renamings name="v_bao_endpoint1825467669" type="java.lang.String"/>
-            <renamings name="v_bao_format1825467669" type="java.lang.String"/>
-            <renamings name="v_canonical_smiles1825467669" type="java.lang.String"/>
-            <renamings name="v_data_validity_comment1825467669" type="java.lang.String"/>
-            <renamings name="v_document_chembl_id1825467669" type="java.lang.String"/>
-            <renamings name="v_document_journal1825467669" type="java.lang.String"/>
-            <renamings name="v_document_year1825467669" type="java.lang.String"/>
-            <renamings name="v_molecule_chembl_id1825467669" type="java.lang.String"/>
-            <renamings name="v_pchembl_value1825467669" type="java.lang.Double"/>
-            <renamings name="v_potential_duplicate1825467669" type="java.lang.String"/>
-            <renamings name="v_published_relation1825467669" type="java.lang.String"/>
-            <renamings name="v_published_type1825467669" type="java.lang.String"/>
-            <renamings name="v_published_units1825467669" type="java.lang.String"/>
-            <renamings name="v_published_value1825467669" type="java.lang.String"/>
-            <renamings name="v_qudt_units1825467669" type="java.lang.String"/>
-            <renamings name="v_record_id1825467669" type="java.lang.String"/>
-            <renamings name="v_standard_flag1825467669" type="java.lang.Boolean"/>
-            <renamings name="v_standard_relation1825467669" type="java.lang.String"/>
-            <renamings name="v_standard_type1825467669" type="java.lang.String"/>
-            <renamings name="v_standard_units1825467669" type="java.lang.String"/>
-            <renamings name="v_standard_value1825467669" type="java.lang.Double"/>
-            <renamings name="v_target_chembl_id1825467669" type="java.lang.String"/>
-            <renamings name="v_target_organism1825467669" type="java.lang.String"/>
+            <renamings name="v_activity_comment1325126510" type="java.lang.String"/>
+            <renamings name="v_activity_id1325126510" type="java.lang.String"/>
+            <renamings name="v_assay_chembl_id1325126510" type="java.lang.String"/>
+            <renamings name="v_assay_description1325126510" type="java.lang.String"/>
+            <renamings name="v_assay_type1325126510" type="java.lang.String"/>
+            <renamings name="v_bao_endpoint1325126510" type="java.lang.String"/>
+            <renamings name="v_bao_format1325126510" type="java.lang.String"/>
+            <renamings name="v_canonical_smiles1325126510" type="java.lang.String"/>
+            <renamings name="v_data_validity_comment1325126510" type="java.lang.String"/>
+            <renamings name="v_document_chembl_id1325126510" type="java.lang.String"/>
+            <renamings name="v_document_journal1325126510" type="java.lang.String"/>
+            <renamings name="v_document_year1325126510" type="java.lang.String"/>
+            <renamings name="v_molecule_chembl_id1325126510" type="java.lang.String"/>
+            <renamings name="v_pchembl_value1325126510" type="java.lang.Double"/>
+            <renamings name="v_potential_duplicate1325126510" type="java.lang.String"/>
+            <renamings name="v_published_relation1325126510" type="java.lang.String"/>
+            <renamings name="v_published_type1325126510" type="java.lang.String"/>
+            <renamings name="v_published_units1325126510" type="java.lang.String"/>
+            <renamings name="v_published_value1325126510" type="java.lang.String"/>
+            <renamings name="v_qudt_units1325126510" type="java.lang.String"/>
+            <renamings name="v_record_id1325126510" type="java.lang.String"/>
+            <renamings name="v_standard_flag1325126510" type="java.lang.Boolean"/>
+            <renamings name="v_standard_relation1325126510" type="java.lang.String"/>
+            <renamings name="v_standard_type1325126510" type="java.lang.String"/>
+            <renamings name="v_standard_units1325126510" type="java.lang.String"/>
+            <renamings name="v_standard_value1325126510" type="java.lang.Double"/>
+            <renamings name="v_target_chembl_id1325126510" type="java.lang.String"/>
+            <renamings name="v_target_organism1325126510" type="java.lang.String"/>
             <renamings name="0" type="java.lang.String"/>
             <renamings name="1" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
@@ -78,5 +78,5 @@
             </RelationalTerm>
         </RelationalTerm>
     </RelationalTerm>
-    <cost value="1.0" type="DoubleCost"/>
+    <cost value="4.154853167389282E8" type="DoubleCost"/>
 </RelationalTermWithCost>
