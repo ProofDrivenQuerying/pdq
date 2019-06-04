@@ -1,0 +1,7 @@
+<<<<<<< HEAD
+ACCESSIBILITY AXIOM: R(x) → Accessible(x) & InferredAccessibleR(x)
+	GROUNDING: {x=v__01673351532}
+=======
+ACCESSIBILITY AXIOM: R(x) ? Accessible(x) & InferredAccessibleR(x)
+	GROUNDING: {x=v__0553224144}
+>>>>>>> branch 'master' of https://github.com/michaelbenedikt/pdq.git

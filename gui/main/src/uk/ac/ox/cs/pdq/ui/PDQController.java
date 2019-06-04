@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
@@ -231,7 +233,7 @@ public class PDQController {
 
 	/** The plan view area. */
 	@FXML
-	private ListView<Text> planViewArea;
+	private TextArea planViewArea;
 
 	/** The proof view area. */
 	@FXML
@@ -455,7 +457,7 @@ public class PDQController {
 	}
 
 	/**
-	 * Action that open's the planner window and start a new planning session.
+	 * Action that opens the planner window and start a new planning session.
 	 *
 	 * @param event the event
 	 */
@@ -485,7 +487,6 @@ public class PDQController {
 				pl.setTimeout(toDouble(this.settingsTimeoutTextField.getText()));
 				pl.setMaxIterations(toDouble(this.settingsMaxIterationsTextField.getText()));
 				pl.setQueryMatchInterval(toInteger(this.settingsQueryMatchIntervalTextField.getText()));
-				// pl.setBlockingInterval(toInteger(this.settingsBlockingIntervalTextField.getText()));
 				plannerController.setPlan(pl);
 				plannerController.setPlanQueue(this.dataQueue);
 				plannerController.setSchema(this.currentSchema.get());
@@ -587,7 +588,7 @@ public class PDQController {
 	}
 
 	/**
-	 * Action that open's either the relation or dependencies inspector window.
+	 * Action that opens either the relation or dependencies inspector window.
 	 *
 	 * @param event the event
 	 */
@@ -1307,12 +1308,12 @@ public class PDQController {
 	}
 	
 	void displayPlan(Plan p) {
-		PDQController.this.planViewArea.getItems().clear();
+		PDQController.this.planViewArea.clear();
 		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			PrintStream pbos = new PrintStream(bos);
 			displayPlanSubtype(pbos, p, 0);
-			PDQController.this.planViewArea.getItems().add(new Text(bos.toString()));
+			PDQController.this.planViewArea.appendText(bos.toString());
 		}
 	}
 
@@ -1637,7 +1638,7 @@ public class PDQController {
 
 						File proof = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROOF_FILENAME_SUFFIX));
 						if (proof.exists()) {
-							System.out.println("Reading proof file: " + proof.getAbsolutePath());
+//							System.out.println("Reading proof file: " + proof.getAbsolutePath());
 							try (FileInputStream prIn = new FileInputStream(proof.getAbsolutePath())) {
 								p.setProofFile(proof);
 								ProofReader proofReader = new ProofReader(schema);
@@ -1758,7 +1759,7 @@ public class PDQController {
 					}
 				}
 			}
-			Atom atom2 = Atom.create(predicate, terms2);
+			Atom atom2 = Atom.create(predicate, terms); // MR: Set to terms or terms2 as required
 			atoms2[a] = atom2;
 		}
 	}
