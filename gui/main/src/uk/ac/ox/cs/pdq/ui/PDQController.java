@@ -1258,9 +1258,9 @@ public class PDQController {
 	private final ChangeListener<ObservablePlan> currentPlanChanged = (
 			ObservableValue<? extends ObservablePlan> observable, ObservablePlan oldValue, ObservablePlan newValue) -> {
 		if (newValue != null) {
-			PDQController.this.savePlan(newValue);
-
 			Plan plan = newValue.getPlan();
+			if (plan != null)	PDQController.this.savePlan(newValue);
+			
 			PDQController.this.runRuntimeButton.setDisable(plan == null);
 			PDQController.this.setSettingsEditable(plan == null);
 			PDQController.this.displayPlan(plan);
