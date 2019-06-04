@@ -1419,6 +1419,8 @@ public class PDQController {
 	private void loadSchemas() {
 		File schemaDir = new File(this.workDirectory.getAbsolutePath() + '/' + SCHEMA_DIRECTORY);
 		for (File schemaFile : listFiles(schemaDir, "", SCHEMA_FILENAME_SUFFIX)) {
+			if (!schemaFile.exists() || !schemaFile.isDirectory())
+				continue;
 			ObservableSchemaReader schemaReader = new ObservableSchemaReader();
 			ObservableSchema s = schemaReader.read(schemaFile);
 			try {
