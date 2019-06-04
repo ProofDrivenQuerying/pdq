@@ -1596,27 +1596,46 @@ public class PDQController {
 					this.plans.put(Pair.of(s, q), ps);
 				}
 
-				if(listFiles(planDir, makePrefix(q), PLAN_FILENAME_SUFFIX).length == 0)
-				{
-					File settings = new File(planDir + "/default" + PROPERTIES_SUFFIX);
-					File settings2 = new File(planDir + "/" + makePrefix(q) + "0" + PROPERTIES_SUFFIX);
-					File proof = new File(planDir + "/default" + PLAN_FILENAME_SUFFIX);
-					File proof2 = new File(planDir + "/" + makePrefix(q) + "0" + PLAN_FILENAME_SUFFIX);
-					File plan = new File(planDir + "/default" + PROOF_FILENAME_SUFFIX);
-					File plan2 = new File(planDir + "/" + makePrefix(q) + "0" + PROOF_FILENAME_SUFFIX);
-					try
-					{
-						Files.copy(settings.toPath(), settings2.toPath());
-						Files.copy(proof.toPath(), proof2.toPath());
-						Files.copy(plan.toPath(), plan2.toPath());
-					}
-					catch(IOException e)
-					{
-					}
-				}
-				
 				// For all plan files in the planDir go to the CostIOManager
 				
+				if(listFiles(planDir, makePrefix(q), PLAN_FILENAME_SUFFIX).length == 0)
+				{
+					for (File planFile : listFiles(planDir, "default", PLAN_FILENAME_SUFFIX)) {
+					try {
+					File settings = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROPERTIES_SUFFIX));
+					if (!settings.exists()) {
+						log.warn("Plan '" + planFile + "' has no associated parameters. Skipping.");
+						continue;
+					}
+					Schema schema = s.getSchema();
+					RelationalTerm p1 = CostIOManager.readRelationalTermFromRelationaltermWithCost(planFile, schema);
+					PlannerParameters q1 = new PlannerParameters(settings);
+					CostParameters r1 = new CostParameters(settings);
+					ReasoningParameters s1 = new ReasoningParameters(settings);
+					ObservablePlan p = new ObservablePlan(p1, q1, r1, s1);
+					File planFile2 = new File(planDir + "/" + makePrefix(q) + "0" + PLAN_FILENAME_SUFFIX);
+					File settings2 = new File(planDir + "/" + makePrefix(q) + "0" + PROPERTIES_SUFFIX);
+					p.setPlanFile(planFile2);
+					p.setSettingsFile(settings2);
+
+					// Read the proof file
+
+					File proof = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROOF_FILENAME_SUFFIX));
+					if (proof.exists()) {
+//						System.out.println("Reading proof file: " + proof.getAbsolutePath());
+						try (FileInputStream prIn = new FileInputStream(proof.getAbsolutePath())) {
+							p.setProofFile(proof);
+							ProofReader proofReader = new ProofReader(schema);
+							p.setProof(proofReader.read(prIn));
+						}
+					}
+					ps.add(p);
+					} catch (Exception e) {
+						log.warn("IO exception caught file loading file '" + planFile + "'. " + e.getMessage());
+					}
+					}
+				}
+				else {
 				for (File planFile : listFiles(planDir, makePrefix(q), PLAN_FILENAME_SUFFIX)) {
 					try (FileInputStream in = new FileInputStream(planFile.getAbsolutePath())) {
 						File settings = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROPERTIES_SUFFIX));
@@ -1625,8 +1644,7 @@ public class PDQController {
 							continue;
 						}
 						Schema schema = s.getSchema();
-						RelationalTerm p1 = CostIOManager.readRelationalTermFromRelationaltermWithCost(planFile,
-								schema);
+						RelationalTerm p1 = CostIOManager.readRelationalTermFromRelationaltermWithCost(planFile, schema);
 						PlannerParameters q1 = new PlannerParameters(settings);
 						CostParameters r1 = new CostParameters(settings);
 						ReasoningParameters s1 = new ReasoningParameters(settings);
@@ -1650,6 +1668,7 @@ public class PDQController {
 						log.warn("IO exception caught file loading file '" + planFile + "'. " + e.getMessage());
 					}
 				}
+					}
 			}
 		}
 	}
