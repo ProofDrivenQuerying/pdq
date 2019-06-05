@@ -66,6 +66,9 @@ public class ObservableSchemaReader {
 	public ObservableSchema read(File file) {
 		try {
 			File schemaDir = new File(file.getAbsolutePath() + "d");
+			if (!schemaDir.exists())
+				schemaDir.mkdirs();
+			
 			ArrayList<Service> list = new ArrayList<>();
 			for(File serviceFile : listFiles(schemaDir, "", ".sr"))
 			{
