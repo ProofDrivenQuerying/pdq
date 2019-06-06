@@ -1,0 +1,21 @@
+	<service
+		name="R"
+		protocol="REST"
+		url="http://localhost:8080/webapp/servlets/servlet/m20" 
+		media-type="application/xml"
+		documentation=""
+		result-delimiter="country"
+		service-group="service-group-1">
+
+		<policy name="1000_items_per_page" />
+
+		<access-method type="FREE" name="m20" cost="1000.0" relation-name="supplier">
+	        <attribute name="s_suppkey" output="true" type="String" relation-attribute="s_suppkey" path="x"/>
+            <attribute name="s_name" output="true" type="String"    	relation-attribute="s_name" path="x"/>
+            <attribute name="s_address" output="true" type="String"    	relation-attribute="s_address" path="x"/>
+            <attribute name="s_nationkey" output="true" type="String"    	relation-attribute="s_nationkey" path="x"/>
+            <attribute name="s_phone" output="true" type="String"    	relation-attribute="s_phone" path="x"/>
+            <attribute name="s_acctbal" output="true" type="String"    	relation-attribute="s_acctbal" path="x"/>
+            <attribute name="s_comment" output="true" type="String"    	relation-attribute="s_comment" path="x"/>
+		</access-method>
+	</service>

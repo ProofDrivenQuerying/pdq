@@ -9,40 +9,7 @@
             <access-method name="m21" inputs="0"/>
             <access-method name="m13"/>
         </view>
-        <relation name="activityFree">
-            <attribute name="activity_comment" type="java.lang.String"/>
-            <attribute name="activity_id" type="java.lang.String"/>
-            <attribute name="assay_chembl_id" type="java.lang.String"/>
-            <attribute name="assay_description" type="java.lang.String"/>
-            <attribute name="assay_type" type="java.lang.String"/>
-            <attribute name="bao_endpoint" type="java.lang.String"/>
-            <attribute name="bao_format" type="java.lang.String"/>
-            <attribute name="canonical_smiles" type="java.lang.String"/>
-            <attribute name="data_validity_comment" type="java.lang.String"/>
-            <attribute name="document_chembl_id" type="java.lang.String"/>
-            <attribute name="document_journal" type="java.lang.String"/>
-            <attribute name="document_year" type="java.lang.String"/>
-            <attribute name="molecule_chembl_id" type="java.lang.String"/>
-            <attribute name="pchembl_value" type="java.lang.Double"/>
-            <attribute name="potential_duplicate" type="java.lang.String"/>
-            <attribute name="published_relation" type="java.lang.String"/>
-            <attribute name="published_type" type="java.lang.String"/>
-            <attribute name="published_units" type="java.lang.String"/>
-            <attribute name="published_value" type="java.lang.String"/>
-            <attribute name="qudt_units" type="java.lang.String"/>
-            <attribute name="record_id" type="java.lang.String"/>
-            <attribute name="standard_flag" type="java.lang.Boolean"/>
-            <attribute name="standard_relation" type="java.lang.String"/>
-            <attribute name="standard_type" type="java.lang.String"/>
-            <attribute name="standard_units" type="java.lang.String"/>
-            <attribute name="standard_value" type="java.lang.Double"/>
-            <attribute name="target_chembl_id" type="java.lang.String"/>
-            <attribute name="target_organism" type="java.lang.String"/>
-            <attribute name="target_pref_name" type="java.lang.String"/>
-            <attribute name="uo_units" type="java.lang.String"/>
-            <access-method name="chembl_activity_free"/>
-        </relation>
-      <relation name="lineitem">
+       <relation name="lineitem">
             <attribute name="l_orderkey" type="java.lang.Integer"/>
             <attribute name="l_partkey" type="java.lang.Integer"/>
             <attribute name="l_suppkey" type="java.lang.Integer"/>
@@ -134,6 +101,205 @@
         </relation>
     </relations>
     <dependencies>
+      <dependency type="TGD">
+            <body>
+                <atom name="lineitem">
+                    <variable name="_0"/>
+                    <variable name="_1"/>
+                    <variable name="_2"/>
+                    <variable name="_3"/>
+                    <variable name="_4"/>
+                    <variable name="_5"/>
+                    <variable name="_6"/>
+                    <variable name="_7"/>
+                    <variable name="_8"/>
+                    <variable name="_9"/>
+                    <variable name="_10"/>
+                    <variable name="_11"/>
+                    <variable name="_12"/>
+                    <variable name="_13"/>
+                    <variable name="_14"/>
+                    <variable name="_15"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="orders">
+                    <variable name="_0"/>
+                    <variable name="_17"/>
+                    <variable name="_18"/>
+                    <variable name="_19"/>
+                    <variable name="_20"/>
+                    <variable name="_21"/>
+                    <variable name="_22"/>
+                    <variable name="_23"/>
+                    <variable name="_24"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="lineitem">
+                    <variable name="_0"/>
+                    <variable name="_1"/>
+                    <variable name="_2"/>
+                    <variable name="_3"/>
+                    <variable name="_4"/>
+                    <variable name="_5"/>
+                    <variable name="_6"/>
+                    <variable name="_7"/>
+                    <variable name="_8"/>
+                    <variable name="_9"/>
+                    <variable name="_10"/>
+                    <variable name="_11"/>
+                    <variable name="_12"/>
+                    <variable name="_13"/>
+                    <variable name="_14"/>
+                    <variable name="_15"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="partsupp">
+                    <variable name="_1"/>
+                    <variable name="_2"/>
+                    <variable name="_18"/>
+                    <variable name="_19"/>
+                    <variable name="_20"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="partsupp">
+                    <variable name="_0"/>
+                    <variable name="_1"/>
+                    <variable name="_2"/>
+                    <variable name="_3"/>
+                    <variable name="_4"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="supplier">
+                    <variable name="_1"/>
+                    <variable name="_6"/>
+                    <variable name="_7"/>
+                    <variable name="_8"/>
+                    <variable name="_9"/>
+                    <variable name="_10"/>
+                    <variable name="_11"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="partsupp">
+                    <variable name="_0"/>
+                    <variable name="_1"/>
+                    <variable name="_2"/>
+                    <variable name="_3"/>
+                    <variable name="_4"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="part">
+                    <variable name="_0"/>
+                    <variable name="_6"/>
+                    <variable name="_7"/>
+                    <variable name="_8"/>
+                    <variable name="_9"/>
+                    <variable name="_10"/>
+                    <variable name="_11"/>
+                    <variable name="_12"/>
+                    <variable name="_13"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="nation">
+                    <variable name="_0"/>
+                    <variable name="_1"/>
+                    <variable name="_2"/>
+                    <variable name="_3"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="region">
+                    <variable name="_2"/>
+                    <variable name="_5"/>
+                    <variable name="_6"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="supplier">
+                    <variable name="_0"/>
+                    <variable name="_1"/>
+                    <variable name="_2"/>
+                    <variable name="_3"/>
+                    <variable name="_4"/>
+                    <variable name="_5"/>
+                    <variable name="_6"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="nation">
+                    <variable name="_3"/>
+                    <variable name="_8"/>
+                    <variable name="_9"/>
+                    <variable name="_10"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="orders">
+                    <variable name="_0"/>
+                    <variable name="_1"/>
+                    <variable name="_2"/>
+                    <variable name="_3"/>
+                    <variable name="_4"/>
+                    <variable name="_5"/>
+                    <variable name="_6"/>
+                    <variable name="_7"/>
+                    <variable name="_8"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="customer">
+                    <variable name="_1"/>
+                    <variable name="_10"/>
+                    <variable name="_11"/>
+                    <variable name="_12"/>
+                    <variable name="_13"/>
+                    <variable name="_14"/>
+                    <variable name="_15"/>
+                    <variable name="_16"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="customer">
+                    <variable name="_0"/>
+                    <variable name="_1"/>
+                    <variable name="_2"/>
+                    <variable name="_3"/>
+                    <variable name="_4"/>
+                    <variable name="_5"/>
+                    <variable name="_6"/>
+                    <variable name="_7"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="nation">
+                    <variable name="_3"/>
+                    <variable name="_9"/>
+                    <variable name="_10"/>
+                    <variable name="_11"/>
+                </atom>
+            </head>
+        </dependency>
           <dependency type="TGD">
             <body>
                 <atom name="region_nation">
