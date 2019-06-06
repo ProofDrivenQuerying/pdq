@@ -1,3 +1,37 @@
+create table Activity
+(
+   activity_comment varchar(20),
+   activity_id varchar(20),
+   assay_chembl_id varchar(20),
+   assay_description varchar(20),
+   assay_type varchar(20),
+   bao_endpoint varchar(20),
+   bao_format varchar(20),
+   canonical_smiles varchar(20),
+   data_validity_comment varchar(20),
+   document_chembl_id varchar(20),
+	    document_journal varchar(20),
+		document_year varchar(20),
+		molecule_chembl_id varchar(20),
+		pchembl_value varchar(20),
+		potential_duplicate varchar(20),
+		published_relation varchar(20),
+		published_type varchar(20),
+		published_units varchar(20),
+		published_value varchar(20),
+		qudt_units varchar(20),
+		record_id varchar(20),
+		standard_flag varchar(20),
+		standard_relation varchar(20),
+		standard_type varchar(20),
+		standard_units varchar(20),
+		standard_value varchar(20),
+		target_chembl_id varchar(20),
+		target_organism varchar(20),
+		target_pref_name varchar(20),
+		uo_units varchar(20)
+);
+insert into public.Activity values('1','2','3','4','5','6','7','8','9','10', '11','12','13','14','15','16','17','18','19','20', '21','22','23','24','25','26','27','28','29','30');
 create table public.nation (n_nationkey integer, n_name varchar(1024), n_regionkey integer, n_comment varchar(1024))
 insert into public.nation (n_nationkey, n_name, n_regionkey, n_comment) values(1, 'USA', 0, 'comment')
 insert into public.nation (n_nationkey, n_name, n_regionkey, n_comment) values(2, 'USSR', 1, 'comment')
