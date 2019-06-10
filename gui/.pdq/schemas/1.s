@@ -14,10 +14,10 @@
             <attribute name="l_partkey" type="java.lang.Integer"/>
             <attribute name="l_suppkey" type="java.lang.Integer"/>
             <attribute name="l_linenumber" type="java.lang.Integer"/>
-            <attribute name="l_quantity" type="java.math.BigDecimal"/>
-            <attribute name="l_extendedprice" type="java.math.BigDecimal"/>
-            <attribute name="l_discount" type="java.math.BigDecimal"/>
-            <attribute name="l_tax" type="java.math.BigDecimal"/>
+            <attribute name="l_quantity" type="java.lang.String"/>
+            <attribute name="l_extendedprice" type="java.lang.String"/>
+            <attribute name="l_discount" type="java.lang.String"/>
+            <attribute name="l_tax" type="java.lang.String"/>
             <attribute name="l_returnflag" type="java.lang.String"/>
             <attribute name="l_linestatus" type="java.lang.String"/>
             <attribute name="l_shipdate" type="java.sql.Date"/>
@@ -34,7 +34,7 @@
             <attribute name="ps_partkey" type="java.lang.Integer"/>
             <attribute name="ps_suppkey" type="java.lang.Integer"/>
             <attribute name="ps_availqty" type="java.lang.Integer"/>
-            <attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+            <attribute name="ps_supplycost" type="java.lang.String"/>
             <attribute name="ps_comment" type="java.lang.String"/>
             <access-method name="m4" inputs="0"/>
             <access-method name="m5" inputs="1"/>
@@ -55,7 +55,7 @@
             <attribute name="p_type" type="java.lang.String"/>
             <attribute name="p_size" type="java.lang.Integer"/>
             <attribute name="p_container" type="java.lang.String"/>
-            <attribute name="p_retailprice" type="java.math.BigDecimal"/>
+            <attribute name="p_retailprice" type="java.lang.String"/>
             <attribute name="p_comment" type="java.lang.String"/>
             <access-method name="m2"/>
         </relation>
@@ -65,7 +65,7 @@
             <attribute name="s_address" type="java.lang.String"/>
             <attribute name="s_nationkey" type="java.lang.Integer"/>
             <attribute name="s_phone" type="java.lang.String"/>
-            <attribute name="s_acctbal" type="java.math.BigDecimal"/>
+            <attribute name="s_acctbal" type="java.lang.String"/>
             <attribute name="s_comment" type="java.lang.String"/>
             <access-method name="m3" inputs="3"/>
             <access-method name="m20"/>
@@ -74,7 +74,7 @@
             <attribute name="o_orderkey" type="java.lang.Integer"/>
             <attribute name="o_custkey" type="java.lang.Integer"/>
             <attribute name="o_orderstatus" type="java.lang.String"/>
-            <attribute name="o_totalprice" type="java.math.BigDecimal"/>
+            <attribute name="o_totalprice" type="java.lang.String"/>
             <attribute name="o_orderdate" type="java.sql.Date"/>
             <attribute name="o_orderpriority" type="java.lang.String"/>
             <attribute name="o_clerk" type="java.lang.String"/>
@@ -94,7 +94,7 @@
             <attribute name="c_address" type="java.lang.String"/>
             <attribute name="c_nationkey" type="java.lang.Integer"/>
             <attribute name="c_phone" type="java.lang.String"/>
-            <attribute name="c_acctbal" type="java.math.BigDecimal"/>
+            <attribute name="c_acctbal" type="java.lang.String"/>
             <attribute name="c_mktsegment" type="java.lang.String"/>
             <attribute name="c_comment" type="java.lang.String"/>
             <access-method name="m1" inputs="3"/>
