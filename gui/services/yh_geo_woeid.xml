@@ -1,0 +1,33 @@
+	<service
+		name="yh_geo_woeid"
+		protocol="REST"
+		url="http://localhost:8080/webapp/servlets/servlet/yh_geo_woeid" 
+		media-type="application/xml"
+		documentation=""
+		result-delimiter="country"
+		service-group="service-group-1">
+
+		<policy name="1000_items_per_page" />
+
+		<access-method type="LIMITED" 						name="yh_geo_woeid" cost="1000.0" relation-name="YahooPlaces">
+	  	<attribute name="woeid"    input="true" output="true" type="Integer"   relation-attribute="woeid"     path="woeid"/>
+		<attribute name="name"     output="true" type="String"     relation-attribute="name"  path="name"/>
+		<attribute name="type"     output="true" type="Integer"    relation-attribute="type"      path="type"/>
+
+		<attribute name="placeTypeName" output="true" type="String" relation-attribute="placeTypeName" path="placeTypeName"/>
+		<attribute name="country"       output="true" type="String" relation-attribute="country" path="country"/>
+		<attribute name="admin1"        output="true" type="String" relation-attribute="admin1" path="admin1"/>
+		<attribute name="admin2"        output="true" type="String" relation-attribute="admin2" path="admin2"/>
+		<attribute name="admin3"        output="true" type="String" relation-attribute="admin3" path="admin3"/>
+		<attribute name="locality1"     output="true" type="String" relation-attribute="locality1" path="locality1"/>
+		<attribute name="locality2"     output="true" type="String" relation-attribute="locality2" path="locality2"/>
+		<attribute name="postal"        output="true" type="String" relation-attribute="postal" path="postal"/>
+		<attribute name="centroid_lat"  output="true" type="Double" relation-attribute="centroid_lat" path="centroid/latitude"/>
+		<attribute name="centroid_lng"  output="true" type="Double" relation-attribute="centroid_lng" path="centroid/longitude"/>
+		<attribute name="bboxNorth"     output="true" type="Double" relation-attribute="bboxNorth" path="northEast/latitude"/>
+		<attribute name="bboxSouth"     output="true" type="Double" relation-attribute="bboxSouth" path="southWest/latitude"/>
+		<attribute name="bboxEast"      output="true" type="Double" relation-attribute="bboxEast" path="northEast/longitude"/>
+		<attribute name="bboxWest"      output="true" type="Double" relation-attribute="bboxWest" path="southWest/longitude"/>
+		<attribute name="timezone"      output="true" type="String" relation-attribute="timezone" path="timezone"/>
+  	</access-method>
+	</service>

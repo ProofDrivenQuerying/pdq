@@ -32,6 +32,23 @@ create table Activity
 		uo_units varchar(20)
 );
 insert into public.Activity values('1','2','3','4','5','6','7','8','9','10', '11','12','13','14','15','16','17','18','19','20', '21','22','23','24','25','26','27','28','29','30');
+create table public.YahooPlaceCode
+(
+ namespace varchar(20),
+ code varchar(20),
+ woeid varchar(20)
+);
+insert into public.YahooPlaceCode values('1','2','3');
+create table public.YahooPlaceRelationship
+(
+ relation varchar(20),
+ of varchar(20),
+ woeid varchar(20),
+ placeTypeName varchar(20),
+ name varchar(20),
+ uri varchar(20)
+);
+insert into public.YahooPlaceCode values('1','2','3');
 create table public.supplier
 (
  s_suppkey varchar(20),
