@@ -1,10 +1,10 @@
 	<service
-		name="ActivityFree"
+		name="activityFree"
 		protocol="REST"
-		url="http://pdq-webapp.cs.ox.ac.uk/webapp/Servlets/Servlet/activityFree" 
+		url="http://pdq-webapp.cs.ox.ac.uk:8080/webapp/servlets/servlet/activityFree" 
 		media-type="application/xml"
 		documentation=""
-		result-delimiter="activities"
+		result-delimiter="activitiesFree"
 		service-group="service-group-1">
 
 		<policy name="1000_items_per_page" />
@@ -20,7 +20,7 @@
 		<attribute name="canonical_smiles"        		output="true" type="String" 	relation-attribute="canonical_smiles" path="canonical_smiles"/>
 		<attribute name="data_validity_comment"        	output="true" type="String" 	relation-attribute="data_validity_comment" path="data_validity_comment"/>
 		<attribute name="document_chembl_id"     		output="true" type="String" 	relation-attribute="document_chembl_id" path="document_chembl_id"/>
-		<attribute name="document_journal"     			output="true" type="String" 	relation-attribute="document_journal" path="document_journal"/>
+	    <attribute name="document_journal"     			output="true" type="String" 	relation-attribute="document_journal" path="document_journal"/>
 		<attribute name="document_year"     			output="true" type="String" 	relation-attribute="document_year" path="document_year"/> 
 		<attribute name="molecule_chembl_id"        	output="true" type="String" 	relation-attribute="molecule_chembl_id" path="molecule_chembl_id"/>
 		<attribute name="pchembl_value"  				output="true" type="Double" 	relation-attribute="pchembl_value" path="pchembl_value"/>

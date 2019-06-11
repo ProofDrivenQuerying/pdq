@@ -77,6 +77,33 @@
         <url-pattern>/servlets/servlet/CountryFree/*</url-pattern>
     </servlet-mapping>
  
+      <servlet>
+        <servlet-name>m5</servlet-name>
+        <servlet-class>m5</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>m5</servlet-name>
+        <url-pattern>/servlets/servlet/m5/*</url-pattern>
+    </servlet-mapping>
+ 
+      <servlet>
+        <servlet-name>m13</servlet-name>
+        <servlet-class>m13</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>m13</servlet-name>
+        <url-pattern>/servlets/servlet/m13/*</url-pattern>
+    </servlet-mapping>
+ 
+      <servlet>
+        <servlet-name>m20</servlet-name>
+        <servlet-class>m20</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>m20</servlet-name>
+        <url-pattern>/servlets/servlet/m20/*</url-pattern>
+    </servlet-mapping>
+ 
      <servlet>
         <servlet-name>R</servlet-name>
         <servlet-class>R</servlet-class>
@@ -102,6 +129,15 @@
      <servlet-mapping>
         <servlet-name>T</servlet-name>
         <url-pattern>/servlets/servlet/T/*</url-pattern>
+    </servlet-mapping>
+ 
+     <servlet>
+        <servlet-name>activityFree</servlet-name>
+        <servlet-class>activityFree</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>activityFree</servlet-name>
+        <url-pattern>/servlets/servlet/activityFree/*</url-pattern>
     </servlet-mapping>
  
     <security-constraint>

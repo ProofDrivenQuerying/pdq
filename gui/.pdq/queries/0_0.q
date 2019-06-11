@@ -30,10 +30,11 @@
 <variable name="standard_value"/>
 <variable name="target_chembl_id"/>
 <variable name="target_organism"/>
-<constant value="0"/>
-<constant value="1"/>
+<constant value="29"/>
+<constant value="30"/>
 </atom>
 </body>
 <head name="Q">
+<variable name="activity_comment"/>
 </head>
 </query>

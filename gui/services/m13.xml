@@ -1,0 +1,18 @@
+	<service
+		name="m13"
+		protocol="REST"
+		url="http://localhost:8080/webapp/servlets/servlet/m13" 
+		media-type="application/xml"
+		documentation=""
+		result-delimiter="country"
+		service-group="service-group-1">
+
+		<policy name="1000_items_per_page" />
+
+		<access-method type="FREE" name="m13" cost="1000.0" relation-name="region_nation">
+           <attribute name="nation_key" output="true" type="Integer" relation-attribute="nation_key" path="nation_key"/>
+            <attribute name="nation_name" type="String" output="true" relation-attribute="nation_name" path="nation_name"/>
+            <attribute name="region_key" type="Integer" output="true"  relation-attribute="region_key" path="region_key"/>
+            <attribute name="region_name" type="String" output="true" relation-attribute="region_name" path="region_name"/>
+		</access-method>
+	</service>
