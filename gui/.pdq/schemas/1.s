@@ -6,7 +6,6 @@
             <attribute name="nation_name" type="java.lang.String"/>
             <attribute name="region_key" type="java.lang.Integer"/>
             <attribute name="region_name" type="java.lang.String"/>
-            <access-method name="m21" inputs="0"/>
             <access-method name="m13"/>
         </view>
        <relation name="lineitem">
