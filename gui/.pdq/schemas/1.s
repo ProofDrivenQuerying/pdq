@@ -66,7 +66,7 @@
             <attribute name="s_phone" type="java.lang.String"/>
             <attribute name="s_acctbal" type="java.lang.String"/>
             <attribute name="s_comment" type="java.lang.String"/>
-            <access-method name="m3" inputs="3"/>
+     
             <access-method name="m20"/>
         </relation>
         <relation name="orders">
