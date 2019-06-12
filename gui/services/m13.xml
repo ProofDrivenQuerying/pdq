@@ -1,7 +1,7 @@
 	<service
 		name="m13"
 		protocol="REST"
-		url="http://localhost:8080/webapp/servlets/servlet/m13" 
+		url="http://pdq-webapp.cs.ox.ac.uk:8080/webapp/servlets/servlet/m13" 
 		media-type="application/xml"
 		documentation=""
 		result-delimiter="country"

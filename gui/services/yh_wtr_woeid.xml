@@ -1,0 +1,41 @@
+	<service
+		name="yh_wtr_woeid"
+		protocol="REST"
+		url="http://localhost:8080/webapp/servlets/servlet/yh_wtr_woeid" 
+		media-type="application/xml"
+		documentation=""
+		result-delimiter="country"
+		service-group="service-group-1">
+
+		<policy name="1000_items_per_page" />
+
+		<access-method type="LIMITED" 						name="yh_wtr_woeid" cost="1000.0" relation-name="YahooWeather">
+	    <attribute name="woeid" input="true" output="true" type="Integer" relation-attribute="woeid" path="woeid" />
+
+		<attribute name="city"           output="true" type="String"  relation-attribute="city" path="location/city"/>
+		<attribute name="country"        output="true" type="String"  relation-attribute="country" path="location/country"/>
+		<attribute name="region"         output="true" type="String"  relation-attribute="region" path="location/region"/>
+
+		<attribute name="distance_unit"  output="true" type="String"  relation-attribute="distance_unit" path="units/distance"/>
+		<attribute name="pressure_unit"  output="true" type="String"  relation-attribute="pressure_unit" path="units/pressure"/>
+		<attribute name="speed_unit"     output="true" type="String"  relation-attribute="speed_unit" path="units/speed"/>
+		<attribute name="temp_unit"      output="true" type="String"  relation-attribute="temp_unit" path="units/temperature"/>
+
+		<attribute name="wind_chill"     output="true" type="Integer" relation-attribute="wind_chill" path="wind/chill"/>
+		<attribute name="wind_direction" output="true" type="Integer" relation-attribute="wind_direction" path="wind/direction"/>
+		<attribute name="wind_speed"     output="true" type="String"  relation-attribute="wind_speed" path="wind/speed"/>
+
+		<attribute name="humidity"       output="true" type="Double"  relation-attribute="humidity" path="atmosphere/humidity"/>
+		<attribute name="pressure"       output="true" type="Double"  relation-attribute="pressure" path="atmosphere/pressure"/>
+		<attribute name="rising"         output="true" type="Integer" relation-attribute="rising" path="atmosphere/rising"/>
+		<attribute name="visibility"     output="true" type="Double"  relation-attribute="visibility" path="atmosphere/visibility"/>
+
+		<attribute name="sunrise"        output="true" type="String"  relation-attribute="sunrise" path="astronomy/sunrise"/>
+		<attribute name="sunset"         output="true" type="String"  relation-attribute="sunset" path="astronomy/sunset"/>
+
+		<attribute name="date"           output="true" type="String"  relation-attribute="date" path="item/condition/date"/>
+		<attribute name="temperature"    output="true" type="Double"  relation-attribute="temperature" path="item/condition/temp"/>
+		<attribute name="condition"      output="true" type="String"  relation-attribute="condition" path="item/condition/text"/>
+		<attribute name="code"           output="true" type="Integer" relation-attribute="code" path="item/condition/code"/>
+	</access-method>
+	</service>

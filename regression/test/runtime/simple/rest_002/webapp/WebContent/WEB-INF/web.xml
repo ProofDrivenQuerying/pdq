@@ -104,6 +104,24 @@
         <url-pattern>/servlets/servlet/m20/*</url-pattern>
     </servlet-mapping>
  
+    <servlet>
+        <servlet-name>yh_geo_code</servlet-name>
+        <servlet-class>yh_geo_code</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>yh_geo_code</servlet-name>
+        <url-pattern>/servlets/servlet/yh_geo_code/*</url-pattern>
+    </servlet-mapping>
+ 
+    <servlet>
+        <servlet-name>yh_geo_rel</servlet-name>
+        <servlet-class>yh_geo_rel</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>yh_geo_rel</servlet-name>
+        <url-pattern>/servlets/servlet/yh_geo_rel/*</url-pattern>
+    </servlet-mapping>
+ 
      <servlet>
         <servlet-name>R</servlet-name>
         <servlet-class>R</servlet-class>
