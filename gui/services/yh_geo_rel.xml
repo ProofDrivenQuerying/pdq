@@ -1,7 +1,7 @@
 	<service
 		name="yh_geo_rel"
 		protocol="REST"
-		url="http://localhost:8080/webapp/servlets/servlet/yh_geo_rel" 
+		url="http://pdq-webapp.cs.ox.ac.uk:8080/webapp/servlets/servlet/yh_geo_rel" 
 		media-type="application/xml"
 		documentation=""
 		result-delimiter="country"

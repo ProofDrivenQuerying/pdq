@@ -1,3 +1,5 @@
+// ActivityFree
+
 create table Activity
 (
    activity_comment varchar(20),
@@ -32,6 +34,9 @@ create table Activity
 		uo_units varchar(20)
 );
 insert into public.Activity values('1','2','3','4','5','6','7','8','9','10', '11','12','13','14','15','16','17','18','19','20', '21','22','23','24','25','26','27','28','29','30');
+
+// Yahoo Places
+
 create table public.YahooPlaceCode
 (
  namespace varchar(20),
@@ -48,7 +53,56 @@ create table public.YahooPlaceRelationship
  name varchar(20),
  uri varchar(20)
 );
-insert into public.YahooPlaceCode values('1','2','3');
+insert into public.YahooPlaceRelationship values('1','2','3','4','5','6');
+create table public.YahooWeather
+(
+ woeid varchar(20),
+ city varchar(20),
+ country varchar(20),
+ region varchar(20),
+ distance_unit varchar(20),
+ pressure_unit varchar(20),
+ speed_unit varchar(20),
+ temp_unit varchar(20),
+ wind_chill varchar(20),
+ wind_direction varchar(20),
+ wind_speed varchar(20),
+ humidity varchar(20),
+ pressure varchar(20),
+ rising varchar(20),
+ visibility varchar(20),
+ sunrise varchar(20),
+ sunset varchar(20),
+ date varchar(20),
+ temperature varchar(20),
+ condition varchar(20),
+ code varchar(20)
+);
+insert into public.YahooWeather values('3','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21');
+create table public.YahooPlaces
+(
+ woeid varchar(20),
+ name varchar(20),
+ type varchar(20),
+ placeTypeName varchar(20),
+ country varchar(20),
+ admin1 varchar(20),
+ admin2 varchar(20),
+ admin3 varchar(20),
+ locality1 varchar(20),
+ locality2 varchar(20),
+ postal varchar(20),
+ centroid_lat varchar(20),
+ centroid_lng varchar(20),
+ bboxNorth varchar(20),
+ bboxSouth varchar(20),
+ bboxEast varchar(20),
+ bboxWest varchar(20),
+ timezone varchar(20)
+);
+insert into public.YahooPlaces values('3','2','3','Point of Interest','5','6','7','8','9','10','11','12','13','14','15','16','17','18');
+// TPCH
+
 create table public.supplier
 (
  s_suppkey varchar(20),
@@ -77,6 +131,9 @@ create table region_nation
  region_name varchar(20) 
 );
 insert into public.region_nation values('4','5','6','7');
+
+// CountryFree NationInput
+
 create table public.nation (n_nationkey integer, n_name varchar(1024), n_regionkey integer, n_comment varchar(1024))
 insert into public.nation (n_nationkey, n_name, n_regionkey, n_comment) values(1, 'USA', 0, 'comment')
 insert into public.nation (n_nationkey, n_name, n_regionkey, n_comment) values(2, 'USSR', 1, 'comment')

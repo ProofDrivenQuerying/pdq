@@ -1,7 +1,7 @@
 	<service
 		name="yh_wtr_woeid"
 		protocol="REST"
-		url="http://localhost:8080/webapp/servlets/servlet/yh_wtr_woeid" 
+		url="http://pdq-webapp.cs.ox.ac.uk:8080/webapp/servlets/servlet/yh_wtr_woeid" 
 		media-type="application/xml"
 		documentation=""
 		result-delimiter="country"

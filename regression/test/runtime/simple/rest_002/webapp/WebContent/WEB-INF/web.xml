@@ -122,6 +122,24 @@
         <url-pattern>/servlets/servlet/yh_geo_rel/*</url-pattern>
     </servlet-mapping>
  
+    <servlet>
+        <servlet-name>yh_wtr_woeid</servlet-name>
+        <servlet-class>yh_wtr_woeid</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>yh_wtr_woeid</servlet-name>
+        <url-pattern>/servlets/servlet/yh_wtr_woeid/*</url-pattern>
+    </servlet-mapping>
+ 
+    <servlet>
+        <servlet-name>yh_geo_woeid</servlet-name>
+        <servlet-class>yh_geo_woeid</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>yh_geo_woeid</servlet-name>
+        <url-pattern>/servlets/servlet/yh_geo_woeid/*</url-pattern>
+    </servlet-mapping>
+ 
      <servlet>
         <servlet-name>R</servlet-name>
         <servlet-class>R</servlet-class>
