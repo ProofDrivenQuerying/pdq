@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -25,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
@@ -71,7 +68,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -1272,37 +1268,11 @@ public class PDQController {
 		}
 	};
 
-	/**
-	 * Display plan.
-	 *
-	 * @param p the p
-	 */
-	
-	static public void ident(PrintStream out, int indent)
-	{
-		for(int i = 0; i < indent; i++) out.print("  ");
-	}
-	
-	static public String chop(String input)
-	{
-		String output = "";
-		boolean print = false;
-		for(int i = 0; i < input.length(); i++)
-		{
-			char c = input.charAt(i);
-			if(c == '[') print = true;
-			if(print) output = output + c;
-			if(c == '{') print = true;
-			if(c == ']') break;
-		}
-		return output;
-	}
 	static public void displayPlanSubtype(PrintStream out, Plan p, int indent)
 	{
 		try {
-			uk.ac.ox.cs.pdq.io.PlanPrinter.printPlanToText(out, (RelationalTerm) p);
+			uk.ac.ox.cs.pdq.io.PlanPrinter.printPlanToText(out, (RelationalTerm) p, indent);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -1311,7 +1281,7 @@ public class PDQController {
 		PDQController.this.planViewArea.clear();
 		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			PrintStream pbos = new PrintStream(bos);
+			PrintStream pbos = new PrintStream(bos); 
 			displayPlanSubtype(pbos, p, 0);
 			PDQController.this.planViewArea.appendText(bos.toString());
 		}
