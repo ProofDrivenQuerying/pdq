@@ -1,0 +1,42 @@
+a{
+  text-decoration: none;
+}
+
+.Header-wrapper{
+  justify-content: space-between;
+  display: flex;
+  border-bottom: 1px solid 	#E0E0E0;
+  background-color: white;
+  height: 5rem;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  position: -webkit-sticky;
+  position: sticky;
+  overflow-x: hidden;
+
+
+  box-shadow: 0 4px 2px -2px #E0E0E0;
+  z-index: 100;
+}
+
+.about{
+  padding: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  font-family: 'Open Sans', sans-serif;
+
+}
+
+.PDQ-Logo{
+  align-items: left;
+  text-align: center;
+  padding-left: 1rem;
+  max-height: 3rem;
+  align-self: center;
+}
+
+.breadlist{
+  padding: 1rem;
+}

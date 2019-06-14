@@ -1,0 +1,30 @@
+/**
+ * schemaList reducer. This reducer is in charge of updating the schemaList
+ * states (selectedSchema and key).
+ *
+ * @author Camilo Ortiz
+ */
+
+const initialSchemaListState = {
+  schemaList: [],
+  isFetching: false,
+  isError: false
+}
+
+const schemaListUpdateReducer = (state = initialSchemaListState, action) => {
+  switch(action.type){
+    case 'FETCHING':
+      return{...state, schemaList: [], isFetching: true, isError: false};
+
+    case 'RESOLVED':
+      return{...state, schemaList: action.schemaList, isFetching: false, isError: false};
+
+    case 'ERROR':
+      return{...state, schemaList: [], isFetching: false, isError:true};
+
+    default:
+      return state;
+  }
+}
+
+export default schemaListUpdateReducer;
