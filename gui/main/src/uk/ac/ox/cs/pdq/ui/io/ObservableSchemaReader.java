@@ -65,17 +65,14 @@ public class ObservableSchemaReader {
 	 */
 	public ObservableSchema read(File file) {
 		try {
-			File schemaDir = new File(file.getAbsolutePath() + "d");
+			File schemaDir = new File("./services");
 			if (!schemaDir.exists())
 				schemaDir.mkdirs();
 			
 			ArrayList<Service> list = new ArrayList<>();
-			for(File serviceFile : listFiles(schemaDir, "", ".sr"))
+			for(File serviceFile : listFiles(schemaDir, "", ".xml"))
 			{
 				File serviceGroupFile = new File(serviceFile.getAbsolutePath() + "g");
-				JAXBContext jaxbContext1 = JAXBContext.newInstance(ServiceGroup.class);
-				Unmarshaller jaxbUnmarshaller1 = jaxbContext1.createUnmarshaller();
-				ServiceGroup sgr = (ServiceGroup) jaxbUnmarshaller1.unmarshal(serviceGroupFile);
 				JAXBContext jaxbContext2 = JAXBContext.newInstance(Service.class);
 				Unmarshaller jaxbUnmarshaller2 = jaxbContext2.createUnmarshaller();
 				list.add((Service) jaxbUnmarshaller2.unmarshal(serviceFile));
