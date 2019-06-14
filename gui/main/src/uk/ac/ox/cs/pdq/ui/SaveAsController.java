@@ -149,9 +149,9 @@ public class SaveAsController {
 	@FXML
 	void chooseFile(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle(this.bundle.getString("application.dialog.import.title"));
+		fileChooser.setTitle(this.bundle.getString("application.dialog.export.title"));
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("XML files", "*.xml"));
-		File file = fileChooser.showOpenDialog(this.okButton.getScene().getWindow());
+		File file = fileChooser.showSaveDialog(this.okButton.getScene().getWindow());
 		this.importFileField.setText(file.getAbsolutePath());
 		event.consume();
 	}
