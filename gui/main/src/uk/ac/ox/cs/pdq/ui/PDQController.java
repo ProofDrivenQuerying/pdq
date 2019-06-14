@@ -641,7 +641,7 @@ public class PDQController {
 					}
 
 					try {
-						View view = (View) this.currentSchema.get().getSchema()
+						Relation view = this.currentSchema.get().getSchema()
 								.getRelation(this.currentSchemaViewitems.getValue());
 						if (currentSchemaViewitems.getParent().valueProperty().get().equals("Views")
 								&& (view != null)) {
@@ -661,8 +661,8 @@ public class PDQController {
 
 												// Get both dependencies characteristic of a view
 
-												Dependency dependency2 = view.getViewToRelationDependency();
-												Dependency dependency3 = view.getRelationToViewDependency();
+												Dependency dependency2 = ((View) view).getViewToRelationDependency();
+												Dependency dependency3 = ((View) view).getRelationToViewDependency();
 
 												if ((dependency != null)
 														&& (((dependency2 != null) && dependency2.equals(dependency))
@@ -701,7 +701,7 @@ public class PDQController {
 
 							// Open the view controller
 							ViewController viewController = loader.getController();
-							viewController.setView(view);
+							viewController.setView(((View) view));
 							g_viewControllerMap.put(dialog, viewController);
 							dialog.showAndWait();
 							return;
