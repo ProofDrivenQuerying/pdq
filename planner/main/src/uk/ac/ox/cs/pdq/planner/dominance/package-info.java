@@ -14,5 +14,5 @@ package uk.ac.ox.cs.pdq.planner.dominance;
  			configuration also appears in the target configuration. In order to perform
  			this kind of check Skolem constants must be assigned to formula variables
  			during chasing.
-	- NumericalFactDominance: A configuration c dominates a configuration c', if c has >= facts than c'.
+	
 **/
