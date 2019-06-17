@@ -7,38 +7,6 @@ import { connect } from 'react-redux';
 //css
 import './relationblock.css';
 
-const RelationAttributeTable = ({relation}) => {
-  return(
-    <div>
-      <span>Attributes</span>
-      <Table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Type</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {relation.attributes.map((attribute, index) => {
-            return[
-              <tr key={"row"+index}>
-                <th scope="row">{index+1}</th>
-                <td>{attribute.name}</td>
-                <td>{attribute.type}</td>
-              </tr>
-            ]
-          })}
-
-        </tbody>
-
-      </Table>
-    </div>
-  )
-}
-
-
 
 const RelationBlock = ({ relationList }) => {
   if(relationList.relationList.relations.length > 0){

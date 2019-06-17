@@ -29,10 +29,10 @@ export const getQueries = (id) => {
     var data;
     return fetch("/getQueries?id="+id)
     .then(res => res.text())
-    .then(res => {
-      console.log(res);
+    .then(res => data = JSON.parse(res)).then((data)=>{
+      console.log(data);
       //if its ok, we keep the data
-      dispatch(resolvedQueries(res))
+      dispatch(resolvedQueries(data))
     }).catch(err => dispatch(errorQueries()));
   }
 }

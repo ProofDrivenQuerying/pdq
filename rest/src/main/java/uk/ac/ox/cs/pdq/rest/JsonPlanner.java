@@ -42,9 +42,6 @@ public class JsonPlanner{
       e.printStackTrace();
       System.exit(-1);
     }
-
-    System.out.println(entry);
-
     return entry;
   }
 }

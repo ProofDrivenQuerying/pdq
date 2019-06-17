@@ -22,23 +22,23 @@ import { getQueries } from '../../actions/getQueries';
  * @author Camilo Ortiz
  */
 
-const Body = ({selectedSchema, setBody, body, relationList}) => {
+const Body = ({selectedSchema, setBody, body, queryList}) => {
   return (
     <div>
-      <div style={{float: "left", padding: "3rem 3rem 0rem 3rem", height:"32rem",
-                    justifyContent: "space-between"}}>
+      <div style={{float: "left", padding: "3rem 3rem 0rem 3rem", height:"32rem"}}>
         <SchemaBody/>
       </div>
 
       <div>
-        {relationList.relationList.relations != null ?
+        {queryList.queryList.SQL != null ?
           <div style={{display: "flex", flexDirection: "row",
                         padding: "3rem 2rem 0rem 2rem", flexWrap: "wrap"}}>
 
-            <div style={{float: "none", paddingRight: "2rem", marginBottom: "1rem"}}>
-              <RelationBody/>
-            </div>
-
+            {
+              // <div style={{float: "none", paddingRight: "2rem", marginBottom: "1rem"}}>
+              //   <RelationBody/>
+              // </div>
+            }
             <div style={{float: "none", paddingRight: "2rem", marginBottom: "1rem"}}>
               <QueryBody/>
             </div>

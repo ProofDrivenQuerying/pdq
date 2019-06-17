@@ -88,21 +88,19 @@ public class JsonController{
   }
 
   @RequestMapping(value="/getQueries", method=RequestMethod.GET, produces="application/json")
-  public String getQueries(@RequestParam(value="id") int id){
+  public JsonQuery getQueries(@RequestParam(value="id") int id){
 
     ConjunctiveQuery query = queryList.get(id);
     Schema schema = schemaList.get(id);
 
     String query_string = SQLLikeQueryWriter.convert(query, schema);
 
-    if (query_string.equals("")){
-      return query.toString();
-    }
-    return query_string;
+    JsonQuery toReturn = new JsonQuery(id, query_string);
+    return toReturn;
   }
 
   @RequestMapping(value="/plan", method=RequestMethod.GET, produces="application/json")
-  public String plan(@RequestParam("id") int id){
+  public Entry<RelationalTerm, Cost> plan(@RequestParam("id") int id){
     Schema schema = schemaList.get(id);
     ConjunctiveQuery cq = queryList.get(id);
     File properties = casePropertyList.get(id);
@@ -110,7 +108,8 @@ public class JsonController{
     try{
       Entry<RelationalTerm, Cost> plan = JsonPlanner.plan(schema, cq, properties);
 
-      return plan.toString();
+      return plan;
+      // return plan.toString();
     }catch (Throwable e) {
       e.printStackTrace();
       System.exit(-1);

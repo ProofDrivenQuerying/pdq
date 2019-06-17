@@ -6,9 +6,10 @@ export const fetchingPlan = () => {
         type: 'FETCHING_PLAN',
     };
 }
-export const resolvedPlan = (plan) => {
+export const resolvedPlan = (plan, id) => {
   return{
     type: "RESOLVED_PLAN",
+    id,
     plan,
   }
 }
@@ -29,9 +30,9 @@ export const plan = (id) => {
     var data;
     return fetch("/plan?id="+id)
     .then(res => res.text())
-    .then(res =>{
+    .then(res => data = JSON.parse(res)).then((data)=>{
       //if its ok, we keep the data
-      dispatch(resolvedPlan(res))
+      dispatch(resolvedPlan(data, id))
     }).catch(err => dispatch(errorPlan()));
   }
 }

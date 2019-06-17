@@ -27,7 +27,7 @@ const QueryBody = ({queryList}) => {
 
         <div>
           <div className='queries'>
-            <div>{queryList.queryList}</div>
+            <div>{queryList.queryList.SQL}</div>
           </div>
         </div>
       </div>

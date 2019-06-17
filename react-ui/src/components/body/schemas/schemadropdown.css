@@ -1,0 +1,23 @@
+.schema-name-holder{
+  margin: 3%;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  width: 10rem;
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
+
+.schema-name{
+  width: inherit;
+  font-weight: 500;
+  font-size: 80%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.threeDots{
+  max-height: 1rem;
+  max-width: 1rem;
+  float: right;
+  align-self: center;
+}

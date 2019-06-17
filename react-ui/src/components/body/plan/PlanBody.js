@@ -33,10 +33,14 @@ const PlanBody = ({selectedSchema, plan, getPlan}) => {
             Plan
           </Button>
 
-          {plan?
+          {plan.plan!==null?
             <div style={{whiteSpace:"normal", width:"85%", height:"80%",
                           overflowX:"scroll", padding:"1rem, 1rem, 1rem, 2rem"}}>
-              {plan.plan}
+              {Object.keys(plan.plan)[0]}
+              <br/>
+              Cost: {Object.values(plan.plan)[0].cost}
+              <br/>
+              Value: {Object.values(plan.plan)[0].value}
             </div>
           :
             null}
