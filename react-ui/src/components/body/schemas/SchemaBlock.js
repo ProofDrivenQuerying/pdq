@@ -1,18 +1,26 @@
+//react
 import React from 'react';
+//reactstrap
 import { Button } from 'reactstrap';
+//redux
 import { connect } from 'react-redux';
-import './schemablock.css';
+//actions
 import setSchema from '../../../actions/setSchema';
 import { getRelations } from '../../../actions/getRelations';
 import { getQueries } from '../../../actions/getQueries';
+//css
+import './schemablock.css';
+//img
+import moreDots from '../../../img/threeDots.png';
 
 /**
- * Renders selectable boxes containing all of the available schema.
- * Called from SchemaBody.js
+ * SchemaBlock returns a button for each schema name in schemaList.
+ *
+ * Conditional: if the schema name's id matches the one from schemaList, it
+ * gets highlighted
  *
  * @author Camilo Ortiz
  */
-
 
 
 const SchemaBlock = ({ schemaList, setSchema, selectedSchema, getRelations, getQueries }) => {
@@ -22,31 +30,49 @@ const SchemaBlock = ({ schemaList, setSchema, selectedSchema, getRelations, getQ
      getQueries(id);
    }
 
-  //return a SchemaBlock for each schema in schemalist got in app constructor
   if(!schemaList.isFetching){
     return schemaList.schemaList.map((schemaFromList, index) => {
       return(
         <div className="schema-name-holder" key={schemaFromList.id}>
-        {selectedSchema.selectedSchema != null &&
-          schemaFromList.id === selectedSchema.id ?
-          <Button color="primary" id = {schemaFromList.id} block
-                  onClick={(e) => setSchema_getRelations(schemaFromList, schemaFromList.id)}>
-            <span>
-                <span className="schema-name">
-                  {selectedSchema.selectedSchema.name}
-                </span>
-            </span>
-          </Button>
-          :
-          <Button outline color="secondary" id = {schemaFromList.id} block
-                  onClick={(e) => setSchema_getRelations(schemaFromList, schemaFromList.id)}>
-            <span>
-              <span className="schema-name">
-                {schemaFromList.name}
-              </span>
-            </span>
-          </Button>
+        {
+          //conditional:
         }
+        {selectedSchema.selectedSchema != null &&
+            schemaFromList.id === selectedSchema.id ?
+
+          <div style={{display: "flex"}}>
+            <Button color="primary" id = {schemaFromList.id} block
+                    onClick={(e) => setSchema_getRelations(schemaFromList, schemaFromList.id)}>
+              <span>
+                  <span className="schema-name">
+                    {selectedSchema.selectedSchema.name}
+                  </span>
+              </span>
+            </Button>
+
+            <Button color="link">
+              <img src={moreDots} className="threeDots" alt="more"/>
+            </Button>
+          </div>
+
+          :
+
+          <div style={{display: "flex"}}>
+            <Button outline color="secondary" id = {schemaFromList.id} block
+                    onClick={(e) => setSchema_getRelations(schemaFromList, schemaFromList.id)}>
+              <span>
+                <span className="schema-name">
+                  {schemaFromList.name}
+                </span>
+              </span>
+            </Button>
+
+            <Button color="link">
+              <img src={moreDots} className="threeDots" alt="more"/>
+            </Button>
+          </div>
+        }
+
         </div>
       )
     })
@@ -73,5 +99,4 @@ const mapDispatchToProps = (dispatch) =>({
 });
 
 //connect component to redux store
-
 export default connect(mapStatesToProps, mapDispatchToProps)(SchemaBlock);

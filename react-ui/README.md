@@ -1,7 +1,7 @@
-# pdq-web
+# react-ui
 
 
-A Proof-Driven Query Planning Application prototype made in React with <3
+A Proof-Driven Query Planning Application prototype made in React
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

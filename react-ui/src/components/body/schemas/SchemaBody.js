@@ -1,6 +1,10 @@
-import React, { Component } from 'react';
+//react
+import React from 'react';
+//components
 import SchemaBlock from './SchemaBlock';
+//reactstrap
 import { Button} from 'reactstrap';
+//css
 import './schemabody.css';
 
 

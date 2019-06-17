@@ -30,7 +30,6 @@ export const getRelations = (id) => {
     return fetch("/getRelations?id="+id)
     .then(res => res.text())
     .then(res => data = JSON.parse(res)).then((data)=>{
-      console.log(data);
       //if its ok, we keep the data
       dispatch(resolvedRelation(data))
     }).catch(err => dispatch(errorRelation()));

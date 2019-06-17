@@ -11,4 +11,12 @@
   width: inherit;
   font-weight: 500;
   font-size: 80%;
+  text-overflow: ellipsis;
+}
+
+.threeDots{
+  max-height: 1rem;
+  max-width: 1rem;
+  float: right;
+  align-self: center;
 }

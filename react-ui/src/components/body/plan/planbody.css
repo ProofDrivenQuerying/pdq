@@ -1,0 +1,27 @@
+.plan{
+  position: relative;
+  margin-right: 2rem;
+  margin-left: 2rem;
+  display: flex;
+  flex-direction: row;
+  height: 10rem;
+
+  position:relative;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  font-size: .7rem;
+}
+
+.body-name-plan{
+  margin: 0 auto;
+  width: 7rem;
+  padding: 1rem;
+  display: flex;
+  align-self: center;
+  align-items: center;
+
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+}

@@ -1,14 +1,17 @@
+//react
 import React from 'react';
+//components
 import SchemaBody from './schemas/SchemaBody';
-import RelationBody from './schemas/RelationBody';
+import RelationBody from './relations/RelationBody';
 import QueryBody from './queries/QueryBody';
-import SearchBody from './searches/SearchBody';
-import { connect } from 'react-redux';
+import PlanBody from './plan/PlanBody';
+//reactstrap
 import { Button} from 'reactstrap';
+//redux
+import { connect } from 'react-redux';
+//actions
 import setBody from '../../actions/setBody';
 import { getQueries } from '../../actions/getQueries';
-
-
 
 /**
  * Renders the app's body. Has  a main body that rotates through the states:
@@ -22,27 +25,31 @@ import { getQueries } from '../../actions/getQueries';
 const Body = ({selectedSchema, setBody, body, relationList}) => {
   return (
     <div>
-      <div style={{float: "left", padding: "3rem 3rem 0rem 3rem", height:"32rem"}}>
+      <div style={{float: "left", padding: "3rem 3rem 0rem 3rem", height:"32rem",
+                    justifyContent: "space-between"}}>
         <SchemaBody/>
-        <div>
-          {// selectedSchema.id != null ?
-          //   <div className="next-button" style={{
-          //     padding: '1rem', display:"flex", flexDirection:"column",
-          //     justifyContent: "center"
-          //   }}>
-          //     <Button type="submit"
-          //             className="btn btn-primary"
-          //             onClick={() => {setBody('query')}}></Button>
-          //   </div>
-          //   :
-          //   null
-        }
-        </div>
       </div>
 
-      <div style={{float: "none", padding: "3rem 4rem 0rem 21rem", height:"32rem"}}>
+      <div>
         {relationList.relationList.relations != null ?
-          <RelationBody/>
+          <div style={{display: "flex", flexDirection: "row",
+                        padding: "3rem 2rem 0rem 2rem", flexWrap: "wrap"}}>
+
+            <div style={{float: "none", paddingRight: "2rem", marginBottom: "1rem"}}>
+              <RelationBody/>
+            </div>
+
+            <div style={{float: "none", paddingRight: "2rem", marginBottom: "1rem"}}>
+              <QueryBody/>
+            </div>
+
+            <div style={{float: "none", width:"92%", marginBottom: "1rem",
+                          marginRight: "3.8rem"}}>
+              <PlanBody/>
+            </div>
+
+          </div>
+
         :
           null}
       </div>

@@ -19,6 +19,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+              <exclusion>
+                  <groupId>log4j</groupId>
+                  <artifactId>*</artifactId>
+              </exclusion>
+              <exclusion>
+                  <groupId>org.apache.logging.log4j</groupId>
+                  <artifactId>*</artifactId>
+              </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -42,6 +52,16 @@
         <dependency>
     			<groupId>uk.ac.ox.cs.pdq</groupId>
     			<artifactId>pdq-gui</artifactId>
+          <version>1.0.0-Beta</version>
+		    </dependency>
+        <dependency>
+    			<groupId>uk.ac.ox.cs.pdq</groupId>
+    			<artifactId>pdq-reasoning</artifactId>
+          <version>1.0.0-Beta</version>
+		    </dependency>
+        <dependency>
+    			<groupId>uk.ac.ox.cs.pdq</groupId>
+    			<artifactId>pdq-planner</artifactId>
           <version>1.0.0-Beta</version>
 		    </dependency>
         <!-- pdq dependencies -->

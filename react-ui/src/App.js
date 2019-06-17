@@ -1,11 +1,13 @@
+//react
 import React, { Component } from 'react';
+//components
 import Header from './components//header/Header.js';
 import Body from './components/body/Body.js';
+//redux
 import { connect } from 'react-redux';
+//actions
 import { getInitialData } from './actions/initialJsonCall.js';
 import setBody from './actions/setBody.js';
-
-
 
 /**
  * Entry of the App's UI. Renders Header and Body components from
@@ -24,7 +26,6 @@ class App extends Component{
   }
 
   render(){
-    console.log(this.props);
     return(
       <div style={{height:"100%"}}>
         <Header/>

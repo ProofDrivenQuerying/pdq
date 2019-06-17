@@ -1,7 +1,11 @@
+//react
 import React from 'react';
-import './header.css';
-import logo from '../../img/logo.png';
+//reactstrap
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
+//css
+import './header.css';
+//img
+import logo from '../../img/logo.png';
 
 /**
  * Renders the app's header. Called from App.js.
@@ -17,7 +21,7 @@ const Header = () =>{
         <Breadcrumb>
           <BreadcrumbItem>Schemas</BreadcrumbItem>
           <BreadcrumbItem>Queries</BreadcrumbItem>
-          <BreadcrumbItem>Searches</BreadcrumbItem>
+          <BreadcrumbItem>Planning</BreadcrumbItem>
         </Breadcrumb>
       </div>
 
