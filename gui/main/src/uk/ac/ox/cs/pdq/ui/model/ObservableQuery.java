@@ -163,12 +163,18 @@ public class ObservableQuery {
 					f.createNewFile();
 				}
 				writer.write(o, this);
+				this.name.set(homepath(file.getValue().getPath()));
 			} catch (IOException e) {
 				throw new UserInterfaceException("Could not write file " + f.getAbsolutePath());
 			}
 		}
 	}
-	
+
+	private String homepath(String path)
+	{
+		String home = System.getProperty("user.dir");
+		return path.replace(home, "");
+	}	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
