@@ -37,7 +37,9 @@ public class JsonPlanner{
 
     ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
     try{
+
       entry = planner.search(query);
+      
     }catch (Throwable e) {
       e.printStackTrace();
       System.exit(-1);

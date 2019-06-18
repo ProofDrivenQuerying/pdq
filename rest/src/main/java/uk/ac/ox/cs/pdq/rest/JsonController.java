@@ -99,6 +99,15 @@ public class JsonController{
     return toReturn;
   }
 
+  @RequestMapping(value="/getProperties", method=RequestMethod.GET, produces="application/json")
+  public File getProperties(@RequestParam(value="id") int id){
+
+    File properties = casePropertyList.get(id);
+
+    // JsonQuery toReturn = new JsonQuery(id, query_string);
+    return properties;
+  }
+
   @RequestMapping(value="/plan", method=RequestMethod.GET, produces="application/json")
   public Entry<RelationalTerm, Cost> plan(@RequestParam("id") int id){
     Schema schema = schemaList.get(id);
