@@ -147,6 +147,34 @@ public abstract class RelationalTerm implements Serializable, Plan {
 	public boolean isClosed() {
 		return this.getInputAttributes().length == 0;
 	}
+	
+	/** Tells if this plan is a linear plan. A plan is linear if it has some kind of join term with further joins on each branch.
+	 * @return
+	 */
+	public boolean isLinear() {
+		if (this.getNumberOfChildren() == 0)
+			return true;
+		if (this.getNumberOfChildren() ==1)
+			return getChild(0).isLinear();
+		if (!getChild(0).hasJoin() && !getChild(1).hasJoin()) {
+			return true;
+		} 
+		return false;
+	}
+	
+	/** True if this term is a join or has join in the children tree. 
+	 * @return
+	 */
+	public boolean hasJoin() {
+		if (this instanceof CartesianProductTerm)
+			return true;
+		if (this.getNumberOfChildren() == 0)
+			return false;
+		if (this.getNumberOfChildren() ==1)
+			return getChild(0).hasJoin();
+		// more then one child means it is a join.
+		return true;
+	}
 
 	@Override
 	public Integer[] getInputIndices() {

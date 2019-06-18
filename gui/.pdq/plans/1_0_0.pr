@@ -1,0 +1,2 @@
+ACCESSIBILITY AXIOM: region_nation(nation_key,nation_name,region_key,region_name) ? Accessible(nation_key) & Accessible(nation_name) & Accessible(region_key) & Accessible(region_name) & InferredAccessibleregion_nation(nation_key,nation_name,region_key,region_name)
+	GROUNDING: {nation_key=v_x81003643206, nation_name=v_x131003643206, region_key=fv_x141003643206, region_name=k8}

@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -69,7 +68,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -231,7 +229,7 @@ public class PDQController {
 
 	/** The plan view area. */
 	@FXML
-	private ListView<Text> planViewArea;
+	private TextArea planViewArea;
 
 	/** The proof view area. */
 	@FXML
@@ -455,7 +453,7 @@ public class PDQController {
 	}
 
 	/**
-	 * Action that open's the planner window and start a new planning session.
+	 * Action that opens the planner window and start a new planning session.
 	 *
 	 * @param event the event
 	 */
@@ -485,7 +483,6 @@ public class PDQController {
 				pl.setTimeout(toDouble(this.settingsTimeoutTextField.getText()));
 				pl.setMaxIterations(toDouble(this.settingsMaxIterationsTextField.getText()));
 				pl.setQueryMatchInterval(toInteger(this.settingsQueryMatchIntervalTextField.getText()));
-				// pl.setBlockingInterval(toInteger(this.settingsBlockingIntervalTextField.getText()));
 				plannerController.setPlan(pl);
 				plannerController.setPlanQueue(this.dataQueue);
 				plannerController.setSchema(this.currentSchema.get());
@@ -587,7 +584,7 @@ public class PDQController {
 	}
 
 	/**
-	 * Action that open's either the relation or dependencies inspector window.
+	 * Action that opens either the relation or dependencies inspector window.
 	 *
 	 * @param event the event
 	 */
@@ -644,7 +641,7 @@ public class PDQController {
 					}
 
 					try {
-						View view = (View) this.currentSchema.get().getSchema()
+						Relation view = this.currentSchema.get().getSchema()
 								.getRelation(this.currentSchemaViewitems.getValue());
 						if (currentSchemaViewitems.getParent().valueProperty().get().equals("Views")
 								&& (view != null)) {
@@ -664,8 +661,8 @@ public class PDQController {
 
 												// Get both dependencies characteristic of a view
 
-												Dependency dependency2 = view.getViewToRelationDependency();
-												Dependency dependency3 = view.getRelationToViewDependency();
+												Dependency dependency2 = ((View) view).getViewToRelationDependency();
+												Dependency dependency3 = ((View) view).getRelationToViewDependency();
 
 												if ((dependency != null)
 														&& (((dependency2 != null) && dependency2.equals(dependency))
@@ -704,7 +701,7 @@ public class PDQController {
 
 							// Open the view controller
 							ViewController viewController = loader.getController();
-							viewController.setView(view);
+							viewController.setView(((View) view));
 							g_viewControllerMap.put(dialog, viewController);
 							dialog.showAndWait();
 							return;
@@ -1258,9 +1255,9 @@ public class PDQController {
 	private final ChangeListener<ObservablePlan> currentPlanChanged = (
 			ObservableValue<? extends ObservablePlan> observable, ObservablePlan oldValue, ObservablePlan newValue) -> {
 		if (newValue != null) {
-			PDQController.this.savePlan(newValue);
-
 			Plan plan = newValue.getPlan();
+			if (plan != null)	PDQController.this.savePlan(newValue);
+			
 			PDQController.this.runRuntimeButton.setDisable(plan == null);
 			PDQController.this.setSettingsEditable(plan == null);
 			PDQController.this.displayPlan(plan);
@@ -1271,48 +1268,22 @@ public class PDQController {
 		}
 	};
 
-	/**
-	 * Display plan.
-	 *
-	 * @param p the p
-	 */
-	
-	static public void ident(PrintStream out, int indent)
-	{
-		for(int i = 0; i < indent; i++) out.print("  ");
-	}
-	
-	static public String chop(String input)
-	{
-		String output = "";
-		boolean print = false;
-		for(int i = 0; i < input.length(); i++)
-		{
-			char c = input.charAt(i);
-			if(c == '[') print = true;
-			if(print) output = output + c;
-			if(c == '{') print = true;
-			if(c == ']') break;
-		}
-		return output;
-	}
 	static public void displayPlanSubtype(PrintStream out, Plan p, int indent)
 	{
 		try {
-			uk.ac.ox.cs.pdq.io.PlanPrinter.printPlanToText(out, (RelationalTerm) p);
+			uk.ac.ox.cs.pdq.io.PlanPrinter.printPlanToText(out, (RelationalTerm) p, indent);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	void displayPlan(Plan p) {
-		PDQController.this.planViewArea.getItems().clear();
+		PDQController.this.planViewArea.clear();
 		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			PrintStream pbos = new PrintStream(bos);
+			PrintStream pbos = new PrintStream(bos); 
 			displayPlanSubtype(pbos, p, 0);
-			PDQController.this.planViewArea.getItems().add(new Text(bos.toString()));
+			PDQController.this.planViewArea.appendText(bos.toString());
 		}
 	}
 
@@ -1595,27 +1566,46 @@ public class PDQController {
 					this.plans.put(Pair.of(s, q), ps);
 				}
 
-				if(listFiles(planDir, makePrefix(q), PLAN_FILENAME_SUFFIX).length == 0)
-				{
-					File settings = new File(planDir + "/default" + PROPERTIES_SUFFIX);
-					File settings2 = new File(planDir + "/" + makePrefix(q) + "0" + PROPERTIES_SUFFIX);
-					File proof = new File(planDir + "/default" + PLAN_FILENAME_SUFFIX);
-					File proof2 = new File(planDir + "/" + makePrefix(q) + "0" + PLAN_FILENAME_SUFFIX);
-					File plan = new File(planDir + "/default" + PROOF_FILENAME_SUFFIX);
-					File plan2 = new File(planDir + "/" + makePrefix(q) + "0" + PROOF_FILENAME_SUFFIX);
-					try
-					{
-						Files.copy(settings.toPath(), settings2.toPath());
-						Files.copy(proof.toPath(), proof2.toPath());
-						Files.copy(plan.toPath(), plan2.toPath());
-					}
-					catch(IOException e)
-					{
-					}
-				}
-				
 				// For all plan files in the planDir go to the CostIOManager
 				
+				if(listFiles(planDir, makePrefix(q), PLAN_FILENAME_SUFFIX).length == 0)
+				{
+					for (File planFile : listFiles(planDir, "default", PLAN_FILENAME_SUFFIX)) {
+					try {
+					File settings = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROPERTIES_SUFFIX));
+					if (!settings.exists()) {
+						log.warn("Plan '" + planFile + "' has no associated parameters. Skipping.");
+						continue;
+					}
+					Schema schema = s.getSchema();
+					RelationalTerm p1 = CostIOManager.readRelationalTermFromRelationaltermWithCost(planFile, schema);
+					PlannerParameters q1 = new PlannerParameters(settings);
+					CostParameters r1 = new CostParameters(settings);
+					ReasoningParameters s1 = new ReasoningParameters(settings);
+					ObservablePlan p = new ObservablePlan(p1, q1, r1, s1);
+					File planFile2 = new File(planDir + "/" + makePrefix(q) + "0" + PLAN_FILENAME_SUFFIX);
+					File settings2 = new File(planDir + "/" + makePrefix(q) + "0" + PROPERTIES_SUFFIX);
+					p.setPlanFile(planFile2);
+					p.setSettingsFile(settings2);
+
+					// Read the proof file
+
+					File proof = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROOF_FILENAME_SUFFIX));
+					if (proof.exists()) {
+//						System.out.println("Reading proof file: " + proof.getAbsolutePath());
+						try (FileInputStream prIn = new FileInputStream(proof.getAbsolutePath())) {
+							p.setProofFile(proof);
+							ProofReader proofReader = new ProofReader(schema);
+							p.setProof(proofReader.read(prIn));
+						}
+					}
+					ps.add(p);
+					} catch (Exception e) {
+						log.warn("IO exception caught file loading file '" + planFile + "'. " + e.getMessage());
+					}
+					}
+				}
+				else {
 				for (File planFile : listFiles(planDir, makePrefix(q), PLAN_FILENAME_SUFFIX)) {
 					try (FileInputStream in = new FileInputStream(planFile.getAbsolutePath())) {
 						File settings = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROPERTIES_SUFFIX));
@@ -1624,8 +1614,7 @@ public class PDQController {
 							continue;
 						}
 						Schema schema = s.getSchema();
-						RelationalTerm p1 = CostIOManager.readRelationalTermFromRelationaltermWithCost(planFile,
-								schema);
+						RelationalTerm p1 = CostIOManager.readRelationalTermFromRelationaltermWithCost(planFile, schema);
 						PlannerParameters q1 = new PlannerParameters(settings);
 						CostParameters r1 = new CostParameters(settings);
 						ReasoningParameters s1 = new ReasoningParameters(settings);
@@ -1637,7 +1626,7 @@ public class PDQController {
 
 						File proof = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROOF_FILENAME_SUFFIX));
 						if (proof.exists()) {
-							System.out.println("Reading proof file: " + proof.getAbsolutePath());
+//							System.out.println("Reading proof file: " + proof.getAbsolutePath());
 							try (FileInputStream prIn = new FileInputStream(proof.getAbsolutePath())) {
 								p.setProofFile(proof);
 								ProofReader proofReader = new ProofReader(schema);
@@ -1649,6 +1638,7 @@ public class PDQController {
 						log.warn("IO exception caught file loading file '" + planFile + "'. " + e.getMessage());
 					}
 				}
+					}
 			}
 		}
 	}
@@ -1758,7 +1748,7 @@ public class PDQController {
 					}
 				}
 			}
-			Atom atom2 = Atom.create(predicate, terms2);
+			Atom atom2 = Atom.create(predicate, terms); // MR: Set to terms or terms2 as required
 			atoms2[a] = atom2;
 		}
 	}

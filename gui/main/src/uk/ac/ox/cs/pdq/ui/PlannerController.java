@@ -339,6 +339,9 @@ public class PlannerController {
 			homeDir = ".";
 		}
 		File workDir = new File(homeDir + '/' + PDQApplication.WORK_DIRECTORY);
+		if (!workDir.exists()) {
+			workDir = new File("./" + PDQApplication.WORK_DIRECTORY);
+		}
 		if (workDir.exists()) {
 			this.params = new PlannerParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
 			this.costParams = new CostParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));

@@ -16,13 +16,13 @@ import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
  */
 public class ObservableAccessMethod {
 	
-	/** The name. */
+	/** */
 	private final SimpleStringProperty name =  new SimpleStringProperty(this, "name");
 	
-	/** The type. */
+	/**  */
 	private final SimpleObjectProperty<String> type =  new SimpleObjectProperty<>(this, "type");
 	
-	/** The inputs. */
+	/**  */
 	private final SimpleListProperty<Integer> inputs =  new SimpleListProperty<>(this, "inputs");
 	
 	/**
@@ -37,54 +37,44 @@ public class ObservableAccessMethod {
 	}
 	
 	/**
-	 * Name property.
+	 * 
 	 *
-	 * @return the property
+	 * TOCOMMENT: What are these properties?
 	 */
 	public Property<String> nameProperty() {
 		return this.name;
 	}
 	
 	/**
-	 * Type property.
-	 *
-	 * @return the property
+	 * 
 	 */
 	public Property<String> typeProperty() {
 		return this.type;
 	}
 	
 	/**
-	 * Inputs property.
-	 *
-	 * @return the property
+	 
 	 */
 	public Property<ObservableList<Integer>> inputsProperty() {
 		return this.inputs;
 	}
 
 	/**
-	 * Gets the name.
-	 *
-	 * @return the name
+	 * 
 	 */
 	public String getName() {
 		return this.name.get();
 	}
 
 	/**
-	 * Gets the type.
-	 *
-	 * @return the type
+	 
 	 */
 	public String getType() {
 		return this.type.get();
 	}
 
 	/**
-	 * Gets the inputs.
-	 *
-	 * @return the inputs
+	
 	 */
 	public List<Integer> getInputs() {
 		return this.inputs.get();

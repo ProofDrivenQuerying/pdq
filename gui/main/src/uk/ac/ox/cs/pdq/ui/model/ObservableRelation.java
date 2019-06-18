@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
  */
 public class ObservableRelation extends Relation {
 
-	/** The relation. */
+	/** */
 	private Relation relation;
 	
 	/**

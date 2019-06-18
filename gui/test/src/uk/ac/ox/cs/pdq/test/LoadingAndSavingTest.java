@@ -29,7 +29,7 @@ public class LoadingAndSavingTest {
 	private String queryTextArea = "SELECT a0.activity_comment FROM activityFree AS a0";
 	private ObservableSchema currentSchema = null;
 	private ObservableQuery currentQuery = new ObservableQuery("name", "description", null);
-	private File workDirectory = new File("/users/marler/.pdq");
+	private File workDirectory = new File("./.pdq");
 
 	// testSave method re-factored from PDQController.saveSelectedQuery
 	@Test

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<query name="/users/marler/.pdq/queries/0_0.q" description="" type="conjunctive">
+<query name="./.pdq/queries/0_0.q" description="" type="conjunctive">
 <body>
 <atom name="activityFree">
 <variable name="activity_comment"/>
@@ -30,10 +30,11 @@
 <variable name="standard_value"/>
 <variable name="target_chembl_id"/>
 <variable name="target_organism"/>
-<constant value="0"/>
-<constant value="1"/>
+<constant value="29"/>
+<constant value="30"/>
 </atom>
 </body>
 <head name="Q">
+<variable name="activity_comment"/>
 </head>
 </query>

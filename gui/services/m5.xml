@@ -1,0 +1,19 @@
+	<service
+		name="m5"
+		protocol="REST"
+		url="http://pdq-webapp.cs.ox.ac.uk:8080/webapp/servlets/servlet/m5" 
+		media-type="application/xml"
+		documentation=""
+		result-delimiter="country"
+		service-group="service-group-1">
+
+		<policy name="1000_items_per_page" />
+
+		<access-method type="LIMITED" name="m5" cost="1000.0" relation-name="partsupp">
+	         <attribute name="ps_partkey" output="true" type="Integer" relation-attribute="ps_partkey" path="ps_partkey"/>
+            <attribute name="ps_suppkey" input="true" output="true" type="Integer" relation-attribute="ps_suppkey" path="ps_suppkey" attribute-encoding="ps_suppkey"/>
+            <attribute name="ps_availqty" output="true" type="Integer" relation-attribute="ps_availqty" path="ps_availqty"/>
+            <attribute name="ps_supplycost" output="true" type="String" relation-attribute="ps_supplycost" path="ps_supplycost"/>
+            <attribute name="ps_comment" output="true" type="String" relation-attribute="ps_comment" path="ps_comment"/>
+		</access-method>
+	</service>

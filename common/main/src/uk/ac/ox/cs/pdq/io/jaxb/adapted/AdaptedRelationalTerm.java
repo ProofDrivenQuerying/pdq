@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.io.jaxb.adapted;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -60,7 +61,7 @@ public class AdaptedRelationalTerm implements Serializable {
 	protected AccessMethodDescriptor accessMethod;
 
 	/** The constants used to call the underlying access method. */
-	protected Map<Integer, TypedConstant> inputConstants;
+	protected Map<Integer, AdaptedConstant> inputConstants;
 
 	public AdaptedRelationalTerm() {
 		
@@ -75,6 +76,11 @@ public class AdaptedRelationalTerm implements Serializable {
 		case AccessTerm:
 			relation = ((AccessTerm) v).getRelation();
 			accessMethod = ((AccessTerm) v).getAccessMethod();
+			Map<Integer, TypedConstant> iConstants = ((AccessTerm) v).getInputConstants();
+			inputConstants = new HashMap<>();
+			for (Integer key:iConstants.keySet()) {
+				inputConstants.put(key, new AdaptedConstant(iConstants.get(key)));
+			}
 			break;
 		case CartesianProductTerm:
 			children = ((CartesianProductTerm) v).getChildren();
@@ -196,11 +202,11 @@ public class AdaptedRelationalTerm implements Serializable {
 	}
 
 	@XmlElement
-	public Map<Integer, TypedConstant> getInputConstants() {
+	public Map<Integer, AdaptedConstant> getInputConstants() {
 		return inputConstants;
 	}
-
-	public void setInputConstants(Map<Integer, TypedConstant> inputConstants) {
+	
+	public void setInputConstants(Map<Integer, AdaptedConstant> inputConstants) {
 		this.inputConstants = inputConstants;
 	}
 
@@ -243,7 +249,14 @@ public class AdaptedRelationalTerm implements Serializable {
 	public RelationalTerm toRelationalTerm() {
 		switch (this.rtType) {
 		case AccessTerm:
-			return AccessTerm.create(this.relation, this.accessMethod);
+			if (inputConstants!=null) {
+				Map<Integer, TypedConstant> iConstants = new HashMap<>();
+				for (Integer key:inputConstants.keySet()) {
+					iConstants.put(key, (TypedConstant)inputConstants.get(key).toConstant());
+				}
+				return AccessTerm.create(this.relation, this.accessMethod, iConstants);
+			} else 
+				return AccessTerm.create(this.relation, this.accessMethod);
 		case CartesianProductTerm:
 			return CartesianProductTerm.create(this.children[0], this.children[1]);
 		case DependentJoinTerm:

@@ -63,10 +63,7 @@ public class ImportController {
     
     /** The import file field. */
     @FXML TextField importFileField;
-    
-    /** The import name field. */
-    @FXML TextField importNameField;
-    
+        
     /** The root pane. */
     @FXML GridPane rootPane;
 
@@ -80,12 +77,10 @@ public class ImportController {
 		assert this.okButton != null : "fx:id=\"okButton\" was not injected: check your FXML file 'import-dialog.fxml'.";
         assert this.importChooseFileButton != null : "fx:id=\"importChooseFileButton\" was not injected: check your FXML file 'import-dialog.fxml'.";
         assert this.importFileField != null : "fx:id=\"importFileField\" was not injected: check your FXML file 'import-dialog.fxml'.";
-        assert this.importNameField != null : "fx:id=\"importNameField\" was not injected: check your FXML file 'import-dialog.fxml'.";
-        assert this.rootPane != null : "fx:id=\"rootPane\" was not injected: check your FXML file 'import-dialog.fxml'.";
+         assert this.rootPane != null : "fx:id=\"rootPane\" was not injected: check your FXML file 'import-dialog.fxml'.";
 
     	this.bundle = ResourceBundle.getBundle("resources.i18n.ui");
 		this.okButton.setDisable(true);
-		this.importNameField.textProperty().addListener(this.importValidator);
 		this.importFileField.textProperty().addListener(this.importValidator);
 	}
 
@@ -96,21 +91,6 @@ public class ImportController {
 		public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
 			ImportController.this.okButton.setDisable(true);
 			ImportController.this.detailsImage.setImage(ImportController.this.errorIcon);
-			int position = ImportController.this.importNameField.caretPositionProperty().get();
-			if (ImportController.this.importNameField.getText().trim().isEmpty()) {
-				ImportController.this.detailsImage.setImage(ImportController.this.errorIcon);
-				ImportController.this.detailsLabel.setText(
-						ImportController.this.bundle.getString(
-								"application.dialog.import.message.name-required"));
-				return;
-			}
-			if (ImportController.this.forbiddenNames.contains(ImportController.this.importNameField.getText().trim())) {
-				ImportController.this.detailsImage.setImage(ImportController.this.errorIcon);
-				ImportController.this.detailsLabel.setText(
-						ImportController.this.bundle.getString(
-								"application.dialog.import.message.name-exists"));
-				return;
-			}
 			if (ImportController.this.importFileField.getText().trim().isEmpty()) {
 				ImportController.this.detailsLabel.setText(
 						ImportController.this.bundle.getString(
@@ -124,7 +104,6 @@ public class ImportController {
 								"application.dialog.import.message.file-notexists"));
 				return;
 			}
-			ImportController.this.importNameField.caretPositionProperty().add(position);
 			ImportController.this.okButton.setDisable(false);
 			ImportController.this.detailsLabel.setText("");
 			ImportController.this.detailsImage.setImage(null);
@@ -170,11 +149,9 @@ public class ImportController {
 					if (this.schema == null) {
 						ObservableSchemaReader reader = new ObservableSchemaReader();
 						o = reader.read(f);
-						((ObservableSchema) o).setName(this.importNameField.getText());
 					} else {
 						ObservableQueryReader reader = new ObservableQueryReader(this.schema.getSchema());
 						o = reader.read(f);
-						((ObservableQuery) o).setName(this.importNameField.getText());
 					}
 					this.dataQueue.add(o);
 					ImportController.this.rootPane.getScene().getWindow().hide();
@@ -211,7 +188,6 @@ public class ImportController {
 	void chooseFile(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(this.bundle.getString("application.dialog.import.title"));
-		fileChooser.getExtensionFilters().add(new ExtensionFilter("XML files", "*.xml"));
 		File file = fileChooser.showOpenDialog(this.okButton.getScene().getWindow());
 		this.importFileField.setText(file.getAbsolutePath());
 		event.consume();

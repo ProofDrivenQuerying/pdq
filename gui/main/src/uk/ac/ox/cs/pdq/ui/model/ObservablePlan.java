@@ -176,18 +176,12 @@ public class ObservablePlan {
 	}
 	
 	/**
-	 * Cost type property.
-	 *
-	 * @return the simple object property
 	 */
 	public SimpleObjectProperty<CostTypes> costTypeProperty() {
 		return this.costType;
 	}
 	
 	/**
-	 * Timeout property.
-	 *
-	 * @return the simple object property
 	 */
 	public SimpleObjectProperty<Double> timeoutProperty() {
 		return this.timeout;
@@ -202,14 +196,10 @@ public class ObservablePlan {
 		return this.maxIterations;
 	}
 	
-//	public SimpleObjectProperty<Integer> blockingIntervalProperty() {
-//		return this.blockingInterval;
-//	}
+
 	
 	/**
- * Query match interval property.
- *
- * @return the simple object property
+ * 
  */
 public SimpleObjectProperty<Integer> queryMatchIntervalProperty() {
 		return this.queryMatchInterval;
@@ -243,76 +233,53 @@ public SimpleObjectProperty<Integer> queryMatchIntervalProperty() {
 	}
 
 	/**
-	 * Gets the planner type.
 	 *
-	 * @return the planner type
 	 */
 	public PlannerTypes getPlannerType() {
 		return this.plannerType.get();
 	}
 
 	/**
-	 * Gets the reasoning type.
-	 *
-	 * @return the reasoning type
+	 * 
 	 */
 	public ReasoningTypes getReasoningType() {
 		return this.chaserType.get();
 	}
 
 	/**
-	 * Gets the cost type.
-	 *
-	 * @return the cost type
 	 */
 	public CostTypes getCostType() {
 		return this.costType.get();
 	}
 
 	/**
-	 * Gets the timeout.
-	 *
-	 * @return the timeout
 	 */
 	public Double getTimeout() {
 		return this.timeout.get();
 	}
 
 	/**
-	 * Gets the max iterations.
-	 *
-	 * @return the max iterations
 	 */
 	public Double getMaxIterations() {
 		return this.maxIterations.get();
 	}
 
-//	public Integer getBlockingInterval() {
-//		return this.blockingInterval.get();
-//	}
+
 
 	/**
- * Gets the query match interval.
- *
- * @return the query match interval
+ * 
  */
 public Integer getQueryMatchInterval() {
 		return this.queryMatchInterval.get();
 	}
 
 	/**
-	 * Gets the cost.
-	 *
-	 * @return the cost
 	 */
 	public Cost getCost() {
 		return this.cost.get();
 	}
 
 	/**
-	 * Gets the settings.
-	 *
-	 * @return the settings
 	 */
 	public PlannerParameters getSettings() {
 		PlannerParameters result = new PlannerParameters();
@@ -324,9 +291,7 @@ public Integer getQueryMatchInterval() {
 	}
 
 	/**
-	 * Gets the cost settings.
-	 *
-	 * @return the cost settings
+	
 	 */
 	public CostParameters getCostSettings() {
 		CostParameters result = new CostParameters();
@@ -335,9 +300,6 @@ public Integer getQueryMatchInterval() {
 	}
 	
 	/**
-	 * Gets the reasoning settings.
-	 *
-	 * @return the reasoning settings
 	 */
 	public ReasoningParameters getReasoningSettings() {
 		ReasoningParameters result = new ReasoningParameters();
@@ -347,27 +309,18 @@ public Integer getQueryMatchInterval() {
 	}
 	
 	/**
-	 * Gets the plan file.
-	 *
-	 * @return the plan file
 	 */
 	public File getPlanFile() {
 		return this.planFile.get();
 	}
 
 	/**
-	 * Gets the proof file.
-	 *
-	 * @return the proof file
 	 */
 	public File getProofFile() {
 		return this.proofFile.get();
 	}
 
 	/**
-	 * Gets the settings file.
-	 *
-	 * @return the settings file
 	 */
 	public File getSettingsFile() {
 		return this.settingsFile.get();
@@ -383,18 +336,12 @@ public Integer getQueryMatchInterval() {
 	}
 
 	/**
-	 * Sets the proof.
-	 *
-	 * @param p the new proof
 	 */
 	public void setProof(Proof p) {
 		this.proof.set(p);
 	}
 
 	/**
-	 * Sets the planner type.
-	 *
-	 * @param o the new planner type
 	 */
 	public void setPlannerType(PlannerTypes o) {
 		this.plannerType.set(o);
@@ -419,18 +366,12 @@ public Integer getQueryMatchInterval() {
 	}
 
 	/**
-	 * Sets the timeout.
-	 *
-	 * @param o the new timeout
 	 */
 	public void setTimeout(Double o) {
 		this.timeout.set(o);
 	}
 
 	/**
-	 * Sets the max iterations.
-	 *
-	 * @param o the new max iterations
 	 */
 	public void setMaxIterations(Double o) {
 		this.maxIterations.set(o);
@@ -441,9 +382,6 @@ public Integer getQueryMatchInterval() {
 //	}
 
 	/**
- * Sets the query match interval.
- *
- * @param o the new query match interval
  */
 public void setQueryMatchInterval(Integer o) {
 		this.queryMatchInterval.set(o);
@@ -486,7 +424,6 @@ public void setQueryMatchInterval(Integer o) {
 	}
 
 	/**
-	 * Destroy.
 	 */
 	public void destroy() {
 		if (this.planFile.isNotNull().get()) {
@@ -543,9 +480,7 @@ public void setQueryMatchInterval(Integer o) {
 	}
 	
 	/**
-	 * Copy.
-	 *
-	 * @return the observable plan
+
 	 */
 	public ObservablePlan copy() {
 		return new ObservablePlan(this.plan.get(), this.planFile.get(), 

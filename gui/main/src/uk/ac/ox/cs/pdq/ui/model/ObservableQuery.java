@@ -21,16 +21,16 @@ import uk.ac.ox.cs.pdq.ui.io.ObservableQueryWriter;
  */
 public class ObservableQuery {
 
-	/** The name. */
+	/** */
 	private final SimpleStringProperty name =  new SimpleStringProperty(this, "name");
 	
-	/** The description. */
+	/**  */
 	private final SimpleStringProperty description =  new SimpleStringProperty(this, "description");
 	
-	/** The file. */
+	/**  */
 	private final SimpleObjectProperty<File> file =  new SimpleObjectProperty<>(this, "file");
 	
-	/** The query. */
+	/**  */
 	private final SimpleObjectProperty<Formula> formula = new SimpleObjectProperty<>(this, "formula");
 	
 	/**
@@ -60,18 +60,13 @@ public class ObservableQuery {
 	}
 
 	/**
-	 * Name property.
-	 *
-	 * @return the observable string value
 	 */
 	public ObservableStringValue nameProperty() {
 		return this.name;
 	}
 
 	/**
-	 * Description property.
 	 *
-	 * @return the observable string value
 	 */
 	public ObservableStringValue descriptionProperty() {
 		return this.description;
@@ -105,54 +100,36 @@ public class ObservableQuery {
 	}
 
 	/**
-	 * Gets the description.
-	 *
-	 * @return the description
 	 */
 	public String getDescription() {
 		return this.description.getValueSafe();
 	}
 
 	/**
-	 * Gets the file.
-	 *
-	 * @return the file
 	 */
 	public File getFile() {
 		return this.file.get();
 	}
 
 	/**
-	 * Gets the query.
-	 *
-	 * @return the query
 	 */
 	public Formula getFormula() {
 		return this.formula.get();
 	}
 
 	/**
-	 * Sets the name.
-	 *
-	 * @param n the new name
 	 */
 	public void setName(String n) {
 		this.name.set(n);
 	}
 
 	/**
-	 * Sets the description.
-	 *
-	 * @param d the new description
 	 */
 	public void setDescription(String d) {
 		this.description.set(d);
 	}
 
 	/**
-	 * Sets the file.
-	 *
-	 * @param f the new file
 	 */
 	public void setFile(File f) {
 		this.file.set(f);
@@ -168,7 +145,6 @@ public class ObservableQuery {
 	}
 
 	/**
-	 * Destroy.
 	 */
 	public void destroy() {
 		if (this.file.isNotNull().get()) {
@@ -177,7 +153,6 @@ public class ObservableQuery {
 	}
 
 	/**
-	 * Store.
 	 */
 	public void store() {
 		if (this.file.isNotNull().get()) {

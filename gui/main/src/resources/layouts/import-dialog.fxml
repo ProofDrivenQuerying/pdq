@@ -28,8 +28,6 @@
             <ImageView fx:id="detailsImage" fitHeight="16.0" fitWidth="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
           </graphic>
         </Label>
-        <Label text="Name" />
-        <TextField fx:id="importNameField" prefWidth="200.0" />
         <HBox prefHeight="22.0" prefWidth="400.0">
           <children>
             <TextField fx:id="importFileField" prefWidth="200.0" HBox.hgrow="ALWAYS" />

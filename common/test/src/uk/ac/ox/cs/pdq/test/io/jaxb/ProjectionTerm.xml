@@ -4,6 +4,7 @@
     <projections name="r1.2" type="java.lang.Integer"/>
     <RelationalTerm type="AccessTerm">
         <accessMethod name="m1"/>
+        <inputConstants/>
         <relation name="r1">
             <attribute name="r1.1" type="java.lang.Integer"/>
             <attribute name="r1.2" type="java.lang.Integer"/>

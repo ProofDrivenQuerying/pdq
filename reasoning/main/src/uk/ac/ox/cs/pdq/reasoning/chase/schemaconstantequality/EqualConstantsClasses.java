@@ -28,12 +28,12 @@ public class EqualConstantsClasses {
 	private Set<EqualConstantsClass> classes = new HashSet<>();
 
 	/**
-	 * Instantiates a new equal constants classes.
+	 * Instantiates a new  class of equal constants .
 	 */
 	public EqualConstantsClasses() {}
 
 	/**
-	 * Instantiates a new equal constants classes.
+	 * Instantiates a new class of equal constants .
 	 *
 	 * @param classes the classes
 	 */
@@ -46,7 +46,7 @@ public class EqualConstantsClasses {
 	}
 
 	/**
-	 * Adds the.
+	 * Updates the equivalence classes by adding an equality
 	 *
 	 * @param equality the equality
 	 * @return 		true if the input equality does not cause chase failure

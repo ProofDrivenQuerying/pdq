@@ -75,8 +75,7 @@ public class ProofReader extends AbstractXMLReader<Proof> {
 			parser.parse(in, this);
 			return this.builder.build();
 		} catch (ParserConfigurationException | SAXException | IOException e) {
-			e.printStackTrace();
-			log.error(e);
+//			log.error(e);
 		}
 		return null;
 	}
