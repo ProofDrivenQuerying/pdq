@@ -4,7 +4,7 @@
   margin-left: 2rem;
   display: flex;
   flex-direction: row;
-  height: 10rem;
+  height: 11rem;
 
   position:relative;
   overflow-x: hidden;
@@ -13,8 +13,7 @@
 }
 
 .body-name-plan{
-  margin: 0 auto;
-  width: 7rem;
+  width: 100%;
   padding: 1rem;
   display: flex;
   align-self: center;

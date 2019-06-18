@@ -8,7 +8,8 @@
 const initialSchemaListState = {
   plan: null,
   isFetchingPlan: false,
-  isErrorPlan: false
+  isErrorPlan: false,
+  id: null
 }
 
 const planUpdateReducer = (state = initialSchemaListState, action) => {
@@ -17,7 +18,8 @@ const planUpdateReducer = (state = initialSchemaListState, action) => {
       return{...state, plan: null, isFetchingPlan: true, isErrorPlan: false};
 
     case 'RESOLVED_PLAN':
-      return{...state, plan: action.plan, isFetchingPlan: false, isErrorPlan: false};
+      return{...state, plan: action.plan, isFetchingPlan: false, isErrorPlan: false,
+              id: action.id};
 
     case 'ERROR_PLAN':
       return{...state, plan: null, isFetchingPlan: false, isErrorPlan:true};

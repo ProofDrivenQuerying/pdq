@@ -24,34 +24,18 @@ import { getQueries } from '../../actions/getQueries';
 
 const Body = ({selectedSchema, setBody, body, queryList}) => {
   return (
-    <div>
-      <div style={{float: "left", padding: "3rem 3rem 0rem 3rem", height:"32rem"}}>
+    <div style={{display:"flex", flexDirection:"row", width:"100vw"}}>
+
+      <div style={{padding: "3rem 1rem 0rem 2rem"}}>
         <SchemaBody/>
       </div>
 
-      <div>
-        {queryList.queryList.SQL != null ?
-          <div style={{display: "flex", flexDirection: "row",
-                        padding: "3rem 2rem 0rem 2rem", flexWrap: "wrap"}}>
+      <div style={{display:"flex",padding:"3rem 1rem 0rem 1rem"}}>
+        <QueryBody/>
+      </div>
 
-            {
-              // <div style={{float: "none", paddingRight: "2rem", marginBottom: "1rem"}}>
-              //   <RelationBody/>
-              // </div>
-            }
-            <div style={{float: "none", paddingRight: "2rem", marginBottom: "1rem"}}>
-              <QueryBody/>
-            </div>
-
-            <div style={{float: "none", width:"92%", marginBottom: "1rem",
-                          marginRight: "3.8rem"}}>
-              <PlanBody/>
-            </div>
-
-          </div>
-
-        :
-          null}
+      <div style={{display:"flex",padding:"3rem 1rem 0rem 1rem"}}>
+        <PlanBody/>
       </div>
 
     </div>

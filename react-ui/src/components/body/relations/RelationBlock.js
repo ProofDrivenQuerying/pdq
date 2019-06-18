@@ -1,7 +1,7 @@
 //react
 import React from 'react';
 //reactstrap
-import { Table, Button } from 'reactstrap';
+import { Button } from 'reactstrap';
 //redux
 import { connect } from 'react-redux';
 //css
@@ -21,9 +21,6 @@ const RelationBlock = ({ relationList }) => {
                 {relation.name}
               </span>
           </Button>
-            {
-              //<RelationAttributeTable relation={relation}/>
-            }
 
         </div>
       )

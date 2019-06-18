@@ -119,8 +119,8 @@ import moreDots from '../../../img/threeDots.png';
          <Modal isOpen={this.state.modal} toggle={this.toggle}>
            <ModalHeader toggle={this.toggle}>{this.props.relation.name}</ModalHeader>
            <ModalBody>
-            <RelationAttributeTable relation={this.props.relation}/>
-            <RelationAccessTable relation={this.props.relation}/>
+              <RelationAttributeTable relation={this.props.relation}/>
+              <RelationAccessTable relation={this.props.relation}/>
            </ModalBody>
 
            <ModalFooter>
@@ -221,12 +221,6 @@ class SchemaDropdown extends React.Component{
                   <Button color="secondary" onClick={this.toggleRelationsModal}>Cancel</Button>
                 </ModalFooter>
               </Modal>
-
-              {
-                //<DropdownItem>Dependencies</DropdownItem>
-              }
-              <DropdownItem>Queries</DropdownItem>
-
             </DropdownMenu>
           </ButtonDropdown>
 

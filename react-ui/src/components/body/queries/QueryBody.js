@@ -1,37 +1,65 @@
 //react
 import React from 'react';
 //reactstrap
-import { Button} from 'reactstrap';
+import { Button } from 'reactstrap';
 //actions
 import { connect } from 'react-redux';
 //css
 import './querybody.css';
 
-
-
 /**
- * Renders Schema information page
+ * Renders query information components
  *
  * @author Camilo Ortiz
  */
 
+ const QueryList = ({queryList}) => {
+   return(
+     <div style={{height: "12rem", display: "flex", flexDirection:"column"}}>
+
+       <header className='body-name-query'>
+         Queries
+       </header>
+
+       {queryList.queryList.name != null?
+         <div className="query-name-holder">
+           <Button color="primary">
+             <span>
+               <span className="query-name">
+                 {queryList.queryList.name}
+               </span>
+             </span>
+           </Button>
+         </div>
+         :
+         null
+       }
+
+     </div>
+   );
+ }
+
 
 const QueryBody = ({queryList}) => {
-    return(
+  return(
+    <div>
       <div style={{border:"1px solid #E0E0E0", borderRadius:"25px",
-          boxShadow: "0 0 5px 2px #E0E0E0", width: "25rem"}}>
+          boxShadow: "0 0 5px 2px #E0E0E0", width: "15rem"}}>
+
+          <QueryList queryList={queryList}/>
 
         <header className='body-name-query'>
-          Query
+          Selected Query
         </header>
 
         <div>
-          <div className='queries'>
+          <div className='querySQL'>
             <div>{queryList.queryList.SQL}</div>
           </div>
         </div>
       </div>
-    )
+    </div>
+  );
 }
 
 //map states to props
