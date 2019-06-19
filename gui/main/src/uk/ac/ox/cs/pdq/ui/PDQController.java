@@ -714,7 +714,14 @@ public class PDQController {
 							.indexOf(this.currentSchemaViewitems);
 
 					// Check dependency to load into the dependency controller
-					Dependency dependency = this.currentSchema.get().getSchema().getAllDependencies()[index];
+					Dependency dependency = null;
+					try
+					{
+						dependency = this.currentSchema.get().getSchema().getAllDependencies()[index];
+					}
+					catch(Exception e)
+					{
+					}
 					if (currentSchemaViewitems.getParent().valueProperty().get().equals("Dependencies")
 							&& (dependency != null)) {
 						try {
@@ -1814,8 +1821,6 @@ public class PDQController {
 		ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
 		TreeItem<String> relations = new TreeItem<>(bundle.getString("application.schema.schemas.relations"),
 				new ImageView(this.dbRelationIcon));
-		TreeItem<String> services = new TreeItem<>(bundle.getString("application.schema.schemas.services"),
-				new ImageView(this.webRelationIcon));
 		TreeItem<String> views = new TreeItem<>(bundle.getString("application.schema.schemas.views"),
 				new ImageView(this.dbViewIcon));
 		TreeItem<String> dependencies = new TreeItem<>(bundle.getString("application.schema.schemas.dependencies"),
@@ -1862,32 +1867,6 @@ public class PDQController {
 						if (ream.getName().equals(a.getName())) {
 							imageView = new ImageView(this.webRelationIcon);
 							ti.getChildren().add(new TreeItem<>(sr.getName(), imageView));
-							found = true;
-						}
-						if (found)
-							break;
-					}
-					if (found)
-						break;
-				}
-				if (found)
-					break;
-			}
-		}
-
-		// Find the relation related to the service by access method name
-
-		for (Service sr : s.getServices()) {
-			ImageView imageView = new ImageView(this.webRelationIcon);
-			TreeItem ti = new TreeItem<>(sr.getName(), imageView);
-			services.getChildren().add(ti);
-			boolean found = false;
-			for (Relation r : s.getSchema().getRelations()) {
-				for (AccessMethodDescriptor a : r.getAccessMethods()) {
-					for (RESTExecutableAccessMethodSpecification ream : sr.getAccessMethod()) {
-						if (ream.getName().equals(a.getName())) {
-							imageView = new ImageView(this.dbRelationIcon);
-							ti.getChildren().add(new TreeItem<>(r.getName(), imageView));
 							found = true;
 						}
 						if (found)
@@ -1968,10 +1947,6 @@ public class PDQController {
 
 		if (!relations.getChildren().isEmpty()) {
 			item.getChildren().add(relations);
-		}
-
-		if (!services.getChildren().isEmpty()) {
-			item.getChildren().add(services);
 		}
 
 		if (!views.getChildren().isEmpty()) {
