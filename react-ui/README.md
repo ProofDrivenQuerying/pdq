@@ -1,6 +1,6 @@
   PDQ react-ui JavaScript UI
 
-  A Proof-Driven Query Planning Application web UI made in React
+  PQD web UI made in React
 
   The source code is available for free for non-commercial use.
   See the LICENCE file for details.
