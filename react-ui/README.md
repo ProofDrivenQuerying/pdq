@@ -1,67 +1,68 @@
-# react-ui
+  PDQ react-ui JavaScript UI
 
+  A Proof-Driven Query Planning Application web UI made in React
 
-A Proof-Driven Query Planning Application prototype made in React
+  The source code is available for free for non-commercial use.
+  See the LICENCE file for details.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+  I. Requirements
 
-## Installation
+   * Node.js version 8.x or higher
+   * React.js 16.0.0 or higher
 
-* Install dependencies
-   `brew install node`
-  * *Make sure you have node version 4 or newer*
-     `node -v`
+  II. Dependencies
 
-* Install React
-   `npm install react`
+  External: @vx/-0.0.189, d3.js-5.9.2, redux-4.0.1, redux-thunk-2.3.0, reactstrap-8.0.0, react-icons-3.7.0
 
-* Install vx modules
-  * `npm i @vx/group`
-  * `npm i @vx/hierarchy`
-  * `npm i @vx/gradient`
-  * `npm i @vx/shape`
+  To install dependencies and requirements:
 
+  On MacOs/Linux:
 
-* Install d3.js modules
-  * `npm i d3-hierarchy`
-  * `npm i d3-shape`
+    * brew install node
+    * npm install react
 
-* Install Redux
-  * `npm install --save redux`
-  * `npm i react-redux`
-  * `npm install --save-dev redux-devtools`
+  For vx modules:
 
-* Install Redux-Thunk for async calls
-  * `npm i redux-thunk`
+    * npm i @vx/group
+    * npm i @vx/hierarchy
+    * npm i @vx/gradient
+    * npm i @vx/shape
 
-* Install Bootstrap components with reactstrap
-  * `npm install --save reactstrap`
+  For d3.js modules:
+    * npm i d3-hierarchy
+    * npm i d3-shape
 
-* Install react-icons
-  * `npm install react-icons --save`
+  For redux:
+    * npm install --save redux
+    * npm i react-redux
+    * npm install --save-dev redux-devtools
+    * npm i redux-thunk
 
-## To Run
+  For Bootstrap:
+    * npm install --save reactstrap
 
-* `npm start`
+  For react-icons:
+    * npm install react-icons --save
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+  III. Installing & running the UI
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+  Under the top directory, type:
 
+  	npm start
 
-* `npm test`
+  This runs the app in the development mode.
+  Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+  The page will reload whenever you make local edits and save.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    npm test
 
-* `npm run build`
-  * *remember to remove the proxy in package.json before building!*
+  This launches the test runner in the interactive watch mode.
+  See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    npm run build
 
-The build is minified and the filenames include the hashes.<br>
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  Builds the app for production to the build folder.
+  It correctly bundles React in production mode and optimizes the build for the best performance.
+  The build is minified and the filenames include the hashes.
+  See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  *There is a proxy in package.json that was used in development. Remember to remove it before building!*

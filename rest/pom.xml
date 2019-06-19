@@ -3,7 +3,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>uk.ac.ox.cs.pdq</groupId>
-  	<artifactId>rest</artifactId>
+  	<artifactId>pdq-rest</artifactId>
   	<version>1.0.0-Beta</version>
   	<name>PDQ RESTful web service</name>
   	<url>http://www.cs.ox.ac.uk/pdq/</url>
@@ -85,9 +85,6 @@
   						</goals>
               <configuration>
   							<mainClass>uk.ac.ox.cs.pdq.rest.Application</mainClass>
-                <sources>
-                  <source>src/main/java</source>
-                </sources>
   						</configuration>
   					</execution>
 				  </executions>

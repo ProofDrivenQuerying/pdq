@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.rest;
 
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.rest.jsonwrappers.*;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,14 +16,20 @@ import java.io.File;
 import java.util.Map.Entry;
 
 /*
-  Entry point for Rest application. JsonController defines and computes all the REST calls of the API.
+  INFO:
 
-  @author Camilo Ortiz
+  `@RequestMapping` tag ensures that HTTP requests to /<my-request>
+  are mapped to the <my-request>() method
+
+  `@RestController` tag marks the class as a Spring MVC controller
+  */
+
+/**
+ * Entry point for Rest application. JsonController defines and computes all the REST calls of the API.
+ *
+ * @author Camilo Ortiz
  */
-
-
-
-@RestController  //marks class as Spring MVC controller
+@RestController
 public class JsonController{
   private final String PATH_TO_SCHEMA_EXAMPLES;
   private String[] example_names;
@@ -71,17 +78,21 @@ public class JsonController{
     }
   }
 
-
-/*
-  `@RequestMapping` ensures that HTTP requests to /init_schemas
-  are mapped to the init_schemas() method
-*/
+  /**
+   * Returns an initial list of schemas that only contains their id and names.
+   *
+   * @return SchemaName[]
+   */
   @RequestMapping(value="/init_schemas", method=RequestMethod.GET, produces="application/json")
-
   public SchemaName[] init_schemas(){
     return this.jsonSchemaList;
   }
-
+  /**
+   * Returns relations associated with specific schema.
+   *
+   * @param id
+   * @return JsonRelationList
+   */
   @RequestMapping(value="/getRelations", method=RequestMethod.GET, produces="application/json")
   public JsonRelationList getRelations(@RequestParam(value="id") int id){
 
@@ -90,7 +101,12 @@ public class JsonController{
 
     return toReturn;
   }
-
+  /**
+   * Returns Query associated with schema. As of now, each schema has only one query.
+   *
+   * @param id
+   * @return JsonQuery
+   */
   @RequestMapping(value="/getQueries", method=RequestMethod.GET, produces="application/json")
   public JsonQuery getQueries(@RequestParam(value="id") int id){
 
@@ -102,7 +118,12 @@ public class JsonController{
     JsonQuery toReturn = new JsonQuery(id, query_string);
     return toReturn;
   }
-
+  /**
+   * Returns properties of the schema (DOES NOT WORK YET)
+   *
+   * @param id
+   * @return File
+   */
   @RequestMapping(value="/getProperties", method=RequestMethod.GET, produces="application/json")
   public File getProperties(@RequestParam(value="id") int id){
 
@@ -111,7 +132,12 @@ public class JsonController{
     // JsonQuery toReturn = new JsonQuery(id, query_string);
     return properties;
   }
-
+  /**
+   * Returns Entry<RelationalTerm, Cost> that shows up as a long string
+   *
+   * @param id
+   * @return
+   */
   @RequestMapping(value="/plan", method=RequestMethod.GET, produces="application/json")
   public Entry<RelationalTerm, Cost> plan(@RequestParam("id") int id){
     Schema schema = schemaList.get(id);
@@ -129,7 +155,12 @@ public class JsonController{
       return null;
     }
   }
-
+  /**
+   * Returns JsonGraphicalPlan for use by the vx and d3.js libraries
+   *
+   * @param id
+   * @return
+   */
   @RequestMapping(value="/getGraphicalPlan", method=RequestMethod.GET, produces="application/json")
   public JsonGraphicalPlan getGraphicalPlan(@RequestParam("id") int id){
     Schema schema = schemaList.get(id);

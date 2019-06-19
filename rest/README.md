@@ -1,22 +1,37 @@
-# rest
-A higher level of abstraction of the PDQ application for use with Spring Boot's RESTful web service for Java backend
 
-for an example visit: https://spring.io/guides/gs/rest-service/
+  PDQ RESTful web service
 
-## to install
-* you'll need JDK 1.8 or later
-* maven 3.2+
-  * `brew install maven`
+  The PDQ RESTful web service employs a Spring Boot controller to direct GET requests to Java methods that extract
+  useful information from PDQ modules and convert that information into JSON objects for consumption by the
+  front-end.
 
-* install dependencies:
-  * `mvn install`
-  * `mvn install:install-file -Dfile=<path-to-common.jar>`
-  * `mvn install:install-file -Dfile=<path-to-gui.jar>`
-  * `mvn install:install-file -Dfile=<path-to-planner.jar>`
-  * `mvn install:install-file -Dfile=<path-to-reasoning.jar>`
+  The source code is available for free for non-commercial use.
+  See the LICENCE file for details.
 
+  I. Requirements
 
+   * Java 1.8 or higher
+   * Maven 3.2 or higher
+     You can build each library outside Maven, e.g. in your favorite IDE, but
+     you will have to managed dependencies manually.
 
-## to run
-* run jar:
-  `java -jar target/fake_pdq-0.1.0.jar`
+  II. Dependencies
+
+  Internal: (pdq-)common, (pdq-)qui, (pdq-)planner, (pdq-)reasoning
+  External: springframework.boot-2.1.4
+
+  III. Installing & running the RESTful web service
+
+  Under the top directory, type:
+
+  	mvn install
+
+  One JAR will be built and placed in the project's "target/" directory.
+
+  	- pdq-rest-<version>.jar, contains the bytecode for the web service
+  	  only, i.e. you need to make sure all dependencies are on the CLASSPATH to
+  	  run it.
+
+  To run the RESTful web service, type:
+
+  	java -jar /path/to/JAR/file
