@@ -1,5 +1,11 @@
 package uk.ac.ox.cs.pdq.rest;
 
+/*
+  Defines the structure of Relations in JSON form.
+
+  @author Camilo Ortiz
+ */
+
 public class JsonRelation{
   public String name;
   public JsonAttribute[] attributes;

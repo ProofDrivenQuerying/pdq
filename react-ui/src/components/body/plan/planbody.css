@@ -3,9 +3,8 @@
   margin-right: 2rem;
   margin-left: 2rem;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   height: 11rem;
-
   position:relative;
   overflow-x: hidden;
   overflow-y: scroll;

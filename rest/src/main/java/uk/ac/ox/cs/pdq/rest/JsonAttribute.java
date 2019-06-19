@@ -1,5 +1,11 @@
 package uk.ac.ox.cs.pdq.rest;
 
+/*
+  Structure for Relations' attributes in JSON form.
+
+  @author Camilo Ortiz
+ */
+
 public class JsonAttribute{
   public String name;
   public String type;

@@ -1,0 +1,9 @@
+uk/ac/ox/cs/pdq/rest/JsonRelation.class
+uk/ac/ox/cs/pdq/rest/JsonPlanner.class
+uk/ac/ox/cs/pdq/rest/JsonRelationList.class
+uk/ac/ox/cs/pdq/rest/JsonController.class
+uk/ac/ox/cs/pdq/rest/Application.class
+uk/ac/ox/cs/pdq/rest/JsonQuery.class
+uk/ac/ox/cs/pdq/rest/JsonAccessMethod.class
+uk/ac/ox/cs/pdq/rest/JsonAttribute.class
+uk/ac/ox/cs/pdq/rest/SchemaName.class

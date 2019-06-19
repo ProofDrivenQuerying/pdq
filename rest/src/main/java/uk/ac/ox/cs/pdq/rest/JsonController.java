@@ -14,6 +14,12 @@ import java.util.HashMap;
 import java.io.File;
 import java.util.Map.Entry;
 
+/*
+  Entry point for Rest application. JsonController defines and computes all the REST calls of the API.
+
+  @author Camilo Ortiz
+ */
+
 
 
 @RestController  //marks class as Spring MVC controller
@@ -82,8 +88,6 @@ public class JsonController{
     Schema schema = schemaList.get(id);
     JsonRelationList toReturn = new JsonRelationList(schema, id);
 
-    //change this so that it only sends a list of names and id...
-    //when you click on a relation it should send relation info
     return toReturn;
   }
 
@@ -119,6 +123,25 @@ public class JsonController{
 
       return plan;
       // return plan.toString();
+    }catch (Throwable e) {
+      e.printStackTrace();
+      System.exit(-1);
+      return null;
+    }
+  }
+
+  @RequestMapping(value="/getGraphicalPlan", method=RequestMethod.GET, produces="application/json")
+  public JsonGraphicalPlan getGraphicalPlan(@RequestParam("id") int id){
+    Schema schema = schemaList.get(id);
+    ConjunctiveQuery cq = queryList.get(id);
+    File properties = casePropertyList.get(id);
+
+    try{
+      Entry<RelationalTerm, Cost> plan = JsonPlanner.plan(schema, cq, properties);
+
+      JsonGraphicalPlan toReturn = JsonPlanner.getGraphicalPlan(plan);
+
+      return toReturn;
     }catch (Throwable e) {
       e.printStackTrace();
       System.exit(-1);

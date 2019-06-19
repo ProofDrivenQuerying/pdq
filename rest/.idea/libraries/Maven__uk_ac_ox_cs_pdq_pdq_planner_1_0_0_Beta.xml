@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: uk.ac.ox.cs.pdq:pdq-planner:1.0.0-Beta">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/uk/ac/ox/cs/pdq/pdq-planner/1.0.0-Beta/pdq-planner-1.0.0-Beta.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/uk/ac/ox/cs/pdq/pdq-planner/1.0.0-Beta/pdq-planner-1.0.0-Beta-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/uk/ac/ox/cs/pdq/pdq-planner/1.0.0-Beta/pdq-planner-1.0.0-Beta-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

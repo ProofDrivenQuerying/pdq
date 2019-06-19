@@ -2,7 +2,6 @@
 import React from 'react';
 //components
 import SchemaBody from './schemas/SchemaBody';
-import RelationBody from './relations/RelationBody';
 import QueryBody from './queries/QueryBody';
 import PlanBody from './plan/PlanBody';
 //reactstrap

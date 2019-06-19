@@ -5,6 +5,13 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 
+/*
+  What is returned to the client when they dispatch a GET request for a relation. This class defines the structure
+  of all of the relations in a schema.
+
+  @author Camilo Ortiz
+ */
+
 public class JsonRelationList{
   public String name;
   public int id;

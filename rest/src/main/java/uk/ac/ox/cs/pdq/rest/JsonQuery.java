@@ -1,5 +1,11 @@
 package uk.ac.ox.cs.pdq.rest;
 
+/*
+  Defines the structure of the query in JSON form
+
+  @author Camilo Ortiz
+ */
+
 public class JsonQuery{
   public String name;
   public String SQL;

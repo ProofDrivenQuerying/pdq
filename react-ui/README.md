@@ -37,6 +37,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 * Install Bootstrap components with reactstrap
   * `npm install --save reactstrap`
 
+* Install react-icons
+  * `npm install react-icons --save`
+
 ## To Run
 
 * `npm start`
