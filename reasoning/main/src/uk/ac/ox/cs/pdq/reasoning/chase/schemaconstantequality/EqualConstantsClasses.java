@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.reasoning.chase.schemaconstantequality;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -61,16 +60,10 @@ public class EqualConstantsClasses {
 			return true;
 		}
 		if(c0 != null && c1 != null) {
-			if(c0.add(terms[1], c1)) {
-				if(!c0.equals(c1)) {
-					Set<EqualConstantsClass> classes = new HashSet<>();
-					Iterator<EqualConstantsClass> iterator = this.classes.iterator();
-					while (iterator.hasNext()) {
-						EqualConstantsClass cls = iterator.next();
-						if (!cls.equals(c1)) {
-							classes.add(cls);
-						}
-					}
+			if(c0.add(terms[1], c1)) { // add all content from c1 to c0
+				if(!c0.equals(c1)) { // two class becomes one, so we have to remove the second one.
+					Set<EqualConstantsClass> classes = new HashSet<>(this.classes);
+					classes.remove(c1); // remove object from a clone and then replace in order to be thread safe.
 					this.classes = classes;
 				}
 			}
