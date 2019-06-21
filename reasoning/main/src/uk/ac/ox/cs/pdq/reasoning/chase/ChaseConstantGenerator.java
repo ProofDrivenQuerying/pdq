@@ -45,7 +45,7 @@ public final class ChaseConstantGenerator {
 	 */
 	public static String getTriggerWitness(Dependency dependency, Map<Variable, Constant> mapping, Variable existentialVariable) {
 		String namesAndValuesOfUniversalVariables = "";
-		for (Variable variable : dependency.getUniversal()) {
+		for (Variable variable : dependency.getTopLevelQuantifiedVariables()) {
 			Variable variableTerm = variable;
 			Preconditions.checkState(mapping.get(variableTerm) != null);
 			namesAndValuesOfUniversalVariables += variable.getSymbol() + mapping.get(variableTerm);
