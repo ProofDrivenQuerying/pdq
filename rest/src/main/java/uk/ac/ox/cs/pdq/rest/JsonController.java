@@ -16,8 +16,7 @@ import java.io.File;
 import java.util.Map.Entry;
 
 /*
-  INFO:
-
+  @info:
   `@RequestMapping` tag ensures that HTTP requests to /<my-request>
   are mapped to the <my-request>() method
 
@@ -166,17 +165,16 @@ public class JsonController{
     Schema schema = schemaList.get(id);
     ConjunctiveQuery cq = queryList.get(id);
     File properties = casePropertyList.get(id);
-
+    JsonGraphicalPlan toReturn = null;
     try{
-      Entry<RelationalTerm, Cost> plan = JsonPlanner.plan(schema, cq, properties);
 
-      JsonGraphicalPlan toReturn = JsonPlanner.getGraphicalPlan(plan);
+      toReturn = JsonPlanner.search(schema, cq, properties);
 
-      return toReturn;
     }catch (Throwable e) {
       e.printStackTrace();
       System.exit(-1);
-      return null;
+
     }
+    return toReturn;
   }
 }

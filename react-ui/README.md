@@ -29,19 +29,23 @@
     * npm i @vx/shape
 
   For d3.js modules:
+
     * npm i d3-hierarchy
     * npm i d3-shape
 
   For redux:
+
     * npm install --save redux
     * npm i react-redux
     * npm install --save-dev redux-devtools
     * npm i redux-thunk
 
   For Bootstrap:
+
     * npm install --save reactstrap
 
   For react-icons:
+
     * npm install react-icons --save
 
   III. Installing & running the UI

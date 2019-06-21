@@ -5,6 +5,7 @@ import schemaListUpdateReducer from './setSchemaList';
 import relationListUpdateReducer from './setRelationList';
 import queryListUpdateReducer from './setQueryList';
 import planUpdateReducer from './setPlan';
+import graphicalPlanUpdateReducer from './setGraphicalPlan';
 
 /**
  * Combines setBody and schemaUpdate reducers into a single rootReducer.
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
   relationList: relationListUpdateReducer,
   schemaList: schemaListUpdateReducer,
   queryList: queryListUpdateReducer,
-  plan: planUpdateReducer
+  plan: planUpdateReducer,
+  graphicalPlan:  graphicalPlanUpdateReducer
 })
 
 export default rootReducer;

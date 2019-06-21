@@ -12,12 +12,14 @@
 
    * Java 1.8 or higher
    * Maven 3.2 or higher
-     You can build each library outside Maven, e.g. in your favorite IDE, but
-     you will have to managed dependencies manually.
+
+   You can build each library outside Maven, e.g. in your favorite IDE, but
+   you will have to managed dependencies manually.
 
   II. Dependencies
 
   Internal: (pdq-)common, (pdq-)qui, (pdq-)planner, (pdq-)reasoning
+
   External: springframework.boot-2.1.4
 
   III. Installing & running the RESTful web service
@@ -35,3 +37,6 @@
   To run the RESTful web service, type:
 
   	java -jar /path/to/JAR/file
+
+  Open http://localhost:8080/<myQuery>?id=0 to make an API call!
+

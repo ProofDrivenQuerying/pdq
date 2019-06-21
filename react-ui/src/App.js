@@ -28,7 +28,7 @@ class App extends Component{
   render(){
     console.log(this.props);
     return(
-      <div style={{height:"100vh", minWidth:"40vw"}}>
+      <div style={{height:"100vh"}}>
         <Header/>
         <Body/>
       </div>
