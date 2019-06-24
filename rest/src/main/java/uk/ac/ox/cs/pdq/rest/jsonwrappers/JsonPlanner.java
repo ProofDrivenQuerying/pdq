@@ -7,7 +7,6 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.db.Schema;
 import java.util.Map.Entry;
 import uk.ac.ox.cs.pdq.planner.*;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearExplorer;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.plantree.PlanTree;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -23,13 +22,15 @@ import uk.ac.ox.cs.pdq.cost.Cost;
  * @author Camilo Ortiz
  */
 public class JsonPlanner{
-    public static JsonGraphicalPlan search(Schema schema, ConjunctiveQuery query, File properties){
+    public static JsonGraphicalPlan search(Schema schema, ConjunctiveQuery query, File properties, String pathToCatalog){
         PlannerParameters planParams = properties != null ?
                 new PlannerParameters(properties) :
                 new PlannerParameters() ;
+
         CostParameters costParams = properties != null ?
                 new CostParameters(properties) :
                 new CostParameters() ;
+        costParams.setCatalog(pathToCatalog);
 
         ReasoningParameters reasoningParams = properties != null ?
                 new ReasoningParameters(properties) :
@@ -42,14 +43,14 @@ public class JsonPlanner{
 
         ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
 
-        ExplorationSetUpForJson planner2 = new ExplorationSetUpForJson(planParams, costParams, reasoningParams, dbParams, schema);
+        ExplorationSetUpForJson jsonPlanner = new ExplorationSetUpForJson(planParams, costParams, reasoningParams, dbParams, schema);
 
         JsonGraphicalPlan toReturn = null;
         try{
 
             Entry<RelationalTerm, Cost>  entry = planner.search(query); //plan first to set cache
 
-            PlanTree<SearchNode> tree = planner2.search(query); //plan again and get the tree
+            PlanTree<SearchNode> tree = jsonPlanner.search(query); //plan again and get the tree
 
             SearchNode root = tree.getRoot();
 
@@ -84,25 +85,6 @@ public class JsonPlanner{
     }
 
     /**
-     * Recursively populates the children and name of a JsonGraphicalPlan, and it's children's, etc.
-     *
-     * @param rt
-     * @return Populated JsonGraphicalPlan
-     */
-//    public static JsonGraphicalPlan populateJsonGraphicalPlan(RelationalTerm rt){
-//        if(rt.getNumberOfChildren() == 0){
-//            return new JsonGraphicalPlan(rt, 0, 1);
-//        }else{
-//            JsonGraphicalPlan plan = new JsonGraphicalPlan(rt, rt.getNumberOfChildren(),1 );
-//
-//            for(int i = 0; i < rt.getNumberOfChildren(); i++){
-//                plan.setChild(i,populateJsonGraphicalPlan(rt.getChild(i)));
-//            }
-//            return plan;
-//        }
-//    }
-
-    /**
      * Creates an Entry<RelationalTerm, Cost> object from a schema, a conjunctive query, and its properties
      *
      * @param schema
@@ -110,13 +92,15 @@ public class JsonPlanner{
      * @param properties
      * @return Entry<RelationalTerm, Cost> Plan
      */
-  public static Entry<RelationalTerm, Cost> plan(Schema schema, ConjunctiveQuery query, File properties){
+  public static Entry<RelationalTerm, Cost> plan(Schema schema, ConjunctiveQuery query, File properties, String pathToCatalog){
     PlannerParameters planParams = properties != null ?
       new PlannerParameters(properties) :
       new PlannerParameters() ;
+
     CostParameters costParams = properties != null ?
       new CostParameters(properties) :
       new CostParameters() ;
+    costParams.setCatalog(pathToCatalog);
 
     ReasoningParameters reasoningParams = properties != null ?
       new ReasoningParameters(properties) :
@@ -126,11 +110,12 @@ public class JsonPlanner{
       new DatabaseParameters(properties) :
       DatabaseParameters.Postgres ;
 
+
+
     Entry<RelationalTerm, Cost> entry = null;
 
     ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
 
-    ExplorationSetUpForJson planner2 = new ExplorationSetUpForJson(planParams, costParams, reasoningParams, dbParams, schema);
     try{
 
       entry = planner.search(query);
@@ -142,54 +127,41 @@ public class JsonPlanner{
     return entry;
   }
 
-    /**
-     * Converter from `Entry<RelationalTerm, Cost> plan` to JsonGraphicalPlan that can be easily converted to JSON
-     *
-     * @param plan
-     * @return JsonGraphicalPlan for use in JsonController
-     */
-//  public static JsonGraphicalPlan getGraphicalPlan(Entry<RelationalTerm, Cost> plan){
-//	  RelationalTerm entryTerm = plan.getKey();
-//
-//	  JsonGraphicalPlan planToReturn = JsonPlanner.populateJsonGraphicalPlan(entryTerm);
-//
-//	  return planToReturn;
-//  }
+    public static RelationalTerm planToObject(Schema schema, ConjunctiveQuery query, File properties, String pathToCatalog){
+        PlannerParameters planParams = properties != null ?
+                new PlannerParameters(properties) :
+                new PlannerParameters() ;
+
+        CostParameters costParams = properties != null ?
+                new CostParameters(properties) :
+                new CostParameters() ;
+        costParams.setCatalog(pathToCatalog);
+
+        ReasoningParameters reasoningParams = properties != null ?
+                new ReasoningParameters(properties) :
+                new ReasoningParameters() ;
+
+        DatabaseParameters dbParams = properties != null ?
+                new DatabaseParameters(properties) :
+                DatabaseParameters.Postgres ;
 
 
-    /**
-     * Gets label for populating JsonGraphicalPlan fields
-     * @param t
-     * @return String
-     */
-  public static String getLabelFor(RelationalTerm t) {
-  	String ret = t.getClass().getSimpleName();
-//		String ret = "label=\"" + t.getClass().getSimpleName() + "\n";
-////		ret += "In :" + Joiner.on(",\n").join(Arrays.asList(t.getInputAttributes())) + "\n";
-////		ret += "Out:" + Joiner.on(",\n").join(Arrays.asList(t.getOutputAttributes())) + "\n";
-//		if (t instanceof SelectionTerm) {
-//			ret += "SelectionCondition:" + ((SelectionTerm) t).getSelectionCondition() + "\"\n";
-//			ret += "shape=polygon,sides=4,distortion=-.3\n";
-//		} else if (t instanceof AccessTerm) {
-//			ret += "Relation:" + ((AccessTerm) t).getRelation() + "\n";
-//			ret += "AccessMethod:" + ((AccessTerm) t).getAccessMethod() + "\n";
-//			ret += "InputConstants:" + ((AccessTerm) t).getInputConstants() + "\"\n";
-//		} else if (t instanceof RenameTerm) {
-//			ret += /*"Renamings:" + Arrays.asList(((RenameTerm) t).getRenamings()) + */ "\"\n";
-//			ret += "shape=polygon,sides=4\n";
-//		} else if (t instanceof JoinTerm) {
-//			ret += "Conditions:" + ((JoinTerm) t).getJoinConditions() + "\"\n";
-//			ret += "shape=invtriangle\n";
-//		} else if (t instanceof DependentJoinTerm) {
-//			ret += "Conditions:" + ((DependentJoinTerm) t).getJoinConditions() + "\n";
-//			ret += "LeftRight positions:" + ((DependentJoinTerm) t).getPositionsInLeftChildThatAreInputToRightChild()
-//					+ "\n";
-//			ret += "\",shape=polygon,sides=5\n";
-//		} else {
-//			ret += "\",shape=polygon,sides=7\n";
-//		}
-		return ret;
-	}
+        RelationalTerm toReturn = null;
 
+        ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
+
+        try{
+            Entry<RelationalTerm, Cost> entry = null;
+
+            entry = planner.search(query);
+
+            toReturn = entry.getKey();
+
+        }catch (Throwable e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+        return toReturn;
+    }
 
 }

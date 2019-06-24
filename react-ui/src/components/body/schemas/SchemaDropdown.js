@@ -6,7 +6,6 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, Table,
 //redux
 import { connect } from 'react-redux';
 //actions
-import setSchema from '../../../actions/setSchema';
 import { getRelations } from '../../../actions/getRelations';
 import { getQueries } from '../../../actions/getQueries';
 //css
@@ -114,9 +113,13 @@ import moreDots from '../../../img/threeDots.png';
    render() {
      return (
        <div>
-         <Button color="link" onClick={this.toggle}>{this.props.relation.name}</Button>
+         <Button
+            color="link"
+            onClick={this.toggle}>{this.props.relation.name}</Button>
 
-         <Modal isOpen={this.state.modal} toggle={this.toggle}>
+         <Modal
+            isOpen={this.state.modal}
+            toggle={this.toggle}>
            <ModalHeader toggle={this.toggle}>{this.props.relation.name}</ModalHeader>
            <ModalBody>
               <RelationAttributeTable relation={this.props.relation}/>
@@ -124,7 +127,9 @@ import moreDots from '../../../img/threeDots.png';
            </ModalBody>
 
            <ModalFooter>
-             <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+             <Button
+                color="secondary"
+                onClick={this.toggle}>Cancel</Button>
            </ModalFooter>
          </Modal>
        </div>
@@ -169,14 +174,19 @@ class SchemaDropdown extends React.Component{
 
   render(){
     return(
-      <div className="schema-name-holder" key={this.props.schemaFromList.id}>
+      <div
+        className="schema-name-holder"
+        key={this.props.schemaFromList.id}>
 
       {this.props.selectedSchema.selectedSchema != null &&
           this.props.schemaFromList.id === this.props.selectedSchema.id ?
 
         <div style={{display: "flex"}}>
-          <Button color="primary" id = {this.props.schemaFromList.id} block
-                  onClick={(e) => this.setSchema_getQueries(
+          <Button
+            color="primary"
+            id = {this.props.schemaFromList.id}
+            block
+            onClick={(e) => this.setSchema_getQueries(
                     this.props.schemaFromList, this.props.schemaFromList.id)}>
             <span>
                 <span className="schema-name">
@@ -185,8 +195,12 @@ class SchemaDropdown extends React.Component{
             </span>
           </Button>
 
-          <ButtonDropdown color="link" isOpen={this.state.dropdownOpen}
-                          toggle={this.toggle} direction="right">
+          <ButtonDropdown
+            color="link"
+            isOpen={this.state.dropdownOpen}
+            toggle={this.toggle}
+            direction="right">
+
             <DropdownToggle color="link">
               <img src={moreDots} className="threeDots" alt="more"/>
             </DropdownToggle>
@@ -199,7 +213,9 @@ class SchemaDropdown extends React.Component{
               {
                 //relations modal
               }
-              <Modal isOpen={this.state.modalRelationsOpen} toggle={this.toggleRelationsModal}>
+              <Modal
+                isOpen={this.state.modalRelationsOpen}
+                toggle={this.toggleRelationsModal}>
                 <ModalHeader toggle={this.toggleRelationsModal}>Relations</ModalHeader>
                 <ModalBody>
                 { this.props.relationList.relationList.relations != null ?
@@ -218,7 +234,9 @@ class SchemaDropdown extends React.Component{
                 </ModalBody>
 
                 <ModalFooter>
-                  <Button color="secondary" onClick={this.toggleRelationsModal}>Cancel</Button>
+                  <Button
+                    color="secondary"
+                    onClick={this.toggleRelationsModal}>Cancel</Button>
                 </ModalFooter>
               </Modal>
             </DropdownMenu>
@@ -230,8 +248,11 @@ class SchemaDropdown extends React.Component{
         :
 
         <div style={{display: "flex"}}>
-          <Button outline color="secondary" id = {this.props.schemaFromList.id} block
-                  onClick={(e) => this.setSchema_getQueries(
+          <Button
+            outline color="secondary"
+            id = {this.props.schemaFromList.id}
+            block
+            onClick={(e) => this.setSchema_getQueries(
                     this.props.schemaFromList, this.props.schemaFromList.id)}>
             <span>
               <span className="schema-name">

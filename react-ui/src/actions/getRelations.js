@@ -26,12 +26,11 @@ export const getRelations = (id) => {
   store.dispatch(fetchingRelation());
 
   return function(dispatch, getState){
-    var data;
     return fetch("/getRelations?id="+id)
     .then(res => res.text())
-    .then(res => data = JSON.parse(res)).then((data)=>{
+    .then(res => res = JSON.parse(res)).then((res)=>{
       //if its ok, we keep the data
-      dispatch(resolvedRelation(data))
+      dispatch(resolvedRelation(res))
     }).catch(err => dispatch(errorRelation()));
   }
 }

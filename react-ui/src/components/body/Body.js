@@ -4,13 +4,8 @@ import React from 'react';
 import SchemaBody from './schemas/SchemaBody';
 import QueryBody from './queries/QueryBody';
 import PlanBody from './plan/PlanBody';
-//reactstrap
-import { Button} from 'reactstrap';
 //redux
 import { connect } from 'react-redux';
-//actions
-import setBody from '../../actions/setBody';
-import { getQueries } from '../../actions/getQueries';
 
 /**
  * Renders the app's body. Has  a main body that rotates through the states:
@@ -21,19 +16,19 @@ import { getQueries } from '../../actions/getQueries';
  * @author Camilo Ortiz
  */
 
-const Body = ({selectedSchema, setBody, body, queryList}) => {
+const Body = ({selectedSchema, body, queryList}) => {
   return (
     <div style={{display:"flex", flexDirection:"row", width:"100vw"}}>
 
-      <div style={{padding: "3rem 1rem 0rem 2rem"}}>
+      <div style={{margin: "3rem 1rem 0rem 2rem"}}>
         <SchemaBody/>
       </div>
 
-      <div style={{display:"flex",padding:"3rem 1rem 0rem 1rem"}}>
+      <div style={{display:"flex",margin:"3rem 1rem 0rem 1rem"}}>
         <QueryBody/>
       </div>
 
-      <div style={{display:"flex",padding:"3rem 1rem 0rem 1rem"}}>
+      <div style={{display:"flex",margin:"3rem 1rem 0rem 1rem"}}>
         <PlanBody/>
       </div>
 
@@ -46,10 +41,6 @@ const mapStatesToProps = (state) =>({
   ...state
 });
 
-//map actions to props
-const mapDispatchToProps = (dispatch) =>({
-  setBody: (body_type) => dispatch({ type: body_type})
-});
 
 
-export default connect(mapStatesToProps, mapDispatchToProps)(Body);
+export default connect(mapStatesToProps, null)(Body);

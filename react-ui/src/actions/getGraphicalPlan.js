@@ -26,13 +26,12 @@ export const getGraphicalPlan = (id) => {
   store.dispatch(fetchingGraphicalPlan());
 
   return function(dispatch, getState){
-    var data;
     return fetch("/getGraphicalPlan?id="+id)
     .then(res => res.text())
-    .then(res => data = JSON.parse(res)).then((data)=>{
-      console.log(data);
+    .then(res => res = JSON.parse(res)).then((res)=>{
+      console.log(res);
       //if its ok, we keep the data
-      dispatch(resolvedGraphicalPlan(data))
+      dispatch(resolvedGraphicalPlan(res))
 
     }).catch(err => dispatch(errorGraphicalPlan()));
   }

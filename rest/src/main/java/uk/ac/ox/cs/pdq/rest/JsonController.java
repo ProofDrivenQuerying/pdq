@@ -40,7 +40,7 @@ public class JsonController{
 
   public JsonController(){
     this.PATH_TO_SCHEMA_EXAMPLES = "test/demo/case_";
-    this.example_names = new String[]{"001", "002", "003"};
+    this.example_names = new String[]{"001","002", "003", "004", "005", "006" };
     this.jsonSchemaList = new SchemaName[example_names.length];
     this.schemaList = new HashMap<Integer, Schema>();
     this.queryList = new HashMap<Integer, ConjunctiveQuery>();
@@ -56,6 +56,8 @@ public class JsonController{
         Schema schema = IOManager.importSchema(new File(pathToSchema));
         ConjunctiveQuery queries = IOManager.importQuery(new File(pathToQuery));
         File caseProperties = new File(pathToCaseProperties);
+
+
 
         //put schema in hash map
         schemaList.put(i, schema);
@@ -142,12 +144,12 @@ public class JsonController{
     Schema schema = schemaList.get(id);
     ConjunctiveQuery cq = queryList.get(id);
     File properties = casePropertyList.get(id);
+    String pathToCatalog = PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/catalog.properties";
 
     try{
-      Entry<RelationalTerm, Cost> plan = JsonPlanner.plan(schema, cq, properties);
+      Entry<RelationalTerm, Cost> plan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
 
       return plan;
-      // return plan.toString();
     }catch (Throwable e) {
       e.printStackTrace();
       System.exit(-1);
@@ -165,15 +167,37 @@ public class JsonController{
     Schema schema = schemaList.get(id);
     ConjunctiveQuery cq = queryList.get(id);
     File properties = casePropertyList.get(id);
+    String pathToCatalog = PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/catalog.properties";
+
     JsonGraphicalPlan toReturn = null;
     try{
 
-      toReturn = JsonPlanner.search(schema, cq, properties);
+      toReturn = JsonPlanner.search(schema, cq, properties, pathToCatalog);
 
     }catch (Throwable e) {
       e.printStackTrace();
       System.exit(-1);
 
+    }
+    return toReturn;
+  }
+
+  @RequestMapping(value="/runPlan", method=RequestMethod.GET, produces="application/json")
+  public JsonRunResults runPlan(@RequestParam("id") int id){
+    Schema schema = schemaList.get(id);
+    ConjunctiveQuery cq = queryList.get(id);
+    File properties = casePropertyList.get(id);
+    String pathToCatalog = PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/catalog.properties";
+
+    JsonRunResults toReturn = null;
+
+    try{
+      RelationalTerm plan = JsonPlanner.planToObject(schema, cq, properties, pathToCatalog);
+      toReturn = new JsonRunResults(Runner.runtime(schema, cq, properties, plan));
+
+    }catch (Throwable e) {
+      e.printStackTrace();
+      System.exit(-1);
     }
     return toReturn;
   }

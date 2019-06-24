@@ -20,7 +20,9 @@ const SchemaBlock = ({ schemaList}) => {
   if(!schemaList.isFetching){
     return schemaList.schemaList.map((schemaFromList, index) => {
       return(
-        <SchemaDropdown schemaFromList={schemaFromList} key={"schema"+index}/>
+        <SchemaDropdown
+          schemaFromList={schemaFromList}
+          key={"schema"+index}/>
       )
     })
   }

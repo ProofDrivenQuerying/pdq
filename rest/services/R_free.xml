@@ -1,0 +1,15 @@
+	<service
+		name="R"
+		protocol="REST"
+		url="http://pdq-webapp.cs.ox.ac.uk:8080/webapp/servlets/servlet/R" 
+		media-type="application/xml"
+		documentation=""
+		result-delimiter="country"
+		service-group="service-group-1">
+
+		<policy name="1000_items_per_page" />
+
+		<access-method type="FREE" 						name="R_free" cost="1000.0" relation-name="R">
+			<attribute name="x"    			output="true" type="String"    	relation-attribute="x" path="x"/>
+		</access-method>
+	</service>

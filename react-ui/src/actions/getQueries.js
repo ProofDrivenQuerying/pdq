@@ -26,13 +26,11 @@ export const getQueries = (id) => {
   store.dispatch(fetchingQueries());
 
   return function(dispatch, getState){
-    var data;
     return fetch("/getQueries?id="+id)
     .then(res => res.text())
-    .then(res => data = JSON.parse(res)).then((data)=>{
-      console.log(data);
+    .then(res => res = JSON.parse(res)).then((res)=>{
       //if its ok, we keep the data
-      dispatch(resolvedQueries(data))
+      dispatch(resolvedQueries(res))
     }).catch(err => dispatch(errorQueries()));
   }
 }

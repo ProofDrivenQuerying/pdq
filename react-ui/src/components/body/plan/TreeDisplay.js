@@ -72,18 +72,21 @@ export default class TreeDisplay extends React.Component {
 
     return (
       <div>
-        <div style={{ color: 'rgba(38, 150, 136, 1.000)', fontSize: 10 }}>
-          <label>layout:</label>
-          <select
-            onClick={e => e.stopPropagation()}
-            onChange={e => this.setState({ layout: e.target.value })}
-            value={layout}
-          >
-            <option value="cartesian">cartesian</option>
-            <option value="polar">polar</option>
-          </select>
+        <div style={{ color: 'black', fontSize: 15, display:"flex" }}>
+          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
+            <label>Layout: </label>
+            <select
+              onClick={e => e.stopPropagation()}
+              onChange={e => this.setState({ layout: e.target.value })}
+              value={layout}
+            >
+              <option value="cartesian">cartesian</option>
+              <option value="polar">polar</option>
+            </select>
+          </div>
 
-          <label>orientation:</label>
+          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
+          <label>Orientation: </label>
           <select
             onClick={e => e.stopPropagation()}
             onChange={e => this.setState({ orientation: e.target.value })}
@@ -93,8 +96,10 @@ export default class TreeDisplay extends React.Component {
             <option value="vertical">vertical</option>
             <option value="horizontal">horizontal</option>
           </select>
+          </div>
 
-          <label>link:</label>
+          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
+          <label>Link: </label>
           <select
             onClick={e => e.stopPropagation()}
             onChange={e => this.setState({ linkType: e.target.value })}
@@ -105,18 +110,21 @@ export default class TreeDisplay extends React.Component {
             <option value="curve">curve</option>
             <option value="line">line</option>
           </select>
+          </div>
+          {
+            // <label>step: </label>
+            // <input
+            //   onClick={e => e.stopPropagation()}
+            //   type="range"
+            //   min={0}
+            //   max={1}
+            //   step={0.1}
+            //   onChange={e => this.setState({ stepPercent: e.target.value })}
+            //   value={stepPercent}
+            //   disabled={linkType !== 'step' || layout === 'polar'}
+            // />
+          }
 
-          <label>step:</label>
-          <input
-            onClick={e => e.stopPropagation()}
-            type="range"
-            min={0}
-            max={1}
-            step={0.1}
-            onChange={e => this.setState({ stepPercent: e.target.value })}
-            value={stepPercent}
-            disabled={linkType !== 'step' || layout === 'polar'}
-          />
         </div>
 
         <svg width={width} height={height}>

@@ -23,12 +23,11 @@ export const getInitialData = () => {
   store.dispatch(fetching());
 
   return function(dispatch, getState){
-    var data;
     return fetch("/init_schemas")
     .then(res => res.text())
-    .then(res => data = JSON.parse(res)).then((data)=>{  
+    .then(res => res = JSON.parse(res)).then((res)=>{
       //if its ok, we keep the data
-      dispatch(resolved(data))
+      dispatch(resolved(res))
     }).catch(err => dispatch(error()));
   }
 }

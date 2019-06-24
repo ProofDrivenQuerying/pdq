@@ -16,17 +16,25 @@ import logo from '../../img/logo.png';
 const Header = () =>{
   return(
     <div className = "Header-wrapper">
-      <img src={logo} className="PDQ-Logo" alt="logo" />
+      <a
+        style={{display:"flex"}}
+        href="http://www.cs.ox.ac.uk/projects/pdq/home.html"
+        target='_blank'
+        rel="noopener noreferrer">
+        <img src={logo} className="PDQ-Logo" alt="logo" />
+      </a>
+
       <div className = 'breadlist'>
         <Breadcrumb>
-          <BreadcrumbItem>Schemas</BreadcrumbItem>
-          <BreadcrumbItem>Queries</BreadcrumbItem>
-          <BreadcrumbItem>Planning</BreadcrumbItem>
+          <BreadcrumbItem>Schema</BreadcrumbItem>
+          <BreadcrumbItem>Query</BreadcrumbItem>
+          <BreadcrumbItem>Plan</BreadcrumbItem>
         </Breadcrumb>
       </div>
 
       <span className='about'>
-        <a href="http://www.cs.ox.ac.uk/projects/pdq/home.html"
+        <a
+          href="http://www.cs.ox.ac.uk/projects/pdq/home.html"
           target='_blank'
           rel="noopener noreferrer">
           about
