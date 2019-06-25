@@ -181,7 +181,7 @@
                     <TextField id="timeoutTextField" fx:id="settingsTimeoutTextField" layoutX="10.0" layoutY="87.0" prefWidth="132.0" />
                     <Label prefHeight="35.0" prefWidth="115.0" text="%application.plan.settings.iterations" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="109.0" />
                     <TextField id="nbIterationsTextField" fx:id="settingsMaxIterationsTextField" layoutY="139.0" prefWidth="132.0" AnchorPane.leftAnchor="10.0" />
-                    <TextField id="matchingIntervalsTextField" fx:id="settingsQueryMatchIntervalTextField" layoutX="152.0" layoutY="139.0" prefWidth="115.0" />
+                    <TextField id="matchingIntervalsTextField" fx:id="settingsQueryMatchIntervalTextField" editable="true" layoutX="152.0" layoutY="139.0" prefWidth="115.0" />
                     <Label layoutX="152.0" layoutY="109.0" prefHeight="35.0" prefWidth="115.0" text="%application.plan.settings.match-intervals" />
                     <TextField id="blockingIntervalsTextField" fx:id="settingsBlockingIntervalTextField" layoutX="152.0" layoutY="87.0" prefWidth="115.0" />
                     <Label layoutX="152.0" layoutY="57.0" prefHeight="35.0" prefWidth="123.0" text="%application.plan.settings.blocking" />
@@ -208,9 +208,6 @@
                     <ComboBox id="costTypeList" fx:id="settingsExecutorTypeList" layoutX="10.0" layoutY="272.0" prefWidth="132.0">
                       <items>
                         <FXCollections fx:factory="observableArrayList">
-                          <String fx:value="Item 1" />
-                          <String fx:value="Item 2" />
-                          <String fx:value="Item 3" />
                         </FXCollections>
                       </items>
                     </ComboBox>

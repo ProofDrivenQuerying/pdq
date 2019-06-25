@@ -1266,7 +1266,7 @@ public class PDQController {
 			if (plan != null)	PDQController.this.savePlan(newValue);
 			
 			PDQController.this.runRuntimeButton.setDisable(plan == null);
-			PDQController.this.setSettingsEditable(plan == null);
+//			PDQController.this.setSettingsEditable(plan == null);
 			PDQController.this.displayPlan(plan);
 			PDQController.this.displayProof(newValue.getProof());
 			PDQController.this.displaySettings(newValue);
@@ -1314,13 +1314,19 @@ public class PDQController {
 	 * @param p the p
 	 */
 	void displaySettings(ObservablePlan p) {
+		PDQController.this.settingsTimeoutTextField.setEditable(true);
 		PDQController.this.settingsTimeoutTextField.setText(PDQController.nullToEmpty(p.getTimeout()));
+		PDQController.this.settingsMaxIterationsTextField.setEditable(true);
 		PDQController.this.settingsMaxIterationsTextField.setText(PDQController.nullToEmpty(p.getMaxIterations()));
-		PDQController.this.settingsQueryMatchIntervalTextField
-				.setText(PDQController.nullToEmpty(p.getQueryMatchInterval()));
+		PDQController.this.settingsQueryMatchIntervalTextField.setEditable(true);
+		PDQController.this.settingsQueryMatchIntervalTextField.setText(PDQController.nullToEmpty(p.getQueryMatchInterval()));
+		PDQController.this.settingsPlannerTypeList.setEditable(true);
 		PDQController.this.settingsPlannerTypeList.getSelectionModel().select(p.getPlannerType());
+		PDQController.this.settingsReasoningTypeList.setEditable(true);
 		PDQController.this.settingsReasoningTypeList.getSelectionModel().select(p.getReasoningType());
+		PDQController.this.settingsCostTypeList.setEditable(true);
 		PDQController.this.settingsCostTypeList.getSelectionModel().select(p.getCostType());
+		PDQController.this.settingsOutputTuplesTextField.setEditable(true);
 	}
 
 	/**
