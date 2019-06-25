@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="pdq-rest" />
+        <module name="pdq-reasoning" />
+        <module name="pdq-common" />
+        <module name="pdq-datasources" />
+        <module name="pdq-gui" />
+        <module name="pdq-runtime" />
+        <module name="pdq-planner" />
+        <module name="pdq-cost" />
+        <module name="pdq-regression" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="pdq-rest" options="-parameters" />
+    </option>
+  </component>
+</project>

@@ -25,8 +25,6 @@ export default class GraphicalPlanModal extends React.Component {
   }
 
   openPlan(id){
-    this.props.getGraphicalPlan(id);
-
     this.toggle();
   }
 
@@ -38,7 +36,7 @@ export default class GraphicalPlanModal extends React.Component {
            style={{float: "left", height:"4rem",
                    margin:"1rem 1rem 1rem 1rem", width: "11rem"}}
            onClick={() => this.openPlan(this.props.selectedSchema.id)}>
-               Graphical Planner <FaRoute/>
+               Visualise plan exploration <FaRoute/>
          </Button>
 
         <Modal

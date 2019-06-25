@@ -4,7 +4,6 @@ import schemaListUpdateReducer from './setSchemaList';
 import relationListUpdateReducer from './setRelationList';
 import queryListUpdateReducer from './setQueryList';
 import planUpdateReducer from './setPlan';
-import graphicalPlanUpdateReducer from './setGraphicalPlan';
 import planRunUpdateReducer from './setPlanRun';
 
 /**
@@ -21,7 +20,6 @@ const rootReducer = combineReducers({
   schemaList: schemaListUpdateReducer,
   queryList: queryListUpdateReducer,
   plan: planUpdateReducer,
-  graphicalPlan:  graphicalPlanUpdateReducer,
   planRun: planRunUpdateReducer
 })
 

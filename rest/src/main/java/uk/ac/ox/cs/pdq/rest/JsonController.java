@@ -1,19 +1,24 @@
 package uk.ac.ox.cs.pdq.rest;
 
-import uk.ac.ox.cs.pdq.cost.Cost;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.rest.jsonwrappers.*;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.*;
+import uk.ac.ox.cs.pdq.rest.wrappermethods.*;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMethod;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
+import org.springframework.core.io.Resource;
+import java.nio.file.Path;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.http.MediaType;
 import java.util.HashMap;
 import java.io.File;
-import java.util.Map.Entry;
+import org.springframework.http.HttpHeaders;
+import java.nio.file.Paths;
+
 
 /*
   @info:
@@ -37,6 +42,8 @@ public class JsonController{
   private HashMap<Integer, ConjunctiveQuery> queryList;
   private SchemaName[] jsonSchemaList;
   private HashMap<Integer, File> casePropertyList;
+  private HashMap<Integer, JsonPlan> planList;
+  private HashMap<Integer, JsonRunResults> runResultList;
 
   public JsonController(){
     this.PATH_TO_SCHEMA_EXAMPLES = "test/demo/case_";
@@ -45,6 +52,8 @@ public class JsonController{
     this.schemaList = new HashMap<Integer, Schema>();
     this.queryList = new HashMap<Integer, ConjunctiveQuery>();
     this.casePropertyList = new HashMap<Integer, File>();
+    this.planList = new HashMap<Integer, JsonPlan>();
+    this.runResultList = new HashMap<Integer, JsonRunResults>();
 
     for (int i = 0; i < example_names.length; i++){
       try {
@@ -119,20 +128,7 @@ public class JsonController{
     JsonQuery toReturn = new JsonQuery(id, query_string);
     return toReturn;
   }
-  /**
-   * Returns properties of the schema (DOES NOT WORK YET)
-   *
-   * @param id
-   * @return File
-   */
-  @RequestMapping(value="/getProperties", method=RequestMethod.GET, produces="application/json")
-  public File getProperties(@RequestParam(value="id") int id){
 
-    File properties = casePropertyList.get(id);
-
-    // JsonQuery toReturn = new JsonQuery(id, query_string);
-    return properties;
-  }
   /**
    * Returns Entry<RelationalTerm, Cost> that shows up as a long string
    *
@@ -140,14 +136,20 @@ public class JsonController{
    * @return
    */
   @RequestMapping(value="/plan", method=RequestMethod.GET, produces="application/json")
-  public Entry<RelationalTerm, Cost> plan(@RequestParam("id") int id){
+  public JsonPlan plan(@RequestParam("id") int id){
+    JsonPlan previousPlan = planList.get(id);
+
+    if(previousPlan != null) return previousPlan; //if we've already planned this schema and query, return it
+
     Schema schema = schemaList.get(id);
     ConjunctiveQuery cq = queryList.get(id);
     File properties = casePropertyList.get(id);
     String pathToCatalog = PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/catalog.properties";
 
     try{
-      Entry<RelationalTerm, Cost> plan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
+      JsonPlan plan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
+
+      planList.put(id, plan); //if we got here, we haven't planned yet, so put the plan in the map.
 
       return plan;
     }catch (Throwable e) {
@@ -156,44 +158,21 @@ public class JsonController{
       return null;
     }
   }
-  /**
-   * Returns JsonGraphicalPlan for use by the vx and d3.js libraries
-   *
-   * @param id
-   * @return
-   */
-  @RequestMapping(value="/getGraphicalPlan", method=RequestMethod.GET, produces="application/json")
-  public JsonGraphicalPlan getGraphicalPlan(@RequestParam("id") int id){
-    Schema schema = schemaList.get(id);
-    ConjunctiveQuery cq = queryList.get(id);
-    File properties = casePropertyList.get(id);
-    String pathToCatalog = PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/catalog.properties";
-
-    JsonGraphicalPlan toReturn = null;
-    try{
-
-      toReturn = JsonPlanner.search(schema, cq, properties, pathToCatalog);
-
-    }catch (Throwable e) {
-      e.printStackTrace();
-      System.exit(-1);
-
-    }
-    return toReturn;
-  }
 
   @RequestMapping(value="/runPlan", method=RequestMethod.GET, produces="application/json")
   public JsonRunResults runPlan(@RequestParam("id") int id){
+    JsonRunResults toReturn = this.runResultList.get(id);
+    if(toReturn != null) return toReturn;
+
     Schema schema = schemaList.get(id);
     ConjunctiveQuery cq = queryList.get(id);
     File properties = casePropertyList.get(id);
-    String pathToCatalog = PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/catalog.properties";
-
-    JsonRunResults toReturn = null;
+    RelationalTerm plan = planList.get(id).plan;
 
     try{
-      RelationalTerm plan = JsonPlanner.planToObject(schema, cq, properties, pathToCatalog);
-      toReturn = new JsonRunResults(Runner.runtime(schema, cq, properties, plan));
+      toReturn = Runner.runtime(schema, cq, properties, plan);
+
+      runResultList.put(id, toReturn);
 
     }catch (Throwable e) {
       e.printStackTrace();
@@ -201,4 +180,41 @@ public class JsonController{
     }
     return toReturn;
   }
+
+  @GetMapping(value="/downloadRun/{id}")
+  public ResponseEntity<Resource> downloadRun(@PathVariable int id, HttpServletRequest request){
+      //idea: write the csv file to the case file and read it from there to send it as a resource.
+      JsonRunResults results = runResultList.get(id);
+      try{
+          Runner.writeOutput(results.results, PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/results.csv");
+
+          Resource resource = loadFileAsResource(PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/results.csv");
+
+          String contentType = "text/csv";
+
+          return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+Integer.toString(id)+"_results.csv\"")
+                    .body(resource);
+
+      }catch(Exception e){
+          e.printStackTrace();
+
+      }
+      return null;
+  }
+
+    public Resource loadFileAsResource(String fileName) {
+        try {
+            Path filePath = Paths.get(fileName);
+
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if(resource.exists()) {
+                return resource;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
 }
