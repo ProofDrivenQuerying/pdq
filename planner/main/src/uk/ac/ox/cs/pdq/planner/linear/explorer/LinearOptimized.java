@@ -38,7 +38,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.StatusUpdateMetadata;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 
@@ -191,7 +190,7 @@ public class LinearOptimized extends LinearExplorer {
 		Candidate selectedCandidate = selectedConfig.chooseCandidate();
 		if (selectedCandidate == null) {
 			selectedNode.setStatus(NodeStatus.TERMINAL);
-			Metadata metadata = new StatusUpdateMetadata(selectedNode, this.getElapsedTime());
+			Metadata metadata = new Metadata(selectedNode, this.getElapsedTime());
 			selectedNode.setMetadata(metadata);
 			this.eventBus.post(selectedNode);
 			return null;

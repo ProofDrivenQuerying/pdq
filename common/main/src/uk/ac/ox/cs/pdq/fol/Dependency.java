@@ -26,9 +26,6 @@ public class Dependency extends QuantifiedFormula {
 	protected final Formula body;
 	protected final Formula head;
 	
-	/**  The dependency's universally quantified variables. */
-	protected Variable[] universal;
-
 	/**  The dependency's existentially quantified variables. */
 	protected Variable[] existential;
 	
@@ -146,17 +143,6 @@ public class Dependency extends QuantifiedFormula {
 		return this.head; 
 	}
 	
-	/**
-	 * Gets the universally quantified variables.
-	 *
-	 * @return List<Variable>
-	 */
-	public Variable[] getUniversal() {
-		if(this.universal == null) 
-			this.universal = this.variables;
-		return this.universal.clone();
-	}
-
 	/**
 	 * Gets the existentially quantified variables.
 	 *

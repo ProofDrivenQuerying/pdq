@@ -208,6 +208,36 @@ public class Runtime {
 			throw t;
 		}
 	}
+	
+	/** This will throw exception if we don't have every executable access method that is necessary to execute this plan.
+	 * @param p
+	 * @return
+	 * @throws Exception
+	 */
+	public ExecutablePlan decoratePlan(RelationalTerm p) throws Exception {
+		AccessRepository repo = this.repository;
+		if (repo == null)
+				repo = AccessRepository.getRepository();
+		ExecutablePlan executable = new PlanDecorator(repo,schema).decorate(p);
+		return executable;
+	}
+	
+	/** executes a plan.
+	 * @param p
+	 * @return
+	 * @throws Exception
+	 */
+	public Table evaluatePlan(ExecutablePlan p) throws Exception {
+		try {
+			System.out.println("Executing plan " + p.hashCode());
+			Table res = p.execute();
+			System.out.println("plan " + p.hashCode() + " finished.");
+			return res;
+		}catch(Throwable t) {
+			t.printStackTrace();
+			throw t;
+		}
+	}
 
 	public RuntimeParameters getParams() {
 		return params;

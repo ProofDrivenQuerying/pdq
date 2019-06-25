@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.cost.io.jaxb;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.OutputStream;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -56,5 +57,16 @@ public class CostIOManager extends IOManager {
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
 		jaxbMarshaller.marshal(rt, targetPlanFile);
+	}
+	
+	public static void writeRelationalTermAndCost(OutputStream output, RelationalTerm plan, Cost cost) throws JAXBException {
+		AdaptedRelationalTermWithCost rt = new AdaptedRelationalTermWithCost(plan);
+		rt.setCost(cost);
+
+		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedRelationalTermWithCost.class);
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		jaxbMarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
+		jaxbMarshaller.marshal(rt, output);
 	}
 }
