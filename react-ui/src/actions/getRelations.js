@@ -1,5 +1,11 @@
 import { store } from '../redux/store.js';
 
+/**
+ * Fetches an array of relation objects from the backend based on the provided
+ * schema's id.
+ *
+ * @author Camilo Ortiz
+ */
 
 export const fetchingRelation = () => {
     return {

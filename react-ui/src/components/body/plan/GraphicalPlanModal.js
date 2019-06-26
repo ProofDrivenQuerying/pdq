@@ -1,11 +1,17 @@
-//react
 import React from "react";
-import TreeDisplay from "./TreeDisplay";
-//reactstrap
-import { Button, Modal, ModalHeader, ModalBody,
-          ModalFooter} from 'reactstrap';
-//icons
+import PDQTree from "./PDQTree";
 import { FaRoute } from 'react-icons/fa';
+import { Button,
+         Modal,
+         ModalHeader,
+         ModalBody,
+         ModalFooter
+} from 'reactstrap';
+
+/**
+ * The modal in which the plan graph is displayed.
+ *
+ */
 
 export default class GraphicalPlanModal extends React.Component {
   constructor(props) {
@@ -15,7 +21,6 @@ export default class GraphicalPlanModal extends React.Component {
     };
 
     this.toggle = this.toggle.bind(this);
-    this.openPlan = this.openPlan.bind(this);
   }
 
   toggle() {
@@ -24,19 +29,15 @@ export default class GraphicalPlanModal extends React.Component {
     }));
   }
 
-  openPlan(id){
-    this.toggle();
-  }
 
   render() {
     return (
       <div>
         <Button
            outline color="secondary"
-           style={{float: "left", height:"4rem",
-                   margin:"1rem 1rem 1rem 1rem", width: "11rem"}}
-           onClick={() => this.openPlan(this.props.selectedSchema.id)}>
-               Visualise plan exploration <FaRoute/>
+           style={this.props.bigButton}
+           onClick={() => this.toggle()}>
+               Plan exploration graph <FaRoute/>
          </Button>
 
         <Modal
@@ -48,10 +49,10 @@ export default class GraphicalPlanModal extends React.Component {
           <ModalBody>
           {this.props.graphicalPlan != null ?
            <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
-            <TreeDisplay
+            <PDQTree
                data={this.props.graphicalPlan}
                width={750}
-               height={500}/>
+               height={600}/>
            </div>
 
            :

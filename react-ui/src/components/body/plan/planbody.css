@@ -4,7 +4,8 @@
   margin-left: 2rem;
   display: flex;
   flex-direction: column;
-  height: 90%;
+  justify-content: center;
+  height: 70%;
   width: 90%;
   position:relative;
   overflow-x: hidden;

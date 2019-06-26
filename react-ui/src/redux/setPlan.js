@@ -1,18 +1,20 @@
 /**
- * relationList reducer. This reducer is in charge of updating the relationList
- * states (selectedSchema and key).
+ * This reducer is in charge of setting the plan field of the state based on
+ * the particular dispatched action. This plan information contains the
+ * graphical plan object, the best plan as a string, the plantime, and the boolean
+ * `runnable`.
  *
  * @author Camilo Ortiz
  */
 
-const initialSchemaListState = {
+const initialPlanState = {
   plan: null,
   isFetchingPlan: false,
   isErrorPlan: false,
   id: null
 }
 
-const planUpdateReducer = (state = initialSchemaListState, action) => {
+const planUpdateReducer = (state = initialPlanState, action) => {
   switch(action.type){
     case 'FETCHING_PLAN':
       return{...state, plan: null, isFetchingPlan: true, isErrorPlan: false};

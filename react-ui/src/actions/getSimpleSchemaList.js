@@ -1,5 +1,11 @@
 import { store } from '../redux/store.js';
 
+/**
+ * Fetches a simple array of schemas (id, name)
+ *
+ * @author Camilo Ortiz
+ */
+
 export const fetching = () => {
     return {
         type: 'FETCHING',

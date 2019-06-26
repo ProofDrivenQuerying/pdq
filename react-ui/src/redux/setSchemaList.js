@@ -1,6 +1,6 @@
 /**
- * schemaList reducer. This reducer is in charge of updating the schemaList
- * states (selectedSchema and key).
+ * This reducer is in charge of updating the state's schemaList value and
+ * is called before the application mounts.
  *
  * @author Camilo Ortiz
  */

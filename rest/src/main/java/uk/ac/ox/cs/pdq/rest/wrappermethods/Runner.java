@@ -49,10 +49,6 @@ public class Runner {
             double computationTime = (System.currentTimeMillis() - start)/1000.0;
 
 
-            System.out.println();
-            System.out.println("Finished, " + tupleCount + " amount of tuples found in " + computationTime + " sec.");
-
-
             return new JsonRunResults(tupleCount, results, computationTime);
 
         }catch(Throwable e){
@@ -94,6 +90,12 @@ public class Runner {
         return executable;
     }
 
+    /**
+     * This methods writes the run's table out to a file.
+     * @param results
+     * @param path
+     * @throws Exception
+     */
     public static void writeOutput(Table results, String path) throws Exception{
 
         File target = new File(path);

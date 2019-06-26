@@ -1,12 +1,8 @@
-//react
 import React, { Component } from 'react';
-//components
 import Header from './components//header/Header.js';
 import Body from './components/body/Body.js';
-//redux
 import { connect } from 'react-redux';
-//actions
-import { getInitialData } from './actions/initialJsonCall.js';
+import { getInitialData } from './actions/getSimpleSchemaList.js';
 
 /**
  * Entry of the App's UI. Renders Header and Body components from
@@ -32,10 +28,10 @@ class App extends Component{
     )
   }
 }
-//map states to props
+
+//redux
 const mapStatesToProps = (state) =>({
   ...state
 });
 
-//connect component to store
 export default connect(mapStatesToProps, null)(App);

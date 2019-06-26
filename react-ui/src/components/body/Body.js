@@ -1,16 +1,12 @@
-//react
 import React from 'react';
-//components
 import SchemaBody from './schemas/SchemaBody';
 import QueryBody from './queries/QueryBody';
 import PlanBody from './plan/PlanBody';
-//redux
 import { connect } from 'react-redux';
 
 /**
- * Renders the app's body. Has  a main body that rotates through the states:
- * Schemas, Queries, and Searches.
- *
+ * Renders the app's body. Displays SchemaBody, QueryBody, and PlanBody
+ * components.
  * Called from App.js.
  *
  * @author Camilo Ortiz

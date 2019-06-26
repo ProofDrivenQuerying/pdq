@@ -47,7 +47,7 @@ public class JsonController{
 
   public JsonController(){
     this.PATH_TO_SCHEMA_EXAMPLES = "test/demo/case_";
-    this.example_names = new String[]{"001","002", "003", "004", "005", "006" };
+    this.example_names = new String[]{"001","002", "003", "004", "005", "006", "007", "008", "009" };
     this.jsonSchemaList = new SchemaName[example_names.length];
     this.schemaList = new HashMap<Integer, Schema>();
     this.queryList = new HashMap<Integer, ConjunctiveQuery>();

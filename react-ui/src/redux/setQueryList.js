@@ -1,17 +1,19 @@
 /**
- * queryList reducer. This reducer is in charge of updating the relationList
- * states (selectedSchema and key).
+ * This reducer is in charge of setting the queryList field of the state based on
+ * the particular dispatched action. This information is used in the QueryBody
+ * component. queryList is composed of an string SQL value, an int id, and
+ * a string name value.
  *
  * @author Camilo Ortiz
  */
 
-const initialSchemaListState = {
+const initialQueryListState = {
   queryList: "",
   isFetchingQueries: false,
   isErrorQueries: false
 }
 
-const queryListUpdateReducer = (state = initialSchemaListState, action) => {
+const queryListUpdateReducer = (state = initialQueryListState, action) => {
   switch(action.type){
     case 'FETCHING_QUERIES':
       return{...state, queryList: [], isFetchingQueries: true, isErrorQueries: false};

@@ -1,6 +1,6 @@
 /**
- * schemaUpdate reducer. This reducer is in charge of updating the schemaUpdate
- * states (selectedSchema and key).
+ * This reducer is in charge of updating the selectedSchema
+ * state based on whichever one is selected in the SchemaBody component's schemaList.
  *
  * @author Camilo Ortiz
  */

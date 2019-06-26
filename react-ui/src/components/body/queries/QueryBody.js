@@ -1,10 +1,6 @@
-//react
 import React from 'react';
-//reactstrap
 import { Button } from 'reactstrap';
-//actions
 import { connect } from 'react-redux';
-//css
 import './querybody.css';
 
 /**
@@ -23,7 +19,9 @@ import './querybody.css';
 
        {queryList.queryList.name != null?
          <div className="query-name-holder">
-           <Button color="primary">
+           <Button
+            color="primary"
+            disabled={true}>
              <span>
                <span className="query-name">
                  {queryList.queryList.name}

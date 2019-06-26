@@ -1,25 +1,25 @@
-//react
 import React from 'react';
-//reactstrap
-import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, Table,
-        DropdownItem, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-//redux
 import { connect } from 'react-redux';
-//actions
 import { getRelations } from '../../../actions/getRelations';
 import { getQueries } from '../../../actions/getQueries';
-//css
 import './schemadropdown.css';
-//img
 import moreDots from '../../../img/threeDots.png';
+import { Button,
+         ButtonDropdown,
+         DropdownToggle,
+         DropdownMenu,
+         Table,
+         DropdownItem,
+         Modal,
+         ModalHeader,
+         ModalBody,
+         ModalFooter
+} from 'reactstrap';
 
 /**
- * SchemaDropdown returns a button for the schemaFromList.
- *
- * Conditional: if the schema name's id matches the one from schemaList, it
- * gets highlighted
- *
- * Highlighted buttons also get a dropdown that opens a number of modals for more info
+ * SchemaDropdown returns a button for given schema.
+ * This file also contains the nested modal components of the selected schema's
+ * relation list.
  *
  * @author Camilo Ortiz
  */
@@ -55,6 +55,7 @@ import moreDots from '../../../img/threeDots.png';
      </div>
    )
  }
+
  //table for displaying each relation's access methods
  const RelationAccessTable = ({relation}) => {
    return(
@@ -181,7 +182,7 @@ class SchemaDropdown extends React.Component{
       {this.props.selectedSchema.selectedSchema != null &&
           this.props.schemaFromList.id === this.props.selectedSchema.id ?
 
-        <div style={{display: "flex"}}>
+        <div style={{display: "flex", width:"100%"}}>
           <Button
             color="primary"
             id = {this.props.schemaFromList.id}
@@ -247,7 +248,7 @@ class SchemaDropdown extends React.Component{
 
         :
 
-        <div style={{display: "flex"}}>
+        <div style={{width:"100%"}}>
           <Button
             outline color="secondary"
             id = {this.props.schemaFromList.id}

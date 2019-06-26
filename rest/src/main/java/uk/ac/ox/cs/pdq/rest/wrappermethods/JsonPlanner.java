@@ -84,9 +84,13 @@ public class JsonPlanner{
 
       JsonPlan toReturn = null;
       try{
+          long start = System.currentTimeMillis();
 
           Entry<RelationalTerm, Cost>  entry = planner.search(query); //plan first to set cache and get RelationalTerm
-          RelationalTerm plan = entry.getKey(); //get the RelationalTerm plan
+
+          double computationTime = (System.currentTimeMillis() - start)/1000.0; //plan time
+
+          RelationalTerm plan = entry.getKey();
 
           PlanTree<SearchNode> tree = jsonPlanner.search(query); //plan again and get the tree
           SearchNode root = tree.getRoot();
@@ -104,9 +108,9 @@ public class JsonPlanner{
 
 
           if(runnable == null){
-              toReturn = new JsonPlan(graphicalPlan, data, false, plan);
+              toReturn = new JsonPlan(graphicalPlan, data, false, plan, computationTime);
           }else{
-              toReturn = new JsonPlan(graphicalPlan, data, true, plan);
+              toReturn = new JsonPlan(graphicalPlan, data, true, plan, computationTime);
           }
 
       }catch (Throwable e) {

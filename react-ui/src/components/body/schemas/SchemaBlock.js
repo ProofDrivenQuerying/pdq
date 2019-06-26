@@ -1,15 +1,11 @@
-//react
 import React from 'react';
-//components
 import SchemaDropdown from './SchemaDropdown';
-//redux
 import { connect } from 'react-redux';
 
 
 
 /**
- * SchemaBlock returns a button for each schema name in schemaList by using
- * the `.map()` function.
+ * This compoennt maps a SchemaDropdown component for each schema in schemaList.
  *
  * @author Camilo Ortiz
  */

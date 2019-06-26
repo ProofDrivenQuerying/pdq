@@ -1,5 +1,11 @@
 import { store } from '../redux/store.js';
 
+/**
+ * Fetches plan object from the backend based on the provided selected schema's id.
+ *
+ * @author Camilo Ortiz
+ */
+
 
 export const fetchingPlan = () => {
     return {

@@ -8,15 +8,14 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store';
 
 /**
- * index.js uses ReactDom to render JSX code as HTML for the client
+ * index.js uses ReactDom to render JSX code as HTML for the client.
+ *
+ * The Provider component provides the React store to all its child
+ * components so we don't need to pass it explicitly to all the components.
  *
  * @author Camilo Ortiz
  */
 
-/**
-  * the Provider component provides the React store to all its child
-  * components so we don't need to pass it explicitly to all the components.
-  */
 
 const rootElement = document.getElementById('root');
 

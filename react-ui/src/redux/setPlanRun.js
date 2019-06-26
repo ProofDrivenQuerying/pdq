@@ -1,6 +1,7 @@
 /**
- * relationList reducer. This reducer is in charge of updating the relationList
- * states (selectedSchema and key).
+ * This reducer is in charge of setting the planRun field of the state based on
+ * the particular dispatched action. This information is used in the Plan's
+ * run results modal.
  *
  * @author Camilo Ortiz
  */

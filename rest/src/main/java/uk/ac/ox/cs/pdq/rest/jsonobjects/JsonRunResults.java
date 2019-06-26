@@ -6,14 +6,14 @@ import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 public class JsonRunResults {
     public long tupleCount;
     public JsonTable table;
-    public double computationTime;
+    public double runTime;
     @JsonIgnore
     public Table results;
 
     public JsonRunResults(long tc, Table t, double time){
         this.tupleCount = tc;
         this.table = new JsonTable(t);
-        this.computationTime = time;
+        this.runTime = time;
         this.results = t;
     }
 }

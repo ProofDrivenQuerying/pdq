@@ -9,6 +9,7 @@ import java.util.List;
 public class JsonTable {
     public JsonAttribute[] header;
     public JsonTuple[] data;
+    public int dataSize;
 
     JsonTable(Table t){
         //header
@@ -23,6 +24,11 @@ public class JsonTable {
         //data
         List<Tuple> tableData = t.getData();
         int n = tableData.size();
+
+        this.dataSize = n;
+
+        if(n > 100) n = 100; //only send a sample of the dataset
+
         data = new JsonTuple[n];
 
         for(int j = 0; j < n; j++){

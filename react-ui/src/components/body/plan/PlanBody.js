@@ -1,21 +1,19 @@
-//react
 import React from 'react';
-//components
 import GraphicalPlanModal from './GraphicalPlanModal';
-import PlanPropertiesModal from './PlanPropertiesModal';
-//reactstrap
+import PlanRunModal from './PlanRunModal';
+import DownloadCSVButton from './DownloadCSVButton';
 import { Button } from 'reactstrap';
-//redux
 import { connect } from 'react-redux';
-//actions
-import { plan } from "../../../actions/plan.js";
+import { plan } from "../../../actions/getPlan.js";
 import { runPlan } from "../../../actions/runPlan.js";
-//css
+import Helpers from "../../../actions/helpers.js";
 import './planbody.css';
-//icons
-import { FaRegMap, FaPlay } from 'react-icons/fa';
-//img
-import moreDots from '../../../img/threeDots.png';
+import { FaRegMap,
+         FaPlay,
+         FaDownload,
+         FaRoute,
+         FaTable
+} from 'react-icons/fa';
 
 /**
  * Renders the plan/button, graphical plan/button, and plan properties/button
@@ -23,18 +21,58 @@ import moreDots from '../../../img/threeDots.png';
  * @author Camilo Ortiz
  */
 
+ function downloadCSV(id){
+   Helpers.httpRequest(
+     `/downloadRun/`+id,
+     "get"
+   )// 1. Convert the data into 'blob'
+    .then((response) => response.blob())
+    .then((blob) => {
+      // 2. Create blob link to download
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `PDQrun`+id+`results.csv`);
+      // 3. Append to html page
+      document.body.appendChild(link);
+      // 4. Force download
+      link.click();
+      // 5. Clean up and remove the link
+      link.parentNode.removeChild(link);
+    })
+     .catch((error) => {
+          console.log(error);
+    });
+ }
+
+ const Line = ({ color }) => (
+     <hr
+         style={{
+             color: color,
+             backgroundColor: color,
+             height: 0.2
+         }}
+     />
+ );
+
+
 const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun}) => {
+
+  let smallButton = {
+    float: "left", width: "4rem", height:"4rem",
+             margin:"1rem 1rem 1rem 1rem"
+  }
+  let bigButton = {
+    float: "left", height:"4rem",
+            margin:"1rem 1rem 1rem 1rem", width: "11rem"
+  }
   return(
     <div style={{border:"1px solid #E0E0E0", borderRadius:"25px",
                 boxShadow: "0 0 5px 2px #E0E0E0", width: "43rem"}}>
 
       <header className='body-name-plan'>
         Plan
-        <div style={{float:"right"}}>
-          <PlanPropertiesModal/>
-        </div>
       </header>
-
 
       {selectedSchema.selectedSchema != null ?
 
@@ -42,60 +80,87 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun}) => {
           <div style={{flexDirection:"row"}}>
 
             <Button
-                disabled={plan.isFetchingPlan}
-                outline color="secondary"
-                style={{float: "left", width: "4rem", height:"4rem", margin:"1rem 1rem 1rem 1rem"}}
+                disabled={plan.id === selectedSchema.selectedSchema.id || plan.isFetchingPlan}
+                outline color={plan.id === selectedSchema.selectedSchema.id ? "primary" : "secondary"}
+                style={smallButton}
                 onClick={(e) => getPlan(selectedSchema.selectedSchema.id)}>
 
                 Plan <FaRegMap/>
-
             </Button>
-            <div style={{whiteSpace:"normal",
-                          overflowX:"scroll", margin:"1rem 1rem 1rem 1rem",
-                          height:"4rem", border:"1px solid #E0E0E0",
-                          width:"80%", padding: "1rem 1rem 1rem 1rem"}}>
 
-                {plan.plan!==null && plan.id === selectedSchema.selectedSchema.id ?
-                  <div>
-                    {plan.plan.bestPlan}
-                  </div>
-                  :
-                  null}
-            </div>
-          </div>
-          {plan.plan!==null && plan.id === selectedSchema.selectedSchema.id ?
-            <div>
+            {plan.plan!==null && plan.id === selectedSchema.selectedSchema.id ?
               <GraphicalPlanModal
                   graphicalPlan={plan.plan.graphicalPlan}
-                  selectedSchema={selectedSchema.selectedSchema}/>
-
+                  selectedSchema={selectedSchema.selectedSchema}
+                  bigButton={bigButton}/>
+              :
               <Button
-                disabled={!plan.plan.runnable}
-                outline color="secondary"
-                style={{float: "left", height:"4rem", margin:"1rem 1rem 1rem 1rem",
-                        width: "11rem"}}
-                onClick={(e)=>runPlan(selectedSchema.selectedSchema.id)}>
-                Run best plan <FaPlay/>
-              </Button>
+                 outline color="secondary"
+                 disabled={true}
+                 style={bigButton}>
+                     Plan exploration graph <FaRoute/>
+               </Button>}
 
-              <Button
-                disabled={planRun.planRun === null}
-                outline color="secondary"
-                style={{float: "left", height:"4rem", margin:"1rem 1rem 1rem 1rem",
-                        width: "11rem"}}
-                >
-                Download run as .csv  <FaPlay/>
-              </Button>
+          </div>
+          <div style={{width:"100%"}}>
+            <Line color="#C8C8C8"/>
+          </div>
+
+          {plan.plan!==null && plan.id === selectedSchema.selectedSchema.id ?
+            <div style={{flexDirection:"row"}}>
+
+            <Button
+               outline color={planRun.id === selectedSchema.selectedSchema.id ? "primary" : "secondary"}
+               disabled={!plan.plan.runnable || planRun.isFetchingPlanRun ||
+                        (planRun.planRun !== null &&
+                          planRun.id === selectedSchema.selectedSchema.id)}
+               style={smallButton}
+               onClick={() => runPlan(selectedSchema.selectedSchema.id)}>
+                   Run <FaPlay/>
+             </Button>
+
+              <PlanRunModal
+                selectedSchema={selectedSchema.selectedSchema}
+                planRun={planRun}
+                plan ={plan.plan}
+                downloadCSV = {downloadCSV}
+                bigButton={bigButton}/>
+
+              <DownloadCSVButton
+                plan={plan}
+                selectedSchema={selectedSchema.selectedSchema}
+                downloadCSV={downloadCSV}
+                planRun={planRun}
+                smallButton={smallButton}/>
             </div>
             :
-            null}
+            <div>
+              <Button
+                 outline color="secondary"
+                 disabled={true}
+                 style={smallButton}>
+                     Run <FaPlay/>
+               </Button>
 
+               <Button
+                  outline color="secondary"
+                  disabled={true}
+                  style={bigButton}>
+                      Run results <FaTable/>
+                </Button>
+
+                <Button
+                  outline color="secondary"
+                  disabled={true}
+                  style={smallButton}>
+                  <FaDownload/>
+                </Button>
+              </div>
+           }
         </div>
-
         :
         null
       }
-
     </div>
   );
 }

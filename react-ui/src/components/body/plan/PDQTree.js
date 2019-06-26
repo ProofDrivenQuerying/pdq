@@ -1,5 +1,3 @@
-//example code found at `https://vx-demo.now.sh/linkTypes`
-
 import React from 'react';
 import { Group } from '@vx/group';
 import { Tree } from '@vx/hierarchy';
@@ -20,8 +18,13 @@ import { LinkHorizontal,
          LinkRadialLine
 } from '@vx/shape';
 
+/**
+ * TreeDisplay creates the svg of the tree that is visualized in the GraphicalPlanModal.
+ *
+ * @author Camilo Ortiz
+ */
 
-export default class TreeDisplay extends React.Component {
+export default class PDQTree extends React.Component {
   state = {
     layout: 'polar',
     orientation: 'horizontal',
@@ -72,60 +75,6 @@ export default class TreeDisplay extends React.Component {
 
     return (
       <div>
-        <div style={{ color: 'black', fontSize: 15, display:"flex" }}>
-          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
-            <label>Layout: </label>
-            <select
-              onClick={e => e.stopPropagation()}
-              onChange={e => this.setState({ layout: e.target.value })}
-              value={layout}
-            >
-              <option value="cartesian">cartesian</option>
-              <option value="polar">polar</option>
-            </select>
-          </div>
-
-          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
-          <label>Orientation: </label>
-          <select
-            onClick={e => e.stopPropagation()}
-            onChange={e => this.setState({ orientation: e.target.value })}
-            value={orientation}
-            disabled={layout === 'polar'}
-          >
-            <option value="vertical">vertical</option>
-            <option value="horizontal">horizontal</option>
-          </select>
-          </div>
-
-          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
-          <label>Link: </label>
-          <select
-            onClick={e => e.stopPropagation()}
-            onChange={e => this.setState({ linkType: e.target.value })}
-            value={linkType}
-          >
-            <option value="diagonal">diagonal</option>
-            <option value="step">step</option>
-            <option value="curve">curve</option>
-            <option value="line">line</option>
-          </select>
-          </div>
-          {
-            // <label>step: </label>
-            // <input
-            //   onClick={e => e.stopPropagation()}
-            //   type="range"
-            //   min={0}
-            //   max={1}
-            //   step={0.1}
-            //   onChange={e => this.setState({ stepPercent: e.target.value })}
-            //   value={stepPercent}
-            //   disabled={linkType !== 'step' || layout === 'polar'}
-            // />
-          }
-
-        </div>
 
         <svg width={width} height={height}>
 
@@ -259,6 +208,48 @@ export default class TreeDisplay extends React.Component {
             </Tree>
           </Group>
         </svg>
+
+        <div style={{ color: 'black', fontSize: 15, display:"flex" }}>
+          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
+            <label>Layout:</label>{" "}
+            <select
+              onClick={e => e.stopPropagation()}
+              onChange={e => this.setState({ layout: e.target.value })}
+              value={layout}
+            >
+              <option value="cartesian">cartesian</option>
+              <option value="polar">polar</option>
+            </select>
+          </div>
+
+          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
+          <label>Orientation: </label>{" "}
+          <select
+            onClick={e => e.stopPropagation()}
+            onChange={e => this.setState({ orientation: e.target.value })}
+            value={orientation}
+            disabled={layout === 'polar'}
+          >
+            <option value="vertical">vertical</option>
+            <option value="horizontal">horizontal</option>
+          </select>
+          </div>
+
+          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
+          <label>Link: </label>{" "}
+          <select
+            onClick={e => e.stopPropagation()}
+            onChange={e => this.setState({ linkType: e.target.value })}
+            value={linkType}
+          >
+            <option value="diagonal">diagonal</option>
+            <option value="step">step</option>
+            <option value="curve">curve</option>
+            <option value="line">line</option>
+          </select>
+          </div>
+
+        </div>
       </div>
     );
   }

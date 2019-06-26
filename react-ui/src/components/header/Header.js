@@ -1,10 +1,6 @@
-//react
 import React from 'react';
-//reactstrap
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
-//css
 import './header.css';
-//img
 import logo from '../../img/logo.png';
 
 /**

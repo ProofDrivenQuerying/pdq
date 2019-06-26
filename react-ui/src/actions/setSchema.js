@@ -1,6 +1,5 @@
 /**
- * Action used by the reducers. These are what are called in the components
- * to update the state. This one handles setting the schema.
+ * Set's the state's selected schema and id to be the given schema and id parameters.
  *
  * @author Camilo Ortiz
  */

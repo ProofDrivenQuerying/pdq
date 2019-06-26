@@ -1,6 +1,6 @@
-  PDQ react-ui JavaScript UI
+  PDQ react-ui
 
-  PQD web UI made in React
+  PQD web UI made in React.js with JavaScript
 
   The source code is available for free for non-commercial use.
   See the LICENCE file for details.
@@ -16,10 +16,20 @@
 
   To install dependencies and requirements:
 
-  On MacOs/Linux:
+    In MacOS/Linux, you can download node with Homebrew.
 
     * brew install node
-    * npm install react
+
+    Otherwise, download [node and npm] (https://www.npmjs.com/get-npm) manually or
+    with your favorite package manager. After you have node and npm, go to the
+    project's root directory and run:
+
+    * npm install
+
+  This will automatically install all of the dependencies listed in the app's
+  package.json file.
+
+  If you want to install dependencies individually, run:
 
   For vx modules:
 
@@ -44,7 +54,7 @@
 
     * npm install --save reactstrap
 
-  For react-icons:
+  For react-icons (using FontAwesome icons):
 
     * npm install react-icons --save
 

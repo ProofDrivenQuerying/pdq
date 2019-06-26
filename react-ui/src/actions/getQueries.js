@@ -1,5 +1,11 @@
 import { store } from '../redux/store.js';
 
+/**
+ * Fetches a queryList from the backend based on the provided
+ * schema's id.
+ * @author Camilo Ortiz
+ */
+
 
 export const fetchingQueries = () => {
     return {

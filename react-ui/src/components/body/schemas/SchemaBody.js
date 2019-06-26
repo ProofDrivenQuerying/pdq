@@ -7,7 +7,7 @@ import './schemabody.css';
 
 
 /**
- * Renders Schema information page
+ * Renders the schema information component.
  *
  * @author Camilo Ortiz
  */
@@ -17,7 +17,7 @@ const SchemaBody = () => {
     return(
       <div
         style={{border:"1px solid #E0E0E0", borderRadius:"25px",
-                boxShadow: "0 0 5px 2px #E0E0E0"}}>
+                boxShadow: "0 0 5px 2px #E0E0E0", width: "14rem"}}>
 
         <header className='body-name-schema'>
           Schemas
