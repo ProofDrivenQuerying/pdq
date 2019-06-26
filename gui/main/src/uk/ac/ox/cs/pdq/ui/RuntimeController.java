@@ -97,7 +97,8 @@ public class RuntimeController {
         this.runtimeStartButton.setGraphic(new ImageView(this.playIcon));
 
         this.runtimePauseButton.setDisable(true);
-    }
+        
+ }
 
 	/**
 	 * Pauses the runtime thread.
@@ -253,7 +254,23 @@ public class RuntimeController {
 		for (String c : bos.toString().split("\n")) {
 			this.runtimePlan.getItems().add(new Text(c));
 		}
-	}
+		
+		try {
+			final uk.ac.ox.cs.pdq.runtime.Runtime runtime =
+					new uk.ac.ox.cs.pdq.runtime.Runtime(this.params, this.schema);
+			RelationalTerm rt = null;
+			if (RuntimeController.this.plan instanceof RelationalTerm) 
+				rt = (RelationalTerm)RuntimeController.this.plan; 
+			else
+				rt = (RelationalTerm)((ExecutablePlan)RuntimeController.this.plan).getDecoratedPlan();
+			ExecutablePlan ep = runtime.decoratePlan(rt);
+		}
+		catch(Exception e)
+		{
+			   System.out.println("Runtime has exceptions");
+		       this.runtimeStartButton.setDisable(true);
+		}
+}
 
 	/**
 	 * Sets the executor type to use this runtime session.
