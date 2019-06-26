@@ -54,6 +54,7 @@ public class PlanDecorator {
 	}
 
 	public PlanDecorator(AccessRepository repository, Schema schema) {
+		Preconditions.checkArgument(schema!=null,"Schema cannot be null!");
 		this.schema = schema;
 		this.repository = repository;
 	}
@@ -122,6 +123,7 @@ public class PlanDecorator {
 		if (newAccess == null) {
 			throw new Exception("AccessMethod \"" + amDesc.getName() + "\" not found in repository: " + repository);
 		}
+		Preconditions.checkArgument(schema.getRelation(newAccess.getRelation().getName())!=null, "ExecutableAccess not found for descriptor: " + newAccess.getRelation().getName());
 		newAccess.updateRelation(schema.getRelation(newAccess.getRelation().getName()));
 		AccessTerm newAccessTerm;
 		if (plan.getInputConstants() != null) {
