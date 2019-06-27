@@ -2,30 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="62dedaba-cb86-4b56-a5c0-3e890da50df5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rest/pdq-rest.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/DownloadCSVButton.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/GraphicalPlanModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/GraphicalPlanModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/PDQTree.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/PDQTree.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/PlanBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/PlanBody.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/PlanRunModal.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/schemas/SchemaBlock.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/schemas/SchemaBlock.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/schemas/SchemaDropdown.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/rest/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/JsonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/JsonController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonGraphicalPlan.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonGraphicalPlan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonPlan.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonPlan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/ExplorationSetUpForJson.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/ExplorationSetUpForJson.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/JsonPlanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/JsonPlanner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/Runner.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/Runner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/JsonController.class" beforeDir="false" afterPath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/JsonController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/wrappermethods/ExplorationSetUpForJson.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/wrappermethods/JsonPlanner.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/wrappermethods/Runner.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_001/results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_001/results.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/PlanInfoModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/PlanInfoModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/RunModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/RunModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_001/computed-plan.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_001/computed-plan.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/regression/target/" />
@@ -48,12 +34,21 @@
     <option name="isMigrated" value="true" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/common/main/src/uk/ac/ox/cs/pdq/io/jaxb/IOManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="615">
-              <caret line="213" column="72" lean-forward="true" selection-start-line="213" selection-start-column="72" selection-end-line="213" selection-end-column="72" />
+            <state relative-caret-position="608">
+              <caret line="213" column="72" selection-start-line="213" selection-start-column="72" selection-end-line="213" selection-end-column="72" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
             </state>
           </provider>
         </entry>
@@ -88,6 +83,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -95,75 +92,10 @@
               <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
               <item name="pdq" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pdq" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pdq" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pdq" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pdq" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="pdq" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pdq" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="pdq" type="462c0819:PsiDirectoryNode" />
-              <item name="io" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pdq" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="pdq" type="462c0819:PsiDirectoryNode" />
-              <item name="io" type="462c0819:PsiDirectoryNode" />
-              <item name="jaxb" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pdq" type="462c0819:PsiDirectoryNode" />
-              <item name="gui" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pdq" type="462c0819:PsiDirectoryNode" />
-              <item name="gui" type="462c0819:PsiDirectoryNode" />
-              <item name=".pdq" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pdq" type="462c0819:PsiDirectoryNode" />
-              <item name="gui" type="462c0819:PsiDirectoryNode" />
-              <item name=".pdq" type="462c0819:PsiDirectoryNode" />
-              <item name="queries" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -215,10 +147,10 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="24" width="1280" height="777" extended-state="6" />
+    <frame x="0" y="23" width="1280" height="777" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2536349" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25767368" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -398,17 +330,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/common/main/src/uk/ac/ox/cs/pdq/io/jaxb/IOManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="608">
+          <caret line="213" column="72" selection-start-line="213" selection-start-column="72" selection-end-line="213" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
           <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/main/src/uk/ac/ox/cs/pdq/io/jaxb/IOManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="213" column="72" lean-forward="true" selection-start-line="213" selection-start-column="72" selection-end-line="213" selection-end-column="72" />
         </state>
       </provider>
     </entry>

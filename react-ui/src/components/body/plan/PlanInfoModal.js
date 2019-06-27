@@ -28,14 +28,12 @@ export default class PlanInfoModal extends React.Component{
       position: "relative",
       marginRight: "2rem",
       marginLeft: "2rem",
-      marginBottom: "1rem",
       display: "flex",
       flexDirection: "column",
-      position: "relative",
       overflowY: "scroll",
       whiteSpace: "pre-wrap",
       fontSize: "1rem",
-      height: "27rem"
+      height: "calc(100vh - 300px)"
     }
     return(
       <div>
@@ -57,7 +55,7 @@ export default class PlanInfoModal extends React.Component{
             Plan{this.props.selectedSchema.id}
           </ModalHeader>
 
-          <ModalBody>
+          <ModalBody style={{maxHeight: "calc(100vh - 200px)"}}>
             {this.props.plan != null ?
             (<div>
               <i>Found an optimal {this.props.plan.runnable ? "runnable":null} plan
@@ -72,6 +70,12 @@ export default class PlanInfoModal extends React.Component{
             :
             (null)}
           </ModalBody>
+
+          <ModalFooter>
+            <Button
+               color="secondary"
+               onClick={this.toggle}>Cancel</Button>
+          </ModalFooter>
 
         </Modal>
 

@@ -46,13 +46,14 @@ export default class GraphicalPlanModal extends React.Component {
            size="lg">
           <ModalHeader toggle={this.toggle}>Graphical Plan</ModalHeader>
 
-          <ModalBody>
+          <ModalBody
+          style={{maxHeight: "calc(100vh - 200px)"}}>
           {this.props.graphicalPlan != null ?
            <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
             <PDQTree
                data={this.props.graphicalPlan}
                width={750}
-               height={600}/>
+               height={370}/>
            </div>
 
            :

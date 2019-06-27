@@ -6,16 +6,7 @@ import { hierarchy } from 'd3-hierarchy';
 import { pointRadial } from 'd3-shape';
 import { LinkHorizontal,
          LinkVertical,
-         LinkRadial,
-         LinkHorizontalStep,
-         LinkVerticalStep,
-         LinkRadialStep,
-         LinkHorizontalCurve,
-         LinkVerticalCurve,
-         LinkRadialCurve,
-         LinkHorizontalLine,
-         LinkVerticalLine,
-         LinkRadialLine
+         LinkRadial
 } from '@vx/shape';
 
 /**
@@ -25,20 +16,99 @@ import { LinkHorizontal,
  */
 
 export default class PDQTree extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.onDragStart = this.onDragStart.bind(this);
+    this.onDragMove = this.onDragMove.bind(this);
+    this.onDragEnd = this.onDragEnd.bind(this);
+    this.onWheel = this.onWheel.bind(this);
+    this.pan = this.pan.bind(this);
+    this.zoom = this.zoom.bind(this);
+  }
   state = {
     layout: 'polar',
     orientation: 'horizontal',
-    linkType: 'diagonal',
     stepPercent: 0.5,
     selectedNode: null,
-    tooltipOpen: false
+    matrix: [1, 0, 0, 1, 30, 30],
+    dragging: false,
+    startX: 0,
+    startY: 0
   };
 
-  toggleTooltip(){
-    this.setState({
-      tooltipOpen: !this.state.tooltipOpen
-    })
+  //Translational methods
+  onDragStart(e) {
+    // Find start position of drag based on touch/mouse coordinates.
+    const startX = typeof e.clientX === 'undefined' ? e.changedTouches[0].clientX : e.clientX;
+    const startY = typeof e.clientY === 'undefined' ? e.changedTouches[0].clientY : e.clientY;
+
+    // Update state with above coordinates, and set dragging to true.
+    const state = {
+      dragging: true,
+      startX,
+      startY,
+    };
+
+    this.setState(state);
   }
+
+  onDragMove(e) {
+    // First check if the state is dragging, if not we can just return
+    // so we do not move unless the user wants to move
+    if (!this.state.dragging) {
+      return;
+    }
+
+    // Get the new x coordinates
+    const x = typeof e.clientX === 'undefined' ? e.changedTouches[0].clientX : e.clientX;
+    const y = typeof e.clientY === 'undefined' ? e.changedTouches[0].clientY : e.clientY;
+
+    // Take the delta where we are minus where we came from.
+    const dx = x - this.state.startX;
+    const dy = y - this.state.startY;
+
+    // Pan using the deltas
+    this.pan(dx, dy);
+
+    // Update the state
+    this.setState({
+      startX: x,
+      startY: y,
+    });
+  }
+
+  onDragEnd() {
+    this.setState({ dragging: false });
+  }
+
+  onWheel(e) {
+    if (e.deltaY < 0) {
+      this.zoom(1.05);
+    } else {
+      this.zoom(0.95);
+    }
+  }
+
+  pan(dx, dy) {
+    const m = this.state.matrix;
+    m[4] += dx;
+    m[5] += dy;
+    this.setState({ matrix: m });
+  }
+
+  zoom(scale) {
+    const m = this.state.matrix;
+    const len = m.length;
+    for (let i = 0; i < len; i++) {
+      m[i] *= scale;
+    }
+    m[4] += (1 - scale) * this.props.width / 2;
+    m[5] += (1 - scale) * this.props.height / 2;
+    this.setState({ matrix: m });
+  }
+
+
 
   render() {
     const {
@@ -52,7 +122,7 @@ export default class PDQTree extends React.Component {
       }
     } = this.props;
 
-    const { layout, orientation, linkType, stepPercent, selectedNode } = this.state;
+    const { layout, orientation, stepPercent } = this.state;
 
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -83,58 +153,43 @@ export default class PDQTree extends React.Component {
 
     return (
       <div>
-
-        <svg width={width} height={height}>
+        <svg
+          width={width}
+          height={height}
+          onMouseDown={this.onDragStart}
+          onTouchStart={this.onDragStart}
+          onMouseMove={this.onDragMove}
+          onTouchMove={this.onDragMove}
+          onMouseUp={this.onDragEnd}
+          onTouchEnd={this.onDragEnd}
+          onWheel={this.onWheel}>
 
           <LinearGradient id="lg" from="#E0E0E0" to="#fe6e9e" />
 
           <rect width={width} height={height} rx={14} fill="#F0F0F0" />
 
-          <Group top={margin.top} left={margin.left}>
+          <Group
+            top={margin.top}
+            left={margin.left}
+            transform={`matrix(${this.state.matrix.join(' ')})`}>
+
             <Tree
-              root={hierarchy(data, d => (d.isExpanded ? null : d.children))}
+              root={hierarchy(data, d => ( d.children))}
               size={[sizeWidth, sizeHeight]}
-              separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
-            >
+              separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}>
               {data => (
                 <Group top={origin.y} left={origin.x}>
                   {data.links().map((link, i) => {
                     let LinkComponent;
-
                     if (layout === 'polar') {
-                      if (linkType === 'step') {
-                        LinkComponent = LinkRadialStep;
-                      } else if (linkType === 'curve') {
-                        LinkComponent = LinkRadialCurve;
-                      } else if (linkType === 'line') {
-                        LinkComponent = LinkRadialLine;
-                      } else {
-                        LinkComponent = LinkRadial;
-                      }
-                    } else {
+                      LinkComponent = LinkRadial;
+                    }else {
                       if (orientation === 'vertical') {
-                        if (linkType === 'step') {
-                          LinkComponent = LinkVerticalStep;
-                        } else if (linkType === 'curve') {
-                          LinkComponent = LinkVerticalCurve;
-                        } else if (linkType === 'line') {
-                          LinkComponent = LinkVerticalLine;
-                        } else {
-                          LinkComponent = LinkVertical;
-                        }
-                      } else {
-                        if (linkType === 'step') {
-                          LinkComponent = LinkHorizontalStep;
-                        } else if (linkType === 'curve') {
-                          LinkComponent = LinkHorizontalCurve;
-                        } else if (linkType === 'line') {
-                          LinkComponent = LinkHorizontalLine;
-                        } else {
-                          LinkComponent = LinkHorizontal;
-                        }
+                        LinkComponent = LinkVertical;
+                    }else {
+                        LinkComponent = LinkHorizontal;
                       }
                     }
-
                     return (
                       <LinkComponent
                         data={link}
@@ -174,7 +229,7 @@ export default class PDQTree extends React.Component {
                         {node.depth === 0 && (
                           <circle
                             r={12}
-                            fill="#808080"
+                            fill='#428bca'
                             onClick={() => {
                               this.setState({ selectedNode: node.data });
                               this.forceUpdate();
@@ -214,6 +269,7 @@ export default class PDQTree extends React.Component {
               )}
             </Tree>
           </Group>
+
         </svg>
 
         <div style={{ color: 'black', fontSize: 15, display:"flex" }}>
@@ -243,37 +299,31 @@ export default class PDQTree extends React.Component {
           </div>
 
           <div style={{margin:"1rem 1rem 1rem 1rem"}}>
-          <label>Link: </label>{" "}
-          <select
-            onClick={e => e.stopPropagation()}
-            onChange={e => this.setState({ linkType: e.target.value })}
-            value={linkType}
-          >
-            <option value="diagonal">diagonal</option>
-            <option value="step">step</option>
-            <option value="line">line</option>
-          </select>
-          </div>
-
-          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
           <span>
             {this.state.selectedNode === null ?
-              <div style={{width: "10rem", height: "5rem"}}>
+              <div style={{width: "20rem", height: "3rem"}}>
               Click on a node for its information.
               </div>
               :
-            <div style={{width: "10rem", height: "5rem"}}>
-              <b>Node: </b>{this.state.selectedNode.id}{" "}
-              <br/>
+            <div style={{width: "20rem", height: "3rem", display:"flex",
+                          flexDirection: "row"}}>
+              <div style={{margin:"0 .5rem 0 .5rem", width: "3rem" }}>
+              <b>Node: </b> <br/>{this.state.selectedNode.id}
+              </div>
+
               {this.state.selectedNode.accessTerm === null ?
               null
               :
-              <div>
-              <b>Access Term: </b> {this.state.selectedNode.accessTerm}{" "}
-              <br/>
+              <div style={{margin:"0 .5rem 0 .5rem",
+                            overflow:"hidden",
+                            whiteSpace:"nowrap",
+                            textOverflow: "ellipsis"}}>
+              <b>Access Term: </b> <br/> {this.state.selectedNode.accessTerm}
               </div>
               }
-              <b>Node Type: </b>{this.state.selectedNode.type}
+              <div style={{margin:"0 .5rem 0 .5rem", width: "6rem"}}>
+              <b>Node Type: </b> <br/> {this.state.selectedNode.type}
+              </div>
             </div>
           }
           </span>

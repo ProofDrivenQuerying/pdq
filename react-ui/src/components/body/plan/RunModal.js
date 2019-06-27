@@ -1,5 +1,5 @@
 import React from "react";
-import { FaTable, FaDownload } from 'react-icons/fa';
+import { FaTable } from 'react-icons/fa';
 import DownloadRunButton from './DownloadRunButton';
 import { Button,
          Modal,
@@ -7,7 +7,6 @@ import { Button,
          ModalBody,
          Table,
          ModalFooter,
-         Tooltip
 } from 'reactstrap';
 
 /**

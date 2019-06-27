@@ -10,11 +10,7 @@ import { plan } from "../../../actions/getPlan.js";
 import { runPlan } from "../../../actions/runPlan.js";
 import './planbody.css';
 import { FaRegMap,
-         FaPlay,
-         FaDownload,
-         FaRoute,
-         FaTable,
-         FaClipboardList
+         FaPlay
 } from 'react-icons/fa';
 
 /**
@@ -134,7 +130,7 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun}) => {
               </div>
               :
               null}
-              
+
             </div>
             :
             <div>
