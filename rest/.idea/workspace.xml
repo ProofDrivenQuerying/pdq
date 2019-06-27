@@ -2,55 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="39b9a6e1-6d9f-48e9-bc1d-99f5507e9807" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/test/demo/case_007/case.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/demo/case_007/catalog.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/demo/case_007/query.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/demo/case_007/schema.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/demo/case_008/case.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/demo/case_008/catalog.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/demo/case_008/query.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/demo/case_008/schema.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/demo/case_009/case.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/demo/case_009/catalog.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/demo/case_009/query.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/demo/case_009/schema.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../react-ui/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/actions/getQueries.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/actions/getQueries.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/actions/getRelations.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/actions/getRelations.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/actions/initialJsonCall.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/actions/plan.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/actions/runPlan.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/actions/runPlan.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/actions/setSchema.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/actions/setSchema.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react-ui/src/components/body/plan/DownloadCSVButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/components/body/plan/DownloadCSVButton.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../react-ui/src/components/body/plan/GraphicalPlanModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/components/body/plan/GraphicalPlanModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react-ui/src/components/body/plan/PDQTree.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/components/body/plan/PDQTree.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../react-ui/src/components/body/plan/PlanBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/components/body/plan/PlanBody.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/components/body/plan/PlanPropertiesModal.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/components/body/plan/TreeDisplay.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/components/body/plan/TreeDisplay.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/components/body/plan/planbody.css" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/components/body/plan/planbody.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/components/body/queries/QueryBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/components/body/queries/QueryBody.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/components/body/schemas/SchemaBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/components/body/schemas/SchemaBody.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/components/body/schemas/SchemaDropdown.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/components/body/schemas/SchemaDropdown.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/redux/schemaUpdate.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/redux/schemaUpdate.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/redux/setPlan.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/redux/setPlan.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/redux/setPlanRun.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/redux/setPlanRun.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/redux/setQueryList.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/redux/setQueryList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/redux/setRelationList.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/redux/setRelationList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react-ui/src/redux/setSchemaList.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/redux/setSchemaList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react-ui/src/components/body/plan/PlanRunModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react-ui/src/components/body/schemas/SchemaBlock.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ui/src/components/body/schemas/SchemaBlock.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react-ui/src/components/body/schemas/SchemaDropdown.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/JsonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/JsonController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonGraphicalPlan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonGraphicalPlan.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonPlan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonPlan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonRunResults.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonRunResults.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonTuple.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonTuple.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/JsonPlanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/JsonPlanner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/Runner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/Runner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/ExplorationSetUpForJson.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/ExplorationSetUpForJson.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/JsonPlanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/JsonPlanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/Runner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/Runner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/uk/ac/ox/cs/pdq/rest/JsonController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/uk/ac/ox/cs/pdq/rest/JsonController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonTable.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonTable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/uk/ac/ox/cs/pdq/rest/wrappermethods/ExplorationSetUpForJson.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/uk/ac/ox/cs/pdq/rest/wrappermethods/JsonPlanner.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/uk/ac/ox/cs/pdq/rest/wrappermethods/Runner.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/test/demo/case_001/results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/demo/case_001/results.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/demo/case_004/results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test/demo/case_004/results.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/demo/case_006/case.properties" beforeDir="false" afterPath="$PROJECT_DIR$/test/demo/case_006/case.properties" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/bin/" />
@@ -64,13 +39,16 @@
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
   </component>
+  <component name="FavoritesManager">
+    <favorites_list name="rest" />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/JsonController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1600">
-              <caret line="49" column="97" selection-start-line="49" selection-start-column="97" selection-end-line="49" selection-end-column="97" />
+            <state relative-caret-position="36">
+              <caret line="202" column="109" selection-start-line="202" selection-start-column="109" selection-end-line="202" selection-end-column="109" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -79,46 +57,24 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/JsonPlanner.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="112" column="82" selection-start-line="112" selection-start-column="82" selection-end-line="112" selection-end-column="82" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonRunResults.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/Runner.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="305">
-              <caret line="48" column="33" selection-start-line="48" selection-end-line="49" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonPlan.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" column="29" lean-forward="true" selection-start-line="19" selection-start-column="29" selection-end-line="19" selection-end-column="29" />
+            <state relative-caret-position="180">
+              <caret line="12" column="11" selection-start-line="12" selection-start-column="11" selection-end-line="12" selection-end-column="11" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#651#652#0" expanded="true" />
+                <element signature="e#683#684#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonGraphicalPlan.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="336">
+              <caret line="52" column="26" selection-start-line="52" selection-start-column="26" selection-end-line="52" selection-end-column="26" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -142,6 +98,7 @@
       <find>relationa</find>
       <find>yh_geo_name</find>
       <find>access-method</find>
+      <find>.plan</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -150,8 +107,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/JsonGraphicalPlan.java" />
-        <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/JsonQuery.java" />
         <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/JsonRelation.java" />
         <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/JsonRelationList.java" />
         <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/JsonAttribute.java" />
@@ -193,13 +148,16 @@
         <option value="$PROJECT_DIR$/test/demo/case_009/schema.xml" />
         <option value="$PROJECT_DIR$/test/demo/case_009/query.xml" />
         <option value="$PROJECT_DIR$/test/demo/case_009/case.properties" />
-        <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/JsonController.java" />
         <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonTuple.java" />
         <option value="$PROJECT_DIR$/test/demo/case_006/case.properties" />
-        <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/Runner.java" />
-        <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonPlan.java" />
         <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/JsonPlanner.java" />
         <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonRunResults.java" />
+        <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/Runner.java" />
+        <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/JsonPlanner.java" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonPlan.java" />
+        <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonGraphicalPlan.java" />
+        <option value="$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/JsonController.java" />
       </list>
     </option>
   </component>
@@ -216,7 +174,6 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -262,21 +219,6 @@
             <path>
               <item name="rest" type="b2602c69:ProjectViewProjectNode" />
               <item name="rest" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="rest" type="462c0819:PsiDirectoryNode" />
-              <item name="wrappermethods" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="rest" type="b2602c69:ProjectViewProjectNode" />
-              <item name="rest" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="rest" type="b2602c69:ProjectViewProjectNode" />
-              <item name="rest" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -285,10 +227,18 @@
               <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="demo" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="rest" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rest" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="demo" type="462c0819:PsiDirectoryNode" />
+              <item name="case_001" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -297,7 +247,7 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="preferences.general" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -362,13 +312,13 @@
     <frame x="0" y="23" width="1280" height="777" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18416801" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49905482" visible="true" weight="0.18659128" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Capture Tool" order="5" />
-      <window_info id="Favorites" order="6" side_tool="true" />
+      <window_info id="Favorites" order="6" sideWeight="0.50094515" side_tool="true" weight="0.18659128" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.329927" />
       <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49917898" visible="true" weight="0.22773723" />
@@ -391,13 +341,6 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$MAVEN_REPOSITORY$/uk/ac/ox/cs/pdq/pdq-planner/1.0.0-Beta/pdq-planner-1.0.0-Beta.jar!/uk/ac/ox/cs/pdq/planner/linear/explorer/LinearOptimized.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="62" selection-start-line="62" selection-end-line="62" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/uk/ac/ox/cs/pdq/pdq-planner/1.0.0-Beta/pdq-planner-1.0.0-Beta.jar!/uk/ac/ox/cs/pdq/planner/ExplorerFactory.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="525">
@@ -497,13 +440,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/services/yh_geo_name.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="10" lean-forward="true" selection-start-line="14" selection-start-column="10" selection-end-line="14" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/services/yh_geo_name.xml" />
     <entry file="jar://$MAVEN_REPOSITORY$/uk/ac/ox/cs/pdq/pdq-datasources/1.0.0-Beta/pdq-datasources-1.0.0-Beta.jar!/uk/ac/ox/cs/pdq/datasources/ExecutableAccessMethod.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1192">
@@ -522,16 +459,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="12" column="30" lean-forward="true" selection-start-line="12" selection-start-column="30" selection-end-line="12" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonGraphicalPlan.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="25" selection-start-line="25" selection-end-line="25" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -580,12 +507,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/demo/case_001/results.csvresults.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/demo/case_001/results.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/test/demo/case_001/results.csvresults.csv" />
     <entry file="file://$PROJECT_DIR$/test/demo/case_004/results.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -699,30 +621,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/JsonController.java">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1600">
-          <caret line="49" column="97" selection-start-line="49" selection-start-column="97" selection-end-line="49" selection-end-column="97" />
+        <state relative-caret-position="60">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/JsonPlanner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-52">
+          <caret line="120" column="3" lean-forward="true" selection-start-line="120" selection-start-column="3" selection-end-line="120" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/Runner.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/Runner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="305">
-          <caret line="48" column="33" selection-start-line="48" selection-end-line="49" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/wrappermethods/JsonPlanner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="112" column="82" selection-start-line="112" selection-start-column="82" selection-end-line="112" selection-end-column="82" />
+        <state relative-caret-position="1125">
+          <caret line="75" column="15" lean-forward="true" selection-start-line="75" selection-start-column="15" selection-end-line="75" selection-end-column="15" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -732,17 +651,42 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonRunResults.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+          <caret line="19" selection-start-line="19" selection-end-line="19" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test/demo/case_001/results.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonPlan.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="29" lean-forward="true" selection-start-line="19" selection-start-column="29" selection-end-line="19" selection-end-column="29" />
+        <state relative-caret-position="180">
+          <caret line="12" column="11" selection-start-line="12" selection-start-column="11" selection-end-line="12" selection-end-column="11" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#651#652#0" expanded="true" />
+            <element signature="e#683#684#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonGraphicalPlan.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="52" column="26" selection-start-line="52" selection-start-column="26" selection-end-line="52" selection-end-column="26" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/ox/cs/pdq/rest/JsonController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="202" column="109" selection-start-line="202" selection-start-column="109" selection-end-line="202" selection-end-column="109" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

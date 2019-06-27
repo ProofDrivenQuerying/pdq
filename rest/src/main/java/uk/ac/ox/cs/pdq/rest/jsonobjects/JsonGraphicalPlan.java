@@ -51,10 +51,8 @@ public class JsonGraphicalPlan {
                 case SUCCESSFUL:
                     this.type = "SUCCESSFUL";
                     break;
-                case TERMINAL:
-                    this.type = "TERMINAL";
                 default:
-                    this.type = "ONGOING";
+                    this.type = "TERMINAL";
             }
         }
 

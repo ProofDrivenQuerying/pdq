@@ -1,5 +1,5 @@
 import React from 'react';
-import SchemaDropdown from './SchemaDropdown';
+import SchemaName from './SchemaName';
 import { connect } from 'react-redux';
 
 
@@ -16,7 +16,7 @@ const SchemaBlock = ({ schemaList}) => {
   if(!schemaList.isFetching){
     return schemaList.schemaList.map((schemaFromList, index) => {
       return(
-        <SchemaDropdown
+        <SchemaName
           schemaFromList={schemaFromList}
           key={"schema"+index}/>
       )

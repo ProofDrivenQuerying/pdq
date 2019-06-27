@@ -4,8 +4,9 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.*;
-import uk.ac.ox.cs.pdq.rest.wrappermethods.*;
+import uk.ac.ox.cs.pdq.rest.eventhandlers.*;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -167,7 +168,7 @@ public class JsonController{
     Schema schema = schemaList.get(id);
     ConjunctiveQuery cq = queryList.get(id);
     File properties = casePropertyList.get(id);
-    RelationalTerm plan = planList.get(id).plan;
+    RelationalTerm plan = planList.get(id).getPlan();
 
     try{
       toReturn = Runner.runtime(schema, cq, properties, plan);
@@ -181,9 +182,15 @@ public class JsonController{
     return toReturn;
   }
 
+    /**
+     * Write run table to its associated example folder, load it, and send it to the client.
+     *
+     * @param id
+     * @param request
+     * @return
+     */
   @GetMapping(value="/downloadRun/{id}")
   public ResponseEntity<Resource> downloadRun(@PathVariable int id, HttpServletRequest request){
-      //idea: write the csv file to the case file and read it from there to send it as a resource.
       JsonRunResults results = runResultList.get(id);
       try{
           Runner.writeOutput(results.results, PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/results.csv");
@@ -193,12 +200,33 @@ public class JsonController{
           String contentType = "text/csv";
 
           return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+Integer.toString(id)+"_results.csv\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+Integer.toString(id)+"results.csv\"")
                     .body(resource);
 
       }catch(Exception e){
           e.printStackTrace();
 
+      }
+      return null;
+  }
+
+  @GetMapping(value="/downloadPlan/{id}")
+  public ResponseEntity<Resource> downloadPlan(@PathVariable int id, HttpServletRequest request){
+      RelationalTerm plan = planList.get(id).getPlan();
+      File planFile = new File(PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/computed-plan.xml");
+      try{
+          IOManager.writeRelationalTerm(plan, planFile);
+
+          Resource resource = loadFileAsResource(PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/computed-plan.xml");
+
+          String contentType = "application/xml";
+
+          return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+Integer.toString(id)+"computed-plan.xml\"")
+                  .body(resource);
+
+      }catch(Exception e){
+          e.printStackTrace();
       }
       return null;
   }

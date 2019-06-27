@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.rest.wrappermethods;
+package uk.ac.ox.cs.pdq.rest.eventhandlers;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
@@ -40,7 +40,6 @@ public class Runner {
 
             long tupleCount = 0;
 
-            // print output
             while(it.hasNext()) {
                 tupleCount++;
                 Tuple t = it.next();

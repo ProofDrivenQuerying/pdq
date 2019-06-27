@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTerm type="ProjectionTerm">
+    <projections name="fv_z1282712642" type="java.lang.String"/>
+    <RelationalTerm type="DependentJoinTerm">
+        <RelationalTerm type="DependentJoinTerm">
+            <RelationalTerm type="JoinTerm">
+                <RelationalTerm type="RenameTerm">
+                    <renamings name="v_x1282712642" type="java.lang.String"/>
+                    <RelationalTerm type="AccessTerm">
+                        <accessMethod name="m6"/>
+                        <inputConstants/>
+                        <relation name="Names">
+                            <attribute name="uname" type="java.lang.String"/>
+                            <access-method name="m6"/>
+                        </relation>
+                    </RelationalTerm>
+                </RelationalTerm>
+                <RelationalTerm type="RenameTerm">
+                    <renamings name="k53" type="java.lang.Integer"/>
+                    <RelationalTerm type="AccessTerm">
+                        <accessMethod name="m4"/>
+                        <inputConstants/>
+                        <relation name="Ids">
+                            <attribute name="uid" type="java.lang.Integer"/>
+                            <access-method name="m4"/>
+                        </relation>
+                    </RelationalTerm>
+                </RelationalTerm>
+            </RelationalTerm>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="v_x1282712642" type="java.lang.String"/>
+                <renamings name="v_y1282712642" type="java.lang.String"/>
+                <renamings name="k53" type="java.lang.Integer"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="m3" inputs="0,2"/>
+                    <inputConstants/>
+                    <relation name="Direct1">
+                        <attribute name="uname" type="java.lang.String"/>
+                        <attribute name="addr" type="java.lang.String"/>
+                        <attribute name="uid" type="java.lang.Integer"/>
+                        <access-method name="m3" inputs="0,2"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="RenameTerm">
+            <renamings name="v_x1282712642" type="java.lang.String"/>
+            <renamings name="v_y1282712642" type="java.lang.String"/>
+            <renamings name="fv_z1282712642" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="m5" inputs="0,1"/>
+                <inputConstants/>
+                <relation name="Direct2">
+                    <attribute name="uname" type="java.lang.String"/>
+                    <attribute name="addr" type="java.lang.String"/>
+                    <attribute name="phone" type="java.lang.String"/>
+                    <access-method name="m5" inputs="0,1"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+</RelationalTerm>

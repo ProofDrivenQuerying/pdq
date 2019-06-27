@@ -16,13 +16,13 @@
 
   To install dependencies and requirements:
 
-    In MacOS/Linux, you can download node with Homebrew.
+  In MacOS/Linux, you can download node with Homebrew.
 
     * brew install node
 
-    Otherwise, download [node and npm] (https://www.npmjs.com/get-npm) manually or
-    with your favorite package manager. After you have node and npm, go to the
-    project's root directory and run:
+  Otherwise, download [node and npm] (https://www.npmjs.com/get-npm) manually or
+  with your favorite package manager. After you have node and npm, go to the
+  project's root directory and run:
 
     * npm install
 

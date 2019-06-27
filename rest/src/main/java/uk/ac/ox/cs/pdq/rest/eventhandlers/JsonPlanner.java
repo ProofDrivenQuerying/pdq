@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.rest.wrappermethods;
+package uk.ac.ox.cs.pdq.rest.eventhandlers;
 
 import uk.ac.ox.cs.pdq.algebra.*;
 import uk.ac.ox.cs.pdq.fol.*;

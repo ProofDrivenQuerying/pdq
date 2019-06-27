@@ -1,9 +1,8 @@
 
   PDQ RESTful web service
 
-  The PDQ RESTful web service employs a Spring Boot controller to direct GET requests to Java methods that extract
-  useful information from PDQ modules and convert that information into JSON objects for consumption by the
-  front-end.
+  The PDQ RESTful web service converts important PDQ objects, computations, and
+  results into JSON objects and hosts them via a REST API.
 
   The source code is available for free for non-commercial use.
   See the LICENCE file for details.
@@ -39,4 +38,3 @@
   	java -jar /path/to/JAR/file
 
   Open http://localhost:8080/<myQuery>?id=0 to make an API call!
-

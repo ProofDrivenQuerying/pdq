@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.rest.wrappermethods;
+package uk.ac.ox.cs.pdq.rest.eventhandlers;
 
 import java.lang.reflect.Type;
 import java.sql.SQLException;

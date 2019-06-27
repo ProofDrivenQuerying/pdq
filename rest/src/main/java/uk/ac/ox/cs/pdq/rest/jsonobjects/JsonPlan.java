@@ -10,7 +10,7 @@ public class JsonPlan {
     public double planTime;
 
     @JsonIgnore
-    public RelationalTerm plan;
+    private RelationalTerm plan;
 
     public JsonPlan(JsonGraphicalPlan gp, String bp, boolean r, RelationalTerm plan, double time){
         this.graphicalPlan = gp;
@@ -18,5 +18,10 @@ public class JsonPlan {
         this.runnable = r;
         this.plan = plan;
         this.planTime = time;
+    }
+
+    @JsonIgnore
+    public RelationalTerm getPlan(){
+        return this.plan;
     }
 }

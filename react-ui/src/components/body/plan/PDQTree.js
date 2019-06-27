@@ -19,9 +19,9 @@ import { LinkHorizontal,
 } from '@vx/shape';
 
 /**
- * TreeDisplay creates the svg of the tree that is visualized in the GraphicalPlanModal.
+ * PDQTree creates an svg of the plan search tree.
+ *  Visualized in GraphicalPlanModal.
  *
- * @author Camilo Ortiz
  */
 
 export default class PDQTree extends React.Component {
@@ -30,7 +30,15 @@ export default class PDQTree extends React.Component {
     orientation: 'horizontal',
     linkType: 'diagonal',
     stepPercent: 0.5,
+    selectedNode: null,
+    tooltipOpen: false
   };
+
+  toggleTooltip(){
+    this.setState({
+      tooltipOpen: !this.state.tooltipOpen
+    })
+  }
 
   render() {
     const {
@@ -44,7 +52,7 @@ export default class PDQTree extends React.Component {
       }
     } = this.props;
 
-    const { layout, orientation, linkType, stepPercent } = this.state;
+    const { layout, orientation, linkType, stepPercent, selectedNode } = this.state;
 
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -168,9 +176,10 @@ export default class PDQTree extends React.Component {
                             r={12}
                             fill="#808080"
                             onClick={() => {
-                              node.data.isExpanded = !node.data.isExpanded;
+                              this.setState({ selectedNode: node.data });
                               this.forceUpdate();
                             }}
+                            id={node+key}
                           />
                         )}
                         {node.depth !== 0 && (
@@ -180,14 +189,12 @@ export default class PDQTree extends React.Component {
                             y={-height / 2}
                             x={-width / 2}
                             fill={node.data.children ? '#428bca' : node.data.type === "SUCCESSFUL" ? "#5cb85c" : '	#d9534f'}
-                            stroke={node.data.children ? '#A9A9A9' : '#DCDCDC'}
-                            strokeWidth={1}
-                            strokeOpacity={!node.data.children ? 0.6 : 1}
                             rx={!node.data.children ? 10 : 0}
-                            onClick={() => {
-                              node.data.isExpanded = !node.data.isExpanded;
+                            onClick={(e) => {
+                              this.setState({ selectedNode: node.data });
                               this.forceUpdate();
                             }}
+                            id={node+key}
                           />
                         )}
                         <text
@@ -244,11 +251,33 @@ export default class PDQTree extends React.Component {
           >
             <option value="diagonal">diagonal</option>
             <option value="step">step</option>
-            <option value="curve">curve</option>
             <option value="line">line</option>
           </select>
           </div>
 
+          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
+          <span>
+            {this.state.selectedNode === null ?
+              <div style={{width: "10rem", height: "5rem"}}>
+              Click on a node for its information.
+              </div>
+              :
+            <div style={{width: "10rem", height: "5rem"}}>
+              <b>Node: </b>{this.state.selectedNode.id}{" "}
+              <br/>
+              {this.state.selectedNode.accessTerm === null ?
+              null
+              :
+              <div>
+              <b>Access Term: </b> {this.state.selectedNode.accessTerm}{" "}
+              <br/>
+              </div>
+              }
+              <b>Node Type: </b>{this.state.selectedNode.type}
+            </div>
+          }
+          </span>
+          </div>
         </div>
       </div>
     );

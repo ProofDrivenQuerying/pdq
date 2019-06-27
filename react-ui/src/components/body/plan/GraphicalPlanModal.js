@@ -37,7 +37,7 @@ export default class GraphicalPlanModal extends React.Component {
            outline color="secondary"
            style={this.props.bigButton}
            onClick={() => this.toggle()}>
-               Plan exploration graph <FaRoute/>
+               {this.props.name} <FaRoute/>
          </Button>
 
         <Modal
