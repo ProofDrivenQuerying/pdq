@@ -868,6 +868,7 @@ public class PDQController {
 				runtimeController.setQuery(this.currentQuery.get());
 				// runtimeController.setExecutorType(this.settingsExecutorTypeList.getValue());
 				runtimeController.setTuplesLimit(toInteger(this.settingsOutputTuplesTextField.getText()));
+				runtimeController.decoratePlan();
 				dialog.setOnCloseRequest((WindowEvent arg0) -> runtimeController.interruptRuntimeThreads());
 				dialog.showAndWait();
 			} catch (IOException e) {
