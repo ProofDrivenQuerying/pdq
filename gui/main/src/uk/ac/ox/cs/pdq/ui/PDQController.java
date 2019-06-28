@@ -463,7 +463,7 @@ public class PDQController {
 			event.consume();
 			try {
 				Stage dialog = new Stage();
-				dialog.initModality(Modality.WINDOW_MODAL);
+				dialog.initModality(Modality.NONE);
 				dialog.initStyle(StageStyle.UTILITY);
 				dialog.initOwner(this.getOriginatingWindow(event));
 				ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -808,7 +808,7 @@ public class PDQController {
 					&& this.plans.get(Pair.of(this.currentSchema.get(), this.currentQuery.get())).isEmpty()) {
 				try {
 					Stage dialog = new Stage();
-					dialog.initModality(Modality.WINDOW_MODAL);
+					dialog.initModality(Modality.NONE);
 					dialog.initStyle(StageStyle.UTILITY);
 					dialog.initOwner(this.getOriginatingWindow(event));
 					ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -850,7 +850,7 @@ public class PDQController {
 			event.consume();
 			try {
 				Stage dialog = new Stage();
-				dialog.initModality(Modality.WINDOW_MODAL);
+				dialog.initModality(Modality.NONE);
 				dialog.initStyle(StageStyle.UTILITY);
 				dialog.initOwner(this.getOriginatingWindow(event));
 				ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -888,7 +888,7 @@ public class PDQController {
 			event.consume();
 			try {
 				final Stage dialog = new Stage();
-				dialog.initModality(Modality.WINDOW_MODAL);
+				dialog.initModality(Modality.NONE);
 				dialog.initStyle(StageStyle.UTILITY);
 				dialog.initOwner(this.getOriginatingWindow(event));
 				ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -927,7 +927,7 @@ public class PDQController {
 			event.consume();
 			try {
 				final Stage dialog = new Stage();
-				dialog.initModality(Modality.WINDOW_MODAL);
+				dialog.initModality(Modality.NONE);
 				dialog.initStyle(StageStyle.UTILITY);
 				dialog.initOwner(this.getOriginatingWindow(event));
 				ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -1013,7 +1013,7 @@ public class PDQController {
 			event.consume();
 			try {
 				final Stage dialog = new Stage();
-				dialog.initModality(Modality.WINDOW_MODAL);
+				dialog.initModality(Modality.NONE);
 				dialog.initStyle(StageStyle.UTILITY);
 				dialog.initOwner(this.getOriginatingWindow(event));
 				ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -1456,7 +1456,7 @@ public class PDQController {
 	private void saveAsQuery(ObservableQuery query) {
 		try {
 			final Stage dialog = new Stage();
-			dialog.initModality(Modality.WINDOW_MODAL);
+			dialog.initModality(Modality.NONE);
 			dialog.initStyle(StageStyle.UTILITY);
 			// dialog.initOwner(this.getOriginatingWindow(event));
 			ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
