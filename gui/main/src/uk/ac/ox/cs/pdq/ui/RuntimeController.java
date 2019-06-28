@@ -300,12 +300,11 @@ public class RuntimeController {
 		}
 		catch(Exception e)
 		{
-		   System.out.println("Runtime has exceptions");
 	       this.runtimeStartButton.setDisable(true);
 	       Alert alert = new Alert(AlertType.INFORMATION);
 	       alert.setTitle("Information Dialog");
 	       alert.setHeaderText(null);
-	       alert.setContentText("Runtime has exceptions");
+	       alert.setContentText(e.toString());
 	       alert.showAndWait();
 
 		}
