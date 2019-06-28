@@ -7,7 +7,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 import uk.ac.ox.cs.pdq.datasources.tuple.Table.ResetableIterator;
-import uk.ac.ox.cs.pdq.rest.jsonobjects.JsonRunResults;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.run.JsonRunResults;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
 import java.io.File;

@@ -1,8 +1,6 @@
-//react
 import React from 'react';
-//components
-import SchemaBlock from './SchemaBlock';
-//css
+import { connect } from 'react-redux';
+import SchemaName from './SchemaName';
 import './schemabody.css';
 
 
@@ -12,29 +10,40 @@ import './schemabody.css';
  * @author Camilo Ortiz
  */
 
-
-const SchemaBody = () => {
+const SchemaBody = ({ schemaList}) => {
     return(
-      <div
-        style={{border:"1px solid #E0E0E0", borderRadius:"25px",
-                boxShadow: "0 0 5px 2px #E0E0E0", width: "14rem"}}>
-
+      <div>
         <header className='body-name-schema'>
           Schemas
         </header>
 
-
-        <div>
-          <div className='schemas'>
-            <div>
-              <SchemaBlock/>
-            </div>
-
-          </div>
+        <div className='schemas'>
+          <SchemaBlock schemaList={schemaList}/>
         </div>
       </div>
     )
 }
 
+const SchemaBlock = ({ schemaList}) => {
+  if(!schemaList.isFetching){
+    return schemaList.schemaList.map((schemaFromList, index) => {
+      return(
+        <SchemaName
+          schemaFromList={schemaFromList}
+          key={"schema"+index}/>
+      )
+    })
+  }
+  else{
+    return null;
+  }
+}
 
-export default SchemaBody;
+//redux
+const mapStatesToProps = (state) =>{
+  return({
+    schemaList: state.schemaList
+  })
+};
+
+export default connect(mapStatesToProps, null)(SchemaBody);

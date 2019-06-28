@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button } from 'reactstrap';
+import { Button, ButtonGroup } from 'reactstrap';
+import EditQueryModal from './EditQueryModal';
 import { connect } from 'react-redux';
 import './querybody.css';
 
@@ -9,25 +10,30 @@ import './querybody.css';
  * @author Camilo Ortiz
  */
 
- const QueryList = ({queryList}) => {
+ const QueryList = ({queryList, selectedSchema}) => {
+   console.log(selectedSchema);
    return(
-     <div style={{height: "12rem", display: "flex", flexDirection:"column"}}>
+     <div style={{height: "10rem", display: "flex", flexDirection:"column"}}>
 
-       <header className='body-name-query'>
-         Queries
-       </header>
+       {queryList.queryList.name != null && selectedSchema != null ?
 
-       {queryList.queryList.name != null?
          <div className="query-name-holder">
-           <Button
-            color="primary"
-            disabled={true}>
-             <span>
-               <span className="query-name">
-                 {queryList.queryList.name}
+            <ButtonGroup>
+             <Button
+              color="primary"
+              disabled={false}>
+               <span>
+                 <span className="query-name">
+                   {queryList.queryList.name}
+                 </span>
                </span>
-             </span>
-           </Button>
+             </Button>
+
+             <EditQueryModal
+              selectedSchema={selectedSchema}
+              queryList={queryList}/>
+
+            </ButtonGroup>
          </div>
          :
          null
@@ -38,22 +44,23 @@ import './querybody.css';
  }
 
 
-const QueryBody = ({queryList}) => {
+const QueryBody = ({queryList, selectedSchema}) => {
   return(
     <div>
-      <div style={{border:"1px solid #E0E0E0", borderRadius:"25px",
-          boxShadow: "0 0 5px 2px #E0E0E0", width: "15rem"}}>
+      <header className='body-name-query'>
+        Queries
+      </header>
+      <QueryList
+        queryList={queryList}
+        selectedSchema={selectedSchema}/>
 
-          <QueryList queryList={queryList}/>
+      <header className='body-name-query'>
+        Selected Query
+      </header>
 
-        <header className='body-name-query'>
-          Selected Query
-        </header>
-
-        <div>
-          <div className='querySQL'>
-            <div>{queryList.queryList.SQL}</div>
-          </div>
+      <div>
+        <div className='querySQL'>
+          <div>{queryList.queryList.SQL}</div>
         </div>
       </div>
     </div>
@@ -62,7 +69,8 @@ const QueryBody = ({queryList}) => {
 
 //map states to props
 const mapStatesToProps = (state) =>({
-  queryList: state.queryList
+  queryList: state.queryList,
+  selectedSchema: state.selectedSchema
 });
 
 

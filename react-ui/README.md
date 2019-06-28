@@ -12,7 +12,7 @@
 
   II. Dependencies
 
-  External: @vx/-0.0.189, d3.js-5.9.2, redux-4.0.1, redux-thunk-2.3.0, reactstrap-8.0.0, react-icons-3.7.0
+  External: @vx/-0.0.189, d3.js-5.9.2, redux-4.0.1, redux-thunk-2.3.0, reactstrap-8.0.0, react-icons-3.7.0, classnames-2.2.6
 
   To install dependencies and requirements:
 
@@ -57,6 +57,10 @@
   For react-icons (using FontAwesome icons):
 
     * npm install react-icons --save
+
+  For Classnames:
+
+    * npm i classnames
 
   III. Installing & running the UI
 

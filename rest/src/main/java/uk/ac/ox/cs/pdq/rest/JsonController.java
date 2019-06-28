@@ -4,9 +4,13 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.*;
 import uk.ac.ox.cs.pdq.rest.eventhandlers.*;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.JsonPlan;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.run.JsonRunResults;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.JsonDependencyList;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.JsonRelationList;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.SchemaName;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -48,7 +52,7 @@ public class JsonController{
 
   public JsonController(){
     this.PATH_TO_SCHEMA_EXAMPLES = "test/demo/case_";
-    this.example_names = new String[]{"001","002", "003", "004", "005", "006", "007", "008", "009" };
+    this.example_names = new String[]{"001","002", "003", "004", "005", "006", "007", "008", "009"};
     this.jsonSchemaList = new SchemaName[example_names.length];
     this.schemaList = new HashMap<Integer, Schema>();
     this.queryList = new HashMap<Integer, ConjunctiveQuery>();
@@ -64,10 +68,9 @@ public class JsonController{
         String pathToCaseProperties = PATH_TO_SCHEMA_EXAMPLES+example_names[i]+"/case.properties";
 
         Schema schema = IOManager.importSchema(new File(pathToSchema));
+
         ConjunctiveQuery queries = IOManager.importQuery(new File(pathToQuery));
         File caseProperties = new File(pathToCaseProperties);
-
-
 
         //put schema in hash map
         schemaList.put(i, schema);
@@ -113,6 +116,24 @@ public class JsonController{
     return toReturn;
   }
   /**
+   * Returns dependencies associated with specific schema.
+   *
+   * @param id
+   * @return JsonRelationList
+   */
+  @RequestMapping(value="/getDependencies", method=RequestMethod.GET, produces="application/json")
+  public ResponseEntity<JsonDependencyList> getDependencies(@RequestParam(value="id") int id){
+
+    Schema schema = schemaList.get(id);
+    JsonDependencyList toReturn = new JsonDependencyList(schema, id);
+
+    String contentType = "application/json";
+
+    return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+              .header(contentType)
+              .body(toReturn);
+  }
+  /**
    * Returns Query associated with schema. As of now, each schema has only one query.
    *
    * @param id
@@ -122,6 +143,7 @@ public class JsonController{
   public JsonQuery getQueries(@RequestParam(value="id") int id){
 
     ConjunctiveQuery query = queryList.get(id);
+
     Schema schema = schemaList.get(id);
 
     String query_string = SQLLikeQueryWriter.convert(query, schema);
@@ -150,7 +172,9 @@ public class JsonController{
     try{
       JsonPlan plan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
 
-      planList.put(id, plan); //if we got here, we haven't planned yet, so put the plan in the map.
+      plan.getGraphicalPlan().setType("ORIGIN"); //manually set type of origin node
+
+      planList.put(id, plan); //put the plan in the map.
 
       return plan;
     }catch (Throwable e) {

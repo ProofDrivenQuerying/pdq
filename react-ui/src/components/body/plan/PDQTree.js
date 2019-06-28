@@ -11,14 +11,13 @@ import { LinkHorizontal,
 
 /**
  * PDQTree creates an svg of the plan search tree.
- *  Visualized in GraphicalPlanModal.
+ * Visualized in GraphicalPlanModal.
  *
  */
 
 export default class PDQTree extends React.Component {
   constructor(props){
     super(props);
-
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragMove = this.onDragMove.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
@@ -43,7 +42,6 @@ export default class PDQTree extends React.Component {
     const startX = typeof e.clientX === 'undefined' ? e.changedTouches[0].clientX : e.clientX;
     const startY = typeof e.clientY === 'undefined' ? e.changedTouches[0].clientY : e.clientY;
 
-    // Update state with above coordinates, and set dragging to true.
     const state = {
       dragging: true,
       startX,
@@ -54,8 +52,7 @@ export default class PDQTree extends React.Component {
   }
 
   onDragMove(e) {
-    // First check if the state is dragging, if not we can just return
-    // so we do not move unless the user wants to move
+    // If not dragging, just return
     if (!this.state.dragging) {
       return;
     }
@@ -64,14 +61,12 @@ export default class PDQTree extends React.Component {
     const x = typeof e.clientX === 'undefined' ? e.changedTouches[0].clientX : e.clientX;
     const y = typeof e.clientY === 'undefined' ? e.changedTouches[0].clientY : e.clientY;
 
-    // Take the delta where we are minus where we came from.
     const dx = x - this.state.startX;
     const dy = y - this.state.startY;
 
     // Pan using the deltas
     this.pan(dx, dy);
 
-    // Update the state
     this.setState({
       startX: x,
       startY: y,
@@ -107,8 +102,6 @@ export default class PDQTree extends React.Component {
     m[5] += (1 - scale) * this.props.height / 2;
     this.setState({ matrix: m });
   }
-
-
 
   render() {
     const {

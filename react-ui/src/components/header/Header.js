@@ -1,5 +1,4 @@
 import React from 'react';
-import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import './header.css';
 import logo from '../../img/logo.png';
 
@@ -19,14 +18,6 @@ const Header = () =>{
         rel="noopener noreferrer">
         <img src={logo} className="PDQ-Logo" alt="logo" />
       </a>
-
-      <div className = 'breadlist'>
-        <Breadcrumb>
-          <BreadcrumbItem>Schema</BreadcrumbItem>
-          <BreadcrumbItem>Query</BreadcrumbItem>
-          <BreadcrumbItem>Plan</BreadcrumbItem>
-        </Breadcrumb>
-      </div>
 
       <span className='about'>
         <a

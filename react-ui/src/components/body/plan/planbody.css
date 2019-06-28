@@ -4,18 +4,17 @@
   margin-left: 2rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  height: 70%;
+  justify-content: space-between;
+  height: 80%;
   width: 90%;
   position:relative;
   overflow-x: hidden;
-  overflow-y: scroll;
   font-size: .7rem;
 }
 
 .body-name-plan{
   width: 100%;
-  padding: 1rem;
+  margin: 1rem;
   display: flex;
   align-self: center;
   align-items: center;

@@ -16,15 +16,27 @@ const Body = ({selectedSchema, body, queryList}) => {
   return (
     <div style={{display:"flex", flexDirection:"row", width:"100vw"}}>
 
-      <div style={{margin: "3rem 1rem 0rem 2rem"}}>
+      <div style={{margin: "3rem 1rem 0rem 2rem",
+                   border:"2px solid #E0E0E0",
+                   borderRadius:"25px",
+                   width: "14rem"}}
+      >
         <SchemaBody/>
       </div>
 
-      <div style={{display:"flex",margin:"3rem 1rem 0rem 1rem"}}>
+      <div style={{margin:"3rem 1rem 0rem 1rem",
+                   border:"2px solid #E0E0E0",
+                   borderRadius:"25px",
+                   width: "15rem"}}
+      >
         <QueryBody/>
       </div>
 
-      <div style={{display:"flex",margin:"3rem 1rem 0rem 1rem"}}>
+      <div style={{margin:"3rem 1rem 0rem 1rem",
+                   border:"2px solid #E0E0E0",
+                   borderRadius:"25px",
+                   width: "43rem"}}
+      >
         <PlanBody/>
       </div>
 

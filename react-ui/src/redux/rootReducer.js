@@ -1,10 +1,11 @@
 import { combineReducers } from 'redux';
-import schemaUpdateReducer from './schemaUpdate';
-import schemaListUpdateReducer from './setSchemaList';
-import relationListUpdateReducer from './setRelationList';
-import queryListUpdateReducer from './setQueryList';
-import planUpdateReducer from './setPlan';
-import planRunUpdateReducer from './setPlanRun';
+import schemaUpdateReducer from './schemaUpdateReducer';
+import schemaListReducer from './schemaListReducer';
+import relationListReducer from './relationListReducer';
+import queryListReducer from './queryListReducer';
+import planReducer from './planReducer';
+import runReducer from './runReducer';
+import dependencyListsReducer from './dependencyListsReducer';
 
 /**
  * Combines setBody and schemaUpdate reducers into a single rootReducer.
@@ -13,14 +14,14 @@ import planRunUpdateReducer from './setPlanRun';
  * @author Camilo Ortiz
  */
 
-
 const rootReducer = combineReducers({
   selectedSchema: schemaUpdateReducer,
-  relationList: relationListUpdateReducer,
-  schemaList: schemaListUpdateReducer,
-  queryList: queryListUpdateReducer,
-  plan: planUpdateReducer,
-  planRun: planRunUpdateReducer
+  relationList: relationListReducer,
+  schemaList: schemaListReducer,
+  queryList: queryListReducer,
+  plan: planReducer,
+  planRun: runReducer,
+  dependencyLists: dependencyListsReducer
 })
 
 export default rootReducer;

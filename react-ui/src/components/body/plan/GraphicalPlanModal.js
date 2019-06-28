@@ -17,7 +17,7 @@ export default class GraphicalPlanModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modal: false
+      modal: false,
     };
 
     this.toggle = this.toggle.bind(this);
@@ -29,8 +29,14 @@ export default class GraphicalPlanModal extends React.Component {
     }));
   }
 
+  width(elem){
+    return elem.clientWidth;
+  }
 
   render() {
+    var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
     return (
       <div>
         <Button
@@ -41,6 +47,7 @@ export default class GraphicalPlanModal extends React.Component {
          </Button>
 
         <Modal
+           id={"GraphicalPlanModalBody"}
            isOpen={this.state.modal}
            toggle={this.toggle}
            size="lg">
@@ -48,17 +55,14 @@ export default class GraphicalPlanModal extends React.Component {
 
           <ModalBody
           style={{maxHeight: "calc(100vh - 200px)"}}>
-          {this.props.graphicalPlan != null ?
+          {this.props.graphicalPlan != null && this.state.modal ?
            <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
             <PDQTree
                data={this.props.graphicalPlan}
                width={750}
                height={370}/>
            </div>
-
-           :
-
-           null}
+           : null}
           </ModalBody>
 
           <ModalFooter>

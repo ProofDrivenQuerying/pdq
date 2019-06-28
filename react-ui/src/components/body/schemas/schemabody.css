@@ -1,7 +1,8 @@
 .schemas{
   position: relative;
-  margin-right: 2rem;
-  margin-left: 2rem;
+  margin-right: 1rem;
+  margin-left: 1rem;
+  margin-bottom: 2rem;
   display: flex;
   text-align: center;
   flex-direction: column;
@@ -9,12 +10,11 @@
 
   position:relative;
   overflow-y: scroll;
-  overflow: visible;
 }
 
 .body-name-schema{
   margin: 0 auto;
-  padding: 1rem;
+  margin: 1rem;
   display: flex;
   flex-direction: column;
   font-family: 'Open Sans', sans-serif;
