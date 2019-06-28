@@ -1,7 +1,7 @@
 	<service
 		name="activityFree"
 		protocol="REST"
-		url="http://pdq-webapp.cs.ox.ac.uk:8080/webapp/servlets/servlet/activityFree2" 
+		url="http://pdq-webapp.cs.ox.ac.uk:8080/webapp/servlets/servlet/activityFree" 
 		media-type="application/xml"
 		documentation=""
 		result-delimiter="activitiesFree"
