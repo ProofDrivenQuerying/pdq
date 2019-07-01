@@ -400,7 +400,7 @@ public class ConjunctiveQueryBodyBuilder {
 		for(Atom atom : preds) atoms[i++] = atom;
 		if(atoms.length > 0)
 		{
-			this.conjQuery = ConjunctiveQuery.create(new Variable[0], atoms);
+			this.conjQuery = ConjunctiveQuery.create(this.resultPredicate.getFreeVariables(), atoms);
 		}
 		else
 		{

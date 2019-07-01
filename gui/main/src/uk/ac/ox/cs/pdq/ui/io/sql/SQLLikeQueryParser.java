@@ -312,6 +312,7 @@ public class SQLLikeQueryParser {
 				match(DOT);
 				Token token2 = identifier();
 				columnNames.add(token2.getText());
+				resultColumns.add(token.getText() + "." + token2.getText());
 			}
 		}
 		else if(lookahead(1) != FROM)

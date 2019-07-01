@@ -122,6 +122,8 @@ public class PDQController {
 
 	/** PDQController's logger. */
 	private static Logger log = Logger.getLogger(PDQController.class);
+	
+	public static PDQController pdqController;
 
 	/*
 	 * JavaFX-specific initializations
@@ -968,6 +970,7 @@ public class PDQController {
 				String str = this.queryTextArea.textProperty().get();
 				SQLLikeQueryReader qr = new SQLLikeQueryReader(this.currentSchema.get().getSchema());
 				ConjunctiveQuery cjq = qr.fromString(str);
+				Variable[] freeVars =  cjq.getFreeVariables();
 				this.currentQuery.get().setQuery(cjq);
 				saveQuery(this.currentQuery.get());
 				Alert alert = new Alert(AlertType.INFORMATION);
@@ -1118,6 +1121,8 @@ public class PDQController {
 		this.configureQueries();
 		this.configurePlans();
 		this.configureSettings();
+		
+		pdqController = this;
 	}
 
 	/**
@@ -1547,6 +1552,18 @@ public class PDQController {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Adds a query from saveas.
+	 */
+	public void addQuery(ObservableQuery q, String path)
+	{
+		ObservableList<ObservableQuery> qs = this.queries.get(this.currentSchema.get().getName());
+		File queryFile = new File(path);
+		ObservableQuery q2 = new ObservableQuery(q.getName(), q.getDescription(), queryFile, q.getFormula());
+		q2.store();
+		qs.add(q2);
 	}
 
 	/**
