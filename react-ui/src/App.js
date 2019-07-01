@@ -31,6 +31,7 @@ class App extends Component{
 
 //redux
 const mapStatesToProps = (state) =>({
+  // dispatch: state.dispatch
   ...state
 });
 

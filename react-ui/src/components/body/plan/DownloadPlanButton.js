@@ -60,19 +60,19 @@ export default class DownloadRunButton extends React.Component {
     return(
       <div>
         <Button
-          id={"downloadPlan"+this.props.selectedSchema.id+this.props.id}
+          id={"downloadPlan"+this.props.schemaID+this.props.id}
           color="link"
           disabled={this.props.plan === null ||
-                     this.props.plan.id !== this.props.selectedSchema.id}
+                     this.props.plan.id !== this.props.schemaID}
           style={this.props.margins ? smallButton : noStyle}
-          onClick={(e) => this.downloadPlan(this.props.selectedSchema.id)}>
+          onClick={(e) => this.downloadPlan(this.props.schemaID)}>
           <FaDownload/>
         </Button>
 
         <Tooltip
           placement="top"
           isOpen={this.state.tooltipOpen}
-          target={"downloadPlan"+this.props.selectedSchema.id+this.props.id}
+          target={"downloadPlan"+this.props.schemaID+this.props.id}
           toggle={this.toggleTooltip}>
           Download plan as .xml
         </Tooltip>

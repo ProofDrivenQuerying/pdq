@@ -5,7 +5,7 @@ import './bootstrap/bootstrap.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
-import { store } from './redux/store';
+import { store } from './reducers/store';
 
 /**
  * index.js uses ReactDom to render JSX code as HTML for the client.

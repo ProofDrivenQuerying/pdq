@@ -30,7 +30,6 @@ export default class RelationModal extends React.Component{
   toggleDependenciesModal(){
     this.setState({
       modalDependenciesOpen: !this.state.modalDependenciesOpen,
-      tooltipOpen: false
     });
   }
 
@@ -65,6 +64,7 @@ export default class RelationModal extends React.Component{
         </Button>
 
         <Tooltip
+          trigger="hover"
           placement="top"
           isOpen={this.state.tooltipOpen}
           target={"DependenciesButton"+ this.props.schemaFromList.id}

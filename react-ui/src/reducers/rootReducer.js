@@ -1,11 +1,10 @@
 import { combineReducers } from 'redux';
-import schemaUpdateReducer from './schemaUpdateReducer';
 import schemaListReducer from './schemaListReducer';
 import relationListReducer from './relationListReducer';
-import queryListReducer from './queryListReducer';
 import planReducer from './planReducer';
 import runReducer from './runReducer';
 import dependencyListsReducer from './dependencyListsReducer';
+import queryValidation from './queryValidation';
 
 /**
  * Combines setBody and schemaUpdate reducers into a single rootReducer.
@@ -15,13 +14,12 @@ import dependencyListsReducer from './dependencyListsReducer';
  */
 
 const rootReducer = combineReducers({
-  selectedSchema: schemaUpdateReducer,
   relationList: relationListReducer,
   schemaList: schemaListReducer,
-  queryList: queryListReducer,
   plan: planReducer,
   planRun: runReducer,
-  dependencyLists: dependencyListsReducer
+  dependencyLists: dependencyListsReducer,
+  queryValidation: queryValidation,
 })
 
 export default rootReducer;

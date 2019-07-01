@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getRelations } from '../../../actions/getRelations';
 import { getDependencies } from '../../../actions/getDependencies';
-import { getQueries } from '../../../actions/getQueries';
 import RelationsModal from './RelationsModal';
 import DependenciesModal from './DependenciesModal';
 import './schemaname.css';
@@ -32,10 +31,6 @@ import { Button, ButtonGroup } from 'reactstrap';
        });
      }
 
-   setSchema_getQueries(schemaFromList, id){
-      this.props.setSchema(schemaFromList, id);
-      this.props.getQueries(id);
-    }
 
     openRelations(id){
       this.props.getRelations(id);
@@ -49,8 +44,8 @@ import { Button, ButtonGroup } from 'reactstrap';
          className="schema-name-holder"
          key={this.props.schemaFromList.id}>
 
-       {this.props.selectedSchema.selectedSchema != null &&
-           this.props.schemaFromList.id === this.props.selectedSchema.id ?
+       {this.props.schemaList.selectedSID != null &&
+           this.props.schemaFromList.id === this.props.schemaList.selectedSID ?
 
          <div style={{display: "flex", width:"100%"}}>
            <ButtonGroup style={{width:"100%"}}>
@@ -58,13 +53,9 @@ import { Button, ButtonGroup } from 'reactstrap';
                color="primary"
                id = {this.props.schemaFromList.id}
                block
-               onClick={(e) => this.setSchema_getQueries(
-                       this.props.schemaFromList,
-                       this.props.schemaFromList.id
-                     )}
               >
                <span className="schema-name">
-                 {this.props.selectedSchema.selectedSchema.name}
+                 {this.props.schemaFromList.name}
                </span>
               </Button>
 
@@ -91,8 +82,10 @@ import { Button, ButtonGroup } from 'reactstrap';
                outline color="secondary"
                id = {this.props.schemaFromList.id}
                block
-               onClick={(e) => this.setSchema_getQueries(
-                       this.props.schemaFromList, this.props.schemaFromList.id)}>
+               onClick={(e) => {
+                 this.props.setSchema(this.props.schemaFromList.id);
+                 this.props.setQuery(0);
+                 }}>
                <span>
                  <span className="schema-name">
                    {this.props.schemaFromList.name}
@@ -111,13 +104,15 @@ import { Button, ButtonGroup } from 'reactstrap';
 
 //redux
 const mapStatesToProps = (state) =>({
-  ...state
+  relationList: state.relationList,
+  dependencyLists: state.dependencyLists,
+  schemaList: state.schemaList
 });
 
 const mapDispatchToProps = (dispatch) =>({
-  setSchema: (schema, id) => dispatch({ type: 'SET', schema: schema, id: id}),
+  setSchema: (id) => dispatch({ type: 'SET_S_ID', id: id}),
+  setQuery: (id) => dispatch({ type: 'SET_Q_ID', id: id}),
   getRelations: (id) => dispatch(getRelations(id)),
-  getQueries: (id) => dispatch(getQueries(id)),
   getDependencies: (id) => dispatch(getDependencies(id))
 });
 

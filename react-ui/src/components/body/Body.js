@@ -16,7 +16,7 @@ const Body = ({selectedSchema, body, queryList}) => {
   return (
     <div style={{display:"flex", flexDirection:"row", width:"100vw"}}>
 
-      <div style={{margin: "3rem 1rem 0rem 2rem",
+      <div style={{margin: "2rem 1rem 0rem 2rem",
                    border:"2px solid #E0E0E0",
                    borderRadius:"25px",
                    width: "14rem"}}
@@ -24,7 +24,7 @@ const Body = ({selectedSchema, body, queryList}) => {
         <SchemaBody/>
       </div>
 
-      <div style={{margin:"3rem 1rem 0rem 1rem",
+      <div style={{margin:"2rem 1rem 0rem 1rem",
                    border:"2px solid #E0E0E0",
                    borderRadius:"25px",
                    width: "15rem"}}
@@ -32,7 +32,7 @@ const Body = ({selectedSchema, body, queryList}) => {
         <QueryBody/>
       </div>
 
-      <div style={{margin:"3rem 1rem 0rem 1rem",
+      <div style={{margin:"2rem 1rem 0rem 1rem",
                    border:"2px solid #E0E0E0",
                    borderRadius:"25px",
                    width: "43rem"}}
@@ -46,7 +46,8 @@ const Body = ({selectedSchema, body, queryList}) => {
 
 //map states to props
 const mapStatesToProps = (state) =>({
-  ...state
+  selectedSchema: state.selectedSchema, 
+  queryList: state.queryList
 });
 
 

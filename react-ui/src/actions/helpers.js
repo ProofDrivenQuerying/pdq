@@ -1,5 +1,5 @@
 /**
- * Structures http requests for certain fetch calls.
+ * Structures http requests for download-related fetch calls.
  *
  */
 

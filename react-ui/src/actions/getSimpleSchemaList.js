@@ -1,4 +1,4 @@
-import { store } from '../redux/store.js';
+import { store } from '../reducers/store.js';
 
 /**
  * Fetches a simple array of schemas (id, name)

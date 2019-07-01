@@ -61,20 +61,20 @@ export default class DownloadRunButton extends React.Component {
     return(
       <div>
         <Button
-          id={"downloadRun"+this.props.selectedSchema.id+this.props.id}
+          id={"downloadRun"+this.props.schemaID+this.props.id}
           color="link"
           disabled={!this.props.plan.runnable ||
                      this.props.planRun.planRun === null ||
-                     this.props.planRun.id !== this.props.selectedSchema.id}
+                     this.props.planRun.id !== this.props.schemaID}
           style={this.props.margins ? smallButton : noStyle}
-          onClick={(e) => this.downloadRun(this.props.selectedSchema.id)}>
+          onClick={(e) => this.downloadRun(this.props.schemaID)}>
           <FaDownload/>
         </Button>
 
         <Tooltip
           placement="top"
           isOpen={this.state.tooltipOpen}
-          target={"downloadRun"+this.props.selectedSchema.id+this.props.id}
+          target={"downloadRun"+this.props.schemaID+this.props.id}
           toggle={this.toggleTooltip}>
           Download full run as .csv
         </Tooltip>

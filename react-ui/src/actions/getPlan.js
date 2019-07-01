@@ -1,4 +1,4 @@
-import { store } from '../redux/store.js';
+import { store } from '../reducers/store.js';
 
 /**
  * Fetches plan object from the backend based on the provided selected schema's id.

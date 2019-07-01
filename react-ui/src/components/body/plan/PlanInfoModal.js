@@ -52,7 +52,7 @@ export default class PlanInfoModal extends React.Component{
           size="lg">
 
           <ModalHeader toggle={this.toggle}>
-            Plan{this.props.selectedSchema.id}
+            Plan{this.props.id}
           </ModalHeader>
 
           <ModalBody style={{maxHeight: "calc(100vh - 200px)"}}>

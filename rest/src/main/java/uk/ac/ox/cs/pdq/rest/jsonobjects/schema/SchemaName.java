@@ -1,6 +1,8 @@
 package uk.ac.ox.cs.pdq.rest.jsonobjects.schema;
 
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.JsonQuery;
+import java.util.ArrayList;
 
 /**
  * Basic schema information that the client will load before their components
@@ -14,9 +16,12 @@ import uk.ac.ox.cs.pdq.db.Schema;
 public class SchemaName{
   public int id;
   public String name;
+  public ArrayList<JsonQuery> queries;
 
-  public SchemaName(Schema schema, int id){
+  public SchemaName(Schema schema, int id, JsonQuery query){
     this.name = "schema"+ new Integer(id).toString();
     this.id = id;
+    this.queries = new ArrayList<JsonQuery>();
+    queries.add(query);
   }
 }

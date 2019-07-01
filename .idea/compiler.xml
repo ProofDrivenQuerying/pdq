@@ -8,12 +8,12 @@
         <outputRelativeToContentRoot value="true" />
         <module name="pdq-rest" />
         <module name="pdq-reasoning" />
-        <module name="pdq-common" />
         <module name="pdq-datasources" />
+        <module name="pdq-cost" />
         <module name="pdq-gui" />
         <module name="pdq-runtime" />
         <module name="pdq-planner" />
-        <module name="pdq-cost" />
+        <module name="pdq-common" />
         <module name="pdq-regression" />
       </profile>
     </annotationProcessing>

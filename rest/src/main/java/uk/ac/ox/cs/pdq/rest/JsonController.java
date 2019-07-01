@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.rest.jsonobjects.run.JsonRunResults;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.JsonDependencyList;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.JsonRelationList;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.SchemaName;
+import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -82,7 +83,10 @@ public class JsonController{
         casePropertyList.put(i, caseProperties);
 
         //make JsonSchema and put it in JsonSchema array
-        SchemaName jsonSchema = new SchemaName(schema, i);
+        String query_string = SQLLikeQueryWriter.convert(queries, schema);
+        JsonQuery query = new JsonQuery(0, query_string);
+
+        SchemaName jsonSchema = new SchemaName(schema, i, query);
         jsonSchemaList[i] = jsonSchema;
 
       }catch (Throwable e) {
@@ -102,7 +106,7 @@ public class JsonController{
     return this.jsonSchemaList;
   }
   /**
-   * Returns relations associated with specific schema.
+   * Returns relations associated with specific schema. Schema is identified thanks to the provided id.
    *
    * @param id
    * @return JsonRelationList
@@ -133,24 +137,6 @@ public class JsonController{
               .header(contentType)
               .body(toReturn);
   }
-  /**
-   * Returns Query associated with schema. As of now, each schema has only one query.
-   *
-   * @param id
-   * @return JsonQuery
-   */
-  @RequestMapping(value="/getQueries", method=RequestMethod.GET, produces="application/json")
-  public JsonQuery getQueries(@RequestParam(value="id") int id){
-
-    ConjunctiveQuery query = queryList.get(id);
-
-    Schema schema = schemaList.get(id);
-
-    String query_string = SQLLikeQueryWriter.convert(query, schema);
-
-    JsonQuery toReturn = new JsonQuery(id, query_string);
-    return toReturn;
-  }
 
   /**
    * Returns Entry<RelationalTerm, Cost> that shows up as a long string
@@ -161,7 +147,6 @@ public class JsonController{
   @RequestMapping(value="/plan", method=RequestMethod.GET, produces="application/json")
   public JsonPlan plan(@RequestParam("id") int id){
     JsonPlan previousPlan = planList.get(id);
-
     if(previousPlan != null) return previousPlan; //if we've already planned this schema and query, return it
 
     Schema schema = schemaList.get(id);
@@ -269,4 +254,25 @@ public class JsonController{
         }
         return null;
     }
+
+    @GetMapping(value="/verifyQuery/{id}/{SQL:.+}")
+    public boolean verifyQuery(@PathVariable int id, @PathVariable String SQL, HttpServletRequest request){
+        Schema schema = this.schemaList.get(id);
+
+        boolean validQuery = false;
+
+        try{
+            SQLQueryReader reader = new SQLQueryReader(schema);
+            ConjunctiveQuery newQuery = reader.fromString(SQL);
+            //validation goes here
+            validQuery = true;
+
+            return validQuery;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return validQuery;
+    }
+
+
 }

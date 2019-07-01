@@ -2,53 +2,47 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="62dedaba-cb86-4b56-a5c0-3e890da50df5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/SQLQueryParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/getDependencies.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/actions/getDependencies.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/getPlan.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/actions/getPlan.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/getQueries.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/getRelations.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/actions/getRelations.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/getSimpleSchemaList.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/actions/getSimpleSchemaList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/actions/helpers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/runPlan.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/actions/runPlan.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/Body.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/Body.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/DownloadPlanButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/DownloadPlanButton.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/DownloadRunButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/DownloadRunButton.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/GraphicalPlanModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/GraphicalPlanModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/PDQTree.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/PDQTree.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/PlanBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/PlanBody.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/planbody.css" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/planbody.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/PlanInfoModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/PlanInfoModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/RunModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/RunModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/queries/EditQueryModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/queries/EditQueryModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/queries/QueryBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/queries/QueryBody.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/queries/querybody.css" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/queries/querybody.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/schemas/DependenciesModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/schemas/DependenciesModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/schemas/RelationsModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/schemas/RelationsModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/schemas/SchemaBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/schemas/SchemaBody.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/components/header/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/header/Header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/components/header/header.css" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/header/header.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/.idea/libraries/Maven__com_google_code_gson_gson_2_8_5.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/schemas/SchemaName.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/schemas/SchemaName.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/schemas/schemabody.css" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/schemas/schemabody.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/dependencyListsReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/planReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/queryListReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/relationListReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/rootReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/runReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/schemaListReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/schemaUpdateReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/store.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/rest/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/rest/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/pdq-rest.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/rest.iml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/rest.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/JsonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/JsonController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/JsonPlanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/JsonPlanner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/Runner.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/Runner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonAccessMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/schemaobjects/JsonAccessMethod.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/schemaobjects/JsonAttribute.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonGraphicalPlan.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/planobjects/JsonGraphicalPlan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonPlan.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/planobjects/JsonPlan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonRelation.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/schemaobjects/JsonRelation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonRelationList.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/schemaobjects/JsonRelationList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonRunResults.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/runobjects/JsonRunResults.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/runobjects/JsonTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonTuple.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/runobjects/JsonTuple.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/SchemaName.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/schemaobjects/SchemaName.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/schema/SchemaName.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/schema/SchemaName.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/JsonController.class" beforeDir="false" afterPath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/JsonController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/eventhandlers/JsonPlanner.class" beforeDir="false" afterPath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/eventhandlers/JsonPlanner.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/eventhandlers/Runner.class" beforeDir="false" afterPath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/eventhandlers/Runner.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonAccessMethod.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonAttribute.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonGraphicalPlan$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonGraphicalPlan.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonPlan.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonRelation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonRelationList.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonRunResults.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonTable.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/JsonTuple.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/SchemaName.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_001/computed-plan.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_001/computed-plan.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_001/results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_001/results.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/schema/SchemaName.class" beforeDir="false" afterPath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/schema/SchemaName.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/regression/target/" />
@@ -72,20 +66,32 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/common/main/src/uk/ac/ox/cs/pdq/io/jaxb/IOManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="608">
+            <state relative-caret-position="-296">
               <caret line="213" column="72" selection-start-line="213" selection-start-column="72" selection-end-line="213" selection-end-column="72" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/gui/main/src/uk/ac/ox/cs/pdq/ui/io/sql/SQLLikeQueryReader.java">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/regression/main/src/uk/ac/ox/cs/pdq/regression/package-info.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="132">
-              <caret line="63" column="31" selection-start-line="63" selection-start-column="31" selection-end-line="63" selection-end-column="31" />
+            <state relative-caret-position="203">
+              <caret line="15" column="36" selection-start-line="15" selection-start-column="36" selection-end-line="15" selection-end-column="36" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gui/main/src/uk/ac/ox/cs/pdq/ui/io/sql/SQLLikeQueryParser.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="558">
+              <caret line="705" column="40" selection-start-line="705" selection-start-column="40" selection-end-line="705" selection-end-column="40" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -96,6 +102,8 @@
     <findStrings>
       <find>repository</find>
       <find>indent</find>
+      <find>c</find>
+      <find>&lt;access-method</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -120,8 +128,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -129,10 +135,73 @@
               <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
               <item name="pdq" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pdq" type="462c0819:PsiDirectoryNode" />
+              <item name="gui" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pdq" type="462c0819:PsiDirectoryNode" />
+              <item name="gui" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pdq" type="462c0819:PsiDirectoryNode" />
+              <item name="gui" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pdq" type="462c0819:PsiDirectoryNode" />
+              <item name="gui" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="pdq" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pdq" type="462c0819:PsiDirectoryNode" />
+              <item name="gui" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="pdq" type="462c0819:PsiDirectoryNode" />
+              <item name="ui" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pdq" type="462c0819:PsiDirectoryNode" />
+              <item name="gui" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="pdq" type="462c0819:PsiDirectoryNode" />
+              <item name="ui" type="462c0819:PsiDirectoryNode" />
+              <item name="io" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pdq" type="462c0819:PsiDirectoryNode" />
+              <item name="gui" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="pdq" type="462c0819:PsiDirectoryNode" />
+              <item name="ui" type="462c0819:PsiDirectoryNode" />
+              <item name="io" type="462c0819:PsiDirectoryNode" />
+              <item name="sql" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pdq" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pdq" type="462c0819:PsiDirectoryNode" />
+              <item name="rest" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -187,7 +256,7 @@
     <frame x="0" y="23" width="1280" height="777" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25767368" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26171243" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -374,17 +443,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/main/src/uk/ac/ox/cs/pdq/io/jaxb/IOManager.java">
+    <entry file="file://$PROJECT_DIR$/gui/main/src/uk/ac/ox/cs/pdq/ui/io/sql/SQLLikeQueryReader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="608">
-          <caret line="213" column="72" selection-start-line="213" selection-start-column="72" selection-end-line="213" selection-end-column="72" />
+        <state relative-caret-position="180">
+          <caret line="12" column="21" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="21" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gui/main/src/uk/ac/ox/cs/pdq/ui/io/sql/SQLLikeQueryReader.java">
+    <entry file="file://$PROJECT_DIR$/regression/main/src/uk/ac/ox/cs/pdq/regression/package-info.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="63" column="31" selection-start-line="63" selection-start-column="31" selection-end-line="63" selection-end-column="31" />
+        <state relative-caret-position="203">
+          <caret line="15" column="36" selection-start-line="15" selection-start-column="36" selection-end-line="15" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/main/src/uk/ac/ox/cs/pdq/ui/io/sql/SQLLikeQueryParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="558">
+          <caret line="705" column="40" selection-start-line="705" selection-start-column="40" selection-end-line="705" selection-end-column="40" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/main/src/uk/ac/ox/cs/pdq/io/jaxb/IOManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-296">
+          <caret line="213" column="72" selection-start-line="213" selection-start-column="72" selection-end-line="213" selection-end-column="72" />
         </state>
       </provider>
     </entry>

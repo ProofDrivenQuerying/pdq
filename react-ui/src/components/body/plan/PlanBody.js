@@ -20,7 +20,7 @@ import { FaRegMap,
  */
 
 
-const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun}) => {
+const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun, schemaList}) => {
 
   let smallButton = {
     float: "left", width: "4rem", height:"4rem", margin:"1rem 1rem 1rem 1rem"
@@ -39,16 +39,16 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun}) => {
         Plan
       </header>
 
-      {selectedSchema.selectedSchema != null ?
+      {schemaList.schemas != null ?
 
         <div className='plan'>
           <div style={{flexDirection:"row"}}>
 
             <Button
-                disabled={plan.id === selectedSchema.selectedSchema.id || plan.isFetchingPlan}
-                outline color={plan.id === selectedSchema.selectedSchema.id ? "primary" : "secondary"}
+                disabled={plan.id === schemaList.selectedSID || plan.isFetchingPlan}
+                outline color={plan.id === schemaList.selectedSID ? "primary" : "secondary"}
                 style={smallButton}
-                onClick={(e) => getPlan(selectedSchema.selectedSchema.id)}>
+                onClick={(e) => getPlan(schemaList.selectedSID)}>
                 {plan.isFetchingPlan ?
                   <Spinner color="secondary"/>
                   :
@@ -58,24 +58,24 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun}) => {
                 }
             </Button>
 
-            {plan.plan!==null && plan.id === selectedSchema.selectedSchema.id ?
+            {plan.plan!==null && plan.id === schemaList.selectedSID ?
               <div>
                 <PlanInfoModal
                   bigButton={bigButton}
-                  selectedSchema={selectedSchema.selectedSchema}
+                  id={schemaList.selectedSID}
                   plan={plan.plan}
                   name = {planViewName}/>
 
                 <GraphicalPlanModal
                     graphicalPlan={plan.plan.graphicalPlan}
-                    selectedSchema={selectedSchema.selectedSchema}
                     bigButton={bigButton}
                     name = {graphicalPlanName}/>
 
                 <DownloadPlanButton
                     plan={plan}
                     margins={true}
-                    selectedSchema={selectedSchema.selectedSchema}/>
+                    id={1}
+                    schemaID={schemaList.selectedSID}/>
 
               </div>
               :
@@ -87,21 +87,21 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun}) => {
             <hr style={{color: "#C8C8C8", backgroundColor: "#C8C8C8", height: 0.2}}/>
           </div>
 
-          {plan.plan!==null && plan.id === selectedSchema.selectedSchema.id ?
+          {plan.plan!==null && plan.id === schemaList.selectedSID ?
             <div style={{flexDirection:"row"}}>
 
             <Button
                outline color={!plan.plan.runnable ?
                  "danger"
                  :
-                 planRun.id === selectedSchema.selectedSchema.id ?
+                 planRun.id === schemaList.selectedSID ?
                  "primary" : "secondary"
                  }
                disabled={!plan.plan.runnable || planRun.isFetchingPlanRun ||
                         (planRun.planRun !== null &&
-                          planRun.id === selectedSchema.selectedSchema.id)}
+                          planRun.id === schemaList.selectedSID)}
                style={smallButton}
-               onClick={() => runPlan(selectedSchema.selectedSchema.id)}>
+               onClick={() => runPlan(schemaList.selectedSID)}>
                {planRun.isFetchingPlanRun ?
                <Spinner color="secondary"/>
                 :
@@ -114,15 +114,15 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun}) => {
              {plan.plan.runnable ?
               <div>
                 <RunModal
-                  selectedSchema={selectedSchema.selectedSchema}
+                  schemaID={schemaList.selectedSID}
                   planRun={planRun}
                   plan ={plan.plan}
                   bigButton={bigButton}
                   name={runViewName}/>
 
                 <DownloadRunButton
+                  schemaID={schemaList.selectedSID}
                   plan={plan.plan}
-                  selectedSchema={selectedSchema.selectedSchema}
                   planRun={planRun}
                   margins={true}
                   id={1}/>
@@ -152,10 +152,10 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun}) => {
 
 const mapStatesToProps = (state) =>{
   return({
-    selectedSchema: state.selectedSchema,
     plan: state.plan,
     graphicalPlan: state.graphicalPlan,
-    planRun: state.planRun
+    planRun: state.planRun,
+    schemaList: state.schemaList
   })
 }
 

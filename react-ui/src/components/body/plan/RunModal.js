@@ -48,7 +48,7 @@ import { Button,
           outline color="secondary"
           disabled={!this.props.plan.runnable ||
                      this.props.planRun.planRun === null ||
-                     this.props.planRun.id !== this.props.selectedSchema.id}
+                     this.props.planRun.id !== this.props.schemaID}
           style={this.props.bigButton}
           onClick={() => this.toggle()}>
 
@@ -61,7 +61,7 @@ import { Button,
           toggle={this.toggle}
           size="lg">
            <ModalHeader toggle={this.toggle}>
-             Plan{this.props.selectedSchema.id} run information
+             Plan{this.props.schemaID} run information
            </ModalHeader>
 
            <ModalBody>
@@ -87,7 +87,7 @@ import { Button,
                  </i>
 
                    <DownloadRunButton
-                     selectedSchema={this.props.selectedSchema}
+                     schemaID={this.props.schemaID}
                      plan={this.props.plan}
                      planRun={this.props.planRun}
                      margins={false}

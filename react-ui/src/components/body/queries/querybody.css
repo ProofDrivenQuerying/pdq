@@ -1,3 +1,16 @@
+.queries{
+  height: 10rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 1rem;
+  margin-left: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  position:relative;
+  overflow-y: scroll;
+}
+
 .querySQL{
   position: relative;
   margin-right: 2rem;
@@ -12,9 +25,9 @@
   font-size: .7rem;
 }
 
-.body-name-query{
+.body-title-query{
   width: 100%;
-  padding: 1rem;
+  margin: 1rem;
   display: flex;
   align-self: center;
   align-items: center;
@@ -26,17 +39,19 @@
 }
 
 .query-name{
+  margin-top: .3rem;
+  margin-bottom: .3rem;
   width: inherit;
   font-weight: 500;
   font-size: 80%;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  height: 5rem;
 }
 
 .query-name-holder{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+  margin: 3%;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  width: 10rem;
+  padding-left: .5rem;
+  padding-right: .5rem;
 }

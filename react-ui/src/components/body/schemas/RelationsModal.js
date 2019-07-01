@@ -50,6 +50,7 @@ export default class RelationModal extends React.Component{
         </Button>
 
         <Tooltip
+          trigger="hover"
           placement="top"
           isOpen={this.state.tooltipOpen}
           target={"RelationButton"+ this.props.schemaFromList.id}

@@ -1,4 +1,4 @@
-import { store } from '../redux/store.js';
+import { store } from '../reducers/store.js';
 
 /**
  * Fetches two arrays of dependency objects (EGD, TGD) from the backend based

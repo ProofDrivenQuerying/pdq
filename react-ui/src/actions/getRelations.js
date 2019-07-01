@@ -1,4 +1,4 @@
-import { store } from '../redux/store.js';
+import { store } from '../reducers/store.js';
 
 /**
  * Fetches an array of relation objects from the backend based on the provided

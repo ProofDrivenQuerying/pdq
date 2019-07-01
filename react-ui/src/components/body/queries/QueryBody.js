@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
-import EditQueryModal from './EditQueryModal';
+import { FaTrashAlt } from 'react-icons/fa';
+import AddQueryModal from './AddQueryModal';
 import { connect } from 'react-redux';
 import './querybody.css';
 
@@ -10,57 +11,94 @@ import './querybody.css';
  * @author Camilo Ortiz
  */
 
- const QueryList = ({queryList, selectedSchema}) => {
-   console.log(selectedSchema);
-   return(
-     <div style={{height: "10rem", display: "flex", flexDirection:"column"}}>
-
-       {queryList.queryList.name != null && selectedSchema != null ?
-
-         <div className="query-name-holder">
-            <ButtonGroup>
-             <Button
-              color="primary"
-              disabled={false}>
-               <span>
-                 <span className="query-name">
-                   {queryList.queryList.name}
+ const QueryList = ({ schemaList, setQuery}) => {
+   if(schemaList.schemas.length > 0){
+     return schemaList.schemas[schemaList.selectedSID].queries.map((queryFromList, index) => {
+       return(
+         <div>
+         {schemaList.selectedQID === index ?
+           <div className="query-name-holder" key={schemaList.selectedSID+"_"+index}>
+              <ButtonGroup>
+               <Button
+                color="primary"
+                disabled={false}>
+                 <span>
+                   <span className="query-name">
+                     {queryFromList.name}
+                   </span>
                  </span>
-               </span>
-             </Button>
+               </Button>
 
-             <EditQueryModal
-              selectedSchema={selectedSchema}
-              queryList={queryList}/>
+               <AddQueryModal
+                schemaID={schemaList.selectedSID}
+                numQueries={schemaList.schemas[schemaList.selectedSID].queries.length}
+                queryFromList={queryFromList}
+                id={index}/>
 
-            </ButtonGroup>
-         </div>
-         :
-         null
-       }
+                <Button
+                  color="link">
+                  <FaTrashAlt/>
+                </Button>
 
-     </div>
-   );
+              </ButtonGroup>
+           </div>
+           :
+           <div className="query-name-holder" key={schemaList.selectedSID+"_"+index}>
+              <ButtonGroup>
+               <Button
+                outline color="secondary"
+                disabled={false}
+                onClick={(e) => setQuery(index)}>
+                 <span>
+                   <span className="query-name">
+                     {queryFromList.name}
+                   </span>
+                 </span>
+               </Button>
+
+               <AddQueryModal
+                schemaID={schemaList.selectedSID}
+                numQueries={schemaList.schemas[schemaList.selectedSID].queries.length}
+                queryFromList={queryFromList}
+                id={index}/>
+
+              </ButtonGroup>
+           </div>
+         }
+        </div>
+       )
+     })
+   }else{
+     return null;
+   }
  }
 
 
-const QueryBody = ({queryList, selectedSchema}) => {
+const QueryBody = ({schemaList, setQuery}) => {
   return(
     <div>
-      <header className='body-name-query'>
+      <header className='body-title-query'>
         Queries
       </header>
-      <QueryList
-        queryList={queryList}
-        selectedSchema={selectedSchema}/>
+      <div className="queries">
 
-      <header className='body-name-query'>
+        <QueryList
+          schemaList={schemaList}
+          setQuery={setQuery}
+          />
+      </div>
+
+      <header className='body-title-query'>
         Selected Query
       </header>
 
       <div>
         <div className='querySQL'>
-          <div>{queryList.queryList.SQL}</div>
+          {schemaList.schemas.length > 0 ?
+            <div>{schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}</div>
+            :
+            null
+          }
         </div>
       </div>
     </div>
@@ -69,9 +107,11 @@ const QueryBody = ({queryList, selectedSchema}) => {
 
 //map states to props
 const mapStatesToProps = (state) =>({
-  queryList: state.queryList,
-  selectedSchema: state.selectedSchema
+  schemaList: state.schemaList,
 });
 
+const mapDispatchToProps = (dispatch) =>({
+  setQuery: (id) => dispatch({ type: 'SET_Q_ID', id: id}),
+});
 
-export default connect(mapStatesToProps, null)(QueryBody);
+export default connect(mapStatesToProps, mapDispatchToProps)(QueryBody);
