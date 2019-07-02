@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaShareAlt } from 'react-icons/fa';
+import PopoutWindow from '../Popout';
 import classnames from 'classnames';
 import { Button,
          Modal,
@@ -189,7 +190,25 @@ export default class RelationModal extends React.Component{
        height: "calc(100vh - 300px)",
        wordWrap:"break"
      }
+     const dependencyContent = (definition, name) => (
+       <div>
+         <header>{name}</header>
 
+         <div style={{
+           position: "relative",
+           marginRight: "2rem",
+           marginLeft: "2rem",
+           display: "flex",
+           flexDirection: "column",
+           overflowY: "scroll",
+           whiteSpace: "pre-wrap",
+           fontSize: "1rem",
+           height: "calc(100vh - 300px)",
+           wordWrap:"break"}}>
+           {this.props.dependency.definition}
+         </div>
+       </div>
+     )
      return (
        <div>
          <Button
@@ -201,7 +220,12 @@ export default class RelationModal extends React.Component{
           toggle={this.toggle}
           size="lg">
 
-           <ModalHeader toggle={this.toggle}>{this.props.name}</ModalHeader>
+           <ModalHeader toggle={this.toggle}>
+              {this.props.name}
+              <PopoutWindow
+                title={"Dependency"}
+                content={dependencyContent(this.props.dependency.definition, this.props.name)}/>
+            </ModalHeader>
 
            <ModalBody>
             <div style={definitionStringStyle}>

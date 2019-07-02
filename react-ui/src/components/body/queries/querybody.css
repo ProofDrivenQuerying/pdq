@@ -2,13 +2,13 @@
   height: 10rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
   margin-right: 1rem;
   margin-left: 1rem;
   margin-bottom: 2rem;
-  text-align: center;
   position:relative;
   overflow-y: scroll;
+  overflow-x: hidden;
+  float: left;
 }
 
 .querySQL{

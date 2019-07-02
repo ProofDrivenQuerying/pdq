@@ -24,14 +24,14 @@ export const errorValidation = () => {
     };
 }
 
-export const verifyQuery = (id, SQL) => {
+export const verifyQuery = (schemaID, queryID, SQL) => {
   //fetching
   store.dispatch(fetchingValidation());
 
   return function(dispatch, getState){
     let simpleSQL = SQL.replace(/\n|\r|\t/g, " ");
 
-    return fetch("/verifyQuery/"+id+"/"+simpleSQL)
+    return fetch("/verifyQuery/"+schemaID+"/"+queryID+"/"+simpleSQL)
     .then(res => res.text())
     .then(res => JSON.parse(res)).then((res)=>{
       console.log(res);

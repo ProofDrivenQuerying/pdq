@@ -1,5 +1,6 @@
 import React from "react";
 import PDQTree from "./PDQTree";
+import PopoutWindow from '../Popout';
 import { FaRoute } from 'react-icons/fa';
 import { Button,
          Modal,
@@ -30,6 +31,23 @@ export default class GraphicalPlanModal extends React.Component {
   }
 
   render() {
+    const graphicalPlanContent = (graphicalPlan) => (
+      <div>
+        <header>Graphical Plan</header>
+        <div style={{
+          display:"flex",
+          alignItems:"center",
+          justifyContent:"center",
+          overflow: "hidden"
+        }}>
+         <PDQTree
+            data={graphicalPlan}
+            width={750}
+            height={370}/>
+        </div>
+      </div>
+    )
+
     return (
       <div>
         <Button
@@ -44,7 +62,17 @@ export default class GraphicalPlanModal extends React.Component {
            isOpen={this.state.modal}
            toggle={this.toggle}
            size="lg">
-          <ModalHeader toggle={this.toggle}>Graphical Plan</ModalHeader>
+          <ModalHeader toggle={this.toggle}>
+            Graphical Plan
+            <PopoutWindow
+              title={"Graphical Plan"}
+              content={graphicalPlanContent(this.props.graphicalPlan)}
+              options={{
+                width: "800px",
+                height: "600px"
+              }}/>
+
+          </ModalHeader>
 
           <ModalBody
           style={{maxHeight: "calc(100vh - 200px)"}}>

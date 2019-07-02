@@ -12,7 +12,7 @@
 
   II. Dependencies
 
-  External: @vx/-0.0.189, d3.js-5.9.2, redux-4.0.1, redux-thunk-2.3.0, reactstrap-8.0.0, react-icons-3.7.0, classnames-2.2.6
+  External: @vx/-0.0.189, d3.js-5.9.2, redux-4.0.1, redux-thunk-2.3.0, reactstrap-8.0.0, react-icons-3.7.0, classnames-2.2.6, react-popout-1.0.2
 
   To install dependencies and requirements:
 
@@ -61,6 +61,10 @@
   For Classnames:
 
     * npm i classnames
+
+  For react-popout:
+
+    * npm i react-popout
 
   III. Installing & running the UI
 

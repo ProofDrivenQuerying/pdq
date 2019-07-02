@@ -16,9 +16,10 @@ export default class DownloadRunButton extends React.Component {
     this.toggleTooltip = this.toggleTooltip.bind(this);
   }
 
-  downloadRun(id){
+  downloadRun(schemaID, queryID, SQL){
+    let simpleSQL = SQL.replace(/\n|\r|\t/g, " ");
     Helpers.httpRequest(
-      `/downloadRun/`+id,
+      `/downloadRun/`+schemaID+`/`+queryID+`/`+simpleSQL,
       "get"
     )// 1. Convert the data into 'blob'
      .then((response) => response.blob())
@@ -27,7 +28,7 @@ export default class DownloadRunButton extends React.Component {
        const url = window.URL.createObjectURL(new Blob([blob]));
        const link = document.createElement('a');
        link.href = url;
-       link.setAttribute('download', `PDQrun`+id+`results.csv`);
+       link.setAttribute('download', `PDQrun`+schemaID+`-`+queryID+`results.csv`);
        // 3. Append to html page
        document.body.appendChild(link);
        // 4. Force download
@@ -67,7 +68,11 @@ export default class DownloadRunButton extends React.Component {
                      this.props.planRun.planRun === null ||
                      this.props.planRun.id !== this.props.schemaID}
           style={this.props.margins ? smallButton : noStyle}
-          onClick={(e) => this.downloadRun(this.props.schemaID)}>
+          onClick={(e) => this.downloadRun(
+            this.props.schemaID,
+            this.props.queryID,
+            this.props.SQL
+          )}>
           <FaDownload/>
         </Button>
 

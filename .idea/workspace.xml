@@ -2,47 +2,83 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="62dedaba-cb86-4b56-a5c0-3e890da50df5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/SQLQueryParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/getDependencies.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/actions/getDependencies.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/actions/getPlan.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/actions/getPlan.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/getQueries.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/getRelations.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/actions/getRelations.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/getSimpleSchemaList.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/actions/getSimpleSchemaList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/actions/helpers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/runPlan.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/actions/runPlan.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/Body.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/Body.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/runPlan.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/setQuery.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/actions/verifyQuery.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/actions/verifyQuery.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/DownloadPlanButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/DownloadPlanButton.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/DownloadRunButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/DownloadRunButton.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/GraphicalPlanModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/GraphicalPlanModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/PlanBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/PlanBody.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/PlanInfoModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/PlanInfoModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/plan/RunModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/plan/RunModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/queries/EditQueryModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/queries/EditQueryModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/queries/AddQueryModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/queries/AddQueryModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/queries/QueryBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/queries/QueryBody.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/queries/querybody.css" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/queries/querybody.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/schemas/DependenciesModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/schemas/DependenciesModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/schemas/RelationsModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/schemas/RelationsModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/schemas/SchemaBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/schemas/SchemaBody.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/schemas/SchemaName.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/schemas/SchemaName.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/components/body/schemas/schemabody.css" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/components/body/schemas/schemabody.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/dependencyListsReducer.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/planReducer.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/queryListReducer.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/relationListReducer.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/rootReducer.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/runReducer.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/schemaListReducer.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/schemaUpdateReducer.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-ui/src/redux/store.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/reducers/planReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/reducers/planReducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-ui/src/reducers/schemaListReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-ui/src/reducers/schemaListReducer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rest/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/JsonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/JsonController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/JsonPlanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/eventhandlers/JsonPlanner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/schema/SchemaName.java" beforeDir="false" afterPath="$PROJECT_DIR$/rest/src/main/java/uk/ac/ox/cs/pdq/rest/jsonobjects/schema/SchemaName.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/JsonController.class" beforeDir="false" afterPath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/JsonController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/eventhandlers/JsonPlanner.class" beforeDir="false" afterPath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/eventhandlers/JsonPlanner.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/schema/SchemaName.class" beforeDir="false" afterPath="$PROJECT_DIR$/rest/target/classes/uk/ac/ox/cs/pdq/rest/jsonobjects/schema/SchemaName.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_001/case.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_1/case.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_001/catalog.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_1/catalog.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_001/computed-plan.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_1/computed-plan.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_001/expected-plan.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_1/expected-plan.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_001/query.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_1/queries/query.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_001/results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_1/results.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_001/schema.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_1/schema.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_002/case.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_2/case.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_002/catalog.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_2/catalog.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_002/expected-plan.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_2/expected-plan.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_002/query.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_2/queries/query.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_002/schema.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_2/schema.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_003/case.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_3/case.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_003/catalog.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_3/catalog.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_003/expected-plan.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_3/expected-plan.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_003/query.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_3/queries/query.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_003/schema.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_3/schema.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_004/accessesMem/data4/part_m4.csv" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_4/accessesMem/data4/part_m4.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_004/accessesMem/m4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_4/accessesMem/m4.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_004/case.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_4/case.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_004/catalog.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_4/catalog.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_004/expected-plan.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_4/expected-plan.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_004/query.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_4/queries/query.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_004/results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_4/results.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_004/schema.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_4/schema.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_005/case.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_5/case.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_005/catalog.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_5/catalog.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_005/computed-plan.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_5/computed-plan.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_005/expected-plan.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_5/expected-plan.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_005/query.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_5/queries/query.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_005/schema.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_5/schema.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_006/case.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_6/case.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_006/catalog.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_6/catalog.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_006/expected-plan.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_6/expected-plan.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_006/query.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_6/queries/query.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_006/schema.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_6/schema.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_007/case.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_7/case.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_007/catalog.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_0/catalog.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_007/query.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_7/queries/query.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_007/schema.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_7/schema.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_008/case.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_0/case.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_008/catalog.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_7/catalog.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_008/query.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_8/queries/query.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_008/schema.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_8/schema.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_009/case.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_8/case.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_009/catalog.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_8/catalog.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_009/query.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_0/queries/query.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rest/test/demo/case_009/schema.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rest/test/demo/case_0/schema.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/regression/target/" />
@@ -69,7 +105,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/common/main/src/uk/ac/ox/cs/pdq/io/jaxb/IOManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-296">
+            <state relative-caret-position="-500">
               <caret line="213" column="72" selection-start-line="213" selection-start-column="72" selection-end-line="213" selection-end-column="72" />
             </state>
           </provider>
@@ -469,7 +505,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/common/main/src/uk/ac/ox/cs/pdq/io/jaxb/IOManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-296">
+        <state relative-caret-position="-500">
           <caret line="213" column="72" selection-start-line="213" selection-start-column="72" selection-end-line="213" selection-end-column="72" />
         </state>
       </provider>

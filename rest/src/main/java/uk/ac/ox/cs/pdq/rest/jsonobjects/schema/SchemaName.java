@@ -18,10 +18,9 @@ public class SchemaName{
   public String name;
   public ArrayList<JsonQuery> queries;
 
-  public SchemaName(Schema schema, int id, JsonQuery query){
+  public SchemaName(Schema schema, int id, ArrayList<JsonQuery> queries){
     this.name = "schema"+ new Integer(id).toString();
     this.id = id;
-    this.queries = new ArrayList<JsonQuery>();
-    queries.add(query);
+    this.queries = queries;
   }
 }

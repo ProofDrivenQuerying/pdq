@@ -25,7 +25,6 @@ const SchemaBody = ({ schemaList}) => {
 }
 
 const SchemaBlock = ({ schemaList}) => {
-  console.log(schemaList);
   if(!schemaList.isFetching){
     return schemaList.schemas.map((schemaFromList, index) => {
       return(

@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaListUl } from 'react-icons/fa';
+import PopoutWindow from '../Popout';
 import { Button,
          Table,
          Modal,
@@ -107,6 +108,13 @@ export default class RelationModal extends React.Component{
    }
 
    render() {
+     const popoutContent = (relation) => (
+       <div>
+          <header>{relation.name}</header>
+         <RelationAttributeTable relation={relation}/>
+         <RelationAccessTable relation={relation}/>
+       </div>
+     );
      return (
        <div>
          <Button
@@ -117,7 +125,13 @@ export default class RelationModal extends React.Component{
           isOpen={this.state.modal}
           toggle={this.toggle}>
 
-           <ModalHeader toggle={this.toggle}>{this.props.relation.name}</ModalHeader>
+           <ModalHeader toggle={this.toggle}>
+             {this.props.relation.name}
+             <PopoutWindow
+              content={popoutContent(this.props.relation)}
+              title={"Relations"}
+              />
+           </ModalHeader>
 
            <ModalBody>
               <RelationAttributeTable relation={this.props.relation}/>

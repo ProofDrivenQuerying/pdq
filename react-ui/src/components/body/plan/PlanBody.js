@@ -7,7 +7,7 @@ import PlanInfoModal from './PlanInfoModal';
 import { Button, Spinner } from 'reactstrap';
 import { connect } from 'react-redux';
 import { plan } from "../../../actions/getPlan.js";
-import { runPlan } from "../../../actions/runPlan.js";
+import { run } from "../../../actions/getRun.js";
 import './planbody.css';
 import { FaRegMap,
          FaPlay
@@ -20,7 +20,7 @@ import { FaRegMap,
  */
 
 
-const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun, schemaList}) => {
+const PlanBody = ({plan, getPlan, run, planRun, schemaList}) => {
 
   let smallButton = {
     float: "left", width: "4rem", height:"4rem", margin:"1rem 1rem 1rem 1rem"
@@ -31,7 +31,6 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun, schemaList})
   let graphicalPlanName = "Plan Exploration Graph";
   let planViewName = "View Plan";
   let runViewName = "Run Results";
-
   return(
     <div>
 
@@ -39,16 +38,23 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun, schemaList})
         Plan
       </header>
 
-      {schemaList.schemas != null ?
+      {schemaList !== null && schemaList.schemas.length > 0 ?
 
         <div className='plan'>
           <div style={{flexDirection:"row"}}>
 
             <Button
-                disabled={plan.id === schemaList.selectedSID || plan.isFetchingPlan}
-                outline color={plan.id === schemaList.selectedSID ? "primary" : "secondary"}
+                disabled={plan.isFetchingPlan}
+                outline color={
+                  plan.schemaID === schemaList.selectedSID
+                  && plan.queryID === schemaList.selectedQID ? "primary" : "secondary"
+                }
                 style={smallButton}
-                onClick={(e) => getPlan(schemaList.selectedSID)}>
+                onClick={(e) => getPlan(
+                  schemaList.selectedSID,
+                  schemaList.selectedQID,
+                  schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL
+                )}>
                 {plan.isFetchingPlan ?
                   <Spinner color="secondary"/>
                   :
@@ -58,7 +64,9 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun, schemaList})
                 }
             </Button>
 
-            {plan.plan!==null && plan.id === schemaList.selectedSID ?
+            {plan.plan!==null
+              && plan.schemaID === schemaList.selectedSID
+              && plan.queryID === schemaList.selectedQID ?
               <div>
                 <PlanInfoModal
                   bigButton={bigButton}
@@ -72,10 +80,13 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun, schemaList})
                     name = {graphicalPlanName}/>
 
                 <DownloadPlanButton
+                    schemaID={schemaList.selectedSID}
+                    queryID = {schemaList.selectedQID}
+                    SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
                     plan={plan}
                     margins={true}
                     id={1}
-                    schemaID={schemaList.selectedSID}/>
+                />
 
               </div>
               :
@@ -87,7 +98,9 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun, schemaList})
             <hr style={{color: "#C8C8C8", backgroundColor: "#C8C8C8", height: 0.2}}/>
           </div>
 
-          {plan.plan!==null && plan.id === schemaList.selectedSID ?
+          {plan.plan!==null
+            && plan.schemaID === schemaList.selectedSID
+            && plan.queryID === schemaList.selectedQID ?
             <div style={{flexDirection:"row"}}>
 
             <Button
@@ -101,7 +114,11 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun, schemaList})
                         (planRun.planRun !== null &&
                           planRun.id === schemaList.selectedSID)}
                style={smallButton}
-               onClick={() => runPlan(schemaList.selectedSID)}>
+               onClick={() => run(
+                 schemaList.selectedSID,
+                 schemaList.selectedQID,
+                 schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL
+               )}>
                {planRun.isFetchingPlanRun ?
                <Spinner color="secondary"/>
                 :
@@ -114,6 +131,8 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun, schemaList})
              {plan.plan.runnable ?
               <div>
                 <RunModal
+                  SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
+                  queryID={schemaList.selectedQID}
                   schemaID={schemaList.selectedSID}
                   planRun={planRun}
                   plan ={plan.plan}
@@ -121,6 +140,8 @@ const PlanBody = ({selectedSchema, plan, getPlan, runPlan, planRun, schemaList})
                   name={runViewName}/>
 
                 <DownloadRunButton
+                  SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
+                  queryID={schemaList.selectedQID}
                   schemaID={schemaList.selectedSID}
                   plan={plan.plan}
                   planRun={planRun}
@@ -161,9 +182,9 @@ const mapStatesToProps = (state) =>{
 
 
 const mapDispatchToProps = (dispatch) =>({
-  getPlan: (id) => dispatch(plan(id)),
+  getPlan: (schemaID, queryID, SQL) => dispatch(plan(schemaID, queryID, SQL)),
 
-  runPlan: (id) => dispatch(runPlan(id))
+  run: (schemaID, queryID, SQL) => dispatch(run(schemaID, queryID, SQL))
 });
 
 export default connect(mapStatesToProps, mapDispatchToProps)(PlanBody);

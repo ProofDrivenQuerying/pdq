@@ -1,5 +1,6 @@
 import React from "react";
 import { FaTable } from 'react-icons/fa';
+import PopoutWindow from '../Popout';
 import DownloadRunButton from './DownloadRunButton';
 import { Button,
          Modal,
@@ -42,6 +43,38 @@ import { Button,
    }
 
    render() {
+
+     const popoutContent = (planRun) =>(
+       <div>
+         {planRun != null ?
+           <div>
+             <div style={{display:"flex", flexDirection:"row",
+                         justifyContent:"space-between"}}>
+
+               <i>{planRun.tupleCount} {" "}
+               {planRun.tupleCount > 1 ? "tuples" : "tuple" } found
+               in {planRun.runTime} seconds.
+
+               {planRun.table.data.length < planRun.table.dataSize ?
+                 <span>{" "}
+                 Displaying {planRun.table.data.length} of
+                 {" "}{planRun.table.dataSize}
+                 {" "} total tuples.
+                 </span>
+                 :
+                 null
+               }
+               </i>
+             </div>
+
+             <RunTable planRun={planRun}/>
+
+           </div>
+          :
+          null}
+        </div>
+     );
+
      return (
        <div>
          <Button
@@ -83,16 +116,23 @@ import { Button,
                    :
                    null
                  }
-
                  </i>
-
+                  <div>
                    <DownloadRunButton
+                     SQL={this.props.SQL}
+                     queryID={this.props.queryID}
                      schemaID={this.props.schemaID}
                      plan={this.props.plan}
                      planRun={this.props.planRun}
                      margins={false}
-                     id={2}/>
+                     id={2}
+                    />
 
+                    <PopoutWindow
+                      title="Run Information"
+                      content={popoutContent(this.props.planRun.planRun)}
+                    />
+                  </div>
                </div>
 
                <RunTable planRun={this.props.planRun.planRun}/>

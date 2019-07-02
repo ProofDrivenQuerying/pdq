@@ -14,7 +14,7 @@ const initialSchemaListState = {
   isError: false
 }
 
-function updateObjectInArray(array, action) {
+function addQuery(array, action) {
   return array.map((item, index) => {
     if (index !== action.id) {
       return item
@@ -34,18 +34,17 @@ function removeQuery(array, action) {
     if(index !== action.schemaID) {
       return item
     }
-
-    let newArray = array.slice()
-    newArray.splice(action.queryID, 1)
     return{
       ...item,
-      queries: newArray
+      queries: [
+        ...item.queries.slice(0, action.queryID),
+        ...item.queries.slice(action.queryID + 1)
+      ]
     }
   })
 }
 
 const schemaListReducer = (state = initialSchemaListState, action) => {
-  console.log(state);
   switch(action.type){
     case 'FETCHING':
       return{...state, schemas: [], isFetching: true, isError: false};
@@ -65,7 +64,7 @@ const schemaListReducer = (state = initialSchemaListState, action) => {
     case 'UPDATE_SCHEMALIST_QUERY':
       return {
         ...state,
-        schemas: updateObjectInArray(state.schemas, action)
+        schemas: addQuery(state.schemas, action)
       };
     case 'REMOVE_SCHEMALISTQUERY':
     return{

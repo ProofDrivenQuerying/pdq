@@ -11,7 +11,6 @@ import uk.ac.ox.cs.pdq.rest.jsonobjects.run.JsonRunResults;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.JsonDependencyList;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.JsonRelationList;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.SchemaName;
-import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -20,6 +19,7 @@ import org.springframework.core.io.Resource;
 import java.nio.file.Path;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.File;
 import org.springframework.http.HttpHeaders;
@@ -41,58 +41,84 @@ import java.nio.file.Paths;
  */
 @RestController
 public class JsonController{
-  private final String PATH_TO_SCHEMA_EXAMPLES;
-  private String[] example_names;
+  private HashMap<Integer, String> paths;
 
   private HashMap<Integer, Schema> schemaList;
-  private HashMap<Integer, ConjunctiveQuery> queryList;
-  private SchemaName[] jsonSchemaList;
+  private HashMap<Integer, ArrayList<ConjunctiveQuery>> queryList;
   private HashMap<Integer, File> casePropertyList;
-  private HashMap<Integer, JsonPlan> planList;
-  private HashMap<Integer, JsonRunResults> runResultList;
+  private HashMap<Integer, ArrayList<JsonPlan>> planList;
+  private HashMap<Integer, ArrayList<JsonRunResults>> runResultList;
+  private HashMap<Integer, String> catalogPaths;
+  private boolean demoMode; //change to config file
 
   public JsonController(){
-    this.PATH_TO_SCHEMA_EXAMPLES = "test/demo/case_";
-    this.example_names = new String[]{"001","002", "003", "004", "005", "006", "007", "008", "009"};
-    this.jsonSchemaList = new SchemaName[example_names.length];
+    this.paths = new HashMap<Integer, String>();
     this.schemaList = new HashMap<Integer, Schema>();
-    this.queryList = new HashMap<Integer, ConjunctiveQuery>();
+    this.queryList = new HashMap<Integer, ArrayList<ConjunctiveQuery>>();
     this.casePropertyList = new HashMap<Integer, File>();
-    this.planList = new HashMap<Integer, JsonPlan>();
-    this.runResultList = new HashMap<Integer, JsonRunResults>();
+    this.planList = new HashMap<Integer, ArrayList<JsonPlan>>();
+    this.runResultList = new HashMap<Integer, ArrayList<JsonRunResults>>();
+    this.catalogPaths = new HashMap<Integer, String>();
+    this.demoMode = true;
 
-    for (int i = 0; i < example_names.length; i++){
-      try {
-        //get schema
-        String pathToSchema = PATH_TO_SCHEMA_EXAMPLES+example_names[i]+"/schema.xml";
-        String pathToQuery = PATH_TO_SCHEMA_EXAMPLES+example_names[i]+"/query.xml";
-        String pathToCaseProperties = PATH_TO_SCHEMA_EXAMPLES+example_names[i]+"/case.properties";
+    File testDirectory = new File("test/demo/");
+    File[] examples = testDirectory.listFiles();
 
-        Schema schema = IOManager.importSchema(new File(pathToSchema));
+    if(examples != null){
+        int i = 0;
+        for(File folder : examples){
+            if (folder.isDirectory()){
+                paths.put(i, folder.getPath());
+                File[] info = folder.listFiles();
 
-        ConjunctiveQuery queries = IOManager.importQuery(new File(pathToQuery));
-        File caseProperties = new File(pathToCaseProperties);
+                for(File file : info){
+                    switch(file.getName()){
+                        case "schema.xml":
+                            try{
 
-        //put schema in hash map
-        schemaList.put(i, schema);
+                                Schema schema = IOManager.importSchema(file);
+                                schemaList.put(i, schema);
 
-        //put query in hash map
-        queryList.put(i, queries);
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
+                            break;
+                        case "queries":
+                            File[] queries = file.listFiles();
+                            ArrayList<ConjunctiveQuery> queryArrayList = new ArrayList<ConjunctiveQuery>();
+                            for(File query : queries){
+                                try{
 
-        //put case properties in hash map
-        casePropertyList.put(i, caseProperties);
+                                    ConjunctiveQuery CQs = IOManager.importQuery(query);
+                                    queryArrayList.add(CQs);
 
-        //make JsonSchema and put it in JsonSchema array
-        String query_string = SQLLikeQueryWriter.convert(queries, schema);
-        JsonQuery query = new JsonQuery(0, query_string);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
 
-        SchemaName jsonSchema = new SchemaName(schema, i, query);
-        jsonSchemaList[i] = jsonSchema;
+                            queryList.put(i, queryArrayList);
 
-      }catch (Throwable e) {
-        e.printStackTrace();
-        System.exit(-1);
-      }
+                            break;
+
+                        case "case.properties":
+                            casePropertyList.put(i, file);
+                            break;
+
+                        case "catalog.properties":
+                            String pathToCatalog = file.getPath();
+                            catalogPaths.put(i, pathToCatalog);
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                }
+                i++;
+            }
+
+        }
     }
   }
 
@@ -103,7 +129,35 @@ public class JsonController{
    */
   @RequestMapping(value="/init_schemas", method=RequestMethod.GET, produces="application/json")
   public SchemaName[] init_schemas(){
-    return this.jsonSchemaList;
+      SchemaName[] jsonSchemaList = new SchemaName[this.schemaList.size()];
+      int i = 0;
+      for(Integer id : this.schemaList.keySet()){
+          ArrayList<ConjunctiveQuery> CQList = this.queryList.get(id);
+          ArrayList<JsonQuery> JQList = new ArrayList<JsonQuery>();
+          Schema schema = this.schemaList.get(id);
+
+          int j = 0;
+          for(ConjunctiveQuery CQ : CQList){
+              try{
+
+                  String query_string = SQLLikeQueryWriter.convert(CQ, schema);
+
+                  JsonQuery query = new JsonQuery(j, query_string);
+
+                  JQList.add(query);
+
+              }catch(Exception e){
+                  e.printStackTrace();
+              }
+              j++;
+          }
+
+          SchemaName jsonSchema = new SchemaName(schema, i, JQList);
+          jsonSchemaList[i] = jsonSchema;
+          i++;
+      }
+
+    return jsonSchemaList;
   }
   /**
    * Returns relations associated with specific schema. Schema is identified thanks to the provided id.
@@ -138,51 +192,150 @@ public class JsonController{
               .body(toReturn);
   }
 
+    @GetMapping(value="/verifyQuery/{schemaID}/{queryID}/{SQL:.+}")
+    public boolean verifyQuery(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL, HttpServletRequest request){
+        Schema schema = this.schemaList.get(schemaID);
+
+        boolean validQuery = false;
+
+        try{
+            SQLQueryReader reader = new SQLQueryReader(schema);
+            ConjunctiveQuery newQuery = reader.fromString(SQL);
+
+            //validation goes here
+            validQuery = true;
+
+            if(! this.demoMode){
+                ArrayList<ConjunctiveQuery> updatedList = queryList.get(schemaID);
+                updatedList.add(newQuery);
+                queryList.put(schemaID, updatedList);
+
+                File query = new File(paths.get(schemaID)+"/queries/"+"query"+queryID.toString()+".xml");
+                IOManager.exportQueryToXml(newQuery, query);
+            }
+
+            return validQuery;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return validQuery;
+    }
+
   /**
    * Returns Entry<RelationalTerm, Cost> that shows up as a long string
    *
-   * @param id
+   * @param schemaID, queryID
    * @return
    */
-  @RequestMapping(value="/plan", method=RequestMethod.GET, produces="application/json")
-  public JsonPlan plan(@RequestParam("id") int id){
-    JsonPlan previousPlan = planList.get(id);
-    if(previousPlan != null) return previousPlan; //if we've already planned this schema and query, return it
+  @GetMapping(value="/plan/{schemaID}/{queryID}/{SQL}")
+  public JsonPlan plan(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL){
+      if(demoMode && queryID != 0){
+          Schema schema = schemaList.get(schemaID);
+          File properties = casePropertyList.get(schemaID);
+          String pathToCatalog = catalogPaths.get(schemaID);
 
-    Schema schema = schemaList.get(id);
-    ConjunctiveQuery cq = queryList.get(id);
-    File properties = casePropertyList.get(id);
-    String pathToCatalog = PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/catalog.properties";
+          try{
+              SQLQueryReader reader = new SQLQueryReader(schema);
+              ConjunctiveQuery cq = reader.fromString(SQL);
 
-    try{
-      JsonPlan plan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
+              JsonPlan plan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
 
-      plan.getGraphicalPlan().setType("ORIGIN"); //manually set type of origin node
+              return plan;
+          }catch (Throwable e) {
+              e.printStackTrace();
+              System.exit(-1);
+              return null;
+          }
+      }
 
-      planList.put(id, plan); //put the plan in the map.
+      ArrayList<JsonPlan> previousPlans= planList.get(schemaID);
+      JsonPlan previousPlan = null;
 
-      return plan;
-    }catch (Throwable e) {
-      e.printStackTrace();
-      System.exit(-1);
-      return null;
-    }
+      if(previousPlans == null){
+          previousPlans = new ArrayList<JsonPlan>();
+      }else if (previousPlans.size() > queryID){
+              previousPlan = previousPlans.get(queryID);
+      }
+
+
+      if(previousPlan != null) return previousPlan; //if we've already planned this schema and query, return it
+
+      Schema schema = schemaList.get(schemaID);
+      ArrayList<ConjunctiveQuery> queryArrayList = queryList.get(schemaID);
+      ConjunctiveQuery cq = queryArrayList.get(queryID);
+      File properties = casePropertyList.get(schemaID);
+      String pathToCatalog = catalogPaths.get(schemaID);
+
+      try{
+          JsonPlan plan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
+
+          if(plan != null){
+              plan.getGraphicalPlan().setType("ORIGIN"); //manually set type of origin node
+
+              previousPlans.add(plan);
+
+              planList.put(schemaID, previousPlans);
+          }
+          return plan;
+      }catch (Throwable e) {
+          e.printStackTrace();
+          System.exit(-1);
+          return null;
+      }
   }
 
-  @RequestMapping(value="/runPlan", method=RequestMethod.GET, produces="application/json")
-  public JsonRunResults runPlan(@RequestParam("id") int id){
-    JsonRunResults toReturn = this.runResultList.get(id);
-    if(toReturn != null) return toReturn;
+  @GetMapping(value="/run/{schemaID}/{queryID}/{SQL}")
+  public JsonRunResults run(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL){
+      if(demoMode && queryID != 0){
+          Schema schema = schemaList.get(schemaID);
+          File properties = casePropertyList.get(schemaID);
+          String pathToCatalog = catalogPaths.get(schemaID);
+          JsonRunResults toReturn = null;
 
-    Schema schema = schemaList.get(id);
-    ConjunctiveQuery cq = queryList.get(id);
-    File properties = casePropertyList.get(id);
-    RelationalTerm plan = planList.get(id).getPlan();
+          try{
+
+              SQLQueryReader reader = new SQLQueryReader(schema);
+              ConjunctiveQuery cq = reader.fromString(SQL);
+
+              JsonPlan jsonPlan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
+              RelationalTerm plan = jsonPlan.getPlan();
+
+              toReturn = Runner.runtime(schema, cq, properties, plan);
+
+          }catch (Throwable e) {
+              e.printStackTrace();
+              System.exit(-1);
+          }
+
+          return toReturn;
+      }
+
+      ArrayList<JsonRunResults> results = this.runResultList.get(schemaID);
+      JsonRunResults toReturn = null;
+      if (results == null){
+          results = new ArrayList<JsonRunResults>();
+      }else if(results != null && results.size() > queryID){
+          toReturn = results.get(queryID);
+      }
+
+      if(toReturn != null) return toReturn;
+
+      Schema schema = schemaList.get(schemaID);
+
+    ArrayList<ConjunctiveQuery> CQList = queryList.get(schemaID);
+    ConjunctiveQuery cq = CQList.get(queryID);
+
+    File properties = casePropertyList.get(schemaID);
+
+    ArrayList<JsonPlan> plans = planList.get(schemaID);
+    RelationalTerm plan = plans.get(queryID).getPlan();
 
     try{
       toReturn = Runner.runtime(schema, cq, properties, plan);
 
-      runResultList.put(id, toReturn);
+      //update HashMap
+      results.add(toReturn);
+      runResultList.put(schemaID, results);
 
     }catch (Throwable e) {
       e.printStackTrace();
@@ -194,22 +347,60 @@ public class JsonController{
     /**
      * Write run table to its associated example folder, load it, and send it to the client.
      *
-     * @param id
+     * @param schemaID
+     * @param queryID
      * @param request
      * @return
      */
-  @GetMapping(value="/downloadRun/{id}")
-  public ResponseEntity<Resource> downloadRun(@PathVariable int id, HttpServletRequest request){
-      JsonRunResults results = runResultList.get(id);
-      try{
-          Runner.writeOutput(results.results, PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/results.csv");
+  @GetMapping(value="/downloadRun/{schemaID}/{queryID}/{SQL}")
+  public ResponseEntity<Resource> downloadRun(@PathVariable int schemaID,
+                                              @PathVariable int queryID,
+                                              @PathVariable String SQL,
+                                              HttpServletRequest request){
+      if(demoMode && queryID != 0){
 
-          Resource resource = loadFileAsResource(PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/results.csv");
+          try{
+              Schema schema = schemaList.get(schemaID);
+              File properties = casePropertyList.get(schemaID);
+              String pathToCatalog = catalogPaths.get(schemaID);
+              SQLQueryReader reader = new SQLQueryReader(schema);
+              ConjunctiveQuery cq = reader.fromString(SQL);
+
+              JsonPlan jsonPlan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
+              RelationalTerm plan = jsonPlan.getPlan();
+              JsonRunResults result = Runner.runtime(schema, cq, properties, plan);
+              Runner.writeOutput(result.results, paths.get(schemaID)+"/results.csv");
+
+              Resource resource = loadFileAsResource(paths.get(schemaID)+"/results.csv");
+              String contentType = "text/csv";
+
+              return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+                      .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"results.csv\"")
+                      .body(resource);
+
+          }catch(Exception e){
+              e.printStackTrace();
+
+          }
+      }
+
+      ArrayList<JsonRunResults> results = this.runResultList.get(schemaID);
+      JsonRunResults result = null;
+      if (results == null){
+          results = new ArrayList<JsonRunResults>();
+      }else if(results != null && results.size() > queryID){
+          result = results.get(queryID);
+      }
+
+      try{
+          Runner.writeOutput(result.results, paths.get(schemaID)+"/results.csv");
+
+          Resource resource = loadFileAsResource(paths.get(schemaID)+"/results.csv");
 
           String contentType = "text/csv";
 
           return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+Integer.toString(id)+"results.csv\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"results.csv\"")
                     .body(resource);
 
       }catch(Exception e){
@@ -219,19 +410,49 @@ public class JsonController{
       return null;
   }
 
-  @GetMapping(value="/downloadPlan/{id}")
-  public ResponseEntity<Resource> downloadPlan(@PathVariable int id, HttpServletRequest request){
-      RelationalTerm plan = planList.get(id).getPlan();
-      File planFile = new File(PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/computed-plan.xml");
+  @GetMapping(value="/downloadPlan/{schemaID}/{queryID}/{SQL}")
+  public ResponseEntity<Resource> downloadPlan(@PathVariable int schemaID,
+                                               @PathVariable int queryID,
+                                               @PathVariable String SQL, HttpServletRequest request){
+      if(demoMode && queryID != 0){
+          try{
+              Schema schema = schemaList.get(schemaID);
+              File properties = casePropertyList.get(schemaID);
+              String pathToCatalog = catalogPaths.get(schemaID);
+              SQLQueryReader reader = new SQLQueryReader(schema);
+              ConjunctiveQuery cq = reader.fromString(SQL);
+              File planFile = new File(paths.get(schemaID)+"/computed-plan.xml");
+
+              JsonPlan jsonPlan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
+              RelationalTerm plan = jsonPlan.getPlan();
+
+              IOManager.writeRelationalTerm(plan, planFile);
+              Resource resource = loadFileAsResource(paths.get(schemaID)+"/computed-plan.xml");
+
+              String contentType = "application/xml";
+
+              return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+                      .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"computed-plan.xml\"")
+                      .body(resource);
+
+          }catch(Exception e){
+              e.printStackTrace();
+          }
+      }
+
+      ArrayList<JsonPlan> previousPlans= planList.get(schemaID);
+      RelationalTerm plan = previousPlans.get(queryID).getPlan();
+
+      File planFile = new File(paths.get(schemaID)+"/computed-plan.xml");
       try{
           IOManager.writeRelationalTerm(plan, planFile);
 
-          Resource resource = loadFileAsResource(PATH_TO_SCHEMA_EXAMPLES+example_names[id]+"/computed-plan.xml");
+          Resource resource = loadFileAsResource(paths.get(schemaID)+"/computed-plan.xml");
 
           String contentType = "application/xml";
 
           return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
-                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+Integer.toString(id)+"computed-plan.xml\"")
+                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"computed-plan.xml\"")
                   .body(resource);
 
       }catch(Exception e){
@@ -246,7 +467,7 @@ public class JsonController{
 
             Resource resource = new UrlResource(filePath.toUri());
 
-            if(resource.exists()) {
+            if (resource.exists()) {
                 return resource;
             }
         } catch (Exception ex) {
@@ -254,25 +475,4 @@ public class JsonController{
         }
         return null;
     }
-
-    @GetMapping(value="/verifyQuery/{id}/{SQL:.+}")
-    public boolean verifyQuery(@PathVariable int id, @PathVariable String SQL, HttpServletRequest request){
-        Schema schema = this.schemaList.get(id);
-
-        boolean validQuery = false;
-
-        try{
-            SQLQueryReader reader = new SQLQueryReader(schema);
-            ConjunctiveQuery newQuery = reader.fromString(SQL);
-            //validation goes here
-            validQuery = true;
-
-            return validQuery;
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return validQuery;
-    }
-
-
 }

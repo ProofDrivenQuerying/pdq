@@ -12,10 +12,11 @@ export const fetchingPlan = () => {
         type: 'FETCHING_PLAN',
     };
 }
-export const resolvedPlan = (plan, id) => {
+export const resolvedPlan = (plan, schemaID, queryID) => {
   return{
     type: "RESOLVED_PLAN",
-    id,
+    schemaID,
+    queryID,
     plan,
   }
 }
@@ -27,17 +28,20 @@ export const errorPlan = () => {
 
 
 
-export const plan = (id) => {
-
+export const plan = (schemaID, queryID, SQL) => {
   //fetching
   store.dispatch(fetchingPlan());
 
   return function(dispatch, getState){
-    return fetch("/plan?id="+id)
+    let simpleSQL = SQL.replace(/\n|\r|\t/g, " ");
+
+    return fetch("/plan/"+schemaID+"/"+queryID+"/"+simpleSQL)
     .then(res => res.text())
     .then(res => res = JSON.parse(res)).then((res)=>{
-      //if its ok, we keep the data
-      dispatch(resolvedPlan(res, id))
+      if (res === null){
+        dispatch(errorPlan())
+      }
+      dispatch(resolvedPlan(res, schemaID, queryID))
     }).catch(err => dispatch(errorPlan()));
   }
 }

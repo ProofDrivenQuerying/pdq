@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaPencilAlt } from 'react-icons/fa';
+import { FaEdit } from 'react-icons/fa';
 import { connect } from 'react-redux';
 import { verifyQuery } from '../../../actions/verifyQuery';
 import { Button,
@@ -56,7 +56,7 @@ class AddQueryModal extends React.Component{
 
 
   submitEditedQuery(){
-    this.props.verifyQuery(this.props.schemaID, this.state.editedQuery).then(()=>{
+    this.props.verifyQuery(this.props.schemaID, this.props.numQueries, this.state.editedQuery).then(()=>{
       if(this.props.queryValidation.validQuery){
         let queryToAdd = {
           id: this.props.numQueries,
@@ -73,7 +73,6 @@ class AddQueryModal extends React.Component{
   }
 
   render(){
-    console.log(this.props);
     return(
       <div>
         <Button
@@ -81,7 +80,7 @@ class AddQueryModal extends React.Component{
           color={"link"}
           onClick={()=> this.toggleQueryModal()}
         >
-          <FaPencilAlt/>
+          <FaEdit/>
         </Button>
 
         <Tooltip
@@ -90,14 +89,14 @@ class AddQueryModal extends React.Component{
           isOpen={this.state.tooltipOpen}
           target={"QueryButton"+ this.props.schemaID+"_"+this.props.id}
           toggle={this.toggleTooltip}>
-          Edit query as SQL
+          Add new SQL query
         </Tooltip>
 
         <Modal
           size="lg"
           isOpen={this.state.modalQueryOpen}
           toggle={this.toggleQueryModal}>
-          <ModalHeader toggle={this.toggleQueryModal}>Edit Query</ModalHeader>
+          <ModalHeader toggle={this.toggleQueryModal}>Add Query</ModalHeader>
 
           <ModalBody style={{height:"calc(100vh - 200px)"}}>
             <Form>
@@ -147,7 +146,7 @@ const mapDispatchToProps = (dispatch) =>({
     type: 'UPDATE_SCHEMALIST_QUERY',
     query: query,
     id: sID }),
-  verifyQuery: (id, SQL) => dispatch(verifyQuery(id, SQL))
+  verifyQuery: (schemaID, queryID, SQL) => dispatch(verifyQuery(schemaID, queryID, SQL))
 });
 
 export default connect(mapStatesToProps, mapDispatchToProps)(AddQueryModal);

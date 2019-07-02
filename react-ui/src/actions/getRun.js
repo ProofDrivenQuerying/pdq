@@ -27,16 +27,18 @@ export const errorPlanRun = () => {
 
 
 
-export const runPlan = (id) => {
+export const run = (schemaID, queryID, SQL) => {
   //fetching
   store.dispatch(fetchingPlanRun());
 
   return function(dispatch, getState){
-    return fetch("/runPlan?id="+id)
+    let simpleSQL = SQL.replace(/\n|\r|\t/g, " ");
+  
+    return fetch("/run/"+schemaID+"/"+queryID+"/"+simpleSQL)
     .then(res => res.text())
     .then(res => res = JSON.parse(res)).then((res)=>{
       //if its ok, we keep the data
-      dispatch(resolvedPlanRun(res, id))
+      dispatch(resolvedPlanRun(res, schemaID))
     }).catch(err => dispatch(errorPlanRun()));
   }
 }
