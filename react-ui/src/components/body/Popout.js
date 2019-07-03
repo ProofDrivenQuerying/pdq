@@ -1,10 +1,31 @@
 import React from 'react';
 import Popout from 'react-popout';
-import '../../bootstrap/bootstrap.css'
 import { FaShareSquare } from 'react-icons/fa';
 import { Button,
          Tooltip
 } from 'reactstrap';
+
+//to copy the css from the parent
+function copyStyles(sourceDoc, targetDoc) {
+  Array.from(sourceDoc.styleSheets).forEach(styleSheet => {
+    if (styleSheet.cssRules) { // for <style> elements
+      const newStyleEl = sourceDoc.createElement('style');
+
+      Array.from(styleSheet.cssRules).forEach(cssRule => {
+        // write the text of each rule into the body of the style element
+        newStyleEl.appendChild(sourceDoc.createTextNode(cssRule.cssText));
+      });
+
+      targetDoc.head.appendChild(newStyleEl);
+    } else if (styleSheet.href) { // for <link> elements loading CSS from a URL
+      const newLinkEl = sourceDoc.createElement('link');
+
+      newLinkEl.rel = 'stylesheet';
+      newLinkEl.href = styleSheet.href;
+      targetDoc.head.appendChild(newLinkEl);
+    }
+  });
+}
 
 export default class PopoutWindow extends React.Component{
   constructor(props) {
@@ -30,7 +51,12 @@ export default class PopoutWindow extends React.Component{
             title={this.props.title}
             options={this.props.options}
             >
-            <div>{this.props.content}</div>
+            {popoutWindow => {
+              copyStyles(window.document, popoutWindow.document);
+              return(
+                <div>{this.props.content}</div>
+              );
+            }}
           </Popout>
 
           <Button

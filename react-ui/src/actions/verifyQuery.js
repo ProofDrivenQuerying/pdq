@@ -25,7 +25,7 @@ export const errorValidation = () => {
 }
 
 export const verifyQuery = (schemaID, queryID, SQL) => {
-  //fetching
+
   store.dispatch(fetchingValidation());
 
   return function(dispatch, getState){
@@ -34,7 +34,6 @@ export const verifyQuery = (schemaID, queryID, SQL) => {
     return fetch("/verifyQuery/"+schemaID+"/"+queryID+"/"+simpleSQL)
     .then(res => res.text())
     .then(res => JSON.parse(res)).then((res)=>{
-      console.log(res);
 
       dispatch(resolvedValidation(res))
 

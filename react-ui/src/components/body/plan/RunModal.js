@@ -81,7 +81,9 @@ import { Button,
           outline color="secondary"
           disabled={!this.props.plan.runnable ||
                      this.props.planRun.planRun === null ||
-                     this.props.planRun.id !== this.props.schemaID}
+                     this.props.planRun.schemaID !== this.props.schemaID ||
+                     this.props.planRun.queryID !== this.props.queryID
+                   }
           style={this.props.bigButton}
           onClick={() => this.toggle()}>
 

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.rest.eventhandlers;
+package uk.ac.ox.cs.pdq.rest.util;
 
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.ConjunctiveQueryBodyBuilder;

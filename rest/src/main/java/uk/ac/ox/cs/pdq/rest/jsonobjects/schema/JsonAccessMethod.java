@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.rest.jsonobjects.schema;
 
 /**
- *  Defines the structure for each relation's access methods field for conversion into JSON.
+ *  Defines the structure for each relation's access util field for conversion into JSON.
  *
  * @author Camilo Ortiz
  */

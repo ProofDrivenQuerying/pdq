@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.rest.eventhandlers;
+package uk.ac.ox.cs.pdq.rest.util;
 
 import uk.ac.ox.cs.pdq.algebra.*;
 import uk.ac.ox.cs.pdq.fol.*;
@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 
 
 /**
- * This class has the static methods for creating a plan and populating a JsonGraphicalPlan.
+ * This class has the static util for creating a plan and populating a JsonGraphicalPlan.
  *
  * @author Camilo Ortiz
  */

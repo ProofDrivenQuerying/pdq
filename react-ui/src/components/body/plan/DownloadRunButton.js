@@ -66,7 +66,8 @@ export default class DownloadRunButton extends React.Component {
           color="link"
           disabled={!this.props.plan.runnable ||
                      this.props.planRun.planRun === null ||
-                     this.props.planRun.id !== this.props.schemaID}
+                     this.props.planRun.schemaID !== this.props.schemaID ||
+                     this.props.planRun.queryID !== this.props.queryID}
           style={this.props.margins ? smallButton : noStyle}
           onClick={(e) => this.downloadRun(
             this.props.schemaID,

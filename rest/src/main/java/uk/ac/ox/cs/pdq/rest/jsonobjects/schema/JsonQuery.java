@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.rest.jsonobjects;
+package uk.ac.ox.cs.pdq.rest.jsonobjects.schema;
 
 /**
  *  Defines the structure of the query in JSON form.

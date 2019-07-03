@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.rest.jsonobjects.schema;
 
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.rest.jsonobjects.JsonQuery;
+
 import java.util.ArrayList;
 
 /**

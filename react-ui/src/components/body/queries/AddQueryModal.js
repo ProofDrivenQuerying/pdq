@@ -66,6 +66,7 @@ class AddQueryModal extends React.Component{
         this.mounted && this.props.updateSchemalistQueries(queryToAdd, this.props.schemaID);
 
         this.toggleQueryModal();
+
       }else{
         this.mounted && this.setState({validQuery: false});
       }
@@ -146,7 +147,8 @@ const mapDispatchToProps = (dispatch) =>({
     type: 'UPDATE_SCHEMALIST_QUERY',
     query: query,
     id: sID }),
-  verifyQuery: (schemaID, queryID, SQL) => dispatch(verifyQuery(schemaID, queryID, SQL))
+  verifyQuery: (schemaID, queryID, SQL) => dispatch(verifyQuery(schemaID, queryID, SQL)),
+  setQuery: (id) => dispatch({ type: 'SET_Q_ID', id: id})
 });
 
 export default connect(mapStatesToProps, mapDispatchToProps)(AddQueryModal);

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.rest.eventhandlers;
+package uk.ac.ox.cs.pdq.rest.util;
 
 import java.lang.reflect.Type;
 import java.sql.SQLException;
@@ -109,7 +109,7 @@ public class ExplorationSetUpForJson {
      */
     private static Map<ConjunctiveQuery, Map<Variable, Constant>> canonicalSubstitutionOfFreeVariables = new HashMap<>();
 
-    /** The auxiliary schema, including axioms capturing access methods */
+    /** The auxiliary schema, including axioms capturing access util */
     private AccessibleSchema accessibleSchema;
 
     /**

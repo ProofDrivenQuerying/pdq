@@ -107,12 +107,15 @@ const PlanBody = ({plan, getPlan, run, planRun, schemaList}) => {
                outline color={!plan.plan.runnable ?
                  "danger"
                  :
-                 planRun.id === schemaList.selectedSID ?
+                 planRun.queryID === schemaList.selectedQID &&
+                 planRun.schemaID === schemaList.selectedSID?
                  "primary" : "secondary"
                  }
                disabled={!plan.plan.runnable || planRun.isFetchingPlanRun ||
                         (planRun.planRun !== null &&
-                          planRun.id === schemaList.selectedSID)}
+                          planRun.schemaID === schemaList.selectedSID &&
+                          planRun.queryID === schemaList.selectedQID
+                        )}
                style={smallButton}
                onClick={() => run(
                  schemaList.selectedSID,

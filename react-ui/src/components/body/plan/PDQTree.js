@@ -198,7 +198,7 @@ export default class PDQTree extends React.Component {
                   })}
 
                   {data.descendants().map((node, key) => {
-                    const width = 30;
+                    const width = 25;
                     const height = 15;
 
                     let top;

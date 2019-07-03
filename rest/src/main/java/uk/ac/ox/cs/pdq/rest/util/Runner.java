@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.rest.eventhandlers;
+package uk.ac.ox.cs.pdq.rest.util;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
@@ -90,7 +90,7 @@ public class Runner {
     }
 
     /**
-     * This methods writes the run's table out to a file.
+     * This util writes the run's table out to a file.
      * @param results
      * @param path
      * @throws Exception

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.rest.eventhandlers;
+package uk.ac.ox.cs.pdq.rest.util;
 
 import java.util.ArrayList;
 import java.util.List;

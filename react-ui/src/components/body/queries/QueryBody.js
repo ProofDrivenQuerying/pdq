@@ -42,10 +42,11 @@ import './querybody.css';
                 schemaID={schemaList.selectedSID}
                 numQueries={schemaList.schemas[schemaList.selectedSID].queries.length}
                 queryFromList={queryFromList}
-                id={index}/>
+                id={index}
+                />
 
                 { //Delete button not implemented in backend yet:
-                  
+
                   // index === 0 ?
                   // null
                   // :
@@ -91,7 +92,7 @@ const QueryBody = ({schemaList, setQuery, removeQuery}) => {
 
       <div>
         <div className='querySQL'>
-          {schemaList.schemas.length > 0 && schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID] !== null?
+          {schemaList.schemas.length > 0 && schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID] !== undefined?
             <div>{schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}</div>
             :
             null
