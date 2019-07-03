@@ -287,7 +287,7 @@ public class RuntimeController {
 	 * decorates the plan and greys out the start button if exceptions.
 	 *
 	 */
-	void decoratePlan() {
+	boolean decoratePlan() {
 		try {
 			final uk.ac.ox.cs.pdq.runtime.Runtime runtime =
 				new uk.ac.ox.cs.pdq.runtime.Runtime(this.params, this.schema);
@@ -297,16 +297,16 @@ public class RuntimeController {
 			else
 				rt = (RelationalTerm)((ExecutablePlan)RuntimeController.this.plan).getDecoratedPlan();
 			ExecutablePlan ep = runtime.decoratePlan(rt);
+			return true;
 		}
 		catch(Exception e)
 		{
-	       this.runtimeStartButton.setDisable(true);
 	       Alert alert = new Alert(AlertType.INFORMATION);
 	       alert.setTitle("Information Dialog");
 	       alert.setHeaderText(null);
 	       alert.setContentText(e.toString());
 	       alert.showAndWait();
-
+	       return false;
 		}
 	}
 

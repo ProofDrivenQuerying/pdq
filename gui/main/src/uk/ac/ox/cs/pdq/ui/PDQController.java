@@ -488,11 +488,21 @@ public class PDQController {
 				plannerController.setPlan(pl);
 				plannerController.setPlanQueue(this.dataQueue);
 				plannerController.setSchema(this.currentSchema.get());
-				plannerController.setQuery(this.currentQuery.get());
-				parent.autosize();
-				dialog.setOnCloseRequest((WindowEvent arg0) -> plannerController.interruptPlanningThreads());
-				dialog.showAndWait();
-			} catch (IOException e) {
+				String str = this.queryTextArea.textProperty().get();
+				try
+				{
+					SQLLikeQueryReader qr = new SQLLikeQueryReader(this.currentSchema.get().getSchema());
+					ConjunctiveQuery cjq = qr.fromString(str);
+					this.currentQuery.get().setQuery(cjq);
+					plannerController.setQuery(this.currentQuery.get());
+					parent.autosize();
+					dialog.setOnCloseRequest((WindowEvent arg0) -> plannerController.interruptPlanningThreads());
+					dialog.showAndWait();
+				}
+				catch(Exception e)
+				{
+				}
+			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				throw new UserInterfaceException(e.getMessage());
 			}
@@ -870,9 +880,9 @@ public class PDQController {
 				runtimeController.setQuery(this.currentQuery.get());
 				// runtimeController.setExecutorType(this.settingsExecutorTypeList.getValue());
 				runtimeController.setTuplesLimit(toInteger(this.settingsOutputTuplesTextField.getText()));
-				runtimeController.decoratePlan();
+				boolean show = runtimeController.decoratePlan();
 				dialog.setOnCloseRequest((WindowEvent arg0) -> runtimeController.interruptRuntimeThreads());
-				dialog.showAndWait();
+				if(show) dialog.showAndWait();
 			} catch (IOException e) {
 				throw new UserInterfaceException("");
 			}
