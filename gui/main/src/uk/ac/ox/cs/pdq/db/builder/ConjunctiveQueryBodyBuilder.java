@@ -92,6 +92,10 @@ public class ConjunctiveQueryBodyBuilder {
 				String relationName = entry.getValue();
 
 				Relation relation = this.schema.getRelation(relationName);
+				if(relation == null)
+				{
+					throw new Exception("No such relation: " + relationName);
+				}
 				Attribute[] attributes = relation.getAttributes();
 
 				Predicate predicate = Predicate.create(relationName, attributes.length);

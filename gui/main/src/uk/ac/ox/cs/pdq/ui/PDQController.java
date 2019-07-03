@@ -970,7 +970,6 @@ public class PDQController {
 				String str = this.queryTextArea.textProperty().get();
 				SQLLikeQueryReader qr = new SQLLikeQueryReader(this.currentSchema.get().getSchema());
 				ConjunctiveQuery cjq = qr.fromString(str);
-				Variable[] freeVars =  cjq.getFreeVariables();
 				this.currentQuery.get().setQuery(cjq);
 				saveQuery(this.currentQuery.get());
 				Alert alert = new Alert(AlertType.INFORMATION);
