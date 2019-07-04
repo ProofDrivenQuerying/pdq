@@ -149,7 +149,7 @@ public class ExplorationSetUp {
 	}
 
 	/**
-	 * Register the given event homoChecker.
+	 * 
 	 *
 	 * @param handler EventHandler
 	 */
