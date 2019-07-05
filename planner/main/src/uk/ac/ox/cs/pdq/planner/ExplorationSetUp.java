@@ -149,7 +149,8 @@ public class ExplorationSetUp {
 	}
 
 	/**
-	 * 
+	 * Register the given event homoChecker.
+	 *
 	 *
 	 * @param handler EventHandler
 	 */
@@ -186,10 +187,10 @@ public class ExplorationSetUp {
 						GlobalCounterProvider.getNext("DatabaseInstanceId"));
 				convertTypes = false; // the internal database can handle types correctly.
 			} else {
-				// external database.
 				if (this.databaseParams.getUseInternalDatabaseManager()) {
 					databaseConnection = new InternalDatabaseManager(new MultiInstanceFactCache(),GlobalCounterProvider.getNext("DatabaseInstanceId"));
 				} else {
+					// external database.
 					databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(),
 						new ExternalDatabaseManager(this.databaseParams),GlobalCounterProvider.getNext("DatabaseInstanceId"));
 				}
@@ -217,7 +218,6 @@ public class ExplorationSetUp {
 
 			explorer.setExceptionOnLimit(this.plannerParams.getExceptionOnLimit());
 			explorer.setMaxRounds(this.plannerParams.getMaxIterations().doubleValue());
-			//explorer.setMaxElapsedTime(120l*1000l); // 2 minutes
 		    explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
 			if (explorer.getBestPlan() != null && explorer.getBestCost() != null) {
@@ -418,14 +418,10 @@ public class ExplorationSetUp {
 	}
 
 	/**
-	 * Generate canonical mapping.
+	 * Generate AccessibleQuery. Stores the substitution maps in global static caches.
 	 *
-	 * @param formula
-	 *            the body
-	 * @return a mapping of variables of the input conjunction to constants. A fresh
-	 *         constant is created for each variable of the conjunction. This method
-	 *         is invoked by the conjunctive query constructor when the constructor
-	 *         is called with empty input canonical mapping.
+	 * @param query
+	 * @return Accessible version of the given query.
 	 */
 	public static ConjunctiveQuery generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(ConjunctiveQuery query) {
 		Map<Variable, Constant> canonicalMapping = AccessibleQuery.generateCanonicalMappingForQuery(query);
