@@ -68,6 +68,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -1482,7 +1483,13 @@ public class PDQController {
 			dialog.setTitle(bundle.getString("application.dialog.saveas.query.title"));
 
 			// Set the currently selected schema/query/plan
-			SaveAsController saveasController = loader.getController();
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle(bundle.getString("application.dialog.saveas.query.title"));
+			File file = fileChooser.showSaveDialog(scene.getWindow());
+			PDQController.pdqController.addQuery(query, file.getPath());
+			scene.getWindow().hide();
+
+/*			SaveAsController saveasController = loader.getController();
 			saveasController.setSchema(this.currentSchema.get());
 			saveasController.setQueue(this.dataQueue);
 			saveasController.saveAs(query);
@@ -1492,7 +1499,7 @@ public class PDQController {
 					dialog.close();
 				}
 			});
-			dialog.showAndWait();
+			dialog.showAndWait();*/
 		} catch (IOException e) {
 			throw new UserInterfaceException(e);
 		}
