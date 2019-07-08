@@ -250,7 +250,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	}
 
 	/*
-	 * ??? What does false here mean? (non-Javadoc)
+	 * ??? TOCOMMENT: What does false here mean? 
 	 * 
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance#chaseStep(java.util.
 	 * Collection)
@@ -736,7 +736,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		return canonicalMapping;
 	}
 	/**
-	 * Fire.
+	 * Get rid of the universally quantified variables in a dependency by applying a substitution to them
 	 *
 	 * @param substitution Map<Variable,Term>
 	 * @param skolemize boolean
