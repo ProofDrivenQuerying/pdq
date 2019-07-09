@@ -26,7 +26,7 @@
 <access-method name="yh_geo_type" type="LIMITED" inputs="1,2" cost="50.0"/>
 </relation>
 <relation name="YahooPlaceType" source="yahoo" size="20">
-		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="placeTypeName2" type="java.lang.String"  path="placeTypeName"/>
 		<attribute name="code"          type="java.lang.Integer" path="placeTypeName attrs/code" input-method="type.1"/>
 		<attribute name="uri"           type="java.lang.String"  path="uri"/>
 <access-method name="yh_geo_types" type="FREE" cost="50.0"/>
@@ -38,7 +38,7 @@
 		<attribute    name="woeid2"         type="java.lang.Integer" input-method="inline.1" />
 
 		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
-		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="placeTypeName3" type="java.lang.String"  path="placeTypeName"/>
 		<attribute name="name"          type="java.lang.String"  path="name"/>
 		<attribute name="uri"           type="java.lang.String"  path="uri"/>
 <access-method name="yh_com_anc" type="LIMITED" inputs="0,1" cost="25.0"/>
@@ -47,50 +47,51 @@
 		<attribute name="relation"      type="java.lang.String"  input-method="relation.2"/>
 		<attribute name="of"            type="java.lang.Integer" input-method="relation.1" />
 		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
-		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
-		<attribute name="name"          type="java.lang.String"  path="name"/>
-		<attribute name="uri"           type="java.lang.String"  path="uri"/>
+		<attribute name="placeTypeName4" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="name4"          type="java.lang.String"  path="name"/>
+		<attribute name="uri4"           type="java.lang.String"  path="uri"/>
 <access-method name="yh_geo_rel" type="LIMITED" inputs="0,1" cost="50.0"/>
 </relation>
 <relation name="YahooPlaceCode" source="yahoo" size="10000000">
 		<attribute name="namespace" type="java.lang.String"  input-method="relation.1"/>
-		<attribute name="code"      type="java.lang.String"  input-method="relation.2"/>
+		<attribute name="code4"      type="java.lang.String"  input-method="relation.2"/>
 		<attribute name="woeid"     type="java.lang.Integer" path="woeid"/>
 		<access-method name="yh_geo_code" type="LIMITED" inputs="0,1" cost="1.0"/>
 </relation>
 <relation name="YahooContinents" source="yahoo" size="7">
 		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
 		<attribute name="placeType"     type="java.lang.Integer" path="placeTypeName attrs/code"/>
-		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
-		<attribute name="name"          type="java.lang.String"  path="name"/>
+		<attribute name="placeTypeName5" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="name5"          type="java.lang.String"  path="name"/>
 <access-method name="yh_geo_continent" type="FREE" cost="1.0"/>
 </relation>
 <relation name="YahooCountries" source="yahoo" size="250">
 		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
 		<attribute name="placeType"     type="java.lang.Integer" path="placeTypeName attrs/code"/>
-		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
-		<attribute name="name"          type="java.lang.String"  path="name"/>
+		<attribute name="placeTypeName6" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="name6
+		"          type="java.lang.String"  path="name"/>
 		<access-method name="yh_geo_country" type="FREE" cost="1.0"/>
 </relation>
 <relation name="YahooSeas" source="yahoo" size="51">
 		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
 		<attribute name="placeType"     type="java.lang.Integer" path="placeTypeName attrs/code"/>
-		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
-		<attribute name="name"          type="java.lang.String"  path="name"/>
+		<attribute name="placeTypeName7" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="name7"          type="java.lang.String"  path="name"/>
 <access-method name="yh_geo_sea" type="FREE" cost="1.0"/>
 </relation>
 <relation name="YahooOceans" source="yahoo" size="5">
 		<attribute name="woeid"         type="java.lang.Integer" path="woeid"/>
 		<attribute name="placeType"     type="java.lang.Integer" path="placeTypeName attrs/code"/>
-		<attribute name="placeTypeName" type="java.lang.String"  path="placeTypeName"/>
-		<attribute name="name"          type="java.lang.String"  path="name"/>
+		<attribute name="placeTypeName8" type="java.lang.String"  path="placeTypeName"/>
+		<attribute name="name8"          type="java.lang.String"  path="name"/>
 <access-method name="yh_geo_ocean" type="FREE" cost="1.0"/>
 </relation>
 <relation name="YahooWeather" source="yahoo" size="100000000">
 		<attribute name="woeid"          type="java.lang.Integer" input-method="q.2" />
 
 		<attribute name="city"           type="java.lang.String"  path="location/city"/>
-		<attribute name="country"        type="java.lang.String"  path="location/country"/>
+		<attribute name="country2"        type="java.lang.String"  path="location/country"/>
 		<attribute name="region"         type="java.lang.String"  path="location/region"/>
 
 		<attribute name="distance_unit"  type="java.lang.String"  path="units/distance"/>
@@ -113,7 +114,7 @@
 		<attribute name="date"           type="java.lang.String"  path="item/condition/date"/>
 		<attribute name="temperature"    type="java.lang.Double"  path="item/condition/temp"/>
 		<attribute name="condition"      type="java.lang.String"  path="item/condition/text"/>
-		<attribute name="code"           type="java.lang.Integer" path="item/condition/code"/>
+		<attribute name="code2"           type="java.lang.Integer" path="item/condition/code"/>
 <access-method name="yh_wtr_woeid" type="LIMITED" inputs="0" cost="10.0"/>
 </relation>
 </relations>

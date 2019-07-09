@@ -2,12 +2,11 @@ package uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata;
 
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 
-// TODO: Auto-generated Javadoc
 /**
- * Top-level class for node dataguide. This main currently mainly used in the
- * use interface.
+ * Top-level class for node metadata, used to pass information from the Planner to the GUI.
  *
  * @author Efthymia Tsamoura
+ * @author Mark Ridler
  */
 public class Metadata {
 
