@@ -1,0 +1,23 @@
+.schemas{
+  margin-right: 1rem;
+  margin-left: 1rem;
+  margin-bottom: 2rem;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  height: 26rem;
+
+  position:relative;
+  overflow-y: scroll;
+}
+
+.body-name-schema{
+  margin: 0 auto;
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+}
