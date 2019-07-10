@@ -665,7 +665,7 @@ public class SQLLikeQueryParser {
 	public Token match(int token) throws Exception
 	{
 		Token tok = tokens.get(tokens.index());
-		if(tok.getType() != token)
+		if((tok.getType() != token) && (!tokenNames[tok.getType()].equals("")))
 		{
 			error("Missing: " + tokenNames[token]);
 		}

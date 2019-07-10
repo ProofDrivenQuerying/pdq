@@ -208,10 +208,11 @@ public class ConjunctiveQueryBodyBuilder {
 		int leftAttrIndex = -1;
 		Term leftTerm = null;
 		
+		Relation r;
 		try {
-			leftAttrIndex = this.schema.getRelation(this.aliasToRelations.get(leftAlias)).getAttributePosition(leftAttr);
-			leftTerm = leftPredForm.getTerm(leftAttrIndex);
-		} catch(NullPointerException e)
+			r = this.schema.getRelation(this.aliasToRelations.get(leftAlias));
+			r.toString();
+		} catch(Exception e)
 		{	
 			log.error("null pointer. leftAttr=" + leftAttr
 					+ ", leftAlias=" + leftAlias
@@ -219,7 +220,17 @@ public class ConjunctiveQueryBodyBuilder {
 					+ ", relationName=" + this.aliasToRelations.get(leftAlias)
 					+ ", leftPredForm=" + leftPredForm
 			, e);
-			throw e;
+			System.out.println("Mark's error2" + e.getMessage());
+			throw new Exception("Missing relation: " + leftAlias);
+		}
+		try
+		{
+			leftAttrIndex = r.getAttributePosition(leftAttr);
+			leftTerm = leftPredForm.getTerm(leftAttrIndex);
+		}
+		catch(Exception e)
+		{
+			throw new Exception("Missing attribute: " + leftAttr);
 		}
 
 		// Prepare right variable:
@@ -232,9 +243,9 @@ public class ConjunctiveQueryBodyBuilder {
 		
 		Term rightTerm = null;
 		try {
-			rightAttrIndex = this.schema.getRelation( this.aliasToRelations.get(rightAlias) ).getAttributePosition(rightAttr);
-			rightTerm = rightPredForm.getTerm(rightAttrIndex);
-		} catch( NullPointerException e ) {
+			r = this.schema.getRelation( this.aliasToRelations.get(rightAlias) );
+			r.toString();
+		} catch( Exception e ) {
 			log.error("null pointer. rightAttr=" + rightAttr
 					+ ", rightAlias=" + rightAlias
 					+ ", rightAttrIndex=" + rightAttrIndex
@@ -243,7 +254,16 @@ public class ConjunctiveQueryBodyBuilder {
 			, e);
 			throw new Exception("Missing relation: " + rightAlias);
 		}
-
+		try
+		{
+			rightAttrIndex = r.getAttributePosition(rightAttr);
+			rightTerm = rightPredForm.getTerm(rightAttrIndex);
+		}
+		catch(Exception e)
+		{
+			throw new Exception("Missing attribute: " + rightAttr);
+		}
+		
 		// Check left and right isVariable()
 		if( !leftTerm.isVariable() && !rightTerm.isVariable() ) {
 			if( !leftTerm.equals(rightTerm) ) {
