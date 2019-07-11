@@ -670,7 +670,6 @@ public class SQLLikeQueryParser {
 			error("Missing: " + tokenNames[token]);
 		}
 		tokens.consume();
-		System.out.println(tok.getText());
 		return tok;
 	}
 	
@@ -682,7 +681,6 @@ public class SQLLikeQueryParser {
 			error("Missing: " + str);
 		}
 		tokens.consume();
-		System.out.println(tok.getText());
 		return tok;
 	}
 	
