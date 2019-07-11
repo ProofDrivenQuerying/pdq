@@ -11,7 +11,7 @@
   	<name>Oxford University - Department of Computer Science</name>
   	<url>http://www.cs.ox.ac.uk/</url>
   </organization>
-  
+
   <modules>
   	<module>common</module>
   	<module>reasoning</module>
@@ -19,14 +19,15 @@
   	<module>planner</module>
   	<module>runtime</module>
   	<module>gui</module>
-  	
-  	
+    <module>rest</module>
+
+
   	<module>datasources</module>
-  	
+
   	<module>regression</module>
- 	
+
     <!--
 	// the server depends on proprietary libraries (logicblox), so comment it out if you cannot build.-->
-	
+
   </modules>
 </project>

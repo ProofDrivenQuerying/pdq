@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTermWithCost type="JoinTerm">
+    <RelationalTerm type="DependentJoinTerm">
+        <RelationalTerm type="SelectionTerm">
+            <predicate type="ConjunctiveCondition">
+                <predicates position="2" type="ConstantEqualityCondition">
+                    <constant value="Country"/>
+                </predicates>
+            </predicate>
+            <RelationalTerm type="RenameTerm">
+                <renamings name="v_countryId1884151725" type="java.lang.Integer"/>
+                <renamings name="v_type21884151725" type="java.lang.Integer"/>
+                <renamings name="Country" type="java.lang.String"/>
+                <renamings name="fv_countryName1884151725" type="java.lang.String"/>
+                <RelationalTerm type="AccessTerm">
+                    <accessMethod name="yh_geo_country"/>
+                    <relation name="YahooCountries">
+                        <attribute name="woeid" type="java.lang.Integer"/>
+                        <attribute name="placeType" type="java.lang.Integer"/>
+                        <attribute name="placeTypeName" type="java.lang.String"/>
+                        <attribute name="name" type="java.lang.String"/>
+                        <access-method name="yh_geo_country"/>
+                    </relation>
+                </RelationalTerm>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="RenameTerm">
+            <renamings name="v_countryId1884151725" type="java.lang.Integer"/>
+            <renamings name="v_continentId1884151725" type="java.lang.Integer"/>
+            <renamings name="v__261884151725" type="java.lang.String"/>
+            <renamings name="v__271884151725" type="java.lang.String"/>
+            <renamings name="v__281884151725" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="yh_geo_belongs" inputs="0"/>
+                <relation name="YahooBelongsTo">
+                    <attribute name="source" type="java.lang.Integer"/>
+                    <attribute name="target" type="java.lang.Integer"/>
+                    <attribute name="placeTypeName" type="java.lang.String"/>
+                    <attribute name="name" type="java.lang.String"/>
+                    <attribute name="uri" type="java.lang.String"/>
+                    <access-method name="yh_geo_belongs" inputs="0"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+    <RelationalTerm type="RenameTerm">
+        <renamings name="v_continentId1884151725" type="java.lang.Integer"/>
+        <renamings name="Asia" type="java.lang.String"/>
+        <renamings name="v_type11884151725" type="java.lang.Integer"/>
+        <renamings name="v_typeName1884151725" type="java.lang.String"/>
+        <renamings name="v_cName11884151725" type="java.lang.String"/>
+        <renamings name="v__01884151725" type="java.lang.String"/>
+        <renamings name="v__11884151725" type="java.lang.String"/>
+        <renamings name="v__21884151725" type="java.lang.String"/>
+        <renamings name="v__31884151725" type="java.lang.String"/>
+        <renamings name="v__41884151725" type="java.lang.String"/>
+        <renamings name="v__51884151725" type="java.lang.String"/>
+        <renamings name="v__61884151725" type="java.lang.Double"/>
+        <renamings name="v__71884151725" type="java.lang.Double"/>
+        <renamings name="v__81884151725" type="java.lang.Double"/>
+        <renamings name="v__91884151725" type="java.lang.Double"/>
+        <renamings name="v__101884151725" type="java.lang.Double"/>
+        <renamings name="v__111884151725" type="java.lang.Double"/>
+        <renamings name="v__121884151725" type="java.lang.String"/>
+        <RelationalTerm type="AccessTerm">
+            <accessMethod name="yh_geo_name" inputs="1"/>
+            <relation name="YahooPlaces">
+                <attribute name="woeid" type="java.lang.Integer"/>
+                <attribute name="name" type="java.lang.String"/>
+                <attribute name="type" type="java.lang.Integer"/>
+                <attribute name="placeTypeName" type="java.lang.String"/>
+                <attribute name="country" type="java.lang.String"/>
+                <attribute name="admin1" type="java.lang.String"/>
+                <attribute name="admin2" type="java.lang.String"/>
+                <attribute name="admin3" type="java.lang.String"/>
+                <attribute name="locality1" type="java.lang.String"/>
+                <attribute name="locality2" type="java.lang.String"/>
+                <attribute name="postal" type="java.lang.String"/>
+                <attribute name="centroid_lat" type="java.lang.Double"/>
+                <attribute name="centroid_lng" type="java.lang.Double"/>
+                <attribute name="bboxNorth" type="java.lang.Double"/>
+                <attribute name="bboxSouth" type="java.lang.Double"/>
+                <attribute name="bboxEast" type="java.lang.Double"/>
+                <attribute name="bboxWest" type="java.lang.Double"/>
+                <attribute name="timezone" type="java.lang.String"/>
+                <access-method name="yh_geo_name" inputs="1"/>
+                <access-method name="yh_geo_woeid" inputs="0"/>
+                <access-method name="yh_geo_type" inputs="1,2"/>
+            </relation>
+        </RelationalTerm>
+    </RelationalTerm>
+    <cost value="6.244500173709283E15" type="DoubleCost"/>
+</RelationalTermWithCost>

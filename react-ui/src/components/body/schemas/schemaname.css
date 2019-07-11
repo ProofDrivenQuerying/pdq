@@ -1,0 +1,18 @@
+.schema-name-holder{
+  margin: 3%;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  width: 10rem;
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
+
+.schema-name{
+  float: left;
+  margin-top: .3rem;
+  margin-bottom: .3rem;
+  width: inherit;
+  font-weight: 500;
+  font-size: 80%;
+  text-overflow: ellipsis;
+}

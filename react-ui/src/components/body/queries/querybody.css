@@ -1,0 +1,57 @@
+.queries{
+  height: 10rem;
+  display: flex;
+  flex-direction: column;
+  margin-right: 1rem;
+  margin-left: 1rem;
+  margin-bottom: 2rem;
+  position:relative;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  float: left;
+}
+
+.querySQL{
+  position: relative;
+  margin-right: 2rem;
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: row;
+  height: 13rem;
+  position:relative;
+  overflow-y: scroll;
+  white-space:pre-wrap;
+  font-size: .7rem;
+}
+
+.body-title-query{
+  width: 100%;
+  margin: 1rem;
+  display: flex;
+  align-self: center;
+  align-items: center;
+
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+}
+
+.query-name{
+  margin-top: .3rem;
+  margin-bottom: .3rem;
+  width: inherit;
+  font-weight: 500;
+  font-size: 80%;
+  text-overflow: ellipsis;
+}
+
+.query-name-holder{
+  margin: 3%;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  width: 10rem;
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
