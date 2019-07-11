@@ -113,17 +113,12 @@ public class DbIOManager extends IOManager {
 			Map<AccessMethodDescriptor, String> map = AdaptedAccessMethod.getMapOfCosts();
 			for (AdaptedRelation r : customer.getAdaptedRelations()) {
 				if (r.getSize() != null) {
-					// System.out.println("" + r.getName() + " size = " + r.getSize());
-					// RE:AssayLimited CA:1148942
 					bw.write("RE:" + r.getName() + "\t\t\t\t\t\t\t\t\t" + "CA:" + r.getSize() + "\n");
 				}
 				if (r.getAccessMethods() != null) {
 					for (AccessMethodDescriptor am : r.getAccessMethods()) {
-						// RE:relation_name BI:access_method_name RT:cost_as_in_xml
 						bw.write("RE:" + r.getName() + "\t\t\t\t" + "BI:" + am.getName() + "\t\tRT:" + map.get(am)
 								+ "\n");
-						// System.out.println("\t" + r.getName() + "." + am.getName() + " cost = " +
-						// map.get(am));
 					}
 				}
 

@@ -234,8 +234,6 @@ public class PlanPrinter {
 			for(int i = 0; i < p.getChildren().length; i++)
 			{
 				printGenericPlanToStream(out, p.getChild(i), indent+1);
-				
-				System.out.println();
 			}
 			ident(out, indent); out.println("}");
 		}
