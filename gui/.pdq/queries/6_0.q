@@ -22,7 +22,7 @@
 <variable name="date"/>
 <variable name="temperature"/>
 <constant value="Sunny"/>
-<constant value="FR"/>
+<variable name="code"/>
 </atom>
 <atom name="YahooPlaceCode">
 <constant value="iso"/>
