@@ -164,16 +164,43 @@ public class ConjunctiveQueryBodyBuilder {
 		// Prepare right variable:
 		String rightAlias = rightAliasAttr.getAlias();
 		String rightAttr  = rightAliasAttr.getAttr();
-		Atom rightPredForm = this.aliasToPredicateFormulas.get(rightAlias);
+		Atom rightPredForm;
+		try
+		{
+			rightPredForm = this.aliasToPredicateFormulas.get(rightAlias);
+			if(rightPredForm == null) throw new Exception();
+		}
+		catch(Exception e)
+		{
+			throw new Exception("Missing relation: " + rightAlias);
+		}
 
 		// Prepare left constant term:
 		Relation relation = this.schema.getRelation(rightPredForm.getPredicate().getName());
 
-		TypedConstant leftConstant = TypedConstant.create(
-				Types.cast(relation.getAttribute(rightAttr).getType(),
+		TypedConstant leftConstant;
+		Attribute attribute;
+		try
+		{
+			attribute = relation.getAttribute(rightAttr);
+			if(attribute == null) throw new Exception();
+		}
+		catch(Exception e)
+		{
+			throw new Exception("Missing attribute: " + rightAttr);
+		}
+
+		try
+		{
+			leftConstant = TypedConstant.create(
+				Types.cast(attribute.getType(),
 						leftConst.getConstant()));
-
-
+		}
+		catch(Exception e)
+		{
+			throw new Exception("Attribute: " + rightAttr + ": Type Mismatch");			
+		}
+		
 		// Get term in said position:
 		int rightAttrIndex = this.schema.getRelation( this.aliasToRelations.get(rightAlias) ).getAttributePosition(rightAttr);
 		Term rightTerm = rightPredForm.getTerm(rightAttrIndex);
