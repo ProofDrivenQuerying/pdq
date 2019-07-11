@@ -60,8 +60,6 @@ public class DependentJoinTerm extends JoinTerm {
 		// for the second.
 		if (!CollectionUtils.containsAny(Arrays.asList(child1.getOutputAttributes()),
 				Arrays.asList(child2.getInputAttributes()))) {
-			System.out.println("Error " + Arrays.asList(child1.getOutputAttributes()) + " does not contain any of "
-					+ Arrays.asList(child2.getInputAttributes()));
 			Assert.assertTrue(CollectionUtils.containsAny(Arrays.asList(child1.getOutputAttributes()),
 					Arrays.asList(child2.getInputAttributes())));
 		}

@@ -77,6 +77,7 @@ public class CostEstimatorFactory {
 				catalog = new SimpleCatalog(schema, costParams.getCatalog());
 			}catch(Exception e) {
 				System.out.println("Error with "+costParams.getCatalog() + " : " + e.getMessage());
+				e.printStackTrace();
 			}
 		} else {
 			if (CostTypes.TEXTBOOK.equals(costParams.getCostType())) {
