@@ -189,6 +189,7 @@ public class ExplorationSetUp {
 			} else {
 				if (this.databaseParams.getUseInternalDatabaseManager()) {
 					databaseConnection = new InternalDatabaseManager(new MultiInstanceFactCache(),GlobalCounterProvider.getNext("DatabaseInstanceId"));
+					convertTypes = false; 
 				} else {
 					// external database.
 					databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(),
