@@ -220,7 +220,6 @@ public class ConjunctiveQueryBodyBuilder {
 					+ ", relationName=" + this.aliasToRelations.get(leftAlias)
 					+ ", leftPredForm=" + leftPredForm
 			, e);
-			System.out.println("Mark's error2" + e.getMessage());
 			throw new Exception("Missing relation: " + leftAlias);
 		}
 		try
@@ -424,7 +423,7 @@ public class ConjunctiveQueryBodyBuilder {
 		for(Atom atom : preds) atoms[i++] = atom;
 		if(atoms.length > 0)
 		{
-			this.conjQuery = ConjunctiveQuery.create(this.resultPredicate.getFreeVariables(), atoms);
+			this.conjQuery = ConjunctiveQuery.create((this.resultPredicate != null) ? this.resultPredicate.getFreeVariables() : new Variable[0], atoms);
 		}
 		else
 		{

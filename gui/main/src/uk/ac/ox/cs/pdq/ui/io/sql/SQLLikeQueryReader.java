@@ -209,7 +209,7 @@ public class SQLLikeQueryReader {
            	Alert alert = new Alert(AlertType.INFORMATION);
         	alert.setTitle("Information Dialog");
         	alert.setHeaderText(null);
-        	alert.setContentText(e.getMessage());
+        	alert.setContentText(e.toString());
         	alert.showAndWait();
         	throw e;
         }
