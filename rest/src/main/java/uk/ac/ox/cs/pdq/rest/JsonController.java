@@ -4,13 +4,10 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.JsonQuery;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.*;
 import uk.ac.ox.cs.pdq.rest.util.*;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.JsonPlan;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.run.JsonRunResults;
-import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.JsonDependencyList;
-import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.JsonRelationList;
-import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.SchemaName;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -35,7 +32,8 @@ public class JsonController{
   private HashMap<Integer, String> paths;
 
   private HashMap<Integer, Schema> schemaList;
-  private HashMap<Integer, HashMap<Integer, ConjunctiveQuery>> queryList;
+  private HashMap<Integer, HashMap<Integer, ConjunctiveQuery>> commonQueries;
+  private HashMap<Long, HashMap<Integer, HashMap<Integer, ConjunctiveQuery>>> queryList;
   private HashMap<Integer, File> casePropertyList;
   private HashMap<Integer, HashMap<Integer, JsonPlan>> planList;
   private HashMap<Integer, HashMap<Integer, JsonRunResults>> runResultList;
@@ -45,8 +43,11 @@ public class JsonController{
   public JsonController(){
     this.paths = new HashMap<Integer, String>();
     this.schemaList = new HashMap<Integer, Schema>();
-    this.queryList = new HashMap<Integer, HashMap<Integer, ConjunctiveQuery>>();
+    this.commonQueries = new HashMap<Integer, HashMap<Integer,  ConjunctiveQuery>>();
     this.casePropertyList = new HashMap<Integer, File>();
+
+
+    this.queryList = new HashMap<Long, HashMap<Integer, HashMap<Integer, ConjunctiveQuery>>>();
     this.planList = new HashMap<Integer, HashMap<Integer, JsonPlan>>();
     this.runResultList = new HashMap<Integer, HashMap<Integer, JsonRunResults>>();
     this.catalogPaths = new HashMap<Integer, String>();
@@ -90,7 +91,7 @@ public class JsonController{
                                 j++;
                             }
 
-                            queryList.put(i, queryHashMap);
+                            commonQueries.put(i, queryHashMap);
 
                             break;
 
@@ -121,11 +122,18 @@ public class JsonController{
    * @return SchemaName[]
    */
   @RequestMapping(value="/init_schemas", method=RequestMethod.GET, produces="application/json")
-  public SchemaName[] init_schemas(){
+  public InitialInfo init_schemas(){
+      Long userID = System.currentTimeMillis();
+
       SchemaName[] jsonSchemaList = new SchemaName[this.schemaList.size()];
+
+      //initialize queryList key value pair for this user
+      this.queryList.put(userID, this.commonQueries);
+
       int i = 0;
       for(Integer id : this.schemaList.keySet()){
-          HashMap<Integer, ConjunctiveQuery> CQList = this.queryList.get(id);
+          HashMap<Integer, ConjunctiveQuery> CQList = this.commonQueries.get(id);
+
 
           ArrayList<JsonQuery> JQList = new ArrayList<JsonQuery>();
           Schema schema = this.schemaList.get(id);
@@ -150,7 +158,7 @@ public class JsonController{
           i++;
       }
 
-    return jsonSchemaList;
+    return new InitialInfo(jsonSchemaList, userID);
   }
   /**
    * Returns relations associated with specific schema. Schema is identified thanks to the provided id.
@@ -185,8 +193,10 @@ public class JsonController{
               .body(toReturn);
   }
 
-    @GetMapping(value="/verifyQuery/{schemaID}/{queryID}/{SQL:.+}")
-    public boolean verifyQuery(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL, HttpServletRequest request){
+    @GetMapping(value="/verifyQuery/{schemaID}/{queryID}/{SQL:.+}/{userID}")
+    public boolean verifyQuery(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL,
+                               @PathVariable Long userID, HttpServletRequest request){
+
         Schema schema = this.schemaList.get(schemaID);
 
         boolean validQuery = false;
@@ -198,10 +208,12 @@ public class JsonController{
             //validation goes here
             validQuery = true;
 
+            HashMap<Integer, ConjunctiveQuery> updatedList = this.queryList.get(userID).get(schemaID);
+            updatedList.put(queryID, newQuery);
+
+            this.queryList.get(userID).put(schemaID, updatedList);
+
             if(this.localMode){
-                HashMap<Integer, ConjunctiveQuery> updatedList = queryList.get(schemaID);
-                updatedList.put(queryID, newQuery);
-                queryList.put(schemaID, updatedList);
 
                 File query = new File(paths.get(schemaID)+"/queries/"+"query"+queryID.toString()+".xml");
                 IOManager.exportQueryToXml(newQuery, query);
@@ -222,8 +234,10 @@ public class JsonController{
    * @param SQL
    * @return
    */
-  @GetMapping(value="/plan/{schemaID}/{queryID}/{SQL}")
-  public JsonPlan plan(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL){
+  @GetMapping(value="/plan/{schemaID}/{queryID}/{SQL}/{userID}")
+  public JsonPlan plan(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL,
+                       @PathVariable Long userID){
+
       if(!localMode && queryID != 0){
           Schema schema = schemaList.get(schemaID);
           File properties = casePropertyList.get(schemaID);
@@ -255,7 +269,7 @@ public class JsonController{
 
 
       Schema schema = schemaList.get(schemaID);
-      ConjunctiveQuery cq = queryList.get(schemaID).get(queryID);
+      ConjunctiveQuery cq = queryList.get(userID).get(schemaID).get(queryID);
       File properties = casePropertyList.get(schemaID);
       String pathToCatalog = catalogPaths.get(schemaID);
 
@@ -277,8 +291,10 @@ public class JsonController{
       }
   }
 
-  @GetMapping(value="/run/{schemaID}/{queryID}/{SQL}")
-  public JsonRunResults run(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL){
+  @GetMapping(value="/run/{schemaID}/{queryID}/{SQL}/{userID}")
+  public JsonRunResults run(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL,
+                            @PathVariable Long userID){
+
       if(!localMode && queryID != 0){
           Schema schema = schemaList.get(schemaID);
           File properties = casePropertyList.get(schemaID);
@@ -315,7 +331,7 @@ public class JsonController{
 
       Schema schema = schemaList.get(schemaID);
 
-    ConjunctiveQuery cq = queryList.get(schemaID).get(queryID);
+    ConjunctiveQuery cq = queryList.get(userID).get(schemaID).get(queryID);
 
     File properties = casePropertyList.get(schemaID);
 
@@ -342,11 +358,11 @@ public class JsonController{
      * @param request
      * @return
      */
-  @GetMapping(value="/downloadRun/{schemaID}/{queryID}/{SQL}")
-  public ResponseEntity<Resource> downloadRun(@PathVariable int schemaID,
-                                              @PathVariable int queryID,
-                                              @PathVariable String SQL,
+  @GetMapping(value="/downloadRun/{schemaID}/{queryID}/{SQL}/{userID}")
+  public ResponseEntity<Resource> downloadRun(@PathVariable int schemaID, @PathVariable int queryID,
+                                              @PathVariable String SQL, @PathVariable long userID,
                                               HttpServletRequest request){
+
       if(!localMode && queryID != 0){
           try{
               Schema schema = schemaList.get(schemaID);
@@ -392,10 +408,11 @@ public class JsonController{
       return null;
   }
 
-  @GetMapping(value="/downloadPlan/{schemaID}/{queryID}/{SQL}")
-  public ResponseEntity<Resource> downloadPlan(@PathVariable int schemaID,
-                                               @PathVariable int queryID,
-                                               @PathVariable String SQL, HttpServletRequest request){
+  @GetMapping(value="/downloadPlan/{schemaID}/{queryID}/{SQL}/{userID}")
+  public ResponseEntity<Resource> downloadPlan(@PathVariable int schemaID, @PathVariable int queryID,
+                                               @PathVariable String SQL, @PathVariable long userID,
+                                               HttpServletRequest request){
+
       if(!localMode && queryID != 0){
           try{
               Schema schema = schemaList.get(schemaID);

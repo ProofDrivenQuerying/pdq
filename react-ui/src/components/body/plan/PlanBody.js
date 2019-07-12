@@ -20,7 +20,7 @@ import { FaRegMap,
  */
 
 
-const PlanBody = ({plan, getPlan, run, planRun, schemaList}) => {
+const PlanBody = ({plan, getPlan, run, planRun, schemaList, userID}) => {
 
   let smallButton = {
     float: "left", width: "4rem", height:"4rem", margin:"1rem 1rem 1rem 1rem"
@@ -86,6 +86,7 @@ const PlanBody = ({plan, getPlan, run, planRun, schemaList}) => {
                     plan={plan}
                     margins={true}
                     id={1}
+                    userID={userID}
                 />
 
               </div>
@@ -140,7 +141,9 @@ const PlanBody = ({plan, getPlan, run, planRun, schemaList}) => {
                   planRun={planRun}
                   plan ={plan.plan}
                   bigButton={bigButton}
-                  name={runViewName}/>
+                  name={runViewName}
+                  userID={userID}
+                  />
 
                 <DownloadRunButton
                   SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
@@ -149,7 +152,9 @@ const PlanBody = ({plan, getPlan, run, planRun, schemaList}) => {
                   plan={plan.plan}
                   planRun={planRun}
                   margins={true}
-                  id={1}/>
+                  id={1}
+                  userID={userID}
+                  />
               </div>
               :
               null}
@@ -179,7 +184,8 @@ const mapStatesToProps = (state) =>{
     plan: state.plan,
     graphicalPlan: state.graphicalPlan,
     planRun: state.planRun,
-    schemaList: state.schemaList
+    schemaList: state.schemaList,
+    userID: state.schemaList.userID
   })
 }
 

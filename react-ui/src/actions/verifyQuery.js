@@ -30,8 +30,10 @@ export const verifyQuery = (schemaID, queryID, SQL) => {
 
   return function(dispatch, getState){
     let simpleSQL = SQL.replace(/\n|\r|\t/g, " ");
+    let userID = store.getState().schemaList.userID;
+    console.log("/verifyQuery/"+schemaID+"/"+queryID+"/"+simpleSQL+"/"+userID);
 
-    return fetch("/verifyQuery/"+schemaID+"/"+queryID+"/"+simpleSQL)
+    return fetch("/verifyQuery/"+schemaID+"/"+queryID+"/"+simpleSQL+"/"+userID)
     .then(res => res.text())
     .then(res => JSON.parse(res)).then((res)=>{
 

@@ -128,6 +128,7 @@ import { Button,
                      planRun={this.props.planRun}
                      margins={false}
                      id={2}
+                     userID={this.props.userID}
                     />
 
                     <PopoutWindow

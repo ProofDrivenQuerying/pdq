@@ -11,10 +11,11 @@ export const fetching = () => {
         type: 'FETCHING',
     };
 }
-export const resolved = (schemaList) => {
+export const resolved = (initialInfo) => {
     return {
         type: 'RESOLVED',
-        schemaList,
+        schemaList: initialInfo.schemas,
+        userID: initialInfo.userID
     };
 }
 export const error = () => {

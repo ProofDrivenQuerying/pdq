@@ -16,10 +16,10 @@ export default class DownloadRunButton extends React.Component {
     this.toggleTooltip = this.toggleTooltip.bind(this);
   }
 
-  downloadPlan(schemaID, queryID, SQL){
+  downloadPlan(schemaID, queryID, SQL, userID){
     let simpleSQL = SQL.replace(/\n|\r|\t/g, " ");
     Helpers.httpRequest(
-      `/downloadPlan/`+schemaID+`/`+queryID+`/`+simpleSQL,
+      `/downloadPlan/`+schemaID+`/`+queryID+`/`+simpleSQL+`/`+userID,
       "get"
     )// 1. Convert the data into 'blob'
      .then((response) => response.blob())
@@ -72,7 +72,8 @@ export default class DownloadRunButton extends React.Component {
           onClick={(e) => this.downloadPlan(
             this.props.schemaID,
             this.props.queryID,
-            this.props.SQL
+            this.props.SQL,
+            this.props.userID
           )}>
           <FaDownload/>
         </Button>

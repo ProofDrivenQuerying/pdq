@@ -1,7 +1,7 @@
-/.idea
+.idea/*
 .DS_Store
-/log
-/target
-/.settings
-/bin/
+/log/
+/target/
+.settings/
+bin/
 *.iml

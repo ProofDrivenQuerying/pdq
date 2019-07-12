@@ -14,7 +14,6 @@ import { getInitialData } from './actions/getSimpleSchemaList.js';
 class App extends Component{
 
   componentWillMount(){
-    //get initial schemaList from server and set state variable schemaList accordingly
     this.props.dispatch(getInitialData());
   }
 
@@ -31,7 +30,6 @@ class App extends Component{
 
 //redux
 const mapStatesToProps = (state) =>({
-  // dispatch: state.dispatch
   ...state
 });
 
