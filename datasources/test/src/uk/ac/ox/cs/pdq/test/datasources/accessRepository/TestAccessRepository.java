@@ -123,15 +123,12 @@ public class TestAccessRepository extends PdqTest {
 		long newLength = new File(
 				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml")
 						.length();
-		// TO COMMENT: the comment below makes no sense without context; really explain
-		// this! - Gabor: There is a file path in the exported xml file. That path
+		
+		
+		//There is a file path in the exported xml file. That path
 		// depends on the user who runs the test. Therefore we cannot know how large the
 		// new file should be exactly, but it should be in a 30 character range to the
 		// saved copy.
-
-		// The data file's path in the xml can change from user to user, so we can only
-		// check that the new xml is approximately the same size as the reference
-		// version.
 		Assert.assertTrue(goodLength + 30 > newLength);
 		Assert.assertTrue(goodLength - 30 < newLength);
 
@@ -190,9 +187,10 @@ public class TestAccessRepository extends PdqTest {
 		long newLength = new File(
 				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml")
 						.length();
-		// The data file's path in the xml can change from user to user, so we can only
-		// check that the new xml is approximately the same size as the reference
-		// version.
+		//There is a file path in the exported xml file. That path
+		// depends on the user who runs the test. Therefore we cannot know how large the
+		// new file should be exactly, but it should be in a 30 character range to the
+		// saved copy.
 		Assert.assertTrue(goodLength + 60 > newLength);
 		Assert.assertTrue(goodLength - 60 < newLength);
 		target.close();
