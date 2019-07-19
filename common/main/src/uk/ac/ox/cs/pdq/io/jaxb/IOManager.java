@@ -23,6 +23,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.log4j.Logger;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -435,7 +436,7 @@ public class IOManager {
 			// Open the csv file for reading
 			long recordCounter = 0;
 			if (verbose)
-				System.out.println("Importing " + r.getName());
+				Logger.getLogger(IOManager.class.getName()).error("Importing " + r.getName());
 			while (sc.hasNextLine()) {
 				String line = sc.nextLine();
 				String[] tuple = line.split(",");
@@ -460,7 +461,7 @@ public class IOManager {
 				facts.clear();
 			}
 			if (verbose)
-				System.out.println("\nImported " + recordCounter + " facts for relation " + r.getName());
+				Logger.getLogger(IOManager.class.getName()).error("\nImported " + recordCounter + " facts for relation " + r.getName());
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
