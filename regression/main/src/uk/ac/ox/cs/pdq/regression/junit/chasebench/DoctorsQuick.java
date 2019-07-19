@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.CommonToPDQTranslator;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
-import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
@@ -104,7 +104,7 @@ public class DoctorsQuick {
 
 	private void reasonTest(DatabaseManager dbm) throws SQLException, IOException, DatabaseException {
 		DatabaseChaseInstance state = new DatabaseChaseInstance(getTestFacts(), dbm);
-		RestrictedChaser chaser = new RestrictedChaser();
+		ParallelChaser chaser = new ParallelChaser();
 		long start = System.currentTimeMillis();
 		chaser.reasonUntilTermination(state, s.getAllDependencies());
 		long duration = System.currentTimeMillis() - start;

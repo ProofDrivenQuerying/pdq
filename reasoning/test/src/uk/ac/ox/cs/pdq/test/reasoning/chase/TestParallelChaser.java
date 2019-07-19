@@ -31,7 +31,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.AlternatingEgdTgdChase;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
@@ -47,7 +47,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 public class TestParallelChaser extends PdqTest {
 
 	public DatabaseChaseInstance state;
-	private ParallelChaser chaser;
+	private AlternatingEgdTgdChase chaser;
 
 	protected Schema schema;
 	private DatabaseManager connection;
@@ -58,7 +58,7 @@ public class TestParallelChaser extends PdqTest {
 	public void setup() throws Exception {
 		super.setup();
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2 }, new Dependency[] { this.tgd });
-		this.chaser = new ParallelChaser();
+		this.chaser = new AlternatingEgdTgdChase();
 	}
 
 	/**
@@ -609,7 +609,7 @@ public class TestParallelChaser extends PdqTest {
 	public void setup(DatabaseManager c) throws SQLException {
 
 		this.setConnection(c);
-		this.chaser = new ParallelChaser();
+		this.chaser = new AlternatingEgdTgdChase();
 	}
 
 }

@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
@@ -200,7 +200,7 @@ public class RestrictedChaserTest {
 				if (schema == null || query == null) {
 					throw new IllegalStateException("Schema and query must be provided.");
 				}
-				RestrictedChaser reasoner = new RestrictedChaser();
+				ParallelChaser reasoner = new ParallelChaser();
 
 				DatabaseManager dbcon = createConnection(schema);
 				DatabaseChaseInstance state = new DatabaseChaseInstance(query, dbcon);				

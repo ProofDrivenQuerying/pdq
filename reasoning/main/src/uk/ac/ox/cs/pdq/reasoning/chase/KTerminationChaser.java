@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
  * @author Efthymia Tsamoura
  *
  */
-public class KTerminationChaser extends RestrictedChaser {
+public class KTerminationChaser extends ParallelChaser {
 
 	/** Factor of number of rounds to chase for before stop the chase. */
 	private final Integer k;
