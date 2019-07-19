@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.regression.utils;
+package uk.ac.ox.cs.pdq.io;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -17,7 +17,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -206,7 +205,7 @@ public class CommonToPDQTranslator {
 				if (equality == null) {
 					return TGD.create(bodyAtoms.toArray(new Atom[bodyAtoms.size()]), headAtoms.toArray(new Atom[headAtoms.size()]));
 				} else {
-					return EGD.create(new Atom[] {bodyAtoms.get(0), bodyAtoms.get(1)}, new Atom[] {Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true),
+					return EGD.create(new Atom[] {bodyAtoms.get(0), bodyAtoms.get(1)}, new Atom[] {Atom.create(Predicate.create(EGD.EQUALITY, 2, true),
 							equality.getVariables()[0],equality.getVariables()[1])});
 				}
 			}
