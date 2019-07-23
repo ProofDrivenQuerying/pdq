@@ -20,6 +20,8 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Types;
+import java.util.Random;
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -56,6 +58,11 @@ public class ConjunctiveQueryBodyBuilder {
 	/** The all terms. */
 	private Term[] 				terms;
 
+	private static char[] buf = new char[5];
+	
+	private static char[] symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+	
+	private static Random random = new Random();
 	/**
 	 * Constructor for ConjunctiveQueryBodyBuilder.
 	 * @param schema Schema
@@ -74,6 +81,13 @@ public class ConjunctiveQueryBodyBuilder {
 		this.terms = terms;
 		
 		this.buildInitialPredicates();
+	}
+	
+	public String rand()
+	{
+	    for (int idx = 0; idx < buf.length; ++idx)
+            buf[idx] = symbols[random.nextInt(symbols.length)];
+        return new String(buf);
 	}
 
 	/**
@@ -103,7 +117,7 @@ public class ConjunctiveQueryBodyBuilder {
 				Term[] terms = new Term[ attributes.length ];
 
 				for( int i = 0; i < terms.length; i++ ) {
-					terms[i] = new Variable(attributes[i].getName());
+					terms[i] = new Variable(rand() + attributes[i].getName());
 				}
 
 				this.aliasToPredicateFormulas.put(aliasName, Atom.create( predicate, terms ));
