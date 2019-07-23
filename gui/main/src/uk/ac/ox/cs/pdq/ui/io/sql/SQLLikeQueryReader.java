@@ -140,7 +140,7 @@ public class SQLLikeQueryReader {
         			if(rawConstraint.split("=").length >= 2)
         			{
         				String left = rawConstraint.split("=")[0].replaceAll("\\s", "");  // Consume whitespace
-        				String right = rawConstraint.split("=")[1].replaceAll("\\s", ""); // Consume whitespace
+        				String right = rawConstraint.split("=")[1].replaceAll("\\n", "").replaceAll("\\r", ""); // Consume newlines
 
         				ConjunctiveQueryBodyBuilder.ConstraintTerm leftConstraint = null;
         				ConjunctiveQueryBodyBuilder.ConstraintTerm rightConstraint = null;
