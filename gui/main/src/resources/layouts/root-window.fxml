@@ -113,7 +113,7 @@
                           <children>
                             <AnchorPane prefHeight="109.99990000000253" prefWidth="640.0">
                               <children>
-                                <TextArea fx:id="queryTextArea" onMouseClicked="#openQueryDetails" prefWidth="200.0" promptText="%application.prompt.query-definition" styleClass="formula-editor" text="" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                <TextArea fx:id="queryTextArea" prefWidth="200.0" promptText="%application.prompt.query-definition" styleClass="formula-editor" text="" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                               </children>
                             </AnchorPane>
                           </children>

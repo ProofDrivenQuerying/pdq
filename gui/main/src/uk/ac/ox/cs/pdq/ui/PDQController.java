@@ -809,50 +809,6 @@ public class PDQController {
 	}
 
 	/**
-	 * Action that open's the query inspector window.
-	 *
-	 * @param event the event
-	 */
-	@FXML
-	void openQueryDetails(MouseEvent event) {
-		if (!event.isConsumed()) {
-			event.consume();
-			if (event.getClickCount() > 1
-					&& this.plans.get(Pair.of(this.currentSchema.get(), this.currentQuery.get())).isEmpty()) {
-				try {
-					Stage dialog = new Stage();
-					dialog.initModality(Modality.NONE);
-					dialog.initStyle(StageStyle.UTILITY);
-					dialog.initOwner(this.getOriginatingWindow(event));
-					ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
-					FXMLLoader loader = new FXMLLoader(
-							PDQApplication.class.getResource("/resources/layouts/query-editor.fxml"), bundle);
-					Parent parent = (Parent) loader.load();
-					Scene scene = new Scene(parent);
-					dialog.setScene(scene);
-					dialog.setTitle(bundle.getString("query_editor.dialog.title"));
-
-					QueryEditorController queryEditorController = loader.getController();
-
-					queryEditorController.setQuery(this.currentQuery.get());
-					queryEditorController.setSchema(this.currentSchema.get());
-					queryEditorController.setQueriesListView(this.queriesListView);
-
-					parent.autosize();
-					dialog.showAndWait();
-					this.saveQuery(this.currentQuery.get());
-					ObservableList<ObservableQuery> list = this.queriesListView.getItems();
-					this.queriesListView.setItems(null);
-					this.queriesListView.setItems(list);
-					return;
-				} catch (IOException e) {
-					throw new UserInterfaceException(e.getMessage());
-				}
-			}
-		}
-	}
-
-	/**
 	 * Action that open's the runtime window and start a new runtime session.
 	 *
 	 * @param event the event
