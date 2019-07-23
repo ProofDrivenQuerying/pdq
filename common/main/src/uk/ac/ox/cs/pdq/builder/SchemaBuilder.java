@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.db.builder;
+package uk.ac.ox.cs.pdq.builder;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.fol.TGD;
  * performs various validations and checks upon initialization.
  * @author Julien Leblay
  */
-public class SchemaBuilder implements uk.ac.ox.cs.pdq.datasources.schemabuilder.Builder<Schema> {
+public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 
 	/** The relations. */
 	private Map<String, Relation> relations = new LinkedHashMap<>();

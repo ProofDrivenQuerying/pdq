@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.db.builder;
+package uk.ac.ox.cs.pdq.builder;
 
 import java.util.ArrayList;
 import java.util.HashMap;

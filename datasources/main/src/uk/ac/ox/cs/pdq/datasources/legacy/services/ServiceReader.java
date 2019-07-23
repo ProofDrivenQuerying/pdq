@@ -22,14 +22,15 @@ import org.xml.sax.SAXException;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLReader;
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
+import uk.ac.ox.cs.pdq.builder.Builder;
+import uk.ac.ox.cs.pdq.builder.BuilderException;
+import uk.ac.ox.cs.pdq.io.xml.AbstractXMLReader;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.policies.PolicyFactory;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.InputMethod;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.OutputMethod;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.PathOutputMethod;
-import uk.ac.ox.cs.pdq.datasources.schemabuilder.BuilderException;
+import uk.ac.ox.cs.pdq.util.QNames;
 import uk.ac.ox.cs.pdq.datasources.schemabuilder.SchemaDiscoverer;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;

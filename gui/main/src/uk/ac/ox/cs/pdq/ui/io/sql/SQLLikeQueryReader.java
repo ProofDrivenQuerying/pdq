@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.builder.ConjunctiveQueryBodyBuilder;
+import uk.ac.ox.cs.pdq.builder.ConjunctiveQueryBodyBuilder;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;

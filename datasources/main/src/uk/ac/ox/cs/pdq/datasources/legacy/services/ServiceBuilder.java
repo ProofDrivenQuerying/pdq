@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.OutputMethod;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTAttribute;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTRelation;
 import uk.ac.ox.cs.pdq.datasources.legacy.services.rest.RESTStaticInput;
-import uk.ac.ox.cs.pdq.datasources.schemabuilder.Builder;
+import uk.ac.ox.cs.pdq.builder.Builder;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;

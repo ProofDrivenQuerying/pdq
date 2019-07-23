@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.AbstractXMLWriter;
+import uk.ac.ox.cs.pdq.io.xml.AbstractXMLWriter;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 //import uk.ac.ox.cs.pdq.io.xml.SchemaWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;

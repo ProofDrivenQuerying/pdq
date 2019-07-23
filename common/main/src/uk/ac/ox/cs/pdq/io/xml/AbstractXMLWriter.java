@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import uk.ac.ox.cs.pdq.io.Writer;
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
+import uk.ac.ox.cs.pdq.util.QNames;
 
 // TODO: Auto-generated Javadoc
 /**

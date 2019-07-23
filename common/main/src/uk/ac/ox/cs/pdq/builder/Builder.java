@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources.schemabuilder;
+package uk.ac.ox.cs.pdq.builder;
 
 /**
  * Interface common to builder class.
