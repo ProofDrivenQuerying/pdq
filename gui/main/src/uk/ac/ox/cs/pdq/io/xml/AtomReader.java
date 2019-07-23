@@ -26,6 +26,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.util.Types;
+import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
 
 // TODO: Auto-generated Javadoc
 /**

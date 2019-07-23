@@ -8,9 +8,9 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.xml.AbstractXMLWriter;
-import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.io.xml.QueryWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
+import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
 
 // TODO: Auto-generated Javadoc
 /**

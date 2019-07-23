@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.builder.Builder;
-import uk.ac.ox.cs.pdq.builder.BuilderException;
+import uk.ac.ox.cs.pdq.datasources.schemabuilder.Builder;
+import uk.ac.ox.cs.pdq.datasources.schemabuilder.BuilderException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Term;

@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.ReaderException;
+import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
 
 // TODO: Auto-generated Javadoc
 /**

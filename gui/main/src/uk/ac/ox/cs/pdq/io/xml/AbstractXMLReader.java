@@ -8,6 +8,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 import uk.ac.ox.cs.pdq.io.Reader;
+import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
 
 // TODO: Auto-generated Javadoc
 /**
