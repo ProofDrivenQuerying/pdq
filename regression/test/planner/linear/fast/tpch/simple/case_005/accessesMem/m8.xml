@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Access access-type="IN_MEMORY_ACCESS_METHOD" name="m8" relation-name="partsupp">
-    <attribute name="ps_availqty" type="java.lang.Integer" input="false" mapsToRelationAttribute="ps_availqty"/>
-    <attribute name="ps_suppkey" type="java.lang.Integer" input="false" mapsToRelationAttribute="ps_suppkey"/>
-    <attribute name="ps_comment" type="java.lang.String" input="false" mapsToRelationAttribute="ps_comment"/>
-    <attribute name="ps_supplycost" type="java.math.BigDecimal" input="false" mapsToRelationAttribute="ps_supplycost"/>
-    <attribute name="ps_partkey" type="java.lang.Integer" input="false" mapsToRelationAttribute="ps_partkey"/>
-    <data-scv-file>./data/partsupp_m8.csv</data-scv-file>
-</Access>

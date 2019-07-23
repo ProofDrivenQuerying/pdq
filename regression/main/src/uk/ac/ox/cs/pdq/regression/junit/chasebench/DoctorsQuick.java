@@ -25,8 +25,9 @@ import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.io.CommonToPDQTranslator;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
-import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
@@ -34,7 +35,6 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
-import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
 /**
  * The test case called "Doctors" from the chasebench project, but with an extre condition that decreases the number of results and makes it run a lot faster.
  * <pre>
@@ -104,7 +104,7 @@ public class DoctorsQuick {
 
 	private void reasonTest(DatabaseManager dbm) throws SQLException, IOException, DatabaseException {
 		DatabaseChaseInstance state = new DatabaseChaseInstance(getTestFacts(), dbm);
-		RestrictedChaser chaser = new RestrictedChaser();
+		ParallelChaser chaser = new ParallelChaser();
 		long start = System.currentTimeMillis();
 		chaser.reasonUntilTermination(state, s.getAllDependencies());
 		long duration = System.currentTimeMillis() - start;

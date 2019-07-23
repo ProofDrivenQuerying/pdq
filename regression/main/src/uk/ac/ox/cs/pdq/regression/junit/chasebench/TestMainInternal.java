@@ -19,14 +19,14 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.io.CommonToPDQTranslator;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
 
 /**
  * @author Gabor
@@ -55,7 +55,7 @@ public class TestMainInternal {
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
 
-			RestrictedChaser chaser = new RestrictedChaser();
+			ParallelChaser chaser = new ParallelChaser();
 			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
@@ -109,7 +109,7 @@ public class TestMainInternal {
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
 
-			RestrictedChaser chaser = new RestrictedChaser();
+			ParallelChaser chaser = new ParallelChaser();
 			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
@@ -151,7 +151,7 @@ public class TestMainInternal {
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
 
-			RestrictedChaser chaser = new RestrictedChaser();
+			ParallelChaser chaser = new ParallelChaser();
 			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
@@ -211,7 +211,7 @@ public class TestMainInternal {
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
 
-			RestrictedChaser chaser = new RestrictedChaser();
+			ParallelChaser chaser = new ParallelChaser();
 			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
@@ -271,7 +271,7 @@ public class TestMainInternal {
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
 
-			RestrictedChaser chaser = new RestrictedChaser();
+			ParallelChaser chaser = new ParallelChaser();
 			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
@@ -313,7 +313,7 @@ public class TestMainInternal {
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
 
-			RestrictedChaser chaser = new RestrictedChaser();
+			ParallelChaser chaser = new ParallelChaser();
 			chaser.reasonUntilTermination(state, schema.getAllDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());

@@ -54,7 +54,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.plantree.PlanTree;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.ChaseConfiguration;
-import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
@@ -121,7 +121,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser();
+		ParallelChaser chaser = new ParallelChaser();
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
@@ -230,7 +230,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser();
+		ParallelChaser chaser = new ParallelChaser();
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
@@ -336,7 +336,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser();
+		ParallelChaser chaser = new ParallelChaser();
 
 		// Mock the cost estimator
 		//Create the cost estimator 
@@ -441,7 +441,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser();
+		ParallelChaser chaser = new ParallelChaser();
 
 		// Mock the cost estimator
 		//Create the cost estimator 
@@ -557,7 +557,7 @@ public class TestPostpruningRemoveFollowups extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser();
+		ParallelChaser chaser = new ParallelChaser();
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);

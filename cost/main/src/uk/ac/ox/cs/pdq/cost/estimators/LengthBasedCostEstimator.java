@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 
 /**
- * Cost estimator favoring query with more atoms.
+ * Cost estimator favoring query with fewer atoms.
  *
  * @author Julien Leblay
  * 

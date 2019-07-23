@@ -36,7 +36,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
@@ -531,7 +531,7 @@ public class TestAccessibleChaseInstance extends PdqTest {
 		DatabaseManager connection = null;
 		
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser();
+		ParallelChaser chaser = new ParallelChaser();
 		
 		try {
 			connection = createConnection(accessibleSchema);

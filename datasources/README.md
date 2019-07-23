@@ -1,27 +1,7 @@
-PDQ web services and dbms connector libraries
+# PDQ Datasources library
 
-The source code is available for free for non-commercial use.
-See the LICENCE file for details.
+The `datasources` library features the web services and dbms connector libraries.
 
-I. Requirements
-   
- * Java 1.7 or higher
- * Maven 2 or higher
-   You can build each library outside Maven, e.g. in your favorite IDE, but
-   you will have to managed dependencies manually.
+Please refer to the [main README](../README.md) for general information about the project, and for information about installation and usage.
 
-II. Dependencies
-
-Internal: common
-External: MySQL, Postgresql, org.apache.jcs, javax.ws.rs, 
-	com.fasterxml.jackson.core, com.fasterxml.jackson.jaxrs, 
-	com.fasterxml.jackson.dataformat, org.glassfish.jersey.core, 
-	org.glassfish.jersey.core
-
-III. Installation
-
-Under the top directory, type:
-
-	mvn install
-	
-The JAR will be built and placed in each project's "target/" directory.
+Please refer to the `package-info.java` files (or to the JavaDoc [[TODO]]) for specific information about each package.

@@ -1091,7 +1091,7 @@ public class SymmetricMemoryHashJoinTest {
 	@Test
 	public void integrationTestSql9() throws Exception {
 
-		String path = "../regression/test/planner/linear/fast/tpch/simple/case_005/";
+		String path = "../regression/test/runtime/DatabaseExamples/case_005/";
 		AccessRepository repo = AccessRepository.getRepository(path + "accessesMem/");
 		Schema s = IOManager.importSchema(new File(path + "schema.xml"));
 		PlanDecorator decor = new PlanDecorator(repo);

@@ -25,7 +25,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoning.chase.KTerminationChaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
@@ -42,7 +42,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 public class DatabaseChaseStateExporterTest extends PdqTest {
 
 	public DatabaseChaseInstance state;
-	private RestrictedChaser chaser;
+	private ParallelChaser chaser;
 
 	protected Schema schema;
 	private DatabaseManager connection;
@@ -230,7 +230,7 @@ public class DatabaseChaseStateExporterTest extends PdqTest {
 			Assert.assertTrue("6001215".equals(ret.get(0)));
 			System.out.println(chaser + " has " + ret);
 			
-			new RestrictedChaser().reasonUntilTermination(chaser, tpchStrings.getAllDependencies());
+			new ParallelChaser().reasonUntilTermination(chaser, tpchStrings.getAllDependencies());
 		}catch(Throwable t) {
 			t.printStackTrace();
 			Assert.fail();
