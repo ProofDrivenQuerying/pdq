@@ -34,7 +34,7 @@
 		<attribute name="date"           type="java.lang.String"  path="item/condition/date"/>
 		<attribute name="temperature"    type="java.lang.Double"  path="item/condition/temp"/>
 		<attribute name="condition"      type="java.lang.String"  path="item/condition/text"/>
-		<attribute name="code"           type="java.lang.Integer" path="item/condition/code"/>
+		<attribute name="code2"          type="java.lang.Integer" path="item/condition/code2"/>
 <access-method name="yh_wtr_woeid" type="LIMITED" inputs="0" cost="10.0"/>
 </relation>
 </relations>
