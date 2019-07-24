@@ -3,7 +3,7 @@
 <relations>
 <relation name="YahooPlaceCode" source="yahoo" size="10000000">
 		<attribute name="namespace" type="java.lang.String"  input-method="relation.1"/>
-		<attribute name="code"      type="java.lang.String"  input-method="relation.2"/>
+		<attribute name="code4"      type="java.lang.String"  input-method="relation.2"/>
 		<attribute name="woeid"     type="java.lang.Integer" path="woeid"/>
 		<access-method name="yh_geo_code" type="LIMITED" inputs="0,1" cost="1.0"/>
 </relation>
