@@ -117,7 +117,7 @@ public class ConjunctiveQueryBodyBuilder {
 				Term[] terms = new Term[ attributes.length ];
 
 				for( int i = 0; i < terms.length; i++ ) {
-					terms[i] = new Variable(rand() + attributes[i].getName());
+					terms[i] = new Variable(attributes[i].getName());
 				}
 
 				this.aliasToPredicateFormulas.put(aliasName, Atom.create( predicate, terms ));
