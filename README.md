@@ -1,4 +1,4 @@
-![PDQ logo](https://www.cs.ox.ac.uk/projects/pdq/images/logo.png)
+![PDQ logo](https://www.cs.ox.ac.uk/projects/pdq/images/pdq-logo.svg)
 
 # Proof-Driven Query Planning
 
