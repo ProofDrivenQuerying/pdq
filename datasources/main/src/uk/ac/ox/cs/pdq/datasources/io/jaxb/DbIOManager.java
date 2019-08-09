@@ -77,6 +77,9 @@ public class DbIOManager extends IOManager {
 		try {
 			if (!schema.exists())
 				throw new FileNotFoundException(schema.getAbsolutePath());
+			if (schema.getName().toLowerCase().endsWith(".txt")) {
+				return chasebanchSchemaRead(schema);
+			}
 			JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedDbSchema.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			AdaptedDbSchema customer = (AdaptedDbSchema) jaxbUnmarshaller.unmarshal(schema);

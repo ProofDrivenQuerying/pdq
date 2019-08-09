@@ -155,7 +155,11 @@ public class CommonToPDQTranslator {
 						terms.add(TypedConstant.create(t.replaceAll("\"", "")));
 					}
 				}
-				atoms.add(Atom.create(relations.get(name), terms.toArray(new Term[terms.size()])));
+				if (relations == null || relations.get(name)==null) {
+					atoms.add(Atom.create(Predicate.create(name, terms.size()), terms.toArray(new Term[terms.size()])));
+				} else {
+					atoms.add(Atom.create(relations.get(name), terms.toArray(new Term[terms.size()])));
+				}
 			}
 		}
 		return atoms;
