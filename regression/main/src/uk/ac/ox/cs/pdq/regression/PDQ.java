@@ -208,7 +208,11 @@ public class PDQ {
 		
 		// Specify the directory where the access methods are described 
 		File accesses = new File(directory, runtimeParams.getAccessDirectory());
-		runtime.setAccessRepository(AccessRepository.getRepository(accesses.getAbsolutePath()));
+		AccessRepository ar = AccessRepository.getRepository(accesses.getAbsolutePath());
+		runtime.setAccessRepository(ar);
+		for (String className: runtimeParams.getCustomAccessClassNames()) {
+			ar.addAccessFromJar(className);
+		}
 
 		Table results = null;
 

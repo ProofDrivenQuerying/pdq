@@ -3,6 +3,9 @@ package uk.ac.ox.cs.pdq.runtime;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -33,6 +36,8 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	protected Integer tuplesLimit;
 	@Parameter(description="Relative or absolute location of the access directory")
 	private String accessDirectory;
+	@Parameter(description="Semicolon (;) separated list of of fully qualified class names of custom made ExecutableAccessMethods")
+	private String customAccessMethods;
 	/**
 	 * Gets the version.
 	 *
@@ -180,5 +185,19 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 		"Executes a query by translating it to a SQL WITH query, "
 				+ "and delegating its execution to an external RDBMS.")
 		SQL_WITH}
+
+	public List<String> getCustomAccessClassNames() {
+		if (customAccessMethods==null || customAccessMethods.isEmpty())
+			return new ArrayList<>();
+		return Arrays.asList(customAccessMethods.split(";"));
+	}
+
+	public String getCustomAccessMethods() {
+		return customAccessMethods;
+	}
+
+	public void setCustomAccessMethods(String customAccessMethods) {
+		this.customAccessMethods = customAccessMethods;
+	}
 
 }
