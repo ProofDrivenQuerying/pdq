@@ -181,22 +181,15 @@ public class ExplorationSetUp {
 		Explorer explorer = null;
 		DatabaseManager databaseConnection;
 		try {
-			if (plannerParams.getUseInternalDatabase()) {
+			if (plannerParams.getUseInternalDatabase() || this.databaseParams.getUseInternalDatabaseManager()) {
 				// internal
-				databaseConnection = new InternalDatabaseManager(new MultiInstanceFactCache(),
-						GlobalCounterProvider.getNext("DatabaseInstanceId"));
+				databaseConnection = new InternalDatabaseManager(new MultiInstanceFactCache(),GlobalCounterProvider.getNext("DatabaseInstanceId"));
 				convertTypes = false; // the internal database can handle types correctly.
 			} else {
-				if (this.databaseParams.getUseInternalDatabaseManager()) {
-					databaseConnection = new InternalDatabaseManager(new MultiInstanceFactCache(),GlobalCounterProvider.getNext("DatabaseInstanceId"));
-					convertTypes = false; 
-				} else {
-					// external database.
-					databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(),
-						new ExternalDatabaseManager(this.databaseParams),GlobalCounterProvider.getNext("DatabaseInstanceId"));
-				}
+				// external database.
+				databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(),
+					new ExternalDatabaseManager(this.databaseParams),GlobalCounterProvider.getNext("DatabaseInstanceId"));
 			}
-			
 			databaseConnection.initialiseDatabaseForSchema(this.accessibleSchema);
 		} catch (DatabaseException e1) {
 			throw new PlannerException("Faild to create database",e1);
@@ -381,20 +374,15 @@ public class ExplorationSetUp {
 		dep.addAll(Arrays.asList(schema.getKeyDependencies()));
 		Relation[] rels = schema.getRelations();
 		for (int i = 0; i < rels.length; i++) {
-			rels[i] = createDatabaseRelation(rels[i]);
+			rels[i] = convertRelationAttributesToString(rels[i]);
 		}
 		return new Schema(rels,dep.toArray(new Dependency[dep.size()]));
 	}
 	/**
-	 * Creates the db relation. Currently codes in the position numbers into the
-	 * names, but this should change
-	 *
-	 * @param relation
-	 *            the relation
-	 * @return a new database relation with attributes x0,x1,...,x_{N-1}, Fact where
-	 *         x_i maps to the i-th relation's attribute
+	 * @param relation with String attributes
+	 * @return
 	 */
-	private static Relation createDatabaseRelation(Relation relation) {
+	private static Relation convertRelationAttributesToString(Relation relation) {
 		Attribute[] attributes = new Attribute[relation.getArity()];
 		for (int index = 0; index < relation.getArity(); index++) {
 			Attribute attribute = relation.getAttribute(index);
