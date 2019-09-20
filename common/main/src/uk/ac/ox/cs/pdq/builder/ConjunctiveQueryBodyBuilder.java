@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -12,15 +13,13 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.Types;
-import java.util.Random;
 
 
 // TODO: Auto-generated Javadoc
@@ -55,9 +54,6 @@ public class ConjunctiveQueryBodyBuilder {
 	/** The returns all vars. */
 	private boolean             returnsAllVars;
 	
-	/** The all terms. */
-	private Term[] 				terms;
-
 	private static char[] buf = new char[5];
 	
 	private static char[] symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
@@ -78,8 +74,6 @@ public class ConjunctiveQueryBodyBuilder {
 		
 		this.returnsAllVars = false;
 		
-		this.terms = terms;
-		
 		this.buildInitialPredicates();
 	}
 	
@@ -98,7 +92,6 @@ public class ConjunctiveQueryBodyBuilder {
 		log.debug("buildInitialPredicates. aliasToRelations = " + this.aliasToRelations);
 		
 		// Build an Atom from predicate and terms
-		int counter = 0;
 		for( Map.Entry<String, String> entry : this.aliasToRelations.entrySet() ) {
 			try
 			{
@@ -121,8 +114,6 @@ public class ConjunctiveQueryBodyBuilder {
 				}
 
 				this.aliasToPredicateFormulas.put(aliasName, Atom.create( predicate, terms ));
-
-				counter++;
 			}
 			catch(NullPointerException e)
 			{
@@ -206,9 +197,7 @@ public class ConjunctiveQueryBodyBuilder {
 
 		try
 		{
-			leftConstant = TypedConstant.create(
-				Types.cast(attribute.getType(),
-						leftConst.getConstant()));
+			leftConstant = TypedConstant.create(TypedConstant.convertStringToType(leftConst.getConstant(), attribute.getType()));
 		}
 		catch(Exception e)
 		{

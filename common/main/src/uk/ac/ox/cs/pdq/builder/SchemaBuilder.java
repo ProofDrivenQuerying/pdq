@@ -3,16 +3,14 @@ package uk.ac.ox.cs.pdq.builder;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import com.google.common.base.Preconditions;
 
+import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
@@ -132,8 +130,6 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @return this builder
 	 */
 	public SchemaBuilder addDependency(Dependency dep) {
-		for (Dependency ic : this.dependencies.values()) {
-		}
 		this.dependencies.put(((TGD) dep).getId(), dep);
 		return this;
 	}
@@ -161,7 +157,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @return this builder
 	 */
 	public SchemaBuilder removeRelation(Relation r) {
-		this.relations.remove(r);
+		this.relations.remove(r.getName());
 		return this;
 	}
 
@@ -288,10 +284,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param relation Relation
 	 */
 	private void ensureForeignKeyDefinition(Relation relation) {
-		for (ForeignKey fkey: relation.getForeignKeys()) {
-		}
-		for (LinearGuarded gd: this.findFKDependency(relation)) {
-		}
+		throw new RuntimeException(new NotImplementedException("ensureForeignKeyDefinition"));
 	}
 
 	/**
@@ -361,32 +354,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 *         (modulo the ID) to the given dependency.
 	 */
 	private TGD findDependency(TGD dep) {
-		if (this.dependencies != null) {
-			for (Dependency ic: this.dependencies.values()) {
-			}
-		}
-		return null;
-	}
-
-
-	/**
-	 * Find fk dependency.
-	 *
-	 * @param r Relation
-	 * @return the guarded dependency that is equal to the given one.
-	 */
-	private Collection<LinearGuarded> findFKDependency(Relation r) {
-		Set<LinearGuarded> result = new LinkedHashSet<>();
-		if (this.dependencies != null) {
-			for (Dependency ic: this.dependencies.values()) {
-				if (ic instanceof LinearGuarded
-						&& ((LinearGuarded) ic).getHeadAtoms().length == 1
-						&& ((LinearGuarded) ic).getGuard().getPredicate().equals(r)) {
-					result.add((LinearGuarded) ic);
-				}
-			}
-		}
-		return result;
+		throw new RuntimeException(new NotImplementedException("ensureForeignKeyDefinition"));
 	}
 
 	/**
@@ -425,14 +393,6 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 7049363904713889121L;
 
-		/**
-		 * Constructor for TemporaryRelation.
-		 * @param name String
-		 * @param attributes List<Attribute>
-		 */
-		public TemporaryRelation(String name, Attribute[] attributes) {
-			this(name, attributes, false);
-		}
 		/**
 		 * Constructor for TemporaryRelation.
 		 * @param name String

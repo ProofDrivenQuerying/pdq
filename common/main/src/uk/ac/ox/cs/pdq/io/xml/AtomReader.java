@@ -15,17 +15,16 @@ import org.xml.sax.SAXException;
 
 import com.google.common.base.Preconditions;
 
+import uk.ac.ox.cs.pdq.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.ReaderException;
-import uk.ac.ox.cs.pdq.util.Types;
 import uk.ac.ox.cs.pdq.util.QNames;
 
 // TODO: Auto-generated Javadoc
@@ -144,7 +143,8 @@ public class AtomReader extends AbstractXMLReader<Atom> {
 			if (value == null) {
 				throw new ReaderException("Syntax error. Constant requires a value attribute");
 			}
-			Object o = Types.cast(attribute.getType(), value);
+			
+			Object o = TypedConstant.convertStringToType(value, attribute.getType());
 			this.terms.add(TypedConstant.create(o));
 			this.position++;
 			break;

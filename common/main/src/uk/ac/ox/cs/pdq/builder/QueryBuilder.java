@@ -7,13 +7,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.builder.Builder;
-import uk.ac.ox.cs.pdq.builder.BuilderException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.Named;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -22,12 +19,6 @@ import uk.ac.ox.cs.pdq.util.Named;
  * @author Julien Leblay
  */
 public class QueryBuilder implements Builder<ConjunctiveQuery> {
-
-	/**  The temporary query name. */
-	private String name = null;
-
-	/**  The temporary query type. */
-	private String type = null;
 
 	/**  The temporary query head. */
 	private List<Term> head = new LinkedList<>();
@@ -51,9 +42,9 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 		Collection<Term> uniTerms = new ArrayList<>();
 		for (Term t : p.getTerms()) {
 			if (t.isVariable()) {
-				Term v = this.termIndex.get(((Named) t).getName());
+				Term v = this.termIndex.get(((Variable)t).getSymbol());
 				if (v == null) {
-					this.termIndex.put(((Named) t).getName(), t);
+					this.termIndex.put(((Variable)t).getSymbol(), t);
 					uniTerms.add(t);
 				} else {
 					uniTerms.add(v);
@@ -80,28 +71,6 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	}
 	
 	/**
-	 * Sets the name.
-	 *
-	 * @param n String
-	 * @return QueryBuilder
-	 */
-	public QueryBuilder setName(String n) {
-		this.name = n;
-		return this;
-	}
-	
-	/**
-	 * Sets the type.
-	 *
-	 * @param n String
-	 * @return QueryBuilder
-	 */
-	public QueryBuilder setType(String n) {
-		this.type = n;
-		return this;
-	}
-	
-	/**
 	 * Adds the head term.
 	 *
 	 * @param term Term
@@ -109,7 +78,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	 */
 	public QueryBuilder addHeadTerm(Term term) {
 		if (term.isVariable()) {
-			Term v = this.termIndex.get(((Named) term).getName());
+			Term v = this.termIndex.get(((Variable) term).getSymbol());
 			if (v != null) {
 				this.head.add(v);
 				return this;

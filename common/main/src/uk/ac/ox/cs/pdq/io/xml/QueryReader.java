@@ -75,7 +75,6 @@ public class QueryReader extends AbstractXMLReader<ConjunctiveQuery> {
 		switch(QNames.parse(qName)) {
 		case QUERY:
 			this.builder = new QueryBuilder();
-			this.builder.setType(this.getValue(atts, QNames.TYPE));
 			this.inBody = null;
 			break;
 
@@ -85,7 +84,6 @@ public class QueryReader extends AbstractXMLReader<ConjunctiveQuery> {
 
 		case HEAD:
 			this.inBody = false;
-			this.builder.setName(this.getValue(atts, QNames.NAME));
 			break;
 
 		case ATOM:
