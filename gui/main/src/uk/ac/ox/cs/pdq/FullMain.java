@@ -37,6 +37,7 @@ public class FullMain {
                 Reason.main(new_args);
                 break;
             default:
+            	PDQApplication.main(args);
                 break;
             }
 
