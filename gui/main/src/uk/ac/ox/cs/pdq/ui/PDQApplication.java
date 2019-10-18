@@ -116,7 +116,7 @@ public class PDQApplication extends Application {
     }
 
 	/**
-	 * Sets up the user-specific work director, where all user's schema/query/
+	 * Sets up the user-specific work directory, where all user's schema/query/
 	 * plans are stored. If the folder does not exist, it is created empty,
 	 * otherwise, existing schema/query/plans are loaded in memory.
 	 * @return a pointer to the work directory
