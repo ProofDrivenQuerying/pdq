@@ -937,6 +937,8 @@ public class PDQController {
 				String str = this.queryTextArea.textProperty().get();
 				SQLLikeQueryReader qr = new SQLLikeQueryReader(this.currentSchema.get().getSchema());
 				ConjunctiveQuery cjq = qr.fromString(str);
+				System.out.println("Saving query: " + str);
+				System.out.println("Converted query: " + cjq);
 				this.currentQuery.get().setQuery(cjq);
 				saveQuery(this.currentQuery.get());
 				Alert alert = new Alert(AlertType.INFORMATION);
@@ -963,8 +965,13 @@ public class PDQController {
 				String str = this.queryTextArea.textProperty().get();
 				SQLLikeQueryReader qr = new SQLLikeQueryReader(this.currentSchema.get().getSchema());
 				ConjunctiveQuery cjq = qr.fromString(str);
-				this.currentQuery.get().setQuery(cjq);
-				saveAsQuery(this.currentQuery.get());
+				ObservableQuery current = this.currentQuery.get();
+				ObservableQuery saveas = new ObservableQuery(current.getName()+"_copy",current.getDescription(), current.getFormula());
+				saveas.setQuery(cjq);
+				//this.selec
+				saveAsQuery(saveas);
+				
+				
 			} catch (Exception e) {
 				return;
 			}
@@ -1416,6 +1423,7 @@ public class PDQController {
 			} while ((file = new File(filename)).exists());
 			query.setFile(file);
 		}
+		System.out.println("Storing query: " + query.getFile().getAbsolutePath());
 		query.store();
 	}
 
@@ -1441,11 +1449,11 @@ public class PDQController {
 			// Set the currently selected schema/query/plan
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle(bundle.getString("application.dialog.saveas.query.title"));
-			File file = fileChooser.showSaveDialog(scene.getWindow());
-			PDQController.pdqController.addQuery(query, file.getPath());
+//			File file = fileChooser.showSaveDialog(scene.getWindow());
+//			PDQController.pdqController.addQuery(query, file.getPath());
 			scene.getWindow().hide();
 
-/*			SaveAsController saveasController = loader.getController();
+			SaveAsController saveasController = loader.getController();
 			saveasController.setSchema(this.currentSchema.get());
 			saveasController.setQueue(this.dataQueue);
 			saveasController.saveAs(query);
@@ -1455,7 +1463,9 @@ public class PDQController {
 					dialog.close();
 				}
 			});
-			dialog.showAndWait();*/
+			dialog.showAndWait();
+			
+			//loadQueries();			
 		} catch (IOException e) {
 			throw new UserInterfaceException(e);
 		}
