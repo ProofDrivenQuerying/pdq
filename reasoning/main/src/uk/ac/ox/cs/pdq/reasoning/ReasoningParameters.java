@@ -119,7 +119,7 @@ public class ReasoningParameters extends Parameters {
 			+ "a single application of the chase. "
 			+ "\nOnly applies to KTERMINATION_CHASE reasoning type.",
 			defaultValue = "Integer.MAX_VALUE")
-	protected Integer terminationK = Integer.MAX_VALUE;
+	protected Integer terminationK = 10;
 
 	/**
 	 * Gets the database driver.

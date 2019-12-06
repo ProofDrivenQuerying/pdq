@@ -156,6 +156,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
 		Map<String, Integer> stats = multiCache.getStatistics(this.databaseInstanceID);
 		Map<String, Term[]> formulaCache = new HashMap<>(); // used for analysing queries.
+		Map<String, Term[]> formulaCache2 = new HashMap<>(); // used for analysing queries.
 		leftQuery = InternalDatabaseManagerQueryOptimiser.optimise(leftQuery, stats);
 		rightQuery = InternalDatabaseManagerQueryOptimiser.optimise(rightQuery, stats);
 		
@@ -165,8 +166,9 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 			return new ArrayList<>();
 
 		// execute right
-		List<Atom> rightFacts = new ArrayList<>(); 
-		rightFacts = answerConjunctiveQueryRecursively(rightQuery.getBody(), rightQuery, this.databaseInstanceID, formulaCache, 0);
+		List<Atom> rightFacts = new ArrayList<>();
+		formulaCache2.putAll(formulaCache);
+		rightFacts = answerConjunctiveQueryRecursively(rightQuery.getBody(), rightQuery, this.databaseInstanceID, formulaCache2, 0);
 		if (rightFacts.isEmpty()) {
 			// nothing to sort out, convert to Match objects and go.
 			Term[] resultTerms = formulaCache.get(leftFacts.get(0).getPredicate().getName());
@@ -174,7 +176,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 		} else {
 			// convert the right results to match left result's signature
 			Term[] leftTerms = formulaCache.get(leftFacts.get(0).getPredicate().getName());
-			Term[] rightTerms = formulaCache.get(rightFacts.get(0).getPredicate().getName());
+			Term[] rightTerms = formulaCache2.get(rightFacts.get(0).getPredicate().getName());
 			List<Atom> convertedRightFacts = convertAtomsToNewSignature(rightQuery, rightFacts, leftTerms, Arrays.asList(rightTerms), leftFacts.get(0).getPredicate().getName());
 
 			// delete the parts we don't want
