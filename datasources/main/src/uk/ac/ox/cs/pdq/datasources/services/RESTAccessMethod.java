@@ -448,7 +448,7 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 
 		// Create a new table as input for the unmarshallers
 		Table table = new Table();
-				
+		System.out.println("Received " + table.size() + " amount of records.");
 		// Process the HTTP response and call response unmarshallers if appropriate
 		int status = response.getResponse().getStatus();
 		if (status == 200) {
