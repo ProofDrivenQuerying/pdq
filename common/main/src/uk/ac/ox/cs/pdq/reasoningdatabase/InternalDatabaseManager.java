@@ -276,7 +276,8 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	 * conjunction or two atoms. ( With one special case is when the query contains
 	 * only one Atom and no conjunctions) The recursive function will evaluate the
 	 * conjunction with the two atoms first and works its way up in the tree to the
-	 * root. 
+	 * root.  The formula argument is the current formula being processed, while the cq is the initial CQ-with-inequalities that 
+	 * this formula is part of.
 	 */
 	private List<Atom> answerConjunctiveQueryRecursively(Formula formula, ConjunctiveQuery cq, int instanceId, Map<String, Term[]> formulaCache, int recursionDepth)
 			throws DatabaseException {
