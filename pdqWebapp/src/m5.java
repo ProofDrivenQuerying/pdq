@@ -57,7 +57,7 @@ public class m5 extends HttpServlet {
 			out.println("<m5s>");
 			out.println("<partsupp>");
 			printGetString(out, 1, "ps_partkey");
-			printGetString(out, 2, "ps_suppkey");
+			printGetString(out, 1, "ps_suppkey");
 			printGetString(out, 3, "ps_availqty");
 			printGetString(out, 4, "ps_supplycost");
 			printGetString(out, 5, "ps_comment");

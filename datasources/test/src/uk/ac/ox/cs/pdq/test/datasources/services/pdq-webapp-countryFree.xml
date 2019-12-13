@@ -1,6 +1,6 @@
 <service name="pdgWebappCountryFree"
 			protocol="REST"
-			url="http://clpc463:8080/webapp/servlets/servlet/CountryFree" 
+			url="http://pdq-webapp.cs.ox.ac.uk:80/webapp/servlets/servlet/CountryFree" 
 			media-type="application/xml"
 			documentation=""
 			result-delimiter="places/place">
