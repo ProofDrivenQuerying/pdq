@@ -118,7 +118,7 @@ public class ReasoningParameters extends Parameters {
 	@Parameter(description = "Number of rounds of rule firings to perform, in "
 			+ "a single application of the chase. "
 			+ "\nOnly applies to KTERMINATION_CHASE reasoning type.",
-			defaultValue = "Integer.MAX_VALUE")
+			defaultValue = "10")
 	protected Integer terminationK = 10;
 
 	/**
