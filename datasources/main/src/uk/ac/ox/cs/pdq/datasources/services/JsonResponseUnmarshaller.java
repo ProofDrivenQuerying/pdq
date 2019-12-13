@@ -49,6 +49,7 @@ public class JsonResponseUnmarshaller extends ResponseUnmarshaller {
 					delim, r, result.getType(), inputs)) {
 				if(t != null) result.appendRow(t);
 			}
+			System.out.println("Received " + result.size() + " amount of records.");
 			return result;
 		} catch (IOException e) {
 			throw new AccessException(e.getMessage(), e);
