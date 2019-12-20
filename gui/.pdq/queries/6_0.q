@@ -31,5 +31,6 @@
 </atom>
 </body>
 <head name="Q">
+<variable name="city"/>
 </head>
 </query>
