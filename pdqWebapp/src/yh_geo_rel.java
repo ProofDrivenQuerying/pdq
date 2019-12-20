@@ -45,11 +45,8 @@ public class yh_geo_rel extends HttpServlet {
 			out.println("<name4>5</name4>");
 			out.println("<uri4>6</uri4>");
 			out.println("</YahooPlaceRelationship>");
-			out.println("</yh_geo_rel>");
-			
-			out.println("<yh_geo_rel>");
 			out.println("<YahooPlaceRelationship>");
-			out.println("<relation>descendant</relation>");
+			out.println("<relation>descendants</relation>");
 			out.println("<of>3</of>");
 			out.println("<woeid>5</woeid>");
 			out.println("<placeTypeName4>4</placeTypeName4>");
