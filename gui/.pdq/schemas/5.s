@@ -32,7 +32,7 @@
             <attribute name="target_organism" type="java.lang.String"/>
             <attribute name="target_pref_name" type="java.lang.String"/>
             <attribute name="uo_units" type="java.lang.String"/>
-            <access-method name="chembl_activity_free2"/>
+            <access-method name="chembl_activity_free"/>
         </relation>
     </relations>
     <dependencies>
