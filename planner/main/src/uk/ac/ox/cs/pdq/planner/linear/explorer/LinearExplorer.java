@@ -189,7 +189,7 @@ public abstract class LinearExplorer extends Explorer {
 	
 	public RelationalTerm getBestPlan() {
 		if (this.bestPlan!=null)
-			return PlanCreationUtility.createFinalProjection(this.accessibleQuery, this.bestPlan,this.connection.getSchema());
+			return PlanCreationUtility.createFinalProjection(this.query, this.bestPlan,this.connection.getSchema());
 		return null;
 	}
 
