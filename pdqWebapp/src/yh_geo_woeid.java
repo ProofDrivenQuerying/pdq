@@ -77,6 +77,27 @@ public class yh_geo_woeid extends HttpServlet {
 				printGetString(out, 17, "bboxWest");
 				printGetString(out, 18, "timezone");
 				out.println("</YahooPlaces>");
+				out.println("<YahooPlaces>");
+				printGetString(out, 3, "woeid");
+				printGetString(out, "China", "name");
+				printGetString(out, 3, "type");
+				printGetString(out, "PointofInterest", "placeTypeName");
+				printGetString(out, "China", "country");
+				printGetString(out, 6, "admin1");
+				printGetString(out, 7, "admin2");
+				printGetString(out, 8, "admin3");
+				printGetString(out, 9, "locality1");
+				printGetString(out, 10, "locality2");
+				printGetString(out, 11, "postal");
+				printGetString(out, 12, "centroid_lat");
+				printGetString(out, 13, "centroid_lng");
+				printGetString(out, 14, "bboxNorth");
+				printGetString(out, 15, "bboxSouth");
+				printGetString(out, 16, "bboxEast");
+				printGetString(out, 17, "bboxWest");
+				printGetString(out, 18, "timezone");
+				out.println("</YahooPlaces>");
+				
 				out.println("</yh_geo_woeid>");
 			}
 		} catch (Exception e) {
