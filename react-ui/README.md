@@ -1,6 +1,6 @@
-  PDQ react-ui
+  # PDQ react-ui
 
-  PQD web UI made in React.js with JavaScript
+  PQD web UI made with React.js
 
   The source code is available for free for non-commercial use.
   See the LICENCE file for details.

@@ -53,8 +53,6 @@ class AddQueryModal extends React.Component{
     })
   }
 
-
-
   submitEditedQuery(){
     this.props.verifyQuery(this.props.schemaID, this.props.numQueries, this.state.editedQuery).then(()=>{
       if(this.props.queryValidation.validQuery){

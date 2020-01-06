@@ -121,8 +121,8 @@ public class JsonController{
    *
    * @return SchemaName[]
    */
-  @RequestMapping(value="/init_schemas", method=RequestMethod.GET, produces="application/json")
-  public InitialInfo init_schemas(){
+  @RequestMapping(value="/initSchemas", method=RequestMethod.GET, produces="application/json")
+  public InitialInfo initSchemas(){
       Long userID = System.currentTimeMillis();
 
       SchemaName[] jsonSchemaList = new SchemaName[this.schemaList.size()];

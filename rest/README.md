@@ -1,5 +1,5 @@
 
-  PDQ RESTful web service
+  # PDQ RESTful web service
 
   The PDQ RESTful web service converts important PDQ objects, computations, and
   results into JSON objects and hosts them via a REST API.

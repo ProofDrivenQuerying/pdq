@@ -80,8 +80,7 @@ export default class GraphicalPlanModal extends React.Component {
            <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
             <PDQTree
                data={this.props.graphicalPlan}
-               width={750}
-               height={370}/>
+               />
            </div>
            : null}
           </ModalBody>

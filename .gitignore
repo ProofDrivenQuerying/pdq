@@ -2,7 +2,7 @@
 /.settings/
 /*.log
 /log/
-/.DS_Store
+.DS_Store
 /doc/
 /materialize/
 /workloadgen/

@@ -24,6 +24,8 @@ export default class PDQTree extends React.Component {
     this.onWheel = this.onWheel.bind(this);
     this.pan = this.pan.bind(this);
     this.zoom = this.zoom.bind(this);
+    this.setHeightandWidth = this.setHeightandWidth.bind(this);
+    this.getSize = this.getSize.bind(this);
   }
   state = {
     layout: 'polar',
@@ -33,7 +35,10 @@ export default class PDQTree extends React.Component {
     matrix: [1, 0, 0, 1, 30, 30],
     dragging: false,
     startX: 0,
-    startY: 0
+    startY: 0,
+    width: 0,
+    height: 0,
+    size: 0,
   };
 
   //Translational methods
@@ -98,15 +103,43 @@ export default class PDQTree extends React.Component {
     for (let i = 0; i < len; i++) {
       m[i] *= scale;
     }
-    m[4] += (1 - scale) * this.props.width / 2;
-    m[5] += (1 - scale) * this.props.height / 2;
+    m[4] += (1 - scale) * this.state.width / 2;
+    m[5] += (1 - scale) * this.state.height / 2;
     this.setState({ matrix: m });
+  }
+
+  getSize(data){
+    let size = 0;
+
+    let start = [data];
+
+    while (start.length !== 0) {
+      let current = start.pop();
+      size += 1;
+      if (current.children !== null){
+        current.children.forEach(child => start.push(child));
+      }
+    }
+    this.setState({size: size});
+  }
+
+  setHeightandWidth(height, width){
+    this.setState({
+      width : width,
+      height : height
+    });
+  }
+  componentDidMount() {
+    this.setHeightandWidth(window.innerHeight - 300, this.refs.svg.parentNode.clientWidth - 60);
+    this.getSize(this.props.data);
+    console.log(1 + (this.state.size / 10) );
+    this.zoom(1 - Math.pow(this.state.size / 10, 2) );
   }
 
   render() {
     const {
-      width,
-      height,
+      width = this.state.width,
+      height = this.state.height,
       margin = {
         top: 30,
         left: 30,
@@ -115,7 +148,7 @@ export default class PDQTree extends React.Component {
       }
     } = this.props;
 
-    const { layout, orientation, stepPercent } = this.state;
+    const { layout, orientation, stepPercent, size } = this.state;
 
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -145,7 +178,7 @@ export default class PDQTree extends React.Component {
     }
 
     return (
-      <div>
+      <div ref="svg">
         <svg
           width={width}
           height={height}
@@ -198,9 +231,8 @@ export default class PDQTree extends React.Component {
                   })}
 
                   {data.descendants().map((node, key) => {
-                    const width = 25;
-                    const height = 15;
-
+                    const width = (size <= 45) ? 25 : 17;
+                    const height = (size <= 45) ? 15 : 12;
                     let top;
                     let left;
                     if (layout === 'polar') {
@@ -216,12 +248,11 @@ export default class PDQTree extends React.Component {
                         left = node.y;
                       }
                     }
-
                     return (
                       <Group top={top} left={left} key={key}>
                         {node.depth === 0 && (
                           <circle
-                            r={12}
+                            r={size <= 45 ? 12 : 7}
                             fill='#428bca'
                             onClick={() => {
                               this.setState({ selectedNode: node.data });
@@ -236,7 +267,7 @@ export default class PDQTree extends React.Component {
                             width={width}
                             y={-height / 2}
                             x={-width / 2}
-                            fill={node.data.children ? '#428bca' : node.data.type === "SUCCESSFUL" ? "#5cb85c" : '	#d9534f'}
+                            fill={node.data.children ? '#428bca' : node.data.type === "SUCCESSFUL" ? "#5cb85c" : '#d9534f'}
                             rx={!node.data.children ? 10 : 0}
                             onClick={(e) => {
                               this.setState({ selectedNode: node.data });

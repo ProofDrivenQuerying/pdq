@@ -28,7 +28,7 @@ const PlanBody = ({plan, getPlan, run, planRun, schemaList, userID}) => {
   let bigButton = {
     float: "left", height:"4rem", margin:"1rem 1rem 1rem 1rem", width: "11rem"
   }
-  let graphicalPlanName = "Plan Exploration Graph";
+  let graphicalPlanName = "Exploration Graph";
   let planViewName = "View Plan";
   let runViewName = "Run Results";
   return(
