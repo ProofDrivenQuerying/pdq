@@ -120,7 +120,12 @@ export default class PDQTree extends React.Component {
         current.children.forEach(child => start.push(child));
       }
     }
-    this.setState({size: size});
+    console.log(size);
+    this.setState({
+      size: size
+    }, (size) => {
+      this.zoom(1.0 - this.state.size / 100 )
+    });
   }
 
   setHeightandWidth(height, width){
@@ -132,8 +137,6 @@ export default class PDQTree extends React.Component {
   componentDidMount() {
     this.setHeightandWidth(window.innerHeight - 300, this.refs.svg.parentNode.clientWidth - 60);
     this.getSize(this.props.data);
-    console.log(1 + (this.state.size / 10) );
-    this.zoom(1 - Math.pow(this.state.size / 10, 2) );
   }
 
   render() {
@@ -164,16 +167,17 @@ export default class PDQTree extends React.Component {
         x: innerWidth / 2,
         y: innerHeight / 2
       };
+      console.log(this.state.size);
       sizeWidth = 2 * Math.PI;
-      sizeHeight = Math.min(innerWidth, innerHeight) / 2;
+      sizeHeight = (this.state.size <= 40) ? Math.min(innerWidth, innerHeight) : Math.min(innerWidth, innerHeight) * (1 + this.state.size / 100 ) / 2;
     } else {
       origin = { x: 0, y: 0 };
       if (orientation === 'vertical') {
-        sizeWidth = innerWidth;
+        sizeWidth = (this.state.size <= 40) ? innerWidth : innerWidth * (1 + this.state.size / 100 );
         sizeHeight = innerHeight;
       } else {
-        sizeWidth = innerHeight;
-        sizeHeight = innerWidth;
+        sizeWidth = (this.state.size <= 40) ? innerHeight : innerHeight * (1.5 + this.state.size / 100 );
+        sizeHeight = (this.state.size <= 40) ? innerWidth : innerWidth * (1 + this.state.size / 100 );
       }
     }
 
@@ -201,7 +205,7 @@ export default class PDQTree extends React.Component {
 
             <Tree
               root={hierarchy(data, d => ( d.children))}
-              size={[sizeWidth, sizeHeight]}
+              size={[sizeWidth , sizeHeight]}
               separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}>
               {data => (
                 <Group top={origin.y} left={origin.x}>
@@ -231,8 +235,8 @@ export default class PDQTree extends React.Component {
                   })}
 
                   {data.descendants().map((node, key) => {
-                    const width = (size <= 45) ? 25 : 17;
-                    const height = (size <= 45) ? 15 : 12;
+                    const width = 25;
+                    const height = 15;
                     let top;
                     let left;
                     if (layout === 'polar') {
@@ -252,7 +256,7 @@ export default class PDQTree extends React.Component {
                       <Group top={top} left={left} key={key}>
                         {node.depth === 0 && (
                           <circle
-                            r={size <= 45 ? 12 : 7}
+                            r={12}
                             fill='#428bca'
                             onClick={() => {
                               this.setState({ selectedNode: node.data });
