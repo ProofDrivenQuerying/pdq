@@ -120,11 +120,14 @@ export default class PDQTree extends React.Component {
         current.children.forEach(child => start.push(child));
       }
     }
-    console.log(size);
     this.setState({
       size: size
     }, (size) => {
-      this.zoom(1.0 - this.state.size / 100 )
+      if (this.state.size < 10){
+        this.zoom(.55)
+
+      }
+      this.zoom(1.0 - this.state.size / 100 );
     });
   }
 
@@ -151,7 +154,7 @@ export default class PDQTree extends React.Component {
       }
     } = this.props;
 
-    const { layout, orientation, stepPercent, size } = this.state;
+    const { layout, orientation, stepPercent } = this.state;
 
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -167,17 +170,16 @@ export default class PDQTree extends React.Component {
         x: innerWidth / 2,
         y: innerHeight / 2
       };
-      console.log(this.state.size);
       sizeWidth = 2 * Math.PI;
-      sizeHeight = (this.state.size <= 40) ? Math.min(innerWidth, innerHeight) : Math.min(innerWidth, innerHeight) * (1 + this.state.size / 100 ) / 2;
+      sizeHeight = (this.state.size <= 40) ? Math.min(innerWidth, innerHeight) : Math.min(innerWidth, innerHeight) * (1.5 + this.state.size / 100 ) / 2;
     } else {
       origin = { x: 0, y: 0 };
       if (orientation === 'vertical') {
-        sizeWidth = (this.state.size <= 40) ? innerWidth : innerWidth * (1 + this.state.size / 100 );
+        sizeWidth = (this.state.size <= 40) ? innerWidth : innerWidth * (1.2 + this.state.size / 100 );
         sizeHeight = innerHeight;
       } else {
-        sizeWidth = (this.state.size <= 40) ? innerHeight : innerHeight * (1.5 + this.state.size / 100 );
-        sizeHeight = (this.state.size <= 40) ? innerWidth : innerWidth * (1 + this.state.size / 100 );
+        sizeWidth = (this.state.size <= 40) ? innerHeight : innerHeight * (1 + this.state.size / 100 );
+        sizeHeight = (this.state.size <= 40) ? innerWidth : innerWidth * (1.5 + this.state.size / 100 );
       }
     }
 
