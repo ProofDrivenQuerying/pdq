@@ -51,7 +51,7 @@ public class PrefuseEventHandler {
 	private AggregateTable aggregateTable;
 	
 	/** The visualization. */
-	private Visualization visualization;
+	public Visualization visualization;
 	
 	/** The path highlight control. */
 	private PathHighlightControl pathHighlightControl;
@@ -63,16 +63,19 @@ public class PrefuseEventHandler {
 	private String nodeGroup;
 	
 	/** The color action. */
-	private String colorAction;
+	public String colorAction;
 	
 	/** The layout action. */
-	private String layoutAction;
+	public String layoutAction;
 	
 	/** The path highlight slider. */
 	private JSlider pathHighlightSlider;
 	
 	/** The paths. */
-	private final SortedSet<Path> paths = new TreeSet<Path>(new PathComparator());
+	public final SortedSet<Path> paths = new TreeSet<Path>(new PathComparator());
+
+	/** The shapes. */
+	private ArrayList<PDQShape> shapes = null;
 
 	/**
 	 * Instantiates a new prefuse event handler.
@@ -102,6 +105,7 @@ public class PrefuseEventHandler {
 		this.colorAction = colorAction;
 		this.layoutAction = layoutAction;
 		this.pathHighlightSlider = pathsHighlightSlider;
+		this.shapes = null;
 	}
 
 	
@@ -123,34 +127,25 @@ public class PrefuseEventHandler {
 			Metadata metadata = node.getMetadata();
 
 			if (metadata instanceof EquivalenceMetadata) {
-				Utils.addEdge(this.graph, node, node.getEquivalentNode(), EdgeTypes.POINTER);
+				shapes.add(new PDQEdge(this.graph, node, node.getEquivalentNode(), EdgeTypes.POINTER));
 			} 
 			else if (metadata instanceof BestPlanMetadata) {
-				Path path = new Path(((BestPlanMetadata) metadata).getBestPathToSuccess(), ((BestPlanMetadata) metadata).getPlan(), new DoubleCost(0.0));
-				this.paths.add(path);
-				log.debug(Joiner.on("\n").join(this.paths));
-
-				this.updatePathHighlightControl();
-				this.updatePathHighlightSlider();
-				this.updateAggregateTable();
-
+				shapes.add(new PDQPath(this.graph, this, ((BestPlanMetadata) metadata).getBestPathToSuccess(), ((BestPlanMetadata) metadata).getPlan(),  new DoubleCost(0.0)));
 			} 
 			else if (metadata instanceof CreationMetadata){
 				if (((CreationMetadata) metadata).getParent() != null) {
-					Utils.addNode(this.graph, node);
-					Utils.addEdge(this.graph, ((CreationMetadata) metadata).getParent(), node, EdgeTypes.HIERARCHY);
+					shapes.add(new PDQNode(this.graph, node));
+					shapes.add(new PDQEdge(this.graph, ((CreationMetadata) metadata).getParent(), node, EdgeTypes.HIERARCHY));
 				} else {
-					Utils.addNode(this.graph, node);
+					shapes.add(new PDQNode(this.graph, node));
 				}
 			}
 
-			Utils.modifyNodeProperty(this.graph, node.getId(), "type", node.getStatus());
+			shapes.add(new PDQModify(this.graph, this, node.getId(), "type", node.getStatus()));
 			//		if (metadata.getParent() != null) {
 			//			Utils.modifyNodeProperty(this.graph, metadata.getParent().getId(), "type", metadata.getParent().getStatus());
 			//		}
 
-			this.visualization.run(this.colorAction);
-			this.visualization.run(this.layoutAction);
 		}
 		catch(Exception e)
 		{
@@ -211,4 +206,16 @@ public class PrefuseEventHandler {
 	}
 
 
+	public void initialiseShapes()
+	{
+		shapes = new ArrayList<PDQShape>();
+	}
+	
+	public void drawShapes()
+	{
+		for(PDQShape s : shapes)
+		{
+			s.drawShape();
+		}
+	}
 }

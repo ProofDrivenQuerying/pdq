@@ -203,6 +203,9 @@ public class PlannerController {
 
 	/**  Sorted set of the plans found *. */
 	private TreeSet<ObservableSearchState> plansFound = new TreeSet<>(new PlanComparator());
+	
+	/**  PrefuseEventHandler *. */
+	private PrefuseEventHandler peh = null;
 
 	/**
 	 * Controller's widget's initialization.
@@ -382,12 +385,12 @@ public class PlannerController {
 				visualizer.addControl(visualizer.getPathHighlightControl());
 				visualizer.addControl(new HoverControl());
 				visualizer.addControl(new ClickControl(PlannerController.this.dataQueue));
-				planner.registerEventHandler(
-						new PrefuseEventHandler(visualizer.getGraph(),
+				peh = new PrefuseEventHandler(visualizer.getGraph(),
 								visualizer.getAggregateTable(),  visualizer.getVisualization(), 
 								"aggregates", "graph.nodes", "color", "layout",
 								visualizer.getPathHighlightControl(),
-								visualizer.getPathsHighlightBox()));
+								visualizer.getPathsHighlightBox());
+				planner.registerEventHandler(peh);
 				swingNode.setContent(visualizer);
 			}
 		});
@@ -408,10 +411,10 @@ public class PlannerController {
 		Preconditions.checkNotNull(this.schema);
 		Preconditions.checkNotNull(this.query);
 		if (this.pauser == null) {
-
 			final ExplorationSetUp planner = new ExplorationSetUp(this.params, this.costParams, this.reasoningParams, this.databaseParams, this.schema);
 			registerEvents(planner);
-			this.pauser = new Pauser(this.dataQueue, 99999);
+            peh.initialiseShapes();
+            this.pauser = new Pauser(this.dataQueue, 99999);
 			ExecutorService executor = Executors.newFixedThreadPool(2);
 			executor.execute(this.pauser);
 			this.future = executor.submit(() -> {
@@ -433,6 +436,7 @@ public class PlannerController {
 					log.error(e.getMessage(), e);
 					throw new IllegalStateException();
 				}
+				peh.drawShapes();
 				PlannerController.this.dataQueue.add(Status.COMPLETE);
 			});
 		} else {

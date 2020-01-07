@@ -868,6 +868,7 @@ public class PDQController {
 				runtimeController.setQuery(this.currentQuery.get());
 				// runtimeController.setExecutorType(this.settingsExecutorTypeList.getValue());
 				runtimeController.setTuplesLimit(toInteger(this.settingsOutputTuplesTextField.getText()));
+				runtimeController.decoratePlan();
 				dialog.setOnCloseRequest((WindowEvent arg0) -> runtimeController.interruptRuntimeThreads());
 				dialog.showAndWait();
 			} catch (IOException e) {
@@ -1266,7 +1267,7 @@ public class PDQController {
 			if (plan != null)	PDQController.this.savePlan(newValue);
 			
 			PDQController.this.runRuntimeButton.setDisable(plan == null);
-			PDQController.this.setSettingsEditable(plan == null);
+//			PDQController.this.setSettingsEditable(plan == null);
 			PDQController.this.displayPlan(plan);
 			PDQController.this.displayProof(newValue.getProof());
 			PDQController.this.displaySettings(newValue);
@@ -1316,11 +1317,11 @@ public class PDQController {
 	void displaySettings(ObservablePlan p) {
 		PDQController.this.settingsTimeoutTextField.setText(PDQController.nullToEmpty(p.getTimeout()));
 		PDQController.this.settingsMaxIterationsTextField.setText(PDQController.nullToEmpty(p.getMaxIterations()));
-		PDQController.this.settingsQueryMatchIntervalTextField
-				.setText(PDQController.nullToEmpty(p.getQueryMatchInterval()));
+		PDQController.this.settingsQueryMatchIntervalTextField.setText(PDQController.nullToEmpty(p.getQueryMatchInterval()));
 		PDQController.this.settingsPlannerTypeList.getSelectionModel().select(p.getPlannerType());
 		PDQController.this.settingsReasoningTypeList.getSelectionModel().select(p.getReasoningType());
 		PDQController.this.settingsCostTypeList.getSelectionModel().select(p.getCostType());
+		setSettingsEditable(true);
 	}
 
 	/**
@@ -1336,7 +1337,8 @@ public class PDQController {
 		PDQController.this.settingsPlannerTypeList.setDisable(!editable);
 		PDQController.this.settingsReasoningTypeList.setDisable(!editable);
 		PDQController.this.settingsCostTypeList.setDisable(!editable);
-	}
+		PDQController.this.settingsOutputTuplesTextField.setEditable(editable);
+		}
 
 	/** The application's user-specific work directory. */
 	private final File workDirectory;
