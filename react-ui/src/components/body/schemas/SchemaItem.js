@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getRelations } from '../../../actions/getRelations';
 import { getDependencies } from '../../../actions/getDependencies';
-import RelationsModal from './RelationsModal';
-import DependenciesModal from './DependenciesModal';
+import Relations from './Relations';
+import Dependencies from './Dependencies';
 import Button from 'react-bootstrap/Button'
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import ListGroup from 'react-bootstrap/ListGroup';
 
+import ListGroup from 'react-bootstrap/ListGroup';
 
 /**
  * SchemaName returns a button for given schema.
@@ -53,40 +53,47 @@ import ListGroup from 'react-bootstrap/ListGroup';
          */
        }
        {this.props.schemaList.selectedSID != null ?
-            <div>
+            <div className = 'my-2'>
               {this.props.schemaFromList.id === this.props.schemaList.selectedSID ?
-                <ListGroup horizontal variant='flush'>
-                  <ListGroup.Item active id = {this.props.schemaFromList.id} block>
+                <ListGroup horizontal>
+                  <ListGroup.Item
+                  active
+                  id = {this.props.schemaFromList.id}
+                  block
+                  variant='primary'
+                  >
                     {this.props.schemaFromList.name}
                   </ListGroup.Item>
 
-                  <ListGroup.Item action>
-                    <RelationsModal
+                  <ListGroup.Item action variant='primary'>
+                    <Relations
                       getRelations={this.props.getRelations}
                       relationList = {this.props.relationList}
                       schemaFromList = {this.props.schemaFromList}
                       />
                   </ListGroup.Item>
 
-                  <ListGroup.Item action>
-                    <DependenciesModal
+                  <ListGroup.Item action variant='primary'>
+                    <Dependencies
                       schemaFromList = {this.props.schemaFromList}
                       getDependencies = {this.props.getDependencies}
                       dependencyLists = {this.props.dependencyLists}
-                      color={"link"}/>
+                      />
                   </ListGroup.Item>
                 </ListGroup>
                 :
-                <ListGroup.Item
-                id = {this.props.schemaFromList.id}
-                action
-                onClick={(e) => {
-                  this.props.setSchema(this.props.schemaFromList.id);
-                  this.props.setQuery(0);
-                  }}
-                >
-                  {this.props.schemaFromList.name}
-                </ListGroup.Item>
+                <ListGroup>
+                  <ListGroup.Item
+                  id = {this.props.schemaFromList.id}
+                  action
+                  onClick={(e) => {
+                    this.props.setSchema(this.props.schemaFromList.id);
+                    this.props.setQuery(0);
+                    }}
+                  >
+                    {this.props.schemaFromList.name}
+                  </ListGroup.Item>
+                </ListGroup>
               }
           </div>
           :

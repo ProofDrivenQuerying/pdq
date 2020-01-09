@@ -1,5 +1,5 @@
 import React from 'react';
-import SchemaBody from './schemas/SchemaBody';
+import Schemas from './schemas/Schemas';
 import QueryBody from './queries/QueryBody';
 import PlanBody from './plan/PlanBody';
 import Container from 'react-bootstrap/Container';
@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col';
 import { connect } from 'react-redux';
 
 /**
- * Renders the app's body. Displays SchemaBody, QueryBody, and PlanBody
+ * Renders the app's body. Displays Schemas, QueryBody, and PlanBody
  * components.
  * Called from App.js.
  *
@@ -21,7 +21,7 @@ const Body = ({selectedSchema, body, queryList}) => {
       <Container fluid = {true}>
         <Row>
           <Col className='border'>
-            <SchemaBody/>
+            <Schemas/>
           </Col>
           <Col className='border'>
             <QueryBody/>

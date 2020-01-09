@@ -1,8 +1,8 @@
 import React from 'react';
 import { FaListUl } from 'react-icons/fa';
 import PopoutWindow from '../Popout';
-import { Button,
-         Table,
+import Button from 'react-bootstrap/Button'
+import { Table,
          Modal,
          ModalHeader,
          ModalBody,
@@ -10,7 +10,7 @@ import { Button,
          Tooltip
 } from 'reactstrap';
 
-export default class RelationModal extends React.Component{
+export default class Relations extends React.Component{
   constructor(props){
     super(props);
     this.toggleRelationsModal = this.toggleRelationsModal.bind(this);
@@ -44,7 +44,7 @@ export default class RelationModal extends React.Component{
       <div>
         <Button
           id={"RelationButton"+ this.props.schemaFromList.id}
-          color={'link'}
+          variant='link'
           onClick={()=> this.openRelations(this.props.schemaFromList.id)}
         >
           <FaListUl/>
@@ -69,7 +69,7 @@ export default class RelationModal extends React.Component{
             {this.props.relationList.relationList.relations.map((relation, index)=>{
               return(
                 <li key={"relation"+index}>
-                  <NestedRelationsModal relation={relation}/>
+                  <NestedRelations relation={relation}/>
                 </li>
               )
             })}
@@ -91,7 +91,7 @@ export default class RelationModal extends React.Component{
 }
 
 //nested modal class that displays each relation's information
- class NestedRelationsModal extends React.Component {
+ class NestedRelations extends React.Component {
    constructor(props) {
      super(props);
      this.state = {

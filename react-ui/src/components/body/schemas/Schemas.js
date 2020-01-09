@@ -11,7 +11,10 @@ import './schemabody.css';
  * @author Camilo Ortiz
  */
 
-const SchemaBody = ({ schemaList}) => {
+const Schemas = ({ schemaList}) => {
+  /*
+    Contains a Header and SchemaList (a list of selectable schemas)
+  */
     return(
       <div>
         <header className='body-name-schema'>
@@ -26,6 +29,10 @@ const SchemaBody = ({ schemaList}) => {
 }
 
 const SchemaList = ({ schemaList}) => {
+  /*
+    SchemaList maps the schemas stored in the state (schemaList) to SchemaItem
+    components to create a list of schemas
+  */
   if(!schemaList.isFetching){
     const schemas = schemaList.schemas.map((schemaFromList, index) =>
         <SchemaItem
@@ -33,9 +40,9 @@ const SchemaList = ({ schemaList}) => {
           key={"schema"+index}/>
       );
       return (
-        <ListGroup>
+        <div>
           {schemas}
-        </ListGroup>
+        </div>
     );
   }
   else{
@@ -50,4 +57,4 @@ const mapStatesToProps = (state) =>{
   })
 };
 
-export default connect(mapStatesToProps, null)(SchemaBody);
+export default connect(mapStatesToProps, null)(Schemas);

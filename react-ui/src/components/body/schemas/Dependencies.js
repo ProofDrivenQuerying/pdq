@@ -15,7 +15,7 @@ import { Button,
          TabPane,
 } from 'reactstrap';
 
-export default class RelationModal extends React.Component{
+export default class Dependencies extends React.Component{
   constructor(props){
     super(props);
     this.toggleDependenciesModal = this.toggleDependenciesModal.bind(this);
@@ -58,7 +58,7 @@ export default class RelationModal extends React.Component{
       <div>
         <Button
           id={"DependenciesButton"+ this.props.schemaFromList.id}
-          color={this.props.color}
+          color={'link'}
           onClick={()=> this.openDependencies(this.props.schemaFromList.id)}
         >
           <FaShareAlt/>
@@ -107,7 +107,7 @@ export default class RelationModal extends React.Component{
                   {this.props.dependencyLists.dependencyLists.TGDDependencies.map((dependency, index)=>{
                     return(
                       <li key={"TGDDependency"+index}>
-                        <NestedDependenciesModal
+                        <NestedDependencies
                           name={"TGD Dependency " + index}
                           dependency={dependency}
                         />
@@ -131,7 +131,7 @@ export default class RelationModal extends React.Component{
                   {this.props.dependencyLists.dependencyLists.EGDDependencies.map((dependency, index)=>{
                     return(
                       <li key={"EGDDependency"+index}>
-                        <NestedDependenciesModal
+                        <NestedDependencies
                           name={"EGD Dependency " + index}
                           dependency={dependency}
                         />
@@ -161,7 +161,7 @@ export default class RelationModal extends React.Component{
 }
 
 //nested modal class that displays each relation's information
- class NestedDependenciesModal extends React.Component {
+ class NestedDependencies extends React.Component {
    constructor(props) {
      super(props);
      this.state = {
