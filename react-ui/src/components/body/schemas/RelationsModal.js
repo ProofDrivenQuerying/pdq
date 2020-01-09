@@ -44,7 +44,7 @@ export default class RelationModal extends React.Component{
       <div>
         <Button
           id={"RelationButton"+ this.props.schemaFromList.id}
-          color={this.props.color}
+          color={'link'}
           onClick={()=> this.openRelations(this.props.schemaFromList.id)}
         >
           <FaListUl/>

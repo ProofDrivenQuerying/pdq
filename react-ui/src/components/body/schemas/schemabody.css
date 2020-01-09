@@ -5,7 +5,6 @@
   display: flex;
   text-align: center;
   flex-direction: column;
-  height: 26rem;
 
   position:relative;
   overflow-y: scroll;

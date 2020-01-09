@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Header from './components//header/Header.js';
-import Body from './components/body/Body.js';
+import Header from './components/Header';
+import Body from './components/body/Body';
 import { connect } from 'react-redux';
 import { getInitialData } from './actions/getSimpleSchemaList.js';
 
@@ -20,7 +20,7 @@ class App extends Component{
   render(){
     console.log(this.props);
     return(
-      <div style={{height:"100vh"}}>
+      <div>
         <Header/>
         <Body/>
       </div>

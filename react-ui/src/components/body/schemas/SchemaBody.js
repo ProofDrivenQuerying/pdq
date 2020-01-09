@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import SchemaName from './SchemaName';
+import SchemaItem from './SchemaItem';
+import ListGroup from 'react-bootstrap/ListGroup';
 import './schemabody.css';
 
 
@@ -18,21 +19,24 @@ const SchemaBody = ({ schemaList}) => {
         </header>
 
         <div className='schemas'>
-          <SchemaBlock schemaList={schemaList}/>
+          <SchemaList schemaList={schemaList}/>
         </div>
       </div>
     )
 }
 
-const SchemaBlock = ({ schemaList}) => {
+const SchemaList = ({ schemaList}) => {
   if(!schemaList.isFetching){
-    return schemaList.schemas.map((schemaFromList, index) => {
-      return(
-        <SchemaName
+    const schemas = schemaList.schemas.map((schemaFromList, index) =>
+        <SchemaItem
           schemaFromList={schemaFromList}
           key={"schema"+index}/>
-      )
-    })
+      );
+      return (
+        <ListGroup>
+          {schemas}
+        </ListGroup>
+    );
   }
   else{
     return null;

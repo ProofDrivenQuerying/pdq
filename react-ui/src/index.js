@@ -1,14 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import './bootstrap.css';
 import App from './App';
-
-// import RelationsModal from './components/body/schemas/RelationsModal';
-
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { store } from './reducers/store';
+import './index.css';
+import '../node_modules/bootstrap/dist/css/bootstrap.css';
 
 /**
  * index.js uses ReactDom to render JSX code as HTML for the client.
@@ -28,12 +25,6 @@ ReactDOM.render(
   </Provider>,
   rootElement
 );
-
-// const relationsElem = document.getElementById('relations');
-// ReactDOM.render(
-//     <RelationsModal/>,
-//   relationsElem
-// );
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

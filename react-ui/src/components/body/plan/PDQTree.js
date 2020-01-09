@@ -13,6 +13,7 @@ import { LinkHorizontal,
  * PDQTree creates an svg of the plan search tree.
  * Visualized in GraphicalPlanModal.
  *
+ * @author Camilo Ortiz
  */
 
 export default class PDQTree extends React.Component {
@@ -123,8 +124,8 @@ export default class PDQTree extends React.Component {
     this.setState({
       size: size
     }, (size) => {
-      if (this.state.size < 10){
-        this.zoom(.55)
+      if (this.state.size < 6){
+        this.zoom(.60)
 
       }
       this.zoom(1.0 - this.state.size / 100 );

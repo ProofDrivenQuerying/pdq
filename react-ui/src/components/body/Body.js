@@ -2,6 +2,9 @@ import React from 'react';
 import SchemaBody from './schemas/SchemaBody';
 import QueryBody from './queries/QueryBody';
 import PlanBody from './plan/PlanBody';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { connect } from 'react-redux';
 
 /**
@@ -14,39 +17,27 @@ import { connect } from 'react-redux';
 
 const Body = ({selectedSchema, body, queryList}) => {
   return (
-    <div style={{display:"flex", flexDirection:"row", width:"100vw"}}>
-
-      <div style={{margin: "2rem 1rem 0rem 2rem",
-                   border:"2px solid #E0E0E0",
-                   borderRadius:"25px",
-                   width: "14rem"}}
-      >
-        <SchemaBody/>
-      </div>
-
-      <div style={{margin:"2rem 1rem 0rem 1rem",
-                   border:"2px solid #E0E0E0",
-                   borderRadius:"25px",
-                   width: "15rem"}}
-      >
-        <QueryBody/>
-      </div>
-
-      <div style={{margin:"2rem 1rem 0rem 1rem",
-                   border:"2px solid #E0E0E0",
-                   borderRadius:"25px",
-                   width: "43rem"}}
-      >
-        <PlanBody/>
-      </div>
-
+    <div>
+      <Container fluid = {true}>
+        <Row>
+          <Col className='border'>
+            <SchemaBody/>
+          </Col>
+          <Col className='border'>
+            <QueryBody/>
+          </Col>
+          <Col className='border'>
+            <PlanBody/>
+          </Col>
+        </Row>
+      </Container>
     </div>
   )
 }
 
 //map states to props
 const mapStatesToProps = (state) =>({
-  selectedSchema: state.selectedSchema, 
+  selectedSchema: state.selectedSchema,
   queryList: state.queryList
 });
 
