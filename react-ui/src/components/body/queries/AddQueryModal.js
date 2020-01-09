@@ -44,7 +44,6 @@ class AddQueryModal extends React.Component{
     this.setState({
       modalQueryOpen: !this.state.modalQueryOpen,
     });
-
   }
 
   toggleTooltip(){
@@ -64,6 +63,8 @@ class AddQueryModal extends React.Component{
         this.mounted && this.props.updateSchemalistQueries(queryToAdd, this.props.schemaID);
 
         this.toggleQueryModal();
+
+        this.props.setQuery(this.props.numQueries - 1);
 
       }else{
         this.mounted && this.setState({validQuery: false});

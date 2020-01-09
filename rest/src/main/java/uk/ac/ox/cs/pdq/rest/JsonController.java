@@ -53,7 +53,7 @@ public class JsonController{
     this.catalogPaths = new HashMap<Integer, String>();
     this.localMode = false;
 
-    File testDirectory = new File("test/demo/");
+    File testDirectory = new File("demo/");
     File[] examples = testDirectory.listFiles();
 
     if(examples != null){
@@ -126,6 +126,12 @@ public class JsonController{
       Long userID = System.currentTimeMillis();
 
       SchemaName[] jsonSchemaList = new SchemaName[this.schemaList.size()];
+
+      //Do some housekeeping; get rid of users who are older than 5 hours
+      if (!this.queryList.isEmpty()){
+          System.out.println("Removing extra entries");
+          this.queryList.entrySet().removeIf(e -> (userID - e.getKey() > (5 * 3600000)));
+      }
 
       //initialize queryList key value pair for this user
       this.queryList.put(userID, this.commonQueries);
@@ -242,7 +248,6 @@ public class JsonController{
           Schema schema = schemaList.get(schemaID);
           File properties = casePropertyList.get(schemaID);
           String pathToCatalog = catalogPaths.get(schemaID);
-
           try{
               SQLQueryReader reader = new SQLQueryReader(schema);
               ConjunctiveQuery cq = reader.fromString(SQL);
