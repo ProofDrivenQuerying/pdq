@@ -35,7 +35,7 @@ const PlanBody = ({plan, getPlan, run, planRun, schemaList, userID}) => {
     <div>
 
       <header className='body-name-plan'>
-        Plan
+        Planning
       </header>
 
       {schemaList !== null && schemaList.schemas.length > 0 ?

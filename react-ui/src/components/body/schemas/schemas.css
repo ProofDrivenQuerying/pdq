@@ -1,13 +1,5 @@
 .schemas{
-  margin-right: 1rem;
-  margin-left: 1rem;
-  margin-bottom: 2rem;
-  display: flex;
-  text-align: center;
-  flex-direction: column;
-
-  position:relative;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .body-name-schema{

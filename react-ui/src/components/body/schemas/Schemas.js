@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import SchemaItem from './SchemaItem';
 import ListGroup from 'react-bootstrap/ListGroup';
-import './schemabody.css';
+import './schemas.css';
 
 
 /**
@@ -21,9 +21,7 @@ const Schemas = ({ schemaList}) => {
           Schemas
         </header>
 
-        <div className='schemas'>
-          <SchemaList schemaList={schemaList}/>
-        </div>
+        <SchemaList schemaList={schemaList}/>
       </div>
     )
 }
@@ -40,7 +38,7 @@ const SchemaList = ({ schemaList}) => {
           key={"schema"+index}/>
       );
       return (
-        <div>
+        <div className='schemas'>
           {schemas}
         </div>
     );
