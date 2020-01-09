@@ -31,6 +31,7 @@ import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
+import uk.ac.ox.cs.pdq.builder.BuilderException;
 
 /**
  * PostgresqlTranslator-specific class for automatically discovering a schema.

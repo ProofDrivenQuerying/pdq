@@ -1,0 +1,16 @@
+Install: 
+ - make sure you have "dynamic web project" addon installed in eclipse
+ - have postgres (with the tpch database), tomcat and java1.8 installed
+ - checkout the project from git, install project from the git repositories view.
+ - create a Lib folder in the WebContent/WEB-INF folder and copy the postgres sql's jdbc connector jar file.
+ - in eclipse project properties add the tomcat jar files as external jars
+ - install tomcat 8 or similar in eclipse (there is a download&install button)
+ 
+ Run:
+ - right click on the project and select run on server, chose the configured server.
+ 
+ Test:
+ - there is a static html file on the server. ( http://localhost:8080/ )
+ - web services can be called using a simple browser window: http://localhost:8080/webapp/servlets/servlet/NationInput?n_nationkey=1
+ - In datasources test/src uk.ac.ox.cs.pdq.test.datasources.services.pdq-webapp-nationInput.xml change the machine name to localhost, then run ServiceXmlTest.test6 
+ 

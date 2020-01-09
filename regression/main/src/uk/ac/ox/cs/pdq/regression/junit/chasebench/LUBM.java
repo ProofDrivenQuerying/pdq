@@ -17,11 +17,11 @@ import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.io.CommonToPDQTranslator;
+import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
 
 /**
  * The test case called "LUBM" from the chasebench project.
@@ -55,7 +55,7 @@ public class LUBM {
 		Collection<Atom> res = state.getFacts();
 		System.out.println("INITIAL STATE contains " + res.size() + " facts.");
 		printStats(res);
-		RestrictedChaser chaser = new RestrictedChaser();
+		ParallelChaser chaser = new ParallelChaser();
 		long start = System.currentTimeMillis();
 		chaser.reasonUntilTermination(state, s.getAllDependencies());
 		long duration = System.currentTimeMillis() - start;

@@ -81,7 +81,7 @@ public class yh_geo_code extends HttpServlet {
         	while (rs.next()) {
                  out.println("<YahooPlaceCode>");
                  printGetString(out, rs, "namespace");
-                 printGetString(out, rs, "code");
+                 printGetString(out, rs, "code4");
                  printGetString(out, rs, "woeid");
                  out.println("</YahooPlaceCode>");
             }

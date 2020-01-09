@@ -42,7 +42,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultPairValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.PairValidator;
 import uk.ac.ox.cs.pdq.planner.dominance.CostDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.ChaseConfiguration;
-import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
@@ -102,7 +102,7 @@ public class TestDAGGeneric extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser();
+		ParallelChaser chaser = new ParallelChaser();
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
@@ -208,7 +208,7 @@ public class TestDAGGeneric extends PdqTest {
 		}
 
 		// Create the chaser
-		RestrictedChaser chaser = new RestrictedChaser();
+		ParallelChaser chaser = new ParallelChaser();
 
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);

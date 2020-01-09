@@ -115,6 +115,9 @@ public class Runtime {
 		this.schema = IOManager.importSchema(new File(schemaPath));
 		if (accessRepo!=null && accessRepo.isDirectory())
 			this.repository = AccessRepository.getRepository(accessRepo.getAbsolutePath());
+		for (String className: this.params.getCustomAccessClassNames()) {
+			this.repository.addAccessFromJar(className);
+		}
 
 		plan = CostIOManager.readRelationalTermFromRelationaltermWithCost(planFile, schema);
 		long start = System.currentTimeMillis();

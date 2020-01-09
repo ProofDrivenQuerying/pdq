@@ -16,7 +16,7 @@ import com.fasterxml.jackson.jaxrs.json.annotation.JacksonFeatures;
  * @author Julien Leblay
  */
 @SuppressWarnings("deprecation")
-public class RESTAccess implements uk.ac.ox.cs.pdq.datasources.schemabuilder.Builder<WebTarget> {
+public class RESTAccess implements uk.ac.ox.cs.pdq.builder.Builder<WebTarget> {
 
 	/** The access's URL. */
 	private final String baseUrl;

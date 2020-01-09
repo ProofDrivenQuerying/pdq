@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.datasources.schemabuilder;
 import java.util.Properties;
 
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.builder.BuilderException;
 
 /**
  * Common interface to all schema discoverers.

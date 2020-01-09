@@ -151,6 +151,7 @@ public class ExplorationSetUp {
 	/**
 	 * Register the given event homoChecker.
 	 *
+	 *
 	 * @param handler EventHandler
 	 */
 	public void unregisterEventHandler(Object handler) {
@@ -180,21 +181,15 @@ public class ExplorationSetUp {
 		Explorer explorer = null;
 		DatabaseManager databaseConnection;
 		try {
-			if (plannerParams.getUseInternalDatabase()) {
+			if (plannerParams.getUseInternalDatabase() || this.databaseParams.getUseInternalDatabaseManager()) {
 				// internal
-				databaseConnection = new InternalDatabaseManager(new MultiInstanceFactCache(),
-						GlobalCounterProvider.getNext("DatabaseInstanceId"));
+				databaseConnection = new InternalDatabaseManager(new MultiInstanceFactCache(),GlobalCounterProvider.getNext("DatabaseInstanceId"));
 				convertTypes = false; // the internal database can handle types correctly.
 			} else {
 				// external database.
-				if (this.databaseParams.getUseInternalDatabaseManager()) {
-					databaseConnection = new InternalDatabaseManager(new MultiInstanceFactCache(),GlobalCounterProvider.getNext("DatabaseInstanceId"));
-				} else {
-					databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(),
-						new ExternalDatabaseManager(this.databaseParams),GlobalCounterProvider.getNext("DatabaseInstanceId"));
-				}
+				databaseConnection = new LogicalDatabaseInstance(new MultiInstanceFactCache(),
+					new ExternalDatabaseManager(this.databaseParams),GlobalCounterProvider.getNext("DatabaseInstanceId"));
 			}
-			
 			databaseConnection.initialiseDatabaseForSchema(this.accessibleSchema);
 		} catch (DatabaseException e1) {
 			throw new PlannerException("Faild to create database",e1);
@@ -217,7 +212,6 @@ public class ExplorationSetUp {
 
 			explorer.setExceptionOnLimit(this.plannerParams.getExceptionOnLimit());
 			explorer.setMaxRounds(this.plannerParams.getMaxIterations().doubleValue());
-			//explorer.setMaxElapsedTime(120l*1000l); // 2 minutes
 		    explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
 			if (explorer.getBestPlan() != null && explorer.getBestCost() != null) {
@@ -380,20 +374,15 @@ public class ExplorationSetUp {
 		dep.addAll(Arrays.asList(schema.getKeyDependencies()));
 		Relation[] rels = schema.getRelations();
 		for (int i = 0; i < rels.length; i++) {
-			rels[i] = createDatabaseRelation(rels[i]);
+			rels[i] = convertRelationAttributesToString(rels[i]);
 		}
 		return new Schema(rels,dep.toArray(new Dependency[dep.size()]));
 	}
 	/**
-	 * Creates the db relation. Currently codes in the position numbers into the
-	 * names, but this should change
-	 *
-	 * @param relation
-	 *            the relation
-	 * @return a new database relation with attributes x0,x1,...,x_{N-1}, Fact where
-	 *         x_i maps to the i-th relation's attribute
+	 * @param relation with String attributes
+	 * @return
 	 */
-	private static Relation createDatabaseRelation(Relation relation) {
+	private static Relation convertRelationAttributesToString(Relation relation) {
 		Attribute[] attributes = new Attribute[relation.getArity()];
 		for (int index = 0; index < relation.getArity(); index++) {
 			Attribute attribute = relation.getAttribute(index);
@@ -418,14 +407,10 @@ public class ExplorationSetUp {
 	}
 
 	/**
-	 * Generate canonical mapping.
+	 * Generate AccessibleQuery. Stores the substitution maps in global static caches.
 	 *
-	 * @param formula
-	 *            the body
-	 * @return a mapping of variables of the input conjunction to constants. A fresh
-	 *         constant is created for each variable of the conjunction. This method
-	 *         is invoked by the conjunctive query constructor when the constructor
-	 *         is called with empty input canonical mapping.
+	 * @param query
+	 * @return Accessible version of the given query.
 	 */
 	public static ConjunctiveQuery generateAccessibleQueryAndStoreSubstitutionToCanonicalVariables(ConjunctiveQuery query) {
 		Map<Variable, Constant> canonicalMapping = AccessibleQuery.generateCanonicalMappingForQuery(query);

@@ -185,7 +185,7 @@ public class PlannerParameters extends Parameters {
 	/** Internal or external database should be used . */
 	@Parameter(description = "If true, we will use an Internal database manager instead of the external one.",
 			defaultValue = "true")
-	private Boolean useInternalDatabase = false;
+	private Boolean useInternalDatabase = true;
 	
 	/** DAG thread timeout value. should be smaller then the main reasoning timeout. */
 	@Parameter(description = "DAG thread timeout value. should be smaller then the main reasoning timeout",

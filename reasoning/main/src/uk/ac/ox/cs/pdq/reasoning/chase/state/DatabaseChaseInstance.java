@@ -22,7 +22,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.datasources.legacy.io.xml.QNames;
+import uk.ac.ox.cs.pdq.util.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -250,7 +250,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	}
 
 	/*
-	 * ??? What does false here mean? (non-Javadoc)
+	 * ??? TOCOMMENT: What does false here mean? 
 	 * 
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance#chaseStep(java.util.
 	 * Collection)
@@ -736,7 +736,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 		return canonicalMapping;
 	}
 	/**
-	 * Fire.
+	 * Get rid of the universally quantified variables in a dependency by applying a substitution to them
 	 *
 	 * @param substitution Map<Variable,Term>
 	 * @param skolemize boolean

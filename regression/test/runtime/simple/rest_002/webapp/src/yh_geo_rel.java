@@ -74,9 +74,9 @@ public class yh_geo_rel extends HttpServlet {
                  printGetString(out, rs, "relation");
                  printGetString(out, rs, "of");
                  printGetString(out, rs, "woeid");
-                 printGetString(out, rs, "placeTypeName");
-                 printGetString(out, rs, "name");
-                 printGetString(out, rs, "uri");
+                 printGetString(out, rs, "placeTypeName4");
+                 printGetString(out, rs, "name4");
+                 printGetString(out, rs, "uri4");
                  out.println("</YahooPlaceRelationship>");
             }
             out.println("</yh_geo_rel>");

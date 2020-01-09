@@ -68,6 +68,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -122,6 +123,8 @@ public class PDQController {
 
 	/** PDQController's logger. */
 	private static Logger log = Logger.getLogger(PDQController.class);
+	
+	public static PDQController pdqController;
 
 	/*
 	 * JavaFX-specific initializations
@@ -463,7 +466,7 @@ public class PDQController {
 			event.consume();
 			try {
 				Stage dialog = new Stage();
-				dialog.initModality(Modality.WINDOW_MODAL);
+				dialog.initModality(Modality.NONE);
 				dialog.initStyle(StageStyle.UTILITY);
 				dialog.initOwner(this.getOriginatingWindow(event));
 				ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -486,11 +489,21 @@ public class PDQController {
 				plannerController.setPlan(pl);
 				plannerController.setPlanQueue(this.dataQueue);
 				plannerController.setSchema(this.currentSchema.get());
-				plannerController.setQuery(this.currentQuery.get());
-				parent.autosize();
-				dialog.setOnCloseRequest((WindowEvent arg0) -> plannerController.interruptPlanningThreads());
-				dialog.showAndWait();
-			} catch (IOException e) {
+				String str = this.queryTextArea.textProperty().get();
+				try
+				{
+					SQLLikeQueryReader qr = new SQLLikeQueryReader(this.currentSchema.get().getSchema());
+					ConjunctiveQuery cjq = qr.fromString(str);
+					this.currentQuery.get().setQuery(cjq);
+					plannerController.setQuery(this.currentQuery.get());
+					parent.autosize();
+					dialog.setOnCloseRequest((WindowEvent arg0) -> plannerController.interruptPlanningThreads());
+					dialog.showAndWait();
+				}
+				catch(Exception e)
+				{
+				}
+			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				throw new UserInterfaceException(e.getMessage());
 			}
@@ -796,50 +809,6 @@ public class PDQController {
 	}
 
 	/**
-	 * Action that open's the query inspector window.
-	 *
-	 * @param event the event
-	 */
-	@FXML
-	void openQueryDetails(MouseEvent event) {
-		if (!event.isConsumed()) {
-			event.consume();
-			if (event.getClickCount() > 1
-					&& this.plans.get(Pair.of(this.currentSchema.get(), this.currentQuery.get())).isEmpty()) {
-				try {
-					Stage dialog = new Stage();
-					dialog.initModality(Modality.WINDOW_MODAL);
-					dialog.initStyle(StageStyle.UTILITY);
-					dialog.initOwner(this.getOriginatingWindow(event));
-					ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
-					FXMLLoader loader = new FXMLLoader(
-							PDQApplication.class.getResource("/resources/layouts/query-editor.fxml"), bundle);
-					Parent parent = (Parent) loader.load();
-					Scene scene = new Scene(parent);
-					dialog.setScene(scene);
-					dialog.setTitle(bundle.getString("query_editor.dialog.title"));
-
-					QueryEditorController queryEditorController = loader.getController();
-
-					queryEditorController.setQuery(this.currentQuery.get());
-					queryEditorController.setSchema(this.currentSchema.get());
-					queryEditorController.setQueriesListView(this.queriesListView);
-
-					parent.autosize();
-					dialog.showAndWait();
-					this.saveQuery(this.currentQuery.get());
-					ObservableList<ObservableQuery> list = this.queriesListView.getItems();
-					this.queriesListView.setItems(null);
-					this.queriesListView.setItems(list);
-					return;
-				} catch (IOException e) {
-					throw new UserInterfaceException(e.getMessage());
-				}
-			}
-		}
-	}
-
-	/**
 	 * Action that open's the runtime window and start a new runtime session.
 	 *
 	 * @param event the event
@@ -850,7 +819,7 @@ public class PDQController {
 			event.consume();
 			try {
 				Stage dialog = new Stage();
-				dialog.initModality(Modality.WINDOW_MODAL);
+				dialog.initModality(Modality.NONE);
 				dialog.initStyle(StageStyle.UTILITY);
 				dialog.initOwner(this.getOriginatingWindow(event));
 				ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -868,9 +837,9 @@ public class PDQController {
 				runtimeController.setQuery(this.currentQuery.get());
 				// runtimeController.setExecutorType(this.settingsExecutorTypeList.getValue());
 				runtimeController.setTuplesLimit(toInteger(this.settingsOutputTuplesTextField.getText()));
-				runtimeController.decoratePlan();
+				boolean show = runtimeController.decoratePlan();
 				dialog.setOnCloseRequest((WindowEvent arg0) -> runtimeController.interruptRuntimeThreads());
-				dialog.showAndWait();
+				if(show) dialog.showAndWait();
 			} catch (IOException e) {
 				throw new UserInterfaceException("");
 			}
@@ -888,7 +857,7 @@ public class PDQController {
 			event.consume();
 			try {
 				final Stage dialog = new Stage();
-				dialog.initModality(Modality.WINDOW_MODAL);
+				dialog.initModality(Modality.NONE);
 				dialog.initStyle(StageStyle.UTILITY);
 				dialog.initOwner(this.getOriginatingWindow(event));
 				ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -927,7 +896,7 @@ public class PDQController {
 			event.consume();
 			try {
 				final Stage dialog = new Stage();
-				dialog.initModality(Modality.WINDOW_MODAL);
+				dialog.initModality(Modality.NONE);
 				dialog.initStyle(StageStyle.UTILITY);
 				dialog.initOwner(this.getOriginatingWindow(event));
 				ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -968,6 +937,8 @@ public class PDQController {
 				String str = this.queryTextArea.textProperty().get();
 				SQLLikeQueryReader qr = new SQLLikeQueryReader(this.currentSchema.get().getSchema());
 				ConjunctiveQuery cjq = qr.fromString(str);
+				System.out.println("Saving query: " + str);
+				System.out.println("Converted query: " + cjq);
 				this.currentQuery.get().setQuery(cjq);
 				saveQuery(this.currentQuery.get());
 				Alert alert = new Alert(AlertType.INFORMATION);
@@ -994,8 +965,13 @@ public class PDQController {
 				String str = this.queryTextArea.textProperty().get();
 				SQLLikeQueryReader qr = new SQLLikeQueryReader(this.currentSchema.get().getSchema());
 				ConjunctiveQuery cjq = qr.fromString(str);
-				this.currentQuery.get().setQuery(cjq);
-				saveAsQuery(this.currentQuery.get());
+				ObservableQuery current = this.currentQuery.get();
+				ObservableQuery saveas = new ObservableQuery(current.getName()+"_copy",current.getDescription(), current.getFormula());
+				saveas.setQuery(cjq);
+				//this.selec
+				saveAsQuery(saveas);
+				
+				
 			} catch (Exception e) {
 				return;
 			}
@@ -1013,7 +989,7 @@ public class PDQController {
 			event.consume();
 			try {
 				final Stage dialog = new Stage();
-				dialog.initModality(Modality.WINDOW_MODAL);
+				dialog.initModality(Modality.NONE);
 				dialog.initStyle(StageStyle.UTILITY);
 				dialog.initOwner(this.getOriginatingWindow(event));
 				ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -1118,6 +1094,8 @@ public class PDQController {
 		this.configureQueries();
 		this.configurePlans();
 		this.configureSettings();
+		
+		pdqController = this;
 	}
 
 	/**
@@ -1445,6 +1423,7 @@ public class PDQController {
 			} while ((file = new File(filename)).exists());
 			query.setFile(file);
 		}
+		System.out.println("Storing query: " + query.getFile().getAbsolutePath());
 		query.store();
 	}
 
@@ -1456,7 +1435,7 @@ public class PDQController {
 	private void saveAsQuery(ObservableQuery query) {
 		try {
 			final Stage dialog = new Stage();
-			dialog.initModality(Modality.WINDOW_MODAL);
+			dialog.initModality(Modality.NONE);
 			dialog.initStyle(StageStyle.UTILITY);
 			// dialog.initOwner(this.getOriginatingWindow(event));
 			ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
@@ -1468,6 +1447,12 @@ public class PDQController {
 			dialog.setTitle(bundle.getString("application.dialog.saveas.query.title"));
 
 			// Set the currently selected schema/query/plan
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle(bundle.getString("application.dialog.saveas.query.title"));
+//			File file = fileChooser.showSaveDialog(scene.getWindow());
+//			PDQController.pdqController.addQuery(query, file.getPath());
+			scene.getWindow().hide();
+
 			SaveAsController saveasController = loader.getController();
 			saveasController.setSchema(this.currentSchema.get());
 			saveasController.setQueue(this.dataQueue);
@@ -1479,6 +1464,8 @@ public class PDQController {
 				}
 			});
 			dialog.showAndWait();
+			
+			//loadQueries();			
 		} catch (IOException e) {
 			throw new UserInterfaceException(e);
 		}
@@ -1548,6 +1535,18 @@ public class PDQController {
 			}
 		}
 	}
+	
+	/**
+	 * Adds a query from saveas.
+	 */
+	public void addQuery(ObservableQuery q, String path)
+	{
+		ObservableList<ObservableQuery> qs = this.queries.get(this.currentSchema.get().getName());
+		File queryFile = new File(path);
+		ObservableQuery q2 = new ObservableQuery(q.getName(), q.getDescription(), queryFile, q.getFormula());
+		q2.store();
+		qs.add(q2);
+	}
 
 	/**
 	 * Make prefix.
@@ -1601,7 +1600,6 @@ public class PDQController {
 
 					File proof = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROOF_FILENAME_SUFFIX));
 					if (proof.exists()) {
-//						System.out.println("Reading proof file: " + proof.getAbsolutePath());
 						try (FileInputStream prIn = new FileInputStream(proof.getAbsolutePath())) {
 							p.setProofFile(proof);
 							ProofReader proofReader = new ProofReader(schema);
@@ -1635,7 +1633,6 @@ public class PDQController {
 
 						File proof = new File(replaceSuffix(planFile, PLAN_FILENAME_SUFFIX, PROOF_FILENAME_SUFFIX));
 						if (proof.exists()) {
-//							System.out.println("Reading proof file: " + proof.getAbsolutePath());
 							try (FileInputStream prIn = new FileInputStream(proof.getAbsolutePath())) {
 								p.setProofFile(proof);
 								ProofReader proofReader = new ProofReader(schema);

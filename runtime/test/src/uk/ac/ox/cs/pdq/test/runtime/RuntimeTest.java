@@ -16,7 +16,7 @@ public class RuntimeTest {
 
 	@Test
 	public void test() {
-		File testFolder = new File("../regression/test/planner/linear/fast/tpch/simple/case_001");
+		File testFolder = new File("../regression/test/runtime/DatabaseExamples/case_001");
 		File schema = new File(testFolder,"schema.xml");
 		File plan = new File(testFolder,"expected-plan.xml");
 		File access = new File(testFolder,"accessesMem");

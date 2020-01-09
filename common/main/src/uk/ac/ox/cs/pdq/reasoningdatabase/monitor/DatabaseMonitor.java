@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 
@@ -54,10 +56,10 @@ public class DatabaseMonitor {
 			copy.addAll(stats);
 		}
 		for (DatabaseStats s:copy) {
-			System.out.println("DatabaseMonitor forcefully shuts down: " + s.toString());
+			Logger.getLogger(DatabaseMonitor.class.getName()).error("DatabaseMonitor forcefully shuts down: " + s.toString());
 			s.dbm.dropDatabase();
 			s.dbm.shutdown();
-			System.out.println("shutdown of: \"" + s.toString() + "\" worked.");
+			Logger.getLogger(DatabaseMonitor.class.getName()).error("shutdown of: \"" + s.toString() + "\" worked.");
 		}
 		synchronized (LOCK) {
 			stats.clear();

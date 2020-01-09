@@ -18,14 +18,14 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.io.CommonToPDQTranslator;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
-import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.regression.utils.CommonToPDQTranslator;
 
 /**
  * The test case called "DoctorsFD" from the chasebench project.
@@ -47,7 +47,7 @@ public class DoctorsFD {
 		DatabaseChaseInstance state = new DatabaseChaseInstance(getTestFacts(), dbm);
 		Collection<Atom> res = state.getFacts();
 		System.out.println("INITIAL STATE contains " + res.size() + " facts.");
-		RestrictedChaser chaser = new RestrictedChaser();
+		ParallelChaser chaser = new ParallelChaser();
 		chaser.reasonUntilTermination(state, s.getNonEgdDependencies());
 		res = state.getFacts();
 		System.out.println("Final state contains " + res.size() + " facts." + new HashSet<>(res).size() + " unique.");
@@ -58,7 +58,7 @@ public class DoctorsFD {
 		DatabaseChaseInstance stateExt = new DatabaseChaseInstance(getTestFacts(), dbmExt);
 		Collection<Atom> resExt = stateExt.getFacts();
 		System.out.println("INITIAL STATE contains " + resExt.size() + " facts.");
-		RestrictedChaser chaserExt = new RestrictedChaser();
+		ParallelChaser chaserExt = new ParallelChaser();
 		chaserExt.reasonUntilTermination(stateExt, s.getNonEgdDependencies());
 		resExt = stateExt.getFacts();
 		System.out.println("Final state contains " + resExt.size() + " facts." + new HashSet<>(resExt).size() + " unique.");

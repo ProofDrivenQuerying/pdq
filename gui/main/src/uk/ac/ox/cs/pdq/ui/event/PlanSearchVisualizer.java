@@ -52,27 +52,34 @@ public class PlanSearchVisualizer {
 	 */
 	@Subscribe
 	public void processExplorerIteration(Explorer explorer) {
-		Preconditions.checkArgument(explorer != null);
-		int rounds = explorer.getRounds();
-		if(explorer instanceof LinearExplorer) {
-			if (rounds % this.interval == 0 && explorer.getBestPlan() != null) {
-				this.dataQueue.add(new ObservableSearchState(
+		try
+		{
+			Preconditions.checkArgument(explorer != null);
+			int rounds = explorer.getRounds();
+			if(explorer instanceof LinearExplorer) {
+				if (rounds % this.interval == 0 && explorer.getBestPlan() != null) {
+					this.dataQueue.add(new ObservableSearchState(
 						explorer.getElapsedTime() / 1e6,
 						rounds,
 						explorer.getBestPlan(),
 						explorer.getBestCost(),
 						Arrays.asList(new LinearChaseConfiguration[] {((LinearExplorer)explorer).getBestNode().getConfiguration()})));
-				synchronized (this.dataQueue) {
-					try {
-						this.dataQueue.wait();
-					} catch (InterruptedException e) {
-						log.error(e.getMessage(),e);
+					synchronized (this.dataQueue) {
+						try {
+							this.dataQueue.wait();
+						} catch (InterruptedException e) {
+							log.error(e.getMessage(),e);
+						}
 					}
 				}
 			}
+			else {
+				throw new java.lang.UnsupportedOperationException();
+			}
 		}
-		else {
-			throw new java.lang.UnsupportedOperationException();
+		catch(Exception e)
+		{
+			System.out.println("processExplorerIteration(): " + e.toString());
 		}
 	}
 }

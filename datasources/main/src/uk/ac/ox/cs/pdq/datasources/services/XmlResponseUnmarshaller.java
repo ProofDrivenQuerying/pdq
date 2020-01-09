@@ -56,6 +56,7 @@ public class XmlResponseUnmarshaller extends ResponseUnmarshaller {
 					delim.subList(start, delim.size()), r, result.getType(), inputs)) {
 				result.appendRow(t);
 			}
+			System.out.println("Received " + result.size() + " amount of records.");
 			return result;
 		} catch (IOException e) {
 			throw new AccessException(e.getMessage(), e);

@@ -13,23 +13,18 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 
 
 /**
- * Runs EGD and TGD chase using parallel chase steps.
  * (From modern dependency theory notes)
+ * Runs the chase algorithm applying only active triggers. 
+ * Consider an instance I, a set Base of values, and a TGD
+ * \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
+ * a trigger for \delta in I is a homomorphism h of \sigma into I. A trigger is active if it
+ * does not extend to a homomorphism h0 into I. Informally, a trigger is a tuple \vec{c}
+ * satisfying \sigma, and it is active if there is no witness \vec{y} that makes \tau holds.
+ * A chase step appends to I additional facts that were produced during grounding \delta. 
+ * The output of the chase step is a new instance in which h is no longer an active trigger.
  * 
- * A trigger for and EGD \delta = \sigma --> x_i = x_j in I is again a homomorphism h in
-	\sigma into I. A trigger is active if it does not extend to a homomorphism h0 into I.
-	Given trigger h
-	for \delta in I, a chase pre-step marks the pair h(x_i) and h(x_j) as equal. Formally,
-	it appends the pair h(x_i), h(x_j) to a set of pairs MarkedEqual.
-	An EGD parallel chase step on instance I for a set of constraints C is performed
-	as follows.
-	i. A chase pre-step is performed for every constraint \delta in C and every active
-	trigger h in I.
-	ii. The resulting set of marked pairs is closed under reflexivity and transitivity
-	to get an equivalence relation.
-	iii. If we try to equate two different schema constants, then the chase fails. 
-	The facts that are generated during chasing are stored in a list.
-
+ * The facts that are generated during chasing are stored in a list.
+ *
  * @author Efthymia Tsamoura
  *
  */
@@ -37,56 +32,33 @@ public class ParallelChaser extends Chaser {
 
 	/**
 	 * Chases the input state until termination.
-	 * The EGDs and the TGDs are applied in rounds, i.e., during even round we apply parallel EGD chase steps,
-	 * while during odd rounds we apply parallel TGD chase steps.  
 	 *
 	 * @param <S> the generic type
 	 * @param instance the instance
-	 * @param target the target
 	 * @param dependencies the dependencies
 	 */
 	@Override
 	public <S extends ChaseInstance> void reasonUntilTermination(S instance,  Dependency[] dependencies) {
 		Preconditions.checkArgument(instance instanceof ChaseInstance);
 		DependencyAssessor accessor = new DependencyAssessor(dependencies);
-
-		int step = 0;
-		//True if at the end of the internal for loop at least one dependency has been fired
-		boolean appliedOddStep = false;
-		boolean appliedEvenStep = false;
-		boolean failedLast = false;
+		boolean appliedStep = false;
+		Dependency[] d = dependencies;
 		do {
-			++step;
-			//Find all active triggers
-			Dependency[] d = step % 2 == 0 ? accessor.getDependencies(EGDROUND.TGD):accessor.getDependencies(EGDROUND.EGD);
-			List<Match> activeTriggers = instance.getTriggers(d, TriggerProperty.ACTIVE);
-			boolean succeeds = instance.chaseStep(activeTriggers);
-			if(failedLast && ! succeeds ) {
-				break;
-			}
-			accessor.addNewFacts(instance.getNewFacts());
-			
-			failedLast = !succeeds;
-			if(succeeds && !activeTriggers.isEmpty()) {
-				if(step % 2 == 0) {
-					appliedEvenStep = true;
-				}
-				else {
-					appliedOddStep = true;
+			appliedStep = false;
+			for(Dependency dependency:d) {
+				List<Match> matches = instance.getTriggers(new Dependency[]{dependency}, TriggerProperty.ACTIVE);
+				if(!matches.isEmpty()) {
+					boolean success = instance.chaseStep(matches);
+					if (success) {
+						appliedStep = true;
+					}
+					accessor.addNewFacts(instance.getNewFacts());
 				}
 			}
-
-			if(activeTriggers.isEmpty()) {
-				if(step % 2 == 0) {
-					appliedEvenStep = false;
-				}
-				else {
-					appliedOddStep = false;
-				}
-			}
-
-		} while (!(appliedOddStep == false && appliedEvenStep == false && step > 1));
+			d = accessor.getDependencies(EGDROUND.BOTH);	
+		} while (appliedStep);
 	}
+
 
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.Chaser#clone()
@@ -95,5 +67,4 @@ public class ParallelChaser extends Chaser {
 	public ParallelChaser clone() {
 		return new ParallelChaser();
 	}
-
 }

@@ -115,8 +115,7 @@ public class SaveAsController {
 			event.consume();
 				try  {
 					File file = new File(this.importFileField.getText());
-					this.query.setFile(file);
-					this.query.store();
+					PDQController.pdqController.addQuery(this.query, file.getPath());
 					SaveAsController.this.rootPane.getScene().getWindow().hide();
 				} catch (Exception e) {
 					SaveAsController.this.detailsImage.setImage(SaveAsController.this.errorIcon);

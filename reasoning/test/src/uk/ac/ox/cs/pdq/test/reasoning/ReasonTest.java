@@ -27,7 +27,7 @@ public class ReasonTest {
 	 */
 	@Test
 	public void testReason() {
-		File testFolder = new File("../regression/test/planner/linear/fast/tpch/simple/case_002");
+		File testFolder = new File("../regression/test/runtime/DatabaseExamples/case_002");
 		File schema = new File(testFolder, "schema.xml");
 		File config = new File(testFolder, "case.properties");
 		File query = new File(testFolder, "query.xml");
@@ -62,7 +62,7 @@ public class ReasonTest {
 	}
 	@Test
 	public void testUserQueries() {
-		File testFolder = new File("../regression/test/planner/linear/fast/tpch/simple/case_002");
+		File testFolder = new File("../regression/test/runtime/DatabaseExamples/case_002");
 		File schema = new File(testFolder, "schema.xml");
 		File config = new File(testFolder, "case.properties");
 		File query = new File(testFolder, "query.xml");

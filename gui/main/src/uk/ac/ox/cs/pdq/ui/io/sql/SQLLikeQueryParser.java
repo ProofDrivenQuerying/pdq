@@ -312,6 +312,7 @@ public class SQLLikeQueryParser {
 				match(DOT);
 				Token token2 = identifier();
 				columnNames.add(token2.getText());
+				resultColumns.add(token.getText() + "." + token2.getText());
 			}
 		}
 		else if(lookahead(1) != FROM)
@@ -664,12 +665,11 @@ public class SQLLikeQueryParser {
 	public Token match(int token) throws Exception
 	{
 		Token tok = tokens.get(tokens.index());
-		if(tok.getType() != token)
+		if((tok.getType() != token) && (!tokenNames[tok.getType()].equals("")))
 		{
 			error("Missing: " + tokenNames[token]);
 		}
 		tokens.consume();
-		System.out.println(tok.getText());
 		return tok;
 	}
 	
@@ -681,7 +681,6 @@ public class SQLLikeQueryParser {
 			error("Missing: " + str);
 		}
 		tokens.consume();
-		System.out.println(tok.getText());
 		return tok;
 	}
 	

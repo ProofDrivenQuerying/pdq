@@ -33,6 +33,7 @@
           <columns>
             <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="121.0" text="%relation.dialog.table.accessMethods.name" fx:id="colAccessMethodName" />
             <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="120.0" text="%relation.dialog.table.accessMethods.type" fx:id="colAccessMethodType" />
+            <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="120.0" text="%relation.dialog.table.accessMethods.working" fx:id="colAccessMethodWorking" />
           </columns>
         </TableView>
       </children>

@@ -56,6 +56,10 @@ public class EdgeShapeRenderer extends EdgeRenderer{
 	protected Shape getRawShape(VisualItem item) {
 		EdgeItem   edge = (EdgeItem)item;
 		EdgeTypes type = (EdgeTypes) edge.get("type");
+		if(type == null) {
+			Thread.yield();
+			type = (EdgeTypes) edge.get("type");
+		}
 		if(type != null)
 		{
 			switch(type) {

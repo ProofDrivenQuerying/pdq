@@ -160,6 +160,7 @@ public class Planner {
 				System.out.println(entry.getKey());
 				return;
 			} 
+			System.out.println("No plan found.");
 			log.trace("No plan found.");
 		} catch (Throwable e) {
 			log.error("Planning aborted: " + e.getMessage(), e);

@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.builder.ConjunctiveQueryBodyBuilder;
+import uk.ac.ox.cs.pdq.builder.ConjunctiveQueryBodyBuilder;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -140,7 +140,7 @@ public class SQLLikeQueryReader {
         			if(rawConstraint.split("=").length >= 2)
         			{
         				String left = rawConstraint.split("=")[0].replaceAll("\\s", "");  // Consume whitespace
-        				String right = rawConstraint.split("=")[1].replaceAll("\\s", ""); // Consume whitespace
+        				String right = rawConstraint.split("=")[1].replaceAll("\\n", "").replaceAll("\\r", ""); // Consume newlines
 
         				ConjunctiveQueryBodyBuilder.ConstraintTerm leftConstraint = null;
         				ConjunctiveQueryBodyBuilder.ConstraintTerm rightConstraint = null;

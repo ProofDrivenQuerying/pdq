@@ -45,6 +45,9 @@ public class ServiceController {
     /** The col access method type. */
     @FXML private TableColumn<ObservableAccessMethod, String> colAccessMethodType;
     
+    /** The col attribute working. */
+    @FXML private TableColumn<ObservableAccessMethod, String> colAccessMethodWorking;
+
     /** The col attribute name. */
     @FXML private TableColumn<ObservableAttribute, String> colAttributeName;
     
@@ -72,12 +75,13 @@ public class ServiceController {
 	    this.colAttributeName.setCellValueFactory(new PropertyValueFactory<ObservableAttribute, String>("name"));
 	    this.colAttributeRelationName.setCellValueFactory(new PropertyValueFactory<ObservableAttribute, String>("relationName"));
 	    this.colAttributeType.setCellValueFactory(new PropertyValueFactory<ObservableAttribute, String>("displayType"));
-
+	
 	    this.relationAccessMethods.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 	    this.relationAccessMethods.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 	    this.colAccessMethodName.setCellValueFactory(new PropertyValueFactory<ObservableAccessMethod, String>("name"));
 	    this.colAccessMethodType.setCellValueFactory(new PropertyValueFactory<ObservableAccessMethod, String>("type"));
-	    
+	    this.colAccessMethodWorking.setCellValueFactory(new PropertyValueFactory<ObservableAccessMethod, String>("working"));
+    
 	    this.relationAccessMethods.getSelectionModel().selectedItemProperty().addListener(this.accessMethodSelected);
 	    this.relationAccessMethods.addEventHandler(MouseEvent.MOUSE_ENTERED, this.accessMethodMouseEntered);
 	}
@@ -148,7 +152,8 @@ public class ServiceController {
 		accessMethods.clear();
 		for (RESTExecutableAccessMethodSpecification ream : this.service.getAccessMethod()) {
 			AccessMethodDescriptor am = AccessMethodDescriptor.create(ream.getName(), new Integer[0]);
-			accessMethods.add(new ObservableAccessMethod(am));
+			ObservableAccessMethod oam = new ObservableAccessMethod(this.service.getUrl(), am);
+			accessMethods.add(oam);
 		}
 	}
 }

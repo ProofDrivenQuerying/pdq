@@ -240,7 +240,7 @@ public class Proof {
 	 *
 	 * @author Julien Leblay
 	 */
-	public static class Builder implements uk.ac.ox.cs.pdq.datasources.schemabuilder.Builder<Proof> {
+	public static class Builder implements uk.ac.ox.cs.pdq.builder.Builder<Proof> {
 
 		/** The query match. */
 		private Map<Variable, Constant> queryMatch = null;

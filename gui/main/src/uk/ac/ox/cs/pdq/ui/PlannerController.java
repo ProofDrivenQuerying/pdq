@@ -13,8 +13,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import javax.swing.SwingUtilities;
-
 import org.apache.log4j.Logger;
 
 import com.google.common.base.Preconditions;
@@ -375,25 +373,20 @@ public class PlannerController {
 	 */
 	private void setSearchSpaceVisualizer(final ExplorationSetUp planner) {
 		final SwingNode swingNode = new SwingNode();
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				PrefuseVisualizer visualizer = new PrefuseVisualizer();
-				visualizer.addControl(new AggregateDragControl());
-				visualizer.addControl(new FocusControl()); 
-				visualizer.addControl(new WheelZoomControl());
-				visualizer.addControl(visualizer.getPathHighlightControl());
-				visualizer.addControl(new HoverControl());
-				visualizer.addControl(new ClickControl(PlannerController.this.dataQueue));
-				peh = new PrefuseEventHandler(visualizer.getGraph(),
-								visualizer.getAggregateTable(),  visualizer.getVisualization(), 
-								"aggregates", "graph.nodes", "color", "layout",
-								visualizer.getPathHighlightControl(),
-								visualizer.getPathsHighlightBox());
-				planner.registerEventHandler(peh);
-				swingNode.setContent(visualizer);
-			}
-		});
+		PrefuseVisualizer visualizer = new PrefuseVisualizer();
+		visualizer.addControl(new AggregateDragControl());
+		visualizer.addControl(new FocusControl()); 
+		visualizer.addControl(new WheelZoomControl());
+		visualizer.addControl(visualizer.getPathHighlightControl());
+		visualizer.addControl(new HoverControl());
+		visualizer.addControl(new ClickControl(PlannerController.this.dataQueue));
+		peh = new PrefuseEventHandler(visualizer.getGraph(),
+						visualizer.getAggregateTable(),  visualizer.getVisualization(), 
+						"aggregates", "graph.nodes", "color", "layout",
+						visualizer.getPathHighlightControl(),
+						visualizer.getPathsHighlightBox());
+		planner.registerEventHandler(peh);
+		swingNode.setContent(visualizer);
 		this.searchSpaceVizualizationArea.getChildren().add(swingNode);
 		AnchorPane.setTopAnchor(swingNode, 0.);
 		AnchorPane.setBottomAnchor(swingNode, 0.);

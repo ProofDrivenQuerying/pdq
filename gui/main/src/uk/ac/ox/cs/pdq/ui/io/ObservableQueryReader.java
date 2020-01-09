@@ -1,21 +1,16 @@
 package uk.ac.ox.cs.pdq.ui.io;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
-
-import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
-import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
-// TODO: Auto-generated Javadoc
 /**
  * Reads queries from XML.
  * 
@@ -23,25 +18,15 @@ import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
  */
 public class ObservableQueryReader {
 
-	/** Logger. */
-	private static Logger log = Logger.getLogger(ObservableQueryReader.class);
-
-	/** The name. */
-	private String name;
-
 	/** The description. */
 	private String description;
 
-	/**  Query builder. */
-	private QueryReader queryReader;
-	
 	/**
 	 * Default constructor.
 	 *
 	 * @param schema the schema
 	 */
 	public ObservableQueryReader(Schema schema) {
-		this.queryReader = new QueryReader(schema);
 	}
 	
 	/**
@@ -54,7 +39,7 @@ public class ObservableQueryReader {
 		try {
 			ConjunctiveQuery cq = IOManager.importQuery(query);
 			return new ObservableQuery(homepath(query.getPath()), this.description, cq);
-		} catch (JAXBException | FileNotFoundException e) {
+		} catch (JAXBException | IOException e) {
 			throw new ReaderException("Exception thrown while reading schema ", e);
 		}
 	}

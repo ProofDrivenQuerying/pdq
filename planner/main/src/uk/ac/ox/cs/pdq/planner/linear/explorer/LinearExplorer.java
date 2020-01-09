@@ -82,15 +82,10 @@ public abstract class LinearExplorer extends Explorer {
 	 * Instantiates a new linear explorer.
 	 *
 	 * @param eventBus the event bus
-	 * @param collectStats the collect stats
 	 * @param query 		The input user query
-	 * @param accessibleQuery 		The accessible counterpart of the user query
-	 * @param schema 		The input schema
 	 * @param accessibleSchema 		The accessible counterpart of the input schema
 	 * @param chaser 		Runs the chase algorithm
-	 * @param detector 		Detects homomorphisms during chasing
 	 * @param costEstimator 		Estimates the cost of a plan
-	 * @param nodeFactory the node factory
 	 * @param depth 		Maximum exploration depth
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
@@ -194,7 +189,7 @@ public abstract class LinearExplorer extends Explorer {
 	
 	public RelationalTerm getBestPlan() {
 		if (this.bestPlan!=null)
-			return PlanCreationUtility.createFinalProjection(this.accessibleQuery, this.bestPlan,this.connection.getSchema());
+			return PlanCreationUtility.createFinalProjection(this.query, this.bestPlan,this.connection.getSchema());
 		return null;
 	}
 

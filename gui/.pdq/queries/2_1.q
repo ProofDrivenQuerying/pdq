@@ -1,43 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<query name="Sunny points of interests within France" description="" type="conjunctive">
+<query name="\queries\2_1.q" description="" type="conjunctive">
 <body>
-<atom name="YahooPlaceRelationship">
-<constant value="descendants"/>
-<variable name="homeCountry"/>
-<variable name="myNextVacationSpot"/>
-<variable name="x9"/>
-<variable name="x10"/>
-<variable name="x11"/>
-</atom>
-<atom name="YahooPlaces">
-<variable name="myNextVacationSpot"/>
-<variable name="name"/>
-<variable name="type"/>
-<constant value="Point of Interest"/>
-<variable name="countryName"/>
-<variable name="admin1"/>
-<variable name="admin2"/>
-<variable name="admin3"/>
-<variable name="locality1"/>
-<variable name="locality2"/>
-<variable name="postal"/>
-<variable name="latitude"/>
-<variable name="longitude"/>
-<variable name="bboxNorth"/>
-<variable name="bboxSouth"/>
-<variable name="bboxEast"/>
-<variable name="bboxWest"/>
-<variable name="timezone"/>
-</atom>
 <atom name="YahooPlaceCode">
 <constant value="iso"/>
 <constant value="FR"/>
-<variable name="homeCountry"/>
+<variable name="_21"/>
 </atom>
 <atom name="YahooWeather">
-<variable name="myNextVacationSpot"/>
+<variable name="_21"/>
 <variable name="city"/>
-<variable name="country"/>
+<variable name="_15"/>
 <variable name="region"/>
 <variable name="distance_unit"/>
 <variable name="pressure_unit"/>
@@ -55,12 +27,40 @@
 <variable name="date"/>
 <variable name="temperature"/>
 <constant value="Sunny"/>
-<variable name="code"/>
+<variable name="code2"/>
+</atom>
+<atom name="YahooPlaceRelationship">
+<constant value="descendants"/>
+<variable name="_21"/>
+<variable name="_21"/>
+<constant value="PointofInterest"/>
+<variable name="_18"/>
+<variable name="uri"/>
+</atom>
+<atom name="YahooPlaces">
+<variable name="_21"/>
+<variable name="_18"/>
+<variable name="type"/>
+<constant value="PointofInterest"/>
+<variable name="_15"/>
+<variable name="admin1"/>
+<variable name="admin2"/>
+<variable name="admin3"/>
+<variable name="locality1"/>
+<variable name="locality2"/>
+<variable name="postal"/>
+<variable name="centroid_lat"/>
+<variable name="centroid_lng"/>
+<variable name="bboxNorth"/>
+<variable name="bboxSouth"/>
+<variable name="bboxEast"/>
+<variable name="bboxWest"/>
+<variable name="timezone"/>
 </atom>
 </body>
 <head name="Q">
 <variable name="city"/>
-<variable name="country"/>
+<variable name="_15"/>
 <variable name="region"/>
 <variable name="temperature"/>
 </head>

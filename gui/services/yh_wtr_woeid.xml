@@ -13,7 +13,7 @@
 	    <attribute name="woeid" input="true" output="true" type="Integer" relation-attribute="woeid" path="woeid" />
 
 		<attribute name="city"           output="true" type="String"  relation-attribute="city" path="location/city"/>
-		<attribute name="country"        output="true" type="String"  relation-attribute="country" path="location/country"/>
+		<attribute name="country2"        output="true" type="String"  relation-attribute="country2" path="location/country2"/>
 		<attribute name="region"         output="true" type="String"  relation-attribute="region" path="location/region"/>
 
 		<attribute name="distance_unit"  output="true" type="String"  relation-attribute="distance_unit" path="units/distance"/>
@@ -36,6 +36,6 @@
 		<attribute name="date"           output="true" type="String"  relation-attribute="date" path="item/condition/date"/>
 		<attribute name="temperature"    output="true" type="Double"  relation-attribute="temperature" path="item/condition/temp"/>
 		<attribute name="condition"      output="true" type="String"  relation-attribute="condition" path="item/condition/text"/>
-		<attribute name="code"           output="true" type="Integer" relation-attribute="code" path="item/condition/code"/>
+		<attribute name="code2"           output="true" type="Integer" relation-attribute="code2" path="item/condition/code2"/>
 	</access-method>
 	</service>

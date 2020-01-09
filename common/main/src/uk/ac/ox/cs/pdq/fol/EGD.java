@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
  */
 public class EGD extends Dependency {
 	private static final long serialVersionUID = 7220579236533295677L;
-	
+	public static String EQUALITY = "EQUALITY";
 	/**
 	 * Flag to indicate if this EGD was created from a functional dependency.
 	 */

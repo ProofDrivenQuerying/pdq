@@ -156,6 +156,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	public List<Match> answerQueryDifferences(ConjunctiveQuery leftQuery, ConjunctiveQuery rightQuery) throws DatabaseException {
 		Map<String, Integer> stats = multiCache.getStatistics(this.databaseInstanceID);
 		Map<String, Term[]> formulaCache = new HashMap<>(); // used for analysing queries.
+		Map<String, Term[]> formulaCache2 = new HashMap<>(); // used for analysing queries.
 		leftQuery = InternalDatabaseManagerQueryOptimiser.optimise(leftQuery, stats);
 		rightQuery = InternalDatabaseManagerQueryOptimiser.optimise(rightQuery, stats);
 		
@@ -165,8 +166,9 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 			return new ArrayList<>();
 
 		// execute right
-		List<Atom> rightFacts = new ArrayList<>(); 
-		rightFacts = answerConjunctiveQueryRecursively(rightQuery.getBody(), rightQuery, this.databaseInstanceID, formulaCache, 0);
+		List<Atom> rightFacts = new ArrayList<>();
+		formulaCache2.putAll(formulaCache);
+		rightFacts = answerConjunctiveQueryRecursively(rightQuery.getBody(), rightQuery, this.databaseInstanceID, formulaCache2, 0);
 		if (rightFacts.isEmpty()) {
 			// nothing to sort out, convert to Match objects and go.
 			Term[] resultTerms = formulaCache.get(leftFacts.get(0).getPredicate().getName());
@@ -174,7 +176,7 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 		} else {
 			// convert the right results to match left result's signature
 			Term[] leftTerms = formulaCache.get(leftFacts.get(0).getPredicate().getName());
-			Term[] rightTerms = formulaCache.get(rightFacts.get(0).getPredicate().getName());
+			Term[] rightTerms = formulaCache2.get(rightFacts.get(0).getPredicate().getName());
 			List<Atom> convertedRightFacts = convertAtomsToNewSignature(rightQuery, rightFacts, leftTerms, Arrays.asList(rightTerms), leftFacts.get(0).getPredicate().getName());
 
 			// delete the parts we don't want
@@ -274,7 +276,8 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 	 * conjunction or two atoms. ( With one special case is when the query contains
 	 * only one Atom and no conjunctions) The recursive function will evaluate the
 	 * conjunction with the two atoms first and works its way up in the tree to the
-	 * root.
+	 * root.  The formula argument is the current formula being processed, while the cq is the initial CQ-with-inequalities that 
+	 * this formula is part of.
 	 */
 	private List<Atom> answerConjunctiveQueryRecursively(Formula formula, ConjunctiveQuery cq, int instanceId, Map<String, Term[]> formulaCache, int recursionDepth)
 			throws DatabaseException {
@@ -464,7 +467,8 @@ public class InternalDatabaseManager extends LogicalDatabaseInstance {
 
 	/**
 	 * In case the CQ is a ConjunctiveQueryWithInequality it will check and filter
-	 * out the disallowed facts. Otherwise returns the input facts.
+	 * out the disallowed facts. Otherwise returns the input facts. FormulaCache is used to map between variable names
+	 * which occur in the CQWithInequality and positions which appear in the facts that need to be filtered
 	 * 
 	 * @param facts
 	 * @param cq

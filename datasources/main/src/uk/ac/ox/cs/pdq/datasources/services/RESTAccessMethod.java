@@ -164,7 +164,6 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 					}
 					catch(ReaderException e)
 					{
-						System.out.println(e.toString());
 					}
 				}
 				else if(gup.getType() != null)
@@ -180,7 +179,6 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 					}
 					catch(ClassNotFoundException e)
 					{
-						System.out.println(e.toString());
 					}
 				}
 			}
@@ -450,7 +448,6 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 
 		// Create a new table as input for the unmarshallers
 		Table table = new Table();
-				
 		// Process the HTTP response and call response unmarshallers if appropriate
 		int status = response.getResponse().getStatus();
 		if (status == 200) {
@@ -460,7 +457,9 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 				else if(mediaType.getSubtype().equals("json")) return jsonResponseUnmarshaller.unmarshalJson(response.getResponse(), table); 
 			}
 		} else if ((status == 400) || (status == 404) || (status == 406)) {
-			System.out.println(response.getResponse().getStatusInfo().getReasonPhrase());
+			throw new AccessException(status
+					+ " - " + response.getResponse().getStatusInfo().getReasonPhrase()
+					+ "\n" + response.getResponse().readEntity(String.class));
 		} else {
 			throw new AccessException(status
 					+ " - " + response.getResponse().getStatusInfo().getReasonPhrase()

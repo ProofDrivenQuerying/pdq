@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.xml.bind.JAXBContext;
@@ -23,6 +24,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.log4j.Logger;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -41,6 +43,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.io.CommonToPDQTranslator;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedRelationalTerm;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedSchema;
@@ -70,6 +73,9 @@ public class IOManager {
 	public static Schema importSchema(File schema) throws JAXBException, FileNotFoundException {
 		if (!schema.exists())
 			throw new FileNotFoundException(schema.getAbsolutePath());
+		if (schema.getName().toLowerCase().endsWith(".txt")) {
+			return chasebanchSchemaRead(schema);
+		}
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedSchema.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		AdaptedSchema customer = (AdaptedSchema) jaxbUnmarshaller.unmarshal(schema);
@@ -82,11 +88,14 @@ public class IOManager {
 	 * @param schema File pointer to the xml file.
 	 * @return imported Query object
 	 * @throws JAXBException         In case importing fails.
-	 * @throws FileNotFoundException
+	 * @throws IOException 
 	 */
-	public static ConjunctiveQuery importQuery(File query) throws JAXBException, FileNotFoundException {
+	public static ConjunctiveQuery importQuery(File query) throws JAXBException, IOException {
 		if (!query.exists())
 			throw new FileNotFoundException(query.getAbsolutePath());
+		if (query.getName().toLowerCase().endsWith(".txt")) {
+			return CommonToPDQTranslator.parseQuery(null, query.getAbsolutePath());
+		}
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedQuery.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		new AdaptedSchema(); // create an empty schema as current for query reading.
@@ -102,10 +111,10 @@ public class IOManager {
 	 *               "schema.xml" files.
 	 * @return Pair of ConjunctiveQuery and Schema objects.
 	 * @throws JAXBException         in case there is a parsing error.
-	 * @throws FileNotFoundException
+	 * @throws IOException 
 	 */
 	public static Pair<Schema, ConjunctiveQuery> importSchemaAndQuery(File folder)
-			throws JAXBException, FileNotFoundException {
+			throws JAXBException, IOException {
 		Schema left = null;
 		ConjunctiveQuery right = null;
 		File schema = new File(folder, "schema.xml");
@@ -435,7 +444,7 @@ public class IOManager {
 			// Open the csv file for reading
 			long recordCounter = 0;
 			if (verbose)
-				System.out.println("Importing " + r.getName());
+				Logger.getLogger(IOManager.class.getName()).error("Importing " + r.getName());
 			while (sc.hasNextLine()) {
 				String line = sc.nextLine();
 				String[] tuple = line.split(",");
@@ -460,7 +469,7 @@ public class IOManager {
 				facts.clear();
 			}
 			if (verbose)
-				System.out.println("\nImported " + recordCounter + " facts for relation " + r.getName());
+				Logger.getLogger(IOManager.class.getName()).error("\nImported " + recordCounter + " facts for relation " + r.getName());
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -477,6 +486,24 @@ public class IOManager {
 			}
 		}
 		return facts;
+	}
+	protected static Schema chasebanchSchemaRead(File schema) throws FileNotFoundException {
+		// chasebench format
+		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schema.getAbsolutePath());
+		File schemaFolder = schema.getParentFile();
+		File dependenciesFolder = new File(schemaFolder.getParentFile(),"dependencies");
+		if (!dependenciesFolder.exists())
+			throw new FileNotFoundException(dependenciesFolder.getAbsolutePath());
+		String schemaName = schema.getName().substring(0, schema.getName().toLowerCase().indexOf("schema.txt")-2);
+		// we have to loop over the dependency folder to find all dependencies
+		List<Dependency> dependencies = new ArrayList<>();
+		for (File possibleDependencyFile: dependenciesFolder.listFiles()) {
+			if (possibleDependencyFile.getName().startsWith(schemaName) &&
+					possibleDependencyFile.getName().endsWith(".txt")) {
+				dependencies.addAll(CommonToPDQTranslator.parseDependencies(tables, possibleDependencyFile.getAbsolutePath()));
+			}
+		}
+		return new Schema(tables.values().toArray(new Relation[tables.size()]), dependencies.toArray(new Dependency[dependencies.size()]));
 	}
 
 }

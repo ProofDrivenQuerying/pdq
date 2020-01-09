@@ -81,7 +81,7 @@ public class yh_wtr_woeid extends HttpServlet {
                  out.println("<YahooWeather>");
                  printGetString(out, rs, "woeid");
                  printGetString(out, rs, "city");
-                 printGetString(out, rs, "country");
+                 printGetString(out, rs, "country2");
                  printGetString(out, rs, "region");
                  printGetString(out, rs, "distance_unit");
                  printGetString(out, rs, "pressure_unit");
@@ -99,7 +99,7 @@ public class yh_wtr_woeid extends HttpServlet {
                  printGetString(out, rs, "date");
                  printGetString(out, rs, "temperature");
                  printGetString(out, rs, "condition");
-                 printGetString(out, rs, "code");
+                 printGetString(out, rs, "code2");
                  out.println("</YahooWeather>");
             }
             out.println("</yh_wtr_woeid>");
