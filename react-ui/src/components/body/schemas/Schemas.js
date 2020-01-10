@@ -2,8 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import SchemaItem from './SchemaItem';
 import ListGroup from 'react-bootstrap/ListGroup';
-import './schemas.css';
-
 
 /**
  * Renders the schema information component.
@@ -17,9 +15,9 @@ const Schemas = ({ schemaList}) => {
   */
     return(
       <div>
-        <header className='body-name-schema'>
+        <h4 className='my-2'>
           Schemas
-        </header>
+        </h4>
 
         <SchemaList schemaList={schemaList}/>
       </div>
@@ -38,8 +36,20 @@ const SchemaList = ({ schemaList}) => {
           key={"schema"+index}/>
       );
       return (
-        <div className='schemas'>
-          {schemas}
+        <div>
+          <style type="text/css">
+            {`
+            .list-group-scroll {
+              max-height: calc(100vh - 8.1rem);
+              margin-bottom: 10px;
+              overflow:scroll;
+              -webkit-overflow-scrolling: touch;
+            }
+            `}
+          </style>
+          <ListGroup variant='scroll'>
+            {schemas}
+          </ListGroup>
         </div>
     );
   }

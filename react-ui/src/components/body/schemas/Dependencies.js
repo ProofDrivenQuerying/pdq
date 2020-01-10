@@ -1,9 +1,10 @@
 import React from 'react';
 import { FaShareAlt } from 'react-icons/fa';
 import PopoutWindow from '../Popout';
+import { IconContext } from "react-icons";
 import classnames from 'classnames';
-import { Button,
-         Modal,
+import Button from 'react-bootstrap/Button';
+import { Modal,
          ModalHeader,
          ModalBody,
          ModalFooter,
@@ -58,10 +59,12 @@ export default class Dependencies extends React.Component{
       <div>
         <Button
           id={"DependenciesButton"+ this.props.schemaFromList.id}
-          color={'link'}
+          variant='link'
           onClick={()=> this.openDependencies(this.props.schemaFromList.id)}
         >
-          <FaShareAlt/>
+          <IconContext.Provider value={{ style:{ margin: '0', padding: '0'} }}>
+            <FaShareAlt/>
+          </IconContext.Provider>
         </Button>
 
         <Tooltip
@@ -151,7 +154,7 @@ export default class Dependencies extends React.Component{
 
           <ModalFooter>
             <Button
-              color="secondary"
+              variant="secondary"
               onClick={this.toggleDependenciesModal}>Cancel</Button>
           </ModalFooter>
         </Modal>
@@ -194,17 +197,7 @@ export default class Dependencies extends React.Component{
        <div>
          <header>{name}</header>
 
-         <div style={{
-           position: "relative",
-           marginRight: "2rem",
-           marginLeft: "2rem",
-           display: "flex",
-           flexDirection: "column",
-           overflowY: "scroll",
-           whiteSpace: "pre-wrap",
-           fontSize: "1rem",
-           height: "calc(100vh - 300px)",
-           wordWrap:"break"}}>
+         <div>
            {this.props.dependency.definition}
          </div>
        </div>
@@ -212,7 +205,7 @@ export default class Dependencies extends React.Component{
      return (
        <div>
          <Button
-            color="link"
+            variant="link"
             onClick={this.toggle}>{this.props.name}</Button>
 
          <Modal
@@ -235,7 +228,7 @@ export default class Dependencies extends React.Component{
 
            <ModalFooter>
              <Button
-                color="secondary"
+                variant="secondary"
                 onClick={this.toggle}>Cancel</Button>
            </ModalFooter>
          </Modal>

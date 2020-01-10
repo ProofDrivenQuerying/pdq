@@ -2,7 +2,6 @@ import React from 'react';
 import logo from '../img/logo.png';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import Button from 'react-bootstrap/Button';
 
 /**
  * Renders the app's header. Called from App.js.
@@ -12,7 +11,7 @@ import Button from 'react-bootstrap/Button';
 
 const Header = () =>{
   return(
-    <Navbar bg='light' expand='lg' sticky='top'>
+    <Navbar bg='light' expand='lg' sticky='top' className='border'>
       <Navbar.Brand
         href='/'>
         <img

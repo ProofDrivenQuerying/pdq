@@ -1,9 +1,12 @@
 import React from "react";
 import { FaDownload } from 'react-icons/fa';
 import Helpers from "../../../actions/helpers.js";
-import { Button,
-        Tooltip
-} from 'reactstrap';
+import {Tooltip} from 'reactstrap';
+
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 
 export default class DownloadRunButton extends React.Component {
@@ -60,23 +63,28 @@ export default class DownloadRunButton extends React.Component {
 
     return(
       <div>
-        <Button
-          id={"downloadPlan"+this.props.schemaID+this.props.id}
-          color="link"
-          disabled={
-            this.props.plan === null ||
-            this.props.plan.schemaID !== this.props.schemaID ||
-            this.props.plan.queryID !== this.props.queryID
-          }
-          style={this.props.margins ? smallButton : noStyle}
-          onClick={(e) => this.downloadPlan(
-            this.props.schemaID,
-            this.props.queryID,
-            this.props.SQL,
-            this.props.userID
-          )}>
-          <FaDownload/>
-        </Button>
+        <Container>
+          <Row className='justify-content-md-center'>
+            <Col xs lg="2">
+              <Button
+                id={"downloadPlan"+this.props.schemaID+this.props.id}
+                variant="link"
+                disabled={
+                  this.props.plan === null ||
+                  this.props.plan.schemaID !== this.props.schemaID ||
+                  this.props.plan.queryID !== this.props.queryID
+                }
+                onClick={(e) => this.downloadPlan(
+                  this.props.schemaID,
+                  this.props.queryID,
+                  this.props.SQL,
+                  this.props.userID
+                )}>
+                <FaDownload/>
+              </Button>
+            </Col>
+          </Row>
+        </Container>
 
         <Tooltip
           placement="top"

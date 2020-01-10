@@ -2,11 +2,12 @@ import React from 'react';
 import PopoutWindow from '../Popout';
 import { FaClipboardList } from 'react-icons/fa';
 import { Modal,
-         Button,
          ModalHeader,
          ModalBody,
          ModalFooter
 } from 'reactstrap';
+
+import Button from 'react-bootstrap/Button'
 
 export default class PlanInfoModal extends React.Component{
   constructor(props){
@@ -70,14 +71,16 @@ export default class PlanInfoModal extends React.Component{
 
     return(
       <div>
-        <Button
-          outline color = "secondary"
-          onClick={(e) => this.toggle()}
-          style={this.props.bigButton}>
-
-          {this.props.name} <FaClipboardList/>
-
-        </Button>
+        <div className="my-2">
+          <Button
+            block
+            variant="primary"
+            onClick={(e) => this.toggle()}>
+              <div className="my-2">
+                View Plan <FaClipboardList/>
+              </div>
+          </Button>
+        </div>
 
         <Modal
           isOpen={this.state.modalOpen}

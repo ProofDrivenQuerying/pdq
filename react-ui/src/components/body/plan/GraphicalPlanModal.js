@@ -2,12 +2,13 @@ import React from "react";
 import PDQTree from "./PDQTree";
 import PopoutWindow from '../Popout';
 import { FaRoute } from 'react-icons/fa';
-import { Button,
-         Modal,
+import { Modal,
          ModalHeader,
          ModalBody,
          ModalFooter
 } from 'reactstrap';
+
+import Button from 'react-bootstrap/Button';
 
 /**
  * The modal in which the plan graph is displayed.
@@ -50,12 +51,16 @@ export default class GraphicalPlanModal extends React.Component {
 
     return (
       <div>
-        <Button
-           outline color="secondary"
-           style={this.props.bigButton}
-           onClick={() => this.toggle()}>
-               {this.props.name} <FaRoute/>
-         </Button>
+        <div className="my-2">
+          <Button
+            block
+            variant="primary"
+            onClick={() => this.toggle()}>
+              <div className="my-2">
+                View Exploration Graph <FaRoute/>
+              </div>
+           </Button>
+          </div>
 
         <Modal
            id={"GraphicalPlanModalBody"}

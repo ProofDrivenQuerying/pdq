@@ -4,9 +4,9 @@ import { getRelations } from '../../../actions/getRelations';
 import { getDependencies } from '../../../actions/getDependencies';
 import Relations from './Relations';
 import Dependencies from './Dependencies';
-import Button from 'react-bootstrap/Button'
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup';
 
 /**
@@ -20,24 +20,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
  class SchemaItem extends React.Component{
    constructor(props){
      super(props);
-     this.toggleRelationsModal = this.toggleRelationsModal.bind(this);
-       this.state = {
-         modalRelationsOpen: false
-       };
-     }
-
-     toggleRelationsModal(){
-       this.setState({
-         modalRelationsOpen: !this.state.modalRelationsOpen
-       });
-     }
-
-    openRelations(id){
-      this.props.getRelations(id);
-
-      this.toggleRelationsModal();
     }
-
 
    render(){
      return(
@@ -53,47 +36,52 @@ import ListGroup from 'react-bootstrap/ListGroup';
          */
        }
        {this.props.schemaList.selectedSID != null ?
-            <div className = 'my-2'>
+            <div className='my-2'>
               {this.props.schemaFromList.id === this.props.schemaList.selectedSID ?
-                <ListGroup horizontal>
                   <ListGroup.Item
-                  active
                   id = {this.props.schemaFromList.id}
-                  block
                   variant='primary'
                   >
-                    {this.props.schemaFromList.name}
-                  </ListGroup.Item>
+                    <Container>
+                      <Row>
+                        <Col xs={6} className="my-2">
+                          {this.props.schemaFromList.name}
+                        </Col>
 
-                  <ListGroup.Item action variant='primary'>
-                    <Relations
-                      getRelations={this.props.getRelations}
-                      relationList = {this.props.relationList}
-                      schemaFromList = {this.props.schemaFromList}
-                      />
-                  </ListGroup.Item>
-
-                  <ListGroup.Item action variant='primary'>
-                    <Dependencies
-                      schemaFromList = {this.props.schemaFromList}
-                      getDependencies = {this.props.getDependencies}
-                      dependencyLists = {this.props.dependencyLists}
-                      />
-                  </ListGroup.Item>
-                </ListGroup>
+                        <Col>
+                          <Relations
+                            getRelations={this.props.getRelations}
+                            relationList = {this.props.relationList}
+                            schemaFromList = {this.props.schemaFromList}
+                            />
+                        </Col>
+                        <Col>
+                          <Dependencies
+                            schemaFromList = {this.props.schemaFromList}
+                            getDependencies = {this.props.getDependencies}
+                            dependencyLists = {this.props.dependencyLists}
+                            />
+                        </Col>
+                    </Row>
+                  </Container>
+                </ListGroup.Item>
                 :
-                <ListGroup>
-                  <ListGroup.Item
-                  id = {this.props.schemaFromList.id}
-                  action
-                  onClick={(e) => {
-                    this.props.setSchema(this.props.schemaFromList.id);
-                    this.props.setQuery(0);
-                    }}
-                  >
-                    {this.props.schemaFromList.name}
-                  </ListGroup.Item>
-                </ListGroup>
+                <ListGroup.Item
+                id = {this.props.schemaFromList.id}
+                action
+                onClick={(e) => {
+                  this.props.setSchema(this.props.schemaFromList.id);
+                  this.props.setQuery(0);
+                  }}
+                >
+                  <Container>
+                    <Row>
+                      <Col className="my-2">
+                      {this.props.schemaFromList.name}
+                      </Col>
+                    </Row>
+                  </Container>
+                </ListGroup.Item>
               }
           </div>
           :

@@ -4,7 +4,11 @@ import RunModal from './RunModal';
 import DownloadRunButton from './DownloadRunButton';
 import DownloadPlanButton from './DownloadPlanButton';
 import PlanInfoModal from './PlanInfoModal';
-import { Button, Spinner } from 'reactstrap';
+
+import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
+
 import { connect } from 'react-redux';
 import { plan } from "../../../actions/getPlan.js";
 import { run } from "../../../actions/getRun.js";
@@ -20,80 +24,28 @@ import { FaRegMap,
  */
 
 
-const PlanBody = ({plan, getPlan, run, planRun, schemaList, userID}) => {
+const Plan = ({plan, getPlan, run, planRun, schemaList, userID}) => {
 
-  let smallButton = {
-    float: "left", width: "4rem", height:"4rem", margin:"1rem 1rem 1rem 1rem"
-  }
   let bigButton = {
     float: "left", height:"4rem", margin:"1rem 1rem 1rem 1rem", width: "11rem"
   }
-  let graphicalPlanName = "Exploration Graph";
-  let planViewName = "View Plan";
   let runViewName = "Run Results";
   return(
     <div>
-
-      <header className='body-name-plan'>
+      <h4 className='my-2'>
         Planning
-      </header>
+      </h4>
 
       {schemaList !== null && schemaList.schemas.length > 0 ?
 
-        <div className='plan'>
-          <div style={{flexDirection:"row"}}>
+        <div>
+            <PlanGroup
+              plan={plan}
+              getPlan={getPlan}
+              schemaList={schemaList}
+              userID={userID}
+            />
 
-            <Button
-                disabled={plan.isFetchingPlan}
-                outline color={
-                  plan.schemaID === schemaList.selectedSID
-                  && plan.queryID === schemaList.selectedQID ? "primary" : "secondary"
-                }
-                style={smallButton}
-                onClick={(e) => getPlan(
-                  schemaList.selectedSID,
-                  schemaList.selectedQID,
-                  schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL
-                )}>
-                {plan.isFetchingPlan ?
-                  <Spinner color="secondary"/>
-                  :
-                  <div>
-                  Plan <FaRegMap/>
-                  </div>
-                }
-            </Button>
-
-            {plan.plan!==null
-              && plan.schemaID === schemaList.selectedSID
-              && plan.queryID === schemaList.selectedQID ?
-              <div>
-                <PlanInfoModal
-                  bigButton={bigButton}
-                  id={schemaList.selectedSID}
-                  plan={plan.plan}
-                  name = {planViewName}/>
-
-                <GraphicalPlanModal
-                    graphicalPlan={plan.plan.graphicalPlan}
-                    bigButton={bigButton}
-                    name = {graphicalPlanName}/>
-
-                <DownloadPlanButton
-                    schemaID={schemaList.selectedSID}
-                    queryID = {schemaList.selectedQID}
-                    SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
-                    plan={plan}
-                    margins={true}
-                    id={1}
-                    userID={userID}
-                />
-
-              </div>
-              :
-              null
-             }
-          </div>
 
           <div style={{width:"100%"}}>
             <hr style={{color: "#C8C8C8", backgroundColor: "#C8C8C8", height: 0.2}}/>
@@ -102,10 +54,10 @@ const PlanBody = ({plan, getPlan, run, planRun, schemaList, userID}) => {
           {plan.plan!==null
             && plan.schemaID === schemaList.selectedSID
             && plan.queryID === schemaList.selectedQID ?
-            <div style={{flexDirection:"row"}}>
+            <div>
 
             <Button
-               outline color={!plan.plan.runnable ?
+               variant={!plan.plan.runnable ?
                  "danger"
                  :
                  planRun.queryID === schemaList.selectedQID &&
@@ -117,7 +69,6 @@ const PlanBody = ({plan, getPlan, run, planRun, schemaList, userID}) => {
                           planRun.schemaID === schemaList.selectedSID &&
                           planRun.queryID === schemaList.selectedQID
                         )}
-               style={smallButton}
                onClick={() => run(
                  schemaList.selectedSID,
                  schemaList.selectedQID,
@@ -127,7 +78,16 @@ const PlanBody = ({plan, getPlan, run, planRun, schemaList, userID}) => {
                <Spinner color="secondary"/>
                 :
                 <div>
-                  Run <FaPlay/>
+                  {plan.plan.runnable ?
+                    <div>
+                      Run <FaPlay/>
+                    </div>
+                    :
+                    <div>
+                      PDQ does not have access to the services required to run this plan
+                    </div>
+                  }
+
                 </div>
                 }
              </Button>
@@ -164,8 +124,7 @@ const PlanBody = ({plan, getPlan, run, planRun, schemaList, userID}) => {
             <div>
               <Button
                  outline color="secondary"
-                 disabled={true}
-                 style={smallButton}>
+                 disabled={true}>
                      Run <FaPlay/>
                </Button>
             </div>
@@ -178,8 +137,72 @@ const PlanBody = ({plan, getPlan, run, planRun, schemaList, userID}) => {
   );
 }
 
+const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
+  return (
+    <div className='half'>
 
-const mapStatesToProps = (state) =>{
+      <div className='my-2'>
+        <Button
+            block
+            disabled={plan.isFetchingPlan}
+            variant={plan.schemaID === schemaList.selectedSID && plan.queryID === schemaList.selectedQID ? 'outline-primary' : 'primary'}
+            onClick={(e) => getPlan(
+              schemaList.selectedSID,
+              schemaList.selectedQID,
+              schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL
+            )}>
+            <div className="my-3">
+              {plan.isFetchingPlan ?
+                <Spinner animation="border"/>
+                :
+                <div>
+                {plan.schemaID === schemaList.selectedSID && plan.queryID === schemaList.selectedQID ?
+                  <div>
+                    Plan Again <FaRegMap/>
+                  </div>
+                  :
+                  <div>
+                    Plan <FaRegMap/>
+                  </div>
+                }
+                </div>
+              }
+            </div>
+        </Button>
+      </div>
+      {
+        plan.plan!==null &&
+        plan.schemaID === schemaList.selectedSID &&
+        plan.queryID === schemaList.selectedQID ?
+        <div>
+          <PlanInfoModal
+            id={schemaList.selectedSID}
+            plan={plan.plan}/>
+
+          <GraphicalPlanModal
+              graphicalPlan={plan.plan.graphicalPlan}/>
+
+          <DownloadPlanButton
+              schemaID={schemaList.selectedSID}
+              queryID = {schemaList.selectedQID}
+              SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
+              plan={plan}
+              margins={true}
+              id={1}
+              userID={userID}/>
+        </div>
+        :
+        null
+      }
+
+
+    </div>
+
+  );
+}
+
+
+const mapStatesToProps = (state) => {
   return({
     plan: state.plan,
     graphicalPlan: state.graphicalPlan,
@@ -189,11 +212,10 @@ const mapStatesToProps = (state) =>{
   })
 }
 
-
-const mapDispatchToProps = (dispatch) =>({
+const mapDispatchToProps = (dispatch) => ({
   getPlan: (schemaID, queryID, SQL) => dispatch(plan(schemaID, queryID, SQL)),
 
   run: (schemaID, queryID, SQL) => dispatch(run(schemaID, queryID, SQL))
 });
 
-export default connect(mapStatesToProps, mapDispatchToProps)(PlanBody);
+export default connect(mapStatesToProps, mapDispatchToProps)(Plan);

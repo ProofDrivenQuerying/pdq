@@ -1,8 +1,7 @@
 import React from 'react';
 import Popout from 'react-popout';
 import { FaShareSquare } from 'react-icons/fa';
-import { Button,
-         Tooltip
+import { Button
 } from 'reactstrap';
 
 //to copy the css from the parent

@@ -1,14 +1,16 @@
 import React from 'react';
 import { FaListUl } from 'react-icons/fa';
 import PopoutWindow from '../Popout';
-import Button from 'react-bootstrap/Button'
+import Button from 'react-bootstrap/Button';
+import { IconContext } from "react-icons";
 import { Table,
          Modal,
          ModalHeader,
          ModalBody,
          ModalFooter,
-         Tooltip
+         Tooltip,
 } from 'reactstrap';
+
 
 export default class Relations extends React.Component{
   constructor(props){
@@ -47,7 +49,9 @@ export default class Relations extends React.Component{
           variant='link'
           onClick={()=> this.openRelations(this.props.schemaFromList.id)}
         >
-          <FaListUl/>
+          <IconContext.Provider value={{ style:{ margin: '0', padding: '0'} }}>
+            <FaListUl/>
+          </IconContext.Provider>
         </Button>
 
         <Tooltip
@@ -81,7 +85,7 @@ export default class Relations extends React.Component{
 
           <ModalFooter>
             <Button
-              color="secondary"
+              variant="secondary"
               onClick={this.toggleRelationsModal}>Cancel</Button>
           </ModalFooter>
         </Modal>
@@ -118,7 +122,7 @@ export default class Relations extends React.Component{
      return (
        <div>
          <Button
-            color="link"
+            variant="link"
             onClick={this.toggle}>{this.props.relation.name}</Button>
 
          <Modal
@@ -140,7 +144,7 @@ export default class Relations extends React.Component{
 
            <ModalFooter>
              <Button
-                color="secondary"
+                variant="secondary"
                 onClick={this.toggle}>Cancel</Button>
            </ModalFooter>
          </Modal>
