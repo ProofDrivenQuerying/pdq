@@ -5,18 +5,18 @@
   The source code is available for free for non-commercial use.
   See the LICENCE file for details.
 
-  I. Requirements
+  ## Requirements
 
    * Node.js version 8.x or higher
    * React.js 16.0.0 or higher
 
-  II. Dependencies
+  ## Dependencies
 
   External: @vx/-0.0.189, d3.js-5.9.2, redux-4.0.1, redux-thunk-2.3.0, reactstrap-8.0.0, react-icons-3.7.0, classnames-2.2.6, react-popout-1.0.2
 
   To install dependencies and requirements:
 
-  In MacOS/Linux, you can download node with Homebrew.
+  On MacOS/Linux, you can download node with Homebrew.
 
     * brew install node
 
@@ -29,44 +29,7 @@
   This will automatically install all of the dependencies listed in the app's
   package.json file.
 
-  If you want to install dependencies individually, run:
-
-  For vx modules:
-
-    * npm i @vx/group
-    * npm i @vx/hierarchy
-    * npm i @vx/gradient
-    * npm i @vx/shape
-
-  For d3.js modules:
-
-    * npm i d3-hierarchy
-    * npm i d3-shape
-
-  For redux:
-
-    * npm install --save redux
-    * npm i react-redux
-    * npm install --save-dev redux-devtools
-    * npm i redux-thunk
-
-  For Bootstrap:
-
-    * npm install --save reactstrap
-
-  For react-icons (using FontAwesome icons):
-
-    * npm install react-icons --save
-
-  For Classnames:
-
-    * npm i classnames
-
-  For react-popout:
-
-    * npm i react-popout
-
-  III. Installing & running the UI
+  ## Installing & running the UI
 
   Under the top directory, type:
 

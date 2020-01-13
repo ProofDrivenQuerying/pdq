@@ -7,7 +7,7 @@
   The source code is available for free for non-commercial use.
   See the LICENCE file for details.
 
-  I. Requirements
+  ## Requirements
 
    * Java 1.8 or higher
    * Maven 3.2 or higher
@@ -15,7 +15,7 @@
    You can build each library outside Maven, e.g. in your favorite IDE, but
    you will have to managed dependencies manually.
 
-  II. Dependencies
+  ## Dependencies
 
   Internal: (pdq-)common, (pdq-)gui, (pdq-)planner, (pdq-)reasoning
 
