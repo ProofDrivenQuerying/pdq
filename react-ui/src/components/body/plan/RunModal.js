@@ -101,7 +101,7 @@ import Button from 'react-bootstrap/Button';
              Plan{this.props.schemaID} run information
            </ModalHeader>
 
-           <ModalBody>
+           <ModalBody style={{maxHeight: "calc(100vh - 200px)", overflowY: 'scroll'}}>
            {this.props.planRun.planRun != null ?
              <div>
                <div style={{display:"flex", flexDirection:"row",

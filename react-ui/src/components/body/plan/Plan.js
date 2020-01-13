@@ -41,7 +41,7 @@ const Plan = ({plan, getPlan, run, planRun, schemaList, userID}) => {
           />
 
           <h4 className='my-2'>
-            Run Your Plan
+            Run Your Plan with PDQ
           </h4>
 
           <RunGroup
