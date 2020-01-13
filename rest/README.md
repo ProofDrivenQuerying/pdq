@@ -21,7 +21,7 @@
 
   External: springframework.boot-2.1.4, org.glassfish.jersey.inject-2.28, org.glassfish.jersey.bundles.repackaged-2.6
 
-  III. Installing & running the RESTful web service
+  ## Installing & running the RESTful web service
 
   Under the top directory, type:
 

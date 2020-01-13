@@ -34,9 +34,8 @@ export const plan = (schemaID, queryID, SQL) => {
 
   return function(dispatch, getState){
     let simpleSQL = SQL.replace(/\n|\r|\t/g, " ");
-    let userID = store.getState().schemaList.userID;
 
-    return fetch("/plan/"+schemaID+"/"+queryID+"/"+simpleSQL+"/"+userID)
+    return fetch("/plan/"+schemaID+"/"+queryID+"/"+simpleSQL)
     .then(res => res.text())
     .then(res => res = JSON.parse(res)).then((res)=>{
       if (res === null){

@@ -14,8 +14,7 @@ export const fetching = () => {
 export const resolved = (initialInfo) => {
     return {
         type: 'RESOLVED',
-        schemaList: initialInfo.schemas,
-        userID: initialInfo.userID
+        schemaList: initialInfo.schemas
     };
 }
 export const error = () => {
