@@ -38,7 +38,7 @@ export const run = (schemaID, queryID, SQL) => {
     return fetch("/run/"+schemaID+"/"+queryID+"/"+simpleSQL+"/"+userID)
     .then(res => res.text())
     .then(res => res = JSON.parse(res)).then((res)=>{
-      dispatch(resolvedPlanRun(res, schemaID, queryID))
+      dispatch(resolvedPlanRun(res, schemaID, queryID));
     }).catch(err => dispatch(errorPlanRun()));
   }
 }

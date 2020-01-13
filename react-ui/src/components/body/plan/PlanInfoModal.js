@@ -46,21 +46,7 @@ export default class PlanInfoModal extends React.Component{
             <i>Found an optimal {plan.runnable ? "runnable":null} plan
               in {plan.planTime} seconds.</i>
 
-            <div style={{width:"100%"}}>
-              <hr style={{color: "rgb(250,250,250)", backgroundColor: "rgb(250,250,250)", height: 0.1}}/>
-            </div>
-
-            <span style={{
-              position: "relative",
-              marginRight: "2rem",
-              marginLeft: "2rem",
-              display: "flex",
-              flexDirection: "column",
-              overflowY: "scroll",
-              whiteSpace: "pre-wrap",
-              fontSize: "1rem",
-              height: "calc(100vh - 100px)"}}
-              >
+            <span>
               {plan.bestPlan}
             </span>
            </div>)
@@ -119,8 +105,10 @@ export default class PlanInfoModal extends React.Component{
 
           <ModalFooter>
             <Button
-               color="secondary"
-               onClick={this.toggle}>Cancel</Button>
+               variant="secondary"
+               onClick={this.toggle}>
+                Cancel
+            </Button>
           </ModalFooter>
 
         </Modal>

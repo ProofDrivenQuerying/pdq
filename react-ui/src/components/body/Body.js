@@ -21,8 +21,8 @@ const Body = ({selectedSchema, body, queryList}) => {
       <style type="text/css">
         {`
         .half {
-          height: calc((100vh - 12rem) / 2);
-          max-height: calc((100vh - 12rem) / 2)
+          height: calc((100vh - 11.5rem) / 2);
+          max-height: calc((100vh - 11.5rem) / 2)
           margin-bottom: 10px;
           overflow:scroll;
           -webkit-overflow-scrolling: touch;

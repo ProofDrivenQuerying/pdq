@@ -92,7 +92,7 @@ export default class GraphicalPlanModal extends React.Component {
 
           <ModalFooter>
             <Button
-               color="secondary"
+               variant="secondary"
                onClick={this.toggle}>Cancel</Button>
           </ModalFooter>
         </Modal>

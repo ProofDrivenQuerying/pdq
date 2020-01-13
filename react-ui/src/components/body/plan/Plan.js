@@ -12,123 +12,47 @@ import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import { connect } from 'react-redux';
 import { plan } from "../../../actions/getPlan.js";
 import { run } from "../../../actions/getRun.js";
-import './planbody.css';
 import { FaRegMap,
          FaPlay
 } from 'react-icons/fa';
 
 /**
- * Renders the plan/button, graphical plan/button, and plan properties/button
+ * Renders the plan/button, graphical modal/button, and plan properties modal/button
+ * and run button/information
  *
  * @author Camilo Ortiz
  */
 
-
 const Plan = ({plan, getPlan, run, planRun, schemaList, userID}) => {
 
-  let bigButton = {
-    float: "left", height:"4rem", margin:"1rem 1rem 1rem 1rem", width: "11rem"
-  }
-  let runViewName = "Run Results";
   return(
     <div>
       <h4 className='my-2'>
-        Planning
+        Plan
       </h4>
 
       {schemaList !== null && schemaList.schemas.length > 0 ?
 
         <div>
-            <PlanGroup
-              plan={plan}
-              getPlan={getPlan}
-              schemaList={schemaList}
-              userID={userID}
-            />
+          <PlanGroup
+            plan={plan}
+            getPlan={getPlan}
+            schemaList={schemaList}
+            userID={userID}
+          />
 
+          <h4 className='my-2'>
+            Run Your Plan
+          </h4>
 
-          <div style={{width:"100%"}}>
-            <hr style={{color: "#C8C8C8", backgroundColor: "#C8C8C8", height: 0.2}}/>
-          </div>
+          <RunGroup
+            plan={plan}
+            planRun={planRun}
+            schemaList={schemaList}
+            userID={userID}
+            run={run}
+          />
 
-          {plan.plan!==null
-            && plan.schemaID === schemaList.selectedSID
-            && plan.queryID === schemaList.selectedQID ?
-            <div>
-
-            <Button
-               variant={!plan.plan.runnable ?
-                 "danger"
-                 :
-                 planRun.queryID === schemaList.selectedQID &&
-                 planRun.schemaID === schemaList.selectedSID?
-                 "primary" : "secondary"
-                 }
-               disabled={!plan.plan.runnable || planRun.isFetchingPlanRun ||
-                        (planRun.planRun !== null &&
-                          planRun.schemaID === schemaList.selectedSID &&
-                          planRun.queryID === schemaList.selectedQID
-                        )}
-               onClick={() => run(
-                 schemaList.selectedSID,
-                 schemaList.selectedQID,
-                 schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL
-               )}>
-               {planRun.isFetchingPlanRun ?
-               <Spinner color="secondary"/>
-                :
-                <div>
-                  {plan.plan.runnable ?
-                    <div>
-                      Run <FaPlay/>
-                    </div>
-                    :
-                    <div>
-                      PDQ does not have access to the services required to run this plan
-                    </div>
-                  }
-
-                </div>
-                }
-             </Button>
-
-             {plan.plan.runnable ?
-              <div>
-                <RunModal
-                  SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
-                  queryID={schemaList.selectedQID}
-                  schemaID={schemaList.selectedSID}
-                  planRun={planRun}
-                  plan ={plan.plan}
-                  bigButton={bigButton}
-                  name={runViewName}
-                  userID={userID}
-                  />
-
-                <DownloadRunButton
-                  SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
-                  queryID={schemaList.selectedQID}
-                  schemaID={schemaList.selectedSID}
-                  plan={plan.plan}
-                  planRun={planRun}
-                  margins={true}
-                  id={1}
-                  userID={userID}
-                  />
-              </div>
-              :
-              null}
-
-            </div>
-            :
-            <div>
-              <Button
-                 outline color="secondary"
-                 disabled={true}>
-                     Run <FaPlay/>
-               </Button>
-            </div>
-           }
         </div>
         :
         null
@@ -151,11 +75,13 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
               schemaList.selectedQID,
               schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL
             )}>
-            <div className="my-3">
+            <div >
               {plan.isFetchingPlan ?
-                <Spinner animation="border"/>
+                <div className="my-1">
+                  <Spinner animation="border"/>
+                </div>
                 :
-                <div>
+                <div className="my-3">
                 {plan.schemaID === schemaList.selectedSID && plan.queryID === schemaList.selectedQID ?
                   <div>
                     Plan Again <FaRegMap/>
@@ -195,9 +121,98 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
         null
       }
 
-
     </div>
 
+  );
+}
+
+const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
+  return (
+    <div className='half'>
+      {plan.plan!==null
+        && plan.schemaID === schemaList.selectedSID
+        && plan.queryID === schemaList.selectedQID ?
+
+        <div className='my-2'>
+          <Button
+            block
+             variant={!plan.plan.runnable ?
+               "danger"
+               :
+               (planRun.planRun !== null &&
+                planRun.schemaID === schemaList.selectedSID &&
+                planRun.queryID === schemaList.selectedQID ?
+                "outline-primary"
+                :
+                "primary"
+                )
+               }
+             disabled={!plan.plan.runnable || planRun.isFetchingPlanRun}
+             onClick={() => run(
+               schemaList.selectedSID,
+               schemaList.selectedQID,
+               schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL
+             )}>
+             <div className="my-3">
+               {planRun.isFetchingPlanRun ?
+                 <Spinner animation="border"/>
+                :
+                <div>
+                  {plan.plan.runnable ?
+                    <div>
+                      {planRun.schemaID === schemaList.selectedSID && planRun.queryID === schemaList.selectedQID ?
+                        <div>
+                          Run Again <FaPlay/>
+                        </div>
+                        :
+                        <div>
+                          Run <FaPlay/>
+                        </div>
+                      }
+
+                    </div>
+                    :
+                    <div>
+                      PDQ does not have access to the services required to run this plan
+                    </div>
+                  }
+                </div>
+                }
+              </div>
+           </Button>
+
+           {planRun.planRun!==null &&
+           planRun.schemaID === schemaList.selectedSID &&
+           planRun.queryID === schemaList.selectedQID  ?
+            <div>
+              <RunModal
+                SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
+                queryID={schemaList.selectedQID}
+                schemaID={schemaList.selectedSID}
+                planRun={planRun}
+                plan ={plan.plan}
+                userID={userID}
+                />
+
+              <DownloadRunButton
+                SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
+                queryID={schemaList.selectedQID}
+                schemaID={schemaList.selectedSID}
+                plan={plan.plan}
+                planRun={planRun}
+                margins={true}
+                id={1}
+                userID={userID}
+                />
+            </div>
+          :
+          null
+          }
+        </div>
+        :
+        null
+      }
+    </div>
   );
 }
 

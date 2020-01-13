@@ -43,6 +43,11 @@ export default class PopoutWindow extends React.Component{
   }
 
   render() {
+    // Not fully implemented yet
+    return (
+      null
+    )
+
     if (this.state.isPoppedOut) {
       return (
         <div>

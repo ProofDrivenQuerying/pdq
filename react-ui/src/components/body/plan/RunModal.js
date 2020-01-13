@@ -2,13 +2,13 @@ import React from "react";
 import { FaTable } from 'react-icons/fa';
 import PopoutWindow from '../Popout';
 import DownloadRunButton from './DownloadRunButton';
-import { Button,
-         Modal,
+import {  Modal,
          ModalHeader,
          ModalBody,
          Table,
          ModalFooter,
 } from 'reactstrap';
+import Button from 'react-bootstrap/Button';
 
 /**
  * Contains the run's table modal and table components. Handles opening and
@@ -77,19 +77,21 @@ import { Button,
 
      return (
        <div>
-         <Button
-          outline color="secondary"
-          disabled={!this.props.plan.runnable ||
-                     this.props.planRun.planRun === null ||
-                     this.props.planRun.schemaID !== this.props.schemaID ||
-                     this.props.planRun.queryID !== this.props.queryID
-                   }
-          style={this.props.bigButton}
-          onClick={() => this.toggle()}>
-
-          {this.props.name} <FaTable/>
-
-          </Button>
+          <div className="my-2">
+           <Button
+           block
+           variant="primary"
+           disabled={!this.props.plan.runnable ||
+             this.props.planRun.planRun === null ||
+             this.props.planRun.schemaID !== this.props.schemaID ||
+             this.props.planRun.queryID !== this.props.queryID
+            }
+            onClick={() => this.toggle()}>
+             <div className="my-2">
+                View Run Results <FaTable/>
+             </div>
+            </Button>
+          </div>
 
          <Modal
           isOpen={this.state.modal}
@@ -147,7 +149,7 @@ import { Button,
 
            <ModalFooter>
              <Button
-                color="secondary"
+                variant="secondary"
                 onClick={this.toggle}>Cancel</Button>
            </ModalFooter>
          </Modal>
