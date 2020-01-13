@@ -126,7 +126,6 @@ export default class Relations extends React.Component{
      return (
        <div>
          <ListGroup.Item
-            variant="link"
             action
             onClick={this.toggle}
           >
@@ -139,9 +138,7 @@ export default class Relations extends React.Component{
           toggle={this.toggle}>
 
            <ModalHeader toggle={this.toggle}>
-            <h4>
              {this.props.relation.name}
-            </h4>
              <PopoutWindow
               content={popoutContent(this.props.relation)}
               title={"Relations"}

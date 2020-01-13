@@ -104,7 +104,7 @@ export default class Dependencies extends React.Component{
 
           <TabContent activeTab={this.state.activeTab}>
             <TabPane tabId="TGD">
-              <div style={{margin: "1rem"}}>
+              <div>
                 {this.props.dependencyLists.dependencyLists.TGDDependencies != null
                   && this.props.dependencyLists.dependencyLists.TGDDependencies.length > 0 ?
                   <ListGroup variant='flush'>
@@ -127,7 +127,7 @@ export default class Dependencies extends React.Component{
             </TabPane>
 
             <TabPane tabId="EGD">
-              <div style={{margin: "1rem"}}>
+              <div>
                 {this.props.dependencyLists.dependencyLists.EGDDependencies != null
                   && this.props.dependencyLists.dependencyLists.EGDDependencies.length > 0 ?
                   <ListGroup variant='flush'>
@@ -201,7 +201,8 @@ export default class Dependencies extends React.Component{
          <Modal
           isOpen={this.state.modal}
           toggle={this.toggle}
-          size="lg">
+          size="lg"
+          >
 
            <ModalHeader toggle={this.toggle}>
               {this.props.name}
