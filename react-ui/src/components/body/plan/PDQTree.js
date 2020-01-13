@@ -1,4 +1,7 @@
 import React from 'react';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { Group } from '@vx/group';
 import { Tree } from '@vx/hierarchy';
 import { LinearGradient } from '@vx/gradient';
@@ -8,6 +11,7 @@ import { LinkHorizontal,
          LinkVertical,
          LinkRadial
 } from '@vx/shape';
+import Form from 'react-bootstrap/Form';
 
 /**
  * PDQTree creates an svg of the plan search tree.
@@ -124,7 +128,7 @@ export default class PDQTree extends React.Component {
     this.setState({
       size: size
     }, (size) => {
-      if (this.state.size < 6){
+      if (this.state.size <= 9){
         this.zoom(.60)
 
       }
@@ -139,8 +143,14 @@ export default class PDQTree extends React.Component {
     });
   }
   componentDidMount() {
-    this.setHeightandWidth(window.innerHeight - 300, this.refs.svg.parentNode.clientWidth - 60);
-    this.getSize(this.props.data);
+    if (this.refs.svg.parentNode.clientWidth > this.refs.svg.parentNode.clientHeight){
+      this.setHeightandWidth(this.refs.svg.parentNode.clientWidth - this.refs.svg.parentNode.clientWidth*.3, this.refs.svg.parentNode.clientWidth);
+      this.getSize(this.props.data);
+    }
+    else{
+      this.setHeightandWidth(this.refs.svg.parentNode.clientHeight, this.refs.svg.parentNode.clientWidth);
+      this.getSize(this.props.data);
+    }
   }
 
   render() {
@@ -303,63 +313,69 @@ export default class PDQTree extends React.Component {
 
         </svg>
 
-        <div style={{ color: 'black', fontSize: 15, display:"flex" }}>
-          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
-            <label>Layout:</label>{" "}
-            <select
-              onClick={e => e.stopPropagation()}
-              onChange={e => this.setState({ layout: e.target.value })}
-              value={layout}
-            >
-              <option value="cartesian">cartesian</option>
-              <option value="polar">polar</option>
-            </select>
-          </div>
+        <Container className='my-2'>
+          <Row>
+            <Col>
+              <Form>
+                <Form.Group>
+                  <Form.Label>
+                    Layout:
+                  </Form.Label>
+                  <Form.Control as="select"
+                    onChange={e => this.setState({ layout: e.target.value })}
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <option value="polar">polar</option>
+                    <option value="cartesian">cartesian</option>
+                  </Form.Control>
+                </Form.Group>
+              </Form>
+            </Col>
+            <Col>
+              <Form>
+                <Form.Group>
+                  <Form.Label>
+                    Orientation:
+                  </Form.Label>
+                  <Form.Control
+                    as='select'
+                    onClick={e => e.stopPropagation()}
+                    onChange={e => this.setState({ orientation: e.target.value })}
+                    value={orientation}
+                    disabled={layout === 'polar'}
+                  >
+                    <option value="horizontal">horizontal</option>
+                    <option value="vertical">vertical</option>
+                  </Form.Control>
+                </Form.Group>
+              </Form>
+            </Col>
+          </Row>
 
-          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
-          <label>Orientation: </label>{" "}
-          <select
-            onClick={e => e.stopPropagation()}
-            onChange={e => this.setState({ orientation: e.target.value })}
-            value={orientation}
-            disabled={layout === 'polar'}
-          >
-            <option value="vertical">vertical</option>
-            <option value="horizontal">horizontal</option>
-          </select>
-          </div>
-
-          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
-          <span>
-            {this.state.selectedNode === null ?
-              <div style={{width: "20rem", height: "3rem"}}>
+          {this.state.selectedNode === null ?
+            <Row>
+              <Col>
               Click on a node for its information.
-              </div>
-              :
-            <div style={{width: "20rem", height: "3rem", display:"flex",
-                          flexDirection: "row"}}>
-              <div style={{margin:"0 .5rem 0 .5rem", width: "3rem" }}>
-              <b>Node: </b> <br/>{this.state.selectedNode.id}
-              </div>
-
+              </Col>
+            </Row>
+            :
+            <Row>
+              <Col>
+                <b>Node: </b> <br/>{this.state.selectedNode.id}
+              </Col>
               {this.state.selectedNode.accessTerm === null ?
-              null
+                null
               :
-              <div style={{margin:"0 .5rem 0 .5rem",
-                            overflow:"hidden",
-                            whiteSpace:"nowrap",
-                            textOverflow: "ellipsis"}}>
+              <Col>
               <b>Access Term: </b> <br/> {this.state.selectedNode.accessTerm}
-              </div>
+              </Col>
               }
-              <div style={{margin:"0 .5rem 0 .5rem", width: "6rem"}}>
-              <b>Node Type: </b> <br/> {this.state.selectedNode.type}
-              </div>
-            </div>
+              <Col>
+                <b>Node Type: </b> <br/> {this.state.selectedNode.type}
+              </Col>
+            </Row>
           }
-          </span>
-          </div>
-        </div>
+        </Container>
       </div>
     );
   }

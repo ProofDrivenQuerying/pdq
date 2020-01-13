@@ -21,25 +21,26 @@ const Body = ({selectedSchema, body, queryList}) => {
       <style type="text/css">
         {`
         .half {
-          height: calc((100vh - 11.5rem) / 2);
-          max-height: calc((100vh - 11.5rem) / 2)
+          height: calc((100vh - 11rem) / 2);
+          max-height: calc((100vh - 11rem) / 2);
           margin-bottom: 10px;
-          overflow:scroll;
           -webkit-overflow-scrolling: touch;
           white-space: pre;
-          x-overflow:scroll;
+        }
+        .overflow{
+          white-space: normal;
         }
         `}
       </style>
       <Container fluid = {true}>
         <Row>
-          <Col className='border' md>
+          <Col className='border border-bottom-0' md>
             <Schemas/>
           </Col>
-          <Col className='border' md>
+          <Col className='border border-bottom-0' md>
             <Queries/>
           </Col>
-          <Col className='border' md>
+          <Col className='border border-bottom-0' md>
             <Plan/>
           </Col>
         </Row>

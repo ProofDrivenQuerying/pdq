@@ -35,16 +35,9 @@ export default class GraphicalPlanModal extends React.Component {
     const graphicalPlanContent = (graphicalPlan) => (
       <div>
         <header>Graphical Plan</header>
-        <div style={{
-          display:"flex",
-          alignItems:"center",
-          justifyContent:"center",
-          overflow: "hidden"
-        }}>
+        <div>
          <PDQTree
-            data={graphicalPlan}
-            width={750}
-            height={370}/>
+            data={graphicalPlan}/>
         </div>
       </div>
     )
@@ -79,10 +72,9 @@ export default class GraphicalPlanModal extends React.Component {
 
           </ModalHeader>
 
-          <ModalBody
-          style={{maxHeight: "calc(100vh - 200px)"}}>
+          <ModalBody>
           {this.props.graphicalPlan != null && this.state.modal ?
-           <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
+           <div className='mx-2'>
             <PDQTree
                data={this.props.graphicalPlan}
                />

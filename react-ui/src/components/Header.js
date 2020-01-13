@@ -11,7 +11,7 @@ import Nav from 'react-bootstrap/Nav';
 
 const Header = () =>{
   return(
-    <Navbar bg='light' expand='lg' sticky='top' className='border'>
+    <Navbar bg='light' expand='lg' sticky='top' className='border border-top-0'>
       <Navbar.Brand
         href='/'>
         <img
@@ -24,7 +24,7 @@ const Header = () =>{
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className='ml-auto'>
           <Nav.Link
-          href="https://www.cs.ox.ac.uk/projects/pdq/home.html">
+          href="http://www.cs.ox.ac.uk/projects/pdq/home.html">
             About
           </Nav.Link>
         </Nav>

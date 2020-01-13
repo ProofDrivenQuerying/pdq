@@ -17,9 +17,6 @@ import Button from 'react-bootstrap/Button'
  */
 
  class QueryItem extends React.Component{
-   constructor(props){
-     super(props);
-    }
    render(){
      return(
        <div key={this.props.queryFromList.id}>

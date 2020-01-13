@@ -4,21 +4,20 @@ import RunModal from './RunModal';
 import DownloadRunButton from './DownloadRunButton';
 import DownloadPlanButton from './DownloadPlanButton';
 import PlanInfoModal from './PlanInfoModal';
-
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
-import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
-
 import { connect } from 'react-redux';
-import { plan } from "../../../actions/getPlan.js";
-import { run } from "../../../actions/getRun.js";
+import { plan } from '../../../actions/getPlan.js';
+import { run } from '../../../actions/getRun.js';
 import { FaRegMap,
          FaPlay
 } from 'react-icons/fa';
 
 /**
- * Renders the plan/button, graphical modal/button, and plan properties modal/button
- * and run button/information
+ * Renders the plan button, graphical modal, plan properties modal,
+ * and the plan download button.
+ *
+ * Renders the run button, run table modal, and the run download button.
  *
  * @author Camilo Ortiz
  */
@@ -77,7 +76,7 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
             )}>
             <div >
               {plan.isFetchingPlan ?
-                <div className="my-1">
+                <div className="my-2">
                   <Spinner animation="border"/>
                 </div>
                 :
@@ -155,7 +154,9 @@ const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
              )}>
              <div className="my-3">
                {planRun.isFetchingPlanRun ?
-                 <Spinner animation="border"/>
+                 <div className="my-2">
+                  <Spinner animation="border"/>
+                </div>
                 :
                 <div>
                   {plan.plan.runnable ?
@@ -172,7 +173,7 @@ const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
 
                     </div>
                     :
-                    <div>
+                    <div className='overflow'>
                       PDQ does not have access to the services required to run this plan
                     </div>
                   }

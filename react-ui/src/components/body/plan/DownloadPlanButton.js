@@ -51,16 +51,6 @@ export default class DownloadRunButton extends React.Component {
   }
 
   render(){
-
-    let smallButton = {
-      float: "left", width: "4rem", height:"4rem",
-               margin:"1rem 1rem 1rem 1rem"
-    }
-
-    let noStyle = {
-      float: "left"
-    }
-
     return(
       <div>
         <Container>

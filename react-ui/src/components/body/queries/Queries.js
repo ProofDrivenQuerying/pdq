@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button, ButtonGroup } from 'reactstrap';
 import QueryItem from './QueryItem';
 import { connect } from 'react-redux';
 import ListGroup from 'react-bootstrap/ListGroup';

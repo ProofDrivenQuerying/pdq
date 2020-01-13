@@ -7,7 +7,7 @@
   	<version>1.0.0-Beta</version>
   	<name>PDQ RESTful web service</name>
   	<url>http://www.cs.ox.ac.uk/pdq/</url>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
   	<description>This library features packages and classes for PDQ's RESTful web service.</description>
 
     <parent>
@@ -52,7 +52,19 @@
         <dependency>
             <groupId>org.glassfish.jersey.inject</groupId>
             <artifactId>jersey-hk2</artifactId>
-            <version>2.28</version>
+            <version>${jersey.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>1.12</version>
         </dependency>
 
         <!-- pdq dependencies -->

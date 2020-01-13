@@ -3,6 +3,7 @@ import { FaListUl } from 'react-icons/fa';
 import PopoutWindow from '../Popout';
 import Button from 'react-bootstrap/Button';
 import { IconContext } from "react-icons";
+import ListGroup from 'react-bootstrap/ListGroup';
 import { Table,
          Modal,
          ModalHeader,
@@ -64,23 +65,26 @@ export default class Relations extends React.Component{
         </Tooltip>
 
         <Modal
+          size="lg"
           isOpen={this.state.modalRelationsOpen}
           toggle={this.toggleRelationsModal}>
-          <ModalHeader toggle={this.toggleRelationsModal}>Relations</ModalHeader>
+          <ModalHeader toggle={this.toggleRelationsModal}>
+            Relations
+          </ModalHeader>
           <ModalBody>
+
           { this.props.relationList.relationList.relations != null ?
-            <ul>
+            <ListGroup variant="flush">
             {this.props.relationList.relationList.relations.map((relation, index)=>{
               return(
-                <li key={"relation"+index}>
-                  <NestedRelations relation={relation}/>
-                </li>
+                <NestedRelations key={"relation"+index} relation={relation}/>
               )
             })}
-          </ul>
+          </ListGroup>
           :
           null
           }
+
           </ModalBody>
 
           <ModalFooter>
@@ -121,16 +125,23 @@ export default class Relations extends React.Component{
      );
      return (
        <div>
-         <Button
+         <ListGroup.Item
             variant="link"
-            onClick={this.toggle}>{this.props.relation.name}</Button>
+            action
+            onClick={this.toggle}
+          >
+              {this.props.relation.name}
+          </ListGroup.Item>
 
          <Modal
+          size='lg'
           isOpen={this.state.modal}
           toggle={this.toggle}>
 
            <ModalHeader toggle={this.toggle}>
+            <h4>
              {this.props.relation.name}
+            </h4>
              <PopoutWindow
               content={popoutContent(this.props.relation)}
               title={"Relations"}
@@ -157,7 +168,7 @@ export default class Relations extends React.Component{
 const RelationAttributeTable = ({relation}) => {
   return(
     <div>
-      <span>Attributes</span>
+      <h5>Attributes</h5>
       <Table>
         <thead>
           <tr>
@@ -191,7 +202,7 @@ const RelationAccessTable = ({relation}) => {
     <div>
     {relation.accessMethods.length > 0 ?
       <div>
-        <span>Access Methods</span>
+        <h5>Access Methods</h5>
         <Table>
           <thead>
             <tr>

@@ -18,9 +18,6 @@ import ListGroup from 'react-bootstrap/ListGroup';
  */
 
  class SchemaItem extends React.Component{
-   constructor(props){
-     super(props);
-    }
 
    render(){
      return(

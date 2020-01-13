@@ -4,6 +4,7 @@ import PopoutWindow from '../Popout';
 import { IconContext } from "react-icons";
 import classnames from 'classnames';
 import Button from 'react-bootstrap/Button';
+import ListGroup from 'react-bootstrap/ListGroup';
 import { Modal,
          ModalHeader,
          ModalBody,
@@ -106,18 +107,17 @@ export default class Dependencies extends React.Component{
               <div style={{margin: "1rem"}}>
                 {this.props.dependencyLists.dependencyLists.TGDDependencies != null
                   && this.props.dependencyLists.dependencyLists.TGDDependencies.length > 0 ?
-                  <ul>
+                  <ListGroup variant='flush'>
                   {this.props.dependencyLists.dependencyLists.TGDDependencies.map((dependency, index)=>{
                     return(
-                      <li key={"TGDDependency"+index}>
-                        <NestedDependencies
-                          name={"TGD Dependency " + index}
-                          dependency={dependency}
-                        />
-                      </li>
+                      <NestedDependencies
+                        key={"TGDDependency"+index}
+                        name={"TGD Dependency " + index}
+                        dependency={dependency}
+                      />
                     )
                   })}
-                  </ul>
+                  </ListGroup>
                   :
                   <div>
                     {this.props.schemaFromList.name} contains no TGD Dependencies.
@@ -130,18 +130,18 @@ export default class Dependencies extends React.Component{
               <div style={{margin: "1rem"}}>
                 {this.props.dependencyLists.dependencyLists.EGDDependencies != null
                   && this.props.dependencyLists.dependencyLists.EGDDependencies.length > 0 ?
-                  <ul>
+                  <ListGroup variant='flush'>
                   {this.props.dependencyLists.dependencyLists.EGDDependencies.map((dependency, index)=>{
                     return(
-                      <li key={"EGDDependency"+index}>
-                        <NestedDependencies
-                          name={"EGD Dependency " + index}
-                          dependency={dependency}
-                        />
-                      </li>
+                      <NestedDependencies
+                        key={"EGDDependency"+index}
+                        name={"EGD Dependency " + index}
+                        dependency={dependency}
+                      />
+
                     )
                   })}
-                  </ul>
+                  </ListGroup>
                   :
                   <div>
                     {this.props.schemaFromList.name} contains no EGD Dependencies.
@@ -181,18 +181,6 @@ export default class Dependencies extends React.Component{
    }
 
    render() {
-     let definitionStringStyle = {
-       position: "relative",
-       marginRight: "2rem",
-       marginLeft: "2rem",
-       display: "flex",
-       flexDirection: "column",
-       overflowY: "scroll",
-       whiteSpace: "pre-wrap",
-       fontSize: "1rem",
-       height: "calc(100vh - 300px)",
-       wordWrap:"break"
-     }
      const dependencyContent = (definition, name) => (
        <div>
          <header>{name}</header>
@@ -201,12 +189,14 @@ export default class Dependencies extends React.Component{
            {this.props.dependency.definition}
          </div>
        </div>
-     )
+     );
      return (
        <div>
-         <Button
-            variant="link"
-            onClick={this.toggle}>{this.props.name}</Button>
+         <ListGroup.Item
+            action
+            onClick={this.toggle}>
+              {this.props.name}
+          </ListGroup.Item>
 
          <Modal
           isOpen={this.state.modal}
@@ -221,7 +211,7 @@ export default class Dependencies extends React.Component{
             </ModalHeader>
 
            <ModalBody>
-            <div style={definitionStringStyle}>
+            <div>
               {this.props.dependency.definition}
             </div>
            </ModalBody>
