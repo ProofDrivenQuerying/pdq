@@ -1,9 +1,6 @@
   # PDQ react-ui
 
-  PQD web UI made with React.js
-
-  The source code is available for free for non-commercial use.
-  See the LICENCE file for details.
+  PQD Web Application made with React.js
 
   ## Requirements
 
@@ -12,24 +9,27 @@
 
   ## Dependencies
 
-  External: @vx/-0.0.189, d3.js-5.9.2, redux-4.0.1, redux-thunk-2.3.0, reactstrap-8.0.0, react-icons-3.7.0, classnames-2.2.6, react-popout-1.0.2
+  External: @vx/-0.0.189, d3.js-5.9.2, redux-4.0.1, redux-thunk-2.3.0, reactstrap-8.0.0, react-icons-3.7.0, classnames-2.2.6, react-popout-1.0.2, react-bootstrap-1.0.0
 
   To install dependencies and requirements:
 
   On MacOS/Linux, you can download node with Homebrew.
 
-    * brew install node
+    brew install node
 
   Otherwise, download [node and npm] (https://www.npmjs.com/get-npm) manually or
   with your favorite package manager. After you have node and npm, go to the
   project's root directory and run:
 
-    * npm install
+    npm install
 
   This will automatically install all of the dependencies listed in the app's
   package.json file.
 
-  ## Installing & running the UI
+  ## Installing & Running the App
+
+  Visit `pdq/rest` and start the backend. You will get errors in the GUI if it
+  runs without a backend.
 
   Under the top directory, type:
 
@@ -37,7 +37,7 @@
 
   This runs the app in the development mode.
   Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-  The page will reload whenever you make local edits and save.
+
 
     npm test
 
