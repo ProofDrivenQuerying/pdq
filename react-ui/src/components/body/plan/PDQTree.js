@@ -269,7 +269,7 @@ export default class PDQTree extends React.Component {
                       <Group top={top} left={left} key={key}>
                         {node.depth === 0 && (
                           <circle
-                            r={12}
+                            r={15}
                             fill='#428bca'
                             onClick={() => {
                               this.setState({ selectedNode: node.data });
@@ -295,7 +295,7 @@ export default class PDQTree extends React.Component {
                         )}
                         <text
                           dy={'.33em'}
-                          fontSize={9}
+                          fontSize={10}
                           fontFamily="Arial"
                           textAnchor={'middle'}
                           style={{ pointerEvents: 'none' }}
@@ -355,7 +355,7 @@ export default class PDQTree extends React.Component {
           {this.state.selectedNode === null ?
             <Row>
               <Col>
-              Click on a node for its information.
+              Select a node to view its information.
               </Col>
             </Row>
             :

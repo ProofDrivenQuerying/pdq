@@ -3,13 +3,12 @@ import { FaEdit } from 'react-icons/fa';
 import { connect } from 'react-redux';
 import { verifyQuery } from '../../../actions/verifyQuery';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import { Modal,
          ModalHeader,
          ModalBody,
          ModalFooter,
          Tooltip,
-         Form,
-         FormGroup,
          Input,
          Alert
 } from 'reactstrap';
@@ -41,6 +40,7 @@ class QueryWriter extends React.Component{
   toggleQueryModal(){
     this.setState({
       modalQueryOpen: !this.state.modalQueryOpen,
+      tooltipOpen: false
     });
   }
 
@@ -70,8 +70,9 @@ class QueryWriter extends React.Component{
     })
   }
   render(){
-    
+
     if (!this.props.schemaList.isFetching){
+      console.log(this.props.queryFromList.SQL);
       return(
         <div>
           <Button
@@ -99,16 +100,14 @@ class QueryWriter extends React.Component{
 
             <ModalBody style={{height:"calc(100vh - 200px)"}}>
               <Form>
-                <FormGroup>
-                  <Input
-                    type="textarea"
-                    name="queryText"
-                    id="queryText"
+                <Form.Group controlId={"QueryText"+this.props.schemaList.selectedSID+"_"+this.props.id}>
+                  <Form.Label>Write your query in SQL</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows="20"
                     placeholder={this.props.queryFromList.SQL}
-                    style={{height:"calc(100vh - 200px - 6rem)"}}
-                    value={this.state.editedQuery}
                     onChange={e => this.setState({editedQuery: e.target.value})}/>
-                </FormGroup>
+                </Form.Group>
               </Form>
 
               {this.state.validQuery ? null :

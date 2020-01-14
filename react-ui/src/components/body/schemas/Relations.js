@@ -26,7 +26,8 @@ export default class Relations extends React.Component{
 
   toggleRelationsModal(){
     this.setState({
-      modalRelationsOpen: !this.state.modalRelationsOpen
+      modalRelationsOpen: !this.state.modalRelationsOpen,
+      tooltipOpen: false
     });
   }
 

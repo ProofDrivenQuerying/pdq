@@ -33,6 +33,7 @@ export default class Dependencies extends React.Component{
   toggleDependenciesModal(){
     this.setState({
       modalDependenciesOpen: !this.state.modalDependenciesOpen,
+      tooltipOpen: false
     });
   }
 
