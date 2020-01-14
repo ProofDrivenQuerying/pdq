@@ -15,7 +15,7 @@ const Header = () =>{
       <Navbar.Brand
         href='/'>
         <img
-        src={logo}
+        src={'https://www.cs.ox.ac.uk/projects/pdq/images/pdq-logo.svg'}
         className='d-inline-block align-top'
         alt="Logo"
         height='45'/>
