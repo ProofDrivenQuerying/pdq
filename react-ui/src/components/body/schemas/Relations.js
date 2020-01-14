@@ -59,7 +59,7 @@ export default class Relations extends React.Component{
         <Tooltip
           trigger="hover"
           placement="top"
-          isOpen={this.state.tooltipOpen}
+          isOpen={this.state.tooltipOpen && !this.state.modalRelationsOpen}
           target={"RelationButton"+ this.props.schemaFromList.id}
           toggle={this.toggleTooltip}>
           View Relations

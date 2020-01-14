@@ -9,7 +9,6 @@ import { Modal,
          ModalBody,
          ModalFooter,
          Tooltip,
-         Input,
          Alert
 } from 'reactstrap';
 
@@ -72,7 +71,6 @@ class QueryWriter extends React.Component{
   render(){
 
     if (!this.props.schemaList.isFetching){
-      console.log(this.props.queryFromList.SQL);
       return(
         <div>
           <Button
@@ -86,7 +84,7 @@ class QueryWriter extends React.Component{
           <Tooltip
             trigger="hover"
             placement="top"
-            isOpen={this.state.tooltipOpen}
+            isOpen={this.state.tooltipOpen && !this.state.modalQueryOpen}
             target={"QueryButton"+ this.props.schemaList.selectedSID+"_"+this.props.id}
             toggle={this.toggleTooltip}>
             Add new SQL query

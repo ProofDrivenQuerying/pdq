@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { FaTrashAlt } from 'react-icons/fa';
 import QueryWriter from './QueryWriter';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup';
-import Button from 'react-bootstrap/Button'
+
+// import Button from 'react-bootstrap/Button';
+// import { FaTrashAlt } from 'react-icons/fa';
+
 
 /**
  * SchemaName returns a button for given schema.

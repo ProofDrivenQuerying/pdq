@@ -72,7 +72,7 @@ export default class Dependencies extends React.Component{
         <Tooltip
           trigger="hover"
           placement="top"
-          isOpen={this.state.tooltipOpen}
+          isOpen={this.state.tooltipOpen && !this.state.modalDependenciesOpen}
           target={"DependenciesButton"+ this.props.schemaFromList.id}
           toggle={this.toggleTooltip}>
           View Dependencies
