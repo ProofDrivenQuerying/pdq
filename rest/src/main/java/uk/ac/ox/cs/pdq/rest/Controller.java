@@ -26,7 +26,7 @@ import org.springframework.http.HttpHeaders;
 import java.nio.file.Paths;
 
 /**
- * Entry point for Rest application. JsonController defines and computes all the REST calls of the API.
+ * Entry point for Rest application. Controller defines and computes all the REST calls of the API.
  *
  * @author Camilo Ortiz
  */
