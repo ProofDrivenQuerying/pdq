@@ -22,7 +22,7 @@ export default class DownloadRunButton extends React.Component {
   downloadPlan(schemaID, queryID, SQL, userID){
     let simpleSQL = SQL.replace(/\n|\r|\t/g, " ");
     Helpers.httpRequest(
-      `/downloadPlan/`+schemaID+`/`+queryID+`/`+simpleSQL+`/`+userID,
+      `/downloadPlan/`+schemaID+`/`+queryID+`/`+simpleSQL,
       "get"
     )// 1. Convert the data into 'blob'
      .then((response) => response.blob())
@@ -31,7 +31,7 @@ export default class DownloadRunButton extends React.Component {
        const url = window.URL.createObjectURL(new Blob([blob]));
        const link = document.createElement('a');
        link.href = url;
-       link.setAttribute('download', `PDQplan`+schemaID+`-`+queryID+`.xml`);
+       link.setAttribute('download', `PDQ_plan_schema`+schemaID+`_query`+queryID+`.xml`);
        // 3. Append to html page
        document.body.appendChild(link);
        // 4. Force download

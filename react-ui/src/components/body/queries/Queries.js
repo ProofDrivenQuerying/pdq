@@ -33,11 +33,6 @@ const Queries = ({schemaList, setQuery, removeQuery}) => {
 
 const QueryList = ({ schemaList}) => {
   if(!schemaList.isFetching){
-    const queries = schemaList.schemas[schemaList.selectedSID].queries.map((queryFromList, index) =>
-      <QueryItem
-        queryFromList={queryFromList}
-        key={"query"+index}/>
-    );
     return (
       <div>
         <style type="text/css">
@@ -52,7 +47,11 @@ const QueryList = ({ schemaList}) => {
           `}
         </style>
         <ListGroup variant='half'>
-          {queries}
+          {schemaList.schemas[schemaList.selectedSID].queries.map((queryFromList, index) =>
+            <QueryItem
+              queryFromList={queryFromList}
+              key={"query"+index}/>
+          )}
         </ListGroup>
       </div>
   );

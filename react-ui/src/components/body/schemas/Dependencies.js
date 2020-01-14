@@ -119,7 +119,7 @@ export default class Dependencies extends React.Component{
                   })}
                   </ListGroup>
                   :
-                  <div>
+                  <div className='my-2'>
                     {this.props.schemaFromList.name} contains no TGD Dependencies.
                   </div>
                 }
@@ -143,7 +143,7 @@ export default class Dependencies extends React.Component{
                   })}
                   </ListGroup>
                   :
-                  <div>
+                  <div className='my-2'>
                     {this.props.schemaFromList.name} contains no EGD Dependencies.
                   </div>
                 }
@@ -212,7 +212,7 @@ export default class Dependencies extends React.Component{
             </ModalHeader>
 
            <ModalBody>
-            <div>
+            <div style={{overflowWrap: 'break-word'}}>
               {this.props.dependency.definition}
             </div>
            </ModalBody>

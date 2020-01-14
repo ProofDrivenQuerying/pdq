@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import org.springframework.core.io.Resource;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,10 +40,7 @@ public class JsonController {
 
     private HashMap<Integer, Schema> schemaList;
     private HashMap<Integer, HashMap<Integer, ConjunctiveQuery>> commonQueries;
-    private HashMap<Long, HashMap<Integer, HashMap<Integer, ConjunctiveQuery>>> queryList;
     private HashMap<Integer, File> casePropertyList;
-    private HashMap<Integer, HashMap<Integer, JsonPlan>> planList;
-    private HashMap<Integer, HashMap<Integer, JsonRunResults>> runResultList;
     private HashMap<Integer, String> catalogPaths;
     private boolean localMode; //change to config file
 
@@ -53,9 +51,6 @@ public class JsonController {
         this.casePropertyList = new HashMap<Integer, File>();
 
 
-        this.queryList = new HashMap<Long, HashMap<Integer, HashMap<Integer, ConjunctiveQuery>>>();
-        this.planList = new HashMap<Integer, HashMap<Integer, JsonPlan>>();
-        this.runResultList = new HashMap<Integer, HashMap<Integer, JsonRunResults>>();
         this.catalogPaths = new HashMap<Integer, String>();
         this.localMode = false;
 
@@ -212,6 +207,7 @@ public class JsonController {
             //validation goes here
             validQuery = true;
 
+            // localMode means we save new queries to file
             if (this.localMode) {
                 File query = new File(paths.get(schemaID) + "/queries/" + "query" + queryID.toString() + ".xml");
                 IOManager.exportQueryToXml(newQuery, query);
@@ -240,26 +236,37 @@ public class JsonController {
         Schema schema = schemaList.get(schemaID);
         File properties = casePropertyList.get(schemaID);
         String pathToCatalog = catalogPaths.get(schemaID);
-        ConjunctiveQuery cq = null;
+        ConjunctiveQuery cq = commonQueries.get(schemaID).get(queryID);
         JsonPlan plan = null;
         try {
-            if(!localMode && queryID != 0) {
+            if(cq == null) {
                 SQLQueryReader reader = new SQLQueryReader(schema);
                 cq = reader.fromString(SQL);
-            }else{
-                cq = commonQueries.get(schemaID).get(queryID);
             }
 
             plan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
+            plan.getGraphicalPlan().setType("ORIGIN");
+
+            // Check whether the cached directory exists
+            if (! Files.exists(Paths.get(paths.get(schemaID) + "/query" + queryID + "/"))) {
+                File dir = new File(paths.get(schemaID) + "/query" + queryID + "/");
+                dir.mkdir();
+            }
+
+            // If our plan has already been written to file, don't write it out again
+            if (Files.exists(Paths.get(paths.get(schemaID) + "/query" + queryID + "/computed-plan.xml"))){
+                return plan;
+            }
+
+            File planFile = new File(paths.get(schemaID) + "/query" + queryID + "/computed-plan.xml");
+
+            RelationalTerm relationalTermPlan = plan.getPlan();
+            IOManager.writeRelationalTerm(relationalTermPlan, planFile);
 
         } catch (Throwable e) {
             e.printStackTrace();
             System.exit(-1);
             return null;
-        }
-
-        if (plan != null) {
-            plan.getGraphicalPlan().setType("ORIGIN");
         }
 
         return plan;
@@ -270,30 +277,42 @@ public class JsonController {
 
 
         Schema schema = schemaList.get(schemaID);
+        ConjunctiveQuery cq = commonQueries.get(schemaID).get(queryID);
         File properties = casePropertyList.get(schemaID);
         String pathToCatalog = catalogPaths.get(schemaID);
-        JsonRunResults toReturn = null;
+        JsonRunResults result = null;
 
         try {
-            ConjunctiveQuery cq = null;
-            if (! localMode && queryID != 0){
+            if (cq == null){
                 SQLQueryReader reader = new SQLQueryReader(schema);
                 cq = reader.fromString(SQL);
-            }else{
-                cq = commonQueries.get(schemaID).get(queryID);
             }
 
             JsonPlan jsonPlan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
             RelationalTerm plan = jsonPlan.getPlan();
 
-            toReturn = Runner.runtime(schema, cq, properties, plan);
+            result = Runner.runtime(schema, cq, properties, plan);
+
+            // Check whether the cached directory exists. If it doesn't, create it.
+            if (! Files.exists(Paths.get(paths.get(schemaID) + "/query" + queryID + "/"))) {
+                File dir = new File(paths.get(schemaID) + "/query" + queryID + "/");
+                dir.mkdir();
+            }
+
+            // If our run has already been written to file, don't write it out again.
+            if (Files.exists(Paths.get(paths.get(schemaID) + "/query" + queryID + "/results.csv"))){
+                return result;
+            }
+
+            Runner.writeOutput(result.results, paths.get(schemaID) + "/query" + queryID + "/results.csv");
+
 
         } catch (Throwable e) {
             e.printStackTrace();
             System.exit(-1);
         }
 
-        return toReturn;
+        return result;
 
     }
 
@@ -310,24 +329,8 @@ public class JsonController {
                                                 @PathVariable String SQL, HttpServletRequest request) {
 
         try {
-            Schema schema = schemaList.get(schemaID);
-            File properties = casePropertyList.get(schemaID);
-            String pathToCatalog = catalogPaths.get(schemaID);
-            ConjunctiveQuery cq = null;
 
-            if (! localMode && queryID != 0){
-                SQLQueryReader reader = new SQLQueryReader(schema);
-                cq = reader.fromString(SQL);
-            }else{
-                cq = commonQueries.get(schemaID).get(queryID);
-            }
-
-            JsonPlan jsonPlan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
-            RelationalTerm plan = jsonPlan.getPlan();
-            JsonRunResults result = Runner.runtime(schema, cq, properties, plan);
-            Runner.writeOutput(result.results, paths.get(schemaID) + "/results.csv");
-
-            Resource resource = loadFileAsResource(paths.get(schemaID) + "/results.csv");
+            Resource resource = loadFileAsResource(paths.get(schemaID) + "/query" + queryID + "/results.csv");
             String contentType = "text/csv";
 
             return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
@@ -346,8 +349,7 @@ public class JsonController {
                                                  @PathVariable String SQL, HttpServletRequest request) {
 
         try {
-
-            Resource resource = loadFileAsResource(paths.get(schemaID) + "/computed-plan.xml");
+            Resource resource = loadFileAsResource(paths.get(schemaID) + "/query" + queryID + "/computed-plan.xml");
 
             String contentType = "application/xml";
 

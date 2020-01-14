@@ -26,18 +26,6 @@ export default class PlanInfoModal extends React.Component{
   }
 
   render(){
-    let planStringStyle = {
-      position: "relative",
-      marginRight: "2rem",
-      marginLeft: "2rem",
-      display: "flex",
-      flexDirection: "column",
-      overflowY: "scroll",
-      whiteSpace: "pre-wrap",
-      fontSize: "1rem",
-      height: "calc(100vh - 300px)"
-    };
-
     const planInfoContent = (name, plan, planStringStyle) =>(
       <div>
         <header>{name}</header>
@@ -97,7 +85,11 @@ export default class PlanInfoModal extends React.Component{
                 <hr style={{color: "rgb(250,250,250)", backgroundColor: "rgb(250,250,250)", height: 0.1}}/>
               </div>
 
-              <span style={planStringStyle}>{this.props.plan.bestPlan}</span>
+              <span style={{ display: "flex", flexDirection: "column",
+                overflowY: "scroll", whiteSpace: "pre-wrap", height: "calc(100vh - 300px)",
+                overflowWrap: 'break-word'}}>
+                  {this.props.plan.bestPlan}
+              </span>
              </div>)
             :
             (null)}

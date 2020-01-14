@@ -69,8 +69,9 @@ class QueryWriter extends React.Component{
       }
     })
   }
-
   render(){
+    console.log(this.props.queryFromList.SQL);
+    
     if (!this.props.schemaList.isFetching){
       return(
         <div>
@@ -104,7 +105,7 @@ class QueryWriter extends React.Component{
                     type="textarea"
                     name="queryText"
                     id="queryText"
-                    placeholder={this.state.editedQuery}
+                    placeholder={this.props.queryFromList.SQL}
                     style={{height:"calc(100vh - 200px - 6rem)"}}
                     value={this.state.editedQuery}
                     onChange={e => this.setState({editedQuery: e.target.value})}/>

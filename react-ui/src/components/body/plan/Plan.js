@@ -26,7 +26,7 @@ const Plan = ({plan, getPlan, run, planRun, schemaList, userID}) => {
 
   return(
     <div>
-      <h4 className='my-2'>
+      <h4 className='my-2 pb-1'>
         Plan
       </h4>
 
@@ -40,7 +40,7 @@ const Plan = ({plan, getPlan, run, planRun, schemaList, userID}) => {
             userID={userID}
           />
 
-          <h4 className='my-2'>
+          <h4 className='my-2 pb-1'>
             Run Your Plan with PDQ
           </h4>
 

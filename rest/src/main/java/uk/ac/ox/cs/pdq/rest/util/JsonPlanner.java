@@ -106,7 +106,6 @@ public class JsonPlanner{
           }
           String data = new String(baos.toByteArray(), StandardCharsets.UTF_8);
 
-
           if(runnable == null){
               toReturn = new JsonPlan(graphicalPlan, data, false, plan, computationTime);
           }else{
