@@ -15,13 +15,19 @@ class App extends Component{
 
   componentWillMount(){
     this.props.dispatch(getInitialData());
+    console.log(this.props);
   }
 
   render(){
     return(
       <div>
         <Header/>
-        <Body/>
+
+        {this.props.schemaList.schemas.length === 0 ?
+          null
+          :
+          <Body/>}
+
       </div>
     )
   }
