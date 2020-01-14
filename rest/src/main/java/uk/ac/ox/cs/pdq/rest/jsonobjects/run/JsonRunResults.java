@@ -3,6 +3,11 @@ package uk.ac.ox.cs.pdq.rest.jsonobjects.run;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 
+/**
+ * Serializable class that contains run results.
+ *
+ * @author Camilo Ortiz
+ */
 public class JsonRunResults {
     public long tupleCount;
     public JsonTable table;

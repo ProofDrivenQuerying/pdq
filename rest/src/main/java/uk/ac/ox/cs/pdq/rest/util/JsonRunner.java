@@ -20,7 +20,7 @@ import java.io.FileWriter;
  * @author Camilo Ortiz
  */
 
-public class Runner {
+public class JsonRunner {
     /**
      * Runs the plan and creates/returns a JSON-friendly object JsonRunResults.
      *
@@ -34,7 +34,7 @@ public class Runner {
         try{
             long start = System.currentTimeMillis();
 
-            Table results = Runner.evaluatePlan(plan, schema);
+            Table results = JsonRunner.evaluatePlan(plan, schema);
 
             ResetableIterator<Tuple> it = results.iterator();
 

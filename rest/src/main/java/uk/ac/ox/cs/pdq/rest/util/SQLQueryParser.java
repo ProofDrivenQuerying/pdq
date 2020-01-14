@@ -9,6 +9,11 @@ import org.antlr.v4.runtime.misc.Interval;
 import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryParser;
 
+/**
+ * Refactoring of SQLQueryParser for easier access to class methods
+ *
+ * @author Camilo Ortiz
+ */
 public class SQLQueryParser {
 
     /** The log. */
@@ -66,12 +71,19 @@ public class SQLQueryParser {
             "SINGLE_LINE_COMMENT", "MULTILINE_COMMENT", "SPACES", "UNEXPECTED_CHAR"
     };
 
+    /**
+     * @return
+     * @throws Exception
+     */
     private Token identifier() throws Exception
     {
         // <identifier> ::= [ <introducer><character set specification> ] <actual identifier>
         return match(IDENTIFIER);
     }
 
+    /**
+     * @throws Exception
+     */
     private void search_condition() throws Exception
     {
         // <search condition> ::=
@@ -85,6 +97,9 @@ public class SQLQueryParser {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private void boolean_term() throws Exception
     {
         // <boolean term> ::=
@@ -98,6 +113,9 @@ public class SQLQueryParser {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private void boolean_factor() throws Exception
     {
         // <boolean factor> ::= [ NOT ] <boolean test>
@@ -109,6 +127,9 @@ public class SQLQueryParser {
     }
 
 
+    /**
+     * @throws Exception
+     */
     private void boolean_test() throws Exception
     {
         // <boolean test> ::= <boolean primary> [ IS [ NOT ] <truth value> ]
@@ -124,6 +145,9 @@ public class SQLQueryParser {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private void boolean_primary() throws Exception
     {
         // <boolean primary> ::= <predicate> | <left paren> <search condition> <right paren>
@@ -139,6 +163,9 @@ public class SQLQueryParser {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private void truth_value() throws Exception
     {
         // <truth value> ::= TRUE | FALSE | UNKNOWN
@@ -157,11 +184,17 @@ public class SQLQueryParser {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private void predicate() throws Exception
     {
         comparison_predicate();
     }
 
+    /**
+     * @throws Exception
+     */
     private void comparison_predicate() throws Exception
     {
         // <comparison predicate> ::= <row value constructor> <comp op> <row value constructor>
@@ -170,6 +203,9 @@ public class SQLQueryParser {
         row_value_constructor();
     }
 
+    /**
+     * @throws Exception
+     */
     private void row_value_constructor() throws Exception
     {
         // <row value constructor> ::=
@@ -188,6 +224,9 @@ public class SQLQueryParser {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private void row_value_constructor_list() throws Exception
     {
         // <row value constructor list> ::= <row value constructor element> [ { <comma> <row value constructor element> } ... ]
@@ -199,6 +238,9 @@ public class SQLQueryParser {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private void row_value_constructor_element() throws Exception
     {
         // <row value constructor element> ::=
@@ -221,12 +263,18 @@ public class SQLQueryParser {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private void null_specification() throws Exception
     {
         // <null specification> ::= NULL
         match(NULL);
     }
 
+    /**
+     * @throws Exception
+     */
     private void value_expression() throws Exception
     {
         // <value expression> ::=
@@ -259,6 +307,9 @@ public class SQLQueryParser {
     }
 
 
+    /**
+     * @throws Exception
+     */
     private void query_specification() throws Exception
     {
         match(SELECT);
@@ -266,6 +317,9 @@ public class SQLQueryParser {
         table_expression();
     }
 
+    /**
+     * @throws Exception
+     */
     private void select_list() throws Exception
     {
         // <select list> ::=
@@ -286,6 +340,9 @@ public class SQLQueryParser {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private void select_sublist() throws Exception
     {
         // <select sublist> ::= <derived column> | <qualifier> <period> <asterisk>
@@ -317,17 +374,26 @@ public class SQLQueryParser {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private void numeric_value_expression() throws Exception
     {
         match(NUMERIC_LITERAL);
     }
 
+    /**
+     * @throws Exception
+     */
     private void string_value_expression() throws Exception
     {
         // <string value expression> ::= <character value expression> | <bit value expression>
         match(STRING_LITERAL);
     }
 
+    /**
+     * @throws Exception
+     */
     private void as_clause() throws Exception
     {
         //	<as clause> ::= [ AS ] <column name>
@@ -338,12 +404,18 @@ public class SQLQueryParser {
         column_name();
     }
 
+    /**
+     * @throws Exception
+     */
     private void column_name() throws Exception
     {
         // <column name> ::= <identifier>
         identifier();
     }
 
+    /**
+     * @throws Exception
+     */
     private void qualifier() throws Exception
     {
         // <qualifier> ::= <table name> | <correlation name>
@@ -358,6 +430,10 @@ public class SQLQueryParser {
         }
     }
 
+    /**
+     * @return
+     * @throws Exception
+     */
     private Token table_name() throws Exception
     {
         // <table name> ::= <qualified name> | <qualified local table name>
@@ -376,12 +452,20 @@ public class SQLQueryParser {
         }
     }
 
+    /**
+     * @return
+     * @throws Exception
+     */
     private Token correlation_name() throws Exception
     {
         // <correlation name> ::= <identifier>
         return identifier();
     }
 
+    /**
+     * @return
+     * @throws Exception
+     */
     private Token qualified_name() throws Exception
     {
         // <qualified name> ::= [ <schema name> <period> ] <qualified identifier>
@@ -393,6 +477,10 @@ public class SQLQueryParser {
         return qualified_identifier();
     }
 
+    /**
+     * @return
+     * @throws Exception
+     */
     private Token qualified_local_table_name() throws Exception
     {
         // <qualified local table name> ::= MODULE <period> <local table name>
@@ -401,18 +489,29 @@ public class SQLQueryParser {
         return local_table_name();
     }
 
+    /**
+     * @return
+     * @throws Exception
+     */
     private Token local_table_name() throws Exception
     {
         // <local table name> ::= <qualified identifier>
         return qualified_identifier();
     }
 
+    /**
+     * @return
+     * @throws Exception
+     */
     private Token qualified_identifier() throws Exception
     {
         // <qualified identifier> ::= <identifier>
         return identifier();
     }
 
+    /**
+     * @throws Exception
+     */
     private void schema_name() throws Exception
     {
         // <schema name> ::= [ <catalog name> <period> ] <unqualified schema name>
@@ -424,18 +523,27 @@ public class SQLQueryParser {
         unqualified_schema_name();
     }
 
+    /**
+     * @throws Exception
+     */
     private void catalog_name() throws Exception
     {
         // <catalog name> ::= <identifier>
         identifier();
     }
 
+    /**
+     * @throws Exception
+     */
     private void unqualified_schema_name() throws Exception
     {
         // <unqualified schema name> ::= <identifier>
         identifier();
     }
 
+    /**
+     * @throws Exception
+     */
     private void table_expression() throws Exception
     {
         // <table expression> ::=
@@ -451,6 +559,9 @@ public class SQLQueryParser {
         matchEOF();
     }
 
+    /**
+     * @throws Exception
+     */
     private void from_clause() throws Exception
     {
         if(lookahead(1) == FROM)
@@ -465,6 +576,10 @@ public class SQLQueryParser {
         }
     }
 
+    /**
+     * @param join
+     * @throws Exception
+     */
     private void table_reference(boolean join) throws Exception
     {
         //	<table reference> ::=
@@ -495,6 +610,10 @@ public class SQLQueryParser {
 		}*/
     }
 
+    /**
+     * @return
+     * @throws Exception
+     */
     private Token correlation_specification() throws Exception
     {
         //	<correlation specification> ::=
@@ -513,29 +632,47 @@ public class SQLQueryParser {
         return token;
     }
 
+    /**
+     * @throws Exception
+     */
     private void derived_column_list() throws Exception
     {
         column_name_list();
     }
 
+    /**
+     * @throws Exception
+     */
     private void derived_table() throws Exception
     {
         table_subquery();
     }
 
+    /**
+     * @throws Exception
+     */
     private void table_subquery() throws Exception
     {
         subquery();
     }
 
+    /**
+     * @throws Exception
+     */
     private void column_name_list() throws Exception
     {
     }
 
+    /**
+     * @throws Exception
+     */
     private void subquery() throws Exception
     {
     }
 
+    /**
+     * @throws Exception
+     */
     private void joined_table() throws Exception
     {
         // <joined table> ::=
@@ -560,6 +697,9 @@ public class SQLQueryParser {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private void join_specification() throws Exception
     {
         //	<join specification> ::= <join condition> | <named columns join>
@@ -574,6 +714,9 @@ public class SQLQueryParser {
     }
 
 
+    /**
+     * @throws Exception
+     */
     private void join_condition() throws Exception
     {
         // <join condition> ::= ON <search condition>
@@ -585,6 +728,9 @@ public class SQLQueryParser {
     }
 
 
+    /**
+     * @throws Exception
+     */
     private void named_columns_join() throws Exception
     {
         // <named columns join> ::= USING <left paren> <join column list> <right paren>
@@ -594,12 +740,18 @@ public class SQLQueryParser {
         match(CLOSE_PAR);
     }
 
+    /**
+     * @throws Exception
+     */
     private void join_column_list() throws Exception
     {
         // <join column list> ::= <column name list>
         column_name_list();
     }
 
+    /**
+     * @throws Exception
+     */
     private void where_clause() throws Exception
     {
         match(WHERE);
@@ -607,38 +759,62 @@ public class SQLQueryParser {
         search_condition();
     }
 
+    /**
+     * @throws Exception
+     */
     public void parse() throws Exception
     {
         lookahead(1);
         query_specification();
     }
 
+    /**
+     * @param message
+     * @throws Exception
+     */
     public void error(String message) throws Exception
     {
         Token token = tokens.get(tokens.index());
         throw new Exception("Line:" + token.getLine() + " Char:" + token.getCharPositionInLine() + " " + message + " Got: " + token.getText());
     }
 
+    /**
+     * @return
+     */
     public String gettext()
     {
         return tokens.get(tokens.index()).getText();
     }
 
+    /**
+     * @param n
+     * @return
+     */
     public int lookahead(int n)
     {
         return tokens.LA(n);
     }
 
+    /**
+     * @return
+     */
     public int marker()
     {
         return tokens.index();
     }
 
+    /**
+     * @param index
+     * @throws Exception
+     */
     public void rollback(int index) throws Exception
     {
         tokens.seek(index);
     }
 
+    /**
+     * @throws Exception
+     */
     public void matchEOF() throws Exception
     {
         if(lookahead(1) != -1)
@@ -646,6 +822,12 @@ public class SQLQueryParser {
             error("Missing EOF");
         }
     }
+
+    /**
+     * @param token
+     * @return
+     * @throws Exception
+     */
     public Token match(int token) throws Exception
     {
         Token tok = tokens.get(tokens.index());
@@ -657,6 +839,11 @@ public class SQLQueryParser {
         return tok;
     }
 
+    /**
+     * @param str
+     * @return
+     * @throws Exception
+     */
     public Token match(String str) throws Exception
     {
         Token tok = tokens.get(tokens.index());
@@ -668,6 +855,10 @@ public class SQLQueryParser {
         return tok;
     }
 
+    /**
+     * @return
+     * @throws Exception
+     */
     public Token match_comp_op() throws Exception
     {
         if(lookahead(1) == ASSIGN) return match(ASSIGN);
@@ -698,26 +889,41 @@ public class SQLQueryParser {
     private ArrayList<String> resultColumns = new ArrayList<>();
 
 
+    /**
+     * @return
+     */
     List<String> getColumnNames()
     {
         return columnNames;
     }
 
+    /**
+     * @return
+     */
     List<String> getTableAliases()
     {
         return tableAliases;
     }
 
+    /**
+     * @return
+     */
     List<String> getJoinConstraints()
     {
         return joinConstraints;
     }
 
+    /**
+     * @return
+     */
     String getLastExpr()
     {
         return tokens.getText(this.where, tokens.get(tokens.index()));
     }
 
+    /**
+     * @return
+     */
     List<String> getResultColumns()
     {
         return resultColumns;

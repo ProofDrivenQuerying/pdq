@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.rest.jsonobjects.schema;
 
 
 /**
- * Defines the structure of Relations in JSON form.
+ * Serializable Relation class.
  *
  * @author Camilo Ortiz
  */

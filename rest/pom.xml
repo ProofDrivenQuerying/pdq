@@ -5,10 +5,10 @@
     <groupId>uk.ac.ox.cs.pdq</groupId>
   	<artifactId>pdq-rest</artifactId>
   	<version>1.0.0-Beta</version>
-  	<name>PDQ RESTful web service</name>
+  	<name>PDQ REST API</name>
   	<url>http://www.cs.ox.ac.uk/pdq/</url>
     <packaging>jar</packaging>
-  	<description>This library features packages and classes for PDQ's RESTful web service.</description>
+  	<description>This library features packages and classes for PDQ's REST API.</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

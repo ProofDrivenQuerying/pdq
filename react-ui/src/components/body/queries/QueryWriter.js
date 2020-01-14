@@ -70,7 +70,6 @@ class QueryWriter extends React.Component{
     })
   }
   render(){
-    console.log(this.props.queryFromList.SQL);
     
     if (!this.props.schemaList.isFetching){
       return(

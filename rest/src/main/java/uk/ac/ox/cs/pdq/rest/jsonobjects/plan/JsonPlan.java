@@ -3,6 +3,11 @@ package uk.ac.ox.cs.pdq.rest.jsonobjects.plan;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 
+/**
+ * Serializable Plan class.
+ *
+ * @author Camilo Ortiz
+ */
 public class JsonPlan {
     public JsonGraphicalPlan graphicalPlan;
     public String bestPlan;
@@ -20,7 +25,6 @@ public class JsonPlan {
         this.planTime = time;
     }
 
-    @JsonIgnore
     public RelationalTerm getPlan(){
         return this.plan;
     }

@@ -16,6 +16,12 @@ public class Application extends SpringBootServletInitializer {
         SpringApplication.run(Application.class, args);
 	}
 
+    /**
+     * Starts Spring Boot REST API
+     *
+     * @param builder
+     * @return
+     */
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(Application.class);

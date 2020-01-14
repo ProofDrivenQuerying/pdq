@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.List;
 
 /**
- * JsonGraphicalPlan is the object that is transformed into JSON to send to front end.
+ * Serializable Graphical Plan object. Used to display the search tree by the front end.
  *
  * @author Camilo Ortiz
  */

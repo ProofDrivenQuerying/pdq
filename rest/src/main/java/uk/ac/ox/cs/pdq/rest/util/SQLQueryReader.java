@@ -16,6 +16,11 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteLexer;
 
+/**
+ * Refactoring of SQLQueryReader for easier access to class methods
+ *
+ * @author Camilo Ortiz
+ */
 public class SQLQueryReader {
 
     /** The schema. */

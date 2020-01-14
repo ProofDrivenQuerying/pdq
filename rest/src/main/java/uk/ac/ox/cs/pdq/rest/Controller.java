@@ -13,13 +13,10 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import org.springframework.core.io.Resource;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.MediaType;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.File;
@@ -35,7 +32,7 @@ import java.nio.file.Paths;
  */
 
 @RestController
-public class JsonController {
+public class Controller {
     private HashMap<Integer, String> paths;
 
     private HashMap<Integer, Schema> schemaList;
@@ -44,7 +41,11 @@ public class JsonController {
     private HashMap<Integer, String> catalogPaths;
     private boolean localMode; //change to config file
 
-    public JsonController() {
+    /**
+     * Constructor. Reads in demo schema/query/property information found in ./demo/ and stores it in HashMaps for
+     * quick access during runtime.
+     */
+    public Controller() {
         this.paths = new HashMap<Integer, String>();
         this.schemaList = new HashMap<Integer, Schema>();
         this.commonQueries = new HashMap<Integer, HashMap<Integer, ConjunctiveQuery>>();
@@ -118,7 +119,7 @@ public class JsonController {
     }
 
     /**
-     * Returns an initial list of schemas that only contains their id and names.
+     * Returns an initial list of schemas that only contains their respective id and name.
      *
      * @return SchemaName[]
      */
@@ -168,13 +169,12 @@ public class JsonController {
     public JsonRelationList getRelations(@RequestParam(value = "id") int id) {
 
         Schema schema = schemaList.get(id);
-        JsonRelationList toReturn = new JsonRelationList(schema, id);
 
-        return toReturn;
+        return new JsonRelationList(schema, id);
     }
 
     /**
-     * Returns dependencies associated with specific schema.
+     * Returns dependencies associated with specific schema
      *
      * @param id
      * @return JsonRelationList
@@ -192,6 +192,15 @@ public class JsonController {
                 .body(toReturn);
     }
 
+    /**
+     * Verifies whether an SQL string can be converted to Conjunctive Query
+     *
+     * @param schemaID
+     * @param queryID
+     * @param SQL
+     * @param request
+     * @return boolean based on whether the SQL string is translatable
+     */
     @GetMapping(value = "/verifyQuery/{schemaID}/{queryID}/{SQL:.+}")
     public boolean verifyQuery(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL,
                                HttpServletRequest request) {
@@ -223,7 +232,7 @@ public class JsonController {
     }
 
     /**
-     * Returns Entry<RelationalTerm, Cost> that shows up as a long string
+     * Generates a plan based on schemaID and queryID
      *
      * @param schemaID
      * @param queryID
@@ -239,6 +248,7 @@ public class JsonController {
         ConjunctiveQuery cq = commonQueries.get(schemaID).get(queryID);
         JsonPlan plan = null;
         try {
+            // SQL is converted to Conjunctive Query if it is not in commonQueries
             if(cq == null) {
                 SQLQueryReader reader = new SQLQueryReader(schema);
                 cq = reader.fromString(SQL);
@@ -272,6 +282,42 @@ public class JsonController {
         return plan;
     }
 
+    /**
+     * Load plan xml from its respective directory and sends it to the client.
+     *
+     * @param schemaID
+     * @param queryID
+     * @param SQL
+     * @param request
+     * @return a ResponseEntity that contains a Resource file (for downloading)
+     */
+    @GetMapping(value = "/downloadPlan/{schemaID}/{queryID}/{SQL}")
+    public ResponseEntity<Resource> downloadPlan(@PathVariable int schemaID, @PathVariable int queryID,
+                                                 @PathVariable String SQL, HttpServletRequest request) {
+
+        try {
+            Resource resource = loadFileAsResource(paths.get(schemaID) + "/query" + queryID + "/computed-plan.xml");
+
+            String contentType = "application/xml";
+
+            return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"computed-plan.xml\"")
+                    .body(resource);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Generates and runs plan based on schemaID and queryID
+     *
+     * @param schemaID
+     * @param queryID
+     * @param SQL
+     * @return
+     */
     @GetMapping(value = "/run/{schemaID}/{queryID}/{SQL}")
     public JsonRunResults run(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL){
 
@@ -283,6 +329,7 @@ public class JsonController {
         JsonRunResults result = null;
 
         try {
+            // SQL is converted to Conjunctive Query if it is not in commonQueries
             if (cq == null){
                 SQLQueryReader reader = new SQLQueryReader(schema);
                 cq = reader.fromString(SQL);
@@ -291,7 +338,7 @@ public class JsonController {
             JsonPlan jsonPlan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
             RelationalTerm plan = jsonPlan.getPlan();
 
-            result = Runner.runtime(schema, cq, properties, plan);
+            result = JsonRunner.runtime(schema, cq, properties, plan);
 
             // Check whether the cached directory exists. If it doesn't, create it.
             if (! Files.exists(Paths.get(paths.get(schemaID) + "/query" + queryID + "/"))) {
@@ -304,7 +351,7 @@ public class JsonController {
                 return result;
             }
 
-            Runner.writeOutput(result.results, paths.get(schemaID) + "/query" + queryID + "/results.csv");
+            JsonRunner.writeOutput(result.results, paths.get(schemaID) + "/query" + queryID + "/results.csv");
 
 
         } catch (Throwable e) {
@@ -317,12 +364,12 @@ public class JsonController {
     }
 
     /**
-     * Write run table to its associated example folder, load it, and send it to the client.
+     * Load run table from its respective directory and sends it to the client.
      *
      * @param schemaID
      * @param queryID
      * @param request
-     * @return
+     * @return a ResponseEntity that contains a Resource file (for downloading)
      */
     @GetMapping(value = "/downloadRun/{schemaID}/{queryID}/{SQL}")
     public ResponseEntity<Resource> downloadRun(@PathVariable int schemaID, @PathVariable int queryID,
@@ -344,25 +391,12 @@ public class JsonController {
         return null;
     }
 
-    @GetMapping(value = "/downloadPlan/{schemaID}/{queryID}/{SQL}")
-    public ResponseEntity<Resource> downloadPlan(@PathVariable int schemaID, @PathVariable int queryID,
-                                                 @PathVariable String SQL, HttpServletRequest request) {
-
-        try {
-            Resource resource = loadFileAsResource(paths.get(schemaID) + "/query" + queryID + "/computed-plan.xml");
-
-            String contentType = "application/xml";
-
-            return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"computed-plan.xml\"")
-                    .body(resource);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
+    /**
+     * Loads fileName converts it into a Resource
+     *
+     * @param fileName as a string
+     * @return Resource
+     */
     public Resource loadFileAsResource(String fileName) {
         try {
             Path filePath = Paths.get(fileName);

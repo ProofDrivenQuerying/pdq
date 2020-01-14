@@ -7,7 +7,11 @@ import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.JsonAttribute;
 
 import java.util.List;
 
-
+/**
+ * Serializable Table object.
+ *
+ * @author Camilo Ortiz
+ */
 public class JsonTable {
     public JsonAttribute[] header;
     public JsonTuple[] data;

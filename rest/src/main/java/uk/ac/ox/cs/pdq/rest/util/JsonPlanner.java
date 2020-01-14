@@ -22,7 +22,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
-
 /**
  * This class has the static util for creating a plan and populating a JsonGraphicalPlan.
  *
@@ -31,7 +30,7 @@ import java.nio.charset.StandardCharsets;
 public class JsonPlanner{
 
     /**
-     * Recursively populates the children and name of a JsonGraphicalPlan, and it's children's, etc.
+     * Recursively populates the children and name of a JsonGraphicalPlan to create a search tree.
      * @param tree
      * @param root
      * @return
@@ -96,7 +95,7 @@ public class JsonPlanner{
           SearchNode root = tree.getRoot();
           graphicalPlan = getPlanGraph(tree, root); //our graphical plan
 
-          ExecutablePlan runnable = Runner.decoratePlan(plan, schema); //will be null if its not runnable
+          ExecutablePlan runnable = JsonRunner.decoratePlan(plan, schema); //will be null if its not runnable
 
           //get pretty string
           final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -118,6 +117,13 @@ public class JsonPlanner{
       return toReturn;
   }
 
+    /**
+     * @param schema
+     * @param query
+     * @param properties
+     * @param pathToCatalog
+     * @return
+     */
     public static RelationalTerm planToObject(Schema schema, ConjunctiveQuery query, File properties, String pathToCatalog){
         PlannerParameters planParams = properties != null ?
                 new PlannerParameters(properties) :

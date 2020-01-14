@@ -4,8 +4,11 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
 
-
-
+/**
+ * Serializable class that contains dependency arrays. Initialized with a Schema.
+ *
+ * @author Camilo Ortiz
+ */
 public class JsonDependencyList {
     public JsonEGD[] EGDDependencies;
     public JsonTGD[] TGDDependencies;

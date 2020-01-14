@@ -1,11 +1,7 @@
 
-  # PDQ RESTful web service
+  # PDQ REST API
 
-  The PDQ RESTful web service converts important PDQ objects, computations, and
-  results into JSON objects and hosts them via a REST API.
-
-  The source code is available for free for non-commercial use.
-  See the LICENCE file for details.
+  The PDQ REST API serves PDQ objects, plans, and run results via HTTP requests. 
 
   ## Requirements
 
@@ -20,8 +16,11 @@
   Internal: (pdq-)common, (pdq-)gui, (pdq-)planner, (pdq-)reasoning
 
   External: springframework.boot-2.1.4, org.glassfish.jersey.inject-2.28, org.glassfish.jersey.bundles.repackaged-2.6
+  
+  **In order to be able to run the API, you will need to include the /demo/ and /services/ folders and all their contents
+  in the project's base  directory.**
 
-  ## Installing & running the RESTful web service
+  ## Installing & running the REST API
 
   Under the top directory, type:
 
@@ -33,7 +32,7 @@
   	  only, i.e. you need to make sure all dependencies are on the CLASSPATH to
   	  run it.
 
-  To run the RESTful web service, type:
+  To run the REST API, type:
 
   	java -jar /path/to/JAR/file
 

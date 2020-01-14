@@ -70,10 +70,13 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
  * <li>- converts query into AccessibleQuery and maintains a map of its
  * variables to chase-constants.</li><br>
  *
+ * Updated method accesses for the REST API.
+ *
  * @author Julien Leblay
  * @author Efthymia Tsamoura
  * @author George Konstantinidis
  * @author Gabor
+ * @author Camilo Ortiz
  *
  */
 public class ExplorationSetUpForJson {
