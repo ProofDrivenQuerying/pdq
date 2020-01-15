@@ -8,8 +8,8 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
  *
  * @author Camilo Ortiz
  */
-public class JsonPlan {
-    public JsonGraphicalPlan graphicalPlan;
+public class Plan {
+    public GraphicalPlan graphicalPlan;
     public String bestPlan;
     public boolean runnable;
     public double planTime;
@@ -17,7 +17,7 @@ public class JsonPlan {
     @JsonIgnore
     private RelationalTerm plan;
 
-    public JsonPlan(JsonGraphicalPlan gp, String bp, boolean r, RelationalTerm plan, double time){
+    public Plan(GraphicalPlan gp, String bp, boolean r, RelationalTerm plan, double time){
         this.graphicalPlan = gp;
         this.bestPlan = bp;
         this.runnable = r;
@@ -29,7 +29,7 @@ public class JsonPlan {
         return this.plan;
     }
 
-    public JsonGraphicalPlan getGraphicalPlan(){
+    public GraphicalPlan getGraphicalPlan(){
         return this.graphicalPlan;
     }
 }

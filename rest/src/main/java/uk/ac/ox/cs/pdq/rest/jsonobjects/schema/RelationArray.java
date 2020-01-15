@@ -1,8 +1,6 @@
 package uk.ac.ox.cs.pdq.rest.jsonobjects.schema;
 
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 
 /**
@@ -11,10 +9,10 @@ import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
  *
  * @author Camilo Ortiz
  */
-public class JsonRelationList{
+public class RelationArray {
   public String name;
   public int id;
-  public JsonRelation[] relations;
+  public Relation[] relations;
 
   /**
    * Populates JsonRelationList's fields
@@ -22,30 +20,30 @@ public class JsonRelationList{
    * @param schema
    * @param id
    */
-  public JsonRelationList(Schema schema, int id){
+  public RelationArray(Schema schema, int id){
     int number_of_relations = schema.getNumberOfRelations();
-    Relation[] schema_relations = schema.getRelations();
+    uk.ac.ox.cs.pdq.db.Relation[] schema_relations = schema.getRelations();
 
-    this.relations = new JsonRelation[number_of_relations];
+    this.relations = new Relation[number_of_relations];
 
     for(int i = 0; i < number_of_relations; i++){
-      Relation relation = schema_relations[i];
+      uk.ac.ox.cs.pdq.db.Relation relation = schema_relations[i];
       String name = relation.getName();
 
-      Attribute[] attributes = relation.getAttributes();
+      uk.ac.ox.cs.pdq.db.Attribute[] attributes = relation.getAttributes();
       Integer num_attributes = attributes.length;
-      JsonAttribute[] jsonAttributes = new JsonAttribute[num_attributes];
+      Attribute[] jsonAttributes = new Attribute[num_attributes];
 
       //make attribute list
       for (int j = 0; j < num_attributes; j++){
         String a_name = attributes[j].getName();
         String a_type = attributes[j].getType().toString();
 
-        jsonAttributes[j] = new JsonAttribute(a_name, a_type);
+        jsonAttributes[j] = new Attribute(a_name, a_type);
       }
 
       AccessMethodDescriptor[] accessMethods = relation.getAccessMethods();
-      JsonAccessMethod[] jsonAccessMethods = new JsonAccessMethod[accessMethods.length];
+      AccessMethod[] jsonAccessMethods = new AccessMethod[accessMethods.length];
 
       //make access type list
       for (int k = 0; k < accessMethods.length; k++){
@@ -56,10 +54,10 @@ public class JsonRelationList{
         }else{
           a_m_type = "limited";
         }
-        jsonAccessMethods[k] = new JsonAccessMethod(a_m_name, a_m_type);
+        jsonAccessMethods[k] = new AccessMethod(a_m_name, a_m_type);
       }
 
-      JsonRelation jsonRelation = new JsonRelation(name, jsonAttributes, jsonAccessMethods);
+      Relation jsonRelation = new Relation(name, jsonAttributes, jsonAccessMethods);
       relations[i] = jsonRelation;
     }
     this.id = id;

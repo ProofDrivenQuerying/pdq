@@ -20,28 +20,28 @@ const Queries = ({schemaList, setQuery, removeQuery}) => {
         {schemaList.isFetching ?
           <div>Queries</div>
         :
-          <Container>
-            <Row>
-              <Col xs={10}>{schemaList.schemas[schemaList.selectedSID].name}'s Queries</Col>
-              {schemaList.selectedQID != null ?
-                <Col>
-                  <QueryWriter
-                   schemaID={schemaList.selectedSID}
-                   numQueries={schemaList.schemas[schemaList.selectedSID].queries.length}
-                   queryFromList={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID]}
-                   id={schemaList.selectedQID}/>
-                 </Col>
-                :
-                null}
-            </Row>
-          </Container>
+          <div>{schemaList.schemas[schemaList.selectedSID].name}'s Queries</div>
         }
       </h4>
 
       <QueryList schemaList={schemaList}/>
 
       <h4 className='my-2'>
-        Selected Query
+        <Container style={{padding:'0', margin:'0'}}>
+          <Row>
+            <Col xs={10}>Selected Query</Col>
+            {schemaList.selectedQID != null ?
+              <Col>
+                <QueryWriter
+                 schemaID={schemaList.selectedSID}
+                 numQueries={schemaList.schemas[schemaList.selectedSID].queries.length}
+                 queryFromList={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID]}
+                 id={schemaList.selectedQID}/>
+               </Col>
+              :
+              null}
+          </Row>
+        </Container>
       </h4>
 
       <QuerySQL schemaList={schemaList}/>
@@ -82,7 +82,8 @@ const QueryList = ({ schemaList}) => {
 const QuerySQL = ({schemaList}) => {
   if(!schemaList.isFetching && schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID] != null){
     return (
-      <p className='half'>
+      <p className='half' style={{overflowY: "scroll", whiteSpace: "pre-wrap", height: "calc(100vh - 300px)",
+      overflowWrap: 'break-word'}}>
         {schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
       </p>
     );

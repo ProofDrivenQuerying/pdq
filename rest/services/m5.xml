@@ -1,30 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Access access-type="DB_ACCESS_METHOD" name="m5" relation-name="part">
-    <attribute name="p_partkey" type="java.lang.Integer" input="true" mapsToRelationAttribute="p_partkey"/>
-    <attribute name="p_name" type="java.lang.String" input="true" mapsToRelationAttribute="p_name"/>
-    <attribute name="p_mfgr" type="java.lang.String" input="false" mapsToRelationAttribute="p_mfgr"/>
-    <attribute name="p_brand" type="java.lang.String" input="false" mapsToRelationAttribute="p_brand"/>
-    <attribute name="p_type" type="java.lang.String" input="false" mapsToRelationAttribute="p_type"/>
-    <attribute name="p_size" type="java.lang.Integer" input="false" mapsToRelationAttribute="p_size"/>
-    <attribute name="p_container" type="java.lang.String" input="false" mapsToRelationAttribute="p_container"/>
-    <attribute name="p_retailprice" type="java.math.BigDecimal" input="false" mapsToRelationAttribute="p_retailprice"/>
-    <attribute name="p_comment" type="java.lang.String" input="false" mapsToRelationAttribute="p_comment"/>
-    <dbProperties>
-        <entry>
-            <key xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">password</key>
-            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">root</value>
-        </entry>
-        <entry>
-            <key xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">url</key>
-            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">jdbc:postgresql://localhost:5432/</value>
-        </entry>
-        <entry>
-            <key xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">database</key>
-            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">tpch</value>
-        </entry>
-        <entry>
-            <key xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">username</key>
-            <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">postgres</value>
-        </entry>
-    </dbProperties>
-</Access>
+	<service
+		name="m5"
+		protocol="REST"
+		url="http://pdq-webapp.cs.ox.ac.uk:8080/webapp/servlets/servlet/m5" 
+		media-type="application/xml"
+		documentation=""
+		result-delimiter="country"
+		service-group="service-group-1">
+
+		<policy name="1000_items_per_page" />
+
+		<access-method type="LIMITED" name="m5" cost="1000.0" relation-name="partsupp">
+	         <attribute name="ps_partkey" output="true" type="Integer" relation-attribute="ps_partkey" path="ps_partkey"/>
+            <attribute name="ps_suppkey" input="true" output="true" type="Integer" relation-attribute="ps_suppkey" path="ps_suppkey" attribute-encoding="ps_suppkey"/>
+            <attribute name="ps_availqty" output="true" type="Integer" relation-attribute="ps_availqty" path="ps_availqty"/>
+            <attribute name="ps_supplycost" output="true" type="String" relation-attribute="ps_supplycost" path="ps_supplycost"/>
+            <attribute name="ps_comment" output="true" type="String" relation-attribute="ps_comment" path="ps_comment"/>
+		</access-method>
+	</service>

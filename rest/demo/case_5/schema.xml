@@ -1,71 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<schema>
+<schema name="mark">
     <relations>
-        <relation name="Direct1">
-            <attribute name="uname" type="java.lang.String"/>
-            <attribute name="addr" type="java.lang.String"/>
-            <attribute name="uid" type="java.lang.Integer"/>
-            <access-method name="m3" inputs="0,2"/>
-        </relation>
-        <relation name="Ids">
-            <attribute name="uid" type="java.lang.Integer"/>
-            <access-method name="m4"/>
-        </relation>
-        <relation name="Direct2">
-            <attribute name="uname" type="java.lang.String"/>
-            <attribute name="addr" type="java.lang.String"/>
-            <attribute name="phone" type="java.lang.String"/>
-            <access-method name="m5" inputs="0,1"/>
-        </relation>
-        <relation name="Names">
-            <attribute name="uname" type="java.lang.String"/>
-            <access-method name="m6"/>
+        <relation name="activityFree">
+            <attribute name="activity_comment" type="java.lang.String"/>
+            <attribute name="activity_id" type="java.lang.String"/>
+            <attribute name="assay_chembl_id" type="java.lang.String"/>
+            <attribute name="assay_description" type="java.lang.String"/>
+            <attribute name="assay_type" type="java.lang.String"/>
+            <attribute name="bao_endpoint" type="java.lang.String"/>
+            <attribute name="bao_format" type="java.lang.String"/>
+            <attribute name="canonical_smiles" type="java.lang.String"/>
+            <attribute name="data_validity_comment" type="java.lang.String"/>
+            <attribute name="document_chembl_id" type="java.lang.String"/>
+            <attribute name="document_journal" type="java.lang.String"/>
+            <attribute name="document_year" type="java.lang.String"/>
+            <attribute name="molecule_chembl_id" type="java.lang.String"/>
+            <attribute name="pchembl_value" type="java.lang.Double"/>
+            <attribute name="potential_duplicate" type="java.lang.String"/>
+            <attribute name="published_relation" type="java.lang.String"/>
+            <attribute name="published_type" type="java.lang.String"/>
+            <attribute name="published_units" type="java.lang.String"/>
+            <attribute name="published_value" type="java.lang.String"/>
+            <attribute name="qudt_units" type="java.lang.String"/>
+            <attribute name="record_id" type="java.lang.String"/>
+            <attribute name="standard_flag" type="java.lang.Boolean"/>
+            <attribute name="standard_relation" type="java.lang.String"/>
+            <attribute name="standard_type" type="java.lang.String"/>
+            <attribute name="standard_units" type="java.lang.String"/>
+            <attribute name="standard_value" type="java.lang.Double"/>
+            <attribute name="target_chembl_id" type="java.lang.String"/>
+            <attribute name="target_organism" type="java.lang.String"/>
+            <attribute name="target_pref_name" type="java.lang.String"/>
+            <attribute name="uo_units" type="java.lang.String"/>
+            <access-method name="chembl_activity_free"/>
         </relation>
     </relations>
     <dependencies>
-        <dependency type="TGD">
-            <body>
-                <atom name="Direct1">
-                    <variable name="x"/>
-                    <variable name="y"/>
-                    <variable name="z"/>
-                </atom>
-            </body>
-            <head>
-                <atom name="Ids">
-                    <variable name="z"/>
-                </atom>
-            </head>
-        </dependency>
-        <dependency type="TGD">
-            <body>
-                <atom name="Direct2">
-                    <variable name="x"/>
-                    <variable name="y"/>
-                    <variable name="z"/>
-                </atom>
-            </body>
-            <head>
-                <atom name="Names">
-                    <variable name="x"/>
-                </atom>
-            </head>
-        </dependency>
-        <dependency type="TGD">
-            <body>
-                <atom name="Direct2">
-                    <variable name="x"/>
-                    <variable name="y"/>
-                    <variable name="z"/>
-                </atom>
-            </body>
-            <head>
-                <atom name="Direct1">
-                    <variable name="x"/>
-                    <variable name="y"/>
-                    <variable name="w"/>
-                </atom>
-            </head>
-        </dependency>
-    </dependencies>
+     </dependencies>
 </schema>

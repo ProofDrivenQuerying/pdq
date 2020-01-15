@@ -46,17 +46,17 @@ import ListGroup from 'react-bootstrap/ListGroup';
                         </Col>
 
                         <Col>
-                          <Relations
-                            getRelations={this.props.getRelations}
-                            relationList = {this.props.relationList}
-                            schemaFromList = {this.props.schemaFromList}
-                            />
-                        </Col>
-                        <Col>
                           <Dependencies
                             schemaFromList = {this.props.schemaFromList}
                             getDependencies = {this.props.getDependencies}
                             dependencyLists = {this.props.dependencyLists}
+                            />
+                        </Col>
+                        <Col>
+                          <Relations
+                            getRelations={this.props.getRelations}
+                            relationList = {this.props.relationList}
+                            schemaFromList = {this.props.schemaFromList}
                             />
                         </Col>
                     </Row>

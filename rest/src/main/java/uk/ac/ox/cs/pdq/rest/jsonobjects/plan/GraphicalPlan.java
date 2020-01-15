@@ -13,15 +13,15 @@ import java.util.List;
  *
  * @author Camilo Ortiz
  */
-public class JsonGraphicalPlan {
+public class GraphicalPlan {
     public int id;
     public String termName;
     public String accessTerm;
     public String type;
-    public JsonGraphicalPlan[] children;
+    public GraphicalPlan[] children;
 
 
-    public JsonGraphicalPlan(RelationalTerm rt, int size, int id, NodeStatus status){
+    public GraphicalPlan(RelationalTerm rt, int size, int id, NodeStatus status){
         if(rt != null) this.termName = rt.getClass().getSimpleName();
 
 
@@ -38,7 +38,7 @@ public class JsonGraphicalPlan {
         if (size == 0){
             this.children = null;
         }else{
-            this.children = new JsonGraphicalPlan[size];
+            this.children = new GraphicalPlan[size];
         }
 
         if(children != null){
@@ -56,7 +56,7 @@ public class JsonGraphicalPlan {
 
     }
 
-    public void setChild(int index, JsonGraphicalPlan plan){
+    public void setChild(int index, GraphicalPlan plan){
         this.children[index] = plan;
     }
 

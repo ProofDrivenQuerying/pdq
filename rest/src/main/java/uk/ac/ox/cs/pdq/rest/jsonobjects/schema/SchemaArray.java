@@ -6,11 +6,11 @@ package uk.ac.ox.cs.pdq.rest.jsonobjects.schema;
  *
  * @author Camilo Ortiz
  */
-public class InitialInfo{
+public class SchemaArray {
 
   public SchemaName[] schemas;
 
-  public InitialInfo(SchemaName[] schemas){
+  public SchemaArray(SchemaName[] schemas){
     this.schemas = schemas;
   }
 }

@@ -33,6 +33,7 @@ import java.nio.file.Paths;
 
 @RestController
 public class Controller {
+    private String workingDirectory = "demo/";
     private HashMap<Integer, String> paths;
 
     private HashMap<Integer, Schema> schemaList;
@@ -55,7 +56,7 @@ public class Controller {
         this.catalogPaths = new HashMap<Integer, String>();
         this.localMode = false;
 
-        File testDirectory = new File("demo/");
+        File testDirectory = new File(workingDirectory);
         File[] examples = testDirectory.listFiles();
 
         if (examples != null) {

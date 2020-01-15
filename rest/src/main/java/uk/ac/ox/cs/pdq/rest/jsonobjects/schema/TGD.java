@@ -5,11 +5,11 @@ package uk.ac.ox.cs.pdq.rest.jsonobjects.schema;
  *
  * @author Camilo Ortiz
  */
-public class JsonTGD {
+public class TGD {
     public String name;
     public String definition;
 
-    public JsonTGD(String n, String d){
+    public TGD(String n, String d){
         this.name = n;
         this.definition = d;
     }

@@ -15,7 +15,6 @@ class App extends Component{
 
   componentWillMount(){
     this.props.dispatch(getInitialData());
-    console.log(this.props);
   }
 
   render(){

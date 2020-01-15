@@ -76,6 +76,7 @@ class QueryWriter extends React.Component{
           <Button
             id={"QueryButton"+ this.props.schemaList.selectedSID+"_"+this.props.id}
             variant="link"
+            className="pull-right"
             onClick={()=> this.toggleQueryModal()}
           >
             <FaEdit/>
@@ -94,12 +95,12 @@ class QueryWriter extends React.Component{
             size="lg"
             isOpen={this.state.modalQueryOpen}
             toggle={this.toggleQueryModal}>
-            <ModalHeader toggle={this.toggleQueryModal}>Add Query</ModalHeader>
+            <ModalHeader toggle={this.toggleQueryModal}>Add a Query</ModalHeader>
 
             <ModalBody style={{height:"calc(100vh - 200px)"}}>
               <Form>
                 <Form.Group controlId={"QueryText"+this.props.schemaList.selectedSID+"_"+this.props.id}>
-                  <Form.Label>Write your query in SQL</Form.Label>
+                  <Form.Label>Please write your query in SQL</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows="20"

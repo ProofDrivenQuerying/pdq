@@ -6,12 +6,12 @@ package uk.ac.ox.cs.pdq.rest.jsonobjects.schema;
  *
  * @author Camilo Ortiz
  */
-public class JsonRelation{
+public class Relation {
   public String name;
-  public JsonAttribute[] attributes;
-  public JsonAccessMethod[] accessMethods;
+  public Attribute[] attributes;
+  public AccessMethod[] accessMethods;
 
-  public JsonRelation(String name, JsonAttribute[] attributes, JsonAccessMethod[] accessMethods){
+  public Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods){
     this.name = name;
     this.attributes = attributes;
     this.accessMethods = accessMethods;

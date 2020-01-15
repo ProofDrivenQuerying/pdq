@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import QueryWriter from './QueryWriter';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
