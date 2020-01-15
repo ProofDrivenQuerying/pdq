@@ -39,18 +39,24 @@ const Plan = ({plan, getPlan, run, planRun, schemaList, userID}) => {
             schemaList={schemaList}
             userID={userID}
           />
+          {plan.plan!==null
+            && plan.schemaID === schemaList.selectedSID
+            && plan.queryID === schemaList.selectedQID ?
+            <div>
+              <h4 className='my-2 pb-1'>
+                Run Your Plan with PDQ
+              </h4>
 
-          <h4 className='my-2 pb-1'>
-            Run Your Plan with PDQ
-          </h4>
-
-          <RunGroup
-            plan={plan}
-            planRun={planRun}
-            schemaList={schemaList}
-            userID={userID}
-            run={run}
-          />
+            <RunGroup
+              plan={plan}
+              planRun={planRun}
+              schemaList={schemaList}
+              userID={userID}
+              run={run}
+            />
+            </div>
+            :
+            null}
 
         </div>
         :

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaShareAlt } from 'react-icons/fa';
-import PopoutWindow from '../Popout';
+// import PopoutWindow from '../Popout';
 import { IconContext } from "react-icons";
 import classnames from 'classnames';
 import Button from 'react-bootstrap/Button';
@@ -111,11 +111,9 @@ export default class Dependencies extends React.Component{
                   <ListGroup variant='flush'>
                   {this.props.dependencyLists.dependencyLists.TGDDependencies.map((dependency, index)=>{
                     return(
-                      <NestedDependencies
-                        key={"TGDDependency"+index}
-                        name={"TGD Dependency " + index}
-                        dependency={dependency}
-                      />
+                      <ListGroup.Item style={{overflowWrap: 'break-word'}} key={"EGDDependency"+index}>
+                        {dependency.definition}
+                      </ListGroup.Item>
                     )
                   })}
                   </ListGroup>
@@ -134,12 +132,9 @@ export default class Dependencies extends React.Component{
                   <ListGroup variant='flush'>
                   {this.props.dependencyLists.dependencyLists.EGDDependencies.map((dependency, index)=>{
                     return(
-                      <NestedDependencies
-                        key={"EGDDependency"+index}
-                        name={"EGD Dependency " + index}
-                        dependency={dependency}
-                      />
-
+                      <ListGroup.Item style={{overflowWrap: 'break-word'}} key={"EGDDependency"+index}>
+                        {dependency.definition}
+                      </ListGroup.Item>
                     )
                   })}
                   </ListGroup>
@@ -163,68 +158,3 @@ export default class Dependencies extends React.Component{
     )
   }
 }
-
-//nested modal class that displays each relation's information
- class NestedDependencies extends React.Component {
-   constructor(props) {
-     super(props);
-     this.state = {
-       modal: false
-     };
-
-     this.toggle = this.toggle.bind(this);
-   }
-
-   toggle() {
-     this.setState(prevState => ({
-       modal: !prevState.modal
-     }));
-   }
-
-   render() {
-     const dependencyContent = (definition, name) => (
-       <div>
-         <header>{name}</header>
-
-         <div>
-           {this.props.dependency.definition}
-         </div>
-       </div>
-     );
-     return (
-       <div>
-         <ListGroup.Item
-            action
-            onClick={this.toggle}>
-              {this.props.name}
-          </ListGroup.Item>
-
-         <Modal
-          isOpen={this.state.modal}
-          toggle={this.toggle}
-          size="lg"
-          >
-
-           <ModalHeader toggle={this.toggle}>
-              {this.props.name}
-              <PopoutWindow
-                title={"Dependency"}
-                content={dependencyContent(this.props.dependency.definition, this.props.name)}/>
-            </ModalHeader>
-
-           <ModalBody>
-            <div style={{overflowWrap: 'break-word'}}>
-              {this.props.dependency.definition}
-            </div>
-           </ModalBody>
-
-           <ModalFooter>
-             <Button
-                variant="secondary"
-                onClick={this.toggle}>Cancel</Button>
-           </ModalFooter>
-         </Modal>
-       </div>
-     );
-   }
- }
