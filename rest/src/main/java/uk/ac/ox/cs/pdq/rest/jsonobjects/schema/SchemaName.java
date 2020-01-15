@@ -13,9 +13,9 @@ import java.util.ArrayList;
 public class SchemaName{
   public int id;
   public String name;
-  public ArrayList<JsonQuery> queries;
+  public ArrayList<Query> queries;
 
-  public SchemaName(Schema schema, int id, ArrayList<JsonQuery> queries){
+  public SchemaName(Schema schema, int id, ArrayList<Query> queries){
     this.name = "schema"+ Integer.toString(id);
     this.id = id;
     this.queries = queries;

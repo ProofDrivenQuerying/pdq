@@ -1,106 +1,46 @@
 import React from 'react';
-import { FaListUl } from 'react-icons/fa';
 import PopoutWindow from '../Popout';
 import Button from 'react-bootstrap/Button';
-import { IconContext } from "react-icons";
-import ListGroup from 'react-bootstrap/ListGroup';
 import { Table,
          Modal,
          ModalHeader,
          ModalBody,
          ModalFooter,
-         Tooltip,
 } from 'reactstrap';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 
 export default class Relations extends React.Component{
-  constructor(props){
-    super(props);
-    this.toggleRelationsModal = this.toggleRelationsModal.bind(this);
-    this.toggleTooltip = this.toggleTooltip.bind(this);
-      this.state = {
-        modalRelationsOpen: false,
-        tooltipOpen: false
-      };
-  }
 
-  toggleRelationsModal(){
-    this.setState({
-      modalRelationsOpen: !this.state.modalRelationsOpen,
-      tooltipOpen: false
-    });
-  }
-
-  toggleTooltip(){
-    this.setState({
-      tooltipOpen: !this.state.tooltipOpen
-    })
-  }
-
-  openRelations(id){
-    this.props.getRelations(id);
-
-    this.toggleRelationsModal();
+  componentWillMount(){
+    this.props.getRelations(this.props.schemaFromList.id);
   }
 
   render(){
     return(
       <div>
-        <Button
-          id={"RelationButton"+ this.props.schemaFromList.id}
-          variant='link'
-          onClick={()=> this.openRelations(this.props.schemaFromList.id)}
-        >
-          <IconContext.Provider value={{ style:{ margin: '0', padding: '0'} }}>
-            <FaListUl/>
-          </IconContext.Provider>
-        </Button>
+      { this.props.relationList.relationList.relations != null ?
+        <DropdownButton
+          id="dropdown-relations"
+          title="Relations">
 
-        <Tooltip
-          trigger="hover"
-          placement="top"
-          isOpen={this.state.tooltipOpen && !this.state.modalRelationsOpen}
-          target={"RelationButton"+ this.props.schemaFromList.id}
-          toggle={this.toggleTooltip}>
-          View Relations
-        </Tooltip>
-
-        <Modal
-          size="lg"
-          isOpen={this.state.modalRelationsOpen}
-          toggle={this.toggleRelationsModal}>
-          <ModalHeader toggle={this.toggleRelationsModal}>
-            Relations
-          </ModalHeader>
-          <ModalBody>
-
-          { this.props.relationList.relationList.relations != null ?
-            <ListGroup variant="flush">
-            {this.props.relationList.relationList.relations.map((relation, index)=>{
-              return(
-                <NestedRelations key={"relation"+index} relation={relation}/>
-              )
-            })}
-          </ListGroup>
-          :
-          null
-          }
-
-          </ModalBody>
-
-          <ModalFooter>
-            <Button
-              variant="secondary"
-              onClick={this.toggleRelationsModal}>Cancel</Button>
-          </ModalFooter>
-        </Modal>
+          {this.props.relationList.relationList.relations.map((relation, index)=>{
+            return(
+              <RelationsModal key={"relation"+index} relation={relation}/>
+            )
+          })}
+        </DropdownButton>
+      :
+        null
+      }
       </div>
     )
   }
 }
 
 //nested modal class that displays each relation's information
- class NestedRelations extends React.Component {
+ class RelationsModal extends React.Component {
    constructor(props) {
      super(props);
      this.state = {
@@ -126,12 +66,11 @@ export default class Relations extends React.Component{
      );
      return (
        <div>
-         <ListGroup.Item
-            action
+         <Dropdown.Item
             onClick={this.toggle}
           >
               {this.props.relation.name}
-          </ListGroup.Item>
+          </Dropdown.Item>
 
          <Modal
           size='lg'

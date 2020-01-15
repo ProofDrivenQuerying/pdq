@@ -15,8 +15,8 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.*;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.JsonGraphicalPlan;
-import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.JsonPlan;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.GraphicalPlan;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.Plan;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -35,12 +35,12 @@ public class JsonPlanner{
      * @param root
      * @return
      */
-    public static JsonGraphicalPlan getPlanGraph(PlanTree<SearchNode> tree, SearchNode root){
+    public static GraphicalPlan getPlanGraph(PlanTree<SearchNode> tree, SearchNode root){
         if(tree.getChildren(root).isEmpty()){
-            return new JsonGraphicalPlan(root.getBestPlanFromRoot(), 0, root.getId(), root.getStatus());
+            return new GraphicalPlan(root.getBestPlanFromRoot(), 0, root.getId(), root.getStatus());
         }else{
             List<SearchNode> children = tree.getChildren(root);
-            JsonGraphicalPlan plan = new JsonGraphicalPlan(root.getBestPlanFromRoot(), children.size(), root.getId(), root.getStatus());
+            GraphicalPlan plan = new GraphicalPlan(root.getBestPlanFromRoot(), children.size(), root.getId(), root.getStatus());
 
             for(int i = 0; i < children.size(); i++){
                 plan.setChild(i, getPlanGraph(tree, children.get(i)));
@@ -57,7 +57,7 @@ public class JsonPlanner{
      * @param properties
      * @return Entry<RelationalTerm, Cost> Plan
      */
-  public static JsonPlan plan(Schema schema, ConjunctiveQuery query, File properties, String pathToCatalog){
+  public static Plan plan(Schema schema, ConjunctiveQuery query, File properties, String pathToCatalog){
     PlannerParameters planParams = properties != null ?
       new PlannerParameters(properties) :
       new PlannerParameters() ;
@@ -79,9 +79,9 @@ public class JsonPlanner{
 
       ExplorationSetUpForJson jsonPlanner = new ExplorationSetUpForJson(planParams, costParams, reasoningParams, dbParams, schema);
 
-      JsonGraphicalPlan graphicalPlan = null;
+      GraphicalPlan graphicalPlan = null;
 
-      JsonPlan toReturn = null;
+      Plan toReturn = null;
       try{
           long start = System.currentTimeMillis();
 
@@ -106,9 +106,9 @@ public class JsonPlanner{
           String data = new String(baos.toByteArray(), StandardCharsets.UTF_8);
 
           if(runnable == null){
-              toReturn = new JsonPlan(graphicalPlan, data, false, plan, computationTime);
+              toReturn = new Plan(graphicalPlan, data, false, plan, computationTime);
           }else{
-              toReturn = new JsonPlan(graphicalPlan, data, true, plan, computationTime);
+              toReturn = new Plan(graphicalPlan, data, true, plan, computationTime);
           }
 
       }catch (Throwable e) {

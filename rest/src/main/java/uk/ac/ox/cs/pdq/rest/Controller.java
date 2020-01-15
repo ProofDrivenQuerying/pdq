@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.*;
 import uk.ac.ox.cs.pdq.rest.util.*;
-import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.JsonPlan;
-import uk.ac.ox.cs.pdq.rest.jsonobjects.run.JsonRunResults;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.Plan;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.run.RunResults;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -124,7 +124,7 @@ public class Controller {
      * @return SchemaName[]
      */
     @RequestMapping(value = "/initSchemas", method = RequestMethod.GET, produces = "application/json")
-    public InitialInfo initSchemas() {
+    public SchemaArray initSchemas() {
 
         SchemaName[] jsonSchemaList = new SchemaName[this.schemaList.size()];
 
@@ -133,7 +133,7 @@ public class Controller {
             HashMap<Integer, ConjunctiveQuery> CQList = this.commonQueries.get(id);
 
 
-            ArrayList<JsonQuery> JQList = new ArrayList<JsonQuery>();
+            ArrayList<Query> JQList = new ArrayList<Query>();
             Schema schema = this.schemaList.get(id);
 
             int n = CQList.size();
@@ -142,7 +142,7 @@ public class Controller {
 
                     String query_string = SQLLikeQueryWriter.convert(CQList.get(j), schema);
 
-                    JsonQuery query = new JsonQuery(j, query_string);
+                    Query query = new Query(j, query_string);
 
                     JQList.add(query);
 
@@ -156,7 +156,7 @@ public class Controller {
             i++;
         }
 
-        return new InitialInfo(jsonSchemaList);
+        return new SchemaArray(jsonSchemaList);
     }
 
     /**
@@ -166,11 +166,11 @@ public class Controller {
      * @return JsonRelationList
      */
     @RequestMapping(value = "/getRelations", method = RequestMethod.GET, produces = "application/json")
-    public JsonRelationList getRelations(@RequestParam(value = "id") int id) {
+    public RelationArray getRelations(@RequestParam(value = "id") int id) {
 
         Schema schema = schemaList.get(id);
 
-        return new JsonRelationList(schema, id);
+        return new RelationArray(schema, id);
     }
 
     /**
@@ -180,10 +180,10 @@ public class Controller {
      * @return JsonRelationList
      */
     @RequestMapping(value = "/getDependencies", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<JsonDependencyList> getDependencies(@RequestParam(value = "id") int id) {
+    public ResponseEntity<DependencyList> getDependencies(@RequestParam(value = "id") int id) {
 
         Schema schema = schemaList.get(id);
-        JsonDependencyList toReturn = new JsonDependencyList(schema, id);
+        DependencyList toReturn = new DependencyList(schema, id);
 
         String contentType = "application/json";
 
@@ -240,13 +240,13 @@ public class Controller {
      * @return
      */
     @GetMapping(value = "/plan/{schemaID}/{queryID}/{SQL}")
-    public JsonPlan plan(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL) {
+    public Plan plan(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL) {
 
         Schema schema = schemaList.get(schemaID);
         File properties = casePropertyList.get(schemaID);
         String pathToCatalog = catalogPaths.get(schemaID);
         ConjunctiveQuery cq = commonQueries.get(schemaID).get(queryID);
-        JsonPlan plan = null;
+        Plan plan = null;
         try {
             // SQL is converted to Conjunctive Query if it is not in commonQueries
             if(cq == null) {
@@ -276,7 +276,6 @@ public class Controller {
         } catch (Throwable e) {
             e.printStackTrace();
             System.exit(-1);
-            return null;
         }
 
         return plan;
@@ -319,14 +318,14 @@ public class Controller {
      * @return
      */
     @GetMapping(value = "/run/{schemaID}/{queryID}/{SQL}")
-    public JsonRunResults run(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL){
+    public RunResults run(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL){
 
 
         Schema schema = schemaList.get(schemaID);
         ConjunctiveQuery cq = commonQueries.get(schemaID).get(queryID);
         File properties = casePropertyList.get(schemaID);
         String pathToCatalog = catalogPaths.get(schemaID);
-        JsonRunResults result = null;
+        RunResults result = null;
 
         try {
             // SQL is converted to Conjunctive Query if it is not in commonQueries
@@ -335,7 +334,7 @@ public class Controller {
                 cq = reader.fromString(SQL);
             }
 
-            JsonPlan jsonPlan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
+            Plan jsonPlan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
             RelationalTerm plan = jsonPlan.getPlan();
 
             result = JsonRunner.runtime(schema, cq, properties, plan);

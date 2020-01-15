@@ -45,14 +45,6 @@ import ListGroup from 'react-bootstrap/ListGroup';
                         </Col>
 
                         <Col>
-                          <QueryWriter
-                           schemaID={this.props.schemaList.selectedSID}
-                           numQueries={this.props.schemaList.schemas[this.props.schemaList.selectedSID].queries.length}
-                           queryFromList={this.props.queryFromList}
-                           id={this.props.queryFromList.id}
-                           />
-                        </Col>
-                        <Col>
                         { //Delete button not implemented in backend yet:
 
                           // this.props.queryFromList.id === 0 ?
@@ -85,13 +77,6 @@ import ListGroup from 'react-bootstrap/ListGroup';
                         {this.props.queryFromList.name}
                       </Col>
 
-                      <Col>
-                        <QueryWriter
-                         numQueries={this.props.schemaList.schemas[this.props.schemaList.selectedSID].queries.length}
-                         queryFromList={this.props.queryFromList}
-                         id={this.props.queryFromList.id}
-                         />
-                      </Col>
                       <Col>
                       { //Delete button not implemented in backend yet:
 

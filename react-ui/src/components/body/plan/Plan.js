@@ -12,6 +12,7 @@ import { run } from '../../../actions/getRun.js';
 import { FaRegMap,
          FaPlay
 } from 'react-icons/fa';
+import Table from 'react-bootstrap/Table';
 
 /**
  * Renders the plan button, graphical modal, plan properties modal,
@@ -192,14 +193,18 @@ const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
            planRun.schemaID === schemaList.selectedSID &&
            planRun.queryID === schemaList.selectedQID  ?
             <div>
-              <RunModal
-                SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
-                queryID={schemaList.selectedQID}
-                schemaID={schemaList.selectedSID}
-                planRun={planRun}
-                plan ={plan.plan}
-                userID={userID}
-                />
+              {
+                <RunTable planRun={planRun.planRun}/>
+              // <RunModal
+              //   SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
+              //   queryID={schemaList.selectedQID}
+              //   schemaID={schemaList.selectedSID}
+              //   planRun={planRun}
+              //   plan ={plan.plan}
+              //   userID={userID}
+              //   />
+              }
+
 
               <DownloadRunButton
                 SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
@@ -223,6 +228,37 @@ const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
   );
 }
 
+const RunTable = ({planRun}) => {
+  return(
+    <div>
+      <Table responsive>
+        <thead>
+          <tr>
+           <th>#</th>
+           {planRun.table.header.map((head, index) => {
+             return[ <th key={"runHead"+index}>{head.name}</th> ]
+           })}
+          </tr>
+        </thead>
+
+        <tbody>
+          {planRun.table.data.map((dataPoint, index) => {
+            return[
+              <tr key={"runRow"+index}>
+                <th scope="row">{index+1}</th>
+                {dataPoint.values.map((value, index)=>{
+                  return[ <td key={"runRowValue"+index}>{value}</td> ]
+                })}
+              </tr>
+            ]
+          })}
+
+        </tbody>
+
+      </Table>
+    </div>
+  )
+}
 
 const mapStatesToProps = (state) => {
   return({

@@ -1,7 +1,5 @@
 import React from 'react';
-import { FaShareAlt } from 'react-icons/fa';
 // import PopoutWindow from '../Popout';
-import { IconContext } from "react-icons";
 import classnames from 'classnames';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -9,23 +7,22 @@ import { Modal,
          ModalHeader,
          ModalBody,
          ModalFooter,
-         Tooltip,
          Nav,
          NavItem,
          NavLink,
          TabContent,
          TabPane,
 } from 'reactstrap';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 export default class Dependencies extends React.Component{
   constructor(props){
     super(props);
     this.toggleDependenciesModal = this.toggleDependenciesModal.bind(this);
-    this.toggleTooltip = this.toggleTooltip.bind(this);
     this.toggleTab = this.toggleTab.bind(this);
       this.state = {
         modalDependenciesOpen: false,
-        tooltipOpen: false,
         activeTab: "TGD"
       };
   }
@@ -37,12 +34,6 @@ export default class Dependencies extends React.Component{
     });
   }
 
-  toggleTooltip(){
-    this.setState({
-      tooltipOpen: !this.state.tooltipOpen
-    })
-  }
-
   toggleTab(tab){
     if (this.state.activeTab !== tab) {
       this.setState({
@@ -51,32 +42,32 @@ export default class Dependencies extends React.Component{
     }
   }
 
-  openDependencies(id){
-    this.props.getDependencies(id);
-    this.toggleDependenciesModal();
+  componentWillMount(){
+    this.props.getDependencies(this.props.schemaFromList.id);
   }
 
   render(){
     return(
       <div>
-        <Button
-          id={"DependenciesButton"+ this.props.schemaFromList.id}
-          variant='link'
-          onClick={()=> this.openDependencies(this.props.schemaFromList.id)}
-        >
-          <IconContext.Provider value={{ style:{ margin: '0', padding: '0'} }}>
-            <FaShareAlt/>
-          </IconContext.Provider>
-        </Button>
+        <DropdownButton
+          id="dropdown-relations"
+          title="Dependencies">
+          <Dropdown.Item
+             onClick={() => {this.toggleDependenciesModal(); this.toggleTab('TGD')}}
+             disabled={!(this.props.dependencyLists.dependencyLists.TGDDependencies != null
+               && this.props.dependencyLists.dependencyLists.TGDDependencies.length > 0)}
+           >
+               TGD Dependencies
+           </Dropdown.Item>
 
-        <Tooltip
-          trigger="hover"
-          placement="top"
-          isOpen={this.state.tooltipOpen && !this.state.modalDependenciesOpen}
-          target={"DependenciesButton"+ this.props.schemaFromList.id}
-          toggle={this.toggleTooltip}>
-          View Dependencies
-        </Tooltip>
+           <Dropdown.Item
+              onClick={() => {this.toggleDependenciesModal(); this.toggleTab('EGD')}}
+              disabled={!(this.props.dependencyLists.dependencyLists.EGDDependencies != null
+                && this.props.dependencyLists.dependencyLists.EGDDependencies.length > 0)}
+            >
+                EGD Dependencies
+            </Dropdown.Item>
+         </DropdownButton>
 
         <Modal
           size="lg"

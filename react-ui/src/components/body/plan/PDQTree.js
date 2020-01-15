@@ -129,7 +129,7 @@ export default class PDQTree extends React.Component {
       size: size
     }, (size) => {
       if (this.state.size <= 9){
-        this.zoom(.60)
+        this.zoom(.50)
 
       }
       this.zoom(1.0 - this.state.size / 100 );

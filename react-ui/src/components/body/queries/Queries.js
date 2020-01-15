@@ -2,6 +2,10 @@ import React from 'react';
 import QueryItem from './QueryItem';
 import { connect } from 'react-redux';
 import ListGroup from 'react-bootstrap/ListGroup';
+import QueryWriter from './QueryWriter';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 /**
  * Renders query information components
@@ -16,7 +20,21 @@ const Queries = ({schemaList, setQuery, removeQuery}) => {
         {schemaList.isFetching ?
           <div>Queries</div>
         :
-          <div>{schemaList.schemas[schemaList.selectedSID].name}'s Queries</div>
+          <Container>
+            <Row>
+              <Col xs={10}>{schemaList.schemas[schemaList.selectedSID].name}'s Queries</Col>
+              {schemaList.selectedQID != null ?
+                <Col>
+                  <QueryWriter
+                   schemaID={schemaList.selectedSID}
+                   numQueries={schemaList.schemas[schemaList.selectedSID].queries.length}
+                   queryFromList={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID]}
+                   id={schemaList.selectedQID}/>
+                 </Col>
+                :
+                null}
+            </Row>
+          </Container>
         }
       </h4>
 

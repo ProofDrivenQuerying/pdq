@@ -7,7 +7,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 import uk.ac.ox.cs.pdq.datasources.tuple.Table.ResetableIterator;
-import uk.ac.ox.cs.pdq.rest.jsonobjects.run.JsonRunResults;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.run.RunResults;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
 import java.io.File;
@@ -29,7 +29,7 @@ public class JsonRunner {
      * @param properties
      * @return
      */
-    public static JsonRunResults runtime(Schema schema, ConjunctiveQuery cq, File properties, RelationalTerm plan){
+    public static RunResults runtime(Schema schema, ConjunctiveQuery cq, File properties, RelationalTerm plan){
 
         try{
             long start = System.currentTimeMillis();
@@ -48,7 +48,7 @@ public class JsonRunner {
             double computationTime = (System.currentTimeMillis() - start)/1000.0;
 
 
-            return new JsonRunResults(tupleCount, results, computationTime);
+            return new RunResults(tupleCount, results, computationTime);
 
         }catch(Throwable e){
             e.printStackTrace();

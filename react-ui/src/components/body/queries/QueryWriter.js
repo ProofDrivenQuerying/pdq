@@ -87,7 +87,7 @@ class QueryWriter extends React.Component{
             isOpen={this.state.tooltipOpen && !this.state.modalQueryOpen}
             target={"QueryButton"+ this.props.schemaList.selectedSID+"_"+this.props.id}
             toggle={this.toggleTooltip}>
-            Add new SQL query
+            Write a new SQL query
           </Tooltip>
 
           <Modal
@@ -103,6 +103,7 @@ class QueryWriter extends React.Component{
                   <Form.Control
                     as="textarea"
                     rows="20"
+                    defaultValue={this.props.queryFromList.SQL}
                     placeholder={this.props.queryFromList.SQL}
                     onChange={e => this.setState({editedQuery: e.target.value})}/>
                 </Form.Group>
