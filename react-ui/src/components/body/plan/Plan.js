@@ -30,7 +30,26 @@ const Plan = ({plan, getPlan, run, planRun, schemaList, userID}) => {
   return(
     <div>
       <h4 className='my-2 pb-1'>
-        Plan
+        <Container style={{padding:'0', margin:'0'}}>
+          <Row>
+            <Col xs={9}>Plan</Col>
+            <Col>
+              {plan.plan!==null &&
+               plan.schemaID === schemaList.selectedSID &&
+               plan.queryID === schemaList.selectedQID ?
+                <DownloadPlanButton
+                    schemaID={schemaList.selectedSID}
+                    queryID = {schemaList.selectedQID}
+                    SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
+                    plan={plan}
+                    margins={true}
+                    id={1}
+                    userID={userID}/>
+                :
+                null}
+             </Col>
+          </Row>
+        </Container>
       </h4>
 
       {schemaList !== null && schemaList.schemas.length > 0 ?
@@ -132,14 +151,6 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
           <GraphicalPlanModal
               graphicalPlan={plan.plan.graphicalPlan}/>
 
-          <DownloadPlanButton
-              schemaID={schemaList.selectedSID}
-              queryID = {schemaList.selectedQID}
-              SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
-              plan={plan}
-              margins={true}
-              id={1}
-              userID={userID}/>
         </div>
         :
         null
@@ -211,7 +222,7 @@ const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
            planRun.schemaID === schemaList.selectedSID &&
            planRun.queryID === schemaList.selectedQID  ?
             <div className='my-4'>
-              <h4 className='my-2 pb-1'>
+              <h4 className='my-2'>
                 <Container style={{padding:'0', margin:'0'}}>
                   <Row>
                     <Col xs={9}>Run Results</Col>
@@ -249,34 +260,32 @@ const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
 
 const RunTable = ({planRun}) => {
   return(
-    <div>
-      <div style={{maxHeight:"calc((100vh - 11rem) / 4 - 40px)", overflowY:"scroll"}} className='my-2'>
-        <Table responsive>
-          <thead>
-            <tr>
-             <th>#</th>
-             {planRun.table.header.map((head, index) => {
-               return[ <th key={"runHead"+index}>{head.name}</th> ]
-             })}
-            </tr>
-          </thead>
+    <div style={{maxHeight:"calc((100vh - 11rem) / 4 - 40px)", overflowY:"scroll"}} className='my-2'>
+      <Table responsive>
+        <thead>
+          <tr>
+           <th>#</th>
+           {planRun.table.header.map((head, index) => {
+             return[ <th key={"runHead"+index}>{head.name}</th> ]
+           })}
+          </tr>
+        </thead>
 
-          <tbody>
-            {planRun.table.data.map((dataPoint, index) => {
-              return[
-                <tr key={"runRow"+index}>
-                  <th scope="row">{index+1}</th>
-                  {dataPoint.values.map((value, index)=>{
-                    return[ <td key={"runRowValue"+index}>{value}</td> ]
-                  })}
-                </tr>
-              ]
-            })}
+        <tbody>
+          {planRun.table.data.map((dataPoint, index) => {
+            return[
+              <tr key={"runRow"+index}>
+                <th scope="row">{index+1}</th>
+                {dataPoint.values.map((value, index)=>{
+                  return[ <td key={"runRowValue"+index}>{value}</td> ]
+                })}
+              </tr>
+            ]
+          })}
 
-          </tbody>
+        </tbody>
 
-        </Table>
-      </div>
+      </Table>
     </div>
   )
 }
