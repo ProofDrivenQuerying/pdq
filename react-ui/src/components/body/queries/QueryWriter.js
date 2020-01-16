@@ -51,7 +51,7 @@ class QueryWriter extends React.Component{
 
   submitEditedQuery(){
     this.props.verifyQuery(this.props.schemaID, this.props.numQueries, this.state.editedQuery).then(()=>{
-      if(this.props.queryValidation.validQuery){
+      if(this.props.queryValidation.validQuery && !this.props.queryValidation.isErrorValidation){
         let queryToAdd = {
           id: this.props.numQueries,
           SQL: this.state.editedQuery,
@@ -64,7 +64,7 @@ class QueryWriter extends React.Component{
         this.props.setQuery(this.props.numQueries - 1);
 
       }else{
-        this.mounted && this.setState({validQuery: false});
+        this.mounted && this.setState({validQuery: this.props.queryValidation.validQuery});
       }
     })
   }
@@ -117,6 +117,15 @@ class QueryWriter extends React.Component{
                 >
                 This query is not valid.
                 </Alert>}
+              {this.props.queryValidation.isErrorValidation ?
+                <Alert
+                  color="danger"
+                  style={{margin:".5rem"}}
+                >
+                There was an error submitting your query.
+                </Alert>
+                :
+                null}
 
             </ModalBody>
 
