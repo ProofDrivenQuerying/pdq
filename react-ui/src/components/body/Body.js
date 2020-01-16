@@ -34,13 +34,13 @@ const Body = ({selectedSchema, body, queryList}) => {
       </style>
       <Container fluid = {true}>
         <Row>
-          <Col className='border border-bottom-0' xs={12} md={4}>
+          <Col className='border border-bottom-0' sm={12} lg={4}>
             <Schemas/>
           </Col>
-          <Col className='border border-bottom-0' xs={12} md={4}>
+          <Col className='border border-bottom-0' xs={12} lg={4}>
             <Queries/>
           </Col>
-          <Col className='border border-bottom-0' xs={12} md={4}>
+          <Col className='border border-bottom-0' xs={12} lg={4}>
             <Plan/>
           </Col>
         </Row>

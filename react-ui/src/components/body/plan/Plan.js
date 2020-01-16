@@ -33,21 +33,6 @@ const Plan = ({plan, getPlan, run, planRun, schemaList, userID}) => {
         <Container style={{padding:'0', margin:'0'}}>
           <Row>
             <Col xs={9}>Plan</Col>
-            <Col>
-              {plan.plan!==null &&
-               plan.schemaID === schemaList.selectedSID &&
-               plan.queryID === schemaList.selectedQID ?
-                <DownloadPlanButton
-                    schemaID={schemaList.selectedSID}
-                    queryID = {schemaList.selectedQID}
-                    SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
-                    plan={plan}
-                    margins={true}
-                    id={1}
-                    userID={userID}/>
-                :
-                null}
-             </Col>
           </Row>
         </Container>
       </h4>
@@ -65,21 +50,11 @@ const Plan = ({plan, getPlan, run, planRun, schemaList, userID}) => {
             && plan.schemaID === schemaList.selectedSID
             && plan.queryID === schemaList.selectedQID ?
             <div>
-              <h4 className='my-2 pb-1'>
+              <h4 className='my-3'>
                 <Container style={{padding:'0', margin:'0'}}>
                   <Row>
-                    <Col >
+                    <Col>
                     Run Your Plan
-                    </Col>
-                    <Col className="my-2">
-                    {planRun.planRun!==null &&
-                    planRun.schemaID === schemaList.selectedSID &&
-                    planRun.queryID === schemaList.selectedQID  ?
-                    <h6><i>{planRun.planRun.tupleCount} {" "}
-                      {planRun.planRun.tupleCount > 1 ? "tuples" : "tuple" } found
-                      in {planRun.planRun.runTime} seconds.</i></h6>
-                    :
-                    null}
                     </Col>
                   </Row>
                 </Container>
@@ -108,7 +83,7 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
   return (
     <div className='half'>
 
-      <div className='my-2'>
+      <div className='my-3'>
         <Button
             block
             disabled={plan.isFetchingPlan}
@@ -143,15 +118,42 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
         plan.plan!==null &&
         plan.schemaID === schemaList.selectedSID &&
         plan.queryID === schemaList.selectedQID ?
-        <div>
-          <PlanInfoModal
-            id={schemaList.selectedSID}
-            plan={plan.plan}/>
 
-          <GraphicalPlanModal
-              graphicalPlan={plan.plan.graphicalPlan}/>
+        <div className='my-4'>
+          <h4 className='my-2'>
+            <Container style={{padding:'0', margin:'0'}}>
+              <Row>
+                <Col xs={9}>Plan Results</Col>
+                <Col>
+                  <DownloadPlanButton
+                    schemaID={schemaList.selectedSID}
+                    queryID = {schemaList.selectedQID}
+                    SQL={schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL}
+                    plan={plan}
+                    margins={true}
+                    id={1}/>
+                </Col>
+              </Row>
+              <Row>
+               <Col className="my-2">
+                  <h6><i>Found an optimal {plan.plan.runnable ? "runnable":null} plan
+                    in {plan.plan.planTime} seconds.</i></h6>
+                </Col>
+              </Row>
+            </Container>
+          </h4>
 
+          <div>
+            <PlanInfoModal
+              id={schemaList.selectedSID}
+              plan={plan.plan}/>
+
+            <GraphicalPlanModal
+                graphicalPlan={plan.plan.graphicalPlan}/>
+
+          </div>
         </div>
+
         :
         null
       }
@@ -235,9 +237,15 @@ const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
                       planRun={planRun}
                       margins={true}
                       id={1}
-                      userID={userID}
                       />
                      </Col>
+                  </Row>
+                  <Row>
+                    <Col className="my-2">
+                      <h6><i>{planRun.planRun.tupleCount} {" "}
+                        {planRun.planRun.tupleCount > 1 ? "tuples" : "tuple" } found
+                        in {planRun.planRun.runTime} seconds.</i></h6>
+                    </Col>
                   </Row>
                 </Container>
 

@@ -1,14 +1,14 @@
 import React from 'react';
 import PopoutWindow from '../Popout';
 import Button from 'react-bootstrap/Button';
-import { Table,
-         Modal,
+import { Modal,
          ModalHeader,
          ModalBody,
          ModalFooter,
 } from 'reactstrap';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
+import Table from 'react-bootstrap/Table';
 
 
 export default class Relations extends React.Component{
@@ -106,7 +106,7 @@ const RelationAttributeTable = ({relation}) => {
   return(
     <div>
       <h5>Attributes</h5>
-      <Table>
+      <Table responsive>
         <thead>
           <tr>
             <th>#</th>

@@ -276,7 +276,6 @@ public class Controller {
 
         } catch (Throwable e) {
             e.printStackTrace();
-            System.exit(-1);
         }
 
         return plan;
@@ -356,7 +355,6 @@ public class Controller {
 
         } catch (Throwable e) {
             e.printStackTrace();
-            System.exit(-1);
         }
 
         return result;
@@ -406,8 +404,8 @@ public class Controller {
             if (resource.exists()) {
                 return resource;
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }

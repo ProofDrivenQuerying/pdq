@@ -57,7 +57,7 @@ export default class DownloadRunButton extends React.Component {
     return(
       <div>
       <Container>
-        <Row className='justify-content-md-center'>
+        <Row>
           <Col xs lg="2">
             <Button
               id={"downloadRun"+this.props.schemaID+this.props.id}
@@ -69,8 +69,7 @@ export default class DownloadRunButton extends React.Component {
               onClick={(e) => this.downloadRun(
                 this.props.schemaID,
                 this.props.queryID,
-                this.props.SQL,
-                this.props.userID
+                this.props.SQL
               )}>
               <FaDownload/>
               </Button>

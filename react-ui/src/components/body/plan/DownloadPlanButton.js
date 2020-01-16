@@ -53,25 +53,24 @@ export default class DownloadRunButton extends React.Component {
   render(){
     return(
       <div>
-        <Container>
-          <Row className='justify-content-md-center'>
-            <Col xs lg="2">
-              <Button
-                id={"downloadPlan"+this.props.schemaID+this.props.id}
-                variant="link"
-                disabled={
-                  this.props.plan === null ||
-                  this.props.plan.schemaID !== this.props.schemaID ||
-                  this.props.plan.queryID !== this.props.queryID
-                }
-                onClick={(e) => this.downloadPlan(
-                  this.props.schemaID,
-                  this.props.queryID,
-                  this.props.SQL,
-                  this.props.userID
-                )}>
-                <FaDownload/>
-              </Button>
+      <Container>
+        <Row>
+          <Col xs lg="1">
+            <Button
+              id={"downloadPlan"+this.props.schemaID+this.props.id}
+              variant="link"
+              disabled={
+                this.props.plan === null ||
+                this.props.plan.schemaID !== this.props.schemaID ||
+                this.props.plan.queryID !== this.props.queryID
+              }
+              onClick={(e) => this.downloadPlan(
+                this.props.schemaID,
+                this.props.queryID,
+                this.props.SQL
+              )}>
+              <FaDownload/>
+            </Button>
             </Col>
           </Row>
         </Container>

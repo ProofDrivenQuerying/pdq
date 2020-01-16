@@ -128,11 +128,7 @@ export default class PDQTree extends React.Component {
     this.setState({
       size: size
     }, (size) => {
-      if (this.state.size <= 9){
         this.zoom(.50)
-
-      }
-      this.zoom(1.0 - this.state.size / 100 );
     });
   }
 
@@ -205,7 +201,8 @@ export default class PDQTree extends React.Component {
           onTouchMove={this.onDragMove}
           onMouseUp={this.onDragEnd}
           onTouchEnd={this.onDragEnd}
-          onWheel={this.onWheel}>
+          onWheel={this.onWheel}
+          style={this.state.dragging ? {cursor:'grabbing'} : {cursor:'grab'}}>
 
           <LinearGradient id="lg" from="#E0E0E0" to="#fe6e9e" />
 
@@ -248,8 +245,8 @@ export default class PDQTree extends React.Component {
                   })}
 
                   {data.descendants().map((node, key) => {
-                    const width = 25;
-                    const height = 15;
+                    const width = 30;
+                    const height = 20;
                     let top;
                     let left;
                     if (layout === 'polar') {
@@ -271,6 +268,7 @@ export default class PDQTree extends React.Component {
                           <circle
                             r={15}
                             fill='#428bca'
+                            style={{cursor:'pointer'}}
                             onClick={() => {
                               this.setState({ selectedNode: node.data });
                               this.forceUpdate();
@@ -286,6 +284,7 @@ export default class PDQTree extends React.Component {
                             x={-width / 2}
                             fill={node.data.children ? '#428bca' : node.data.type === "SUCCESSFUL" ? "#5cb85c" : '#d9534f'}
                             rx={!node.data.children ? 10 : 0}
+                            style={{cursor:'pointer'}}
                             onClick={(e) => {
                               this.setState({ selectedNode: node.data });
                               this.forceUpdate();
