@@ -86,8 +86,8 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
       <div className='my-3'>
         <Button
             block
-            disabled={plan.isFetchingPlan}
-            variant={plan.schemaID === schemaList.selectedSID && plan.queryID === schemaList.selectedQID ? 'outline-primary' : 'primary'}
+            disabled={plan.isFetchingPlan || (plan.schemaID === schemaList.selectedSID && plan.queryID === schemaList.selectedQID && plan.isErrorPlan)}
+            variant={plan.schemaID === schemaList.selectedSID && plan.queryID === schemaList.selectedQID ? plan.isErrorPlan ? 'danger' :'outline-primary' : 'primary'}
             onClick={(e) => getPlan(
               schemaList.selectedSID,
               schemaList.selectedQID,
@@ -100,15 +100,27 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
                 </div>
                 :
                 <div className="my-3">
-                {plan.schemaID === schemaList.selectedSID && plan.queryID === schemaList.selectedQID ?
+
                   <div>
-                    Plan Again <FaRegMap/>
+                  {plan.schemaID === schemaList.selectedSID && plan.queryID === schemaList.selectedQID ?
+                    <div>
+                      { plan.isErrorPlan ?
+                        <div>
+                        PDQ was unable to plan with this query
+                        </div>
+                        :
+                      <div>
+                        Plan Again <FaRegMap/>
+                      </div>
+                      }
+                    </div>
+                    :
+                    <div>
+                      Plan <FaRegMap/>
+                    </div>
+                  }
                   </div>
-                  :
-                  <div>
-                    Plan <FaRegMap/>
-                  </div>
-                }
+
                 </div>
               }
             </div>
@@ -164,6 +176,9 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
 }
 
 const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
+  console.log(planRun.isFetchingPlanRun );
+  console.log(!plan.runnable);
+  console.log((planRun.schemaID === schemaList.selectedSID && planRun.queryID === schemaList.selectedQID && planRun.isErrorPlanRun));
   return (
     <div style={{maxHeight:"calc((100vh - 11rem) / 2 - 40px)", overflowY:"scroll"}}>
       {plan.plan!==null
@@ -173,51 +188,52 @@ const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
         <div className='my-2 mx-0'>
           <Button
             block
-             variant={!plan.plan.runnable ?
-               "danger"
-               :
-               (planRun.planRun !== null &&
-                planRun.schemaID === schemaList.selectedSID &&
-                planRun.queryID === schemaList.selectedQID ?
-                "outline-primary"
-                :
-                "primary"
-                )
-               }
-             disabled={!plan.plan.runnable || planRun.isFetchingPlanRun}
-             onClick={() => run(
+            disabled={planRun.isFetchingPlanRun || !plan.plan.runnable || (planRun.schemaID === schemaList.selectedSID && planRun.queryID === schemaList.selectedQID && planRun.isErrorPlanRun)}
+            variant={planRun.schemaID === schemaList.selectedSID && planRun.queryID === schemaList.selectedQID ? planRun.isErrorPlanRun ? 'danger' :'outline-primary' : 'primary'}
+            onClick={() => run(
                schemaList.selectedSID,
                schemaList.selectedQID,
                schemaList.schemas[schemaList.selectedSID].queries[schemaList.selectedQID].SQL
              )}>
-             <div className="my-3">
+             <div >
                {planRun.isFetchingPlanRun ?
                  <div className="my-2">
-                  <Spinner animation="border"/>
-                </div>
-                :
-                <div>
-                  {plan.plan.runnable ?
-                    <div>
-                      {planRun.schemaID === schemaList.selectedSID && planRun.queryID === schemaList.selectedQID ?
-                        <div>
-                          Run Again <FaPlay/>
-                        </div>
-                        :
-                        <div>
-                          Run <FaPlay/>
-                        </div>
-                      }
+                   <Spinner animation="border"/>
+                 </div>
+                 :
+                 <div className="my-3">
+                   {plan.plan.runnable ?
 
-                    </div>
-                    :
-                    <div className='overflow'>
-                      PDQ does not have access to the services required to run this plan
-                    </div>
-                  }
-                </div>
-                }
-              </div>
+                   <div>
+
+                   {planRun.schemaID === schemaList.selectedSID && planRun.queryID === schemaList.selectedQID ?
+                     <div>
+                       { planRun.isErrorPlanRun ?
+                         <div>
+                         PDQ was unable to run this plan
+                         </div>
+                         :
+                         <div>
+                           Run Again <FaPlay/>
+                         </div>
+                       }
+                     </div>
+                     :
+                     <div>
+                       Run <FaPlay/>
+                     </div>
+                   }
+
+                   </div>
+                   :
+                   <div className='overflow'>
+                     PDQ does not have access to the services required to run this plan
+                   </div>
+                 }
+                 </div>
+               }
+             </div>
+
            </Button>
 
            {planRun.planRun!==null &&
