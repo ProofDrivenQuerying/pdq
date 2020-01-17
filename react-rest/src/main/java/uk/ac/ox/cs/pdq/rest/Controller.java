@@ -258,18 +258,12 @@ public class Controller {
             plan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
             plan.getGraphicalPlan().setType("ORIGIN");
 
-            // Check whether the cached directory exists
-            if (! Files.exists(Paths.get(paths.get(schemaID) + "/query" + queryID + "/"))) {
-                File dir = new File(paths.get(schemaID) + "/query" + queryID + "/");
-                dir.mkdir();
-            }
-
             // If our plan has already been written to file, don't write it out again
-            if (Files.exists(Paths.get(paths.get(schemaID) + "/query" + queryID + "/computed-plan.xml"))){
+            if (Files.exists(Paths.get(paths.get(schemaID) + "/computed-plan" + queryID + ".xml")) && commonQueries.get(schemaID).get(queryID) != null){
                 return plan;
             }
 
-            File planFile = new File(paths.get(schemaID) + "/query" + queryID + "/computed-plan.xml");
+            File planFile = new File(paths.get(schemaID) + "/computed-plan" + queryID + ".xml");
 
             RelationalTerm relationalTermPlan = plan.getPlan();
             IOManager.writeRelationalTerm(relationalTermPlan, planFile);
@@ -295,7 +289,7 @@ public class Controller {
                                                  @PathVariable String SQL, HttpServletRequest request) {
 
         try {
-            Resource resource = loadFileAsResource(paths.get(schemaID) + "/query" + queryID + "/computed-plan.xml");
+            Resource resource = loadFileAsResource(paths.get(schemaID) + "/computed-plan" + queryID + ".xml");
 
             String contentType = "application/xml";
 
@@ -339,18 +333,12 @@ public class Controller {
 
             result = JsonRunner.runtime(schema, cq, properties, plan);
 
-            // Check whether the cached directory exists. If it doesn't, create it.
-            if (! Files.exists(Paths.get(paths.get(schemaID) + "/query" + queryID + "/"))) {
-                File dir = new File(paths.get(schemaID) + "/query" + queryID + "/");
-                dir.mkdir();
-            }
-
             // If our run has already been written to file, don't write it out again.
-            if (Files.exists(Paths.get(paths.get(schemaID) + "/query" + queryID + "/results.csv"))){
+            if (Files.exists(Paths.get(paths.get(schemaID) + "/results" + queryID + ".csv")) && commonQueries.get(schemaID).get(queryID) != null){
                 return result;
             }
 
-            JsonRunner.writeOutput(result.results, paths.get(schemaID) + "/query" + queryID + "/results.csv");
+            JsonRunner.writeOutput(result.results, paths.get(schemaID) + "/results" + queryID + ".csv");
 
 
         } catch (Throwable e) {
@@ -375,7 +363,7 @@ public class Controller {
 
         try {
 
-            Resource resource = loadFileAsResource(paths.get(schemaID) + "/query" + queryID + "/results.csv");
+            Resource resource = loadFileAsResource(paths.get(schemaID) + "/results" + queryID + ".csv");
             String contentType = "text/csv";
 
             return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
