@@ -39,7 +39,7 @@
   Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 
-    npm test
+    npm run test
 
   This launches the test runner in the interactive watch mode.
   See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
@@ -50,4 +50,3 @@
   It correctly bundles React in production mode and optimizes the build for the best performance.
   The build is minified and the filenames include the hashes.
   See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-  *There is a proxy in package.json that was used in development. Remember to remove it before building!*
