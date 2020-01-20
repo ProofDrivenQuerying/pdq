@@ -19,7 +19,7 @@
   	<module>planner</module>
   	<module>runtime</module>
   	<module>gui</module>
-    <module>rest</module>
+    	<module>react-rest</module>
 
 
   	<module>datasources</module>
