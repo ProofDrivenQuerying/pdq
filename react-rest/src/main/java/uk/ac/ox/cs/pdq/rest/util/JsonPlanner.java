@@ -156,7 +156,6 @@ public class JsonPlanner{
 
         }catch (Throwable e) {
             e.printStackTrace();
-            System.exit(-1);
         }
         return toReturn;
     }

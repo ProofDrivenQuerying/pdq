@@ -340,7 +340,6 @@ public class Controller {
 
             JsonRunner.writeOutput(result.results, paths.get(schemaID) + "/results" + queryID + ".csv");
 
-
         } catch (Throwable e) {
             e.printStackTrace();
         }

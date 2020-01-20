@@ -176,9 +176,7 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
 }
 
 const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
-  console.log(planRun.isFetchingPlanRun );
-  console.log(!plan.runnable);
-  console.log((planRun.schemaID === schemaList.selectedSID && planRun.queryID === schemaList.selectedQID && planRun.isErrorPlanRun));
+
   return (
     <div style={{maxHeight:"calc((100vh - 11rem) / 2 - 40px)", overflowY:"scroll"}}>
       {plan.plan!==null

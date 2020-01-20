@@ -52,13 +52,12 @@ public class JsonRunner {
 
         }catch(Throwable e){
             e.printStackTrace();
-            System.exit(-1);
         }
         return null;
     }
 
     private static Table evaluatePlan(RelationalTerm p, Schema schema) throws Exception {
-        AccessRepository repo = AccessRepository.getRepository();
+        AccessRepository repo = AccessRepository.getRepository("./services");
         try {
             ExecutablePlan executable = new PlanDecorator(repo,schema).decorate(p);
             System.out.println("Executing plan " + p.hashCode());
@@ -78,7 +77,7 @@ public class JsonRunner {
      * @throws Exception
      */
     public static ExecutablePlan decoratePlan(RelationalTerm p, Schema schema) throws Exception {
-        AccessRepository repo = AccessRepository.getRepository();
+        AccessRepository repo = AccessRepository.getRepository("./services");
 
         ExecutablePlan executable = null;
         try{
