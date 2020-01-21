@@ -287,8 +287,8 @@ const RunTable = ({planRun}) => {
         <thead>
           <tr>
            <th>#</th>
-           {planRun.table.header.map((head, index) => {
-             return[ <th key={"runHead"+index}>{head.name}</th> ]
+           {planRun.table.columns.map((name, index) => {
+             return[ <th key={"runHead"+index}>{name}</th> ]
            })}
           </tr>
         </thead>

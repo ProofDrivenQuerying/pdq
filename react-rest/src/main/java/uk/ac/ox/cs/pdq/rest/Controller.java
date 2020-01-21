@@ -371,13 +371,12 @@ public class Controller {
 
         } catch (Exception e) {
             e.printStackTrace();
-
         }
         return null;
     }
 
     /**
-     * Loads fileName converts it into a Resource
+     * Loads fileName and converts it into a Resource
      *
      * @param fileName as a string
      * @return Resource

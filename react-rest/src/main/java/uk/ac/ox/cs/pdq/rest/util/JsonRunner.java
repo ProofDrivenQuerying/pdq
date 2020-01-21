@@ -48,7 +48,7 @@ public class JsonRunner {
             double computationTime = (System.currentTimeMillis() - start)/1000.0;
 
 
-            return new RunResults(tupleCount, results, computationTime);
+            return new RunResults(tupleCount, results, computationTime, cq);
 
         }catch(Throwable e){
             e.printStackTrace();
@@ -59,10 +59,8 @@ public class JsonRunner {
     private static Table evaluatePlan(RelationalTerm p, Schema schema) throws Exception {
         AccessRepository repo = AccessRepository.getRepository("./services");
         try {
-            ExecutablePlan executable = new PlanDecorator(repo,schema).decorate(p);
-            System.out.println("Executing plan " + p.hashCode());
+            ExecutablePlan executable = new PlanDecorator(repo, schema).decorate(p);
             Table res = executable.execute();
-            System.out.println("plan " + p.hashCode() + " finished.");
             return res;
         }catch(Throwable t) {
             t.printStackTrace();
