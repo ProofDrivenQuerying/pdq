@@ -25,7 +25,6 @@ public class Table {
         this.header = new Attribute[tableHeader.length];
 
         for (int i = 0; i < tableHeader.length; i ++){
-            System.out.println(tableHeader[i].getName());
             header[i] = new Attribute(tableHeader[i].getName(), tableHeader[i].getType().toString());
         }
 

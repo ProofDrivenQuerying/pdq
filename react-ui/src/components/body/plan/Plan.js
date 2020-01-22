@@ -148,7 +148,7 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
               </Row>
               <Row>
                <Col className="my-2">
-                  <h6><i>Found an optimal {plan.plan.runnable ? "runnable":null} plan
+                  <h6 style={{whiteSpace: 'normal'}}><i>Found an optimal {plan.plan.runnable ? "runnable":null} plan
                     in {plan.plan.planTime} seconds.</i></h6>
                 </Col>
               </Row>

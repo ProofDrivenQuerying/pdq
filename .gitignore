@@ -9,5 +9,5 @@
 /workloadrun/
 /cardinality/
 /bin/
-/.idea
+.idea/
 *.iml

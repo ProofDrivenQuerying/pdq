@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.*;
 import uk.ac.ox.cs.pdq.rest.util.*;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.Plan;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.run.RunResults;
+import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -211,7 +212,7 @@ public class Controller {
         boolean validQuery = false;
 
         try {
-            SQLQueryReader reader = new SQLQueryReader(schema);
+            SQLLikeQueryReader reader = new SQLLikeQueryReader(schema);
             ConjunctiveQuery newQuery = reader.fromString(SQL);
 
             //validation goes here
@@ -246,14 +247,12 @@ public class Controller {
         Schema schema = schemaList.get(schemaID);
         File properties = casePropertyList.get(schemaID);
         String pathToCatalog = catalogPaths.get(schemaID);
-        ConjunctiveQuery cq = commonQueries.get(schemaID).get(queryID);
         Plan plan = null;
         try {
-            // SQL is converted to Conjunctive Query if it is not in commonQueries
-            if(cq == null) {
-                SQLQueryReader reader = new SQLQueryReader(schema);
-                cq = reader.fromString(SQL);
-            }
+
+            SQLLikeQueryReader reader = new SQLLikeQueryReader(schema);
+            ConjunctiveQuery cq = reader.fromString(SQL);
+
 
             plan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
             plan.getGraphicalPlan().setType("ORIGIN");
@@ -316,17 +315,13 @@ public class Controller {
 
 
         Schema schema = schemaList.get(schemaID);
-        ConjunctiveQuery cq = commonQueries.get(schemaID).get(queryID);
         File properties = casePropertyList.get(schemaID);
         String pathToCatalog = catalogPaths.get(schemaID);
         RunResults result = null;
 
         try {
-            // SQL is converted to Conjunctive Query if it is not in commonQueries
-            if (cq == null){
-                SQLQueryReader reader = new SQLQueryReader(schema);
-                cq = reader.fromString(SQL);
-            }
+            SQLLikeQueryReader reader = new SQLLikeQueryReader(schema);
+            ConjunctiveQuery cq = reader.fromString(SQL);
 
             Plan jsonPlan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
             RelationalTerm plan = jsonPlan.getPlan();
