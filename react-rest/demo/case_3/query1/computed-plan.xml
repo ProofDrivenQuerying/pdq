@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTerm type="ProjectionTerm">
+    <projections name="fv_y23073264" type="java.lang.String"/>
+    <RelationalTerm type="JoinTerm">
+        <RelationalTerm type="RenameTerm">
+            <renamings name="v_x23073264" type="java.lang.String"/>
+            <renamings name="fv_y23073264" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="S_free"/>
+                <inputConstants/>
+                <relation name="S">
+                    <attribute name="x" type="java.lang.String"/>
+                    <attribute name="y" type="java.lang.String"/>
+                    <access-method name="S_free"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+        <RelationalTerm type="RenameTerm">
+            <renamings name="v_x23073264" type="java.lang.String"/>
+            <RelationalTerm type="AccessTerm">
+                <accessMethod name="R_free"/>
+                <inputConstants/>
+                <relation name="R">
+                    <attribute name="x" type="java.lang.String"/>
+                    <access-method name="R_free"/>
+                </relation>
+            </RelationalTerm>
+        </RelationalTerm>
+    </RelationalTerm>
+</RelationalTerm>

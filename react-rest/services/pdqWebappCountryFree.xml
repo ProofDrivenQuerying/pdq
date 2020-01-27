@@ -1,0 +1,16 @@
+	<service
+		name="pdqWebappCountryFree"
+		protocol="REST"
+		url="http://pdq-webapp.cs.ox.ac.uk:8080/webapp/servlets/servlet/CountryFree" 
+		media-type="application/xml"
+		documentation=""
+		result-delimiter="country"
+		service-group="service-group-1">
+
+		<policy name="1000_items_per_page" />
+
+		<access-method type="FREE" 						name="pdqWebappCountryFree" cost="1000.0" relation-name="Country">
+			<attribute name="c_nationkey"    			output="true" type="Integer"    	relation-attribute="c_nationkey" path="c_nationkey"/>
+			<attribute name="c_area"   		  			output="true" type="Integer"    	relation-attribute="c_area" path="c_area"/>
+		</access-method>
+	</service>

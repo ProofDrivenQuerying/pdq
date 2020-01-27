@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Header from './components//header/Header.js';
-import Body from './components/body/Body.js';
+import Header from './components/Header';
+import Body from './components/body/Body';
 import { connect } from 'react-redux';
 import { getInitialData } from './actions/getSimpleSchemaList.js';
 
@@ -14,16 +14,19 @@ import { getInitialData } from './actions/getSimpleSchemaList.js';
 class App extends Component{
 
   componentWillMount(){
-    //get initial schemaList from server and set state variable schemaList accordingly
     this.props.dispatch(getInitialData());
   }
 
   render(){
-    console.log(this.props);
     return(
-      <div style={{height:"100vh"}}>
+      <div>
         <Header/>
-        <Body/>
+
+        {this.props.schemaList.schemas.length === 0 ?
+          null
+          :
+          <Body/>}
+
       </div>
     )
   }
@@ -31,7 +34,6 @@ class App extends Component{
 
 //redux
 const mapStatesToProps = (state) =>({
-  // dispatch: state.dispatch
   ...state
 });
 

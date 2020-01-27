@@ -7,9 +7,11 @@ import { store } from '../reducers/store.js';
  */
 
 
-export const fetchingPlan = () => {
+export const fetchingPlan = (schemaID, queryID) => {
     return {
         type: 'FETCHING_PLAN',
+        schemaID,
+        queryID
     };
 }
 export const resolvedPlan = (plan, schemaID, queryID) => {
@@ -20,9 +22,11 @@ export const resolvedPlan = (plan, schemaID, queryID) => {
     plan,
   }
 }
-export const errorPlan = () => {
+export const errorPlan = (schemaID, queryID) => {
     return {
         type: 'ERROR_PLAN',
+        schemaID,
+        queryID
     };
 }
 
@@ -30,7 +34,7 @@ export const errorPlan = () => {
 
 export const plan = (schemaID, queryID, SQL) => {
   //fetching
-  store.dispatch(fetchingPlan());
+  store.dispatch(fetchingPlan(schemaID, queryID));
 
   return function(dispatch, getState){
     let simpleSQL = SQL.replace(/\n|\r|\t/g, " ");
@@ -42,6 +46,6 @@ export const plan = (schemaID, queryID, SQL) => {
         dispatch(errorPlan())
       }
       dispatch(resolvedPlan(res, schemaID, queryID))
-    }).catch(err => dispatch(errorPlan()));
+    }).catch(err => dispatch(errorPlan(schemaID, queryID)));
   }
 }

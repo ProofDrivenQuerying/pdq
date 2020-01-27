@@ -17,7 +17,14 @@ const initialPlanRunState = {
 const runReducer = (state = initialPlanRunState, action) => {
   switch(action.type){
     case 'FETCHING_PLAN_RUN':
-      return{...state, planRun: null, isFetchingPlanRun: true, isErrorPlanRun: false};
+      return{
+        ...state,
+        planRun: null,
+        isFetchingPlanRun: true,
+        isErrorPlanRun: false,
+        schemaID: action.schemaID,
+        queryID: action.queryID
+      };
 
     case 'RESOLVED_PLAN_RUN':
       return{
@@ -30,7 +37,14 @@ const runReducer = (state = initialPlanRunState, action) => {
       };
 
     case 'ERROR_PLAN_RUN':
-      return{...state, planRun: null, isFetchingPlanRun: false, isErrorPlanRun:true};
+      return{
+        ...state,
+        planRun: null,
+        isFetchingPlanRun: false,
+        isErrorPlanRun:true,
+        schemaID: action.schemaID,
+        queryID: action.queryID
+      };
 
     default:
       return state;

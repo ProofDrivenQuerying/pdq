@@ -1,9 +1,12 @@
 import React from "react";
 import { FaDownload } from 'react-icons/fa';
 import Helpers from "../../../actions/helpers.js";
-import { Button,
-        Tooltip
-} from 'reactstrap';
+import {Tooltip} from 'reactstrap';
+
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 
 export default class DownloadRunButton extends React.Component {
@@ -16,7 +19,7 @@ export default class DownloadRunButton extends React.Component {
     this.toggleTooltip = this.toggleTooltip.bind(this);
   }
 
-  downloadPlan(schemaID, queryID, SQL){
+  downloadPlan(schemaID, queryID, SQL, userID){
     let simpleSQL = SQL.replace(/\n|\r|\t/g, " ");
     Helpers.httpRequest(
       `/downloadPlan/`+schemaID+`/`+queryID+`/`+simpleSQL,
@@ -28,7 +31,7 @@ export default class DownloadRunButton extends React.Component {
        const url = window.URL.createObjectURL(new Blob([blob]));
        const link = document.createElement('a');
        link.href = url;
-       link.setAttribute('download', `PDQplan`+schemaID+`-`+queryID+`.xml`);
+       link.setAttribute('download', `PDQ_plan_schema`+schemaID+`_query`+queryID+`.xml`);
        // 3. Append to html page
        document.body.appendChild(link);
        // 4. Force download
@@ -48,34 +51,29 @@ export default class DownloadRunButton extends React.Component {
   }
 
   render(){
-
-    let smallButton = {
-      float: "left", width: "4rem", height:"4rem",
-               margin:"1rem 1rem 1rem 1rem"
-    }
-
-    let noStyle = {
-      float: "left"
-    }
-
     return(
       <div>
-        <Button
-          id={"downloadPlan"+this.props.schemaID+this.props.id}
-          color="link"
-          disabled={
-            this.props.plan === null ||
-            this.props.plan.schemaID !== this.props.schemaID ||
-            this.props.plan.queryID !== this.props.queryID
-          }
-          style={this.props.margins ? smallButton : noStyle}
-          onClick={(e) => this.downloadPlan(
-            this.props.schemaID,
-            this.props.queryID,
-            this.props.SQL
-          )}>
-          <FaDownload/>
-        </Button>
+      <Container>
+        <Row>
+          <Col xs lg="1">
+            <Button
+              id={"downloadPlan"+this.props.schemaID+this.props.id}
+              variant="link"
+              disabled={
+                this.props.plan === null ||
+                this.props.plan.schemaID !== this.props.schemaID ||
+                this.props.plan.queryID !== this.props.queryID
+              }
+              onClick={(e) => this.downloadPlan(
+                this.props.schemaID,
+                this.props.queryID,
+                this.props.SQL
+              )}>
+              <FaDownload/>
+            </Button>
+            </Col>
+          </Row>
+        </Container>
 
         <Tooltip
           placement="top"

@@ -2,12 +2,13 @@ import React from "react";
 import PDQTree from "./PDQTree";
 import PopoutWindow from '../Popout';
 import { FaRoute } from 'react-icons/fa';
-import { Button,
-         Modal,
+import { Modal,
          ModalHeader,
          ModalBody,
          ModalFooter
 } from 'reactstrap';
+
+import Button from 'react-bootstrap/Button';
 
 /**
  * The modal in which the plan graph is displayed.
@@ -34,28 +35,25 @@ export default class GraphicalPlanModal extends React.Component {
     const graphicalPlanContent = (graphicalPlan) => (
       <div>
         <header>Graphical Plan</header>
-        <div style={{
-          display:"flex",
-          alignItems:"center",
-          justifyContent:"center",
-          overflow: "hidden"
-        }}>
+        <div>
          <PDQTree
-            data={graphicalPlan}
-            width={750}
-            height={370}/>
+            data={graphicalPlan}/>
         </div>
       </div>
     )
 
     return (
       <div>
-        <Button
-           outline color="secondary"
-           style={this.props.bigButton}
-           onClick={() => this.toggle()}>
-               {this.props.name} <FaRoute/>
-         </Button>
+        <div className="my-2">
+          <Button
+            block
+            variant="primary"
+            onClick={() => this.toggle()}>
+              <div className="my-2">
+                View Exploration Graph <FaRoute/>
+              </div>
+           </Button>
+          </div>
 
         <Modal
            id={"GraphicalPlanModalBody"}
@@ -74,21 +72,19 @@ export default class GraphicalPlanModal extends React.Component {
 
           </ModalHeader>
 
-          <ModalBody
-          style={{maxHeight: "calc(100vh - 200px)"}}>
+          <ModalBody>
           {this.props.graphicalPlan != null && this.state.modal ?
-           <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
+           <div className='mx-2'>
             <PDQTree
                data={this.props.graphicalPlan}
-               width={750}
-               height={370}/>
+               />
            </div>
            : null}
           </ModalBody>
 
           <ModalFooter>
             <Button
-               color="secondary"
+               variant="secondary"
                onClick={this.toggle}>Cancel</Button>
           </ModalFooter>
         </Modal>

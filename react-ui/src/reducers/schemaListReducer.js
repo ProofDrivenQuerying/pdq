@@ -11,7 +11,8 @@ const initialSchemaListState = {
   selectedSID: 0,
   selectedQID: 0,
   isFetching: false,
-  isError: false
+  isError: false,
+  userID: null
 }
 
 function addQuery(array, action) {
@@ -50,7 +51,13 @@ const schemaListReducer = (state = initialSchemaListState, action) => {
       return{...state, schemas: [], isFetching: true, isError: false};
 
     case 'RESOLVED':
-      return{...state, schemas: action.schemaList, isFetching: false, isError: false};
+      return{
+        ...state,
+        schemas: action.schemaList,
+        isFetching: false,
+        isError: false,
+        userID: action.userID
+      };
 
     case 'ERROR':
       return{...state, schemas: [], isFetching: false, isError:true};

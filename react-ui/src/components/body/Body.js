@@ -1,11 +1,14 @@
 import React from 'react';
-import SchemaBody from './schemas/SchemaBody';
-import QueryBody from './queries/QueryBody';
-import PlanBody from './plan/PlanBody';
+import Schemas from './schemas/Schemas';
+import Queries from './queries/Queries';
+import Plan from './plan/Plan';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { connect } from 'react-redux';
 
 /**
- * Renders the app's body. Displays SchemaBody, QueryBody, and PlanBody
+ * Renders the app's body. Displays Schemas, Queries, and Plan
  * components.
  * Called from App.js.
  *
@@ -14,39 +17,41 @@ import { connect } from 'react-redux';
 
 const Body = ({selectedSchema, body, queryList}) => {
   return (
-    <div style={{display:"flex", flexDirection:"row", width:"100vw"}}>
-
-      <div style={{margin: "2rem 1rem 0rem 2rem",
-                   border:"2px solid #E0E0E0",
-                   borderRadius:"25px",
-                   width: "14rem"}}
-      >
-        <SchemaBody/>
-      </div>
-
-      <div style={{margin:"2rem 1rem 0rem 1rem",
-                   border:"2px solid #E0E0E0",
-                   borderRadius:"25px",
-                   width: "15rem"}}
-      >
-        <QueryBody/>
-      </div>
-
-      <div style={{margin:"2rem 1rem 0rem 1rem",
-                   border:"2px solid #E0E0E0",
-                   borderRadius:"25px",
-                   width: "43rem"}}
-      >
-        <PlanBody/>
-      </div>
-
+    <div>
+      <style type="text/css">
+        {`
+        .half {
+          height: calc((100vh - 11rem) / 2);
+          max-height: calc((100vh - 11rem) / 2);
+          margin-bottom: 10px;
+          -webkit-overflow-scrolling: touch;
+          white-space: pre;
+        }
+        .overflow{
+          white-space: normal;
+        }
+        `}
+      </style>
+      <Container fluid = {true}>
+        <Row>
+          <Col className='border border-bottom-0' sm={12} lg={4}>
+            <Schemas/>
+          </Col>
+          <Col className='border border-bottom-0' xs={12} lg={4}>
+            <Queries/>
+          </Col>
+          <Col className='border border-bottom-0' xs={12} lg={4}>
+            <Plan/>
+          </Col>
+        </Row>
+      </Container>
     </div>
   )
 }
 
 //map states to props
 const mapStatesToProps = (state) =>({
-  selectedSchema: state.selectedSchema, 
+  selectedSchema: state.selectedSchema,
   queryList: state.queryList
 });
 

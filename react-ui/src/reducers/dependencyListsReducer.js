@@ -7,7 +7,7 @@
  */
 
  const initialDependencyListsState = {
-   dependencyLists: [],
+   dependencyLists: null,
    isFetchingDependencies: false,
    isErrorDependencies: false
  }
@@ -17,7 +17,7 @@
      case "FETCHING_DEPENDENCIES":
         return{
            ...state,
-           dependencyLists: [],
+           dependencyLists: null,
            isFetchingDependencies: true,
            isErrorDependencies: false
         }
@@ -31,7 +31,7 @@
      case "ERROR_DEPENDENCIES":
           return{
             ...state,
-            dependencyLists: [],
+            dependencyLists: null,
             isFetchingDependencies: false,
             isErrorDependencies: true
           }

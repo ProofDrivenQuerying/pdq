@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import './bootstrap/bootstrap.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { store } from './reducers/store';
+import './index.css';
+import '../node_modules/bootstrap/dist/css/bootstrap.css';
 
 /**
  * index.js uses ReactDom to render JSX code as HTML for the client.
@@ -22,7 +22,7 @@ const rootElement = document.getElementById('root');
 ReactDOM.render(
   <Provider store = {store}>
     <App/>
-    </Provider>,
+  </Provider>,
   rootElement
 );
 

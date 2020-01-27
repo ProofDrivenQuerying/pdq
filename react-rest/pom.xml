@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>uk.ac.ox.cs.pdq</groupId>
+  	<artifactId>pdq-react-rest</artifactId>
+  	<version>1.0.0-Beta</version>
+  	<name>PDQ REST API</name>
+  	<url>http://www.cs.ox.ac.uk/pdq/</url>
+    <packaging>jar</packaging>
+  	<description>This library features packages and classes for PDQ's REST API.</description>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.4.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+              <exclusion>
+                  <groupId>log4j</groupId>
+                  <artifactId>*</artifactId>
+              </exclusion>
+              <exclusion>
+                  <groupId>org.apache.logging.log4j</groupId>
+                  <artifactId>*</artifactId>
+              </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.bundles.repackaged</groupId>
+            <artifactId>jersey-guava</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.inject/jersey-hk2 -->
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>1.12</version>
+        </dependency>
+
+        <!-- pdq dependencies -->
+        <dependency>
+    			<groupId>uk.ac.ox.cs.pdq</groupId>
+    			<artifactId>pdq-common</artifactId>
+                <version>1.0.0-Beta</version>
+        </dependency>
+
+        <dependency>
+    			<groupId>uk.ac.ox.cs.pdq</groupId>
+    			<artifactId>pdq-gui</artifactId>
+                <version>1.0.0-Beta</version>
+        </dependency>
+
+        <dependency>
+    			<groupId>uk.ac.ox.cs.pdq</groupId>
+    			<artifactId>pdq-reasoning</artifactId>
+                <version>1.0.0-Beta</version>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ox.cs.pdq</groupId>
+            <artifactId>pdq-runtime</artifactId>
+            <version>1.0.0-Beta</version>
+        </dependency>
+
+        <dependency>
+    			<groupId>uk.ac.ox.cs.pdq</groupId>
+    			<artifactId>pdq-planner</artifactId>
+                <version>1.0.0-Beta</version>
+        </dependency>
+
+        <dependency>
+    			<groupId>uk.ac.ox.cs.pdq</groupId>
+    			<artifactId>pdq-datasources</artifactId>
+                <version>1.0.0-Beta</version>
+        </dependency>
+
+        <dependency>
+    			<groupId>uk.ac.ox.cs.pdq</groupId>
+    			<artifactId>pdq-cost</artifactId>
+                <version>1.0.0-Beta</version>
+        </dependency>
+        <!-- pdq dependencies -->
+    </dependencies>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+  		<plugins>
+            <plugin>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-maven-plugin</artifactId>
+              <version>2.1.5.RELEASE</version>
+              <executions>
+                  <execution>
+                      <goals>
+                          <goal>repackage</goal>
+                      </goals>
+                  <configuration>
+                      <mainClass>uk.ac.ox.cs.pdq.rest.Application</mainClass>
+                  </configuration>
+                  </execution>
+              </executions>
+            </plugin>
+  		</plugins>
+  	</build>
+    <organization>
+  		<name>Oxford University - Department of Computer Science</name>
+  		<url>http://www.cs.ox.ac.uk/</url>
+  	</organization>
+</project>

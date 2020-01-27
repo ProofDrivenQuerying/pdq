@@ -1,4 +1,7 @@
 import React from 'react';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { Group } from '@vx/group';
 import { Tree } from '@vx/hierarchy';
 import { LinearGradient } from '@vx/gradient';
@@ -8,11 +11,13 @@ import { LinkHorizontal,
          LinkVertical,
          LinkRadial
 } from '@vx/shape';
+import Form from 'react-bootstrap/Form';
 
 /**
  * PDQTree creates an svg of the plan search tree.
  * Visualized in GraphicalPlanModal.
  *
+ * @author Camilo Ortiz
  */
 
 export default class PDQTree extends React.Component {
@@ -24,6 +29,8 @@ export default class PDQTree extends React.Component {
     this.onWheel = this.onWheel.bind(this);
     this.pan = this.pan.bind(this);
     this.zoom = this.zoom.bind(this);
+    this.setHeightandWidth = this.setHeightandWidth.bind(this);
+    this.getSize = this.getSize.bind(this);
   }
   state = {
     layout: 'polar',
@@ -33,7 +40,10 @@ export default class PDQTree extends React.Component {
     matrix: [1, 0, 0, 1, 30, 30],
     dragging: false,
     startX: 0,
-    startY: 0
+    startY: 0,
+    width: 0,
+    height: 0,
+    size: 0,
   };
 
   //Translational methods
@@ -98,15 +108,51 @@ export default class PDQTree extends React.Component {
     for (let i = 0; i < len; i++) {
       m[i] *= scale;
     }
-    m[4] += (1 - scale) * this.props.width / 2;
-    m[5] += (1 - scale) * this.props.height / 2;
+    m[4] += (1 - scale) * this.state.width / 2;
+    m[5] += (1 - scale) * this.state.height / 2;
     this.setState({ matrix: m });
+  }
+
+  getSize(data){
+    let size = 0;
+
+    let start = [data];
+
+    while (start.length !== 0) {
+      let current = start.pop();
+      size += 1;
+      if (current.children !== null){
+        current.children.forEach(child => start.push(child));
+      }
+    }
+    this.setState({
+      size: size
+    }, (size) => {
+        this.zoom(.50)
+    });
+  }
+
+  setHeightandWidth(height, width){
+    this.setState({
+      width : width,
+      height : height
+    });
+  }
+  componentDidMount() {
+    if (this.refs.svg.parentNode.clientWidth > this.refs.svg.parentNode.clientHeight){
+      this.setHeightandWidth(this.refs.svg.parentNode.clientWidth - this.refs.svg.parentNode.clientWidth*.3, this.refs.svg.parentNode.clientWidth);
+      this.getSize(this.props.data);
+    }
+    else{
+      this.setHeightandWidth(this.refs.svg.parentNode.clientHeight, this.refs.svg.parentNode.clientWidth);
+      this.getSize(this.props.data);
+    }
   }
 
   render() {
     const {
-      width,
-      height,
+      width = this.state.width,
+      height = this.state.height,
       margin = {
         top: 30,
         left: 30,
@@ -132,20 +178,20 @@ export default class PDQTree extends React.Component {
         y: innerHeight / 2
       };
       sizeWidth = 2 * Math.PI;
-      sizeHeight = Math.min(innerWidth, innerHeight) / 2;
+      sizeHeight = (this.state.size <= 40) ? Math.min(innerWidth, innerHeight) : Math.min(innerWidth, innerHeight) * (1.5 + this.state.size / 100 ) / 2;
     } else {
       origin = { x: 0, y: 0 };
       if (orientation === 'vertical') {
-        sizeWidth = innerWidth;
+        sizeWidth = (this.state.size <= 40) ? innerWidth : innerWidth * (1.2 + this.state.size / 100 );
         sizeHeight = innerHeight;
       } else {
-        sizeWidth = innerHeight;
-        sizeHeight = innerWidth;
+        sizeWidth = (this.state.size <= 40) ? innerHeight : innerHeight * (1 + this.state.size / 100 );
+        sizeHeight = (this.state.size <= 40) ? innerWidth : innerWidth * (1.5 + this.state.size / 100 );
       }
     }
 
     return (
-      <div>
+      <div ref="svg">
         <svg
           width={width}
           height={height}
@@ -155,7 +201,8 @@ export default class PDQTree extends React.Component {
           onTouchMove={this.onDragMove}
           onMouseUp={this.onDragEnd}
           onTouchEnd={this.onDragEnd}
-          onWheel={this.onWheel}>
+          onWheel={this.onWheel}
+          style={this.state.dragging ? {cursor:'grabbing'} : {cursor:'grab'}}>
 
           <LinearGradient id="lg" from="#E0E0E0" to="#fe6e9e" />
 
@@ -168,7 +215,7 @@ export default class PDQTree extends React.Component {
 
             <Tree
               root={hierarchy(data, d => ( d.children))}
-              size={[sizeWidth, sizeHeight]}
+              size={[sizeWidth , sizeHeight]}
               separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}>
               {data => (
                 <Group top={origin.y} left={origin.x}>
@@ -198,9 +245,8 @@ export default class PDQTree extends React.Component {
                   })}
 
                   {data.descendants().map((node, key) => {
-                    const width = 25;
-                    const height = 15;
-
+                    const width = 30;
+                    const height = 20;
                     let top;
                     let left;
                     if (layout === 'polar') {
@@ -216,13 +262,13 @@ export default class PDQTree extends React.Component {
                         left = node.y;
                       }
                     }
-
                     return (
                       <Group top={top} left={left} key={key}>
                         {node.depth === 0 && (
                           <circle
-                            r={12}
+                            r={15}
                             fill='#428bca'
+                            style={{cursor:'pointer'}}
                             onClick={() => {
                               this.setState({ selectedNode: node.data });
                               this.forceUpdate();
@@ -236,8 +282,9 @@ export default class PDQTree extends React.Component {
                             width={width}
                             y={-height / 2}
                             x={-width / 2}
-                            fill={node.data.children ? '#428bca' : node.data.type === "SUCCESSFUL" ? "#5cb85c" : '	#d9534f'}
+                            fill={node.data.children ? '#428bca' : node.data.type === "SUCCESSFUL" ? "#5cb85c" : '#d9534f'}
                             rx={!node.data.children ? 10 : 0}
+                            style={{cursor:'pointer'}}
                             onClick={(e) => {
                               this.setState({ selectedNode: node.data });
                               this.forceUpdate();
@@ -247,7 +294,7 @@ export default class PDQTree extends React.Component {
                         )}
                         <text
                           dy={'.33em'}
-                          fontSize={9}
+                          fontSize={10}
                           fontFamily="Arial"
                           textAnchor={'middle'}
                           style={{ pointerEvents: 'none' }}
@@ -265,63 +312,69 @@ export default class PDQTree extends React.Component {
 
         </svg>
 
-        <div style={{ color: 'black', fontSize: 15, display:"flex" }}>
-          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
-            <label>Layout:</label>{" "}
-            <select
-              onClick={e => e.stopPropagation()}
-              onChange={e => this.setState({ layout: e.target.value })}
-              value={layout}
-            >
-              <option value="cartesian">cartesian</option>
-              <option value="polar">polar</option>
-            </select>
-          </div>
+        <Container className='my-2'>
+          <Row>
+            <Col>
+              <Form>
+                <Form.Group>
+                  <Form.Label>
+                    Layout:
+                  </Form.Label>
+                  <Form.Control as="select"
+                    onChange={e => this.setState({ layout: e.target.value })}
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <option value="polar">polar</option>
+                    <option value="cartesian">cartesian</option>
+                  </Form.Control>
+                </Form.Group>
+              </Form>
+            </Col>
+            <Col>
+              <Form>
+                <Form.Group>
+                  <Form.Label>
+                    Orientation:
+                  </Form.Label>
+                  <Form.Control
+                    as='select'
+                    onClick={e => e.stopPropagation()}
+                    onChange={e => this.setState({ orientation: e.target.value })}
+                    value={orientation}
+                    disabled={layout === 'polar'}
+                  >
+                    <option value="horizontal">horizontal</option>
+                    <option value="vertical">vertical</option>
+                  </Form.Control>
+                </Form.Group>
+              </Form>
+            </Col>
+          </Row>
 
-          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
-          <label>Orientation: </label>{" "}
-          <select
-            onClick={e => e.stopPropagation()}
-            onChange={e => this.setState({ orientation: e.target.value })}
-            value={orientation}
-            disabled={layout === 'polar'}
-          >
-            <option value="vertical">vertical</option>
-            <option value="horizontal">horizontal</option>
-          </select>
-          </div>
-
-          <div style={{margin:"1rem 1rem 1rem 1rem"}}>
-          <span>
-            {this.state.selectedNode === null ?
-              <div style={{width: "20rem", height: "3rem"}}>
-              Click on a node for its information.
-              </div>
-              :
-            <div style={{width: "20rem", height: "3rem", display:"flex",
-                          flexDirection: "row"}}>
-              <div style={{margin:"0 .5rem 0 .5rem", width: "3rem" }}>
-              <b>Node: </b> <br/>{this.state.selectedNode.id}
-              </div>
-
+          {this.state.selectedNode === null ?
+            <Row>
+              <Col>
+              Select a node to view its information.
+              </Col>
+            </Row>
+            :
+            <Row>
+              <Col>
+                <b>Node: </b> <br/>{this.state.selectedNode.id}
+              </Col>
               {this.state.selectedNode.accessTerm === null ?
-              null
+                null
               :
-              <div style={{margin:"0 .5rem 0 .5rem",
-                            overflow:"hidden",
-                            whiteSpace:"nowrap",
-                            textOverflow: "ellipsis"}}>
+              <Col>
               <b>Access Term: </b> <br/> {this.state.selectedNode.accessTerm}
-              </div>
+              </Col>
               }
-              <div style={{margin:"0 .5rem 0 .5rem", width: "6rem"}}>
-              <b>Node Type: </b> <br/> {this.state.selectedNode.type}
-              </div>
-            </div>
+              <Col>
+                <b>Node Type: </b> <br/> {this.state.selectedNode.type}
+              </Col>
+            </Row>
           }
-          </span>
-          </div>
-        </div>
+        </Container>
       </div>
     );
   }

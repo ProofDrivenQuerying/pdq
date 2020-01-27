@@ -32,7 +32,6 @@ export const getDependencies = (id) => {
     return fetch("/getDependencies?id="+id)
       .then(res => res.text())
       .then(res => res = JSON.parse(res)).then((res)=>{
-        console.log(res);
         dispatch(resolvedDependencies(res));
       }).catch(err => dispatch(errorDependencies));
   }
