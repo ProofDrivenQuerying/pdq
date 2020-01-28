@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.datasources.legacy.services.Service;
@@ -24,7 +25,7 @@ import uk.ac.ox.cs.pdq.datasources.tuple.Table;
  *
  */
 public class ServiceReaderTest {
-	
+	@Ignore // service is no longer available
 	@Test
 	public void testParsingReactomeService() throws FileNotFoundException {
 		File input = new File("test/src/uk/ac/ox/cs/pdq/test/datasources/services/legacy/reactome-services.xml");

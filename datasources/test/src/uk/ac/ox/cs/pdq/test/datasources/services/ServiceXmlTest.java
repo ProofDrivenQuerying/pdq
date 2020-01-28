@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.test.datasources.services;
 import java.io.File;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.datasources.services.RESTAccessMethodGenerator;
@@ -164,6 +165,7 @@ public class ServiceXmlTest {
 	// with 5 attributes such as "ORGANISM" and "COMMENT"
 	// There are 5 output attributes and no input attributes, hence the FREE marker
 	
+	@Ignore //- 3rd party service stopped working 
 	@Test
 	public void test4() {
 		
@@ -206,6 +208,7 @@ public class ServiceXmlTest {
 	// with 2 attributes such as "displayName" and "schemaClass"
 	// There are 2 output attributes and 1 input attributes, hence the LIMITED marker
 	
+	@Ignore //- 3rd party service stopped working 
 	@Test
 	public void test5() {
 		

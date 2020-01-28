@@ -207,6 +207,9 @@ public class RestrictedChaserTest {
 				
 				reasoner.reasonUntilTermination(state, schema.getAllDependencies());
 				Collection<Atom> expected = loadFacts(PATH + f, schema);
+				if (expected.size()!= state.getFacts().size()) {
+					System.out.println("failed " + f);
+				}
 				Assert.assertEquals(expected.size(), state.getFacts().size());
 			} catch (FileNotFoundException e) {
 				System.out.println("Cannot find input files");

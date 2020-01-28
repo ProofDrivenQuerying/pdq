@@ -81,10 +81,8 @@ public class PlanCreationUtility {
 	/**
 	 * Creates a single access plans
 	 * 
-	 * @param relation:
-	 *            the relation being accessed the c
-	 * @param accessMethod
-	 *            the access being used
+	 * @param              relation: the relation being accessed the c
+	 * @param accessMethod the access being used
 	 * @exposedFacts: the facts being exposed by the access: used in order to name
 	 *                the attributes in the output
 	 * @return the term representing the output plan
@@ -174,17 +172,15 @@ public class PlanCreationUtility {
 	/**
 	 * Creates the select predicates.
 	 *
-	 * @param terms
-	 *            List<Term>
+	 * @param terms List<Term>
 	 * @return a conjunction of selection conditions that the output values of a
 	 *         source must satisfy based on the exposed fact's terms. The selection
 	 *         conditions enforce value equality when two terms are equal and
 	 *         equality to a constant when an exposed fact's term is mapped to a
 	 *         schema constant. The returned list is null if there does not exist
-	 *         any select condition
-	 *         For example, if we have the list y,x,x then we will create a condition saying
-	 *         that position 2= position 3
-	 *         
+	 *         any select condition For example, if we have the list y,x,x then we
+	 *         will create a condition saying that position 2= position 3
+	 * 
 	 */
 	public static Condition createFilteringConditions(Term[] terms) {
 		Set<SimpleCondition> result = new LinkedHashSet<>();
@@ -213,10 +209,8 @@ public class PlanCreationUtility {
 	/**
 	 * Creates the final projection, based on the free variables of the query
 	 *
-	 * @param query
-	 *            Query
-	 * @param plan
-	 *            partial plan wihtout the final projection
+	 * @param query Query
+	 * @param plan  partial plan wihtout the final projection
 	 * @return Projection
 	 */
 	public static ProjectionTerm createFinalProjection(ConjunctiveQuery query, RelationalTerm plan, Schema schema) {
@@ -252,3 +246,30 @@ public class PlanCreationUtility {
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

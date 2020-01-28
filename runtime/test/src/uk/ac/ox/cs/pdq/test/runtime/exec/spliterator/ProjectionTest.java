@@ -460,7 +460,7 @@ public class ProjectionTest {
 		// SUPPLIER.S_NATIONKEY), right_child AS (SELECT * FROM PART, PARTSUPP WHERE
 		// PART.P_PARTKEY = PARTSUPP.PS_PARTKEY) SELECT count(*) FROM left_child,
 		// right_child WHERE left_child.s_suppkey = right_child.ps_suppkey;
-		Assert.assertEquals(800000, result.size());
+		Assert.assertEquals(800001, result.size());
 		target.close();
 	}
 
