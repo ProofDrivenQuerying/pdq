@@ -48,7 +48,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>uk.ac.ox.cs.pdq.planner.Bootstrap</mainClass>
+							<mainClass>uk.ac.ox.cs.pdq.planner.Planner</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -68,7 +68,7 @@
 							<archive>
 								<manifest>
 									<addClasspath>true</addClasspath>
-									<mainClass>uk.ac.ox.cs.pdq.planner.Bootstrap</mainClass>
+									<mainClass>uk.ac.ox.cs.pdq.planner.Planner</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>
