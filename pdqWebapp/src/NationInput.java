@@ -8,6 +8,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Currently deployed at:
+ * http://pdq-webapp.cs.ox.ac.uk:80/webapp/servlets/servlet/NationInput
+ *
+ */
 public class NationInput extends HttpServlet {
 
 	/**
