@@ -267,7 +267,7 @@ public class PDQ {
 		double duration = (System.currentTimeMillis() - start) / 1000.0;
 		if (printPlan && observation!=null) {
 			printPlan = false;
-			PlanPrinter.openPngPlan(observation.getKey());
+			//PlanPrinter.openPngPlan(observation.getKey());
 		}
 		DecimalFormat myFormatter = new DecimalFormat("####.##");
 		String duration_s = " Duration: " + myFormatter.format(duration) + "s.";				
