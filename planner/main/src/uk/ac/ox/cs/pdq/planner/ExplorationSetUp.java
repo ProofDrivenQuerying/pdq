@@ -96,7 +96,10 @@ public class ExplorationSetUp {
 
 	/** The input schema with the original attribute types.  */
 	private Schema originalSchema;
-	/** Same as the original schema but the attribute types are converted to String. */
+	/** Same as the original schema but the attribute types are converted to String.  */
+	* This encoding is used when we make use of an external database manager 
+	*/
+		
 	private Schema schema;
 
 	/**
@@ -134,7 +137,7 @@ public class ExplorationSetUp {
 		if (plannerParams.getUseInternalDatabase()) {
 			this.schema = schema;
 		} else {
-			this.schema = convertTypesToString(schema);
+			this.schema = convertTypesToString(schema); // external dbms reasoning only works on strings
 		}
 		this.accessibleSchema = new AccessibleSchema(this.schema);
 	}
@@ -255,6 +258,7 @@ public class ExplorationSetUp {
 	}
 
 	/** Converts the output plan's attribute types and constant types back to the original schema's types.
+	* This will be necessary when we make use of an external dbms 
 	 * @param bestPlan
 	 * @return
 	 */
