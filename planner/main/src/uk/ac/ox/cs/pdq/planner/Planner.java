@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.FileValidator;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
@@ -61,6 +62,10 @@ public class Planner {
 	@Parameter(names = { "-v", "--verbose" }, required = false,
 			description ="Activates verbose mode.")
 	private boolean verbose = false;
+	
+	@Parameter(names = { "-o", "--output" }, required = false,
+			description ="Output file name.")
+	private String outputFileName = "out.xml";
 	
 	@DynamicParameter(names = "-D", description = "Dynamic parameters. Override values defined in the configuration files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
@@ -157,7 +162,11 @@ public class Planner {
 				entry = planner.search(query);
 
 			if (entry != null) {
-				System.out.println(entry.getKey());
+				System.out.println("Plan found with cost: " + entry.getValue());
+				CostIOManager.writeRelationalTermAndCost(new File(outputFileName), entry.getKey(), entry.getValue());
+				System.out.println("Plan written to " + new File(outputFileName).getAbsolutePath());
+				if (verbose)
+					System.out.println("Plan:\n"+entry.getKey());
 				return;
 			} 
 			System.out.println("No plan found.");
