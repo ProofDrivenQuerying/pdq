@@ -21,6 +21,7 @@ import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.simplewebservice.XmlWebService;
 import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -198,6 +199,64 @@ public class TestAccessRepository extends PdqTest {
 		new File(
 				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml")
 						.delete();
+	}
+
+	/**
+	 * Creates an simple xml web access method object and attempts to export it to xml. 
+	 * 
+	 * @throws JAXBException
+	 */
+	@Test
+	public void testXmlWebAccessExport() throws JAXBException {
+		ExecutableAccessMethod target;
+		Integer[] inputs;
+		Relation relation;
+
+		relation = Mockito.mock(Relation.class);
+		when(relation.getAttributes()).thenReturn(this.attrs_nation.clone());
+		String name = "NATION";
+		when(relation.getName()).thenReturn(name);
+
+		inputs = new Integer[0];
+		target = new XmlWebService("NATION_MEM", this.attrs_N, inputs, relation, this.attrMap_nation);
+		((XmlWebService)target).setUrl("http://pdq-webapp.cs.ox.ac.uk:80/webapp/servlets/servlet/NationInput");
+		try {
+			DbIOManager.exportAccessMethod(target, new File(
+					"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/XmlWebAccessMethodOut.xml"));
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw t;
+		}
+		long goodLength = new File(
+				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/XmlWebAccessMethod.xml")
+						.length();
+		long newLength = new File(
+				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/XmlWebAccessMethodOut.xml")
+						.length();
+		
+		
+		//There is a file path in the exported xml file. That path
+		// depends on the user who runs the test. Therefore we cannot know how large the
+		// new file should be exactly, but it should be in a 30 character range to the
+		// saved copy.
+		Assert.assertTrue(goodLength + 60 > newLength);
+		Assert.assertTrue(goodLength - 60 < newLength);
+		target.close();
+		
+		new File(
+				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml")
+						.delete();
+		
+		try {
+			ExecutableAccessMethod imported = DbIOManager.importAccess(new File(
+					"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/XmlWebAccessMethod.xml"));
+			Assert.assertEquals("http://pdq-webapp.cs.ox.ac.uk:80/webapp/servlets/servlet/NationInput", ((XmlWebService)imported).getUrl());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw t;
+		}
+		
+		
 	}
 
 	/**

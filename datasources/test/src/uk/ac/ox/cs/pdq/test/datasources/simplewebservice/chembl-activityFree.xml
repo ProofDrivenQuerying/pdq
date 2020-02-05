@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Access access-type="JSON_WEB_ACCESS_METHOD" name="chembl_activity_free" relation-name="ActivityFree" web-service-url = "https://www.ebi.ac.uk/chembl/api/data/activity.json">
+	<attribute name="activity_comment"    			type="java.lang.String" input="false"   mapsToRelationAttribute="activity_comment"/>
+	<attribute name="activity_id"     				type="java.lang.String" input="false"   mapsToRelationAttribute="activity_id"/>
+	<attribute name="assay_chembl_id"     			type="java.lang.String" input="false"   mapsToRelationAttribute="assay_chembl_id"/>
+	<attribute name="assay_description" 			type="java.lang.String" input="false" 	mapsToRelationAttribute="assay_description"/>
+	<attribute name="assay_type"    				type="java.lang.String" input="false" 	mapsToRelationAttribute="assay_type"/>
+	<attribute name="bao_endpoint"        			type="java.lang.String" input="false" 	mapsToRelationAttribute="bao_endpoint"/> 
+	<attribute name="bao_format"        			type="java.lang.String" input="false" 	mapsToRelationAttribute="bao_format"/> 
+	<attribute name="canonical_smiles"        		type="java.lang.String" input="false" 	mapsToRelationAttribute="canonical_smiles"/>
+	<attribute name="data_validity_comment"        	type="java.lang.String" input="false" 	mapsToRelationAttribute="data_validity_comment"/>
+	<attribute name="document_chembl_id"     		type="java.lang.String" input="false" 	mapsToRelationAttribute="document_chembl_id"/>
+	<attribute name="document_journal"     			type="java.lang.String" input="false" 	mapsToRelationAttribute="document_journal"/>
+	<attribute name="document_year"     			type="java.lang.String" input="false" 	mapsToRelationAttribute="document_year"/> 
+	<attribute name="molecule_chembl_id"        	type="java.lang.String" input="false" 	mapsToRelationAttribute="molecule_chembl_id"/>
+	<attribute name="pchembl_value"  				type="java.lang.Double" input="false"	mapsToRelationAttribute="pchembl_value"/>
+	<attribute name="potential_duplicate"  			type="java.lang.String" input="false" 	mapsToRelationAttribute="potential_duplicate"/>
+	<attribute name="published_relation"  			type="java.lang.String" input="false" 	mapsToRelationAttribute="published_relation"/>
+	<attribute name="published_type"  				type="java.lang.String" input="false" 	mapsToRelationAttribute="published_type"/>
+	<attribute name="published_units"  				type="java.lang.String" input="false" 	mapsToRelationAttribute="published_units"/>
+	<attribute name="published_value"  				type="java.lang.String" input="false" 	mapsToRelationAttribute="published_value"/>
+	<attribute name="qudt_units"  					type="java.lang.String" input="false" 	mapsToRelationAttribute="qudt_units"/>
+	<attribute name="record_id"  					type="java.lang.String" input="false" 	mapsToRelationAttribute="record_id"/>
+	<attribute name="standard_flag"  				type="java.lang.Boolean" input="false"	mapsToRelationAttribute="standard_flag"/>
+	<attribute name="standard_relation"  			type="java.lang.String" input="false" 	mapsToRelationAttribute="standard_relation"/>
+	<attribute name="standard_type"  				type="java.lang.String" input="false" 	mapsToRelationAttribute="standard_type"/>
+	<attribute name="standard_units"  				type="java.lang.String" input="false" 	mapsToRelationAttribute="standard_units"/>
+	<attribute name="standard_value"  				type="java.lang.Double" input="false"	mapsToRelationAttribute="standard_value"/>
+	<attribute name="target_chembl_id"  			type="java.lang.String" input="false" 	mapsToRelationAttribute="target_chembl_id"/>
+	<attribute name="target_organism"  				type="java.lang.String" input="false" 	mapsToRelationAttribute="target_organism"/>
+	<attribute name="target_pref_name"  			type="java.lang.String" input="false" 	mapsToRelationAttribute="target_pref_name"/>
+	<attribute name="uo_units"  					type="java.lang.String" input="false" 	mapsToRelationAttribute="uo_units"/>
+</Access>

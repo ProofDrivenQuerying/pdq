@@ -20,6 +20,8 @@ import javax.xml.bind.annotation.XmlType;
 
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.simplewebservice.JsonWebService;
+import uk.ac.ox.cs.pdq.datasources.simplewebservice.XmlWebService;
 import uk.ac.ox.cs.pdq.datasources.sql.SqlAccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -38,7 +40,7 @@ import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 @XmlType(propOrder = { "accessType", "accessMethodName", "relationName", "xmlAttributes", "data", "dbProperties" })
 public class XmlExecutableAccessMethod {
 	public enum ACCESS_TYPE {
-		IN_MEMORY_ACCESS_METHOD, DB_ACCESS_METHOD, REST_ACCESS_METHOD
+		IN_MEMORY_ACCESS_METHOD, DB_ACCESS_METHOD, XML_WEB_ACCESS_METHOD, JSON_WEB_ACCESS_METHOD
 	};
 
 	private ACCESS_TYPE accessType;
@@ -56,7 +58,8 @@ public class XmlExecutableAccessMethod {
 	/** The underlying data in the InMemoryAccessMethod. */
 	private Collection<Tuple> data = new ArrayList<>();
 	private String dataFileName;
-
+	/* Simple xml and json WebService AccessMethod */
+	private String webServiceUrl;
 	/* Database AccessMethod */
 	private Properties dbProperties;
 	private File datafolder;
@@ -84,10 +87,14 @@ public class XmlExecutableAccessMethod {
 		} else if (eam instanceof SqlAccessMethod) {
 			accessType = ACCESS_TYPE.DB_ACCESS_METHOD;
 			dbProperties = ((SqlAccessMethod) eam).getProperties();
-			/*
-			 * } else if (eam instanceof RestAccessMethod) { Do rest specific parameters
-			 * here.
-			 */
+			
+		} else if (eam instanceof JsonWebService) {
+			accessType = ACCESS_TYPE.JSON_WEB_ACCESS_METHOD;
+			webServiceUrl = ((JsonWebService) eam).getUrl();
+			
+		} else if (eam instanceof XmlWebService) { 
+			accessType = ACCESS_TYPE.XML_WEB_ACCESS_METHOD;
+			webServiceUrl = ((XmlWebService) eam).getUrl();
 		} else {
 			throw new RuntimeException("Unknown executable access method type! : " + eam);
 		}
@@ -124,9 +131,16 @@ public class XmlExecutableAccessMethod {
 					attributes.toArray(new Attribute[attributes.size()]), inputAttributes, r, attributeMapping,
 					dbProperties);
 			return dam;
-		case REST_ACCESS_METHOD:
-			/* we need to implement this case */
-			return null;
+		case XML_WEB_ACCESS_METHOD:
+			XmlWebService service = new XmlWebService(accessMethodName,
+					attributes.toArray(new Attribute[attributes.size()]), inputAttributes, r, attributeMapping);
+			service.setUrl(webServiceUrl);
+			return service;
+		case JSON_WEB_ACCESS_METHOD:
+			JsonWebService service2 = new JsonWebService(accessMethodName,
+					attributes.toArray(new Attribute[attributes.size()]), inputAttributes, r, attributeMapping);
+			service2.setUrl(webServiceUrl);
+			return service2;
 		default:
 			throw new RuntimeException("Unknown accessType! : " + accessType);
 		}
@@ -152,6 +166,15 @@ public class XmlExecutableAccessMethod {
 		return accessMethodName;
 	}
 
+	@XmlAttribute(name = "web-service-url")
+	public String getWebServiceUrl() {
+		return webServiceUrl;
+	}
+
+	public void setWebServiceUrl(String xmlWebServiceUrl) {
+		this.webServiceUrl = xmlWebServiceUrl;
+	}
+	
 	public void setAccessMethodName(String accessMethodName) {
 		this.accessMethodName = accessMethodName;
 	}
