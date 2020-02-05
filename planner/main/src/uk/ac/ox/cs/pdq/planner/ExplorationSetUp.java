@@ -96,7 +96,7 @@ public class ExplorationSetUp {
 
 	/** The input schema with the original attribute types.  */
 	private Schema originalSchema;
-	/** Same as the original schema but the attribute types are converted to String.  */
+	/** Same as the original schema but the attribute types are converted to String.  
 	* This encoding is used when we make use of an external database manager 
 	*/
 		
