@@ -77,7 +77,7 @@ public class JsonWebService extends XmlWebService {
 				System.out.println("Received a map with " + ((Map)data).size() + " record(s).");
 			}
 			
-			return this.processItems(data, inputTuples);
+			return this.processItems(data, inputTuples.next());
 		} catch (IOException e) {
 			throw new AccessException(e.getMessage(), e);
 		}

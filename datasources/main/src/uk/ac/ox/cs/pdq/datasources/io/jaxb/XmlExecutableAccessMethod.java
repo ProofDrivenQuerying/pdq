@@ -37,7 +37,7 @@ import uk.ac.ox.cs.pdq.db.tuple.Tuple;
  *
  */
 @XmlRootElement(name = "Access")
-@XmlType(propOrder = { "accessType", "accessMethodName", "relationName", "xmlAttributes", "data", "dbProperties" })
+@XmlType(propOrder = { "accessType", "accessMethodName", "relationName", "xmlAttributes", "data", "dbProperties", "webServiceUrl","requestTemplates" })
 public class XmlExecutableAccessMethod {
 	public enum ACCESS_TYPE {
 		IN_MEMORY_ACCESS_METHOD, DB_ACCESS_METHOD, XML_WEB_ACCESS_METHOD, JSON_WEB_ACCESS_METHOD
@@ -60,6 +60,8 @@ public class XmlExecutableAccessMethod {
 	private String dataFileName;
 	/* Simple xml and json WebService AccessMethod */
 	private String webServiceUrl;
+	private List<String> requestTemplates = new ArrayList<>();
+	
 	/* Database AccessMethod */
 	private Properties dbProperties;
 	private File datafolder;
@@ -95,6 +97,7 @@ public class XmlExecutableAccessMethod {
 		} else if (eam instanceof XmlWebService) { 
 			accessType = ACCESS_TYPE.XML_WEB_ACCESS_METHOD;
 			webServiceUrl = ((XmlWebService) eam).getUrl();
+			requestTemplates = ((XmlWebService) eam).getRequestTemplates();
 		} else {
 			throw new RuntimeException("Unknown executable access method type! : " + eam);
 		}
@@ -135,11 +138,13 @@ public class XmlExecutableAccessMethod {
 			XmlWebService service = new XmlWebService(accessMethodName,
 					attributes.toArray(new Attribute[attributes.size()]), inputAttributes, r, attributeMapping);
 			service.setUrl(webServiceUrl);
+			service.setRequestTemplates(requestTemplates);
 			return service;
 		case JSON_WEB_ACCESS_METHOD:
 			JsonWebService service2 = new JsonWebService(accessMethodName,
 					attributes.toArray(new Attribute[attributes.size()]), inputAttributes, r, attributeMapping);
 			service2.setUrl(webServiceUrl);
+			service2.setRequestTemplates(requestTemplates);
 			return service2;
 		default:
 			throw new RuntimeException("Unknown accessType! : " + accessType);
@@ -166,7 +171,8 @@ public class XmlExecutableAccessMethod {
 		return accessMethodName;
 	}
 
-	@XmlAttribute(name = "web-service-url")
+	//< url-template pattern="mandatory:[http:/somethingsomething/] plus optional template for inputs where {0} means the first input etc">
+	@XmlElement(name = "url-template")
 	public String getWebServiceUrl() {
 		return webServiceUrl;
 	}
@@ -199,11 +205,16 @@ public class XmlExecutableAccessMethod {
 				mapsTo = this.attributeMapping.get(a).getName();
 			}
 			xmlAttr.add(new uk.ac.ox.cs.pdq.datasources.io.jaxb.XmlAttribute(a.getName(), a.getType(),
-					inputAttributes.contains(a), mapsTo));
+					isInput(mapsTo), mapsTo));
 		}
 		return xmlAttr.toArray(new uk.ac.ox.cs.pdq.datasources.io.jaxb.XmlAttribute[xmlAttr.size()]);
 	}
-
+	private boolean isInput(String attributeName) {
+		for (Attribute a: inputAttributes)
+			if (a.getName()!=null && a.getName().equals(attributeName))
+				return true;
+		return false;
+	}
 	public void setXmlAttributes(uk.ac.ox.cs.pdq.datasources.io.jaxb.XmlAttribute[] attributes) {
 		this.attributes = new ArrayList<>();
 		;
@@ -244,5 +255,15 @@ public class XmlExecutableAccessMethod {
 
 	public void setDbProperties(Properties dbProperties) {
 		this.dbProperties = dbProperties;
+	}
+
+	//request-templates are give for web services, on a per input filed bases.
+	@XmlElement(name = "request-template")
+	public List<String> getRequestTemplates() {
+		return requestTemplates;
+	}
+
+	public void setRequestTemplates(List<String> requestTemplates) {
+		this.requestTemplates = requestTemplates;
 	}
 }

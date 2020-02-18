@@ -22,8 +22,6 @@ import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
-import uk.ac.ox.cs.pdq.datasources.services.RESTResponseEvent;
-import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.tuple.Tuple;
@@ -32,15 +30,11 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 public class XmlWebService extends ExecutableAccessMethod {
 	private String url = null;
+	private List<String> requestTemplates = new ArrayList<>();
 
 	private WebTarget target;
 
-	private MediaType mediaType;
-	
 	private static final long serialVersionUID = 5268175711548627539L;
-
-	private static final List<String> resultDelimiter = new ArrayList<>();
-	
 
 	public XmlWebService(Attribute[] attributes, Integer[] inputs, Relation relation,
 			Map<Attribute, Attribute> attributeMapping) {
@@ -61,27 +55,100 @@ public class XmlWebService extends ExecutableAccessMethod {
 			Relation relation, Map<Attribute, Attribute> attributeMapping) {
 		super(name, attributes, inputAttributes, relation, attributeMapping);
 	}
-
 	@Override
 	protected Stream<Tuple> fetchTuples(Iterator<Tuple> inputTuples) {
-		this.mediaType = new MediaType("application", "xml");
-		String inputParams = "";
-		if (inputTuples != null && inputTuples.hasNext())
-			inputParams+="?";
-		Tuple currentInputTuple = inputTuples.next();
-		int i = 0;
-		for (Attribute a:inputAttributes(false)) {
-			if (i>0)
-				inputParams+=";";
-			inputParams+=a.getName() + "=" + currentInputTuple.getValue(i); 
-			i++;
+		MediaType mediaType = new MediaType("application", "xml");
+		List<Tuple> data = new ArrayList<>();
+		if(inputTuples == null)
+		{
+			// No input case
+			if (url.contains("{") || this.requestTemplates.size()>0)
+				throw new RuntimeException("Inputs are defined, but not specified!");
+			this.target = ClientBuilder.newClient().register(JacksonFeatures.class).target(url);
+			Response response = this.target.request(mediaType).get();
+			data.addAll(unmarshalXml(response,null));
+			response.close();
 		}
-		this.target = ClientBuilder.newClient().register(JacksonFeatures.class).target(url+inputParams);
-		Response response = this.target.request(this.mediaType).get();
-		List<Tuple> data = unmarshalXml(response,inputTuples);
+		else
+		{
+			while(inputTuples.hasNext())
+			{
+				// 1 or more input tuple is given, run all of them and then concatenate the results.
+				Tuple tuple = inputTuples.next();
+				this.target = ClientBuilder.newClient().register(JacksonFeatures.class).target(createUrlWithInputs(tuple));
+				Response response = this.target.request(mediaType).get();
+				data.addAll(unmarshalXml(response,tuple));
+				response.close();
+			}
+		}
 		return StreamSupport.stream(data.spliterator(), false);
 	}
-	
+
+	private String createUrlWithInputs(Tuple tuple) {
+		//Error checkings
+		if (tuple == null)
+			throw new RuntimeException("Input tuple cannot be null");
+		if (url.contains("{" + tuple.size() + "}")) {
+			throw new RuntimeException(
+					"Input attribute number " + tuple.size() + " specified in the url pattern, but the input has only "
+							+ tuple.size() + " attributes. (input indexing starts from 0)");
+		}
+		for (String requestTemplate:this.requestTemplates) {
+			if (requestTemplate.contains("{" + tuple.size() + "}")) {
+				throw new RuntimeException(
+						"One of the request templates refferes to {" + tuple.size() + "}, but the input has only "
+								+ tuple.size() + " attributes. (input indexing starts from 0)");
+			}
+		}
+		
+		List<Integer> inputIndexes = new ArrayList<Integer>();
+		for (String requestTemplate:this.requestTemplates) {
+			inputIndexes.addAll(parseTemplate(requestTemplate));
+		}
+		inputIndexes.addAll(parseTemplate(url));
+		for (Integer i: inputIndexes) {
+			if (i < 0 || i>= tuple.size())
+				throw new RuntimeException(
+						"One of the request templates or the url template reffers to {" + i + "} attribute, but the input has only "
+								+ tuple.size() + " attributes. (input indexing starts from 0)");
+		}
+		
+		
+		String urlWithInput = url;
+		if (!url.contains("?")) {
+			urlWithInput += "?"; 
+		}
+		for (String requestTemplate:this.requestTemplates) {
+			urlWithInput += requestTemplate;
+		}
+		for (int i=0; i < tuple.size(); i++) {
+			urlWithInput = urlWithInput.replaceAll("\\{"+i+"\\}", ""+tuple.getValue(i));
+		}
+		if (urlWithInput.contains("{") || urlWithInput.contains("}") ) {
+			throw new RuntimeException("failed to parse input parameters while preparing link: " + urlWithInput);  
+		}
+		return urlWithInput;
+	}
+
+	private Collection<Integer> parseTemplate(String string) {
+		Collection<Integer> inputIndexes = new ArrayList<Integer>();
+		int begin = 0;
+		while (string.indexOf('{', begin) >0) {
+			begin = string.indexOf('{', begin);
+			int end = string.indexOf('}', begin);
+			if (end<begin)
+				throw new RuntimeException("Broken input template: " + string);
+			String number = string.substring(begin+1, end);
+			try {
+				inputIndexes.add(Integer.parseInt(number));
+			} catch(Exception e) {
+				throw new RuntimeException("Broken input template: " + string,e);
+			}
+			begin = end+1;
+		}
+		return inputIndexes;
+	}
+
 	@Override
 	public void close() {
 	}
@@ -98,28 +165,28 @@ public class XmlWebService extends ExecutableAccessMethod {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public List<Tuple> unmarshalXml(Response response,Iterator<Tuple> inputTuples) throws AccessException {
+	@SuppressWarnings({ "rawtypes"})
+	public List<Tuple> unmarshalXml(Response response,Tuple inputTuple) throws AccessException {
 		XmlMapper mapper = new XmlMapper();
 		try {
 			String responseText = response.readEntity(String.class);
 			List data = mapper.readValue(responseText, List.class);
 			System.out.println("Received " + data.size() + " amount of records.");
-			return this.processItems(data, inputTuples);
+			return this.processItems(data, inputTuple);
 		} catch (IOException e) {
 			throw new AccessException(e.getMessage(), e);
 		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected List<Tuple> processItems (Object response, Iterator<Tuple>  inputTable) throws AccessException{
+	protected List<Tuple> processItems (Object response, Tuple inputTuple) throws AccessException{
 		List<Tuple> result = new LinkedList<>();
 		if (response instanceof Collection) {
 			for (Object o: ((Collection) response)) {
-				result.addAll(this.processItems(o, inputTable));
+				result.addAll(this.processItems(o, inputTuple));
 			}
 		} else if (response instanceof Map) {
-			List<Tuple> t = this.processItem((Map) response, inputTable);
+			List<Tuple> t = this.processItem((Map) response, inputTuple);
 			if (t != null && !t.isEmpty()) {
 				result.addAll(t);
 			}
@@ -129,16 +196,17 @@ public class XmlWebService extends ExecutableAccessMethod {
 		return result;
 	}
 
-	protected List<Tuple> processItem(Map<String, Object> item, Iterator<Tuple> inputTable) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected List<Tuple> processItem(Map<String, Object> item, Tuple inputTuple) {
 		List<Attribute> serviceOutputattributes = Arrays.asList(this.outputAttributes(false));			
 		Object[] result = new Object[serviceOutputattributes.size()];
 
 		int i = 0, j = 0;
 		boolean hasValue = false;
 		Attribute[] inputHeader = this.inputAttributes();
-		Tuple first = inputTable!=null && inputTable.hasNext()?inputTable.next():null;
+		Tuple first = inputTuple;
 		for (Attribute column: this.attributeMapping.keySet()) {
-			if (!Arrays.asList(inputHeader).contains(column) || inputTable.hasNext()) {
+			if (!Arrays.asList(inputHeader).contains(column) || inputTuple!=null) {
 				Attribute relationAttribute = this.attributeMapping.get(column);
 				result[serviceOutputattributes.indexOf(column)]= Utility.cast(relationAttribute.getType(), item.get(column.getName()));
 				hasValue |= result[i] != null;
@@ -153,7 +221,7 @@ public class XmlWebService extends ExecutableAccessMethod {
 			for (String key: item.keySet()) {
 				Object value = item.get(key);
 				if (value instanceof Map) {
-					List<Tuple> t = processItem((Map)value, inputTable);
+					List<Tuple> t = processItem((Map)value, inputTuple);
 					if (t!=null)
 						results.addAll(t);
 				}
@@ -162,7 +230,7 @@ public class XmlWebService extends ExecutableAccessMethod {
 					if (!data.isEmpty()) {
 						if ( data.get(0) != null && data.get(0) instanceof Map) {
 							for (Map d: data) {
-								List<Tuple> t = processItem((Map)d, inputTable);
+								List<Tuple> t = processItem((Map)d, inputTuple);
 								if (t!=null)
 									results.addAll(t);
 							}
@@ -175,6 +243,14 @@ public class XmlWebService extends ExecutableAccessMethod {
 		} else {
 			return hasValue ? Arrays.asList(new Tuple[] {TupleType.createFromTyped(this.outputAttributes(false)).createTuple(result)}): null ;
 		}
+	}
+
+	public List<String> getRequestTemplates() {
+		return requestTemplates;
+	}
+
+	public void setRequestTemplates(List<String> requestTemplates) {
+		this.requestTemplates = requestTemplates;
 	}
 	
 }

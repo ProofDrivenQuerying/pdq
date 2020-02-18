@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import javax.xml.bind.JAXBException;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -22,13 +24,7 @@ import com.google.common.collect.ImmutableMap;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
-import uk.ac.ox.cs.pdq.datasources.services.RESTAccessMethodGenerator;
-import uk.ac.ox.cs.pdq.datasources.services.ServiceManager;
-import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
-import uk.ac.ox.cs.pdq.datasources.services.service.Service;
-import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
 import uk.ac.ox.cs.pdq.datasources.simplewebservice.XmlWebService;
-import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Cache;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -51,6 +47,7 @@ public class XmlWebServiceTest {
 				Attribute.create(String.class, "comment")};
 		
 		when(relation.getAttributes()).thenReturn(relationAttributes.clone());
+		when(relation.getName()).thenReturn("TestRelation1");
 
 		Attribute[] amAttributes = new Attribute[] {
 				Attribute.create(String.class, "n_name"), 
@@ -68,17 +65,44 @@ public class XmlWebServiceTest {
 		inputs[0] = 1;
 		target = new XmlWebService(amAttributes, inputs, relation, attributeMapping);
 		target.setUrl("http://pdq-webapp.cs.ox.ac.uk:80/webapp/servlets/servlet/NationInput");
+		List<String> requestTemplates = new ArrayList<>();
+		requestTemplates.add("n_nationkey={0}");
+		target.setRequestTemplates(requestTemplates);
+		
+		File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + 
+				"cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "datasources" + File.separator + "simplewebservice" + 
+				File.separator + "webServiceExported.xml");
+		
+		try {
+			DbIOManager.exportAccessMethod(target, out);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+		XmlWebService read = null;
+		try {
+			read = (XmlWebService) DbIOManager.importAccess(out);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+		Assert.assertEquals(target.getName(),read.getName());
+		Assert.assertEquals(target.getUrl(),read.getUrl());
+		Assert.assertEquals(target.getRelation().getName(),read.getRelation().getName());
+		Assert.assertEquals(target.getRequestTemplates(),read.getRequestTemplates());
+		Assert.assertEquals(target.getNumberOfInputs(),read.getNumberOfInputs());
+		Assert.assertEquals(target.getInputPosition(0),read.getInputPosition(0));
 		
 		TupleType tt = TupleType.DefaultFactory.create(Integer.class);
 		List<Tuple> inputTuples = new ArrayList<Tuple>();
+		inputTuples.add(tt.createTuple(1));
 		inputTuples.add(tt.createTuple(2));
 		Iterable<Tuple> data = target.access(inputTuples.iterator());
 		List<Tuple> resultTuples = StreamSupport.stream(data.spliterator(), false).collect(Collectors.toList());
+		Assert.assertEquals(2,resultTuples.size());
+		Assert.assertEquals((Integer)2,(Integer)(resultTuples.get(1).getValue(0)));
 		System.out.println(resultTuples);
 		System.out.println("done.");
-//		Assert.assertEquals(0, target.getData().size());
-//		target.load(tuples);
-//		Assert.assertEquals(3, target.getData().size());
 	}
 	@Test
 	public void testJson() {
@@ -97,7 +121,7 @@ public class XmlWebServiceTest {
 			List<Tuple> tuples = StreamSupport.stream(results.spliterator(), false).collect(Collectors.toList());
 			int i = 0;
 			for (Tuple t: tuples)
-				System.out.println("#"+i++ +" " +tuples);
+				System.out.println("#"+i++ +" " +t);
 		}
 		catch (Exception e)
 		{
