@@ -119,6 +119,7 @@ public class XmlWebServiceTest {
 			Tuple input = tupleType.createTuple();
 			Iterable<Tuple> results = access.access(Arrays.asList(new Tuple[] {input}).iterator());
 			List<Tuple> tuples = StreamSupport.stream(results.spliterator(), false).collect(Collectors.toList());
+			Assert.assertEquals(20, tuples.size());
 			int i = 0;
 			for (Tuple t: tuples)
 				System.out.println("#"+i++ +" " +t);

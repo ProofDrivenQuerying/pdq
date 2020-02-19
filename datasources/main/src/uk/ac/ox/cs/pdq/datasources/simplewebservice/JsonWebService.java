@@ -1,29 +1,19 @@
 package uk.ac.ox.cs.pdq.datasources.simplewebservice;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
-import jersey.repackaged.com.google.common.base.Preconditions;
-import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.datasources.AccessException;
-import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.tuple.Tuple;
-import uk.ac.ox.cs.pdq.db.tuple.TupleType;
 
 public class JsonWebService extends XmlWebService {
 
@@ -48,12 +38,6 @@ public class JsonWebService extends XmlWebService {
 			Relation relation, Map<Attribute, Attribute> attributeMapping) {
 		super(name, attributes, inputAttributes, relation, attributeMapping);
 	}
-//	@Override
-//	protected Stream<Tuple> fetchTuples(Iterator<Tuple> inputTuples) {
-//		//test with https://www.ebi.ac.uk/chembl/api/data/activity.json
-//		
-//		return null;
-//	}
 	
 	@Override
 	public void close() {
@@ -64,20 +48,21 @@ public class JsonWebService extends XmlWebService {
 		return false;
 	}
 	
-	public List<Tuple> unmarshalXml(Response response,Iterator<Tuple> inputTuples) throws AccessException {
+	@Override
+	public List<Tuple> unmarshalXml(Response response,Tuple inputTuple) throws AccessException {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			String responseText = response.readEntity(String.class);
 			Object data = null;
 			try {
 				data = mapper.readValue(responseText, List.class);
-				System.out.println("Received a list with " + ((List)data).size() + " record(s).");
+				System.out.println("Received a list with " + ((List<?>)data).size() + " record(s).");
 			} catch (JsonMappingException e) {
 				data = mapper.readValue(responseText, Map.class);
-				System.out.println("Received a map with " + ((Map)data).size() + " record(s).");
+				System.out.println("Received a map with " + ((Map<?,?>)data).size() + " record(s).");
 			}
 			
-			return this.processItems(data, inputTuples.next());
+			return this.processItems(data, inputTuple);
 		} catch (IOException e) {
 			throw new AccessException(e.getMessage(), e);
 		}

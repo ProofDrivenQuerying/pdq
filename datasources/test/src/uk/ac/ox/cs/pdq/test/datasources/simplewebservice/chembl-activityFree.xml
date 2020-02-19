@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Access access-type="JSON_WEB_ACCESS_METHOD" name="chembl_activity_free" relation-name="ActivityFree" web-service-url = "https://www.ebi.ac.uk/chembl/api/data/activity.json">
+<Access access-type="JSON_WEB_ACCESS_METHOD" name="chembl_activity_free" relation-name="ActivityFree">
 	<attribute name="activity_comment"    			type="java.lang.String" input="false"   mapsToRelationAttribute="activity_comment"/>
 	<attribute name="activity_id"     				type="java.lang.String" input="false"   mapsToRelationAttribute="activity_id"/>
 	<attribute name="assay_chembl_id"     			type="java.lang.String" input="false"   mapsToRelationAttribute="assay_chembl_id"/>
@@ -30,4 +30,5 @@
 	<attribute name="target_organism"  				type="java.lang.String" input="false" 	mapsToRelationAttribute="target_organism"/>
 	<attribute name="target_pref_name"  			type="java.lang.String" input="false" 	mapsToRelationAttribute="target_pref_name"/>
 	<attribute name="uo_units"  					type="java.lang.String" input="false" 	mapsToRelationAttribute="uo_units"/>
+	<url-template>https://www.ebi.ac.uk/chembl/api/data/activity.json</url-template>
 </Access>

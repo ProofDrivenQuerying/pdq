@@ -170,8 +170,14 @@ public class XmlWebService extends ExecutableAccessMethod {
 		XmlMapper mapper = new XmlMapper();
 		try {
 			String responseText = response.readEntity(String.class);
-			List data = mapper.readValue(responseText, List.class);
-			System.out.println("Received " + data.size() + " amount of records.");
+			Object data = null; 
+			try {
+				data = mapper.readValue(responseText, List.class);
+				System.out.println("Received a list with " + ((List)data).size() + " amount of records.");
+			} catch(Exception e) {
+				data = mapper.readValue(responseText, Map.class);
+				System.out.println("Received a map with " + ((Map)data).size() + " amount of records.");
+			}
 			return this.processItems(data, inputTuple);
 		} catch (IOException e) {
 			throw new AccessException(e.getMessage(), e);
