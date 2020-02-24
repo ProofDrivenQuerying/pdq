@@ -31,7 +31,7 @@ import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 /**
  * This class represents all executable access methods as xml files. Its main
  * purpose is to have all necessary parameters to be able to create a
- * DbAccessMethod, RestAccessMethod or InMemoryAccessMethod.
+ * DbAccessMethod, RestAccessMethod or InMemoryAccessMethod, JsonWebService or XmlWebService.
  * 
  * @author gabor
  *
@@ -58,6 +58,7 @@ public class XmlExecutableAccessMethod {
 	/** The underlying data in the InMemoryAccessMethod. */
 	private Collection<Tuple> data = new ArrayList<>();
 	private String dataFileName;
+	
 	/* Simple xml and json WebService AccessMethod */
 	private String webServiceUrl;
 	private List<String> requestTemplates = new ArrayList<>();
