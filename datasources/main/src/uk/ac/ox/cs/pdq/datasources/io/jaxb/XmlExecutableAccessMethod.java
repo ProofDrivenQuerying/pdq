@@ -172,7 +172,8 @@ public class XmlExecutableAccessMethod {
 		return accessMethodName;
 	}
 
-	//< url-template pattern="mandatory:[http:/somethingsomething/] plus optional template for inputs where {0} means the first input etc">
+	//< url-template pattern="mandatory:[http:/somethingsomething/] plus optional
+	// template for inputs where {0} means the first input etc">
 	@XmlElement(name = "url-template")
 	public String getWebServiceUrl() {
 		return webServiceUrl;
