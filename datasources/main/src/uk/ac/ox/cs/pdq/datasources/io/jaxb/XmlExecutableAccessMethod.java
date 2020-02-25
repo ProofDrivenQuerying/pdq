@@ -172,8 +172,8 @@ public class XmlExecutableAccessMethod {
 		return accessMethodName;
 	}
 
-	//< url-template pattern="mandatory:[http:/somethingsomething/] plus optional
-	// template for inputs where {0} means the first input etc">
+	//< url-template pattern= "[http:/somethingsomething/{8}]" where {i} are placeholders
+	//  for inputs where {i} means the i^th input  >
 	@XmlElement(name = "url-template")
 	public String getWebServiceUrl() {
 		return webServiceUrl;
@@ -259,7 +259,7 @@ public class XmlExecutableAccessMethod {
 		this.dbProperties = dbProperties;
 	}
 
-	//request-templates are give for web services, on a per input filed bases.
+	//request templates are given for web services, on a per input attribute basis.
 	@XmlElement(name = "request-template")
 	public List<String> getRequestTemplates() {
 		return requestTemplates;
