@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableMap;
 
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.XmlExecutableAccessMethod.PostParameter;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.simplewebservice.XmlWebService;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -65,8 +66,9 @@ public class XmlWebServiceTest {
 		inputs[0] = 1;
 		target = new XmlWebService(amAttributes, inputs, relation, attributeMapping);
 		target.setUrl("http://pdq-webapp.cs.ox.ac.uk:80/webapp/servlets/servlet/NationInput");
-		List<String> requestTemplates = new ArrayList<>();
-		requestTemplates.add("n_nationkey={0}");
+		//target.setUrl("http://localhost:8080/webapp/servlets/servlet/NationInput");
+		List<PostParameter> requestTemplates = new ArrayList<>();
+		requestTemplates.add(new PostParameter( "n_nationkey","{0}"));
 		target.setRequestTemplates(requestTemplates);
 		
 		File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + 
@@ -89,7 +91,9 @@ public class XmlWebServiceTest {
 		Assert.assertEquals(target.getName(),read.getName());
 		Assert.assertEquals(target.getUrl(),read.getUrl());
 		Assert.assertEquals(target.getRelation().getName(),read.getRelation().getName());
-		Assert.assertEquals(target.getRequestTemplates(),read.getRequestTemplates());
+		Assert.assertEquals(target.getRequestTemplates().size(),read.getRequestTemplates().size());
+		Assert.assertEquals(target.getRequestTemplates().get(0).getName(),read.getRequestTemplates().get(0).getName());
+		Assert.assertEquals(target.getRequestTemplates().get(0).getValue(),read.getRequestTemplates().get(0).getValue());
 		Assert.assertEquals(target.getNumberOfInputs(),read.getNumberOfInputs());
 		Assert.assertEquals(target.getInputPosition(0),read.getInputPosition(0));
 		

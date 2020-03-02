@@ -61,7 +61,8 @@ public class XmlExecutableAccessMethod {
 	
 	/* Simple xml and json WebService AccessMethod */
 	private String webServiceUrl;
-	private List<String> requestTemplates = new ArrayList<>();
+	// web service push or get method parameters
+	private List<PostParameter> postParams = new ArrayList<>();
 	
 	/* Database AccessMethod */
 	private Properties dbProperties;
@@ -98,7 +99,7 @@ public class XmlExecutableAccessMethod {
 		} else if (eam instanceof XmlWebService) { 
 			accessType = ACCESS_TYPE.XML_WEB_ACCESS_METHOD;
 			webServiceUrl = ((XmlWebService) eam).getUrl();
-			requestTemplates = ((XmlWebService) eam).getRequestTemplates();
+			this.postParams = ((XmlWebService) eam).getRequestTemplates();
 		} else {
 			throw new RuntimeException("Unknown executable access method type! : " + eam);
 		}
@@ -139,13 +140,13 @@ public class XmlExecutableAccessMethod {
 			XmlWebService service = new XmlWebService(accessMethodName,
 					attributes.toArray(new Attribute[attributes.size()]), inputAttributes, r, attributeMapping);
 			service.setUrl(webServiceUrl);
-			service.setRequestTemplates(requestTemplates);
+			service.setRequestTemplates(postParams);
 			return service;
 		case JSON_WEB_ACCESS_METHOD:
 			JsonWebService service2 = new JsonWebService(accessMethodName,
 					attributes.toArray(new Attribute[attributes.size()]), inputAttributes, r, attributeMapping);
 			service2.setUrl(webServiceUrl);
-			service2.setRequestTemplates(requestTemplates);
+			service2.setRequestTemplates(postParams);
 			return service2;
 		default:
 			throw new RuntimeException("Unknown accessType! : " + accessType);
@@ -260,11 +261,41 @@ public class XmlExecutableAccessMethod {
 
 	//request-templates are give for web services, on a per input filed bases.
 	@XmlElement(name = "request-template")
-	public List<String> getRequestTemplates() {
-		return requestTemplates;
+	public List<PostParameter> getRequestTemplates() {
+		return postParams;
 	}
 
-	public void setRequestTemplates(List<String> requestTemplates) {
-		this.requestTemplates = requestTemplates;
+	public void setRequestTemplates(List<PostParameter> postParams) {
+		this.postParams = postParams;
+	}
+	
+	/**
+	 * @author gabor
+	 *	Name value pairs for the post or get web methods.
+	 */
+	public static class PostParameter {
+		private String name;
+		private String value;
+		public PostParameter() {
+		}
+		public PostParameter(String name, String value) {
+			this.name = name;
+			this.value = value;
+		}
+		@XmlAttribute(name = "name")
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		@XmlAttribute(name = "value")
+		public String getValue() {
+			return value;
+		}
+		public void setValue(String value) {
+			this.value = value;
+		}
+		
 	}
 }

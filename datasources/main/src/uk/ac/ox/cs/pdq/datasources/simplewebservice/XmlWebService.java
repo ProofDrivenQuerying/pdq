@@ -13,8 +13,10 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -22,6 +24,7 @@ import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.XmlExecutableAccessMethod.PostParameter;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.tuple.Tuple;
@@ -36,8 +39,8 @@ import uk.ac.ox.cs.pdq.util.Utility;
  *
  */
 public class XmlWebService extends ExecutableAccessMethod {
-	private String url = null;
-	private List<String> requestTemplates = new ArrayList<>();
+	private String urlTemplate = null;
+	private List<PostParameter> postParams = new ArrayList<>();
 
 	private WebTarget target;
 
@@ -72,9 +75,9 @@ public class XmlWebService extends ExecutableAccessMethod {
 		List<Tuple> data = new ArrayList<>();
 		if (inputTuples == null) {
 			// No input case
-			if (url.contains("{") || this.requestTemplates.size() > 0)
+			if (urlTemplate.contains("{") || this.postParams.size() > 0)
 				throw new RuntimeException("Inputs are defined, but not specified!");
-			this.target = ClientBuilder.newClient().register(JacksonFeatures.class).target(url);
+			this.target = ClientBuilder.newClient().register(JacksonFeatures.class).target(urlTemplate);
 			Response response = this.target.request(mediaType).get();
 			data.addAll(unmarshalXml(response, null));
 			response.close();
@@ -87,9 +90,28 @@ public class XmlWebService extends ExecutableAccessMethod {
 				Tuple tuple = inputTuples.next();
 				this.target = ClientBuilder.newClient().register(JacksonFeatures.class)
 						.target(createUrlWithInputs(tuple));
-				Response response = this.target.request(mediaType).get();
-				data.addAll(unmarshalXml(response, tuple));
-				response.close();
+				if (postParams!=null && !postParams.isEmpty()) {
+					// parameters are in the link and or posted as objects.
+					MultivaluedHashMap<String,String> parameters = new MultivaluedHashMap<>();
+					for (PostParameter p:postParams) {
+						String value = p.getValue();
+						for (int i = 0; i < tuple.size(); i++) {
+							value = value.replaceAll("\\{" + i + "\\}", "" + tuple.getValue(i));
+						}
+						List<String> l = new ArrayList<>();
+						l.add(value);
+						parameters.put(p.getName(), l);
+					}
+					//Response response = this.target.request(mediaType).put(Entity.form(parameters));
+					Response response = this.target.request(mediaType).post(Entity.form(parameters));
+					data.addAll(unmarshalXml(response, tuple));
+					response.close();
+				} else {
+					// parameters are in the link only.
+					Response response = this.target.request(mediaType).get();
+					data.addAll(unmarshalXml(response, tuple));
+					response.close();
+				}
 			}
 		}
 		// return the tuples as a stream.
@@ -108,23 +130,23 @@ public class XmlWebService extends ExecutableAccessMethod {
 		// Error checkings
 		if (tuple == null)
 			throw new RuntimeException("Input tuple cannot be null");
-		if (url.contains("{" + tuple.size() + "}")) {
+		if (urlTemplate.contains("{" + tuple.size() + "}")) {
 			throw new RuntimeException(
 					"Input attribute number " + tuple.size() + " specified in the url pattern, but the input has only "
 							+ tuple.size() + " attributes. (input indexing starts from 0)");
 		}
-		for (String requestTemplate : this.requestTemplates) {
-			if (requestTemplate.contains("{" + tuple.size() + "}")) {
+		for (PostParameter requestTemplate : this.postParams) {
+			if (requestTemplate.getValue().contains("{" + tuple.size() + "}")) {
 				throw new RuntimeException("One of the request templates refferes to {" + tuple.size()
 						+ "}, but the input has only " + tuple.size() + " attributes. (input indexing starts from 0)");
 			}
 		}
 
 		List<Integer> inputIndexes = new ArrayList<Integer>();
-		for (String requestTemplate : this.requestTemplates) {
-			inputIndexes.addAll(parseTemplate(requestTemplate));
+		for (PostParameter requestTemplate : this.postParams) {
+			inputIndexes.addAll(parseTemplate(requestTemplate.getValue()));
 		}
-		inputIndexes.addAll(parseTemplate(url));
+		inputIndexes.addAll(parseTemplate(urlTemplate));
 		for (Integer i : inputIndexes) {
 			if (i < 0 || i >= tuple.size())
 				throw new RuntimeException("One of the request templates or the url template reffers to {" + i
@@ -132,16 +154,13 @@ public class XmlWebService extends ExecutableAccessMethod {
 						+ " attributes. (input indexing starts from 0)");
 		}
 
-		String urlWithInput = url;
+		String urlWithInput = urlTemplate;
 		// A web link have to have the format [url]?[parameters] so we make sure we have
 		// the '?' in it.
-		if (!url.contains("?")) {
+		if (!urlTemplate.contains("?")) {
 			urlWithInput += "?";
 		}
-		// add parameters from request templates (including {x} template elements)
-		for (String requestTemplate : this.requestTemplates) {
-			urlWithInput += requestTemplate;
-		}
+		
 		// replace the {x} with the actual input
 		for (int i = 0; i < tuple.size(); i++) {
 			urlWithInput = urlWithInput.replaceAll("\\{" + i + "\\}", "" + tuple.getValue(i));
@@ -193,11 +212,11 @@ public class XmlWebService extends ExecutableAccessMethod {
 	}
 
 	public String getUrl() {
-		return url;
+		return urlTemplate;
 	}
 
 	public void setUrl(String url) {
-		this.url = url;
+		this.urlTemplate = url;
 	}
 
 	/**
@@ -320,12 +339,12 @@ public class XmlWebService extends ExecutableAccessMethod {
 		}
 	}
 
-	public List<String> getRequestTemplates() {
-		return requestTemplates;
+	public List<PostParameter> getRequestTemplates() {
+		return this.postParams;
 	}
 
-	public void setRequestTemplates(List<String> requestTemplates) {
-		this.requestTemplates = requestTemplates;
+	public void setRequestTemplates(List<PostParameter> postParams) {
+		this.postParams = postParams;
 	}
 
 }

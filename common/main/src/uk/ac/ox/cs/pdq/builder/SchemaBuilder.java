@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 
 import com.google.common.base.Preconditions;
 
-import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -284,7 +283,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param relation Relation
 	 */
 	private void ensureForeignKeyDefinition(Relation relation) {
-		throw new RuntimeException(new NotImplementedException("ensureForeignKeyDefinition"));
+		throw new RuntimeException("ensureForeignKeyDefinition");
 	}
 
 	/**
@@ -354,7 +353,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 *         (modulo the ID) to the given dependency.
 	 */
 	private TGD findDependency(TGD dep) {
-		throw new RuntimeException(new NotImplementedException("ensureForeignKeyDefinition"));
+		throw new RuntimeException("ensureForeignKeyDefinition");
 	}
 
 	/**
