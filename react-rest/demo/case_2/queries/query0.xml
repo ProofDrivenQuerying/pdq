@@ -42,7 +42,7 @@
 <variable name="_18"/>
 <variable name="type"/>
 <constant value="PointofInterest"/>
-<variable name="_15"/>
+<variable name="country"/>
 <variable name="admin1"/>
 <variable name="admin2"/>
 <variable name="admin3"/>
@@ -60,7 +60,7 @@
 </body>
 <head name="Q">
 <variable name="city"/>
-<variable name="_15"/>
+<variable name="country"/>
 <variable name="region"/>
 <variable name="temperature"/>
 </head>

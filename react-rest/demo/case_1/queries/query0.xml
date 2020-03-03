@@ -5,29 +5,30 @@
 			<variable name="x0" />
 			<variable name="x1" />
 			<variable name="x2" />
-			<variable name="x3" />
+			<variable name="supplycost" />
 			<variable name="x4" />
 		</atom>
 		<atom name="supplier">
 			<variable name="x1" />
-			<variable name="x6" />
+			<variable name="name" />
 			<variable name="x7" />
 			<variable name="x8" />
 			<variable name="x9" />
-			<variable name="x10" />
+			<variable name="acctball" />
 			<variable name="x11" />
 		</atom>
 		<atom name="nation">
 			<variable name="x8" />
 			<variable name="x13" />
-			<variable name="x14" />
+			<variable name="regionkey" />
 			<variable name="x15" />
 		</atom>
 	</body>
+	
 	<head name="Q">
-		<variable name="x10" />
-		<variable name="x6" />
-		<variable name="x3" />
-		<variable name="x14" />
+		<variable name="acctball" />
+		<variable name="name" />
+		<variable name="supplycost" />
+		<variable name="regionkey" />
 	</head>
 </query>

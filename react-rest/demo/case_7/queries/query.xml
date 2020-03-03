@@ -2,7 +2,7 @@
 <query>
 	<body>
 		<atom name="part">
-			<variable name="x0" />
+			<variable name="partkey" />
 			<variable name="x1" />
 			<variable name="x2" />
 			<variable name="x3" />
@@ -14,6 +14,6 @@
 		</atom>
 	</body>
 	<head name="Q">
-		<variable name="x0" />
+		<variable name="partkey" />
 	</head>
 </query>
