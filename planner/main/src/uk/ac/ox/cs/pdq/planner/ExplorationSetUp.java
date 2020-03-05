@@ -396,10 +396,9 @@ public class ExplorationSetUp {
 	}
 
 	/**
-	 * Handle early termination.
 	 *
-	 * @param ex
-	 *            Explorer<?>
+	 *
+	 * 
 	 */
 	private void handleEarlyTermination(Explorer ex) {
 		if (ex != null) {
