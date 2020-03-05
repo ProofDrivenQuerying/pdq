@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Access access-type="JSON_WEB_ACCESS_METHOD" name="NATION_MEM" relation-name="NATION">
-    <attribute name="N_NATIONKEY" type="java.lang.Integer" input="false" mapsToRelationAttribute="nationKey"/>
-    <attribute name="N_NAME" type="java.lang.String" input="false" mapsToRelationAttribute="name"/>
-    <attribute name="N_REGIONKEY" type="java.lang.Integer" input="false" mapsToRelationAttribute="regionKey"/>
-    <attribute name="N_COMMENT" type="java.lang.String" input="false"/>
-    <url>http://pdq-webapp.cs.ox.ac.uk:80/webapp/servlets/servlet/NationInputJson</url>
-</Access>

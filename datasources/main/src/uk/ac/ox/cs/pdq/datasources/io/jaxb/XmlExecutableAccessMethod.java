@@ -261,7 +261,7 @@ public class XmlExecutableAccessMethod {
 	}
 
 	//request templates are given for web services, on a per input attribute basis.
-	@XmlElement(name = "request-template")
+	@XmlElement(name = "post-parameter")
 	public List<PostParameter> getRequestTemplates() {
 		return postParams;
 	}
