@@ -105,7 +105,7 @@ public class CertainAnswerExecutor {
 			queries[0] = queryFolder;
 		}
 		for (File q : queries) {
-			if (q.getName().endsWith(".xml")) {
+			if (q.getName().endsWith(".xml") || q.getName().endsWith(".txt") ) {
 				String nameWithoutExtension = q.getName().substring(0, q.getName().length() - 4);
 				ConjunctiveQuery cq = IOManager.importQuery(q);
 				if (cq != null) {
