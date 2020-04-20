@@ -31,3 +31,6 @@ jobs:
 
       - name: Compile pdq
         run: mvn compile
+
+      - name: Test pdq
+        run: mvn test -fn
