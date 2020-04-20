@@ -3,7 +3,7 @@ name: Compile on multiple Java versions
 on:
   push:
     branches:
-      - master
+      - ci
   pull_request:
     branches-ignore:
       - '**'
