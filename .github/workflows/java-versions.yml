@@ -27,7 +27,7 @@ jobs:
           architecture: x64
 
       - name: Check Java version
-        run: java --version
+        run: java -version
 
       - name: Compile pdq
         run: mvn compile
