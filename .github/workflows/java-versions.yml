@@ -1,0 +1,33 @@
+name: Compile on multiple Java versions
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches-ignore:
+      - '**'
+
+jobs:
+
+  build:
+    name: Java ${{ matrix.java-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 6, 7, 8, 9, 10, 11, 12, 13 ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up java ${{ matrix.java-version }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+          architecture: x64
+
+      - name: Check Java version
+        run: java --version
+
+      - name: Compile pdq
+        run: mvn compile
