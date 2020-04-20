@@ -32,5 +32,6 @@ jobs:
       - name: Compile pdq
         run: mvn compile
 
-      - name: Test pdq
-        run: mvn test -fn
+      - name: Test pdq common
+        run: mvn test
+        working-directory: common
