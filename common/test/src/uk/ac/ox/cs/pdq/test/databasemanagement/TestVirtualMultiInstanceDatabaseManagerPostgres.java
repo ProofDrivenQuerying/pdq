@@ -42,7 +42,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * @author Gabor
  *
  */
-public class TestVirtualMultiInstanceDatabaseManager extends PdqTest {
+public class TestVirtualMultiInstanceDatabaseManagerPostgres extends PdqTest {
 
 
 	/**

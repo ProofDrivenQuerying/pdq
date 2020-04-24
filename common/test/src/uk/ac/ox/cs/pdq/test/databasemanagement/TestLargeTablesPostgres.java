@@ -32,7 +32,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * @author Gabor
  *
  */
-public class TestLargeTables extends PdqTest {
+public class TestLargeTablesPostgres extends PdqTest {
 	/**
 	 * First half of the test: 
 	 * <pre>

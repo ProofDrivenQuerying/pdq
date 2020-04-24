@@ -39,7 +39,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * @author Gabor
  *
  */
-public class TestExternalDatabaseManager extends PdqTest {
+public class TestExternalDatabaseManagerPostgres extends PdqTest {
 
 
 	/**
