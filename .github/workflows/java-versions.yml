@@ -33,5 +33,9 @@ jobs:
         run: mvn compile
 
       - name: Test pdq common
-        run: mvn test
+        run: mvn -Dpdq.skip-tests="**/*Postgres.java" test
+        working-directory: common
+
+      - name: Package pdq common
+        run: mvn -Dpdq.skip-tests="**/*Postgres.java" package
         working-directory: common
