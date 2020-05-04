@@ -116,6 +116,11 @@ these may be moved to a separate project later on.</description>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
 			<artifactId>pdq-reasoning</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>net.sf.jgrapht</groupId>
+			<artifactId>jgrapht</artifactId>
+			<version>0.8.3</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
