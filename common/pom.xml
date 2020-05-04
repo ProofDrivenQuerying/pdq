@@ -58,6 +58,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -80,6 +81,7 @@
 		</plugins>
 	</build>
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<pdq.skip-tests>none</pdq.skip-tests>
 	</properties>
 	<name>PDQ common library</name>
@@ -139,6 +141,11 @@ FOL formulas, relation algebra, etc.
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
 			<version>2.4.0-b180725.0644</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.4.0-b180725.0427</version>
 		</dependency>
 	</dependencies>
 </project>
