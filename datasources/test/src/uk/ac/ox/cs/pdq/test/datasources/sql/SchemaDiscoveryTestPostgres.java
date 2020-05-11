@@ -28,7 +28,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 /**
  * The Class PostgresqlSchemaDiscoveryTest.
  */
-public class PostgresqlSchemaDiscoveryTest extends PdqTest {
+public class SchemaDiscoveryTestPostgres extends PdqTest {
 
 	/** The schema. */
 	private Schema schema = null;
@@ -76,7 +76,7 @@ public class PostgresqlSchemaDiscoveryTest extends PdqTest {
 	 *
 	 * @throws BuilderException the builder exception
 	 */
-	public PostgresqlSchemaDiscoveryTest() throws BuilderException {
+	public SchemaDiscoveryTestPostgres() throws BuilderException {
 		Properties properties = new Properties();
 		properties.put("url", "jdbc:postgresql://localhost/");
 		properties.put("database", "tpch");

@@ -25,7 +25,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 import uk.ac.ox.cs.pdq.db.tuple.TupleType;
 
-public class SqlAccessMethodTest {
+public class SqlAccessMethodTestPostgres {
 
 	/*
 	 *  Parameters of the Postgres test instance.

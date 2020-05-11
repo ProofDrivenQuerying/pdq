@@ -38,11 +38,11 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * @author gabor
  *
  */
-public class TestAccessRepository extends PdqTest {
+public class TestAccessRepositoryPostgres extends PdqTest {
 	Properties properties;
 	boolean print = false;
 
-	public TestAccessRepository() {
+	public TestAccessRepositoryPostgres() {
 		properties = new Properties();
 		properties.setProperty("url", "jdbc:postgresql://localhost:5432/");
 		properties.setProperty("database", "tpch");
