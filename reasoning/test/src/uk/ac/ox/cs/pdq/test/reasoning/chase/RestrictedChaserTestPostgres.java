@@ -34,7 +34,7 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
  * @author Efthymia Tsamoura
  */
 
-public class RestrictedChaserTest {
+public class RestrictedChaserTestPostgres {
 
 	/** The path. */
 	private static String PATH = "test/src/uk/ac/ox/cs/pdq/test/reasoning/chase/restricted_chaser/";
