@@ -39,7 +39,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * @author gabor
  *
  */
-public class TestQueryExplainCostEstimator extends PdqTest {
+public class TestQueryExplainCostEstimatorPostgres extends PdqTest {
 
 	/**
 	 * This test creates a plan like: Join
