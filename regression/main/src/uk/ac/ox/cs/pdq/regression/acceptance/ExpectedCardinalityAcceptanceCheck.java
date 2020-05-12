@@ -6,7 +6,7 @@ import static uk.ac.ox.cs.pdq.regression.acceptance.AcceptanceCriterion.Acceptan
 import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 
 /**
- * Acceptance test request the expected and observed results to be equivalent
+ * Acceptance test requests the expected and observed results to be equivalent
  * under set semantics.
  * 
  * @author Julien Leblay
@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 public class ExpectedCardinalityAcceptanceCheck implements AcceptanceCriterion<Integer, Table> {
 
 	/**
-	 * Check.
+	 * 
 	 *
 	 * @param expected Integer
 	 * @param observed Result
