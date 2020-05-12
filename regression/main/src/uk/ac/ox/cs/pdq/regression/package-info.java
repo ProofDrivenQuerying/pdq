@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.regression;
 
 /**
 	@author Mark Ridler and Efthymia Tsamoura
-	@author gabor
+	@author gabor and Michael Benedikt
 	
 	This package is the entry point for running regression tests.
 	There are different types of regression tests:
@@ -15,25 +15,15 @@ package uk.ac.ox.cs.pdq.regression;
 	- query.xml: the input query
 	- [optional] expected-plan.xml: When exists the generated plan will be compared against it, otherwise PDQ in planner mode creates it.
 
- 	This also contains the following sub packages:
+ 	This package also contains the following sub packages:
  	
- 	-- acceptance, which runs regression tests with a theme of acceptance criteria.
+ 	-- acceptance, which gives different kinds of acceptance criteria for tests
  
- 	-- casegenerator, which contains utility methods to create a new test case from scratch or convert an existing regression test
- 		 to runtime-compatible test with auto generated access methods using templates.
  
  	-- chasebench, which contains tests for the Chase:
  
  	-- cost.estimators, which contains classes that provide tests for Cost Estimation functions.
 
-	-- planner, which runs regression tests for the optimised explorer. Runs a search with and
-	 	 without optimisation (global equivalence, global dominance) and compares the
-	 	 resulting plans. An exception is thrown when the plans are different.
- 
- 	-- runtime, which is commented out pending resolution of the runtime changes.
 
-	Top-level files include:
-	- PDQ.java which is the entry point for the regression package.
-	- RegressionTest.java which runs regression tests.
  	
 */
