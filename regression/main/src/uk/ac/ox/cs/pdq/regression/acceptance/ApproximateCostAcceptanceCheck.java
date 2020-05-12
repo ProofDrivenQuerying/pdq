@@ -10,8 +10,8 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 
 /**
- * Acceptance test request the expected plan cost to be within an order of 
- * magnitude of the expected plan cost to pass.
+ * Acceptance test requests the expected plan cost to be within an order of 
+ * magnitude of the expected plan cost in order to pass.
  * 
  * @author Julien Leblay
  */
