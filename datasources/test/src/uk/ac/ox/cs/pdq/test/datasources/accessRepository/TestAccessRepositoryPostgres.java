@@ -193,8 +193,10 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 		// depends on the user who runs the test. Therefore we cannot know how large the
 		// new file should be exactly, but it should be in a 30 character range to the
 		// saved copy.
-		Assert.assertTrue(goodLength + 60 > newLength);
-		Assert.assertTrue(goodLength - 60 < newLength);
+		//\todo: this test is not good. On Fergus's system the generated path is absolute and therefore substantially
+		// longer than the "good" file.
+		Assert.assertTrue(goodLength + 120 > newLength);
+		Assert.assertTrue(goodLength <= newLength);
 		target.close();
 		new File(
 				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml")
