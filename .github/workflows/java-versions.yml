@@ -41,9 +41,9 @@ jobs:
         run: |
           mvn -B -Dpdq.skip-tests="**/*Postgres.java" test -f datasources
 
-      - name: Test pdq reasoning
-        run: |
-          mvn -B -Dpdq.skip-tests="**/*Postgres.java" test -f reasoning
+#      - name: Test pdq reasoning
+#        run: |
+#          mvn -B -Dpdq.skip-tests="**/*Postgres.java" test -f reasoning
 
       - name: Test pdq cost
         run: |
