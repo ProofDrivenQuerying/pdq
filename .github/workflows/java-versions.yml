@@ -34,8 +34,19 @@ jobs:
 
       - name: Test pdq common
         run: |
-          mvn -B -Dpdq.skip-tests="**/*Postgres.java" test
-        working-directory: common
+          mvn -B -Dpdq.skip-tests="**/*Postgres.java" test -f common
+
+      - name: Test pdq datasources
+        run: |
+          mvn -B -Dpdq.skip-tests="**/*Postgres.java" test -f datasources
+
+      - name: Test pdq reasoning
+        run: |
+          mvn -B -Dpdq.skip-tests="**/*Postgres.java" test -f reasoning
+
+      - name: Test pdq cost
+        run: |
+          mvn -B -Dpdq.skip-tests="**/*Postgres.java" test -f cost
 
       - name: Package all components
         run: mvn -B -DskipTests=true package
