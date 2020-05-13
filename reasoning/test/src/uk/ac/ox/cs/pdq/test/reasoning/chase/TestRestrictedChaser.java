@@ -594,21 +594,21 @@ public class TestRestrictedChaser extends PdqTest {
 	}
 
 	/**
-	 * Used by {@link TestRestrictedChaserMultiRun}
+	 * Used by {@link TestRestrictedChaserMultiRunPostgres}
 	 */
 	public void setConnection(DatabaseManager connection) {
 		this.connection = connection;
 	}
 
 	/**
-	 * Used by {@link TestRestrictedChaserMultiRun}
+	 * Used by {@link TestRestrictedChaserMultiRunPostgres}
 	 */
 	public void createSchema() {
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2 }, new Dependency[] { this.tgd });
 	}
 
 	/**
-	 * Used by {@link TestRestrictedChaserMultiRun}
+	 * Used by {@link TestRestrictedChaserMultiRunPostgres}
 	 */
 	public void setup(DatabaseManager c) throws SQLException {
 

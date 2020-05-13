@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * @author Gabor
  *
  */
-public class TestRestrictedChaserMultiRun extends PdqTest {
+public class TestRestrictedChaserMultiRunPostgres extends PdqTest {
 	private static final int REPEAT = 50;
 
 	@Test
