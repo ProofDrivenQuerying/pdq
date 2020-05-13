@@ -130,10 +130,6 @@
 			</dependency>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>pdq-datasources</artifactId>
-			</dependency>
-			<dependency>
-				<groupId>uk.ac.ox.cs.pdq</groupId>
 				<artifactId>pdq-reasoning</artifactId>
 			</dependency>
 			<dependency>
