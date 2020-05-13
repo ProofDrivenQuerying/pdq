@@ -29,8 +29,8 @@ jobs:
       - name: Check Java version
         run: java -version
 
-      - name: Package all components
-        run: mvn -B -DskipTests=true package
+      - name: Install all components
+        run: mvn -B -DskipTests=true install
 
       - name: Test pdq common
         run: |
