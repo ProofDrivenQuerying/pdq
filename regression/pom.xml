@@ -4,6 +4,14 @@
 	<groupId>uk.ac.ox.cs.pdq</groupId>
 	<artifactId>pdq-regression</artifactId>
 	<version>1.0.0-Beta</version>
+
+	<parent>
+		<groupId>uk.ac.ox.cs.pdq</groupId>
+		<artifactId>pdq</artifactId>
+		<version>1.0.0-Beta</version>
+		<relativePath>..</relativePath>
+	</parent>
+
 	<name>PDQ regression test library</name>
 	<description>Gather packages and classes aims at checking when regressions occur in the code.</description>
 	<build>
@@ -86,47 +94,6 @@
 		<name>Oxford University - Department of Computer Science</name>
 		<url>http://www.cs.ox.ac.uk/</url>
 	</organization>
-	<dependencyManagement>
-		<dependencies>
-		 	<dependency>
-		        <groupId>uk.ac.ox.cs.pdq</groupId>
-		        <artifactId>pdq-common</artifactId>
-		        <type>test-jar</type>
-		        <version>1.0.0-Beta</version>
-		        <scope>test</scope>
-		    </dependency>		
-			<dependency>
-				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>pdq-common</artifactId>
-				<version>1.0.0-Beta</version>
-			</dependency>
-			<dependency>
-				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>pdq-runtime</artifactId>
-				<version>1.0.0-Beta</version>
-			</dependency>
-			<dependency>
-				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>pdq-reasoning</artifactId>
-				<version>1.0.0-Beta</version>
-			</dependency>
-			<dependency>
-				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>pdq-planner</artifactId>
-				<version>1.0.0-Beta</version>
-			</dependency>
-			<dependency>
-				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>pdq-datasources</artifactId>
-				<version>1.0.0-Beta</version>
-			</dependency>
-			<dependency>
-				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>pdq-cost</artifactId>
-				<version>1.0.0-Beta</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
@@ -148,26 +115,5 @@
 			<groupId>uk.ac.ox.cs.pdq</groupId>
 			<artifactId>pdq-datasources</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.beust</groupId>
-			<artifactId>jcommander</artifactId>
-			<version>1.35</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.annotation</groupId>
-			<artifactId>javax.annotation-api</artifactId>
-			<version>1.3.2</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>2.4.0-b180725.0427</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jaxb</groupId>
-			<artifactId>jaxb-runtime</artifactId>
-			<version>2.4.0-b180725.0644</version>
-		</dependency>
-		
 	</dependencies>
 </project>
