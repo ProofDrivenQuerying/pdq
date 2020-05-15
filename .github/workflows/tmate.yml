@@ -17,28 +17,31 @@ jobs:
         image: postgres:10.8
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: pdq
+
         ports:
-          # will assign a random free host port
-          - 5432/tcp
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-
-
       - uses: actions/checkout@v2
 
-      - run: echo something
-        env:
-          # use localhost for the host here because we are running the job on the VM.
-          # If we were running the job on in a container this would be postgres
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
+      - name: Set up java ${{ matrix.java-version }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java-version }}
+          architecture: x64
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v2
+      - name: Install pdq common
+        run: |
+          mvn -B install -DskipTests -f common
+
+      - name: Install pdq common
+        run: |
+          mvn -B test -f common
         env:
           POSTGRES_HOST: localhost
-          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
+          POSTGRES_PORT: 5432
