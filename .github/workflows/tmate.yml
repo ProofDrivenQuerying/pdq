@@ -1,0 +1,17 @@
+name: tmate
+
+on:
+  push:
+    branches:
+      - ci
+  pull_request:
+    branches-ignore:
+      - '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v2
