@@ -38,3 +38,6 @@ jobs:
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v2
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
