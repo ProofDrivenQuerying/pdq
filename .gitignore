@@ -11,3 +11,7 @@
 /bin/
 .idea/
 *.iml
+
+.pdq
+
+regression/**/*.csv
