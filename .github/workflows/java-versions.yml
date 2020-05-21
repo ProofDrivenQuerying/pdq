@@ -47,24 +47,29 @@ jobs:
           wget -q --no-check-certificate -O pdq-tpch-test-data.zip "https://unioxfordnexus-my.sharepoint.com/:u:/g/personal/some3327_ox_ac_uk/ESytqq-8oyJNtF_dRq6aTrYBNtVacXhL5yP51Rf11A4v_A?e=1Lruh0&download=1"
           unzip pdq-tpch-test-data.zip
 
-      - name: Set up tpch database
+      - name: Set up tpch database & user
         run: |
-          sed -i 's+/path/to/pdq-tpch-test-data+/tmp+g' tpch-build-db.sql
-          echo localhost:5432:postgres:postgres:root >> pgpassfile
-          echo localhost:5432:pdq:postgres:root >> pgpassfile
-          echo localhost:5432:tpch:admin:admin >> pgpassfile
-          export CONTAINERID=$(docker ps --filter "name=postgres" | awk 'NR==2 {print $1}')
-          docker cp . ${CONTAINERID}:/tmp
           psql -U postgres -c "create user admin password 'admin'"
           psql -U postgres -c "create database tpch"
           psql -U postgres -c "ALTER DATABASE tpch OWNER TO admin"
+        working-directory: pdq-tpch-test-data
+        env:
+          PGPASSWORD: root
+          PGHOST: localhost
+          PGPORT: 5432
+
+      - name: Ingest tpch data
+        run: |
+          sed -i 's+/path/to/pdq-tpch-test-data+/tmp+g' tpch-build-db.sql
+          export CONTAINERID=$(docker ps --filter "name=postgres" | awk 'NR==2 {print $1}')
+          docker cp . ${CONTAINERID}:/tmp
           psql -U admin tpch -c "\i tpch-build-db.sql"
           psql -U admin tpch -c "\d+"
           psql -U admin tpch -c "\dt"
           psql -U admin tpch -c "\l"
         working-directory: pdq-tpch-test-data
         env:
-          PGPASSFILE: pgpassfile
+          PGPASSWORD: admin
           PGHOST: localhost
           PGPORT: 5432
 
