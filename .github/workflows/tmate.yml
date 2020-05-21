@@ -10,11 +10,18 @@ on:
 
 jobs:
   build:
+    name: Postgres ${{ matrix.postgres-version }}
+
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        postgres-version: [ 12, 9.5 ]
 
     services:
       postgres:
-        image: postgres:10.12
+        image: postgres:${{ matrix.postgres-version }}
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: root
@@ -58,15 +65,16 @@ jobs:
 
       - name: Test pdq common
         run: mvn -B test -f common
+        if: ${{ always() }}
 
       - name: Test pdq datasources
         run: mvn -B test -f datasources
+        if: ${{ always() }}
 
       - name: Test pdq reasoning
         run: mvn -B test -f reasoning
+        if: ${{ always() }}
 
       - name: Test pdq cost
         run: mvn -B test -f cost
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v2
+        if: ${{ always() }}
