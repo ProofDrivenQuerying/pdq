@@ -1,4 +1,4 @@
-name: Test with multiple Java versions
+name: Install and test PDQ
 
 on:
   push:
@@ -10,18 +10,21 @@ on:
 
 jobs:
   build:
-    name: Java ${{ matrix.java-version }}
+    name: Java ${{ matrix.java-version }}, postgres ${{ matrix.postgres-version }}
 
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        java-version: [ 14 ]
+        # Newest, and oldest supported java versions
+        java-version: [ 14, 11 ]
+        # Newest, and oldest supported postgres versions
+        postgres-version: [ 12, 9.5 ]
 
     services:
       postgres:
-        image: postgres:12
+        image: postgres:${{ matrix.postgres-version }}
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: root
@@ -66,8 +69,6 @@ jobs:
           docker cp . ${CONTAINERID}:/tmp
           psql -U admin tpch -c "\i tpch-build-db.sql"
           psql -U admin tpch -c "\d+"
-          psql -U admin tpch -c "\dt"
-          psql -U admin tpch -c "\l"
         working-directory: pdq-tpch-test-data
         env:
           PGPASSWORD: admin
