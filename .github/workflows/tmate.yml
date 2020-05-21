@@ -35,24 +35,17 @@ jobs:
           java-version: 12
           architecture: x64
 
-      - name: Install pdq common
-        run: |
-          mvn -B install -DskipTests -f common
+      - name: Install all components
+        run: mvn -B -DskipTests=true install
 
       - name: Test pdq common
-        run: |
-          mvn -B test -f common
+        run: mvn -B test -f common
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
 
-      - name: Install pdq datasources
-        run: |
-          mvn -B install -DskipTests -f datasources
-
       - name: Test pdq datasources
-        run: |
-          mvn -B test -f datasources
+        run: mvn -B test -f datasources
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
