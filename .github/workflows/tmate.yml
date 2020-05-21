@@ -39,8 +39,19 @@ jobs:
         run: |
           wget -nv -O pdq-tpch-test-data.zip "https://unioxfordnexus-my.sharepoint.com/:u:/g/personal/some3327_ox_ac_uk/ESytqq-8oyJNtF_dRq6aTrYBNtVacXhL5yP51Rf11A4v_A?e=1Lruh0&download=1"
           unzip pdq-tpch-test-data.zip
-          cd pdq-tpch-test-data
-          ls -l
+
+      - name: Set up tpch database
+        run: |
+          sed -i 's+/path/to+/home/runner/work/pdq/pdq+g' tpch-build-db.sql
+          echo localhost:5432:pdq:postgres:root >> pgpassfile
+          echo localhost:5432:tpch:postgres:root >> pgpassfile
+          psql -U postgres -c "\i tpch-build-db.sql"
+          psql -U postgres -c "\d+"
+        working-directory: pdq-tpch-test-data
+        env:
+          PGPASSFILE: pgpassfile
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
 
 #      - name: Install all components
 #        run: mvn -B -DskipTests=true install
