@@ -1,22 +1,37 @@
-name: Compile on multiple Java versions
+name: Test with multiple Java versions
 
 on:
   push:
     branches:
-      - xci
+      - ci
   pull_request:
     branches-ignore:
       - '**'
 
 jobs:
-
   build:
     name: Java ${{ matrix.java-version }}
+
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
-        java-version: [ 14, 13, 12, 11 ]
+        java-version: [ 12, 9.5 ]
+
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: pdq
+
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - uses: actions/checkout@v2
@@ -27,24 +42,43 @@ jobs:
           java-version: ${{ matrix.java-version }}
           architecture: x64
 
-      - name: Check Java version
-        run: java -version
+      - name: Download tpch data
+        run: |
+          wget -q --no-check-certificate -O pdq-tpch-test-data.zip "https://unioxfordnexus-my.sharepoint.com/:u:/g/personal/some3327_ox_ac_uk/ESytqq-8oyJNtF_dRq6aTrYBNtVacXhL5yP51Rf11A4v_A?e=1Lruh0&download=1"
+          unzip pdq-tpch-test-data.zip
+
+      - name: Set up tpch database
+        run: |
+          sed -i 's+/path/to/pdq-tpch-test-data+/tmp+g' tpch-build-db.sql
+          export CONTAINERID=$(docker ps --filter "name=postgres" | awk 'NR==2 {print $1}')
+          docker cp . ${CONTAINERID}:/tmp
+          psql -U postgres -c "create user admin password 'admin'"
+          psql -U postgres -c "create database tpch"
+          psql -U postgres -c "ALTER DATABASE tpch OWNER TO admin"
+          psql -U postgres -c "\i tpch-build-db.sql"
+          psql -U postgres -c "\d+"
+        working-directory: pdq-tpch-test-data
+        env:
+          PGPASSWORD: root
+          PGHOST: localhost
+          PGPORT: 5432
 
       - name: Install all components
         run: mvn -B -DskipTests=true install
 
       - name: Test pdq common
-        run: |
-          mvn -B -Dpdq.skip-tests="**/*Postgres.java" test -f common
+        run: mvn -B test -f common
+        if: ${{ always() }}
 
       - name: Test pdq datasources
-        run: |
-          mvn -B -Dpdq.skip-tests="**/*Postgres.java" test -f datasources
+        run: mvn -B test -f datasources
+        if: ${{ always() }}
 
-#      - name: Test pdq reasoning
-#        run: |
-#          mvn -B -Dpdq.skip-tests="**/*Postgres.java" test -f reasoning
+      - name: Test pdq reasoning
+        run: mvn -B test -f reasoning
+        if: ${{ always() }}
 
       - name: Test pdq cost
-        run: |
-          mvn -B -Dpdq.skip-tests="**/*Postgres.java" test -f cost
+        run: mvn -B test -f cost
+        if: ${{ always() }}
+

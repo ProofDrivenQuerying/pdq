@@ -1,4 +1,4 @@
-name: tmate
+name: Test with multiple postgres versions
 
 on:
   push:
@@ -54,6 +54,7 @@ jobs:
           docker cp . ${CONTAINERID}:/tmp
           psql -U postgres -c "create user admin password 'admin'"
           psql -U postgres -c "create database tpch"
+          psql -U postgres -c "ALTER DATABASE tpch OWNER TO admin"
           psql -U postgres -c "\i tpch-build-db.sql"
           psql -U postgres -c "\d+"
         working-directory: pdq-tpch-test-data
@@ -62,28 +63,21 @@ jobs:
           PGHOST: localhost
           PGPORT: 5432
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v2
-        env:
-          PGPASSWORD: root
-          PGHOST: localhost
-          PGPORT: 5432
+      - name: Install all components
+        run: mvn -B -DskipTests=true install
 
-#      - name: Install all components
-#        run: mvn -B -DskipTests=true install
-#
-#      - name: Test pdq common
-#        run: mvn -B test -f common
-#        if: ${{ always() }}
-#
-#      - name: Test pdq datasources
-#        run: mvn -B test -f datasources
-#        if: ${{ always() }}
-#
-#      - name: Test pdq reasoning
-#        run: mvn -B test -f reasoning
-#        if: ${{ always() }}
-#
-#      - name: Test pdq cost
-#        run: mvn -B test -f cost
-#        if: ${{ always() }}
+      - name: Test pdq common
+        run: mvn -B test -f common
+        if: ${{ always() }}
+
+      - name: Test pdq datasources
+        run: mvn -B test -f datasources
+        if: ${{ always() }}
+
+      - name: Test pdq reasoning
+        run: mvn -B test -f reasoning
+        if: ${{ always() }}
+
+      - name: Test pdq cost
+        run: mvn -B test -f cost
+        if: ${{ always() }}
