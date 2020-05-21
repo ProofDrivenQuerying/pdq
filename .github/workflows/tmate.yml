@@ -37,7 +37,7 @@ jobs:
 
       - name: Download tpch data
         run: |
-          wget -nv -O pdq-tpch-test-data.zip "https://unioxfordnexus-my.sharepoint.com/:u:/g/personal/some3327_ox_ac_uk/ESytqq-8oyJNtF_dRq6aTrYBNtVacXhL5yP51Rf11A4v_A?e=1Lruh0&download=1"
+          wget -O pdq-tpch-test-data.zip "https://unioxfordnexus-my.sharepoint.com/:u:/g/personal/some3327_ox_ac_uk/ESytqq-8oyJNtF_dRq6aTrYBNtVacXhL5yP51Rf11A4v_A?e=1Lruh0&download=1"
           unzip pdq-tpch-test-data.zip
 
       - name: Set up tpch database
