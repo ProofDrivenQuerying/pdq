@@ -29,26 +29,34 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up java 12
-        uses: actions/setup-java@v1
-        with:
-          java-version: 12
-          architecture: x64
+#      - name: Set up java 12
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: 12
+#          architecture: x64
 
-      - name: Install all components
-        run: mvn -B -DskipTests=true install
+      - name: Download tpch data
+        run: |
+          mkdir tpch_data && cd tpch_data
+          pwd
+          wget https://unioxfordnexus-my.sharepoint.com/:u:/g/personal/some3327_ox_ac_uk/ESytqq-8oyJNtF_dRq6aTrYBNtVacXhL5yP51Rf11A4v_A?e=1Lruh0
+          unzip pdq-tpch-test-data.zip
+          ls -l
 
-      - name: Test pdq common
-        run: mvn -B test -f common
-        env:
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-
-      - name: Test pdq datasources
-        run: mvn -B test -f datasources
-        env:
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
+#      - name: Install all components
+#        run: mvn -B -DskipTests=true install
+#
+#      - name: Test pdq common
+#        run: mvn -B test -f common
+#        env:
+#          POSTGRES_HOST: localhost
+#          POSTGRES_PORT: 5432
+#
+#      - name: Test pdq datasources
+#        run: mvn -B test -f datasources
+#        env:
+#          POSTGRES_HOST: localhost
+#          POSTGRES_PORT: 5432
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v2
