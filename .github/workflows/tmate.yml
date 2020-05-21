@@ -62,21 +62,28 @@ jobs:
           PGHOST: localhost
           PGPORT: 5432
 
-      - name: Install all components
-        run: mvn -B -DskipTests=true install
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v2
+        env:
+          PGPASSWORD: root
+          PGHOST: localhost
+          PGPORT: 5432
 
-      - name: Test pdq common
-        run: mvn -B test -f common
-        if: ${{ always() }}
-
-      - name: Test pdq datasources
-        run: mvn -B test -f datasources
-        if: ${{ always() }}
-
-      - name: Test pdq reasoning
-        run: mvn -B test -f reasoning
-        if: ${{ always() }}
-
-      - name: Test pdq cost
-        run: mvn -B test -f cost
-        if: ${{ always() }}
+#      - name: Install all components
+#        run: mvn -B -DskipTests=true install
+#
+#      - name: Test pdq common
+#        run: mvn -B test -f common
+#        if: ${{ always() }}
+#
+#      - name: Test pdq datasources
+#        run: mvn -B test -f datasources
+#        if: ${{ always() }}
+#
+#      - name: Test pdq reasoning
+#        run: mvn -B test -f reasoning
+#        if: ${{ always() }}
+#
+#      - name: Test pdq cost
+#        run: mvn -B test -f cost
+#        if: ${{ always() }}
