@@ -50,6 +50,7 @@ jobs:
       - name: Set up tpch database
         run: |
           sed -i 's+/path/to/pdq-tpch-test-data+/tmp+g' tpch-build-db.sql
+          echo localhost:5432:postgres:postgres:root >> pgpassfile
           echo localhost:5432:pdq:postgres:root >> pgpassfile
           echo localhost:5432:tpch:admin:admin >> pgpassfile
           export CONTAINERID=$(docker ps --filter "name=postgres" | awk 'NR==2 {print $1}')
