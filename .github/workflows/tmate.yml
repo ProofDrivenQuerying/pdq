@@ -29,20 +29,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-#      - name: Set up java 12
-#        uses: actions/setup-java@v1
-#        with:
-#          java-version: 12
-#          architecture: x64
+      - name: Set up java 12
+        uses: actions/setup-java@v1
+        with:
+          java-version: 12
+          architecture: x64
 
       - name: Download tpch data
         run: |
           wget -q --no-check-certificate -O pdq-tpch-test-data.zip "https://unioxfordnexus-my.sharepoint.com/:u:/g/personal/some3327_ox_ac_uk/ESytqq-8oyJNtF_dRq6aTrYBNtVacXhL5yP51Rf11A4v_A?e=1Lruh0&download=1"
           unzip pdq-tpch-test-data.zip
-          ls -l
-          cd pdq-tpch-test-data
-          ls -l
-          pwd
 
       - name: Set up tpch database
         run: |
@@ -57,20 +53,20 @@ jobs:
           PGHOST: localhost
           PGPORT: 5432
 
-#      - name: Install all components
-#        run: mvn -B -DskipTests=true install
-#
-#      - name: Test pdq common
-#        run: mvn -B test -f common
-#        env:
-#          POSTGRES_HOST: localhost
-#          POSTGRES_PORT: 5432
-#
-#      - name: Test pdq datasources
-#        run: mvn -B test -f datasources
-#        env:
-#          POSTGRES_HOST: localhost
-#          POSTGRES_PORT: 5432
+      - name: Install all components
+        run: mvn -B -DskipTests=true install
 
-#      - name: Setup tmate session
-#        uses: mxschmitt/action-tmate@v2
+      - name: Test pdq common
+        run: mvn -B test -f common
+
+      - name: Test pdq datasources
+        run: mvn -B test -f datasources
+
+      - name: Test pdq reasoning
+        run: mvn -B test -f reasoning
+
+      - name: Test pdq cost
+        run: mvn -B test -f cost
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v2
