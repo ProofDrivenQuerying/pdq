@@ -39,8 +39,8 @@ jobs:
         run: |
           mkdir tpch_data && cd tpch_data
           pwd
-          wget https://unioxfordnexus-my.sharepoint.com/:u:/g/personal/some3327_ox_ac_uk/ESytqq-8oyJNtF_dRq6aTrYBNtVacXhL5yP51Rf11A4v_A?e=1Lruh0
-          unzip pdq-tpch-test-data.zip
+          wget -O data.zip "https://unioxfordnexus-my.sharepoint.com/:u:/g/personal/some3327_ox_ac_uk/ESytqq-8oyJNtF_dRq6aTrYBNtVacXhL5yP51Rf11A4v_A?e=1Lruh0&download=1"
+          unzip data.zip
           ls -l
 
 #      - name: Install all components
