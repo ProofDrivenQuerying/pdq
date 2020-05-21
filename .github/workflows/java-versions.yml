@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java-version: [ 12, 9.5 ]
+        java-version: [ 14, 11 ]
 
     services:
       postgres:
