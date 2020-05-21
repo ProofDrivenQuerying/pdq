@@ -42,7 +42,7 @@ jobs:
 
       - name: Set up tpch database
         run: |
-          sed -i 's+/path/to+/home/runner/work/pdq/pdq+g' tpch-build-db.sql
+          sed -i 's+/path/to/pdq-tpch-test-data/++g' tpch-build-db.sql
           psql -U postgres -c "\i tpch-build-db.sql"
           psql -U postgres -c "\d+"
         working-directory: pdq-tpch-test-data
