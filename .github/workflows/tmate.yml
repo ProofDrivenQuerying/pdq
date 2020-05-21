@@ -52,6 +52,8 @@ jobs:
           sed -i 's+/path/to/pdq-tpch-test-data+/tmp+g' tpch-build-db.sql
           export CONTAINERID=$(docker ps --filter "name=postgres" | awk 'NR==2 {print $1}')
           docker cp . ${CONTAINERID}:/tmp
+          psql -U postgres -c "create user admin password 'admin'"
+          psql -U postgres -c "create database tpch"
           psql -U postgres -c "\i tpch-build-db.sql"
           psql -U postgres -c "\d+"
         working-directory: pdq-tpch-test-data
