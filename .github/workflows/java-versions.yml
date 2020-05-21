@@ -50,6 +50,8 @@ jobs:
       - name: Set up tpch database
         run: |
           sed -i 's+/path/to/pdq-tpch-test-data+/tmp+g' tpch-build-db.sql
+          echo localhost:5432:pdq:postgres:root >> pgpassfile
+          echo localhost:5432:tpch:admin:admin >> pgpassfile
           export CONTAINERID=$(docker ps --filter "name=postgres" | awk 'NR==2 {print $1}')
           docker cp . ${CONTAINERID}:/tmp
           psql -U postgres -c "create user admin password 'admin'"
@@ -61,7 +63,7 @@ jobs:
           psql -U admin tpch -c "\l"
         working-directory: pdq-tpch-test-data
         env:
-          PGPASSWORD: root
+          PGPASSFILE: pgpassfile
           PGHOST: localhost
           PGPORT: 5432
 
