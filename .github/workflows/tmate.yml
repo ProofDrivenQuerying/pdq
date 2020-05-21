@@ -43,13 +43,11 @@ jobs:
       - name: Set up tpch database
         run: |
           sed -i 's+/path/to+/home/runner/work/pdq/pdq+g' tpch-build-db.sql
-          echo localhost:5432:pdq:postgres:root >> pgpassfile
-          echo localhost:5432:tpch:postgres:root >> pgpassfile
           psql -U postgres -c "\i tpch-build-db.sql"
           psql -U postgres -c "\d+"
         working-directory: pdq-tpch-test-data
         env:
-          PGPASSFILE: pgpassfile
+          PGPASSWORD: root
           PGHOST: localhost
           PGPORT: 5432
 
