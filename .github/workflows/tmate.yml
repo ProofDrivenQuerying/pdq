@@ -44,18 +44,18 @@ jobs:
           ls -l
           pwd
 
-#      - name: Set up tpch database
-#        run: |
-#          less /home/runner/work/pdq/pdq/pdq-tpch-test-data/region.csv
-#          sed -i 's+/path/to+/home/runner/work/pdq/pdq+g' tpch-build-db.sql
-#          less tpch-build-db.sql
-#          psql -U postgres -c "\i tpch-build-db.sql"
-#          psql -U postgres -c "\d+"
-#        working-directory: pdq-tpch-test-data
-#        env:
-#          PGPASSWORD: root
-#          PGHOST: localhost
-#          PGPORT: 5432
+      - name: Set up tpch database
+        run: |
+          sed -i 's+/path/to/pdq-tpch-test-data+/tmp+g' tpch-build-db.sql
+          export CONTAINERID=$(docker ps --filter "name=postgres" | awk 'NR==2 {print $1}')
+          docker cp . ${CONTAINERID}:/tmp
+          psql -U postgres -c "\i tpch-build-db.sql"
+          psql -U postgres -c "\d+"
+        working-directory: pdq-tpch-test-data
+        env:
+          PGPASSWORD: root
+          PGHOST: localhost
+          PGPORT: 5432
 
 #      - name: Install all components
 #        run: mvn -B -DskipTests=true install
@@ -72,5 +72,5 @@ jobs:
 #          POSTGRES_HOST: localhost
 #          POSTGRES_PORT: 5432
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v2
+#      - name: Setup tmate session
+#        uses: mxschmitt/action-tmate@v2
