@@ -111,5 +111,9 @@
             <groupId>uk.ac.ox.cs.pdq</groupId>
             <artifactId>pdq-datasources</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
     </dependencies>
 </project>

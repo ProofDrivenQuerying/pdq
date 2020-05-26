@@ -15,3 +15,5 @@
 .pdq
 
 regression/**/*.csv
+
+TestResults*
