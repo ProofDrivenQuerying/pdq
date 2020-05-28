@@ -16,7 +16,6 @@ jobs:
 
     strategy:
       fail-fast: false
-      max-parallel: 1
       matrix:
         # Newest, and oldest supported java versions
         java-version: [ 14, 11 ]
@@ -96,5 +95,13 @@ jobs:
 
       - name: Test pdq cost
         run: mvn -B test -f cost
+        if: ${{ always() }}
+
+      - name: Test pdq planner
+        run: mvn -B test -f planner
+        if: ${{ always() }}
+
+      - name: Test pdq runtime
+        run: mvn -B test -f runtime
         if: ${{ always() }}
 
