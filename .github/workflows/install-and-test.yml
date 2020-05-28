@@ -45,10 +45,18 @@ jobs:
           java-version: ${{ matrix.java-version }}
           architecture: x64
 
+      - name: Restore cached tpch data
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: pdq-tpch-test-data
+          key: any-key-will-do
+
       - name: Download tpch data
         run: |
           wget -q --no-check-certificate -O pdq-tpch-test-data.zip "https://unioxfordnexus-my.sharepoint.com/:u:/g/personal/some3327_ox_ac_uk/ESytqq-8oyJNtF_dRq6aTrYBNtVacXhL5yP51Rf11A4v_A?e=1Lruh0&download=1"
           unzip pdq-tpch-test-data.zip
+        if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Set up tpch database & user
         run: |
