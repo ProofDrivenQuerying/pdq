@@ -69,6 +69,9 @@ jobs:
           export CONTAINERID=$(docker ps --filter "name=postgres" | awk 'NR==2 {print $1}')
           docker cp . ${CONTAINERID}:/tmp
           psql -U admin tpch -c "\i tpch-build-db.sql"
+          psql -U admin tpch -c "CREATE VIEW region_nation AS SELECT n.n_nationkey as nation_key, n_name as nation_name, r.r_regionkey as region_key, r_name as region_name FROM nation as n, region as r WHERE n.n_regionkey = r.r_regionkey"
+          psql -U admin tpch -c "CREATE VIEW order_customer AS SELECT c.c_name as cname, c.c_address as caddress, c.c_nationkey as cnation, c.c_acctbal as cactbal, o.o_orderpriority as opriority, o.o_clerk as oclerk, p.p_name as pname, p.p_brand as pbrand, p.p_type as ptype, l.l_extendedprice as lextendedprice, l.l_discount as ldiscount, l.l_tax as ltax, l.l_returnflag as lflag FROM customer as c, orders as o, lineitem as l, part as p WHERE o.o_orderkey = l.l_orderkey AND o.o_custkey = c.c_custkey AND l.l_partkey = p.p_partkey"
+          psql -U admin tpch -c "CREATE VIEW order_supplier AS SELECT s.s_name as sname, s.s_address as saddress, s.s_nationkey as snation, s.s_acctbal as sactbal, o.o_orderpriority as opriority, o.o_clerk as oclerk, p.p_name as pname, p.p_brand as pbrand, p.p_type as ptype, l.l_extendedprice as lextendedprice, l.l_discount as ldiscount, l.l_tax as ltax, l.l_returnflag as lflag FROM supplier as s, orders as o, lineitem as l, part as p WHERE o.o_orderkey = l.l_orderkey AND l.l_partkey = p.p_partkey AND l.l_suppkey = s.s_suppkey"
           psql -U admin tpch -c "\d+"
         working-directory: pdq-tpch-test-data
         env:
