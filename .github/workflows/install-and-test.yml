@@ -18,11 +18,9 @@ jobs:
       fail-fast: false
       matrix:
         # Newest, and oldest supported java versions
-        java-version: [ 14 ]
-#        java-version: [ 14, 11 ]
+        java-version: [ 14, 11 ]
         # Newest, and oldest supported postgres versions
-        postgres-version: [ 12 ]
-#        postgres-version: [ 12, 9.5 ]
+        postgres-version: [ 12, 9.5 ]
 
     services:
       postgres:
@@ -95,9 +93,9 @@ jobs:
         run: mvn -B test -f common
         if: ${{ success() || failure() }}
 
-#      - name: Test pdq datasources
-#        run: mvn -B test -f datasources
-#        if: ${{ success() || failure() }}
+      - name: Test pdq datasources
+        run: mvn -B test -f datasources
+        if: ${{ success() || failure() }}
 
       - name: Test pdq reasoning
         run: mvn -B test -f reasoning
