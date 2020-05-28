@@ -83,25 +83,25 @@ jobs:
 
       - name: Test pdq common
         run: mvn -B test -f common
-        if: ${{ always() }}
+        if: ${{ success() || failure() }}
 
       - name: Test pdq datasources
         run: mvn -B test -f datasources
-        if: ${{ always() }}
+        if: ${{ success() || failure() }}
 
       - name: Test pdq reasoning
         run: mvn -B test -f reasoning
-        if: ${{ always() }}
+        if: ${{ success() || failure() }}
 
       - name: Test pdq cost
         run: mvn -B test -f cost
-        if: ${{ always() }}
+        if: ${{ success() || failure() }}
 
       - name: Test pdq planner
         run: mvn -B test -f planner
-        if: ${{ always() }}
+        if: ${{ success() || failure() }}
 
       - name: Test pdq runtime
         run: mvn -B test -f runtime
-        if: ${{ always() }}
+        if: ${{ success() || failure() }}
 
