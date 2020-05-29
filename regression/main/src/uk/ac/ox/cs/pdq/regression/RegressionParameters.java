@@ -77,7 +77,7 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	/** The expected cardinality. */
 	@Parameter(description =
 			"The expected cardinality of a plan execution result.\n"
-			+ "This can be used for instance when there is way to execute the "
+			+ "This can be used for instance when there is no way to execute the "
 			+ "input query to obtain the ground truth.",
 			defaultValue = "-1")
 	private Integer expectedCardinality = -1;
@@ -85,7 +85,7 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	/** The skip runtime. */
 	@Parameter(description =
 			"If true, skip the runtime test.\n"
-			+ "This can be used for case for actually testing runtime can be "
+			+ "This can be used for cases when testing runtime can be "
 			+ "costly (e.g. web services).",
 			defaultValue = "false")
 	private Boolean skipRuntime = false;
