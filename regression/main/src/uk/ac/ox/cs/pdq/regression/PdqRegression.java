@@ -34,7 +34,6 @@ import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.tuple.Table;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -55,9 +54,9 @@ import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
- * Main entry point to use PDQ. Runs regression tests or other folders with schema and query xml files.<br>
+ * Main entry point for regression tests. Runs regression tests or other folders with schema and query xml files.<br>
  * Usage: <br>
- * PDQ -m [mode] -i [folder]
+ * PdqRegression -m [mode] -i [folder]
  * <br>Folder: either a folder with a schema.xml and query.xml file in it, or a root directory containing many of such sub folders.<br>
  * Available modes: <br>
  *  - planner: creates the expected plan xml file. If it is already exists compares the result with it.<br>
@@ -67,7 +66,7 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
  * @author gabor
  *
  */
-public class PDQ {
+public class PdqRegression {
 
 	protected PrintStream out = System.out;
 
@@ -389,7 +388,7 @@ public class PDQ {
 	 * @param args String[]
 	 */
 	public static void main(String... args) {
-		new PDQ(args);
+		new PdqRegression(args);
 	}
 
 	private void printStats(String message) {
@@ -407,7 +406,7 @@ public class PDQ {
 	 * the planner on them.
 	 * @param args String[]
 	 */
-	private PDQ(String... args) {
+	private PdqRegression(String... args) {
 		JCommander jc = new JCommander(this);
 		jc.setProgramName(PROGRAM_NAME);
 		try {

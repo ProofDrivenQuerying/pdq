@@ -33,7 +33,7 @@ package uk.ac.ox.cs.pdq.regression;
  	-- runtime, which is commented out pending resolution of the runtime changes.
 
 	Top-level files include:
-	- PDQ.java which is the entry point for the regression package.
+	- PdqRegression.java which is the entry point for the regression package.
 	- RegressionTest.java which runs regression tests.
  	
 */
