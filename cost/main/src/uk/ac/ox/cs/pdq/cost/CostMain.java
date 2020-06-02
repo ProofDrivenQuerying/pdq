@@ -36,7 +36,7 @@ public class CostMain {
 		description ="Path to the input schema definition file (xml).")
 	private String schemaPath;
 	
-	/** The schema path. */
+	/** The plan path. */
 	@Parameter(names = { "-p", "--plan" }, required = true,
 			 validateWith=FileValidator.class,
 		description ="Path to the input plan definition file (xml).")
