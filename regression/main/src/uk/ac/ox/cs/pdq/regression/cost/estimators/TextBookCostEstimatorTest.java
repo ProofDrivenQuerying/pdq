@@ -26,19 +26,19 @@ import uk.ac.ox.cs.pdq.regression.utils.PlannerTestUtilities;
  */
 public class TextBookCostEstimatorTest{
 
-	/** The shema path. */
+	
 	private static String SHEMA_PATH = "test/cost/";
 
-	/** The plan path. */
+	
 	private static String PLAN_PATH = "test/cost/blackbox/";
 	
-	/** The catalog. */
+	
 	private static String CATALOG = "test/cost/erspi/catalog/catalog.properties";
 
-	/** The schemata. */
+
 	String schemata = "schema_bio.xml";
 
-	/** The plans. */
+	
 	String[] plans = {
 			"plan_bio_1.xml",
 			"plan_bio_2.xml",
@@ -57,35 +57,31 @@ public class TextBookCostEstimatorTest{
 			"plan_bio_15.xml"
 	};
 
-	/** The canonical names. */
+	
 	boolean canonicalNames = true;
 
-	/** The driver. */
+	
 	String driver = null;
 
-	/** The url. */
+	
 	String url = "jdbc:mysql://localhost/";
 
-	/** The database. */
 	String database = "pdq_chase";
 
-	/** The username. */
+	
 	String username = "root";
 
-	/** The password. */
+	
 	String password ="root";
 
-	/**
-	 * Prepare.
-	 */
+	
+	
 	@Before
 	public void prepare() {
 
 	}
 
-	/**
-	 * Test.
-	 */
+	
 	@Test
 	public void test() {
 		for(int i = 0; i < this.plans.length; ++i) {
