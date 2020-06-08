@@ -42,7 +42,7 @@ public abstract class Parameters extends Properties {
 	private static final long serialVersionUID = -722499380053104769L;
 
 	/**
-	 * The Interface Parameter.
+	 * 
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited @Target(ElementType.FIELD)
@@ -64,24 +64,24 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
-	 * The Interface EnumParameterValue.
+	 * 
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited @Target(ElementType.FIELD)
 	public static @interface EnumParameterValue {
 		
 		/**
-		 * Description.
+		 * 
 		 *
 		 * @return the string
 		 */
 		public abstract String description();
 	}
 
-	/** Logger. */
+	/** */
 	private static Logger log = Logger.getLogger(Parameters.class);
 
-	/**  Properties file name. */
+	/**   */
 	static final String DEFAULT_CONFIG_FILE_NAME = "pdq.properties";
 
 	/**  Properties file path. */
@@ -352,7 +352,7 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
-	 * Gets the all fields.
+	 *
 	 *
 	 * @return Collection<Field>
 	 */
@@ -370,7 +370,7 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
-	 * To string.
+	 * 
 	 *
 	 * @return a string containing of the parameters and the current values,
 	 * as they would appear in the file, i.e. the returned String can be used
@@ -382,7 +382,7 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
-	 * To string.
+	 * 
 	 *
 	 * @param verbose the verbose
 	 * @return a string containing of the parameters and the current values,
@@ -456,7 +456,7 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
-	 * Combine.
+	 * C
 	 *
 	 * @param params Parameters[]
 	 * @return Parameters
@@ -498,7 +498,7 @@ public abstract class Parameters extends Properties {
 		}
 
 		/**
-		 * Sets the.
+		 * 
 		 *
 		 * @param k Object
 		 * @param v Object
@@ -516,7 +516,7 @@ public abstract class Parameters extends Properties {
 		}
 
 		/**
-		 * Gets the.
+		 * 
 		 *
 		 * @param k Object
 		 * @return Object
@@ -555,7 +555,7 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
-	 * Gets the seed.
+	 * 
 	 *
 	 * @return Integer
 	 */
@@ -564,7 +564,7 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
-	 * Sets the seed.
+	 * 
 	 *
 	 * @param seed Number
 	 */
@@ -573,7 +573,7 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
-	 * Gets the version.
+	 * 
 	 *
 	 * @return the version of the planner code, as given by Maven
 	 */
