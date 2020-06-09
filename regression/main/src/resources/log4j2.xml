@@ -2,47 +2,45 @@
 <Configuration monitorInterval="600">
     <Appenders>
         <Console name="CONSOLE" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d %-5p [%t] (%F:%L) - %m%n" />
+            <PatternLayout pattern="%d %-5p [%t] (%F:%L) - %m%n"/>
         </Console>
-		<RollingFile name="FILE" fileName="log/pdq-regression.log"
-			filePattern="log/pdq-regression-%d{MM-dd-yyyy}.log.gz" ignoreExceptions="false">
-			<PatternLayout>
-				<pattern>%d %-5p [%t] (%F:%L) - %m%n</pattern>
-			</PatternLayout>
- 			<TimeBasedTriggeringPolicy />
- 		</RollingFile>
+        <RollingFile name="FILE" fileName="log/pdq-regression.log"
+                     filePattern="log/pdq-regression-%d{MM-dd-yyyy}.log.gz" ignoreExceptions="false">
+            <PatternLayout>
+                <pattern>%d %-5p [%t] (%F:%L) - %m%n</pattern>
+            </PatternLayout>
+            <TimeBasedTriggeringPolicy/>
+        </RollingFile>
     </Appenders>
     <Loggers>
-    <!-- 
         <Logger name="uk.ac.ox.cs.pdq" level="warn" additivity="false">
-            <AppenderRef ref="CONSOLE" />
+            <AppenderRef ref="CONSOLE"/>
         </Logger>
         <Logger name="uk.ac.ox.cs.pdq.cost" level="info" additivity="false">
-            <AppenderRef ref="CONSOLE" />
+            <AppenderRef ref="CONSOLE"/>
         </Logger>
         <Logger name="uk.ac.ox.cs.pdq.runtime" level="info" additivity="false">
-            <AppenderRef ref="CONSOLE" />
+            <AppenderRef ref="CONSOLE"/>
         </Logger>
-        
+
         <Logger name="uk.ac.ox.cs.pdq.planner" level="info" additivity="false">
-            <AppenderRef ref="CONSOLE" />
+            <AppenderRef ref="CONSOLE"/>
         </Logger>
 
         <Logger name="uk.ac.ox.cs.pdq.test" level="info" additivity="false">
-            <AppenderRef ref="CONSOLE" />
+            <AppenderRef ref="CONSOLE"/>
         </Logger>
 
         <Logger name="uk.ac.ox.cs.pdq.services" level="info" additivity="false">
-            <AppenderRef ref="CONSOLE" />
+            <AppenderRef ref="CONSOLE"/>
         </Logger>
 
         <Logger name="org.apache" level="off" additivity="false">
-            <AppenderRef ref="CONSOLE" />
+            <AppenderRef ref="CONSOLE"/>
         </Logger>
-      
+
         <Root level="info">
-            <AppenderRef ref="CONSOLE" />
+            <AppenderRef ref="CONSOLE"/>
         </Root>
-     -->
     </Loggers>
 </Configuration>

@@ -12,15 +12,12 @@
  			<TimeBasedTriggeringPolicy />
  		</RollingFile>
     </Appenders>
-    
-    <!-- 
-    <Loggers>
-        <Logger name="uk.ac.ox.cs.pdq.reasoning" level="trace">
-            <AppenderRef ref="CONSOLE" />
-        </Logger>
-        <Root level="trace">
-            <AppenderRef ref="FILE" />
-        </Root>
-    </Loggers>
-     -->
+	<Loggers>
+		<Logger name="uk.ac.ox.cs.pdq" level="WARN">
+			<AppenderRef ref="CONSOLE" />
+		</Logger>
+		<Root level="INFO">
+			<AppenderRef ref="FILE" />
+		</Root>
+	</Loggers>
 </Configuration>
