@@ -29,7 +29,6 @@ public class DatabaseParameters extends Parameters {
 	static final int DEFAULT_NUMBER_OF_THREADS = 10;
 	static final String NUMBER_OF_THREADS_PROPERTY = "number.of.threads";
 
-	public static final DatabaseParameters MySql = getDefaultForMySql();
 	public static final DatabaseParameters Postgres = getDefaultForPostgres();
 	public static final DatabaseParameters PostgresLinux = getDefaultForLinuxPostgres();
 	public static final DatabaseParameters Empty = new DatabaseParameters();
@@ -77,17 +76,7 @@ public class DatabaseParameters extends Parameters {
 	private DatabaseParameters() {
 		super(new File(DEFAULT_CONFIG_FILE_PATH), false, false);
 	}
-	private static DatabaseParameters getDefaultForMySql() {
-		DatabaseParameters dbParam = new DatabaseParameters();
-		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
-		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-		dbParam.setDatabaseName("pdq");
-		dbParam.setDatabaseUser("root");
-		dbParam.setDatabasePassword("root");
-		dbParam.setNumberOfThreads(DEFAULT_NUMBER_OF_THREADS);
-		return dbParam; 
-	}
-	
+
 	private static DatabaseParameters getDefaultForPostgres() {
 		DatabaseParameters dbParam = new DatabaseParameters();
 		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
