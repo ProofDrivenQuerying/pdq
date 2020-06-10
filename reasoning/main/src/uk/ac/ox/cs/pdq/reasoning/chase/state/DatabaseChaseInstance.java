@@ -250,7 +250,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	}
 
 	/*
-	 * ??? TOCOMMENT: What does false here mean? 
+	 * really this checks whether there is a match
 	 * 
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance#chaseStep(java.util.
 	 * Collection)
@@ -761,7 +761,7 @@ public class DatabaseChaseInstance implements ChaseInstance {
 	}
 
 	/**
-	 * Skolemize mapping.
+	 * 
 	 *
 	 * @param mapping the mapping
 	 * @return 		If canonicalNames is TRUE returns a copy of the input mapping
