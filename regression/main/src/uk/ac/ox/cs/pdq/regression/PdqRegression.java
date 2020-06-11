@@ -25,6 +25,8 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 
+import org.apache.log4j.Logger;
+
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
@@ -83,6 +85,10 @@ public class PdqRegression {
 
 	/**  File name where the expected plan must be stored in a test case directory. */
 	private static final String EXPECTED_PLAN_FILE = "expected-plan.xml";
+
+	/**  File name where the generated plan is stored in a test case directory, if the generated plan is not identical
+	 *   or equivalent to the expected plan. */
+	private static final String GENERATED_PLAN_FILE = "generated-plan.xml";
 
 	private static final String CATALOG_FILE = "catalog.properties";
 
@@ -305,10 +311,12 @@ public class PdqRegression {
 				System.out.println("No previous plan found, but there is a new plan");
 			statsMsg+="No previous plan found.";
 		}
-		if (observation != null && (expectedPlan == null || expectedCost.greaterThan(observation.getValue())) ) {
+		if (observation != null && (expectedPlan == null || !(expectedCost.equals(observation.getValue()))) ) {
 			this.out.print("\tWriting plan: " + observation + " " + observation.getValue());
-			CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + EXPECTED_PLAN_FILE),  observation.getKey(), observation.getValue());
-			statsMsg+= "New Plan written.";
+			CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + GENERATED_PLAN_FILE),  observation.getKey(), observation.getValue());
+			statsMsg+= "Observed and expect plan costs differ. New Plan written.";
+			Logger.getLogger(this.getClass()).error(statsMsg);
+			isFailed = true;
 		}
 		if (observation!=null && observation.getValue()!= null)
 			statsMsg+= "Cost: " + observation.getValue();
