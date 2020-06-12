@@ -72,7 +72,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;
 
 	/**
-	 * Constructor for PlannerParameters using default configuration file path.
+	 * Constructor for CostParameters using default configuration file path.
 	 */
 	public CostParameters() {
 		this(new File(DEFAULT_CONFIG_FILE_PATH), false, false);
@@ -81,7 +81,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	/**
 	 * Gets the version.
 	 *
-	 * @return the version of the planner code, as given by Maven
+	 * @return the version of the code, as given by Maven
 	 */
 	public static String getVersion() {
 	    String path = "/cost.version";
@@ -100,7 +100,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * Constructor for PlannerParameters.
+	 * Constructor for CostParameters.
 	 * @param config path to the configuration file to read
 	 */
 	public CostParameters(File config) {
@@ -108,7 +108,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Constructor for PlannerParameters.
+	 * Constructor for CostParameters.
 	 * @param config path to the configuration file to read
 	 * @param verbose if true, param loading problem will be reported
 	 */
@@ -117,7 +117,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Constructor for PlannerParameters.
+	 * Constructor for CostParameters.
 	 * @param config path to the configuration file to read
 	 * @param verbose if true, param loading problem will be reported
 	 * @param strict if true, param loading problem will throw an exception
@@ -127,7 +127,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Constructor for PlannerParameters.
+	 * Constructor for CostParameters.
 	 * @param config path to the configuration file to read
 	 * @param delay true if the loading of the given config file should be delayed
 	 * @param verbose if true, param loading problem will be reported
@@ -249,7 +249,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * Gets the cost type.
+	 * 
 	 *
 	 * @return CostTypes
 	 */
@@ -258,7 +258,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the cost type.
+	 * 
 	 *
 	 * @param costType String
 	 */
@@ -272,7 +272,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the cost type.
+	 * 
 	 *
 	 * @param costType CostTypes
 	 */
@@ -281,7 +281,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * Gets the cardinality estimation type.
+	 * 
 	 *
 	 * @return CardinalityEstimationTypes
 	 */
@@ -290,7 +290,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the cardinality estimation type.
+	 * 
 	 *
 	 * @param cardEstType String
 	 */
@@ -304,7 +304,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the cardinality estimation type.
+	 * 
 	 *
 	 * @param cardEstType CardinalityEstimationTypes
 	 */
@@ -313,7 +313,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * The Enum CostTypes.
+	 * 
 	 */
 	public static enum CostTypes {
 		
@@ -345,7 +345,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * The Enum CardinalityEstimationTypes.
+	 * 
 	 */
 	public static enum CardinalityEstimationTypes {
 		
