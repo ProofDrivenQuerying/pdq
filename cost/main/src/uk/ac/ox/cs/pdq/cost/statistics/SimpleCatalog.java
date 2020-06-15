@@ -94,6 +94,8 @@ public class SimpleCatalog implements Catalog{
 	private final Map<Pair<Relation,AccessMethodDescriptor>,Integer> numberOfOutputTuplesPerInput;
 	/** The response time of each access method*/
 	private final Map<Pair<Relation,AccessMethodDescriptor>,Double> costs;
+	/** The response time of each access method, with lookup by name*/
+	private final Map<Pair<String,String>,Double> costsLookupByName;
 	/** The selectivity of each attribute*/
 	private final Map<Pair<Relation,Attribute>,Double> columnSelectivity;
 	/** The frequency histogram of each attribute*/
@@ -124,6 +126,7 @@ public class SimpleCatalog implements Catalog{
 		this.schema = schema;
 		this.numberOfOutputTuplesPerInput = new HashMap<>();
 		this.costs = new HashMap<>();
+		this.costsLookupByName = new HashMap<>();
 		this.columnSelectivity = new HashMap<>();
 		this.cardinalities = new HashMap<>();
 		this.columnCardinalities = new HashMap<>();
@@ -263,7 +266,9 @@ public class SimpleCatalog implements Catalog{
 				Relation r = schema.getRelation(relation);
 				AccessMethodDescriptor b = r.getAccessMethod(binding);
 				if(b != null) {
-					this.costs.put( Pair.of(r,b), Double.parseDouble(cost));
+					Double numeric_cost = Double.parseDouble(cost);
+					this.costs.put(Pair.of(r, b), numeric_cost);
+					this.costsLookupByName.put(Pair.of(r.getName(), b.getName()), numeric_cost);
 					log.info("RELATION: " + relation + " BINDING: " + binding + " COST: " + cost);
 				}
 				else {
@@ -309,6 +314,41 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	/**
+	 * Given this.costs, populate this.costsLookupByName to match.
+	 *
+	 * The former is
+	 *     Map<Pair<Relation,AccessMethodDescriptor>,Double>
+	 * while the latter is
+	 *     Map<Pair<String,String>,Double>
+	 *
+	 * The more permissive lookup allows, for instance, a base Relation to match a derived relation such as a View.
+	 */
+	private void updateCostsLookupByName() {
+		for (Map.Entry<Pair<Relation,AccessMethodDescriptor>,Double> entry : this.costs.entrySet()) {
+			Pair<Relation,AccessMethodDescriptor> key = entry.getKey();
+			Double value = entry.getValue();
+
+			this.costsLookupByName.put(Pair.of(key.getLeft().getName(), key.getRight().getName()), value);
+		}
+	}
+
+	/**
+	 * Query this.costs for the cost given the relation and access method.
+	 *
+	 * If the lookup fails, try looking up by name in this.costsLookupByName.
+	 */
+	private Double getCostFromMap(Relation r, AccessMethodDescriptor amd) {
+
+		Double cost = this.costs.get(Pair.of(r, amd));
+
+		if (cost == null) {
+			cost = this.costsLookupByName.get(Pair.of(r.getName(), amd.getName()));
+		}
+
+		return cost;
+	}
+
+	/**
 	 * Instantiates a new simple catalog.
 	 *
 	 * @param schema the schema
@@ -338,6 +378,8 @@ public class SimpleCatalog implements Catalog{
 		this.cardinalities = Maps.newHashMap(cardinalities);
 		this.numberOfOutputTuplesPerInput = Maps.newHashMap(erpsi);
 		this.costs = Maps.newHashMap(responseTimes);
+		this.costsLookupByName = new HashMap<>();
+		this.updateCostsLookupByName();
 		this.columnSelectivity = Maps.newHashMap(columnSelectivity);
 		this.columnCardinalities = Maps.newHashMap(columnCardinalities);
 		this.frequencyMaps = Maps.newHashMap(frequencyMaps);
@@ -527,7 +569,7 @@ public class SimpleCatalog implements Catalog{
 	public double getCost(Relation relation, AccessMethodDescriptor method) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(method);
-		Double cost = this.costs.get(Pair.of(relation, method));
+		Double cost = this.getCostFromMap(relation, method);
 
 		if(cost == null) {
 			log.warn("RELATION: " + relation.getName() + " ACCESS METHOD: " + method + " is using the DEFAULT_COST: " + DEFAULT_COST);
@@ -553,7 +595,7 @@ public class SimpleCatalog implements Catalog{
 				log.info("RELATION: " + relation.getName() + " ACCESS: " + method + " INPUTS: " + inputs + " ERPSI: " + erpsi);
 			}
 		}
-		Double cost = this.costs.get(Pair.of(relation, method));
+		Double cost = this.getCostFromMap(relation, method);
 		if(cost == null) {
 			log.warn("RELATION: " + relation.getName() + " ACCESS METHOD: " + method + " is using the DEFAULT_COST: " + DEFAULT_COST);
 			return DEFAULT_COST;
