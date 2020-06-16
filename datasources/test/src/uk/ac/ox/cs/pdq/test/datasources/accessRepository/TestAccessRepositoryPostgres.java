@@ -42,6 +42,8 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 	Properties properties;
 	boolean print = false;
 
+	private final static String accessesDir = "test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/";
+
 	public TestAccessRepositoryPostgres() {
 		properties = new Properties();
 		properties.setProperty("url", "jdbc:postgresql://localhost:5432/");
@@ -76,7 +78,7 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 			Attribute.create(Integer.class, "nationKey"), Attribute.create(Integer.class, "regionKey"), };
 
 	// Attribute mapping
-	Map<Attribute, Attribute> attrMap_nation = ImmutableMap.<Attribute, Attribute>of(
+	Map<Attribute, Attribute> attrMap_nation = ImmutableMap.of(
 			Attribute.create(Integer.class, "N_NATIONKEY"), Attribute.create(Integer.class, "nationKey"),
 			Attribute.create(String.class, "N_NAME"), Attribute.create(String.class, "name"),
 			Attribute.create(Integer.class, "N_REGIONKEY"), Attribute.create(Integer.class, "regionKey"));
@@ -92,6 +94,9 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 		SqlAccessMethod target;
 		Integer[] inputs;
 		Relation relation;
+
+		final String referenceFile = accessesDir + "dbAccessMethod.xml";
+		final String generatedFile = accessesDir + "dbAccessMethodOut.xml";
 
 		relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(this.attrs_nation.clone());
@@ -113,18 +118,13 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 		// The NATION table in the tpch database should have 25 facts.
 		Assert.assertEquals(25, counter);
 		try {
-			DbIOManager.exportAccessMethod(target, new File(
-					"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml"));
+			DbIOManager.exportAccessMethod(target, new File(generatedFile));
 		} catch (Throwable t) {
 			t.printStackTrace();
 			t.printStackTrace();
 		}
-		long goodLength = new File(
-				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethod.xml")
-						.length();
-		long newLength = new File(
-				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml")
-						.length();
+		long goodLength = new File(referenceFile).length();
+		long newLength = new File(generatedFile).length();
 		
 		
 		//There is a file path in the exported xml file. That path
@@ -135,8 +135,7 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 		Assert.assertTrue(goodLength - 30 < newLength);
 
 		target.close();
-		new File("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethodOut.xml")
-				.delete();
+		new File(generatedFile).delete();
 	}
 
 	/**
@@ -150,6 +149,9 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 		InMemoryAccessMethod target;
 		Integer[] inputs;
 		Relation relation;
+
+		final String referenceFile = accessesDir + "InMemoryAccessMethod.xml";
+		final String generatedFile = accessesDir + "InMemoryAccessMethodOut.xml";
 
 		relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(this.attrs_nation.clone());
@@ -177,18 +179,13 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 		}
 		Assert.assertEquals(25, counter);
 		try {
-			DbIOManager.exportAccessMethod(target, new File(
-					"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml"));
+			DbIOManager.exportAccessMethod(target, new File(generatedFile));
 		} catch (Throwable t) {
 			t.printStackTrace();
 			t.printStackTrace();
 		}
-		long goodLength = new File(
-				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethod.xml")
-						.length();
-		long newLength = new File(
-				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml")
-						.length();
+		long goodLength = new File(referenceFile).length();
+		long newLength = new File(generatedFile).length();
 		//There is a file path in the exported xml file. That path
 		// depends on the user who runs the test. Therefore we cannot know how large the
 		// new file should be exactly, but it should be in a 30 character range to the
@@ -198,9 +195,7 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 		Assert.assertTrue(goodLength + 120 > newLength);
 		Assert.assertTrue(goodLength <= newLength);
 		target.close();
-		new File(
-				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml")
-						.delete();
+		new File(generatedFile).delete();
 	}
 
 	/**
@@ -214,6 +209,9 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 		Integer[] inputs;
 		Relation relation;
 
+		final String referenceFile = accessesDir + "XmlWebAccessMethod.xml";
+		final String generatedFile = accessesDir + "XmlWebAccessMethodOut.xml";
+
 		relation = Mockito.mock(Relation.class);
 		when(relation.getAttributes()).thenReturn(this.attrs_nation.clone());
 		String name = "NATION";
@@ -223,18 +221,13 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 		target = new XmlWebService("NATION_MEM", this.attrs_N, inputs, relation, this.attrMap_nation);
 		((XmlWebService)target).setUrl("http://pdq-webapp.cs.ox.ac.uk:80/webapp/servlets/servlet/NationInput");
 		try {
-			DbIOManager.exportAccessMethod(target, new File(
-					"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/XmlWebAccessMethodOut.xml"));
+			DbIOManager.exportAccessMethod(target, new File(generatedFile));
 		} catch (Throwable t) {
 			t.printStackTrace();
 			throw t;
 		}
-		long goodLength = new File(
-				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/XmlWebAccessMethod.xml")
-						.length();
-		long newLength = new File(
-				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/XmlWebAccessMethodOut.xml")
-						.length();
+		long goodLength = new File(referenceFile).length();
+		long newLength = new File(generatedFile).length();
 		
 		
 		//There is a file path in the exported xml file. That path
@@ -244,21 +237,18 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 		Assert.assertTrue(goodLength + 60 > newLength);
 		Assert.assertTrue(goodLength - 60 < newLength);
 		target.close();
-		
-		new File(
-				"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethodOut.xml")
-						.delete();
+
+		new File(generatedFile).delete();
 		
 		try {
-			ExecutableAccessMethod imported = DbIOManager.importAccess(new File(
-					"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/XmlWebAccessMethod.xml"));
-			Assert.assertEquals("http://pdq-webapp.cs.ox.ac.uk:80/webapp/servlets/servlet/NationInput", ((XmlWebService)imported).getUrl());
+			ExecutableAccessMethod imported = DbIOManager.importAccess(new File(referenceFile));
+			Assert.assertNotNull(imported);
+			final String serviceUrl = "http://pdq-webapp.cs.ox.ac.uk:80/webapp/servlets/servlet/NationInput";
+			Assert.assertEquals(serviceUrl, ((XmlWebService)imported).getUrl());
 		} catch (Throwable t) {
 			t.printStackTrace();
 			throw t;
 		}
-		
-		
 	}
 
 	/**
@@ -271,8 +261,8 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 
 		SqlAccessMethod target = null;
 		try {
-			target = (SqlAccessMethod) DbIOManager.importAccess(new File(
-					"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/dbAccessMethod.xml"));
+			final String accessMethodXml = accessesDir + "dbAccessMethod.xml";
+			target = (SqlAccessMethod) DbIOManager.importAccess(new File(accessMethodXml));
 		} catch (Throwable t) {
 			t.printStackTrace();
 			throw t;
@@ -301,8 +291,8 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 
 		InMemoryAccessMethod target = null;
 		try {
-			target = (InMemoryAccessMethod) DbIOManager.importAccess(new File(
-					"test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses/InMemoryAccessMethod.xml"));
+			final String accessMethodXml = accessesDir + "InMemoryAccessMethod.xml";
+			target = (InMemoryAccessMethod) DbIOManager.importAccess(new File(accessMethodXml));
 		} catch (Throwable t) {
 			t.printStackTrace();
 			t.printStackTrace();
@@ -330,8 +320,7 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 	 */
 	@Test
 	public void testAccessRepositoryDb() throws Exception {
-		AccessRepository repo = AccessRepository
-				.getRepository("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses");
+		AccessRepository repo = AccessRepository.getRepository(accessesDir);
 		ExecutableAccessMethod accessMethod = repo.getAccess("NATION_DB");
 		testReadingData(accessMethod);
 		repo.closeAllAccesses();
@@ -340,8 +329,7 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 
 	@Test
 	public void testAccessRepositoryMem() throws Exception {
-		AccessRepository repo = AccessRepository
-				.getRepository("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses");
+		AccessRepository repo = AccessRepository.getRepository(accessesDir);
 		ExecutableAccessMethod accessMethod = repo.getAccess("NATION_MEM");
 		testReadingData(accessMethod);
 		repo.closeAllAccesses();
@@ -350,8 +338,7 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 
 	@Test
 	public void testAccessRepositoryWeb() throws Exception {
-		AccessRepository repo = AccessRepository
-				.getRepository("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses");
+		AccessRepository repo = AccessRepository.getRepository(accessesDir);
 		ExecutableAccessMethod accessMethod = repo.getAccess("NATION_WEB");
 		testReadingData(accessMethod);
 		repo.closeAllAccesses();
