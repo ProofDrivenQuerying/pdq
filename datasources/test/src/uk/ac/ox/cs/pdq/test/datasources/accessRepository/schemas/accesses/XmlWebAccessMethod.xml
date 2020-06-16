@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Access access-type="XML_WEB_ACCESS_METHOD" name="NATION_WEB" relation-name="NATION">
-    <attribute name="N_NATIONKEY" type="java.lang.Integer" input="false" mapsToRelationAttribute="nationKey"/>
-    <attribute name="N_NAME" type="java.lang.String" input="false" mapsToRelationAttribute="name"/>
-    <attribute name="N_REGIONKEY" type="java.lang.Integer" input="false" mapsToRelationAttribute="regionKey"/>
-    <attribute name="N_COMMENT" type="java.lang.String" input="false"/>
+    <attribute name="n_nationkey" type="java.lang.Integer" input="false" mapsToRelationAttribute="nationKey"/>
+    <attribute name="n_name" type="java.lang.String" input="false" mapsToRelationAttribute="name"/>
+    <attribute name="n_regionkey" type="java.lang.Integer" input="false" mapsToRelationAttribute="regionKey"/>
+    <attribute name="n_comment" type="java.lang.String" input="false"/>
     <url-template>http://pdq-webapp.cs.ox.ac.uk:80/webapp/servlets/servlet/NationInput</url-template>
 </Access>
