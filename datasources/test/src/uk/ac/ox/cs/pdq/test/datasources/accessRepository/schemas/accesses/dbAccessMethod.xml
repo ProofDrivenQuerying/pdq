@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Access access-type="DB_ACCESS_METHOD" name="NATION" relation-name="NATION">
+<Access access-type="DB_ACCESS_METHOD" name="NATION_DB" relation-name="NATION">
     <attribute name="N_NATIONKEY" type="java.lang.Integer" input="false" mapsToRelationAttribute="nationKey"/>
     <attribute name="N_NAME" type="java.lang.String" input="false" mapsToRelationAttribute="name"/>
     <attribute name="N_REGIONKEY" type="java.lang.Integer" input="false" mapsToRelationAttribute="regionKey"/>

@@ -329,16 +329,33 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testAccessRepository() throws Exception {
+	public void testAccessRepositoryDb() throws Exception {
 		AccessRepository repo = AccessRepository
 				.getRepository("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses");
-		ExecutableAccessMethod accessMethod = repo.getAccess("NATION");
+		ExecutableAccessMethod accessMethod = repo.getAccess("NATION_DB");
 		testReadingData(accessMethod);
-		ExecutableAccessMethod accessMethod2 = repo.getAccess("NATION_MEM");
-		testReadingData(accessMethod2);
 		repo.closeAllAccesses();
 		Assert.assertTrue(accessMethod.isClosed());
-		Assert.assertTrue(accessMethod2.isClosed());
+	}
+
+	@Test
+	public void testAccessRepositoryMem() throws Exception {
+		AccessRepository repo = AccessRepository
+				.getRepository("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses");
+		ExecutableAccessMethod accessMethod = repo.getAccess("NATION_MEM");
+		testReadingData(accessMethod);
+		repo.closeAllAccesses();
+		Assert.assertTrue(accessMethod.isClosed());
+	}
+
+	@Test
+	public void testAccessRepositoryWeb() throws Exception {
+		AccessRepository repo = AccessRepository
+				.getRepository("test/src/uk/ac/ox/cs/pdq/test/datasources/accessRepository/schemas/accesses");
+		ExecutableAccessMethod accessMethod = repo.getAccess("NATION_WEB");
+		testReadingData(accessMethod);
+		repo.closeAllAccesses();
+		Assert.assertTrue(accessMethod.isClosed());
 	}
 
 	/**
