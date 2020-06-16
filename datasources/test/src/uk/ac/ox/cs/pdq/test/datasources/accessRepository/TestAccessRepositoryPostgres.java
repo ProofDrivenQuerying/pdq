@@ -323,7 +323,7 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 		AccessRepository repo = AccessRepository.getRepository(accessesDir);
 		ExecutableAccessMethod accessMethod = repo.getAccess("NATION_DB");
 		testReadingData(accessMethod, 25);
-		repo.closeAllAccesses();
+		accessMethod.close();
 		Assert.assertTrue(accessMethod.isClosed());
 	}
 
@@ -332,7 +332,7 @@ public class TestAccessRepositoryPostgres extends PdqTest {
 		AccessRepository repo = AccessRepository.getRepository(accessesDir);
 		ExecutableAccessMethod accessMethod = repo.getAccess("NATION_MEM");
 		testReadingData(accessMethod, 25);
-		repo.closeAllAccesses();
+		accessMethod.close();
 		Assert.assertTrue(accessMethod.isClosed());
 	}
 
