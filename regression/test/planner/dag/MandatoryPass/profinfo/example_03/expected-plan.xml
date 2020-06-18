@@ -5,7 +5,7 @@
         <RelationalTerm type="SelectionTerm">
             <predicate type="ConjunctiveCondition">
                 <predicates position="1" type="ConstantEqualityCondition">
-                    <constant value="smith"/>
+                    <constant type="java.lang.String" value="smith"/>
                 </predicates>
             </predicate>
             <RelationalTerm type="RenameTerm">
@@ -24,7 +24,7 @@
         <RelationalTerm type="SelectionTerm">
             <predicate type="ConjunctiveCondition">
                 <predicates position="2" type="ConstantEqualityCondition">
-                    <constant value="smith"/>
+                    <constant type="java.lang.String" value="smith"/>
                 </predicates>
             </predicate>
             <RelationalTerm type="RenameTerm">

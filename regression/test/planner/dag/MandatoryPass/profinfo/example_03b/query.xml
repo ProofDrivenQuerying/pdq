@@ -3,10 +3,10 @@
 	<body>
 		<atom name="Profinfo">
 			<variable name="x" />
-			<constant value="smith" />
+			<constant type="java.lang.String" value="smith" />
 		</atom>
 	</body>
 	<head name="Q">
 	</head>
 </query>
-
+
