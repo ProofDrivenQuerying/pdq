@@ -13,6 +13,8 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 
 
 /**
+ * Parallel chasing here just refers to doing chase steps in bulk using SQL calls to find active triggers
+ * rather than performing one chase step at a time
  * (From modern dependency theory notes)
  * Runs the chase algorithm applying only active triggers. 
  * Consider an instance I, a set Base of values, and a TGD
