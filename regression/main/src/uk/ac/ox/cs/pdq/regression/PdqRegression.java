@@ -312,11 +312,15 @@ public class PdqRegression {
 			statsMsg+="No previous plan found.";
 		}
 		if (observation != null && (expectedPlan == null || !(expectedCost.equals(observation.getValue()))) ) {
-			this.out.print("\tWriting plan: " + observation + " " + observation.getValue());
-			CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + GENERATED_PLAN_FILE),  observation.getKey(), observation.getValue());
-			statsMsg+= "Observed and expect plan costs differ. New Plan written.";
-			Logger.getLogger(this.getClass()).error(statsMsg);
-			isFailed = true;
+
+			final String newPlanFile = directory.getAbsolutePath() + '/' + GENERATED_PLAN_FILE;
+			final String costsDifferWarning = "\nObserved and expected costs differ. New plan written to " +
+					newPlanFile + "\nManually check whether the expected plan needs to be updated.";
+
+			Logger.getLogger(this.getClass()).warn(costsDifferWarning);
+
+			CostIOManager.writeRelationalTermAndCost(new File(newPlanFile),  observation.getKey(), observation.getValue());
+			statsMsg+= "New Plan written.";
 		}
 		if (observation!=null && observation.getValue()!= null)
 			statsMsg+= "Cost: " + observation.getValue();
