@@ -7,7 +7,7 @@
             </predicates>
         </predicate>
         <RelationalTerm type="RenameTerm">
-            <renamings name="1" type="java.lang.String"/>
+            <renamings name="1" type="java.lang.Integer"/>
             <renamings name="c0" type="java.lang.String"/>
             <renamings name="c1" type="java.lang.String"/>
             <RelationalTerm type="AccessTerm">
