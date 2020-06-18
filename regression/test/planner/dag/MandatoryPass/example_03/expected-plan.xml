@@ -3,7 +3,7 @@
     <RelationalTerm type="SelectionTerm">
         <predicate type="ConjunctiveCondition">
             <predicates position="0" type="ConstantEqualityCondition">
-                <constant value="1"/>
+                <constant type="java.lang.Integer" value="1"/>
             </predicates>
         </predicate>
         <RelationalTerm type="RenameTerm">
