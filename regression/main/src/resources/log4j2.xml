@@ -2,7 +2,7 @@
 <Configuration monitorInterval="600">
     <Appenders>
         <Console name="CONSOLE" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d %-5p [%t] (%F:%L) - %m%n"/>
+            <PatternLayout pattern="\n\n%d %-5p [%t] (%F:%L) - %m%n"/>
         </Console>
         <RollingFile name="FILE" fileName="log/pdq-regression.log"
                      filePattern="log/pdq-regression-%d{MM-dd-yyyy}.log.gz" ignoreExceptions="false">
@@ -16,22 +16,22 @@
         <Logger name="uk.ac.ox.cs.pdq" level="warn" additivity="false">
             <AppenderRef ref="CONSOLE"/>
         </Logger>
-        <Logger name="uk.ac.ox.cs.pdq.cost" level="info" additivity="false">
+        <Logger name="uk.ac.ox.cs.pdq.cost" level="warn" additivity="false">
             <AppenderRef ref="CONSOLE"/>
         </Logger>
-        <Logger name="uk.ac.ox.cs.pdq.runtime" level="info" additivity="false">
-            <AppenderRef ref="CONSOLE"/>
-        </Logger>
-
-        <Logger name="uk.ac.ox.cs.pdq.planner" level="info" additivity="false">
+        <Logger name="uk.ac.ox.cs.pdq.runtime" level="warn" additivity="false">
             <AppenderRef ref="CONSOLE"/>
         </Logger>
 
-        <Logger name="uk.ac.ox.cs.pdq.test" level="info" additivity="false">
+        <Logger name="uk.ac.ox.cs.pdq.planner" level="warn" additivity="false">
             <AppenderRef ref="CONSOLE"/>
         </Logger>
 
-        <Logger name="uk.ac.ox.cs.pdq.services" level="info" additivity="false">
+        <Logger name="uk.ac.ox.cs.pdq.test" level="warn" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </Logger>
+
+        <Logger name="uk.ac.ox.cs.pdq.services" level="warn" additivity="false">
             <AppenderRef ref="CONSOLE"/>
         </Logger>
 
@@ -39,7 +39,7 @@
             <AppenderRef ref="CONSOLE"/>
         </Logger>
 
-        <Root level="info">
+        <Root level="warn">
             <AppenderRef ref="CONSOLE"/>
         </Root>
     </Loggers>

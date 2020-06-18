@@ -15,7 +15,7 @@
     <description>Gather packages and classes aims at checking when regressions occur in the code.</description>
     <build>
         <sourceDirectory>main/src</sourceDirectory>
-        <testSourceDirectory>test/src</testSourceDirectory>
+        <testSourceDirectory>main/src</testSourceDirectory>
         <resources>
             <resource>
                 <directory>main/src</directory>
@@ -50,7 +50,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>uk.ac.ox.cs.pdq.test.regression.PDQ</mainClass>
+                            <mainClass>uk.ac.ox.cs.pdq.regression.PdqRegression</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -69,7 +69,7 @@
                             <archive>
                                 <manifest>
                                     <addClasspath>true</addClasspath>
-                                    <mainClass>uk.ac.ox.cs.pdq.test.PDQ</mainClass>
+                                    <mainClass>uk.ac.ox.cs.pdq.regression.PdqRegression</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>
@@ -114,6 +114,10 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
         </dependency>
     </dependencies>
 </project>
