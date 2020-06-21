@@ -11,7 +11,7 @@ public class LimitReachedException extends Exception {
 	private static final long serialVersionUID = -315472460756924167L;
 
 	/**
-	 * The Enum Reasons.
+	 * 
 	 */
 	public static enum Reasons {
 		/** The timeout. */
@@ -19,7 +19,7 @@ public class LimitReachedException extends Exception {
 		/** The max iteration. */
 		MAX_ITERATION}
 
-	/** The reason. */
+	/**  */
 	private final Reasons reason;
 
 	/**
