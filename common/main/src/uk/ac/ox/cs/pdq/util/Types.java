@@ -4,7 +4,7 @@ import java.lang.reflect.Type;
 
 import org.apache.log4j.Logger;
 
-// TODO: Auto-generated Javadoc
+// 
 /**
  * Utility class for Type-related operations.
  *  
@@ -12,11 +12,11 @@ import org.apache.log4j.Logger;
  */
 public class Types {
 
-	/**  The logger. */
+	
 	public static Logger log = Logger.getLogger(Types.class);
 
 	/**
-	 * Simple name.
+	 * 
 	 *
 	 * @param type the type
 	 * @return the shortest know name of the given type.
@@ -30,7 +30,7 @@ public class Types {
 	}
 
 	/**
-	 * Canonical name.
+	 * 
 	 *
 	 * @param type the type
 	 * @return the canonical name of the given type. By default, toString() is
@@ -46,10 +46,8 @@ public class Types {
 	}
 
 	/**
-	 * Equals.
+	 * 
 	 *
-	 * @param o1 the o1
-	 * @param o2 the o2
 	 * @return if o1 and o2 are the same type
 	 */
 	public static boolean equals(Type o1, Type o2) {
