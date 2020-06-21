@@ -229,7 +229,7 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
-	 * To canonical name.
+	 * 
 	 *
 	 * @param camelName String
 	 * @return String
@@ -290,10 +290,7 @@ public abstract class Parameters extends Properties {
 	 * Sets the member of a initialConfig helper with the value specified in the
 	 * underlying Properties.
 	 *
-	 * @param k the k
-	 * @param v the v
-	 * @param verbose the verbose
-	 * @param strict boolean
+	 *
 	 */
 	public void set(Object k, Object v, boolean verbose, boolean strict) {
 		Preconditions.checkArgument(v != null);
@@ -332,9 +329,7 @@ public abstract class Parameters extends Properties {
 	 * Gets the member of a initialConfig helper whose value is given as
 	 * parameter.
 	 *
-	 * @param k the k
-	 * @return Object
-	 * @see java.util.Map#get(Object)
+	 * 
 	 */
 	@Override
 	public synchronized Object get(Object k) {
@@ -384,7 +379,7 @@ public abstract class Parameters extends Properties {
 	/**
 	 * 
 	 *
-	 * @param verbose the verbose
+	 * 
 	 * @return a string containing of the parameters and the current values,
 	 * as they would appear in the file, i.e. the returned String can be used
 	 * for serialization purposes.
