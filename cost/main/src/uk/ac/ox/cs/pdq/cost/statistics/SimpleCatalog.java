@@ -69,7 +69,7 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 public class SimpleCatalog implements Catalog{
 
 	/** Logger. */
-	private static Logger log = Logger.getLogger(SimpleCatalog.class);
+	private static final Logger log = Logger.getLogger(SimpleCatalog.class);
 
 	public static double DEFAULT_ATTRIBUTE_EQUALITY_SELECTIVITY = 0.1;
 
@@ -94,14 +94,27 @@ public class SimpleCatalog implements Catalog{
 	private final Map<Pair<Relation,AccessMethodDescriptor>,Integer> numberOfOutputTuplesPerInput;
 	/** The response time of each access method*/
 	private final Map<Pair<Relation,AccessMethodDescriptor>,Double> costs;
-	/** The response time of each access method, with lookup by name*/
-	private final Map<Pair<String,String>,Double> costsLookupByName;
 	/** The selectivity of each attribute*/
 	private final Map<Pair<Relation,Attribute>,Double> columnSelectivity;
 	/** The frequency histogram of each attribute*/
 	private final Map<Pair<Relation,Attribute>, SimpleFrequencyMap> frequencyMaps;
 	/** The SQL Server histograms of each attribute*/
 	private final Map<Pair<Relation,Attribute>, SQLServerHistogram> SQLServerHistograms;
+
+	/** Cardinalities of the schema relations, with lookup by name*/
+	private final Map<String,Integer> cardinalitiesLookupByName;
+	/** Cardinalities of the relations' attributes, with lookup by name*/
+	private final Map<Pair<String,String>,Integer> columnCardinalitiesLookupByName;
+	/** The estimated result size per invocation of each access method, with lookup by name*/
+	private final Map<Pair<String,String>,Integer> numberOfOutputTuplesPerInputLookupByName;
+	/** The response time of each access method, with lookup by name*/
+	private final Map<Pair<String,String>,Double> costsLookupByName;
+	/** The selectivity of each attribute, with lookup by name*/
+	private final Map<Pair<String,String>,Double> columnSelectivityLookupByName;
+	/** The frequency histogram of each attribute, with lookup by name*/
+	private final Map<Pair<String,String>, SimpleFrequencyMap> frequencyMapsLookupByName;
+	/** The SQL Server histograms of each attribute, with lookup by name*/
+	private final Map<Pair<String,String>, SQLServerHistogram> SQLServerHistogramsLookupByName;
 
 	/** The schema of the input database */
 	private final Schema schema;
@@ -126,12 +139,20 @@ public class SimpleCatalog implements Catalog{
 		this.schema = schema;
 		this.numberOfOutputTuplesPerInput = new HashMap<>();
 		this.costs = new HashMap<>();
-		this.costsLookupByName = new HashMap<>();
 		this.columnSelectivity = new HashMap<>();
 		this.cardinalities = new HashMap<>();
 		this.columnCardinalities = new HashMap<>();
 		this.frequencyMaps = new HashMap<>();
 		this.SQLServerHistograms = new HashMap<>();
+
+		this.cardinalitiesLookupByName = new HashMap<>();
+		this.columnCardinalitiesLookupByName = new HashMap<>();
+		this.numberOfOutputTuplesPerInputLookupByName = new HashMap<>();
+		this.costsLookupByName = new HashMap<>();
+		this.columnSelectivityLookupByName = new HashMap<>();
+		this.frequencyMapsLookupByName = new HashMap<>();
+		this.SQLServerHistogramsLookupByName = new HashMap<>();
+
 		this.read(schema, fileName);
 	}
 
@@ -177,7 +198,9 @@ public class SimpleCatalog implements Catalog{
 			String cardinality = m.group(4);
 			if(schema.contains(relation)) {
 				Relation r = schema.getRelation(relation);
-				this.cardinalities.put(r, Integer.parseInt(cardinality));
+				final int value = Integer.parseInt(cardinality);
+				this.cardinalities.put(r, value);
+				this.cardinalitiesLookupByName.put(r.getName(), value);
 				log.info("RELATION: " + relation + " CARDINALITY: " + cardinality);
 			}
 			else {
@@ -196,7 +219,9 @@ public class SimpleCatalog implements Catalog{
 				Relation r = schema.getRelation(relation);
 				if(r.getAttribute(column) != null) {
 					Attribute attribute = r.getAttribute(column);
-					this.columnCardinalities.put( Pair.of(r,attribute), Integer.parseInt(cardinality));
+					final int value = Integer.parseInt(cardinality);
+					this.columnCardinalities.put( Pair.of(r,attribute), value);
+					this.columnCardinalitiesLookupByName.put( Pair.of(r.getName(),attribute.getName()), value);
 					log.info("RELATION: " + relation + " ATTRIBUTE: " + attribute + " CARDINALITY: " + cardinality);
 				}
 				else {
@@ -219,7 +244,9 @@ public class SimpleCatalog implements Catalog{
 				Relation r = schema.getRelation(relation);
 				if(r.getAttribute(column) != null) {
 					Attribute attribute = r.getAttribute(column);
-					this.columnSelectivity.put( Pair.of(r,attribute), Double.parseDouble(selectivity));
+					final double value = Double.parseDouble(selectivity);
+					this.columnSelectivity.put( Pair.of(r,attribute), value);
+					this.columnSelectivityLookupByName.put( Pair.of(r.getName(),attribute.getName()), value);
 					log.info("RELATION: " + relation + " ATTRIBUTE: " + attribute + " SELECTIVITY: " + selectivity);
 				}
 				else {
@@ -243,7 +270,9 @@ public class SimpleCatalog implements Catalog{
 				Relation r = schema.getRelation(relation);
 				AccessMethodDescriptor b = r.getAccessMethod(binding);
 				if(b != null) {
-					this.numberOfOutputTuplesPerInput.put( Pair.of(r,b), Integer.parseInt(erspi));
+					final int value = Integer.parseInt(erspi);
+					this.numberOfOutputTuplesPerInput.put( Pair.of(r,b), value);
+					this.numberOfOutputTuplesPerInputLookupByName.put( Pair.of(r.getName(),b.getName()), value);
 					log.info("RELATION: " + relation + " BINDING: " + binding + " ERPSI: " + erspi);
 				}
 				else {
@@ -266,9 +295,9 @@ public class SimpleCatalog implements Catalog{
 				Relation r = schema.getRelation(relation);
 				AccessMethodDescriptor b = r.getAccessMethod(binding);
 				if(b != null) {
-					Double numeric_cost = Double.parseDouble(cost);
-					this.costs.put(Pair.of(r, b), numeric_cost);
-					this.costsLookupByName.put(Pair.of(r.getName(), b.getName()), numeric_cost);
+					final double value = Double.parseDouble(cost);
+					this.costs.put(Pair.of(r, b), value);
+					this.costsLookupByName.put(Pair.of(r.getName(), b.getName()), value);
 					log.info("RELATION: " + relation + " BINDING: " + binding + " COST: " + cost);
 				}
 				else {
@@ -284,6 +313,7 @@ public class SimpleCatalog implements Catalog{
 		SimpleFrequencyMap h = SimpleFrequencyMap.build(schema, line);
 		if(h != null) {
 			this.frequencyMaps.put(Pair.of(h.getRelation(), h.getAttibute()), h);
+			this.frequencyMapsLookupByName.put(Pair.of(h.getRelation().getName(), h.getAttibute().getName()), h);
 			return;
 		}
 
@@ -299,6 +329,7 @@ public class SimpleCatalog implements Catalog{
 					Attribute attribute = r.getAttribute(column);
 					SQLServerHistogram histogram = SQLServerHistogramLoader.load(attribute.getType(), histogramFile);
 					this.SQLServerHistograms.put(Pair.of(r, attribute), histogram);
+					this.SQLServerHistogramsLookupByName.put(Pair.of(r.getName(), attribute.getName()), histogram);
 					log.info("RELATION: " + relation + " ATTRIBUTE: " + attribute + " Histogram file: " + histogramFile);
 				}
 				else {
@@ -314,22 +345,98 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	/**
-	 * Given this.costs, populate this.costsLookupByName to match.
+	 * Populate the maps with lookup by name from the maps with lookup by object.
 	 *
-	 * The former is
+	 * The former are, for instance
 	 *     Map<Pair<Relation,AccessMethodDescriptor>,Double>
-	 * while the latter is
+	 * while the latter are, for instance
 	 *     Map<Pair<String,String>,Double>
 	 *
-	 * The more permissive lookup allows, for instance, a base Relation to match a derived relation such as a View.
+	 * The more permissive lookups allow a base Relation to match a derived relation such as a View.
 	 */
-	private void updateCostsLookupByName() {
+	private void updateMapsThatLookUpByName() {
+
+
+		for (Map.Entry<Relation, Integer> entry : this.cardinalities.entrySet()) {
+			Relation key = entry.getKey();
+			Integer value = entry.getValue();
+			this.cardinalitiesLookupByName.put(key.getName(), value);
+		}
+
+		for (Map.Entry<Pair<Relation, Attribute>, Integer> entry : this.columnCardinalities.entrySet()) {
+			Pair<Relation, Attribute> key = entry.getKey();
+			Integer value = entry.getValue();
+			this.columnCardinalitiesLookupByName.put(Pair.of(key.getLeft().getName(), key.getRight().getName()), value);
+		}
+
+		for (Map.Entry<Pair<Relation, AccessMethodDescriptor>, Integer> entry : this.numberOfOutputTuplesPerInput.entrySet()) {
+			Pair<Relation,AccessMethodDescriptor> key = entry.getKey();
+			Integer value = entry.getValue();
+			this.numberOfOutputTuplesPerInputLookupByName.put(Pair.of(key.getLeft().getName(), key.getRight().getName()), value);
+		}
+
 		for (Map.Entry<Pair<Relation,AccessMethodDescriptor>,Double> entry : this.costs.entrySet()) {
 			Pair<Relation,AccessMethodDescriptor> key = entry.getKey();
 			Double value = entry.getValue();
-
 			this.costsLookupByName.put(Pair.of(key.getLeft().getName(), key.getRight().getName()), value);
 		}
+
+		for (Map.Entry<Pair<Relation, Attribute>, Double> entry : this.columnSelectivity.entrySet()) {
+			Pair<Relation, Attribute> key = entry.getKey();
+			Double value = entry.getValue();
+			this.columnSelectivityLookupByName.put(Pair.of(key.getLeft().getName(), key.getRight().getName()), value);
+		}
+
+		for (Map.Entry<Pair<Relation, Attribute>, SimpleFrequencyMap> entry : this.frequencyMaps.entrySet()) {
+			Pair<Relation, Attribute> key = entry.getKey();
+			SimpleFrequencyMap value = entry.getValue();
+			this.frequencyMapsLookupByName.put(Pair.of(key.getLeft().getName(), key.getRight().getName()), value);
+		}
+
+		for (Map.Entry<Pair<Relation, Attribute>, SQLServerHistogram> entry : this.SQLServerHistograms.entrySet()) {
+			Pair<Relation, Attribute> key = entry.getKey();
+			SQLServerHistogram value = entry.getValue();
+			this.SQLServerHistogramsLookupByName.put(Pair.of(key.getLeft().getName(), key.getRight().getName()), value);
+		}
+	}
+
+	/**
+	 * Query this.cardinalities for the cardinality given the relation.
+	 *
+	 * If the lookup fails, try looking up by name in this.cardinalitiesLookupByName.
+	 */
+	private Integer getCardinalityFromMap(Relation r) {
+		Integer value = this.cardinalities.get(r);
+		if (value == null) {
+			value = this.cardinalitiesLookupByName.get(r.getName());
+		}
+		return value;
+	}
+
+	/**
+	 * Query this.columnCardinalities for the column cardinality given the relation and attribute.
+	 *
+	 * If the lookup fails, try looking up by name in this.columnCardinalitiesLookupByName.
+	 */
+	private Integer getColumnCardinalityFromMap(Relation relation, Attribute attribute) {
+		Integer value = this.columnCardinalities.get(Pair.of(relation, attribute));
+		if (value == null) {
+			value = this.columnCardinalitiesLookupByName.get(Pair.of(relation.getName(), attribute.getName()));
+		}
+		return value;
+	}
+
+	/**
+	 * Query this.numberOfOutputTuplesPerInput given the relation and access method.
+	 *
+	 * If the lookup fails, try looking up by name in this.numberOfOutputTuplesPerInputLookupByName.
+	 */
+	private Integer getNumberOfOutputTuplesPerInputFromMap(Relation r, AccessMethodDescriptor amd) {
+		Integer value = this.numberOfOutputTuplesPerInput.get(Pair.of(r, amd));
+		if (value == null) {
+			value = this.numberOfOutputTuplesPerInputLookupByName.get(Pair.of(r.getName(), amd.getName()));
+		}
+		return value;
 	}
 
 	/**
@@ -338,14 +445,50 @@ public class SimpleCatalog implements Catalog{
 	 * If the lookup fails, try looking up by name in this.costsLookupByName.
 	 */
 	private Double getCostFromMap(Relation r, AccessMethodDescriptor amd) {
-
-		Double cost = this.costs.get(Pair.of(r, amd));
-
-		if (cost == null) {
-			cost = this.costsLookupByName.get(Pair.of(r.getName(), amd.getName()));
+		Double value = this.costs.get(Pair.of(r, amd));
+		if (value == null) {
+			value = this.costsLookupByName.get(Pair.of(r.getName(), amd.getName()));
 		}
+		return value;
+	}
 
-		return cost;
+	/**
+	 * Query this.columnSelectivity for the column cardinality given the relation and attribute.
+	 *
+	 * If the lookup fails, try looking up by name in this.columnSelectivityLookupByName.
+	 */
+	private Double getColumnSelectivityFromMap(Relation relation, Attribute attribute) {
+		Double value = this.columnSelectivity.get(Pair.of(relation, attribute));
+		if (value == null) {
+			value = this.columnSelectivityLookupByName.get(Pair.of(relation.getName(), attribute.getName()));
+		}
+		return value;
+	}
+
+	/**
+	 * Query this.frequencyMaps given a relation and attribute.
+	 *
+	 * If the lookup fails, try looking up by name in this.frequencyMapsLookupByName.
+	 */
+	private SimpleFrequencyMap getFrequencyMapsFromMap(Relation relation, Attribute attribute) {
+		SimpleFrequencyMap value = this.frequencyMaps.get(Pair.of(relation, attribute));
+		if (value == null) {
+			value = this.frequencyMapsLookupByName.get(Pair.of(relation.getName(), attribute.getName()));
+		}
+		return value;
+	}
+
+	/**
+	 * Query this.SQLServerHistograms given a relation and attribute.
+	 *
+	 * If the lookup fails, try looking up by name in this.SQLServerHistogramsLookupByName.
+	 */
+	private SQLServerHistogram getSQLServerHistogramsFromMap(Relation relation, Attribute attribute) {
+		SQLServerHistogram value = this.SQLServerHistograms.get(Pair.of(relation, attribute));
+		if (value == null) {
+			value = this.SQLServerHistogramsLookupByName.get(Pair.of(relation.getName(), attribute.getName()));
+		}
+		return value;
 	}
 
 	/**
@@ -357,12 +500,16 @@ public class SimpleCatalog implements Catalog{
 	 * @param responseTimes the response times
 	 * @param columnSelectivity the column selectivity
 	 * @param columnCardinalities the column cardinalities
-	 * @param queries the queries
 	 * @param frequencyMaps the frequency maps
 	 * @param SQLServerHistograms the SQL server histograms
 	 */
-	public SimpleCatalog(Schema schema, Map<Relation,Integer> cardinalities, Map<Pair<Relation,AccessMethodDescriptor>,Integer> erpsi, Map<Pair<Relation,AccessMethodDescriptor>,Double> responseTimes,
-			Map<Pair<Relation,Attribute>,Double> columnSelectivity, Map<Pair<Relation,Attribute>,Integer> columnCardinalities,
+	public SimpleCatalog(
+			Schema schema,
+			Map<Relation,Integer> cardinalities,
+			Map<Pair<Relation,AccessMethodDescriptor>,Integer> erpsi,
+			Map<Pair<Relation,AccessMethodDescriptor>,Double> responseTimes,
+			Map<Pair<Relation,Attribute>,Double> columnSelectivity,
+			Map<Pair<Relation,Attribute>,Integer> columnCardinalities,
 			Map<Pair<Relation,Attribute>, SimpleFrequencyMap> frequencyMaps,
 			Map<Pair<Relation,Attribute>, SQLServerHistogram> SQLServerHistograms
 			) {
@@ -378,12 +525,20 @@ public class SimpleCatalog implements Catalog{
 		this.cardinalities = Maps.newHashMap(cardinalities);
 		this.numberOfOutputTuplesPerInput = Maps.newHashMap(erpsi);
 		this.costs = Maps.newHashMap(responseTimes);
-		this.costsLookupByName = new HashMap<>();
-		this.updateCostsLookupByName();
 		this.columnSelectivity = Maps.newHashMap(columnSelectivity);
 		this.columnCardinalities = Maps.newHashMap(columnCardinalities);
 		this.frequencyMaps = Maps.newHashMap(frequencyMaps);
 		this.SQLServerHistograms = Maps.newHashMap(SQLServerHistograms);
+
+		// Initialise the maps with lookup by name, then construct them from the maps above
+		this.cardinalitiesLookupByName = new HashMap<>();
+		this.columnCardinalitiesLookupByName = new HashMap<>();
+		this.numberOfOutputTuplesPerInputLookupByName = new HashMap<>();
+		this.costsLookupByName = new HashMap<>();
+		this.columnSelectivityLookupByName = new HashMap<>();
+		this.frequencyMapsLookupByName = new HashMap<>();
+		this.SQLServerHistogramsLookupByName = new HashMap<>();
+		this.updateMapsThatLookUpByName();
 	}
 
 	/* (non-Javadoc)
@@ -394,16 +549,16 @@ public class SimpleCatalog implements Catalog{
 		Preconditions.checkNotNull(attribute);
 		Preconditions.checkNotNull(constant);
 
-		SimpleFrequencyMap histogram = this.frequencyMaps.get(Pair.of(relation, attribute));
+		SimpleFrequencyMap histogram = getFrequencyMapsFromMap(relation, attribute);
 		String search = constant.toString();
-		if(constant.getType() instanceof Class && BigDecimal.class.isAssignableFrom((Class<?>) constant.getType())) {
+		if (constant.getType() instanceof Class && BigDecimal.class.isAssignableFrom((Class<?>) constant.getType())) {
 			BigInteger integer = new BigDecimal(constant.toString()).toBigInteger();
 			search = integer.toString();
 		}
-		if(histogram != null && histogram.getFrequency(search) != null) {
+		if (histogram != null && histogram.getFrequency(search) != null) {
 			int erpsi = histogram.getFrequency(search);
 			log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " CONSTANTS: " + constant);
-			return (double)erpsi/this.getCardinality(relation);
+			return (double) erpsi / this.getCardinality(relation);
 		}
 		return this.getSelectivity(relation, attribute);
 	}
@@ -417,7 +572,7 @@ public class SimpleCatalog implements Catalog{
 		Preconditions.checkNotNull(attribute);
 		Preconditions.checkNotNull(constant);
 
-		SimpleFrequencyMap histogram = this.frequencyMaps.get(Pair.of(relation, attribute));
+		SimpleFrequencyMap histogram = getFrequencyMapsFromMap(relation, attribute);
 		String search = constant.toString();
 		if(constant.getType() instanceof Class && BigDecimal.class.isAssignableFrom((Class<?>) constant.getType())) {
 			BigInteger integer = new BigDecimal(constant.toString()).toBigInteger();
@@ -441,19 +596,22 @@ public class SimpleCatalog implements Catalog{
 	public double getSelectivity(Relation relation, Attribute attribute) {
 		Preconditions.checkNotNull(attribute);
 		Preconditions.checkNotNull(relation);
-		Double selectivities = this.columnSelectivity.get(Pair.of(relation, attribute));
+		final Double selectivities = getColumnSelectivityFromMap(relation, attribute);
 		if(selectivities != null) {
 			log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " SELECTIVITY: " + selectivities);
 			return selectivities;
-		}
-		else {
-			Integer columnCardinality = this.columnCardinalities.get(Pair.of(relation, attribute));
-			if(columnCardinality != null) {
-				log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " SELECTIVITY: " + 1.0/columnCardinality);
-				return 1.0/columnCardinality;
+		} else {
+			Integer columnCardinality = this.getColumnCardinalityFromMap(relation, attribute);
+			if (columnCardinality != null) {
+				final double selectivity = 1.0 / (double) columnCardinality;
+				log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " SELECTIVITY: " + selectivity);
+				return selectivity;
 			}
-			log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " SELECTIVITY: " + 1.0/SimpleCatalog.DEFAULT_COLUMN_CARDINALITY);
-			return 1.0/SimpleCatalog.DEFAULT_COLUMN_CARDINALITY;
+			final double selectivity = 1.0 / (double) DEFAULT_COLUMN_CARDINALITY;
+			log.warn("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute
+					+ " is using the DEFAULT_COLUMN_CARDINALITY: " + DEFAULT_COLUMN_CARDINALITY);
+			log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " SELECTIVITY: " + selectivity);
+			return selectivity;
 		}
 	}
 
@@ -471,15 +629,22 @@ public class SimpleCatalog implements Catalog{
 		Preconditions.checkNotNull(right);
 		Preconditions.checkNotNull(leftAttribute);
 		Preconditions.checkNotNull(rightAttribute);
-		Integer leftcardinalities = this.columnCardinalities.get(Pair.of(left, leftAttribute));
-		Integer rightcardinalities = this.columnCardinalities.get(Pair.of(right, rightAttribute));
-		if(leftcardinalities != null && rightcardinalities != null) {
-			log.info("LEFT RELATION: " + left.getName() + " LEFT ATTRIBUTE " + leftAttribute + " RIGHT RELATION: " + right.getName() + " RIGHT ATTRIBUTE " + rightAttribute + " SELECTIVITY: " + 1.0 / Math.max(leftcardinalities, rightcardinalities));
-			return 1.0 / Math.max(leftcardinalities, rightcardinalities);
+		Integer leftCardinality = this.getColumnCardinalityFromMap(left, leftAttribute);
+		Integer rightCardinality = this.getColumnCardinalityFromMap(right, rightAttribute);
+		if(leftCardinality != null && rightCardinality != null) {
+			final double selectivity = 1.0 / (double) Math.max(leftCardinality, rightCardinality);
+			log.info("LEFT RELATION: " + left.getName() + " LEFT ATTRIBUTE " + leftAttribute + " RIGHT RELATION: "
+					+ right.getName() + " RIGHT ATTRIBUTE " + rightAttribute + " SELECTIVITY: " + selectivity);
+			return selectivity;
 		}
 		else {
-			log.info("LEFT RELATION: " + left.getName() + " LEFT ATTRIBUTE " + leftAttribute + " RIGHT RELATION: " + right.getName() + " RIGHT ATTRIBUTE " + rightAttribute + " SELECTIVITY: " + 1.0 / SimpleCatalog.DEFAULT_COLUMN_CARDINALITY);
-			return 1.0 / SimpleCatalog.DEFAULT_COLUMN_CARDINALITY;
+			final double selectivity = 1.0 / (double) DEFAULT_COLUMN_CARDINALITY;
+			log.warn("LEFT RELATION: " + left.getName() + " LEFT ATTRIBUTE " + leftAttribute + " RIGHT RELATION: "
+					+ right.getName() + " RIGHT ATTRIBUTE " + rightAttribute
+					+ " is using the DEFAULT_COLUMN_CARDINALITY: " + DEFAULT_COLUMN_CARDINALITY);
+			log.info("LEFT RELATION: " + left.getName() + " LEFT ATTRIBUTE " + leftAttribute + " RIGHT RELATION: "
+					+ right.getName() + " RIGHT ATTRIBUTE " + rightAttribute + " SELECTIVITY: " + selectivity);
+			return selectivity;
 		}
 	}
 
@@ -490,27 +655,37 @@ public class SimpleCatalog implements Catalog{
 	public int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethodDescriptor method) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(method);
-		Integer erspi = this.numberOfOutputTuplesPerInput.get(Pair.of(relation, method));
+		final Integer erspi = getNumberOfOutputTuplesPerInputFromMap(relation, method);
 		if(erspi == null) {
 			double columnProduct = 1.0;
 			for(Integer input:method.getInputs()) {
 				Attribute attribute = relation.getAttribute(input);
-				Integer columnCardinality = this.columnCardinalities.get(Pair.of(relation, attribute));
+				final Integer columnCardinality = getColumnCardinalityFromMap(relation, attribute);
 				if(columnCardinality != null) {
 					columnProduct *= columnCardinality;
 				}
 				else {
-					log.info("RELATION: " + relation.getName() + " AccessMethod: " + method + " ERPSI: " + SimpleCatalog.DEFAULT_CARDINALITY/SimpleCatalog.DEFAULT_COLUMN_CARDINALITY);
-					return SimpleCatalog.DEFAULT_CARDINALITY/SimpleCatalog.DEFAULT_COLUMN_CARDINALITY;
+					log.warn("RELATION: " + relation.getName() + " AccessMethod: " + method + " is using the DEFAULT_CARDINALITY: "
+							+ DEFAULT_CARDINALITY + " and DEFAULT_COLUMN_CARDINALITY: " + DEFAULT_COLUMN_CARDINALITY);
+
+					final int defaultValue = DEFAULT_CARDINALITY / DEFAULT_COLUMN_CARDINALITY;
+					log.info("RELATION: " + relation.getName() + " AccessMethod: " + method + " ERPSI: " + defaultValue);
+					return defaultValue;
 				}
 			}
-			if(this.cardinalities.containsKey(relation)) {
-				log.info("RELATION: " + relation.getName() + " AccessMethod: " + method + " ERPSI: " + this.cardinalities.get(relation)/columnProduct);
-				return (int) ((int) this.cardinalities.get(relation)/columnProduct);
+			if (getCardinalityFromMap(relation) != null) {
+				final int value = getCardinalityFromMap(relation);
+				log.info("RELATION: " + relation.getName() + " AccessMethod: " + method + " ERPSI: " + value / columnProduct);
+				return (int) (value / columnProduct);
 			}
 			else {
-				log.info("RELATION: " + relation.getName() + " AccessMethod: " + method + " ERPSI: " + SimpleCatalog.DEFAULT_CARDINALITY/SimpleCatalog.DEFAULT_COLUMN_CARDINALITY);
-				return SimpleCatalog.DEFAULT_CARDINALITY/SimpleCatalog.DEFAULT_COLUMN_CARDINALITY;
+				log.warn("RELATION: " + relation.getName() + " AccessMethod: " + method + " is using the DEFAULT_CARDINALITY: "
+						+ DEFAULT_CARDINALITY + " and DEFAULT_COLUMN_CARDINALITY: " + DEFAULT_COLUMN_CARDINALITY);
+
+				final int defaultValue = DEFAULT_CARDINALITY / DEFAULT_COLUMN_CARDINALITY;
+
+				log.info("RELATION: " + relation.getName() + " AccessMethod: " + method + " ERPSI: " + defaultValue);
+				return defaultValue;
 			}
 		}
 		return erspi;
@@ -526,7 +701,7 @@ public class SimpleCatalog implements Catalog{
 		Preconditions.checkNotNull(inputs);
 		if(inputs.size() == 1 && method.getInputs().length == 1) {
 			Attribute attribute = relation.getAttribute(method.getInputs().length);
-			SimpleFrequencyMap histogram = this.frequencyMaps.get(Pair.of(relation, attribute));
+			SimpleFrequencyMap histogram = getFrequencyMapsFromMap(relation, attribute);
 			if(histogram != null && histogram.getFrequency(inputs.get(0).toString()) != null) {
 				int erpsi = histogram.getFrequency(inputs.get(0).toString());
 				log.info("RELATION: " + relation.getName() + " ACCESS: " + method + " INPUTS: " + inputs + " ERPSI: " + erpsi);
@@ -543,10 +718,15 @@ public class SimpleCatalog implements Catalog{
 	 */
 	@Override
 	public int getCardinality(Relation relation) {
-		if(this.cardinalities.get(relation) != null) {
-			return this.cardinalities.get(relation);
+
+		final Integer cardinality = getCardinalityFromMap(relation);
+
+		if(cardinality == null) {
+			log.warn("RELATION: " + relation.getName() + " is using the DEFAULT_CARDINALITY: " + DEFAULT_CARDINALITY);
+			return DEFAULT_CARDINALITY;
+		} else {
+			return cardinality;
 		}
-		return DEFAULT_CARDINALITY;
 	}
 
 	/* (non-Javadoc)
@@ -554,12 +734,16 @@ public class SimpleCatalog implements Catalog{
 	 */
 	@Override
 	public int getCardinality(Relation relation, Attribute attribute) {
-		if(this.columnCardinalities.get(Pair.of(relation, attribute)) != null) {
-			log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " CARDINALITY: " + this.columnCardinalities.get(Pair.of(relation, attribute)));
-			return this.columnCardinalities.get(Pair.of(relation, attribute));
+
+		final Integer cardinality = getColumnCardinalityFromMap(relation, attribute);
+
+		if(cardinality == null) {
+			log.warn("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute
+					+ " is using the DEFAULT_COLUMN_CARDINALITY: " + DEFAULT_COLUMN_CARDINALITY);
+			return DEFAULT_COLUMN_CARDINALITY;
+		} else {
+			return cardinality;
 		}
-		log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " CARDINALITY: " + DEFAULT_COLUMN_CARDINALITY);
-		return DEFAULT_COLUMN_CARDINALITY;
 	}
 
 	/* (non-Javadoc)
@@ -569,10 +753,11 @@ public class SimpleCatalog implements Catalog{
 	public double getCost(Relation relation, AccessMethodDescriptor method) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(method);
-		Double cost = this.getCostFromMap(relation, method);
+		final Double cost = this.getCostFromMap(relation, method);
 
 		if(cost == null) {
-			log.warn("RELATION: " + relation.getName() + " ACCESS METHOD: " + method + " is using the DEFAULT_COST: " + DEFAULT_COST);
+			log.warn("RELATION: " + relation.getName() + " ACCESS METHOD: " + method + " is using the DEFAULT_COST: "
+					+ DEFAULT_COST);
 			return DEFAULT_COST;
 		} else {
 			return cost;
@@ -589,7 +774,7 @@ public class SimpleCatalog implements Catalog{
 		double erpsi = -1;
 		if(inputs.size() == 1) {
 			Attribute attribute = relation.getAttribute(method.getInputs()[0]);
-			SimpleFrequencyMap histogram = this.frequencyMaps.get(Pair.of(relation, attribute));
+			SimpleFrequencyMap histogram = getFrequencyMapsFromMap(relation, attribute);
 			if(histogram != null && histogram.getFrequency(inputs.get(0).toString()) != null) {
 				erpsi = histogram.getFrequency(inputs.get(0).toString());
 				log.info("RELATION: " + relation.getName() + " ACCESS: " + method + " INPUTS: " + inputs + " ERPSI: " + erpsi);
@@ -609,8 +794,8 @@ public class SimpleCatalog implements Catalog{
 	 */
 	@Override
 	public SimpleCatalog clone() {
-		return new SimpleCatalog(this.schema, this.cardinalities, this.numberOfOutputTuplesPerInput, this.costs, this.columnSelectivity,
-				this.columnCardinalities, this.frequencyMaps, this.SQLServerHistograms);
+		return new SimpleCatalog(this.schema, this.cardinalities, this.numberOfOutputTuplesPerInput, this.costs,
+				this.columnSelectivity, this.columnCardinalities, this.frequencyMaps, this.SQLServerHistograms);
 	}
 
 	/** This method can be used by schema discovery functions to add table cardinalities.
@@ -619,6 +804,7 @@ public class SimpleCatalog implements Catalog{
 	 */
 	public void addRelationCardinality(Relation r, Integer value) {
 		this.cardinalities.put(r, value);
+		this.cardinalitiesLookupByName.put(r.getName(), value);
 	}
 
 	/** Exports this class into a string that can be used to create a catalog.properties file.
@@ -713,7 +899,7 @@ public class SimpleCatalog implements Catalog{
 	public SQLServerHistogram getSQLServerHistogram(Relation relation, Attribute attribute) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(attribute);
-		return this.SQLServerHistograms.get(Pair.of(relation, attribute));
+		return getSQLServerHistogramsFromMap(relation, attribute);
 	}
 
 	/* (non-Javadoc)
@@ -723,7 +909,7 @@ public class SimpleCatalog implements Catalog{
 	public Histogram getHistogram(Relation relation, Attribute attribute) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(attribute);
-		return this.SQLServerHistograms.get(Pair.of(relation, attribute));
+		return getSQLServerHistogramsFromMap(relation, attribute);
 	}
 
 	/* (non-Javadoc)
