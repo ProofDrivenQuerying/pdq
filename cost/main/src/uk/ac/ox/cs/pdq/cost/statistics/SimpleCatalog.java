@@ -71,8 +71,6 @@ public class SimpleCatalog implements Catalog{
 	/** Logger. */
 	private static final Logger log = Logger.getLogger(SimpleCatalog.class);
 
-	public static double DEFAULT_ATTRIBUTE_EQUALITY_SELECTIVITY = 0.1;
-
 	private static final int DEFAULT_CARDINALITY = 1000000;
 	private static final double DEFAULT_QUALITY = 0.0;
 	private static final int DEFAULT_COLUMN_CARDINALITY = 1000;
@@ -163,7 +161,7 @@ public class SimpleCatalog implements Catalog{
 	 * @param fileName 		The file that stores the statistics
 	 */
 	private void read(Schema schema, String fileName) {
-		String line = null;
+		String line;
 		try {
 			FileReader fileReader = new FileReader(fileName);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -339,9 +337,7 @@ public class SimpleCatalog implements Catalog{
 			else {
 				throw new java.lang.IllegalArgumentException();
 			}
-			return;
 		}
-
 	}
 
 	/**
@@ -355,7 +351,6 @@ public class SimpleCatalog implements Catalog{
 	 * The more permissive lookups allow a base Relation to match a derived relation such as a View.
 	 */
 	private void updateMapsThatLookUpByName() {
-
 
 		for (Map.Entry<Relation, Integer> entry : this.cardinalities.entrySet()) {
 			Relation key = entry.getKey();
@@ -401,7 +396,7 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	/**
-	 * Query this.cardinalities for the cardinality given the relation.
+	 * Query this.cardinalities given the relation.
 	 *
 	 * If the lookup fails, try looking up by name in this.cardinalitiesLookupByName.
 	 */
@@ -414,7 +409,7 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	/**
-	 * Query this.columnCardinalities for the column cardinality given the relation and attribute.
+	 * Query this.columnCardinalities given the relation and attribute.
 	 *
 	 * If the lookup fails, try looking up by name in this.columnCardinalitiesLookupByName.
 	 */
@@ -440,7 +435,7 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	/**
-	 * Query this.costs for the cost given the relation and access method.
+	 * Query this.costs given the relation and access method.
 	 *
 	 * If the lookup fails, try looking up by name in this.costsLookupByName.
 	 */
@@ -453,7 +448,7 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	/**
-	 * Query this.columnSelectivity for the column cardinality given the relation and attribute.
+	 * Query this.columnSelectivity given the relation and attribute.
 	 *
 	 * If the lookup fails, try looking up by name in this.columnSelectivityLookupByName.
 	 */
