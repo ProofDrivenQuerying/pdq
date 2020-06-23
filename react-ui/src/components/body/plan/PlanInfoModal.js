@@ -1,3 +1,6 @@
+// This file is part of PDQ (https://github.com/michaelbenedikt/pdq) which is released under the MIT license.
+// See accompanying LICENSE for copyright notice and full details.
+
 import React from 'react';
 import PopoutWindow from '../Popout';
 import { FaClipboardList } from 'react-icons/fa';

@@ -1,3 +1,6 @@
+// This file is part of PDQ (https://github.com/michaelbenedikt/pdq) which is released under the MIT license.
+// See accompanying LICENSE for copyright notice and full details.
+
 /**
  * The io.jaxb package will replace the old io.xml package with a jaxb xml
  * parser.
