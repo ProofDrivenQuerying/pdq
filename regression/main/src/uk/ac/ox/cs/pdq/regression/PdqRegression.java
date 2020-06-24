@@ -9,16 +9,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
@@ -435,9 +430,13 @@ public class PdqRegression {
 			jc.usage();
 			return;
 		}
-		File folder = new File("TestResults/current");
+		File folder = new File("TestResults/regression");
 		folder.mkdirs();
-		File stats = new File(folder,"summary"+System.currentTimeMillis() + ".txt");
+
+		// Get & format date for name of regression summary file
+		DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+		File stats = new File(folder,dateTimeFormat.format(new Date()) + ".txt");
+
 		System.out.println("Creating log file: " + stats.getAbsolutePath());
 		stats.delete();
 		try {
