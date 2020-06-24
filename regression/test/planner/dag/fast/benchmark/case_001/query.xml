@@ -5,7 +5,7 @@
 		<atom name="partsupp">
 			<variable />
 			<variable />
-			<constant value="10" type="java.math.BigDecimal"/>
+			<constant value="10" type="java.lang.Integer"/>
 			<variable name="x3" />
 			<variable />
 		</atom>

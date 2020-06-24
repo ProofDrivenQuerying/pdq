@@ -31,7 +31,7 @@
 		</atom>
 		<atom name="nation">
 			<variable name="x8" />
-			<constant value="UNITED STATES" />
+			<constant type="java.lang.String" value="UNITED STATES" />
 			<variable />
 			<variable />
 		</atom>

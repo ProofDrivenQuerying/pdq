@@ -37,7 +37,7 @@
 		</atom>
 		<atom name="region">
 			<variable name="x14" />
-			<constant value="AMERICA" />
+			<constant type="java.lang.String" value="AMERICA" />
 			<variable />
 		</atom>
 	</body>
