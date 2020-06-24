@@ -457,6 +457,7 @@ public class PdqRegression {
 				failed.append("\n\t").append(failedDir);
 			}
 			printStats(failed.toString());
+			System.out.flush();
 			System.err.println(failed.toString());
 			exitCode = 1;
 		}
