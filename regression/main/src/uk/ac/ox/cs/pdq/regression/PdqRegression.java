@@ -96,6 +96,8 @@ public class PdqRegression {
 		full
 	};
 
+	private final List<String> failedPlanning = new ArrayList<>();
+
 	/** The help. */
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
 	private boolean help;
@@ -163,27 +165,14 @@ public class PdqRegression {
 					// RUNTIME
 					doRuntime(directory, schema, observation);
 				}
-			} catch (FileNotFoundException | JAXBException e) {
-				e.printStackTrace();
-				stats+= "Failed: " + e.getMessage();
-				stats = "FAIL" + stats;
-			} catch (PlannerException e) {
-				e.printStackTrace();
-				stats+= "Failed: " + e.getMessage();				
-				stats = "FAIL" + stats;
-			} catch (SQLException e) {
-				e.printStackTrace();
-				stats+= "Failed: " + e.getMessage();				
-				stats = "FAIL" + stats;
 			} catch (Throwable e) {
 				e.printStackTrace();
-				stats+= "Failed: " + e.getMessage();				
+				stats+= "Failed: " + e.getMessage();
 				stats = "FAIL" + stats;
 			}
 			stats+= this.statsMsg;
 			this.statsMsg = "";
-			printStats(stats + "\n");				
-			
+			printStats(stats + "\n");
 		}
 	}
 
@@ -324,10 +313,12 @@ public class PdqRegression {
 			statsMsg+= "Cost: " + observation.getValue();
 		this.out.println("\n " + duration_s);
 		statsMsg+= "Finished, " + duration_s;
-		if (isFailed)
+		if (isFailed) {
+			failedPlanning.add(directory.getAbsolutePath());
 			statsMsg = " NOT ACCEPTED " + statsMsg;
-		else
+		} else {
 			statsMsg = " SUCCESS " + statsMsg;
+		}
 		return observation;
 	}
 	/** Checks the content of each sub directory and selects the ones that look like a test folder.
@@ -455,11 +446,30 @@ public class PdqRegression {
 			printStats("regression test failed " + t.getMessage());
 			t.printStackTrace();
 		}
+
+		int exitCode = 0;
+
+		// Notify the user of failures during planning
+		if(!failedPlanning.isEmpty()) {
+			StringBuilder failed = new StringBuilder(
+					"\n\nThe following tests failed during planning (" + failedPlanning.size() + " in total):");
+			for (String failedDir :	failedPlanning) {
+				failed.append("\n\t").append(failedDir);
+			}
+			printStats(failed.toString());
+			System.err.println(failed.toString());
+			exitCode = 1;
+		}
+
 		try {
 			if (statsFile!=null)
 				statsFile.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+
+		if (exitCode != 0) {
+			System.exit(exitCode);
 		}
 	}
 	
