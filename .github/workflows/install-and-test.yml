@@ -113,7 +113,7 @@ jobs:
         run: mvn -B test -f runtime
         if: ${{ success() || failure() }}
 
-      - name: Regression
+      - name: Regression (planner/dag/MandatoryPass/*)
         run: java ${LOG4JCONFIG} -jar ${JARFILE} -m ${MODE} -i ${INPUTDIR}
         working-directory: regression
         env:
@@ -123,3 +123,12 @@ jobs:
           INPUTDIR: test/planner/dag/MandatoryPass/
         if: ${{ success() || failure() }}
 
+      - name: Regression (runtime/simple/*)
+        run: java ${LOG4JCONFIG} -jar ${JARFILE} -m ${MODE} -i ${INPUTDIR}
+        working-directory: regression
+        env:
+          LOG4JCONFIG: -Dlog4j.configurationFile=main/src/resources/log4j2.xml
+          JARFILE: target/pdq-regression-1.0.0-Beta-jar-with-dependencies.jar
+          MODE: runtime
+          INPUTDIR: test/runtime/simple/
+        if: ${{ success() || failure() }}
