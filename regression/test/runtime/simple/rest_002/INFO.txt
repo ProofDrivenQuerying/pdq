@@ -1,3 +1,5 @@
+
+
 This test has a query:
 
 SELECT n_name, n_regionkey, n_comment, c_area
@@ -6,3 +8,6 @@ FROM nation JOIN country ON c_nationkey = n_nationkey
 The query refers to a schema with 2 tables, nation and country
 
 The schema has a constraint where the c_nationkey of country are referred to by the n_nationkey of nation.
+
+
+Note that this is NOT a simpleservice, but one of the older flavors of the specification for services.
