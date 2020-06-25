@@ -96,7 +96,15 @@ public class PdqRegression {
 		full
 	};
 
+	/**
+	 * A list of test directories that fail during planning
+	 */
 	private final List<String> failedPlanning = new ArrayList<>();
+
+	/**
+	 * A list of test directories that fail during runtime
+	 */
+	private final List<String> failedRuntime = new ArrayList<>();
 
 	/** The help. */
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
@@ -227,6 +235,12 @@ public class PdqRegression {
 
 		AcceptanceResult accResult = new ExpectedCardinalityAcceptanceCheck().check(regParams.getExpectedCardinality(), results);
 		accResult.report(this.out);
+
+		// Handle case of a failure
+		final boolean isFailed = accResult.getLevel() == AcceptanceLevels.FAIL;
+		if (isFailed) {
+			failedRuntime.add(directory.getAbsolutePath());
+		}
 	}
 
 	private Entry<RelationalTerm, Cost> doPlanning(File directory,Schema schema, PlannerTypes replacePlanner) throws JAXBException, PlannerException, SQLException, IOException, InterruptedException {
@@ -450,10 +464,23 @@ public class PdqRegression {
 		int exitCode = 0;
 
 		// Notify the user of failures during planning
-		if(!failedPlanning.isEmpty()) {
+		if (!failedPlanning.isEmpty()) {
 			StringBuilder failed = new StringBuilder(
 					"\n\nThe following tests failed during planning (" + failedPlanning.size() + " in total):");
-			for (String failedDir :	failedPlanning) {
+			for (String failedDir : failedPlanning) {
+				failed.append("\n\t").append(failedDir);
+			}
+			printStats(failed.toString());
+			System.out.flush();
+			System.err.println(failed.toString());
+			exitCode = 1;
+		}
+
+		// Notify the user of failures during runtime
+		if (!failedRuntime.isEmpty()) {
+			StringBuilder failed = new StringBuilder(
+					"\n\nThe following tests failed during runtime (" + failedRuntime.size() + " in total):");
+			for (String failedDir : failedRuntime) {
 				failed.append("\n\t").append(failedDir);
 			}
 			printStats(failed.toString());
@@ -463,8 +490,9 @@ public class PdqRegression {
 		}
 
 		try {
-			if (statsFile!=null)
+			if (statsFile != null) {
 				statsFile.close();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
