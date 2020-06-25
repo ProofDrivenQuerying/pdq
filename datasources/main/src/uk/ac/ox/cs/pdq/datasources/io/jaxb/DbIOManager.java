@@ -161,7 +161,7 @@ public class DbIOManager extends IOManager {
 			return xmlAccessMethod.toExecutableAccessMethod(null,xmlFile.getParentFile());
 		} catch (Throwable t) {
 			//t.printStackTrace();
-			// the xml was not a SqlAccessMethod or a InMemoryAccessMethod, so assume it is a RESTAccessMethod.
+			// the xml was not a SqlAccessMethod or a InMemoryAccessMethod or an simple web service so assume it is a RESTAccessMethod.
 			JAXBContext jaxbContext = JAXBContext.newInstance(Service.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			Service sr = (Service) jaxbUnmarshaller.unmarshal(xmlFile);
