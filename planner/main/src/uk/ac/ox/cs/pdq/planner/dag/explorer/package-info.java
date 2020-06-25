@@ -12,7 +12,7 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer;
  	Finally, check if the newly configuration matches the accessible query and update the best configuration appropriately.   
 	
 	-The DAGGenericSimple class explores the space of proofs exhaustively.
-	-The DAGOptimizedMultiThreaded (which extends the base class DAGOptimized). This employs some DP-like heuristics to cut down the search space. In the past heuristics that we consider were:
+	-The DAGOptimizedMultiThread (which extends the base class DAGOptimized). This employs some DP-like heuristics to cut down the search space. In the past heuristics that we consider were:
         -----Pruning the configurations that map to plans with cost >= to the best plan found so far.
 	---- Pruing the cost dominated configurations. A configuration c and c' is fact dominated by another configuration c' 
 	if there exists an homomorphism from the facts of c to the facts of c' and the input constants are preserved.
