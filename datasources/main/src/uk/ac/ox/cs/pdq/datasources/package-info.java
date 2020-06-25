@@ -14,10 +14,8 @@ in the plan language
 -- tools for reading these datasource objects from external repositories (currently,
 from SQL-based databases).
 
-Two XML-based specifications of services are maintained. The important
-one is the current format, which
-is fully operatioinal. There is also a legacy one, which can be parsed but
-the resulting parsed files cannot be used; it is useful only for creating converters
+There are 3 generations of XML-based specifications, unfortunately, of which two are still supported.  There is also a legacy one, which can be parsed but
+the resulting parsed files cannot be used; it is useful mostly for creating converters
 to the current format.
 	
 Subpackages include:
@@ -26,20 +24,20 @@ Subpackages include:
 
 -- schema builder, which allows one to read in external schemas (currently from a DBMS)
 
--- io.jaxb, for reading specifications in the current format
-
--- io.xml for reading specifications in the old format
+-- io.jaxb, for reading specifications in the current "simple web service" format
 
 -- legacy services, giving the java object representation of the legacy REST metadata specifications 
 
--- services, giving the java object representation of the current REST services -- metadata
+-- services, giving the java object representation of an older specification of REST services -- metadata
 and methods to access the data
+
+-- simple web service: the simplest and most recent specification for web services
 
 -- SQL, giving the java object representations of SQL-based datasources
 
 -- memory, giving the java object representation of access to main memory data
 
--- utility classes
+-- tuple and utility classes
   	
  The main top-level file in the package is  ExecutableAccessMethod.java
  This class extends the functionality of an AccessMethodDescriptor, which is an
