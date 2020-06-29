@@ -133,6 +133,6 @@ Currently, the only implementation reasoning algorithm is the Chase.</descriptio
 	</dependencies>
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/michaelbenedikt/pdq/issues/</url>
+		<url>https://github.com/ProofDrivenQuerying/pdq/issues/</url>
 	</issueManagement>
 </project>
