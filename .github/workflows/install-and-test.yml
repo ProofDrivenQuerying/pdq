@@ -3,9 +3,9 @@ name: Install and test PDQ
 on:
   push:
     branches:
-      - ci
+      - master
   pull_request:
-    branches-ignore:
+    branches:
       - '**'
 
 jobs:
