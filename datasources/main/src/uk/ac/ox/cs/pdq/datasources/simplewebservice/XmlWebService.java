@@ -105,7 +105,7 @@ public class XmlWebService extends ExecutableAccessMethod {
 						l.add(value);
 						parameters.put(p.getName(), l);
 					}
-					//Response response = this.target.request(mediaType).put(Entity.form(parameters));
+					
 					Response response = this.target.request(mediaType).post(Entity.form(parameters));
 					data.addAll(unmarshalXml(response, tuple));
 					response.close();
@@ -140,7 +140,7 @@ public class XmlWebService extends ExecutableAccessMethod {
 		}
 		for (PostParameter requestTemplate : this.postParams) {
 			if (requestTemplate.getValue().contains("{" + tuple.size() + "}")) {
-				throw new RuntimeException("One of the request templates refferes to {" + tuple.size()
+				throw new RuntimeException("One of the request templates refers to {" + tuple.size()
 						+ "}, but the input has only " + tuple.size() + " attributes. (input indexing starts from 0)");
 			}
 		}
@@ -152,7 +152,7 @@ public class XmlWebService extends ExecutableAccessMethod {
 		inputIndexes.addAll(parseTemplate(urlTemplate));
 		for (Integer i : inputIndexes) {
 			if (i < 0 || i >= tuple.size())
-				throw new RuntimeException("One of the request templates or the url template reffers to {" + i
+				throw new RuntimeException("One of the request templates or the url template refers to {" + i
 						+ "} attribute, but the input has only " + tuple.size()
 						+ " attributes. (input indexing starts from 0)");
 		}

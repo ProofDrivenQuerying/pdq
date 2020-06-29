@@ -75,7 +75,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;
 
 	/**
-	 * Constructor for PlannerParameters using default configuration file path.
+	 * Constructor for CostParameters using default configuration file path.
 	 */
 	public CostParameters() {
 		this(new File(DEFAULT_CONFIG_FILE_PATH), false, false);
@@ -84,7 +84,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	/**
 	 * Gets the version.
 	 *
-	 * @return the version of the planner code, as given by Maven
+	 * @return the version of the code, as given by Maven
 	 */
 	public static String getVersion() {
 	    String path = "/cost.version";
@@ -103,7 +103,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * Constructor for PlannerParameters.
+	 * Constructor for CostParameters.
 	 * @param config path to the configuration file to read
 	 */
 	public CostParameters(File config) {
@@ -111,7 +111,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Constructor for PlannerParameters.
+	 * Constructor for CostParameters.
 	 * @param config path to the configuration file to read
 	 * @param verbose if true, param loading problem will be reported
 	 */
@@ -120,7 +120,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Constructor for PlannerParameters.
+	 * Constructor for CostParameters.
 	 * @param config path to the configuration file to read
 	 * @param verbose if true, param loading problem will be reported
 	 * @param strict if true, param loading problem will throw an exception
@@ -130,7 +130,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Constructor for PlannerParameters.
+	 * Constructor for CostParameters.
 	 * @param config path to the configuration file to read
 	 * @param delay true if the loading of the given config file should be delayed
 	 * @param verbose if true, param loading problem will be reported
@@ -252,7 +252,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * Gets the cost type.
+	 * 
 	 *
 	 * @return CostTypes
 	 */
@@ -261,7 +261,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the cost type.
+	 * 
 	 *
 	 * @param costType String
 	 */
@@ -275,7 +275,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the cost type.
+	 * 
 	 *
 	 * @param costType CostTypes
 	 */
@@ -284,7 +284,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * Gets the cardinality estimation type.
+	 * 
 	 *
 	 * @return CardinalityEstimationTypes
 	 */
@@ -293,7 +293,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the cardinality estimation type.
+	 * 
 	 *
 	 * @param cardEstType String
 	 */
@@ -307,7 +307,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the cardinality estimation type.
+	 * 
 	 *
 	 * @param cardEstType CardinalityEstimationTypes
 	 */
@@ -316,31 +316,31 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * The Enum CostTypes.
+	 * 
 	 */
 	public static enum CostTypes {
 		
-		/** The simple constant. */
+		/**  */
 		@EnumParameterValue(description = "Estimates the cost as the sum of the cost of all accesses in a plan, \n where access cost are provided externally")
 		FIXED_COST_PER_ACCESS,
 		
-		/** The simple count. */
+		/** */
 		@EnumParameterValue(description = "Estimates the cost as the sum of all accesses in a plan")
 		COUNT_NUMBER_OF_ACCESSED_RELATIONS,
 		
-		/** The blackbox. */
+		/**  */
 		@EnumParameterValue(description = "Estimates the cost through some externally defined cost function.\nCurrently, this defaults to the white box cost functions relying on textbox cost estimation techniques")
 		TEXTBOOK,
 		
-		/** The blackbox db. */
+		/** T */
 		@EnumParameterValue(description = "Estimates the cost by translating the query to SQL and asking its cost to a database")
 		BLACKBOX_DB,
 		
-		/** The inverse length. */
+		/**  */
 		@EnumParameterValue(description = "Experimental: estimates the cost as the number of atoms in a plan")
 		INVERSE_LENGTH,
 		
-		/** The simple erspi. */
+		/**  */
 		@EnumParameterValue(description = "Estimates the cost as the sum of the estimated result size per invocation associated to each access method used in a plan")
 		NUMBER_OF_OUTPUT_TUPLES_PER_ACCESS,
 		
@@ -348,11 +348,11 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * The Enum CardinalityEstimationTypes.
+	 * 
 	 */
 	public static enum CardinalityEstimationTypes {
 		
-		/** The naive. */
+		/**  */
 		@EnumParameterValue(description = "Naive cardinality estimation, based on external defined constant join/selectivity reduction factors")
 		NAIVE
 	}

@@ -16,11 +16,11 @@ public final class DoubleCost extends Cost {
 	/** The Constant UPPER_BOUND. */
 	public static final DoubleCost UPPER_BOUND = new DoubleCost(Double.POSITIVE_INFINITY);
 	
-	/** The value. */
+	/**  */
 	protected Double value;
 
 	/**
-	 * Instantiates a new double cost.
+	 * 
 	 */
 	public DoubleCost() {
 		this.value = 0.0;
@@ -44,7 +44,7 @@ public final class DoubleCost extends Cost {
 	}
 
 	/**
-	 * Less or equals.
+	 * 
 	 *
 	 * @param cost Cost
 	 * @return boolean
@@ -59,7 +59,7 @@ public final class DoubleCost extends Cost {
 	}
 
 	/**
-	 * Greater or equals.
+	 * 
 	 *
 	 * @param cost Cost
 	 * @return boolean
@@ -75,11 +75,11 @@ public final class DoubleCost extends Cost {
 	}
 
 	/**
-	 * Less than.
+	 * 
 	 *
 	 * @param cost Cost
 	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.datasources.Cost#lessThan(Cost)
+	 * 
 	 */
 	@Override
 	public boolean lessThan(Cost cost) {
@@ -90,11 +90,11 @@ public final class DoubleCost extends Cost {
 	}
 
 	/**
-	 * Greater than.
+	 * 
 	 *
 	 * @param cost Cost
 	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.datasources.Cost#greaterThan(Cost)
+	 * 
 	 */
 	@Override
 	public boolean greaterThan(Cost cost) {
@@ -107,7 +107,7 @@ public final class DoubleCost extends Cost {
 	}
 
 	/**
-	 * Equals.
+	 * 
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -125,7 +125,7 @@ public final class DoubleCost extends Cost {
 	}
 
 	/**
-	 * Hash code.
+	 * 
 	 *
 	 * @return int
 	 */
@@ -135,7 +135,7 @@ public final class DoubleCost extends Cost {
 	}
 
 	/**
-	 * To string.
+	 * 
 	 *
 	 * @return String
 	 */
@@ -145,10 +145,10 @@ public final class DoubleCost extends Cost {
 	}
 
 	/**
-	 * Gets the value.
+	 * .
 	 *
 	 * @return Number
-	 * @see uk.ac.ox.cs.pdq.datasources.Cost#getValue()
+	 * 
 	 */
 	@Override
 	public Number getValue() {
@@ -156,7 +156,7 @@ public final class DoubleCost extends Cost {
 	}
 
 	/**
-	 * Compare to.
+	 * 
 	 *
 	 * @param o Cost
 	 * @return int

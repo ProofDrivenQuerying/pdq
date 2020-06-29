@@ -21,9 +21,7 @@ public interface AcceptanceCriterion<Expected, Observed> {
 	 * The Enum AcceptanceLevels.
 	 */
 	enum AcceptanceLevels { 
-		/** The pass. */
 		PASS, 
-		/** The fail. */
 		FAIL }
 
 	/**
@@ -35,10 +33,10 @@ public interface AcceptanceCriterion<Expected, Observed> {
 	 */
 	static class AcceptanceResult {
 
-		/** The level. */
+	
 		private final AcceptanceLevels level;
 
-		/** The supporting info. */
+		
 		private final List<String> supportingInfo;
 
 		/**
@@ -69,7 +67,7 @@ public interface AcceptanceCriterion<Expected, Observed> {
 		}
 
 		/**
-		 * Gets the level.
+		 * 
 		 *
 		 * @return the acceptance level of the result
 		 */
@@ -79,7 +77,7 @@ public interface AcceptanceCriterion<Expected, Observed> {
 	}
 
 	/**
-	 * Check.
+	 * 
 	 *
 	 * @param e expected object
 	 * @param o observed object

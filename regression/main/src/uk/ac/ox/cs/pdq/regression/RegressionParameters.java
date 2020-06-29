@@ -20,7 +20,7 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 7756663320915095016L;
 
-	/** Logger. */
+	/** */
 	private static Logger log = Logger.getLogger(RegressionParameters.class); 
 
 	/**  Properties file name. */
@@ -80,21 +80,21 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	/** The expected cardinality. */
 	@Parameter(description =
 			"The expected cardinality of a plan execution result.\n"
-			+ "This can be used for instance when there is way to execute the "
+			+ "This can be used for instance when there is no way to execute the "
 			+ "input query to obtain the ground truth.",
 			defaultValue = "-1")
 	private Integer expectedCardinality = -1;
 	
-	/** The skip runtime. */
+	/**  */
 	@Parameter(description =
 			"If true, skip the runtime test.\n"
-			+ "This can be used for case for actually testing runtime can be "
+			+ "This can be used for cases when testing runtime can be "
 			+ "costly (e.g. web services).",
 			defaultValue = "false")
 	private Boolean skipRuntime = false;
 	
 	/**
-	 * Gets the expected cardinality.
+	 * 
 	 *
 	 * @return Integer
 	 */
@@ -103,7 +103,7 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * Sets the expected cardinality.
+	 * 
 	 *
 	 * @param i Integer
 	 */
@@ -112,7 +112,7 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * Gets the skip runtime.
+	 * G
 	 *
 	 * @return Boolean
 	 */
@@ -121,7 +121,7 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * Sets the skip runtime.
+	 * 
 	 *
 	 * @param b Boolean
 	 */
@@ -130,7 +130,7 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * Sets the expected cardinality.
+	 * 
 	 *
 	 * @param i Integer
 	 */
@@ -139,7 +139,7 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Gets the version.
+	 * 
 	 *
 	 * @return the version of the builders code, as given by Maven
 	 */

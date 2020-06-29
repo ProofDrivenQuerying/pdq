@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.regression.utils.PlannerTestUtilities;
 
 /**
- * Acceptance test request the expected and observed plans to have the same cost
+ * Acceptance test requests that the expected and observed plans  have the same cost in order
  * to pass.
  * 
  * @author Julien Leblay
@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.regression.utils.PlannerTestUtilities;
 public class SameCostAcceptanceCheck implements AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> {
 
 	/**
-	 * Check.
+	 * 
 	 *
 	 * @param expectedPlan Plan
 	 * @param observedPlan Plan

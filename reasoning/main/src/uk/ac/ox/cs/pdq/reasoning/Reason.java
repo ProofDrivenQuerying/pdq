@@ -273,8 +273,7 @@ public class Reason {
 		return new Schema(rels,dep.toArray(new Dependency[dep.size()]));
 	}
 	/**
-	 * Creates the db relation. Currently codes in the position numbers into the
-	 * names, but this should change
+	 * Creates the db relation. 
 	 *
 	 * @param relation
 	 *            the relation

@@ -72,7 +72,8 @@ public class TestRestrictedChaser extends PdqTest {
 	}
 
 	/**
-	 * Uses an two example relation a TGD and an EGD such a way that after reasoning every fact should contain the constant John such as:
+	 * Uses an two example relation a TGD and an EGD such a way that after reasoning every fact should contain the constant
+	 * John such as:
 	 * <pre>
 	 * R1(k1,c,John), 
 	 * R1(k2,c,John), 

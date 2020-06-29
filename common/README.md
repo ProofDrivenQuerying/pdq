@@ -5,4 +5,4 @@ It features high-level interfaces and basic code for handling, FOL formulas, rel
 
 Please refer to the [main README](../README.md) for general information about the project, and for information about installation and usage.
 
-Please refer to the `package-info.java` files (or to the JavaDoc [[TODO]]) for specific information about each package.
+Please refer to the `package-info.java` files for specific information about each package.

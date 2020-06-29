@@ -1,1 +1,2 @@
 This a REST method which means it uses HTTP to access the target URL. It retrieves 20 results.
+Note that this is not a "simple webservice" description, but one of the older ones.
