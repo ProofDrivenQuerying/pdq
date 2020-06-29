@@ -1,3 +1,6 @@
+// This file is part of PDQ (https://github.com/michaelbenedikt/pdq) which is released under the MIT license.
+// See accompanying LICENSE for copyright notice and full details.
+
 /**
  * This reducer is in charge of setting the relationList field of the state based on
  * the particular dispatched action. This information is used in the SchemaDropdown

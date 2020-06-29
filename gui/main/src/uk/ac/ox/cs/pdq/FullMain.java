@@ -1,10 +1,13 @@
+// This file is part of PDQ (https://github.com/michaelbenedikt/pdq) which is released under the MIT license.
+// See accompanying LICENSE for copyright notice and full details.
+
 package uk.ac.ox.cs.pdq;
 
+import uk.ac.ox.cs.pdq.regression.PdqRegression;
 import uk.ac.ox.cs.pdq.ui.PDQApplication;
 import uk.ac.ox.cs.pdq.cost.CostMain;
 import uk.ac.ox.cs.pdq.planner.Planner;
 import uk.ac.ox.cs.pdq.reasoning.Reason;
-import uk.ac.ox.cs.pdq.regression.PDQ;
 import uk.ac.ox.cs.pdq.runtime.Runtime;
 
 import java.util.Arrays;
@@ -31,7 +34,7 @@ public class FullMain {
                 Runtime.main(new_args);
                 break;
             case "regression":
-                PDQ.main(new_args);
+                PdqRegression.main(new_args);
                 break;
             case "reasoning":
                 Reason.main(new_args);

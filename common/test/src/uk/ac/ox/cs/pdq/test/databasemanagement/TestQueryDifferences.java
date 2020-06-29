@@ -1,3 +1,6 @@
+// This file is part of PDQ (https://github.com/michaelbenedikt/pdq) which is released under the MIT license.
+// See accompanying LICENSE for copyright notice and full details.
+
 package uk.ac.ox.cs.pdq.test.databasemanagement;
 
 import java.util.ArrayList;
@@ -5,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -32,38 +34,6 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 public class TestQueryDifferences extends PdqTest {
 
 	/**
-	 * In this first part of the test we create the following query difference: Left
-	 * query: exists[x,y](R(x,y,z) & S(x,y)) Right query:exists[x,y,z](R(x,y,z) &
-	 * (S(x,y) & T(z,res1,res2)))
-	 * 
-	 * Second part of the test: Left query: exists[x,y](R(x,y,z) & S(x,y)) Right
-	 * query:exists[x,y,z,res2](R(x,y,z) & (S(x,y) & T(res1,res2,z)))
-	 * 
-	 * The result should be all facts that only satisfy the first query, but not the
-	 * second one. In both cases there should be one record that matches these query
-	 * differences.
-	 * 
-	 * @throws DatabaseException
-	 */
-	@Test
-	public void largeTableQueryDifferencePostgres() throws DatabaseException {
-		largeTableQueryDifferenceTGD(DatabaseParameters.Postgres);
-		largeTableQueryDifferenceEGD(DatabaseParameters.Postgres);
-	}
-
-	@Test
-	public void largeTableQueryDifferenceMemory() throws DatabaseException {
-		largeTableQueryDifferenceTGD(null);
-		largeTableQueryDifferenceEGD(null);
-	}
-	
-	@Test
-	public void testComplicatedQueryDifference() throws DatabaseException {
-		complicatedQueryDifference(DatabaseParameters.Postgres);
-		complicatedQueryDifference(null);
-	}
-
-	/**
 	 * In this test: Left query: exists[x,y](R(x,y,z) & S(x,y)) Right
 	 * query:exists[x,y,z](R(x,y,z) & (S(x,y) & T(z,res1,res2)))
 	 * 
@@ -73,7 +43,7 @@ public class TestQueryDifferences extends PdqTest {
 	 * @param parameters
 	 * @throws DatabaseException
 	 */
-	private void largeTableQueryDifferenceTGD(DatabaseParameters parameters) throws DatabaseException {
+	void largeTableQueryDifferenceTGD(DatabaseParameters parameters) throws DatabaseException {
 		DatabaseManager manager = null; 
 		if (parameters!=null)
 			manager = new ExternalDatabaseManager(parameters);
@@ -142,7 +112,7 @@ public class TestQueryDifferences extends PdqTest {
 	 * @param parameters
 	 * @throws DatabaseException
 	 */
-	private void largeTableQueryDifferenceEGD(DatabaseParameters parameters) throws DatabaseException {
+	void largeTableQueryDifferenceEGD(DatabaseParameters parameters) throws DatabaseException {
 		DatabaseManager manager = null;
 		if (parameters!=null)
 			manager = new ExternalDatabaseManager(parameters);
@@ -210,7 +180,7 @@ public class TestQueryDifferences extends PdqTest {
 	 * @param parameters
 	 * @throws DatabaseException
 	 */
-	private void complicatedQueryDifference(DatabaseParameters parameters) throws DatabaseException {
+	void complicatedQueryDifference(DatabaseParameters parameters) throws DatabaseException {
 		DatabaseManager manager = null;
 		if (parameters!=null)
 			manager = new ExternalDatabaseManager(parameters);

@@ -1,3 +1,6 @@
+// This file is part of PDQ (https://github.com/michaelbenedikt/pdq) which is released under the MIT license.
+// See accompanying LICENSE for copyright notice and full details.
+
 package uk.ac.ox.cs.pdq.test.reasoning.chase;
 
 import java.sql.SQLException;
@@ -510,21 +513,21 @@ public class TestKTerminationChaser extends PdqTest {
 	}
 
 	/**
-	 * Used by {@link TestRestrictedChaserMultiRun}
+	 * Used by {@link TestRestrictedChaserMultiRunPostgres}
 	 */
 	public void setConnection(DatabaseManager connection) {
 		this.connection = connection;
 	}
 
 	/**
-	 * Used by {@link TestRestrictedChaserMultiRun}
+	 * Used by {@link TestRestrictedChaserMultiRunPostgres}
 	 */
 	public void createSchema() {
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2 }, new Dependency[] { this.tgd });
 	}
 
 	/**
-	 * Used by {@link TestRestrictedChaserMultiRun}
+	 * Used by {@link TestRestrictedChaserMultiRunPostgres}
 	 */
 	public void setup(DatabaseManager c) throws SQLException {
 

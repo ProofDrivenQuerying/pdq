@@ -13,16 +13,14 @@
  		</RollingFile>
     </Appenders>
     <Loggers>
-    <!-- 
         <Logger name="uk.ac.ox.cs.pdq" level="warn">
-            <AppenderRef ref="CONSOLE" />
+            <AppenderRef ref="CONSOLE"/>
         </Logger>
         <Logger name="uk.ac.ox.cs.pdq.runtime" level="warn" additivity="false">
-            <AppenderRef ref="CONSOLE" />
+            <AppenderRef ref="CONSOLE"/>
         </Logger>
-         -->
-        <Root level="info">
-            <AppenderRef ref="FILE" />
+        <Root level="INFO">
+            <AppenderRef ref="FILE"/>
         </Root>
     </Loggers>
 </Configuration>

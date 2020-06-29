@@ -8,7 +8,7 @@
                 <RelationalTerm type="SelectionTerm">
                     <predicate type="ConjunctiveCondition">
                         <predicates position="1" type="ConstantEqualityCondition">
-                            <constant value="UNITED STATES"/>
+                            <constant type="java.lang.String" value="UNITED STATES"/>
                         </predicates>
                     </predicate>
                     <RelationalTerm type="RenameTerm">

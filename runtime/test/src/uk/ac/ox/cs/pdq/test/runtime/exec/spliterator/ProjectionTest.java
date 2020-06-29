@@ -1,3 +1,6 @@
+// This file is part of PDQ (https://github.com/michaelbenedikt/pdq) which is released under the MIT license.
+// See accompanying LICENSE for copyright notice and full details.
+
 package uk.ac.ox.cs.pdq.test.runtime.exec.spliterator;
 
 import static org.mockito.Mockito.when;
@@ -460,7 +463,7 @@ public class ProjectionTest {
 		// SUPPLIER.S_NATIONKEY), right_child AS (SELECT * FROM PART, PARTSUPP WHERE
 		// PART.P_PARTKEY = PARTSUPP.PS_PARTKEY) SELECT count(*) FROM left_child,
 		// right_child WHERE left_child.s_suppkey = right_child.ps_suppkey;
-		Assert.assertEquals(800001, result.size());
+		Assert.assertEquals(800000, result.size());
 		target.close();
 	}
 

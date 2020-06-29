@@ -1,3 +1,6 @@
+// This file is part of PDQ (https://github.com/michaelbenedikt/pdq) which is released under the MIT license.
+// See accompanying LICENSE for copyright notice and full details.
+
 package uk.ac.ox.cs.pdq.io.jaxb;
 
 import java.io.File;
@@ -444,7 +447,7 @@ public class IOManager {
 			// Open the csv file for reading
 			long recordCounter = 0;
 			if (verbose)
-				Logger.getLogger(IOManager.class.getName()).error("Importing " + r.getName());
+				Logger.getLogger(IOManager.class.getName()).info("Importing " + r.getName());
 			while (sc.hasNextLine()) {
 				String line = sc.nextLine();
 				String[] tuple = line.split(",");
@@ -469,7 +472,7 @@ public class IOManager {
 				facts.clear();
 			}
 			if (verbose)
-				Logger.getLogger(IOManager.class.getName()).error("\nImported " + recordCounter + " facts for relation " + r.getName());
+				Logger.getLogger(IOManager.class.getName()).info("Imported " + recordCounter + " facts for relation " + r.getName());
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

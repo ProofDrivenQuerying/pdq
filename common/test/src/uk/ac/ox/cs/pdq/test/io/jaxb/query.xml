@@ -10,8 +10,8 @@
         </atom>
         <atom name="r3">
 			<variable/>
-			<constant value="10" />
-			<constant value="UNITED STATES" />
+			<constant type="java.lang.Integer" value="10" />
+			<constant type="java.lang.String" value="UNITED STATES" />
 			<variable name="z"/>
         </atom>
         <atom name="r3">

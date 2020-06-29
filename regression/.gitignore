@@ -7,8 +7,5 @@
 /*.data
 /*.log
 /*.key
-<<<<<<< HEAD
 /.DS_Store
-=======
-/.DS_Store
->>>>>>> 67482d4... Changing one-jar assembly to Maven's own jar-with-dependency assembly.
+generated-plan.xml

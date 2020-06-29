@@ -1,3 +1,6 @@
+// This file is part of PDQ (https://github.com/michaelbenedikt/pdq) which is released under the MIT license.
+// See accompanying LICENSE for copyright notice and full details.
+
 package uk.ac.ox.cs.pdq.test.reasoning.chase.state;
 
 import java.sql.SQLException;
@@ -11,7 +14,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Assert;
-import org.junit.Test;
 
 import com.google.common.collect.Sets;
 
@@ -55,37 +57,13 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  *
  */
 public class TestEGDChaseStep extends PdqTest {
-	private Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
-	private Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
-	private Relation r[] = new Relation[] { A,B };
-	private Schema s = new Schema(r,new Dependency[0]);
+	Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
+	Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1")});
+	Relation r[] = new Relation[] { A,B };
+	Schema s = new Schema(r,new Dependency[0]);
 
-
-	/**
-	 * 
-	 * a. the facts of the chase instance are A(c_i,c_{i+1}), for i=1,...,1000 The
-	 * input matches contain the EGD B(x,y), B(x,y') -> y=y' and the i-th match in
-	 * the input collection contains the mapping {x=k1, y'=c_i, y=c_{i+1}} for
-	 * i=1,...,1000 after you do this operation, the database should contain only
-	 * one A fact. 
-	 * 
-	 * Should have one in the database as a result.
-	 * @param conn 
-	 * @param sqlType
-	 * @throws DatabaseException 
-	 * @throws SQLException 
-	 * @throws SQLException, DatabaseException
-	 */
-	@Test
-	public void testA_InMemory() throws SQLException, DatabaseException {
-		testA(getDatabaseConnectionInMem(s));
-	}
-	@Test
-	public void testA_External() throws SQLException, DatabaseException {
-		testA(getDatabaseConnectionExternal(s));
-	}
 	
-	public void testA(DatabaseManager conn) throws SQLException, DatabaseException {
+	void testA(DatabaseManager conn) throws SQLException, DatabaseException {
 		List<Atom> facts = new ArrayList<>();
 		for (int i=2; i <= 1000; i++) facts.add(Atom.create(A, new Term[]{UntypedConstant.create("c_"+(i-1)),UntypedConstant.create("c_"+i)}));
 		
@@ -122,41 +100,20 @@ public class TestEGDChaseStep extends PdqTest {
 		}
 	}
 
-	private DatabaseManager getDatabaseConnectionInMem(Schema s) throws SQLException, DatabaseException{
+	DatabaseManager getDatabaseConnectionInMem(Schema s) throws SQLException, DatabaseException{
 		LogicalDatabaseInstance connection = new InternalDatabaseManager();
 		connection.initialiseDatabaseForSchema(s);
 		return connection;
 	}
-	private DatabaseManager getDatabaseConnectionExternal(Schema s) throws SQLException, DatabaseException{
+
+	DatabaseManager getDatabaseConnectionExternal(Schema s) throws SQLException, DatabaseException{
 		LogicalDatabaseInstance connection = new LogicalDatabaseInstance(new MultiInstanceFactCache(), 
 				new ExternalDatabaseManager(DatabaseParameters.Postgres),13);
 		connection.initialiseDatabaseForSchema(s);
 		return connection;
 	}
-
-	/**
-	 * b. the facts of the chase instance are A(c_i,c_{i+1}), for i=1,...,1000 The
-	 * input matches contain the EGD B(x,y), B(x,y') -> y=y' and the i-th match in
-	 * the input collection contains the mapping {x=k1, y'=c_i, y=c_{i+1}} for
-	 * i=1,...,500 after you do this operation, the database should contain 501 A
-	 * facts. 
-	 * 
-	 * Should have 501 in the database as a result.
-	 * 
-	 * @param sqlType
-	 * @throws SQLException 
-	 * @throws SQLException, DatabaseException
-	 */
-	@Test
-	public void testB_InMemory() throws SQLException, DatabaseException {
-		testB(getDatabaseConnectionInMem(s));
-	}
-	@Test
-	public void testB_External() throws SQLException, DatabaseException {
-		testB(getDatabaseConnectionExternal(s));
-	}
 	
-	public void testB(DatabaseManager conn) throws SQLException, DatabaseException {
+	void testB(DatabaseManager conn) throws SQLException, DatabaseException {
 		List<Atom> facts = new ArrayList<>();
 		for (int i=2; i <= 1000; i++) facts.add(Atom.create(A, new Term[]{UntypedConstant.create("c_"+(i-1)),UntypedConstant.create("c_"+i)}));
 		
