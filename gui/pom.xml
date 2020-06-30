@@ -66,14 +66,15 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin><plugin>
-    <groupId>org.openjfx</groupId>
-    <artifactId>javafx-maven-plugin</artifactId>
-    <version>0.0.2</version>
-    <configuration>
-        <mainClass>main/src/uk/ac/ox/cs/pdq/ui/PDQApplication.java</mainClass>
-    </configuration>
-</plugin>
+			</plugin>
+			<plugin>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-maven-plugin</artifactId>
+				<version>0.0.2</version>
+				<configuration>
+					<mainClass>main/src/uk/ac/ox/cs/pdq/ui/PDQApplication.java</mainClass>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<organization>
