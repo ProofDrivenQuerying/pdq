@@ -23,11 +23,9 @@
         <module>runtime</module>
         <module>gui</module>
         <module>react-rest</module>
-
-
         <module>datasources</module>
-
         <module>regression</module>
+        <module>pdq-main</module>
 
         <!--
         // the server depends on proprietary libraries (logicblox), so comment it out if you cannot build.-->
@@ -121,6 +119,11 @@
             <dependency>
                 <groupId>uk.ac.ox.cs.pdq</groupId>
                 <artifactId>pdq-planner</artifactId>
+                <version>1.0.0-Beta</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.ac.ox.cs.pdq</groupId>
+                <artifactId>pdq-regression</artifactId>
                 <version>1.0.0-Beta</version>
             </dependency>
             <dependency>
