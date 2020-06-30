@@ -57,7 +57,7 @@
 							<archive>
 								<manifest>
 									<addClasspath>true</addClasspath>
-									<mainClass>uk.ac.ox.cs.pdq.FullMain</mainClass>
+									<mainClass>uk.ac.ox.cs.pdq.ui.GuiMain</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>
