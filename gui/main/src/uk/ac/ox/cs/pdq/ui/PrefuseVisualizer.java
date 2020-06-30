@@ -333,7 +333,7 @@ public class PrefuseVisualizer extends JComponent {
 		this.pathHighlightSlider.setBackground(Color.WHITE);
 
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
-		labelTable.put(new Integer(0), new JLabel("No path") );
+		labelTable.put(0, new JLabel("No path") );
 		this.pathHighlightSlider.setLabelTable(labelTable);
 		this.pathHighlightSlider.setPaintLabels(true);
 		

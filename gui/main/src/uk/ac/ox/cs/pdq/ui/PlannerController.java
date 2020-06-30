@@ -519,7 +519,7 @@ private void registerEvents(final ExplorationSetUp planner) {
 		if(!this.plansFound.contains(p)) {
 			this.plansFound.add(p);
 			int size = this.planSelection.getItems().size();
-			this.planSelection.getItems().add("Plan " + new Integer(size + 1).toString());
+			this.planSelection.getItems().add("Plan " + Integer.valueOf(size + 1).toString());
 			this.planSelection.getSelectionModel().selectedIndexProperty().addListener(this.viewPlan);
 		}
 	}

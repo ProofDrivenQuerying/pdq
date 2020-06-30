@@ -185,12 +185,12 @@ public class PrefuseEventHandler {
 	 */
 	public void updatePathHighlightSlider() {
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
-		labelTable.put( new Integer( 0 ), new JLabel("0") );
+		labelTable.put(0, new JLabel("0"));
 		int i = 0;
 		for(i = 0; i < this.paths.size(); ++i) {
-			labelTable.put( new Integer( i + 1 ), new JLabel(new Integer(i + 1).toString() ) );
+			labelTable.put(i + 1, new JLabel(Integer.valueOf(i + 1).toString()));
 		}
-		labelTable.put( new Integer( i + 1), new JLabel("All") );
+		labelTable.put(i + 1, new JLabel("All"));
 		this.pathHighlightSlider.setLabelTable(labelTable);
 		this.pathHighlightSlider.setValue(0);
 		this.pathHighlightSlider.setMinimum(0);

@@ -263,7 +263,7 @@ public class CustomColorAction extends ColorAction {
         this.m_olist = values;
         this.m_omap = new HashMap();
         for ( int i=0; i<values.length; ++i ) {
-            this.m_omap.put(values[i], new Integer(i));
+            this.m_omap.put(values[i], i);
         }
     }
     
