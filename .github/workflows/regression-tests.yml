@@ -1,0 +1,107 @@
+name: regression tests
+
+on:
+  schedule:
+    # Daily at 2am
+    - cron:  '0 2 * * *'
+
+jobs:
+  build:
+    name: Java ${{ matrix.java-version }}, postgres ${{ matrix.postgres-version }}
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # Newest, and oldest supported java versions
+        java-version: [ 14, 11 ]
+        # Newest, and oldest supported postgres versions
+        postgres-version: [ 12, 9.5 ]
+
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres-version }}
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: pdq
+
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up java ${{ matrix.java-version }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java-version }}
+          architecture: x64
+
+      - name: Restore cached tpch data
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: pdq-tpch-test-data
+          key: tpch-data-v1
+
+      - name: Download tpch data
+        run: |
+          wget -q --no-check-certificate -O pdq-tpch-test-data.zip "https://unioxfordnexus-my.sharepoint.com/:u:/g/personal/some3327_ox_ac_uk/ESytqq-8oyJNtF_dRq6aTrYBNtVacXhL5yP51Rf11A4v_A?e=1Lruh0&download=1"
+          unzip pdq-tpch-test-data.zip
+        if: steps.cache.outputs.cache-hit != 'true'
+
+      - name: Set up tpch database & user
+        run: |
+          psql -U postgres -c "create user admin password 'admin'"
+          psql -U postgres -c "create database tpch"
+          psql -U postgres -c "ALTER USER admin WITH SUPERUSER"
+          psql -U postgres -c "ALTER DATABASE tpch OWNER TO admin"
+        working-directory: pdq-tpch-test-data
+        env:
+          PGPASSWORD: root
+          PGHOST: localhost
+          PGPORT: 5432
+
+      - name: Ingest tpch data
+        run: |
+          sed -i 's+/path/to/pdq-tpch-test-data+/tmp+g' tpch-build-db.sql
+          export CONTAINERID=$(docker ps --filter "name=postgres" | awk 'NR==2 {print $1}')
+          docker cp . ${CONTAINERID}:/tmp
+          psql -U admin tpch -c "\i tpch-build-db.sql"
+          psql -U admin tpch -c "CREATE VIEW region_nation AS SELECT n.n_nationkey as nation_key, n_name as nation_name, r.r_regionkey as region_key, r_name as region_name FROM nation as n, region as r WHERE n.n_regionkey = r.r_regionkey"
+          psql -U admin tpch -c "CREATE VIEW order_customer AS SELECT c.c_name as cname, c.c_address as caddress, c.c_nationkey as cnation, c.c_acctbal as cactbal, o.o_orderpriority as opriority, o.o_clerk as oclerk, p.p_name as pname, p.p_brand as pbrand, p.p_type as ptype, l.l_extendedprice as lextendedprice, l.l_discount as ldiscount, l.l_tax as ltax, l.l_returnflag as lflag FROM customer as c, orders as o, lineitem as l, part as p WHERE o.o_orderkey = l.l_orderkey AND o.o_custkey = c.c_custkey AND l.l_partkey = p.p_partkey"
+          psql -U admin tpch -c "CREATE VIEW order_supplier AS SELECT s.s_name as sname, s.s_address as saddress, s.s_nationkey as snation, s.s_acctbal as sactbal, o.o_orderpriority as opriority, o.o_clerk as oclerk, p.p_name as pname, p.p_brand as pbrand, p.p_type as ptype, l.l_extendedprice as lextendedprice, l.l_discount as ldiscount, l.l_tax as ltax, l.l_returnflag as lflag FROM supplier as s, orders as o, lineitem as l, part as p WHERE o.o_orderkey = l.l_orderkey AND l.l_partkey = p.p_partkey AND l.l_suppkey = s.s_suppkey"
+          psql -U admin tpch -c "\d+"
+        working-directory: pdq-tpch-test-data
+        env:
+          PGPASSWORD: admin
+          PGHOST: localhost
+          PGPORT: 5432
+
+      - name: Install all components
+        run: mvn -B -DskipTests=true install
+
+      - name: Regression (planner/dag/MandatoryPass/*)
+        run: java ${LOG4JCONFIG} -jar ${JARFILE} -m ${MODE} -i ${INPUTDIR}
+        working-directory: regression
+        env:
+          LOG4JCONFIG: -Dlog4j.configurationFile=main/src/resources/log4j2.xml
+          JARFILE: target/pdq-regression-1.0.0-Beta-jar-with-dependencies.jar
+          MODE: planner
+          INPUTDIR: test/planner/dag/MandatoryPass/
+        if: ${{ success() || failure() }}
+
+      - name: Regression (runtime/simple/*)
+        run: java ${LOG4JCONFIG} -jar ${JARFILE} -m ${MODE} -i ${INPUTDIR}
+        working-directory: regression
+        env:
+          LOG4JCONFIG: -Dlog4j.configurationFile=main/src/resources/log4j2.xml
+          JARFILE: target/pdq-regression-1.0.0-Beta-jar-with-dependencies.jar
+          MODE: runtime
+          INPUTDIR: test/runtime/simple/
+        if: ${{ success() || failure() }}
