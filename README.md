@@ -1,3 +1,6 @@
+![unit tests](https://github.com/ProofDrivenQuerying/pdq/workflows/unit%20tests/badge.svg)
+![regression tests](https://github.com/ProofDrivenQuerying/pdq/workflows/regression%20tests/badge.svg)
+
 ![PDQ logo](https://www.cs.ox.ac.uk/projects/pdq/images/pdq-logo.svg)
 
 # Proof-Driven Query Planning
