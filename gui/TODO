@@ -1,5 +1,0 @@
-Proof pretty printing:
-	- Add a best proof tab in the planner's controller to show the best proof
-	  along the best plan's
-	- The proof should include on the axiom firings that leads to it, not
-	  just the accessibility axioms.
