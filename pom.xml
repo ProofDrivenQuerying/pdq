@@ -88,49 +88,49 @@
             <dependency>
                 <groupId>uk.ac.ox.cs.pdq</groupId>
                 <artifactId>pdq-common</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.ac.ox.cs.pdq</groupId>
                 <artifactId>pdq-common</artifactId>
                 <type>test-jar</type>
-                <version>${revision}</version>
+                <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>uk.ac.ox.cs.pdq</groupId>
                 <artifactId>pdq-datasources</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.ac.ox.cs.pdq</groupId>
                 <artifactId>pdq-cost</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.ac.ox.cs.pdq</groupId>
                 <artifactId>pdq-reasoning</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.ac.ox.cs.pdq</groupId>
                 <artifactId>pdq-runtime</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.ac.ox.cs.pdq</groupId>
                 <artifactId>pdq-planner</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.ac.ox.cs.pdq</groupId>
                 <artifactId>pdq-regression</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.ac.ox.cs.pdq</groupId>
                 <artifactId>pdq-gui</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.beust</groupId>
