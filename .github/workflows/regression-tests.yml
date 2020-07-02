@@ -33,6 +33,9 @@ jobs:
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
+    env:
+      LOG4JCONFIG: -Dlog4j.configurationFile=main/src/resources/log4j2.xml
+
     steps:
       - uses: actions/checkout@v2
 
@@ -87,21 +90,15 @@ jobs:
         run: mvn -B -DskipTests=true install
 
       - name: Regression (planner/dag/MandatoryPass/*)
-        run: java ${LOG4JCONFIG} -jar ${JARFILE} -m ${MODE} -i ${INPUTDIR}
+        run: |
+          export JARFILE=$(ls target/*-jar-with-dependencies.jar)
+          java ${LOG4JCONFIG} -jar ${JARFILE} -m planner -i test/planner/dag/MandatoryPass/
         working-directory: regression
-        env:
-          LOG4JCONFIG: -Dlog4j.configurationFile=main/src/resources/log4j2.xml
-          JARFILE: target/pdq-regression-1.0.0-Beta-jar-with-dependencies.jar
-          MODE: planner
-          INPUTDIR: test/planner/dag/MandatoryPass/
         if: ${{ success() || failure() }}
 
       - name: Regression (runtime/simple/*)
-        run: java ${LOG4JCONFIG} -jar ${JARFILE} -m ${MODE} -i ${INPUTDIR}
+        run: |
+          export JARFILE=$(ls target/*-jar-with-dependencies.jar)
+          java ${LOG4JCONFIG} -jar ${JARFILE} -m runtime -i test/runtime/simple/
         working-directory: regression
-        env:
-          LOG4JCONFIG: -Dlog4j.configurationFile=main/src/resources/log4j2.xml
-          JARFILE: target/pdq-regression-1.0.0-Beta-jar-with-dependencies.jar
-          MODE: runtime
-          INPUTDIR: test/runtime/simple/
         if: ${{ success() || failure() }}
