@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>pdq-main</artifactId>
-	<version>1.0.0-Beta</version>
+	<version>${revision}</version>
 
 	<parent>
 		<groupId>uk.ac.ox.cs.pdq</groupId>
 		<artifactId>pdq</artifactId>
-		<version>1.0.0-Beta</version>
+		<version>${revision}</version>
 		<relativePath>..</relativePath>
 	</parent>
 
@@ -81,6 +81,9 @@
 			</plugin>
 		</plugins>
 	</build>
+	<properties>
+		<revision>1.0.0-Beta</revision>
+	</properties>
 	<name>PDQ main entry point</name>
 	<description>The main entry point for using PDQ</description>
 	<url>http://www.cs.ox.ac.uk/pdq/</url>
@@ -112,6 +115,10 @@
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
 			<artifactId>pdq-regression</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>uk.ac.ox.cs.pdq</groupId>
+			<artifactId>pdq-gui</artifactId>
 		</dependency>
 	</dependencies>
 </project>

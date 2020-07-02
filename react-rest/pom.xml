@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>uk.ac.ox.cs.pdq</groupId>
   	<artifactId>pdq-react-rest</artifactId>
-  	<version>1.0.0-Beta</version>
+  	<version>${revision}</version>
   	<name>PDQ REST API</name>
   	<url>http://www.cs.ox.ac.uk/pdq/</url>
     <packaging>jar</packaging>
@@ -71,43 +71,43 @@
         <dependency>
     			<groupId>uk.ac.ox.cs.pdq</groupId>
     			<artifactId>pdq-common</artifactId>
-                <version>1.0.0-Beta</version>
+                <version>${revision}</version>
         </dependency>
 
         <dependency>
     			<groupId>uk.ac.ox.cs.pdq</groupId>
     			<artifactId>pdq-gui</artifactId>
-                <version>1.0.0-Beta</version>
+                <version>${revision}</version>
         </dependency>
 
         <dependency>
     			<groupId>uk.ac.ox.cs.pdq</groupId>
     			<artifactId>pdq-reasoning</artifactId>
-                <version>1.0.0-Beta</version>
+                <version>${revision}</version>
         </dependency>
 
         <dependency>
             <groupId>uk.ac.ox.cs.pdq</groupId>
             <artifactId>pdq-runtime</artifactId>
-            <version>1.0.0-Beta</version>
+            <version>${revision}</version>
         </dependency>
 
         <dependency>
     			<groupId>uk.ac.ox.cs.pdq</groupId>
     			<artifactId>pdq-planner</artifactId>
-                <version>1.0.0-Beta</version>
+                <version>${revision}</version>
         </dependency>
 
         <dependency>
     			<groupId>uk.ac.ox.cs.pdq</groupId>
     			<artifactId>pdq-datasources</artifactId>
-                <version>1.0.0-Beta</version>
+                <version>${revision}</version>
         </dependency>
 
         <dependency>
     			<groupId>uk.ac.ox.cs.pdq</groupId>
     			<artifactId>pdq-cost</artifactId>
-                <version>1.0.0-Beta</version>
+                <version>${revision}</version>
         </dependency>
         <!-- pdq dependencies -->
     </dependencies>
