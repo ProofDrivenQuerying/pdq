@@ -82,7 +82,7 @@
 		</plugins>
 	</build>
 	<properties>
-		<revision>1.0.0-Beta</revision>
+		<revision>0.99</revision>
 	</properties>
 	<name>PDQ main entry point</name>
 	<description>The main entry point for using PDQ</description>
