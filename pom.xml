@@ -81,6 +81,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <pdq.skip-tests>none</pdq.skip-tests>
+        <revision>0.99</revision>
     </properties>
     <dependencyManagement>
         <dependencies>
