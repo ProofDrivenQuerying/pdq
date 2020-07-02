@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.cost.CostMain;
 import uk.ac.ox.cs.pdq.planner.Planner;
 import uk.ac.ox.cs.pdq.reasoning.Reason;
 import uk.ac.ox.cs.pdq.runtime.Runtime;
+import uk.ac.ox.cs.pdq.ui.PDQApplication;
 
 import java.util.Arrays;
 
@@ -39,6 +40,9 @@ public class PdqMain {
             case "reasoning":
                 Reason.main(new_args);
                 break;
+            case "gui":
+                PDQApplication.main(new_args);
+                break;
             default:
                 printHelp();
                 break;
@@ -55,6 +59,7 @@ public class PdqMain {
                 "\t\truntime\n" +
                 "\t\tregression\n" +
                 "\t\treasoning\n" +
+                "\t\tgui\n" +
                 "\tand args are arguments for the selected module\n";
         System.out.println(sb);
     }
