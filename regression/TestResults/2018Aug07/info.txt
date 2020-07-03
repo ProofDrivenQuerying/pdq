@@ -1,1 +1,0 @@
-These test were performed by forcing the PlannerParameter.getPlannerType method to always return DAG_GENERIC or DAG_GENERIC_SIMPLE. The results might be different with the original planner specified in the case.properties files.
