@@ -20,7 +20,7 @@ public class PdqMain {
     public static void main(String[] args) {
 
         if (args.length == 0) {
-            printHelp();
+            PDQApplication.main(args);
         }
         else {
             String[] new_args = Arrays.copyOfRange(args, 1, args.length);
