@@ -99,6 +99,6 @@ jobs:
       - name: Regression (runtime/simple/*)
         run: |
           export JARFILE=$(ls target/*-jar-with-dependencies.jar)
-          java ${LOG4JCONFIG} -jar ${JARFILE} -m runtime -i test/runtime/simple/
+          java ${LOG4JCONFIG} -jar ${JARFILE} -m runtime -i test/runtime/
         working-directory: regression
         if: ${{ success() || failure() }}
