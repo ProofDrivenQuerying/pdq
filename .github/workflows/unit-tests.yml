@@ -112,3 +112,7 @@ jobs:
       - name: Test pdq runtime
         run: mvn -B test -f runtime
         if: ${{ success() || failure() }}
+
+      - name: Test pdq gui
+        run: mvn -B test -f gui
+        if: ${{ success() || failure() }}

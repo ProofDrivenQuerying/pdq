@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryParser;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteLexer;
 
 
-public class GUIExampleInput4 {
+public class GUIExampleInput3Test {
 	
 	// test method tests example input
 	@Test
@@ -25,32 +25,29 @@ public class GUIExampleInput4 {
 		Schema schema = testschema();
 	}
 	static public Schema testschema() {
-		Relation nation = Relation.create("nation",
+		Relation R = Relation.create("R",
 			new Attribute[] {
-					Attribute.create(Integer.class, "n_nationkey"),
-					Attribute.create(String.class, "n_name"),
-					Attribute.create(Integer.class, "n_regionkey"),
-					Attribute.create(String.class, "n_comment")
-					},
+					Attribute.create(String.class, "x")},
 			new AccessMethodDescriptor[] {
-					AccessMethodDescriptor.create("m10", new Integer[] { }),
-					AccessMethodDescriptor.create("m11", new Integer[] { 0, 1 })
-					});
-		Relation region = Relation.create("region",
+					AccessMethodDescriptor.create("R_free", new Integer[] { })});
+		Relation S = Relation.create("S",
 			new Attribute[] {
-					Attribute.create(String.class, "r_regionkey"),
-					Attribute.create(String.class, "r_name"),
-					Attribute.create(String.class, "r_comment")},
+					Attribute.create(String.class, "x"),
+					Attribute.create(String.class, "y")},
 			new AccessMethodDescriptor[] {
-					AccessMethodDescriptor.create("m12", new Integer[] { }),
-					AccessMethodDescriptor.create("m11", new Integer[] { 0 })
-					});
-					
+					AccessMethodDescriptor.create("S_free", new Integer[] { })});
+		Relation T = Relation.create("T",
+			new Attribute[] {
+					Attribute.create(String.class, "y"),
+					Attribute.create(String.class, "z")},
+			new AccessMethodDescriptor[] {
+					AccessMethodDescriptor.create("T_free", new Integer[] { })});
 					
 
 		Schema schema = new Schema(new Relation[] {			
-			nation,
-			region});
+			R,
+			S,
+			T});
 		return schema;
 	}
 

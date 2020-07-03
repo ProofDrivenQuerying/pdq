@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryParser;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteLexer;
 
 
-public class GUIExampleInput2 {
+public class GUIExampleInput2Test {
 	
 	// test method tests example input
 	@Test
