@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>uk.ac.ox.cs.pdq</groupId>
     <artifactId>pdq</artifactId>
-    <version>0.99</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>PDQ</name>
     <url>http://www.cs.ox.ac.uk/pdq/</url>
