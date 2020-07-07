@@ -1,4 +1,4 @@
-// This file is part of PDQ (https://github.com/ProofDrivenQuerying/pdq) which is released under the MIT license.
+// This file is part of PDQ (https://github.com/michaelbenedikt/pdq) which is released under the MIT license.
 // See accompanying LICENSE for copyright notice and full details.
 
 package uk.ac.ox.cs.pdq.planner;
@@ -67,8 +67,8 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
  * create various objects like explorer,reasoner,cost estimator, etc...
  * <li>- implements an easy to use search function that has a query as input and
  * returns plans with costs for the given query over the previously configured
- * schema.</li><br>
- * <li>- Also creates and manages an eventBus.</li><br>
+ * schema. </li>
+ * <li> - Also creates and manages an eventBus.</li><br>
  * <li>- converts query into AccessibleQuery and maintains a map of its
  * variables to chase-constants.</li><br>
  * 
@@ -198,7 +198,7 @@ public class ExplorationSetUp {
 			}
 			databaseConnection.initialiseDatabaseForSchema(this.accessibleSchema);
 		} catch (DatabaseException e1) {
-			throw new PlannerException("Faild to create database",e1);
+			throw new PlannerException("Failed to create database",e1);
 		}
 
 		try {
@@ -219,6 +219,7 @@ public class ExplorationSetUp {
 			explorer.setExceptionOnLimit(this.plannerParams.getExceptionOnLimit());
 			explorer.setMaxRounds(this.plannerParams.getMaxIterations().doubleValue());
 		    explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
+			explorer.setFindBestPlan(this.plannerParams.getFindBestPlan());
 			explorer.explore();
 			if (explorer.getBestPlan() != null && explorer.getBestCost() != null) {
 				RelationalTerm bestPlan = explorer.getBestPlan();
@@ -440,3 +441,4 @@ public class ExplorationSetUp {
 		return canonicalSubstitutionOfFreeVariables;
 	}
 }
+
