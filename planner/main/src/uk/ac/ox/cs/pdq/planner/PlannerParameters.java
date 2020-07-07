@@ -1,4 +1,4 @@
-// This file is part of PDQ (https://github.com/ProofDrivenQuerying/pdq) which is released under the MIT license.
+// This file is part of PDQ (https://github.com/michaelbenedikt/pdq) which is released under the MIT license.
 // See accompanying LICENSE for copyright notice and full details.
 
 package uk.ac.ox.cs.pdq.planner;
@@ -139,6 +139,11 @@ public class PlannerParameters extends Parameters {
 			+ "gracefully")
 	protected Boolean exceptionOnLimit;
 
+	/** Checks if we want one plan or the best plan */
+	@Parameter(description = "if we want the best plan or just a plan",
+			defaultValue = "true")
+	protected Boolean findBestPlan = true;
+
 	/** The validator type. */
 	@Parameter(description = "Type of validator to use. Only required in "
 			+ "conjunction with DAG planning algorithms",
@@ -149,20 +154,20 @@ public class PlannerParameters extends Parameters {
 			+ "conjunction with DAG planning algorithms")
 	protected FilterTypes filterType;
 
-	/** The dominance type. */
+	/** The dominance type. Dominance is used to avoid searching in different parts of the plan space */
 	@Parameter(description = "Type of dominance checks to use. Only required "
 			+ "in conjunction with DAG planning algorithms",
 			defaultValue = "STRICT_OPEN")
 	protected DominanceTypes dominanceType = DominanceTypes.OPEN;
 
-	/** The success dominance type. */
+	/** The success dominance type. Success domiannce refers to avoiding searching parts of the plan space since it is considered worse than a part we have already seen */
 	@Parameter(description =
 			"Type of sucess dominance checks to use. Only required in "
 			+ "conjunction with DAG planning algorithms",
 			defaultValue = "OPEN")
 	protected SuccessDominanceTypes successDominanceType = SuccessDominanceTypes.OPEN;
 
-	/** The follow up handling. */
+	/** The follow up handling. Refers to how we build plans when we fire one of the access rules */
 	@Parameter(description = "Specifies how follow-up joins should be handled."
 			+ "\nOnly applies to DAG planning algorithms",
 			defaultValue = "MINIMAL")
@@ -196,7 +201,7 @@ public class PlannerParameters extends Parameters {
 	private long dagThreadTimeout = 1000*60*2; // 2 minutes
 
 	/**
-	 * Gets the max iterations.
+	 * 
 	 *
 	 * @return Integer
 	 */
@@ -205,7 +210,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the max iterations.
+	 * 
 	 *
 	 * @param maxIterations Number
 	 */
@@ -214,7 +219,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the max iterations.
+	 * 
 	 *
 	 * @param maxIterations String
 	 */
@@ -224,7 +229,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the timeout.
+	 * 
 	 *
 	 * @param s String
 	 */
@@ -234,7 +239,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the planner type.
+	 * 
 	 *
 	 * @return PlannerTypes
 	 */
@@ -246,7 +251,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the planner type.
+	 * 
 	 *
 	 * @param plannerType PlannerTypes
 	 */
@@ -255,7 +260,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the planner type.
+	 * 
 	 *
 	 * @param plannerType String
 	 */
@@ -269,7 +274,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the query match interval.
+	 * 
 	 *
 	 * @return Integer
 	 */
@@ -281,7 +286,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the query match interval.
+	 * 
 	 *
 	 * @param queryMatchInterval Number
 	 */
@@ -297,7 +302,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the post pruning type.
+	 * 
 	 *
 	 * @param postPruningType PostPruningTypes
 	 */
@@ -306,7 +311,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the post pruning type.
+	 * 
 	 *
 	 * @param postPruningType String
 	 */
@@ -320,7 +325,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the chase interval.
+	 * 
 	 *
 	 * @return Integer
 	 */
@@ -332,7 +337,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the chase interval.
+	 * 
 	 *
 	 * @param chaseInterval Number
 	 */
@@ -341,7 +346,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the max depth.
+	 * 
 	 *
 	 * @return Integer
 	 */
@@ -353,7 +358,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the max depth.
+	 * 
 	 *
 	 * @param maxDepth Number
 	 */
@@ -369,7 +374,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the exception on limit.
+	 * 
 	 *
 	 * @param exceptionOnLimit Boolean
 	 */
@@ -378,7 +383,24 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the validator type.
+	 * @return Boolean
+	 */
+	public Boolean getFindBestPlan() {
+		return this.findBestPlan == null ? true : this.findBestPlan;
+	}
+
+    /**
+	 * 
+	 *
+	 * @param bestPlan Boolean
+	 */
+	public void setFindBestPlan(Boolean bestPlan) {
+		this.findBestPlan = bestPlan;
+	}
+
+
+	/**
+	 * 
 	 *
 	 * @return ValidatorTypes
 	 */
@@ -387,7 +409,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the validator type.
+	 * 
 	 *
 	 * @param validatorType ValidatorTypes
 	 */
@@ -396,7 +418,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the validator type.
+	 * 
 	 *
 	 * @param validatorType String
 	 */
@@ -405,7 +427,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the filter type.
+	 * 
 	 *
 	 * @return FilterTypes
 	 */
@@ -414,7 +436,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the filter type.
+	 * 
 	 *
 	 * @param filterType FilterTypes
 	 */
@@ -423,7 +445,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the filter type.
+	 * 
 	 *
 	 * @param filterType String
 	 */
@@ -432,7 +454,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the dominance type.
+	 * 
 	 *
 	 * @return DominanceTypes
 	 */
@@ -449,7 +471,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the dominance type.
+	 *
 	 *
 	 * @param dominanceType String
 	 */
@@ -463,7 +485,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the success dominance type.
+	 * 
 	 *
 	 * @return SuccessDominanceTypes
 	 */
@@ -472,7 +494,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the success dominance type.
+	 * 
 	 *
 	 * @param successDominanceType SuccessDominanceTypes
 	 */
@@ -481,7 +503,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the success dominance type.
+	 * 
 	 *
 	 * @param successDominanceType String
 	 */
@@ -502,7 +524,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the follow up handling.
+	 * 
 	 *
 	 * @param f FollowUpHandling
 	 */
@@ -511,7 +533,7 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the follow up handling.
+	 * 
 	 *
 	 * @param f String
 	 */
@@ -719,27 +741,27 @@ public class PlannerParameters extends Parameters {
 	 */
 	public static enum SuccessDominanceTypes {
 		
-		/** The closed. */
+	
 		@EnumParameterValue(description = "Closed dominance on successful configurations.")
 		CLOSED,
 
-		/** The open. */
+		
 		@EnumParameterValue(description = "Open dominance on successful configurations.")
 		OPEN
 	}
 
 	/**
-	 * The Enum FollowUpHandling.
+	 * 
 	 */
 	public static enum FollowUpHandling {
 		
-		/** The minimal. */
+		
 		@EnumParameterValue(description = "Minimal follow-up join.\n"
 				+ "Upon initializing of a DAG plan search every follow-up join "
 				+ "gives rise to an independant ApplyRule")
 		MINIMAL, 
 		
-		/** The maximal. */
+		
 		@EnumParameterValue(description = "Maximal follow-up join.\n"
 				+ "Upon initializing of a DAG plan search all follow-up joins "
 				+ "gives rise to a single/common ApplyRule")
