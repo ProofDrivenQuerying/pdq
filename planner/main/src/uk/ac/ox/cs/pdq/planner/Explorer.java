@@ -26,6 +26,9 @@ public abstract class Explorer {
 
 	/**  The best plan found this far. */
 	protected RelationalTerm bestPlan = null;
+
+	/** If we want to find the best plan or not */
+	protected Boolean findBestPlan = true;
 	
 	/**  The cost of the best plan found this far. */
 	protected Cost bestCost = null;
@@ -80,6 +83,16 @@ public abstract class Explorer {
 		}
 		this.checkLimitReached();
 		this.post();
+		if (foundEnoughPlans()) {
+			System.out.println("Plan found!");
+		}
+		else if (hasTimedOut()) {
+			System.out.println(this.elapsedTime/ 1e6);
+			System.out.println(this.maxElapsedTime);
+			System.out.println("TIMEOUT EXPIRED");
+		} else if (hasReachMaxRounds()){
+			System.out.println("Max Rounds Reached");
+		}
 	}
 
 	public void updateClock() {
@@ -89,14 +102,31 @@ public abstract class Explorer {
 	}
 
 	protected boolean checkLimitReached() throws LimitReachedException {
-		this.updateClock();
-		boolean hasTimedOut = (this.elapsedTime / 1e6) > this.maxElapsedTime;
-		if (hasTimedOut && this.exceptionOnLimit) 
+		boolean hasTimedOutCache = hasTimedOut();
+		if (foundEnoughPlans()) {
+			return true;
+		}
+		if (hasTimedOutCache && this.exceptionOnLimit)
 			throw new LimitReachedException("Planning timeout reached: " + (this.elapsedTime / 1e6) + ">" + this.maxElapsedTime, Reasons.TIMEOUT);
-		boolean hasReachMaxRounds = this.rounds > this.maxRounds;
-		if (hasReachMaxRounds && this.exceptionOnLimit) 
+		boolean hasReachMaxRoundsCache = hasReachMaxRounds();
+		if (hasReachMaxRoundsCache && this.exceptionOnLimit)
 			throw new LimitReachedException("Planning max number of iterations reached: " + this.rounds + ">" + this.maxRounds, Reasons.MAX_ITERATION);
-		return hasTimedOut || hasReachMaxRounds;
+		return hasTimedOutCache || hasReachMaxRoundsCache;
+	}
+
+	private boolean hasReachMaxRounds() {
+		return this.rounds > this.maxRounds;
+	}
+        
+	/** if we do not require the best plan (parameter that can be user set) then return true if we have any plan
+	*/
+	private boolean foundEnoughPlans() {
+		return this.bestPlan != null && !this.getFindBestPlan();
+	}
+
+	private boolean hasTimedOut() {
+		this.updateClock();
+		return (this.elapsedTime / 1e6) > this.maxElapsedTime;
 	}
 
 	protected void post() {
@@ -155,4 +185,13 @@ public abstract class Explorer {
 	public double getElapsedTime() {
 		return this.elapsedTime;
 	}
+
+	public boolean getFindBestPlan(){
+		return this.findBestPlan;
+	}
+
+	public void setFindBestPlan(Boolean findBestPlan){
+		this.findBestPlan = findBestPlan;
+	}
+
 }

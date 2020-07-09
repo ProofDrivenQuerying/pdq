@@ -156,13 +156,16 @@ public class Planner {
 		for (String k : this.dynamicParams.keySet()) {
 			planParams.set(k, this.dynamicParams.get(k));
 		}
+		for (String k : this.dynamicParams.keySet()) {
+			reasoningParams.set(k, this.dynamicParams.get(k));
+		}
 		try {
 			Schema schema = IOManager.importSchema(new File(this.getSchemaPath()));
 			ConjunctiveQuery query = IOManager.importQuery(new File(this.getQueryPath()));
 
 			Entry<RelationalTerm, Cost> entry = null;
-				ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
-				entry = planner.search(query);
+			ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
+			entry = planner.search(query);
 
 			if (entry != null) {
 				System.out.println("Plan found with cost: " + entry.getValue());
