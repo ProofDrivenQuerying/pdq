@@ -39,6 +39,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
  * Tests the access repository
  * 
  * @author gabor
+ * @author Stefano
  *
  */
 public class TestAccessRepositoryPostgres extends PdqTest {

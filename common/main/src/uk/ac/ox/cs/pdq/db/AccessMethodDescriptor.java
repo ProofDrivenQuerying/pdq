@@ -9,8 +9,6 @@ import java.util.Map;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.junit.Assert;
-
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.AccessMethodAdapter;
@@ -26,6 +24,7 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  * @author Gabor Gyorkei
+ * @author Stefano
  */
 @XmlJavaTypeAdapter(AccessMethodAdapter.class)
 public class AccessMethodDescriptor implements Serializable {
@@ -62,7 +61,7 @@ public class AccessMethodDescriptor implements Serializable {
 	}
 	
 	public int getInputPosition(int index) {
-		Assert.assertTrue(index >=0 && index < this.inputs.length);
+		assert (index >=0 && index < this.inputs.length);
 		return this.inputs[index];
 	}
 	

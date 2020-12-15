@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
-
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -37,6 +35,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * The (output) facts are all stored inside the state member field.
  *
  * @author Efthymia Tsamoura
+ * @author Stefano
  */
 public class LinearChaseConfiguration extends ChaseConfiguration implements LinearConfiguration {
 
@@ -65,15 +64,15 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	}
 	public LinearChaseConfiguration(LinearChaseConfiguration parent, Set<Candidate> candidatesToExpose, AccessibleChaseInstance state) {
 		super(state, new LinkedHashSet<Constant>(), LinearChaseConfiguration.getOutputConstants(candidatesToExpose));
-		Assert.assertNotNull(parent);
-		Assert.assertTrue(candidatesToExpose!= null && !candidatesToExpose.isEmpty());
-		Assert.assertTrue(this.getInput() != null && this.getInput().isEmpty());
-		Assert.assertNotNull(this.getOutput());
+		assert (parent != null);
+		assert (candidatesToExpose!= null && !candidatesToExpose.isEmpty());
+		assert (this.getInput() != null && this.getInput().isEmpty());
+		assert (this.getOutput() != null);
 		this.rule = candidatesToExpose.iterator().next().getRule();
 		this.facts = new LinkedHashSet<>();
 		this.newlyExposedCandidates = candidatesToExpose;
 		for (Candidate candidate:candidatesToExpose) {
-			Assert.assertTrue(this.rule.equals(candidate.getRule()));
+			assert (this.rule.equals(candidate.getRule()));
 			this.facts.add(candidate.getFact());
 		}
 		List<Match> matches = new ArrayList<>();

@@ -3,8 +3,6 @@
 
 package uk.ac.ox.cs.pdq.algebra;
 
-import org.junit.Assert;
-
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.tuple.Tuple;
@@ -15,6 +13,7 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
  *  
  * @author Unknown
  * @author Gabor
+ * @author Stefano
  */
 public class ConstantEqualityCondition extends SimpleCondition {
 	private static final long serialVersionUID = 1040523371703814834L;
@@ -27,7 +26,7 @@ public class ConstantEqualityCondition extends SimpleCondition {
 
 	private ConstantEqualityCondition(int position, TypedConstant constant) {
 		super(position);
-		Assert.assertTrue(position >= 0 && constant != null);
+		assert (position >= 0 && constant != null);
 		this.position = position;
 		this.constant = constant;
 	}

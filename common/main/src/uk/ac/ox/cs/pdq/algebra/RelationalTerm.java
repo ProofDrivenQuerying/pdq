@@ -12,8 +12,6 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.junit.Assert;
-
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -23,6 +21,7 @@ import uk.ac.ox.cs.pdq.io.jaxb.adapters.RelationalTermAdapter;
  * 
  * @author Efthymia Tsamoura
  * @author Tim Hobson
+ * @author Stefano
  */
 @XmlJavaTypeAdapter(RelationalTermAdapter.class)
 public abstract class RelationalTerm implements Serializable, Plan {
@@ -40,7 +39,7 @@ public abstract class RelationalTerm implements Serializable, Plan {
 	private Set<AccessTerm> accessesCached = null;
 
 	protected RelationalTerm(Attribute[] inputAttributes, Attribute[] outputAttributes) {
-		Assert.assertTrue(outputAttributes != null);
+		assert (outputAttributes != null);
 		this.inputAttributes = inputAttributes;
 		this.outputAttributes = outputAttributes;
 	}

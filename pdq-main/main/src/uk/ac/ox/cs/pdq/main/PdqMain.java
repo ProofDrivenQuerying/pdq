@@ -14,6 +14,9 @@ import java.util.Arrays;
 
 /**
  * Main entry point for PDQ
+ *
+ * @author Stefano
+ *
  */
 public class PdqMain {
 

@@ -6,8 +6,6 @@ package uk.ac.ox.cs.pdq.cost;
 
 import java.sql.SQLException;
 
-import org.junit.Assert;
-
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
@@ -40,6 +38,7 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
  *
  * @author Julien Leblay
  * @author Efthymia Tsamoura 
+ * @author Stefano
  *
  */
 public class CostEstimatorFactory {
@@ -71,7 +70,7 @@ public class CostEstimatorFactory {
 	public static CostEstimator getInstance(
 			CostParameters costParams, 
 			Schema schema) {
-		Assert.assertNotNull("Cost type parameter is not defined.", costParams.getCostType());
+		assert (costParams.getCostType() != null) : "Cost type parameter is not defined.";
 		CostEstimator result = null;
 		
 		Catalog catalog = null;
@@ -118,11 +117,11 @@ public class CostEstimatorFactory {
 			}
 			break;
 		case NUMBER_OF_OUTPUT_TUPLES_PER_ACCESS:
-			Assert.assertNotNull(costParams.getCatalog());
+			assert (costParams.getCatalog() != null);
 			result = new TotalNumberOfOutputTuplesPerAccessCostEstimator(catalog);
 			break;
 		case FIXED_COST_PER_ACCESS:
-			Assert.assertNotNull(costParams.getCatalog());
+			assert (costParams.getCatalog() != null);
 			result =  new FixedCostPerAccessCostEstimator(catalog);
 			break;
 		case INVERSE_LENGTH:

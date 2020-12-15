@@ -10,14 +10,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.junit.Assert;
-
 /**
  * Schema constant.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  * @author Gabor
+ * @author Stefano
  */
 public class TypedConstant extends Constant implements Serializable, Comparable<Constant> {
 	private static final long serialVersionUID = 314066835619901611L;
@@ -32,7 +31,7 @@ public class TypedConstant extends Constant implements Serializable, Comparable<
 	public final Object value;
 
 	protected TypedConstant(Object value) {
-		Assert.assertNotNull(value);
+		assert (value != null);
 		this.type = value.getClass();
 		this.value = value;
 	}

@@ -5,7 +5,6 @@ package uk.ac.ox.cs.pdq.planner;
 
 
 import org.apache.log4j.Logger;
-import org.junit.Assert;
 
 import com.google.common.eventbus.EventBus;
 
@@ -18,6 +17,7 @@ import uk.ac.ox.cs.pdq.exceptions.LimitReachedException.Reasons;
  * Searches for a feasible plan w.r.t. the relations' bindings and the schema dependencies.
  *
  * @author Efthymia Tsamoura
+ * @author Stefano
  */
 public abstract class Explorer {
 
@@ -58,7 +58,7 @@ public abstract class Explorer {
 	protected final EventBus eventBus;
 
 	public Explorer(EventBus eventBus) {
-		Assert.assertNotNull(eventBus);
+		assert (eventBus != null);
 		this.eventBus = eventBus;
 	}
 

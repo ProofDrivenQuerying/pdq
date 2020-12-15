@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
-import org.junit.Assert;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -44,6 +43,7 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
  * 
  *
  * @author Efthymia Tsamoura
+ * @author Stefano
  *
  */
 public abstract class LinearExplorer extends Explorer {
@@ -103,12 +103,12 @@ public abstract class LinearExplorer extends Explorer {
 			int depth
 			) throws PlannerException, SQLException {
 		super(eventBus);
-		Assert.assertNotNull(eventBus);
-		Assert.assertNotNull(query);
-		Assert.assertNotNull(accessibleSchema);
-		Assert.assertNotNull(chaser);
-		Assert.assertNotNull(connection);
-		Assert.assertNotNull(costEstimator);
+		assert (eventBus != null);
+		assert (query != null);
+		assert (accessibleSchema != null);
+		assert (chaser != null);
+		assert (connection != null);
+		assert (costEstimator != null);
 
 		this.query = query;
 		this.accessibleQuery = AccessibleQuery.createAccessibleQuery(query);

@@ -6,8 +6,6 @@ package uk.ac.ox.cs.pdq.fol;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.junit.Assert;
-
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 
@@ -15,6 +13,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
  *
  * @author Efthymia Tsamoura
  * @author Gabor
+ * @author Stefano
  */
 public class EGD extends Dependency {
 	private static final long serialVersionUID = 7220579236533295677L;
@@ -27,11 +26,11 @@ public class EGD extends Dependency {
 	protected EGD(Atom[] body, Atom[] head, boolean isFromFunctionalDependency) {
 		super(body, head);
 		this.isFromFunctionalDependency = isFromFunctionalDependency;
-		Assert.assertTrue(isConjunctionOfNonEqualities(body));
-		Assert.assertTrue(!isConjunctionOfNonEqualities(head));
+		assert (isConjunctionOfNonEqualities(body));
+		assert (!isConjunctionOfNonEqualities(head));
 		if (isFromFunctionalDependency) {
-			Assert.assertEquals(2,body.length);
-			Assert.assertEquals(body[0].getPredicate(),body[1].getPredicate());
+			assert (2 == body.length);
+			assert(body[0].getPredicate().equals(body[1].getPredicate()));
 		}
 	}
 	
@@ -42,11 +41,11 @@ public class EGD extends Dependency {
 	protected EGD(Atom[] body, Atom[] head, String name, boolean isFromFunctionalDependency) {
 		super(body, head, name);
 		this.isFromFunctionalDependency = isFromFunctionalDependency;
-		Assert.assertTrue(isConjunctionOfNonEqualities(body));
-		Assert.assertTrue(!isConjunctionOfNonEqualities(head));
+		assert (isConjunctionOfNonEqualities(body));
+		assert (!isConjunctionOfNonEqualities(head));
 		if (isFromFunctionalDependency) {
-			Assert.assertEquals(2,body.length);
-			Assert.assertEquals(body[0].getPredicate(),body[1].getPredicate());
+			assert (2 == body.length);
+			assert (body[0].getPredicate().equals(body[1].getPredicate()));
 		}
 	}
 

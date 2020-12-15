@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
-
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -17,6 +15,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 /**
  * 
  * @author Efthymia Tsamoura
+ * @author Stefano
  *
  */
 public class RenameTerm extends RelationalTerm {
@@ -40,9 +39,9 @@ public class RenameTerm extends RelationalTerm {
 
 	private RenameTerm(Attribute[] renamings, RelationalTerm child) {
 		super(RenameTerm.computeRenamedInputAttributes(renamings, child), renamings);
-		Assert.assertNotNull(renamings);
-		Assert.assertNotNull(child);
-		Assert.assertTrue(renamings.length == child.getOutputAttributes().length);
+		assert (renamings != null);
+		assert (child != null);
+		assert (renamings.length == child.getOutputAttributes().length);
 		this.renamings = renamings.clone();
 		this.child = child;
 	}
@@ -89,7 +88,7 @@ public class RenameTerm extends RelationalTerm {
 
 	@Override
 	public RelationalTerm getChild(int childIndex) {
-		Assert.assertTrue(childIndex == 0);
+		assert (childIndex == 0);
 		return this.child;
 	}
 

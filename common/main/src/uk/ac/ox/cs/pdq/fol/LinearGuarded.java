@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
+ * @author Stefano
  */
 public class LinearGuarded extends TGD {
 
@@ -18,7 +19,7 @@ public class LinearGuarded extends TGD {
 
 //	private LinearGuarded(Formula body, Formula head) {
 //		super(body,head);
-//		Assert.assertTrue(body.getAtoms().length == 1);
+//		assert (body.getAtoms().length == 1);
 //	}
 	
 	protected LinearGuarded(Atom body, Atom[] head) {

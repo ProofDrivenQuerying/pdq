@@ -5,8 +5,6 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 
 import java.util.Collection;
 
-import org.junit.Assert;
-
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
@@ -18,6 +16,7 @@ import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
  * associated accesses
  *
  * @author Efthymia Tsamoura
+ * @author Stefano
  */
 public class FixedCostPerAccessCostEstimator implements OrderIndependentCostEstimator{
 	
@@ -68,7 +67,7 @@ public class FixedCostPerAccessCostEstimator implements OrderIndependentCostEsti
 	public DoubleCost cost(Collection<AccessTerm> accesses) {
 		double totalCost = 0;
 		for (AccessTerm access: accesses) {
-			Assert.assertNotNull(access.getAccessMethod());
+			assert (access.getAccessMethod() != null);
 			totalCost += this.catalog.getCost(access.getRelation(), access.getAccessMethod());
 		}
 		return new DoubleCost(totalCost);

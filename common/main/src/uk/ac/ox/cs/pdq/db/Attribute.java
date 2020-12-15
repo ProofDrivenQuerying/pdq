@@ -8,8 +8,6 @@ import java.lang.reflect.Type;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.junit.Assert;
-
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.AttributeAdapter;
 
 /**
@@ -17,6 +15,7 @@ import uk.ac.ox.cs.pdq.io.jaxb.adapters.AttributeAdapter;
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
+ * @author Stefano
  */
 @XmlJavaTypeAdapter(AttributeAdapter.class)
 public class Attribute implements Serializable {
@@ -32,8 +31,8 @@ public class Attribute implements Serializable {
 	protected String toString = null;
 
 	protected Attribute(Type type, String name) {
-		Assert.assertNotNull(type);
-		Assert.assertNotNull(name);
+		assert (type != null);
+		assert (name != null);
 		assert name != null;
 		this.type = type;
 		this.name = name;

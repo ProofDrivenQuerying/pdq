@@ -18,7 +18,6 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
-import org.junit.Assert;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -46,6 +45,7 @@ import uk.ac.ox.cs.pdq.util.QNames;
  * 
  * @author Julien Leblay
  * @author Efthymia Tsamoura
+ * @author Stefano
  * 
  */
 public class ServiceReader extends AbstractXMLReader<ServiceRepository> implements SchemaDiscoverer {
@@ -259,7 +259,7 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 						 break;
 					}
 				}
-				Assert.assertNotNull("Undentified input key", k);
+				assert (k != null) : "Undentified input key";
 				skey.add(k);
 			}
 			this.builder.addPrimaryKey(PrimaryKey.create(skey.toArray(new Attribute[skey.size()])));

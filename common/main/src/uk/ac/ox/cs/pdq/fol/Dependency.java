@@ -11,8 +11,6 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.junit.Assert;
-
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.DependencyAdapter;
 
 /**
@@ -20,6 +18,7 @@ import uk.ac.ox.cs.pdq.io.jaxb.adapters.DependencyAdapter;
  * the head is an existentially-quantified or quantifier-free formula.
  *
  * @author Efthymia Tsamoura
+ * @author Stefano
  */
 @XmlJavaTypeAdapter(DependencyAdapter.class)
 public class Dependency extends QuantifiedFormula {
@@ -38,9 +37,9 @@ public class Dependency extends QuantifiedFormula {
 	
 	protected Dependency(Formula body, Formula head) {
 		super(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), Implication.create(body,head));
-		Assert.assertTrue(isUnquantified(body));
-		Assert.assertTrue(isExistentiallyQuantified(head) || isUnquantified(head));
-		Assert.assertTrue(Arrays.asList(body.getFreeVariables()).containsAll(Arrays.asList(head.getFreeVariables())));
+		assert (isUnquantified(body));
+		assert (isExistentiallyQuantified(head) || isUnquantified(head));
+		assert (Arrays.asList(body.getFreeVariables()).containsAll(Arrays.asList(head.getFreeVariables())));
 		this.name = "dependency";
 		this.body = body;
 		this.head = head;
@@ -50,9 +49,9 @@ public class Dependency extends QuantifiedFormula {
 	
 	protected Dependency(Formula body, Formula head, String name) {
 		super(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), Implication.create(body,head));
-		Assert.assertTrue(isUnquantified(body));
-		Assert.assertTrue(isExistentiallyQuantified(head) || isUnquantified(head));
-		Assert.assertTrue(Arrays.asList(body.getFreeVariables()).containsAll(Arrays.asList(head.getFreeVariables())));
+		assert (isUnquantified(body));
+		assert (isExistentiallyQuantified(head) || isUnquantified(head));
+		assert (Arrays.asList(body.getFreeVariables()).containsAll(Arrays.asList(head.getFreeVariables())));
 		this.name = name;
 		this.body = body;
 		this.head = head;

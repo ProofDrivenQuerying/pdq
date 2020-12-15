@@ -10,8 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -25,6 +23,7 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 /**
  *
  * @author Efthymia Tsamoura
+ * @author Stefano
  */
 public class AccessTerm extends RelationalTerm {
 
@@ -44,8 +43,8 @@ public class AccessTerm extends RelationalTerm {
 
 	private AccessTerm(Relation relation, AccessMethodDescriptor accessMethod) {
 		super(AccessTerm.computeInputAttributes(relation, accessMethod), relation.getAttributes());
-		Assert.assertNotNull(relation);
-		Assert.assertNotNull(accessMethod);
+		assert (relation != null);
+		assert (accessMethod != null);
 		this.relation = relation;
 		this.accessMethod = accessMethod;
 		this.inputConstants = new LinkedHashMap<>();
@@ -54,15 +53,15 @@ public class AccessTerm extends RelationalTerm {
 	private AccessTerm(Relation relation, AccessMethodDescriptor accessMethod, Map<Integer, TypedConstant> inputConstants) {
 		super(AccessTerm.computeInputAttributes(relation, accessMethod, inputConstants),
 				relation.getAttributes());
-		Assert.assertNotNull(relation);
-		Assert.assertNotNull(accessMethod);
+		assert (relation != null);
+		assert (accessMethod != null);
 		this.relation = relation;
 		this.accessMethod = accessMethod;
 		this.inputConstants = new LinkedHashMap<>();
 		if (inputConstants != null) {
 			for (Integer position : inputConstants.keySet()) {
-				Assert.assertTrue(position < relation.getAttributes().length);
-				Assert.assertTrue(Arrays.asList(accessMethod.getInputs()).contains(position));
+				assert (position < relation.getAttributes().length);
+				assert (Arrays.asList(accessMethod.getInputs()).contains(position));
 			}
 			for (java.util.Map.Entry<Integer, TypedConstant> entry : inputConstants.entrySet())
 				this.inputConstants.put(entry.getKey(), entry.getValue().clone());
@@ -198,8 +197,8 @@ public class AccessTerm extends RelationalTerm {
 	 * @return
 	 */
 	public static Attribute[] computeInputAttributes(Relation relation, AccessMethodDescriptor accessMethod) {
-		Assert.assertNotNull(relation);
-		Assert.assertNotNull(accessMethod);
+		assert (relation != null);
+		assert (accessMethod != null);
 		if (accessMethod.getInputs().length == 0) {
 			return new Attribute[] {};
 		}
@@ -222,16 +221,16 @@ public class AccessTerm extends RelationalTerm {
 	 */
 	public static Attribute[] computeInputAttributes(Relation relation, AccessMethodDescriptor accessMethod,
 			Map<Integer, TypedConstant> inputConstants) {
-		Assert.assertNotNull(relation);
+		assert (relation != null);
 		if (!(accessMethod != null && accessMethod.getInputs().length > 0)
 				&& (inputConstants == null || inputConstants.isEmpty())) {
 			return new Attribute[0];
 		}
-		Assert.assertTrue(accessMethod != null && accessMethod.getInputs().length > 0);
-		Assert.assertNotNull(inputConstants);
+		assert (accessMethod != null && accessMethod.getInputs().length > 0);
+		assert (inputConstants != null);
 		for (Integer position : inputConstants.keySet()) {
-			Assert.assertTrue(position < relation.getAttributes().length);
-			Assert.assertTrue(Arrays.asList(accessMethod.getInputs()).contains(position));
+			assert (position < relation.getAttributes().length);
+			assert (Arrays.asList(accessMethod.getInputs()).contains(position));
 		}
 		List<Attribute> inputs = new ArrayList<>();
 		for (Integer i : accessMethod.getInputs()) {

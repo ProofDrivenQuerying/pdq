@@ -10,11 +10,10 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.junit.Assert;
-
 /**
  * 
  * @author Efthymia Tsamoura
+ * @author Stefano
  *
  */
 public class QuantifiedFormula extends Formula {
@@ -54,10 +53,10 @@ public class QuantifiedFormula extends Formula {
 	 * @param child 		Input child
 	 */
 	protected QuantifiedFormula(LogicalSymbols operator, Variable[] variables, Formula child) {
-		Assert.assertTrue(operator == UNIVERSAL || operator == EXISTENTIAL);
-		Assert.assertNotNull(child);
-		Assert.assertNotNull(variables);
-		Assert.assertTrue(child.getVariablesRecursive().containsAll(Arrays.asList(variables)));
+		assert (operator == UNIVERSAL || operator == EXISTENTIAL);
+		assert (child != null);
+		assert (variables != null);
+		assert (child.getVariablesRecursive().containsAll(Arrays.asList(variables)));
 		this.child = child;
 		this.operator = operator;
 		this.variables = variables.clone();
@@ -166,7 +165,7 @@ public class QuantifiedFormula extends Formula {
     
 	@Override
 	public Formula getChild(int childIndex) {
-		Assert.assertTrue(childIndex == 0);
+		assert (childIndex == 0);
 		return this.child;
 	}
 

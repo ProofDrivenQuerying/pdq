@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
@@ -21,6 +19,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 /**
  * 
  * @author Efthymia Tsamoura
+ * @author Stefano
  *
  */
 public class ProjectionTerm extends RelationalTerm {
@@ -34,10 +33,10 @@ public class ProjectionTerm extends RelationalTerm {
 
 	private ProjectionTerm(Attribute[] projections, RelationalTerm child) {
 		super(child.getInputAttributes(), projections);
-		Assert.assertNotNull(projections);
-		Assert.assertNotNull(child);
+		assert (projections != null);
+		assert (child != null);
 		for (int outputAttributeIndex = 0; outputAttributeIndex < projections.length; ++outputAttributeIndex)
-			Assert.assertTrue(
+			assert (
 					Arrays.asList(child.getOutputAttributes()).indexOf(projections[outputAttributeIndex]) >= 0);
 		this.projections = projections.clone();
 		this.child = child;
@@ -80,7 +79,7 @@ public class ProjectionTerm extends RelationalTerm {
 
 	@Override
 	public RelationalTerm getChild(int childIndex) {
-		Assert.assertTrue(childIndex == 0);
+		assert (childIndex == 0);
 		return this.child;
 	}
 

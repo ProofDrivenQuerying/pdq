@@ -3,11 +3,10 @@
 
 package uk.ac.ox.cs.pdq.fol;
 
-import org.junit.Assert;
-
 /**
  * 
  * @author Efthymia Tsamoura
+ * @author Stefano
  *
  */
 public final class Negation extends Formula {
@@ -39,7 +38,7 @@ public final class Negation extends Formula {
 	 * @param sf T
 	 */
 	private Negation(Formula child) {
-		Assert.assertNotNull(child);
+		assert (child != null);
 		this.child = child;
 	}
 
@@ -51,7 +50,7 @@ public final class Negation extends Formula {
 	 * @return Negation<T>
 	 */
 	public static Negation of(Formula f) {
-		Assert.assertNotNull(f);
+		assert (f != null);
 		return Negation.create(f);
 	}
 
@@ -114,7 +113,7 @@ public final class Negation extends Formula {
     
 	@Override
 	public Formula getChild(int childIndex) {
-		Assert.assertTrue(childIndex == 0);
+		assert (childIndex == 0);
 		return this.child;
 	}
 
