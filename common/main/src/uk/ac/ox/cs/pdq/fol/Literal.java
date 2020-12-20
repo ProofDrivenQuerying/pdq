@@ -8,12 +8,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Assert;
-
 /**
  * A positive or a negative atom
  *
  * @author Efthymia Tsamoura
+ * @author Stefano
  */
 public class Literal extends Formula{
 
@@ -42,9 +41,8 @@ public class Literal extends Formula{
 	}
 	
 	private Literal(LogicalSymbols operator, Predicate predicate, Term... terms) {
-		Assert.assertTrue("Predicate and terms list cannot be null. (predicate: " + predicate + ", terms:" + terms + ")", predicate != null && terms != null);
-		Assert.assertTrue("Atom predicate does not match terms lists " + predicate.getName() + "(" + predicate.getArity() + ") <> " + terms, 
-				predicate.getArity() == terms.length);
+		assert (predicate != null && terms != null) : "Predicate and terms list cannot be null. (predicate: " + predicate + ", terms:" + terms + ")";
+		assert (predicate.getArity() == terms.length) : "Atom predicate does not match terms lists " + predicate.getName() + "(" + predicate.getArity() + ") <> " + terms;
 		this.predicate = predicate;
 		this.terms = terms.clone();
 		this.operator = operator;

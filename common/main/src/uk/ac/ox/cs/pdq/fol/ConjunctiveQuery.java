@@ -11,7 +11,6 @@ import java.util.List;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTermAsLogic;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -24,6 +23,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * where A_i are atoms with arguments that are either variables or constants.
 
  * @author Efthymia Tsamoura
+ * @author Stefano
  *
  */
 @XmlJavaTypeAdapter(QueryAdapter.class)
@@ -52,11 +52,11 @@ public class ConjunctiveQuery extends Formula {
 	 * @param children
 	 */
 	protected ConjunctiveQuery(Variable[] freeVariables, Atom[] children) {
-		Assert.assertNotNull(children);
-		Assert.assertTrue(children.length > 0);
+		assert (children != null);
+		assert (children.length > 0);
 		if (children.length == 1) {
 			//Check that the body is a conjunction of positive atoms
-			Assert.assertTrue(Arrays.asList(children[0].getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
+			assert (Arrays.asList(children[0].getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
 			this.child = children[0];
 			this.freeVariables = freeVariables.clone();
 			this.boundVariables = ArrayUtils.removeElements(child.getFreeVariables(), freeVariables);
@@ -64,7 +64,7 @@ public class ConjunctiveQuery extends Formula {
 		} else {
 			
 			Conjunction conjunction = (Conjunction)Conjunction.create(children);
-			Assert.assertTrue(Arrays.asList(conjunction.getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
+			assert (Arrays.asList(conjunction.getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
 			this.child = conjunction;
 			this.freeVariables = freeVariables.clone();
 			this.boundVariables = ArrayUtils.removeElements(child.getFreeVariables(), freeVariables);
@@ -135,7 +135,7 @@ public class ConjunctiveQuery extends Formula {
     
 	@Override
 	public Formula getChild(int childIndex) {
-		Assert.assertTrue(childIndex == 0);
+		assert (childIndex == 0);
 		return this.child;
 	}
 

@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.junit.Assert;
 
 import com.google.common.base.Preconditions;
 
@@ -19,6 +18,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
  * right side can have other inputs.
  * 
  * @author Efthymia Tsamoura
+ * @author Stefano
  *
  */
 public class DependentJoinTerm extends JoinTerm {
@@ -57,13 +57,13 @@ public class DependentJoinTerm extends JoinTerm {
 	 */
 	private DependentJoinTerm(RelationalTerm child1, RelationalTerm child2,Condition joinConditions) {
 		super(child1, child2,joinConditions, true);
-		Assert.assertNotNull(child1);
-		Assert.assertNotNull(child2);
+		assert (child1 != null);
+		assert (child2 != null);
 		// The first child most have at least one output that can be used as an input
 		// for the second.
 		if (!CollectionUtils.containsAny(Arrays.asList(child1.getOutputAttributes()),
 				Arrays.asList(child2.getInputAttributes()))) {
-			Assert.assertTrue(CollectionUtils.containsAny(Arrays.asList(child1.getOutputAttributes()),
+			assert (CollectionUtils.containsAny(Arrays.asList(child1.getOutputAttributes()),
 					Arrays.asList(child2.getInputAttributes())));
 		}
 		this.children[0] = child1;
@@ -137,7 +137,7 @@ public class DependentJoinTerm extends JoinTerm {
 
 	@Override
 	public RelationalTerm getChild(int childIndex) {
-		Assert.assertTrue(childIndex == 0 || childIndex == 1);
+		assert (childIndex == 0 || childIndex == 1);
 		return this.children[childIndex];
 	}
 

@@ -7,11 +7,10 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.junit.Assert;
-
 /**
  * 
  * @author Efthymia Tsamoura
+ * @author Stefano
  *
  */
 public final class Implication extends Formula {
@@ -41,8 +40,8 @@ public final class Implication extends Formula {
 	private Variable[] boundVariables;
 
 	private Implication(Formula... children) {
-		Assert.assertNotNull(children);
-		Assert.assertTrue(children.length == 2);
+		assert (children != null);
+		assert (children.length == 2);
 		this.children = children.clone();
 	}
 

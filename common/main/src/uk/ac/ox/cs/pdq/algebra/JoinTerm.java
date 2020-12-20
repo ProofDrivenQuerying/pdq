@@ -15,8 +15,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.junit.Assert;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -30,6 +28,7 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 /**
  * CartesianProduct with simple conditions.
  * @author Efthymia Tsamoura
+ * @author Stefano
  *
  */
 public class JoinTerm extends CartesianProductTerm {
@@ -121,7 +120,7 @@ public class JoinTerm extends CartesianProductTerm {
     
 	@Override
 	public RelationalTerm getChild(int childIndex) {
-		Assert.assertTrue(childIndex == 0 || childIndex == 1);
+		assert (childIndex == 0 || childIndex == 1);
 		return this.children[childIndex];
 	}
 	

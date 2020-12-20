@@ -6,8 +6,6 @@ package uk.ac.ox.cs.pdq.algebra;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.junit.Assert;
-
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.tuple.Tuple;
@@ -17,6 +15,7 @@ import uk.ac.ox.cs.pdq.db.tuple.Tuple;
  * Compares the values at two given positions in a tuple.
  *
  * @author Julien Leblay
+ * @author Stefano
  */
 public class AttributeEqualityCondition extends SimpleCondition {
 	private static final long serialVersionUID = 590156716681307220L;
@@ -26,7 +25,7 @@ public class AttributeEqualityCondition extends SimpleCondition {
 
 	private AttributeEqualityCondition(Integer position, Integer other) {
 		super(position);
-		Assert.assertTrue(position >= 0 && other >= 0);
+		assert (position >= 0 && other >= 0);
 		this.other = other;
 	}
 

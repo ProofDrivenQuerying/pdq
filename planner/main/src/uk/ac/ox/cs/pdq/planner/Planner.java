@@ -31,6 +31,7 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
  * 
  * @author Julien Leblay
  * @author Gabor
+ * @author Stefano
  */
 public class Planner {
 

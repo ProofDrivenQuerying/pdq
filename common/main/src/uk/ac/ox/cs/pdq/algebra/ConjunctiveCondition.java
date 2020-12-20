@@ -3,8 +3,6 @@
 
 package uk.ac.ox.cs.pdq.algebra;
 
-import org.junit.Assert;
-
 import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 
 /**
@@ -13,6 +11,7 @@ import uk.ac.ox.cs.pdq.db.tuple.Tuple;
  * 
  * @author Unknown
  * @author Gabor
+ * @author Stefano
  */
 public class ConjunctiveCondition extends Condition {
 	private static final long serialVersionUID = 3482096951862132845L;
@@ -20,7 +19,7 @@ public class ConjunctiveCondition extends Condition {
 	protected final SimpleCondition[] predicates;
 
 	private ConjunctiveCondition(SimpleCondition[] predicates) {
-		Assert.assertNotNull(predicates);
+		assert (predicates != null);
 		this.predicates = predicates.clone();
 	}
 

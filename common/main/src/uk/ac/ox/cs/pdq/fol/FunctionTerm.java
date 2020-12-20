@@ -7,11 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
-
 /**
  * 
  * @author Efthtymia Tsamoura
+ * @author Stefano
  *
  */
 public class FunctionTerm extends Term{
@@ -23,8 +22,8 @@ public class FunctionTerm extends Term{
 	protected Variable[] variables;
 
 	private FunctionTerm(Function function, Term... terms) {
-		Assert.assertNotNull(terms);
-		Assert.assertTrue(function.getArity() == terms.length);
+		assert (terms != null);
+		assert (function.getArity() == terms.length);
 		this.function = function;
 		this.terms = terms.clone();
 	}

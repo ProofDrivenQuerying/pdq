@@ -7,11 +7,10 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.junit.Assert;
-
 /**
  * 
  * @author Efthymia Tsamoura
+ * @author Stefano
  *
  */
 public final class Conjunction extends Formula {
@@ -42,8 +41,8 @@ public final class Conjunction extends Formula {
 	private Variable[] boundVariables;
 
 	private Conjunction(Formula... children) {
-		Assert.assertNotNull(children);
-		Assert.assertTrue(children.length == 2);
+		assert (children != null);
+		assert (children.length == 2);
 		this.children = children.clone();
 	}
 

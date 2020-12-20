@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-
 import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -21,6 +19,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 /**
  * 
  * @author Efthymia Tsamoura
+ * @author Stefano
  *
  */
 public class CartesianProductTerm extends RelationalTerm {
@@ -33,8 +32,8 @@ public class CartesianProductTerm extends RelationalTerm {
 	
 	protected CartesianProductTerm(RelationalTerm child1, RelationalTerm child2, boolean isDependentJoin) {
 		super(CartesianProductTerm.computeInputAttributes(child1, child2,isDependentJoin), CartesianProductTerm.computeOutputAttributes(child1, child2));
-		Assert.assertNotNull(child1);
-		Assert.assertNotNull(child2);
+		assert (child1 != null);
+		assert (child2 != null);
 		this.children[0] = child1;
 		this.children[1] = child2;
 	}
@@ -71,7 +70,7 @@ public class CartesianProductTerm extends RelationalTerm {
 
 	@Override
 	public RelationalTerm getChild(int childIndex) {
-		Assert.assertTrue(childIndex == 0 || childIndex == 1);
+		assert (childIndex == 0 || childIndex == 1);
 		return this.children[0];
 	}
 
@@ -113,8 +112,8 @@ public class CartesianProductTerm extends RelationalTerm {
 	 * @return
 	 */
 	public static Attribute[] computeOutputAttributes(RelationalTerm child1, RelationalTerm child2) {
-		Assert.assertNotNull(child1);
-		Assert.assertNotNull(child2);
+		assert (child1 != null);
+		assert (child2 != null);
 		Attribute[] input = new Attribute[child1.getNumberOfOutputAttributes() + child2.getNumberOfOutputAttributes()];
 		System.arraycopy(child1.getOutputAttributes(), 0, input, 0, child1.getNumberOfOutputAttributes());
 		System.arraycopy(child2.getOutputAttributes(), 0, input, child1.getNumberOfOutputAttributes(),
@@ -134,8 +133,8 @@ public class CartesianProductTerm extends RelationalTerm {
 	 */
 	public static Attribute[] computeInputAttributes(RelationalTerm left, RelationalTerm right,
 			boolean isDependentJoinTerm) {
-		Assert.assertNotNull(left);
-		Assert.assertNotNull(right);
+		assert (left != null);
+		assert (right != null);
 		Attribute[] leftInputs = left.getInputAttributes();
 		Attribute[] leftOutputs = left.getOutputAttributes();
 		Attribute[] rightInputs = right.getInputAttributes();

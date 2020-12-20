@@ -11,8 +11,6 @@ import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 
-import org.junit.Assert;
-
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
@@ -34,6 +32,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
  * 
  * @author Julien Leblay
  * @author Efthymia Tsamoura
+ * @author Stefano
  */
 public class ServiceBuilder implements Builder<Service> {
 
@@ -156,8 +155,8 @@ public class ServiceBuilder implements Builder<Service> {
 	 * @return ServiceBuilder
 	 */
 	public ServiceBuilder addStaticInput(Attribute a, Object defaultValue, InputMethod m, String... additionalParams) {
-		Assert.assertNotNull(a);
-		Assert.assertNotNull(m);
+		assert (a != null);
+		assert (m != null);
 		this.attributes.add(a);
 		this.staticInputs.put(a, m);
 		this.staticvalues.put(a, defaultValue);
@@ -200,7 +199,7 @@ public class ServiceBuilder implements Builder<Service> {
 	 * @return ServiceBuilder
 	 */
 	public ServiceBuilder addAttribute(Attribute a, OutputMethod om, InputMethod im, String... additionalParams) {
-		Assert.assertNotNull(a);
+		assert (a != null);
 		this.attributes.add(a);
 		this.nonStaticAttributes.add(a);
 		this.outputMethods.put(a, om);
@@ -261,7 +260,7 @@ public class ServiceBuilder implements Builder<Service> {
 	 */
 	@Override
 	public Service build() {
-		Assert.assertNotNull(this.protocol);
+		assert (this.protocol != null);
 		switch (this.protocol.toLowerCase()) {
 		case "rest":
 			List<RESTAttribute> allAttributes = new ArrayList<>();

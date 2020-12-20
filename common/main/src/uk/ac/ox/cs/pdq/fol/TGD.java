@@ -9,6 +9,7 @@ import java.util.List;
 /**
  *
  * @author Efthymia Tsamoura, Mark Ridler
+ * @author Stefano
  */
 public class TGD extends Dependency {
 

@@ -6,8 +6,6 @@ package uk.ac.ox.cs.pdq.algebra;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -20,6 +18,7 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 /**
  * 
  * @author Efthymia Tsamoura
+ * @author Stefano
  *
  */
 public class SelectionTerm extends RelationalTerm {
@@ -83,7 +82,7 @@ public class SelectionTerm extends RelationalTerm {
 
 	@Override
 	public RelationalTerm getChild(int childIndex) {
-		Assert.assertTrue(childIndex == 0);
+		assert (childIndex == 0);
 		return this.child;
 	}
 
