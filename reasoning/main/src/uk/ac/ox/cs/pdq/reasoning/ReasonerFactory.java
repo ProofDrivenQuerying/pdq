@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
  * Creates reasoners based on the input arguments
  * 
  * 		The following reasoning algorithms are supported:
-		-Restricted chase: Runs the chase algorithm applying only active triggers. 
+		-Restricted chase: Runs the chase algorithm in rounds only applying triggers that are active at the beginning of the round. 
  		Consider an instance I, a set Base of values, and a TGD
 		\delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
 		a trigger for \delta in I is a homomorphism h of \sigma into I. A trigger is active if it
@@ -25,7 +25,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 		The output of the chase step is a new instance in which h is no longer an active trigger.
 		The facts that are generated during chasing are stored in a list.
 	
-		-Parallel EGD chase: Runs EGD chase using parallel chase steps.
+		-Parallel EGD chase: alternate between running rounds with TGDss and rounds with EGDs.
 	 	(From modern dependency theory notes)
  	 	A trigger for and EGD \delta = \sigma --> x_i = x_j in I is again a homomorphism h in
 	 	\sigma into I. A trigger is active if it does not extend to a homomorphism h0 into I.
@@ -41,7 +41,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 	 	iii. If we try to equate two different schema constants, then the chase fails. 
 	 	The facts that are generated during chasing are stored in a list.
 	 
-	 	-KTermination chase: Run the chase for k rounds.
+	 	-KTermination chase: similar to the first case, but runs the chase for k rounds.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
