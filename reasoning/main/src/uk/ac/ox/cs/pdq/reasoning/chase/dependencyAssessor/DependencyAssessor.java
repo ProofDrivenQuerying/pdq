@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 
 /**
- * Finds for each chase round which dependencies are most likely to be fired and
+ * Finds for each chase round which dependencies can be fired and
  * returns those dependencies. It works as follows: after each rule firing this
  * class keeps track of the generated facts. After a chase round is completed it
  * returns all the dependencies that have in their left-hand side at least one
