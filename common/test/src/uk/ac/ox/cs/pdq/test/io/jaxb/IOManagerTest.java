@@ -3,12 +3,9 @@
 
 package uk.ac.ox.cs.pdq.test.io.jaxb;
 
-import java.io.File;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
@@ -20,6 +17,8 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
+
+import java.io.File;
 
 /**
  * @author Gabor
@@ -61,6 +60,8 @@ public class IOManagerTest extends PdqTest {
 			File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "queryOut.xml");
 			IOManager.exportQueryToXml(q, out);
 			Assert.assertTrue(out.exists());
+			System.out.println(ref);
+			System.out.println(out);
 			Assert.assertEquals(ref.length(), out.length());
 			out.delete();
 		} catch (Exception e) {
