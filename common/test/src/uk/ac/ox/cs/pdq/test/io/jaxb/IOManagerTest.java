@@ -60,8 +60,6 @@ public class IOManagerTest extends PdqTest {
 			File out = new File("test" + File.separator + "src" + File.separator + "uk" + File.separator + "ac" + File.separator + "ox" + File.separator + "cs" + File.separator + "pdq" + File.separator + "test" + File.separator + "io" + File.separator + "jaxb" + File.separator + "queryOut.xml");
 			IOManager.exportQueryToXml(q, out);
 			Assert.assertTrue(out.exists());
-			System.out.println(ref);
-			System.out.println(out);
 			Assert.assertEquals(ref.length(), out.length());
 			out.delete();
 		} catch (Exception e) {
