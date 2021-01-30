@@ -128,6 +128,7 @@ public class Controller {
      *
      * @return SchemaName[]
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/initSchemas", method = RequestMethod.GET, produces = "application/json")
     public SchemaArray initSchemas() {
 
@@ -170,6 +171,7 @@ public class Controller {
      * @param id
      * @return JsonRelationList
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/getRelations", method = RequestMethod.GET, produces = "application/json")
     public RelationArray getRelations(@RequestParam(value = "id") int id) {
 
@@ -184,17 +186,13 @@ public class Controller {
      * @param id
      * @return JsonRelationList
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/getDependencies", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<DependencyList> getDependencies(@RequestParam(value = "id") int id) {
+    public Dependencies getDependencies(@RequestParam(value = "id") int id) {
 
         Schema schema = schemaList.get(id);
-        DependencyList toReturn = new DependencyList(schema, id);
 
-        String contentType = "application/json";
-
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
-                .header(contentType)
-                .body(toReturn);
+        return new Dependencies(schema, id);
     }
 
     /**
@@ -203,12 +201,11 @@ public class Controller {
      * @param schemaID
      * @param queryID
      * @param SQL
-     * @param request
      * @return boolean based on whether the SQL string is translatable
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/verifyQuery/{schemaID}/{queryID}/{SQL:.+}")
-    public boolean verifyQuery(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL,
-                               HttpServletRequest request) {
+    public boolean verifyQuery(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL) {
 
         Schema schema = this.schemaList.get(schemaID);
 
@@ -244,6 +241,7 @@ public class Controller {
      * @param SQL
      * @return
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/plan/{schemaID}/{queryID}/{SQL}")
     public Plan plan(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL) {
 
@@ -286,6 +284,7 @@ public class Controller {
      * @param request
      * @return a ResponseEntity that contains a Resource file (for downloading)
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/downloadPlan/{schemaID}/{queryID}/{SQL}")
     public ResponseEntity<Resource> downloadPlan(@PathVariable int schemaID, @PathVariable int queryID,
                                                  @PathVariable String SQL, HttpServletRequest request) {
@@ -313,6 +312,7 @@ public class Controller {
      * @param SQL
      * @return
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/run/{schemaID}/{queryID}/{SQL}")
     public RunResults run(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL){
 
@@ -354,6 +354,7 @@ public class Controller {
      * @param request
      * @return a ResponseEntity that contains a Resource file (for downloading)
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/downloadRun/{schemaID}/{queryID}/{SQL}")
     public ResponseEntity<Resource> downloadRun(@PathVariable int schemaID, @PathVariable int queryID,
                                                 @PathVariable String SQL, HttpServletRequest request) {
