@@ -76,7 +76,7 @@ public class ObservableQuery {
 	}
 
 	/**
-	 * File property.
+	 * 
 	 *
 	 * @return the observable value
 	 */
@@ -85,7 +85,7 @@ public class ObservableQuery {
 	}
 
 	/**
-	 * Query property.
+	 * 
 	 *
 	 * @return the observable value
 	 */
@@ -94,7 +94,7 @@ public class ObservableQuery {
 	}
 
 	/**
-	 * Gets the name.
+	 * 
 	 *
 	 * @return the name
 	 */
