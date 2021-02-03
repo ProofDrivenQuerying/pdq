@@ -55,10 +55,10 @@ public class ExportController {
 	/** The ok button. */
 	@FXML Button okButton;
     
-    /** The import choose file button. */
+    
     @FXML Button exportChooseFileButton;
     
-    /** The import file field. */
+   
     @FXML TextField exportFileField;
     
     /** The root pane. */
@@ -176,7 +176,7 @@ public class ExportController {
 	}
 	
 	/**
-	 * Sets the forbidden names.
+	 * 
 	 *
 	 * @param names the new forbidden names
 	 */
@@ -185,7 +185,7 @@ public class ExportController {
 	}
 	
 	/**
-	 * Sets the schema.
+	 *
 	 *
 	 * @param schema the new schema
 	 */
