@@ -28,11 +28,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.LinearGradient;
 import javafx.stage.*;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.builder.QueryBuilder;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
@@ -347,7 +349,8 @@ public class PDQController {
 	 */
 	@FXML
 	void newQueryPressed(ActionEvent event) {
-		Schema schema = this.currentSchema.get().getSchema();
+		ObservableQuery query = new ObservableQuery("New Query", "", null);
+		this.dataQueue.add(query);
 		/*
 		 * MR ObservableQuery query = new ObservableQuery("New Query", "", new
 		 * QueryBuilder().setName("Q").addBodyAtom(
@@ -1394,7 +1397,7 @@ public class PDQController {
 			ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
 			FXMLLoader loader = new FXMLLoader(
 					PDQApplication.class.getResource("/resources/layouts/saveas-dialog.fxml"), bundle);
-			Parent parent = (Parent) loader.load();
+			Parent parent = loader.load();
 			Scene scene = new Scene(parent);
 			dialog.setScene(scene);
 			dialog.setTitle(bundle.getString("application.dialog.saveas.query.title"));
@@ -1783,7 +1786,6 @@ public class PDQController {
 		// For all relations choose an icon depending on view or not
 
 		Relation[] relationz = s.getSchema().getRelations();
-		Relation[] relationz2 = new Relation[relationz.length];
 		for (int z = 0; z < relationz.length; z++) {
 			Relation r = relationz[z];
 			ImageView imageView = null;
@@ -1797,13 +1799,10 @@ public class PDQController {
 				// Process the ViewToRelation dependency
 
 				LinearGuarded viewToRelation = v.getViewToRelationDependency();
-				Atom[] bodyatoms = viewToRelation.getBodyAtoms();
-				Atom[] bodyatoms2 = new Atom[bodyatoms.length];
-				processDependencyBodyOrHeadAtoms(bodyatoms, bodyatoms2, relationz);
-				Atom[] headatoms = viewToRelation.getHeadAtoms();
-				Atom[] headatoms2 = new Atom[headatoms.length];
-				processDependencyBodyOrHeadAtoms(headatoms, headatoms2, relationz);
-				LinearGuarded viewToRelation2 = LinearGuarded.create(bodyatoms2, headatoms2, viewToRelation.getName());
+
+				Map<String, Atom[]> atoms = processViewToRelation(viewToRelation, relationz);
+
+				LinearGuarded viewToRelation2 = LinearGuarded.create(atoms.get("bodyAtoms2"), atoms.get("headAtoms2"), viewToRelation.getName());
 				v.setViewToRelationDependency(viewToRelation2);
 
 			} else {
@@ -1854,27 +1853,18 @@ public class PDQController {
 				imageView = new ImageView(this.dependencyIcon);
 			}
 
-			// Replace symbol _x with attribute name for every variable in the body atoms
 
-			Atom[] bodyatoms = ic.getBodyAtoms();
-			Atom[] bodyatoms2 = new Atom[bodyatoms.length];
-			processDependencyBodyOrHeadAtoms(bodyatoms, bodyatoms2, relationz);
-
-			// Replace symbol _x with attribute name for every variable in the head atoms
-
-			Atom[] headatoms = ic.getHeadAtoms();
-			Atom[] headatoms2 = new Atom[headatoms.length];
-			processDependencyBodyOrHeadAtoms(headatoms, headatoms2, relationz);
+			Map<String, Atom[]> atoms = processViewToRelation(ic, relationz);
 
 			// Decide whether to create LinearGuarded or TGD depending on view to relation
 			// etc
 			Dependency ic2;
 			if (is == +1) {
-				ic2 = LinearGuarded.create(bodyatoms2, headatoms2, ic.getName());
+				ic2 = LinearGuarded.create(atoms.get("bodyAtoms2"), atoms.get("headAtoms2"), ic.getName());
 			} else if (is == -1) {
-				ic2 = TGD.create(bodyatoms2, headatoms2, ic.getName());
+				ic2 = TGD.create(atoms.get("bodyAtoms2"), atoms.get("headAtoms2"), ic.getName());
 			} else {
-				ic2 = TGD.create(bodyatoms2, headatoms2, ic.getName());
+				ic2 = TGD.create(atoms.get("bodyAtoms2"), atoms.get("headAtoms2"), ic.getName());
 			}
 			dependencys2[d] = ic2;
 
@@ -1912,6 +1902,30 @@ public class PDQController {
 		}
 	}
 
+	private Map<String, Atom[]> processViewToRelation(Object dependency, Relation[] relations){
+		Map<String, Atom[]> schemaAtoms = new HashMap<>();
+		 var viewToRelation2 =
+				 dependency instanceof LinearGuarded ? (LinearGuarded) dependency : (Dependency) dependency;
+
+		// Replace symbol _x with attribute name for every variable in the body atoms
+		Atom[] bodyatoms = viewToRelation2.getBodyAtoms();
+		Atom[] bodyatoms2 = new Atom[bodyatoms.length];
+		processDependencyBodyOrHeadAtoms(bodyatoms, bodyatoms2, relations);
+
+		// Replace symbol _x with attribute name for every variable in the head atoms
+		Atom[] headatoms = viewToRelation2.getHeadAtoms();
+		Atom[] headatoms2 = new Atom[headatoms.length];
+		processDependencyBodyOrHeadAtoms(headatoms, headatoms2, relations);
+
+		schemaAtoms.put("bodyAtoms", bodyatoms);
+		schemaAtoms.put("bodyAtoms2", bodyatoms);
+		schemaAtoms.put("headAtoms", headatoms);
+		schemaAtoms.put("headAtoms2", headatoms2);
+
+		return schemaAtoms;
+
+
+	}
 	/**
 	 * List files.
 	 *
