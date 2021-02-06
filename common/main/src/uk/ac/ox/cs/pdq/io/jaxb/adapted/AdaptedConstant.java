@@ -3,19 +3,17 @@
 
 package uk.ac.ox.cs.pdq.io.jaxb.adapted;
 
+import org.apache.log4j.Logger;
+import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
+
+import javax.xml.bind.annotation.XmlAttribute;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-import org.apache.log4j.Logger;
-
-import javax.xml.bind.annotation.XmlAttribute;
-
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 
 /**
  * @author Gabor, Fergus Cooper
@@ -140,7 +138,7 @@ public class AdaptedConstant extends AdaptedVariable {
 		this.type = TypedConstant.convertStringToType(type);
 	}
 	public String getType() {
-		if (type!= null && type != String.class)
+		if (type!= null)
 			return type.getTypeName();
 		return null;
 	}

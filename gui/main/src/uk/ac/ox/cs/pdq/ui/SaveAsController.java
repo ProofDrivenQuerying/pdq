@@ -40,6 +40,9 @@ public class SaveAsController {
 	/**  Default icon for relations. */
 	final Image errorIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/error.gif"));
 
+	/**  Init icon for window. */
+	final Image infoIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/info.gif"));
+
 	private ObservableQuery query = null;
 	
 	/** The bundle. */
@@ -76,11 +79,12 @@ public class SaveAsController {
 		assert this.okButton != null : "fx:id=\"okButton\" was not injected: check your FXML file 'saveas-dialog.fxml'.";
         assert this.importChooseFileButton != null : "fx:id=\"importChooseFileButton\" was not injected: check your FXML file 'saveas-dialog.fxml'.";
         assert this.importFileField != null : "fx:id=\"importFileField\" was not injected: check your FXML file 'saveas-dialog.fxml'.";
-         assert this.rootPane != null : "fx:id=\"rootPane\" was not injected: check your FXML file 'saveas-dialog.fxml'.";
+        assert this.rootPane != null : "fx:id=\"rootPane\" was not injected: check your FXML file 'saveas-dialog.fxml'.";
 
     	this.bundle = ResourceBundle.getBundle("resources.i18n.ui");
 		this.okButton.setDisable(true);
 		this.importFileField.textProperty().addListener(this.importValidator);
+		this.detailsImage.setImage(SaveAsController.this.infoIcon);
 	}
 
 	

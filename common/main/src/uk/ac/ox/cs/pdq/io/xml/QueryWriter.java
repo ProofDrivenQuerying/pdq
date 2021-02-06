@@ -3,17 +3,12 @@
 
 package uk.ac.ox.cs.pdq.io.xml;
 
+import uk.ac.ox.cs.pdq.fol.*;
+import uk.ac.ox.cs.pdq.util.QNames;
+
 import java.io.PrintStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.QNames;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -117,6 +112,9 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 				openclose(out, QNames.VARIABLE, att2);
 			} else {
 				att2.put(QNames.VALUE, t.toString());
+				if(t instanceof TypedConstant){
+					att2.put(QNames.TYPE, t.toString());
+				}
 				openclose(out, QNames.CONSTANT, att2);
 			}
 		}

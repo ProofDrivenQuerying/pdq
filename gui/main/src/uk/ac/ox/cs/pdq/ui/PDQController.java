@@ -3,37 +3,8 @@
 
 package uk.ac.ox.cs.pdq.ui;
 
-import static uk.ac.ox.cs.pdq.ui.PDQApplication.PLAN_DIRECTORY;
-import static uk.ac.ox.cs.pdq.ui.PDQApplication.PLAN_FILENAME_SUFFIX;
-import static uk.ac.ox.cs.pdq.ui.PDQApplication.PROOF_FILENAME_SUFFIX;
-import static uk.ac.ox.cs.pdq.ui.PDQApplication.PROPERTIES_SUFFIX;
-import static uk.ac.ox.cs.pdq.ui.PDQApplication.QUERY_DIRECTORY;
-import static uk.ac.ox.cs.pdq.ui.PDQApplication.QUERY_FILENAME_SUFFIX;
-import static uk.ac.ox.cs.pdq.ui.PDQApplication.SCHEMA_DIRECTORY;
-import static uk.ac.ox.cs.pdq.ui.PDQApplication.SCHEMA_FILENAME_SUFFIX;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Logger;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-
 import javafx.animation.AnimationTimer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
@@ -48,22 +19,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.MultipleSelectionModel;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -71,33 +28,20 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.Window;
-import javafx.stage.WindowEvent;
+import javafx.scene.paint.LinearGradient;
+import javafx.stage.*;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.builder.QueryBuilder;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
-import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.View;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.LinearGuarded;
-import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.TGD;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.db.*;
+import uk.ac.ox.cs.pdq.fol.*;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -113,6 +57,14 @@ import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 import uk.ac.ox.cs.pdq.util.SanityCheck;
+
+import java.io.*;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import static uk.ac.ox.cs.pdq.ui.PDQApplication.*;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -397,7 +349,8 @@ public class PDQController {
 	 */
 	@FXML
 	void newQueryPressed(ActionEvent event) {
-		Schema schema = this.currentSchema.get().getSchema();
+		ObservableQuery query = new ObservableQuery("New Query", "", null);
+		this.dataQueue.add(query);
 		/*
 		 * MR ObservableQuery query = new ObservableQuery("New Query", "", new
 		 * QueryBuilder().setName("Q").addBodyAtom(
@@ -1444,7 +1397,7 @@ public class PDQController {
 			ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
 			FXMLLoader loader = new FXMLLoader(
 					PDQApplication.class.getResource("/resources/layouts/saveas-dialog.fxml"), bundle);
-			Parent parent = (Parent) loader.load();
+			Parent parent = loader.load();
 			Scene scene = new Scene(parent);
 			dialog.setScene(scene);
 			dialog.setTitle(bundle.getString("application.dialog.saveas.query.title"));
@@ -1682,9 +1635,11 @@ public class PDQController {
 		this.schemasTreeView.setRoot(root);
 		this.schemasTreeView.setShowRoot(false);
 		ArrayList<ObservableSchema> list = new ArrayList<>();
-		for (ObservableSchema s : this.schemas.values()) {
-			list.add(s);
-		}
+
+		this.schemas.entrySet().stream()
+				.sorted(Map.Entry.comparingByValue((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())))
+				.forEach(stringObservableSchemaEntry -> list.add(stringObservableSchemaEntry.getValue()));
+
 		for (ObservableSchema s : list) {
 			this.loadTreeItem(s);
 		}
@@ -1831,7 +1786,6 @@ public class PDQController {
 		// For all relations choose an icon depending on view or not
 
 		Relation[] relationz = s.getSchema().getRelations();
-		Relation[] relationz2 = new Relation[relationz.length];
 		for (int z = 0; z < relationz.length; z++) {
 			Relation r = relationz[z];
 			ImageView imageView = null;
@@ -1845,13 +1799,10 @@ public class PDQController {
 				// Process the ViewToRelation dependency
 
 				LinearGuarded viewToRelation = v.getViewToRelationDependency();
-				Atom[] bodyatoms = viewToRelation.getBodyAtoms();
-				Atom[] bodyatoms2 = new Atom[bodyatoms.length];
-				processDependencyBodyOrHeadAtoms(bodyatoms, bodyatoms2, relationz);
-				Atom[] headatoms = viewToRelation.getHeadAtoms();
-				Atom[] headatoms2 = new Atom[headatoms.length];
-				processDependencyBodyOrHeadAtoms(headatoms, headatoms2, relationz);
-				LinearGuarded viewToRelation2 = LinearGuarded.create(bodyatoms2, headatoms2, viewToRelation.getName());
+
+				Map<String, Atom[]> atoms = processViewToRelation(viewToRelation, relationz);
+
+				LinearGuarded viewToRelation2 = LinearGuarded.create(atoms.get("bodyAtoms2"), atoms.get("headAtoms2"), viewToRelation.getName());
 				v.setViewToRelationDependency(viewToRelation2);
 
 			} else {
@@ -1902,27 +1853,18 @@ public class PDQController {
 				imageView = new ImageView(this.dependencyIcon);
 			}
 
-			// Replace symbol _x with attribute name for every variable in the body atoms
 
-			Atom[] bodyatoms = ic.getBodyAtoms();
-			Atom[] bodyatoms2 = new Atom[bodyatoms.length];
-			processDependencyBodyOrHeadAtoms(bodyatoms, bodyatoms2, relationz);
-
-			// Replace symbol _x with attribute name for every variable in the head atoms
-
-			Atom[] headatoms = ic.getHeadAtoms();
-			Atom[] headatoms2 = new Atom[headatoms.length];
-			processDependencyBodyOrHeadAtoms(headatoms, headatoms2, relationz);
+			Map<String, Atom[]> atoms = processViewToRelation(ic, relationz);
 
 			// Decide whether to create LinearGuarded or TGD depending on view to relation
 			// etc
 			Dependency ic2;
 			if (is == +1) {
-				ic2 = LinearGuarded.create(bodyatoms2, headatoms2, ic.getName());
+				ic2 = LinearGuarded.create(atoms.get("bodyAtoms2"), atoms.get("headAtoms2"), ic.getName());
 			} else if (is == -1) {
-				ic2 = TGD.create(bodyatoms2, headatoms2, ic.getName());
+				ic2 = TGD.create(atoms.get("bodyAtoms2"), atoms.get("headAtoms2"), ic.getName());
 			} else {
-				ic2 = TGD.create(bodyatoms2, headatoms2, ic.getName());
+				ic2 = TGD.create(atoms.get("bodyAtoms2"), atoms.get("headAtoms2"), ic.getName());
 			}
 			dependencys2[d] = ic2;
 
@@ -1960,6 +1902,30 @@ public class PDQController {
 		}
 	}
 
+	private Map<String, Atom[]> processViewToRelation(Object dependency, Relation[] relations){
+		Map<String, Atom[]> schemaAtoms = new HashMap<>();
+		 var viewToRelation2 =
+				 dependency instanceof LinearGuarded ? (LinearGuarded) dependency : (Dependency) dependency;
+
+		// Replace symbol _x with attribute name for every variable in the body atoms
+		Atom[] bodyatoms = viewToRelation2.getBodyAtoms();
+		Atom[] bodyatoms2 = new Atom[bodyatoms.length];
+		processDependencyBodyOrHeadAtoms(bodyatoms, bodyatoms2, relations);
+
+		// Replace symbol _x with attribute name for every variable in the head atoms
+		Atom[] headatoms = viewToRelation2.getHeadAtoms();
+		Atom[] headatoms2 = new Atom[headatoms.length];
+		processDependencyBodyOrHeadAtoms(headatoms, headatoms2, relations);
+
+		schemaAtoms.put("bodyAtoms", bodyatoms);
+		schemaAtoms.put("bodyAtoms2", bodyatoms);
+		schemaAtoms.put("headAtoms", headatoms);
+		schemaAtoms.put("headAtoms2", headatoms2);
+
+		return schemaAtoms;
+
+
+	}
 	/**
 	 * List files.
 	 *
