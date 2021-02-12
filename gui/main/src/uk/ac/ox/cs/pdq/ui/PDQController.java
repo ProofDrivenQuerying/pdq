@@ -28,13 +28,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.LinearGradient;
 import javafx.stage.*;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.builder.QueryBuilder;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
@@ -458,6 +456,7 @@ public class PDQController {
 				}
 				catch(Exception e)
 				{
+					log.error(e.getMessage(), e);
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -1381,6 +1380,14 @@ public class PDQController {
 		}
 		System.out.println("Storing query: " + query.getFile().getAbsolutePath());
 		query.store();
+
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Save successful");
+		alert.setHeaderText(null);
+		alert.setContentText(String.format("your new query was saved as %s", query.getName()));
+		alert.setHeight(10);
+		alert.setWidth(20);
+		alert.show();
 	}
 
 	/**
@@ -1389,42 +1396,22 @@ public class PDQController {
 	 * @param query the query
 	 */
 	private void saveAsQuery(ObservableQuery query) {
-		try {
-			final Stage dialog = new Stage();
-			dialog.initModality(Modality.NONE);
-			dialog.initStyle(StageStyle.UTILITY);
-			// dialog.initOwner(this.getOriginatingWindow(event));
-			ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
-			FXMLLoader loader = new FXMLLoader(
-					PDQApplication.class.getResource("/resources/layouts/saveas-dialog.fxml"), bundle);
-			Parent parent = loader.load();
-			Scene scene = new Scene(parent);
-			dialog.setScene(scene);
-			dialog.setTitle(bundle.getString("application.dialog.saveas.query.title"));
+		ResourceBundle bundle = ResourceBundle.getBundle("resources.i18n.ui");
+		//get Stage to position dialog box in middle of parentWindow
+		Stage stage = (Stage) this.schemasTreeView.getScene().getWindow();
 
-			// Set the currently selected schema/query/plan
-			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle(bundle.getString("application.dialog.saveas.query.title"));
-//			File file = fileChooser.showSaveDialog(scene.getWindow());
-//			PDQController.pdqController.addQuery(query, file.getPath());
-			scene.getWindow().hide();
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Save as new query");
+		alert.setHeaderText(null);
+		alert.setContentText(bundle.getString("application.dialog.saveas.info.label"));
+		alert.setHeight(16);
+		alert.setWidth(30);
 
-			SaveAsController saveasController = loader.getController();
-			saveasController.setSchema(this.currentSchema.get());
-			saveasController.setQueue(this.dataQueue);
-			saveasController.saveAs(query);
-			dialog.addEventHandler(KeyEvent.ANY, (KeyEvent e) -> {
-				if (!e.isConsumed() && e.getCode() == KeyCode.ESCAPE) {
-					e.consume();
-					dialog.close();
-				}
-			});
-			dialog.showAndWait();
-			
-			//loadQueries();			
-		} catch (IOException e) {
-			throw new UserInterfaceException(e);
-		}
+		alert.setX(stage.getX() + stage.getWidth() / 2  - alert.getWidth() / 2);
+		alert.setY(stage.getY() + stage.getHeight() / 2  - alert.getHeight() / 2);
+		alert.showAndWait()
+				.filter(buttonType -> buttonType == ButtonType.OK)
+				.ifPresent(buttonType -> this.addQuery(query));
 	}
 
 	/**
@@ -1495,12 +1482,11 @@ public class PDQController {
 	/**
 	 * Adds a query from saveas.
 	 */
-	public void addQuery(ObservableQuery q, String path)
+	public void addQuery(ObservableQuery q)
 	{
 		ObservableList<ObservableQuery> qs = this.queries.get(this.currentSchema.get().getName());
-		File queryFile = new File(path);
-		ObservableQuery q2 = new ObservableQuery(q.getName(), q.getDescription(), queryFile, q.getFormula());
-		q2.store();
+		ObservableQuery q2 = new ObservableQuery(q.getName(), q.getDescription(), null, q.getFormula());
+		this.saveQuery(q2);
 		qs.add(q2);
 	}
 

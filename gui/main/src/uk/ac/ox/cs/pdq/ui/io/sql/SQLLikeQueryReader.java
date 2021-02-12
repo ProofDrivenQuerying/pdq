@@ -206,16 +206,26 @@ public class SQLLikeQueryReader {
         	
         	log.debug("query: " + query);
         }
+        catch(ArrayIndexOutOfBoundsException arrE){
+			generateDialog(AlertType.INFORMATION, "Information Dialog", "Query definition is empty, please" +
+					" write a query to continue further.");
+			throw arrE;
+		}
         catch(Exception e)
         {
-           	Alert alert = new Alert(AlertType.INFORMATION);
-        	alert.setTitle("Information Dialog");
-        	alert.setHeaderText(null);
-        	alert.setContentText(e.getMessage());
-        	alert.showAndWait();
+			generateDialog(AlertType.INFORMATION, "Information Dialog", e.getMessage());
+        	e.printStackTrace();
         	throw e;
         }
         
          return query;
+	}
+
+	public void generateDialog(AlertType alertType, String title, String contentText){
+		Alert alert = new Alert(alertType);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(contentText);
+		alert.showAndWait();
 	}
 }

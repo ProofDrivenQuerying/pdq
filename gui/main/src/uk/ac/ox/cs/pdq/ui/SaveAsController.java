@@ -3,35 +3,30 @@
 
 package uk.ac.ox.cs.pdq.ui;
 
-import java.io.File;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import org.apache.log4j.Logger;
+import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
+import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
+
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.log4j.Logger;
-
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
-import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
-import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
-
 // TODO: Auto-generated Javadoc
 /**
  * Controller class for file imports (schema, queries, etc.)
  * @author Julien Leblay
- *
+ * @deprecated This class has been replaced with a alert dialog box in the PDQ Controller should not be used instead use
+ * java fx Alert class
  */
+@Deprecated
 public class SaveAsController {
 
 	/** ImportController's logger. */
@@ -60,12 +55,6 @@ public class SaveAsController {
 	/** The ok button. */
 	@FXML Button okButton;
     
-    /** The import choose file button. */
-    @FXML Button importChooseFileButton;
-    
-    /** The import file field. */
-    @FXML TextField importFileField;
-    
     /** The root pane. */
     @FXML GridPane rootPane;
 
@@ -77,34 +66,14 @@ public class SaveAsController {
 		assert this.cancelButton != null : "fx:id=\"cancelButton\" was not injected: check your FXML file 'saveas-dialog.fxml'.";
 		assert this.detailsLabel != null : "fx:id=\"detailsLabel\" was not injected: check your FXML file 'saveas-dialog.fxml'.";
 		assert this.okButton != null : "fx:id=\"okButton\" was not injected: check your FXML file 'saveas-dialog.fxml'.";
-        assert this.importChooseFileButton != null : "fx:id=\"importChooseFileButton\" was not injected: check your FXML file 'saveas-dialog.fxml'.";
-        assert this.importFileField != null : "fx:id=\"importFileField\" was not injected: check your FXML file 'saveas-dialog.fxml'.";
         assert this.rootPane != null : "fx:id=\"rootPane\" was not injected: check your FXML file 'saveas-dialog.fxml'.";
 
     	this.bundle = ResourceBundle.getBundle("resources.i18n.ui");
-		this.okButton.setDisable(true);
-		this.importFileField.textProperty().addListener(this.importValidator);
+		this.okButton.setDisable(false);
 		this.detailsImage.setImage(SaveAsController.this.infoIcon);
+		this.detailsLabel.setText(this.bundle.getString("application.dialog.saveas.info.label"));
 	}
 
-	
-	/** The import validator. */
-	private ChangeListener<String> importValidator = new ChangeListener<String>() {
-		@Override
-		public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
-			SaveAsController.this.okButton.setDisable(true);
-			SaveAsController.this.detailsImage.setImage(SaveAsController.this.errorIcon);
-			if (SaveAsController.this.importFileField.getText().trim().isEmpty()) {
-				SaveAsController.this.detailsLabel.setText(
-						SaveAsController.this.bundle.getString(
-								"application.dialog.import.message.file-required"));
-				return;
-			}
-			SaveAsController.this.okButton.setDisable(false);
-			SaveAsController.this.detailsLabel.setText("");
-			SaveAsController.this.detailsImage.setImage(null);
-		}
-	};
 	
 	public void saveAs(ObservableQuery query)
 	{
@@ -121,8 +90,7 @@ public class SaveAsController {
 		if (!event.isConsumed()) {
 			event.consume();
 				try  {
-					File file = new File(this.importFileField.getText());
-					PDQController.pdqController.addQuery(this.query, file.getPath());
+					PDQController.pdqController.addQuery(this.query);
 					SaveAsController.this.rootPane.getScene().getWindow().hide();
 				} catch (Exception e) {
 					SaveAsController.this.detailsImage.setImage(SaveAsController.this.errorIcon);
@@ -145,20 +113,6 @@ public class SaveAsController {
 			event.consume();
 			SaveAsController.this.rootPane.getScene().getWindow().hide();
 		}
-	}
-
-	/**
-	 * Opens a file chooser window, and handle the returned selected file.
-	 *
-	 * @param event the event
-	 */
-	@FXML
-	void chooseFile(ActionEvent event) {
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle(this.bundle.getString("application.dialog.export.title"));
-		File file = fileChooser.showSaveDialog(this.okButton.getScene().getWindow());
-		this.importFileField.setText(file.getAbsolutePath());
-		event.consume();
 	}
 
 	/** The schema currently selected. If null, we are importing a schema, other a query. */
