@@ -456,6 +456,7 @@ public class PDQController {
 				}
 				catch(Exception e)
 				{
+					log.error(e.getMessage(), e);
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
