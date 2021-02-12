@@ -28,7 +28,7 @@ import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
 // TODO: Auto-generated Javadoc
 /**
- * Controller class for file imports (schema, queries, etc.)
+ * Controller class for file exports (schema, queries, etc.)
  * @author Julien Leblay
  *
  */
