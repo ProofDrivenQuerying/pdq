@@ -23,8 +23,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * Controller class for file imports (schema, queries, etc.)
  * @author Julien Leblay
- *
+ * @deprecated This class has been replaced with a alert dialog box in the PDQ Controller should not be used instead use
+ * java fx Alert class
  */
+@Deprecated
 public class SaveAsController {
 
 	/** ImportController's logger. */

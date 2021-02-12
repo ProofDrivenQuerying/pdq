@@ -207,8 +207,8 @@ public class SQLLikeQueryReader {
         	log.debug("query: " + query);
         }
         catch(ArrayIndexOutOfBoundsException arrE){
-			generateDialog(AlertType.INFORMATION, "Information Dialog", "Query Definition is empty please" +
-					" write a query to continue further");
+			generateDialog(AlertType.INFORMATION, "Information Dialog", "Query definition is empty, please" +
+					" write a query to continue further.");
 			throw arrE;
 		}
         catch(Exception e)
