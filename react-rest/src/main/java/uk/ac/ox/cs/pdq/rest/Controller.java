@@ -3,6 +3,7 @@
 
 package uk.ac.ox.cs.pdq.rest;
 
+import com.fasterxml.jackson.databind.annotation.NoClass;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -206,7 +207,7 @@ public class Controller {
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/verifyQuery/{schemaID}/{queryID}/{SQL:.+}")
     public boolean verifyQuery(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL) {
-
+        System.out.println("SchemaID: " + schemaID + " QueryID: " + queryID + " SQL: " + SQL);
         Schema schema = this.schemaList.get(schemaID);
 
         boolean validQuery = false;
@@ -225,11 +226,12 @@ public class Controller {
                 HashMap<Integer, ConjunctiveQuery> updatedList = this.commonQueries.get(schemaID);
                 updatedList.put(queryID, newQuery);
             }
-
-            return validQuery;
-        } catch (Exception e) {
+        } catch (Exception | ExceptionInInitializerError | NoClassDefFoundError e) {
             e.printStackTrace();
+            return false;
         }
+
+        System.out.println("Returned in validQuery " + validQuery);
         return validQuery;
     }
 
@@ -271,7 +273,6 @@ public class Controller {
         } catch (Throwable e) {
             e.printStackTrace();
         }
-
         return plan;
     }
 
