@@ -3,26 +3,14 @@
 
 package uk.ac.ox.cs.pdq.ui.io;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import com.google.common.base.Preconditions;
+import org.apache.log4j.Logger;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
+import uk.ac.ox.cs.pdq.io.xml.AbstractXMLWriter;
+import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
 import javax.xml.bind.JAXBException;
-
-import org.apache.log4j.Logger;
-
-import com.google.common.base.Preconditions;
-
-import uk.ac.ox.cs.pdq.io.xml.AbstractXMLWriter;
-import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-//import uk.ac.ox.cs.pdq.io.xml.SchemaWriter;
-import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
+import java.io.*;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -42,9 +30,8 @@ public class ObservableSchemaWriter extends AbstractXMLWriter<ObservableSchema> 
 	public ObservableSchemaWriter() {
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.benchmark.io.AbstractWriter#save(java.io.PrintStream, java.lang.Object)
+	/**
+	 * should not be used for writing to file instead use write(File file, ObservableSchema o)
 	 */
 	@Override
 	public void write(PrintStream out, ObservableSchema o) {
@@ -62,13 +49,14 @@ public class ObservableSchemaWriter extends AbstractXMLWriter<ObservableSchema> 
 		}
 		catch(FileNotFoundException e)
 		{
+			log.error("[FileNotFoundException - ObservableSchemaWriter.class]", e);
 		}
 	}
 
 	/**
 	 * Writes the given schema to the given output.
 	 *
-	 * @param out the out
+	 * @param file the file
 	 * @param s the s
 	 */
 	private void writeSchema(File file, ObservableSchema s) {
