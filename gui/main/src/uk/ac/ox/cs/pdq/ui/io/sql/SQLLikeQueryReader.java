@@ -3,8 +3,6 @@
 
 package uk.ac.ox.cs.pdq.ui.io.sql;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -206,26 +204,11 @@ public class SQLLikeQueryReader {
         	
         	log.debug("query: " + query);
         }
-        catch(ArrayIndexOutOfBoundsException arrE){
-			generateDialog(AlertType.INFORMATION, "Information Dialog", "Query definition is empty, please" +
-					" write a query to continue further.");
-			throw arrE;
-		}
         catch(Exception e)
         {
-			generateDialog(AlertType.INFORMATION, "Information Dialog", e.getMessage());
-        	e.printStackTrace();
         	throw e;
         }
         
          return query;
-	}
-
-	public void generateDialog(AlertType alertType, String title, String contentText){
-		Alert alert = new Alert(alertType);
-		alert.setTitle(title);
-		alert.setHeaderText(null);
-		alert.setContentText(contentText);
-		alert.showAndWait();
 	}
 }
