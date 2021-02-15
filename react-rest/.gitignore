@@ -5,3 +5,5 @@
 .settings/
 bin/
 *.iml
+computed-plan*.xml
+results*.csv
