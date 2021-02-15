@@ -34,9 +34,12 @@ export const verifyQuery = (schemaID, queryID, SQL) => {
     return fetch("/verifyQuery/"+schemaID+"/"+queryID+"/"+simpleSQL)
     .then(res => res.text())
     .then(res => JSON.parse(res)).then((res)=>{
-
-      dispatch(resolvedValidation(res))
-
+        console.log(res);
+        if (res.status === 500) {
+            dispatch(errorValidation())
+        } else {
+            dispatch(resolvedValidation(res))
+        }
     }).catch(err => dispatch(errorValidation()));
   }
 }

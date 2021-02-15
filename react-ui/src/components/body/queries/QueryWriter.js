@@ -106,7 +106,7 @@ class QueryWriter extends React.Component{
                   <Form.Label>Please write your query in SQL</Form.Label>
                   <Form.Control
                     as="textarea"
-                    rows="20"
+                    rows="15"
                     defaultValue={this.props.queryFromList.SQL}
                     placeholder={this.props.queryFromList.SQL}
                     onChange={e => this.setState({editedQuery: e.target.value})}/>
