@@ -42,7 +42,9 @@ class QueryWriter extends React.Component{
   toggleQueryModal(){
     this.setState({
       modalQueryOpen: !this.state.modalQueryOpen,
-      tooltipOpen: false
+      tooltipOpen: false,
+      editedQuery: this.props.queryFromList.SQL,
+      validQuery: true
     });
   }
 
