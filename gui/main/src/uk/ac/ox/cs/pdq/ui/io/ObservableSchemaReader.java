@@ -3,30 +3,23 @@
 
 package uk.ac.ox.cs.pdq.ui.io;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
-import org.apache.log4j.Logger;
-
 import com.google.common.base.Preconditions;
-
+import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
 import uk.ac.ox.cs.pdq.db.Schema;
-//import uk.ac.ox.cs.pdq.SchemaReader;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.ui.UserInterfaceException;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -68,14 +61,13 @@ public class ObservableSchemaReader {
 	 */
 	public ObservableSchema read(File file) {
 		try {
-			File schemaDir = new File("./services");
+			File schemaDir = new File(".pdq/services");
 			if (!schemaDir.exists())
 				schemaDir.mkdirs();
 			
 			ArrayList<Service> list = new ArrayList<>();
 			for(File serviceFile : listFiles(schemaDir, "", ".xml"))
 			{
-				File serviceGroupFile = new File(serviceFile.getAbsolutePath() + "g");
 				JAXBContext jaxbContext2 = JAXBContext.newInstance(Service.class);
 				Unmarshaller jaxbUnmarshaller2 = jaxbContext2.createUnmarshaller();
 				list.add((Service) jaxbUnmarshaller2.unmarshal(serviceFile));

@@ -454,9 +454,15 @@ public class PDQController {
 					dialog.setOnCloseRequest((WindowEvent arg0) -> plannerController.interruptPlanningThreads());
 					dialog.showAndWait();
 				}
+				catch(ArrayIndexOutOfBoundsException arrE){
+					generateDialog(AlertType.INFORMATION, "Information Dialog", "Query definition is empty, please" +
+							" write a query to continue further.");
+					log.error("[ArrayIndexOutOfBoundsException - PDQController]", arrE);
+				}
 				catch(Exception e)
 				{
-					log.error(e.getMessage(), e);
+					generateDialog(AlertType.INFORMATION, "Information Dialog", e.getMessage());
+					log.error("[ArrayIndexOutOfBoundsException - PDQController]", e);
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -901,8 +907,15 @@ public class PDQController {
 				alert.setHeaderText(null);
 				alert.setContentText("Successfully saved");
 				alert.showAndWait();
-			} catch (Exception e) {
-				return;
+			} catch(ArrayIndexOutOfBoundsException arrE){
+				generateDialog(AlertType.INFORMATION, "Information Dialog", "Query definition is empty, please" +
+						" write a query to continue further.");
+				log.error("[ArrayIndexOutOfBoundsException - PDQController]", arrE);
+			}
+			catch(Exception e)
+			{
+				generateDialog(AlertType.INFORMATION, "Information Dialog", e.getMessage());
+				log.error("[ArrayIndexOutOfBoundsException - PDQController]", e);
 			}
 		}
 	}
@@ -927,8 +940,15 @@ public class PDQController {
 				saveAsQuery(saveas);
 				
 				
-			} catch (Exception e) {
-				return;
+			} catch(ArrayIndexOutOfBoundsException arrE){
+				generateDialog(AlertType.INFORMATION, "Information Dialog", "Query definition is empty, please" +
+						" write a query to continue further.");
+				log.error("[ArrayIndexOutOfBoundsException - PDQController]", arrE);
+			}
+			catch(Exception e)
+			{
+				generateDialog(AlertType.INFORMATION, "Information Dialog", e.getMessage());
+				log.error("[ArrayIndexOutOfBoundsException - PDQController]", e);
 			}
 		}
 	}
@@ -1988,5 +2008,19 @@ public class PDQController {
 				PDQController.this.updateWidgets();
 			}
 		}.start();
+	}
+
+	/**
+	 * Generate an Alert Dialog to be prompt to user in GUI
+	 * @param alertType
+	 * @param title
+	 * @param contentText
+	 */
+	private void generateDialog(AlertType alertType, String title, String contentText){
+		Alert alert = new Alert(alertType);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(contentText);
+		alert.showAndWait();
 	}
 }
