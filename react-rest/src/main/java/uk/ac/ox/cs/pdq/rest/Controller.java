@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.io.File;
 
@@ -37,14 +38,14 @@ import java.nio.file.Paths;
 
 @RestController
 public class Controller {
-    private String workingDirectory = "demo/";
-    private HashMap<Integer, String> paths;
+    private final String workingDirectory = "demo/";
+    private final HashMap<Integer, String> paths;
 
-    private HashMap<Integer, Schema> schemaList;
-    private HashMap<Integer, HashMap<Integer, ConjunctiveQuery>> commonQueries;
-    private HashMap<Integer, File> casePropertyList;
-    private HashMap<Integer, String> catalogPaths;
-    private boolean localMode; //change to config file
+    private final HashMap<Integer, Schema> schemaList;
+    private final HashMap<Integer, HashMap<Integer, ConjunctiveQuery>> commonQueries;
+    private final HashMap<Integer, File> casePropertyList;
+    private final HashMap<Integer, String> catalogPaths;
+    private final boolean localMode; //change to config file
 
     /**
      * Constructor. Reads in demo schema/query/property information found in ./demo/ and stores it in HashMaps for
@@ -60,7 +61,10 @@ public class Controller {
         this.catalogPaths = new HashMap<Integer, String>();
         this.localMode = false;
 
+        // The directory we store our example folders in
+        // This is externalizable
         File testDirectory = new File(workingDirectory);
+        // All the example folders
         File[] examples = testDirectory.listFiles();
 
         if (examples != null) {
@@ -392,5 +396,17 @@ public class Controller {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public HashMap<Integer, Schema> getSchemaList() {
+        return this.schemaList;
+    }
+
+    public HashMap<Integer, HashMap<Integer, ConjunctiveQuery>> getCommonQueries() {
+        return this.commonQueries;
+    }
+
+    public HashMap<Integer, File> getCasePropertyList() {
+        return casePropertyList;
     }
 }

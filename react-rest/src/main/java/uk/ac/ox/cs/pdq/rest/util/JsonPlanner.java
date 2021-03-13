@@ -3,9 +3,11 @@
 
 package uk.ac.ox.cs.pdq.rest.util;
 
+import com.fasterxml.jackson.jaxrs.json.annotation.JSONP;
 import uk.ac.ox.cs.pdq.algebra.*;
 import uk.ac.ox.cs.pdq.fol.*;
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import uk.ac.ox.cs.pdq.db.Schema;
 import java.util.Map.Entry;
@@ -19,6 +21,7 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.*;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.GraphicalPlan;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.JSONPlan;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.Plan;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
 import java.io.ByteArrayOutputStream;
@@ -38,7 +41,7 @@ public class JsonPlanner{
      * @param root
      * @return
      */
-    public static GraphicalPlan getPlanGraph(PlanTree<SearchNode> tree, SearchNode root){
+    public static GraphicalPlan getPlanGraph(PlanTree tree, SearchNode root){
         if(tree.getChildren(root).isEmpty()){
             return new GraphicalPlan(root.getBestPlanFromRoot(), 0, root.getId(), root.getStatus());
         }else{
@@ -53,12 +56,12 @@ public class JsonPlanner{
     }
 
     /**
-     * Creates an Entry<RelationalTerm, Cost> object from a schema, a conjunctive query, and its properties
+     * Creates an Entry<PlanTree, Cost> object from a schema, a conjunctive query, and its properties
      *
      * @param schema
      * @param query
      * @param properties
-     * @return Entry<RelationalTerm, Cost> Plan
+     * @return Entry<PlanTree, Cost> Plan
      */
   public static Plan plan(Schema schema, ConjunctiveQuery query, File properties, String pathToCatalog){
     PlannerParameters planParams = properties != null ?
@@ -88,13 +91,13 @@ public class JsonPlanner{
       try{
           long start = System.currentTimeMillis();
 
-          Entry<RelationalTerm, Cost>  entry = planner.search(query); //plan first to set cache and get RelationalTerm
+          Entry<RelationalTerm, Cost>  entry = planner.search(query); //plan first to set cache and get PlanTree
 
           double computationTime = (System.currentTimeMillis() - start)/1000.0; //plan time
 
           RelationalTerm plan = entry.getKey();
 
-          PlanTree<SearchNode> tree = jsonPlanner.search(query); //plan again and get the tree
+          PlanTree tree = jsonPlanner.search(query); //plan again and get the tree
           SearchNode root = tree.getRoot();
           graphicalPlan = getPlanGraph(tree, root); //our graphical plan
 
@@ -113,6 +116,20 @@ public class JsonPlanner{
           }else{
               toReturn = new Plan(graphicalPlan, data, true, plan, computationTime);
           }
+
+          System.out.println("Plan as a string is " + toReturn.getPlan().toString());
+          System.out.println("Plan input attributes are " + Arrays.toString(toReturn.getPlan().getInputAttributes()));
+          System.out.println("Plan output attributes are " + Arrays.toString(toReturn.getPlan().getOutputAttributes()));
+          System.out.println("Plan children are " + Arrays.toString(toReturn.getPlan().getChildren()));
+          System.out.println("Plan accesses are " + toReturn.getPlan().getAccesses());
+          System.out.println("Plan to logic is " + toReturn.getPlan().toLogic());
+          System.out.println("Plan has join is " + toReturn.getPlan().hasJoin());
+          System.out.println("Plan is closed is " + toReturn.getPlan().isClosed());
+          System.out.println("Plan is linear is " + toReturn.getPlan().isLinear());
+
+          System.out.println("/n/n");
+          JSONPlan jsonPlan = new JSONPlan(plan);
+          System.out.println("JSONPlan: " + jsonPlan.toString());
 
       }catch (Throwable e) {
           e.printStackTrace();
