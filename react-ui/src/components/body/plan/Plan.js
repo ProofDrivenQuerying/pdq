@@ -129,7 +129,7 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
         </Button>
       </div>
       {
-        plan.plan!==null &&
+        plan.plan &&
         plan.schemaID === schemaList.selectedSID &&
         plan.queryID === schemaList.selectedQID ?
 
@@ -181,7 +181,7 @@ const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
 
   return (
     <div>
-      {plan.plan!==null
+      {plan.plan
         && plan.schemaID === schemaList.selectedSID
         && plan.queryID === schemaList.selectedQID ?
 
@@ -236,7 +236,7 @@ const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
 
            </Button>
 
-           {planRun.planRun!==null &&
+           {planRun.planRun &&
            planRun.schemaID === schemaList.selectedSID &&
            planRun.queryID === schemaList.selectedQID  ?
             <div className='my-4'>

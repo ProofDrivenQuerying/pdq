@@ -16,9 +16,9 @@ import Button from 'react-bootstrap/Button'
 export default class PlanModal extends React.Component{
   constructor(props){
     super(props);
-
     this.state = {
       modalOpen: false,
+      formattedTree: this.grow([this.props.plan.jsonPlan])
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -27,6 +27,24 @@ export default class PlanModal extends React.Component{
     this.setState({
       modalOpen: !this.state.modalOpen
     })
+  }
+
+  grow(jsonPlan) {
+    console.log(jsonPlan)
+    /*
+    Converts JSONPlan object into the required shape for Tree
+    */
+    const toReturn = [];
+    for (const command in jsonPlan) {
+      console.log(jsonPlan[command])
+      const node = {
+        title: jsonPlan[command].command,
+        key: `${jsonPlan[command].command}-${jsonPlan[command].inputAttributes}-${jsonPlan[command].outputAttributes}`,
+        children: this.grow(jsonPlan[command].subexpression)
+      }
+      toReturn.push(node);
+    }
+    return toReturn;
   }
 
   render(){
@@ -46,7 +64,8 @@ export default class PlanModal extends React.Component{
           (null)}
       </div>
     );
-    console.log(this.props.plan.jsonPlan)
+    
+    console.log(this.stateformattedTree)
     return(
       <div>
         <div className="my-2">
@@ -82,11 +101,12 @@ export default class PlanModal extends React.Component{
           <ModalBody style={{maxHeight: "calc(100vh - 200px)"}}>
             {this.props.plan ?
             (
-              <span style={{ display: "flex", flexDirection: "column",
-                overflowY: "scroll", whiteSpace: "pre-wrap", height: "calc(100vh - 300px)",
-                overflowWrap: 'break-word'}}>
-                  Check the console!
-              </span>
+              // <span style={{ display: "flex", flexDirection: "column",
+              //   overflowY: "scroll", whiteSpace: "pre-wrap", height: "calc(100vh - 300px)",
+              //   overflowWrap: 'break-word'}}>
+              //     Check the console!
+              // </span>
+              <Tree treeData={this.state.formattedTree} height={233}/>
              )
             :
             (null)}
