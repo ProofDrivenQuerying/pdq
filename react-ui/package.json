@@ -8,6 +8,7 @@
     "@vx/group": "0.0.189",
     "@vx/hierarchy": "0.0.189",
     "@vx/shape": "0.0.189",
+    "antd": "^4.14.0",
     "bootstrap": "^4.4.1",
     "classnames": "^2.2.6",
     "d3-hierarchy": "^1.1.8",
@@ -47,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "eslint": "^6.8.0",
     "redux-devtools": "^3.5.0"
   }
 }
