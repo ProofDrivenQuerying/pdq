@@ -9,10 +9,11 @@ import { Modal,
          ModalBody,
          ModalFooter
 } from 'reactstrap';
+import { Tree } from 'antd';
 
 import Button from 'react-bootstrap/Button'
 
-export default class PlanInfoModal extends React.Component{
+export default class PlanModal extends React.Component{
   constructor(props){
     super(props);
 
@@ -32,20 +33,20 @@ export default class PlanInfoModal extends React.Component{
     const planInfoContent = (name, plan, planStringStyle) =>(
       <div>
         <header>{name}</header>
-          {plan != null ?
+          {plan ?
           (<div>
             <i>Found an optimal {plan.runnable ? "runnable":null} plan
               in {plan.planTime} seconds.</i>
 
             <span>
-              {plan.bestPlan}
+              {plan.jsonPlan}
             </span>
            </div>)
           :
           (null)}
       </div>
     );
-
+    console.log(this.props.plan.jsonPlan)
     return(
       <div>
         <div className="my-2">
@@ -79,12 +80,12 @@ export default class PlanInfoModal extends React.Component{
           </ModalHeader>
 
           <ModalBody style={{maxHeight: "calc(100vh - 200px)"}}>
-            {this.props.plan != null ?
+            {this.props.plan ?
             (
               <span style={{ display: "flex", flexDirection: "column",
                 overflowY: "scroll", whiteSpace: "pre-wrap", height: "calc(100vh - 300px)",
                 overflowWrap: 'break-word'}}>
-                  {this.props.plan.bestPlan}
+                  Check the console!
               </span>
              )
             :

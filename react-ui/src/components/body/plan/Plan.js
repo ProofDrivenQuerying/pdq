@@ -5,7 +5,7 @@ import React from 'react';
 import GraphicalPlanModal from './GraphicalPlanModal';
 import DownloadRunButton from './DownloadRunButton';
 import DownloadPlanButton from './DownloadPlanButton';
-import PlanInfoModal from './PlanInfoModal';
+import PlanModal from './PlanModal';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import { connect } from 'react-redux';
@@ -158,7 +158,7 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
           </h4>
 
           <div>
-            <PlanInfoModal
+            <PlanModal
               id={schemaList.selectedSID}
               plan={plan.plan}/>
 
