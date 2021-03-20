@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { store } from './reducers/store';
 import './index.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.css';
+import 'antd/dist/antd.css';
 
 /**
  * index.js uses ReactDom to render JSX code as HTML for the client.
