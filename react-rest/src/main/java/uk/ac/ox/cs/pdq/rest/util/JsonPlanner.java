@@ -103,18 +103,13 @@ public class JsonPlanner{
 
           ExecutablePlan runnable = JsonRunner.decoratePlan(plan, schema); //will be null if its not runnable
 
-          //get pretty string
-          final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-          try (PrintStream ps = new PrintStream(baos, true, "UTF-8")) {
-              PlanPrinter.printGenericPlanToStream(ps, plan, 1);
-          }
-          String data = new String(baos.toByteArray(), StandardCharsets.UTF_8);
+          // JSON plan serialization
+          JSONPlan jsonPlan = new JSONPlan(plan);
 
           if(runnable == null){
-              toReturn = new Plan(graphicalPlan, data, false, plan, computationTime);
+              toReturn = new Plan(graphicalPlan, false, plan, computationTime);
           }else{
-              toReturn = new Plan(graphicalPlan, data, true, plan, computationTime);
+              toReturn = new Plan(graphicalPlan, true, plan, computationTime);
           }
 
           System.out.println("Plan as a string is " + toReturn.getPlan().toString());
@@ -128,7 +123,7 @@ public class JsonPlanner{
           System.out.println("Plan is linear is " + toReturn.getPlan().isLinear());
 
           System.out.println("/n/n");
-          JSONPlan jsonPlan = new JSONPlan(plan);
+
           System.out.println("JSONPlan: " + jsonPlan.toString());
 
       }catch (Throwable e) {

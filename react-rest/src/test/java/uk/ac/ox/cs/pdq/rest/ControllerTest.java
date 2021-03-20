@@ -74,7 +74,7 @@ public class ControllerTest {
                 "AND a0.uo_units='15'";
         Plan actual = underTest.plan(schemaID, queryID, SQL);
         Assert.assertNotNull(actual);
-        Assert.assertNotNull(actual.bestPlan);
+        Assert.assertNotNull(actual.jsonPlan);
         Assert.assertNotNull(actual.graphicalPlan);
     }
 

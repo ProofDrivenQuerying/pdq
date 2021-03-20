@@ -13,16 +13,16 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
  */
 public class Plan {
     public GraphicalPlan graphicalPlan;
-    public String bestPlan;
+    public JSONPlan jsonPlan;
     public boolean runnable;
     public double planTime;
 
     @JsonIgnore
     private RelationalTerm plan;
 
-    public Plan(GraphicalPlan gp, String bp, boolean r, RelationalTerm plan, double time){
+    public Plan(GraphicalPlan gp, boolean r, RelationalTerm plan, double time){
         this.graphicalPlan = gp;
-        this.bestPlan = bp;
+        this.jsonPlan = new JSONPlan(plan);
         this.runnable = r;
         this.plan = plan;
         this.planTime = time;
