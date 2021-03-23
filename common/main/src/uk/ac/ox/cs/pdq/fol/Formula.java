@@ -106,7 +106,7 @@ public abstract class Formula implements Serializable{
 		}
 		else if(this instanceof Implication) {
 			variables.addAll(((Implication)this).getChildren()[0].getVariablesRecursive());
-			variables.addAll(((Implication)this).getChildren()[0].getVariablesRecursive());
+			variables.addAll(((Implication)this).getChildren()[1].getVariablesRecursive());
 		}
 		else if(this instanceof QuantifiedFormula) {
 			variables.addAll(((QuantifiedFormula)this).getChildren()[0].getVariablesRecursive());
