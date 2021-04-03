@@ -103,29 +103,11 @@ public class JsonPlanner{
 
           ExecutablePlan runnable = JsonRunner.decoratePlan(plan, schema); //will be null if its not runnable
 
-          // JSON plan serialization
-          JSONPlan jsonPlan = new JSONPlan(plan);
-
           if(runnable == null){
               toReturn = new Plan(graphicalPlan, false, plan, computationTime);
           }else{
               toReturn = new Plan(graphicalPlan, true, plan, computationTime);
           }
-
-          System.out.println("Plan as a string is " + toReturn.getPlan().toString());
-          System.out.println("Plan input attributes are " + Arrays.toString(toReturn.getPlan().getInputAttributes()));
-          System.out.println("Plan output attributes are " + Arrays.toString(toReturn.getPlan().getOutputAttributes()));
-          System.out.println("Plan children are " + Arrays.toString(toReturn.getPlan().getChildren()));
-          System.out.println("Plan accesses are " + toReturn.getPlan().getAccesses());
-          System.out.println("Plan to logic is " + toReturn.getPlan().toLogic());
-          System.out.println("Plan has join is " + toReturn.getPlan().hasJoin());
-          System.out.println("Plan is closed is " + toReturn.getPlan().isClosed());
-          System.out.println("Plan is linear is " + toReturn.getPlan().isLinear());
-
-          System.out.println("/n/n");
-
-          System.out.println("JSONPlan: " + jsonPlan.toString());
-
       }catch (Throwable e) {
           e.printStackTrace();
       }
