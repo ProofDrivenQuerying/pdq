@@ -10,12 +10,14 @@ import { Modal,
          ModalFooter
 } from 'reactstrap';
 import { Tree } from 'antd';
-
+import PlanTreeNode from './PlanTreeNode'
 import Button from 'react-bootstrap/Button'
 
 export default class PlanModal extends React.Component{
+  
   constructor(props){
     super(props);
+    console.log([this.props.plan.jsonPlan]);
     this.state = {
       modalOpen: false,
       formattedTree: this.grow([this.props.plan.jsonPlan])
@@ -30,16 +32,14 @@ export default class PlanModal extends React.Component{
   }
 
   grow(jsonPlan) {
-    console.log(jsonPlan)
     /*
     Converts JSONPlan object into the required shape for Tree
     */
     const toReturn = [];
     for (const command in jsonPlan) {
-      console.log(jsonPlan[command])
       const node = {
-        title: jsonPlan[command].command,
-        key: `${jsonPlan[command].command}-${jsonPlan[command].inputAttributes}-${jsonPlan[command].outputAttributes}`,
+        title: <PlanTreeNode relationalTerm={jsonPlan[command]}/>,
+        key: `${jsonPlan[command].command}-${command}`,
         children: this.grow(jsonPlan[command].subexpression)
       }
       toReturn.push(node);
@@ -65,7 +65,6 @@ export default class PlanModal extends React.Component{
       </div>
     );
     
-    console.log(this.stateformattedTree)
     return(
       <div>
         <div className="my-2">
@@ -106,7 +105,7 @@ export default class PlanModal extends React.Component{
               //   overflowWrap: 'break-word'}}>
               //     Check the console!
               // </span>
-              <Tree treeData={this.state.formattedTree} height={233}/>
+              <Tree treeData={this.state.formattedTree} height={233} defaultExpandAll/>
              )
             :
             (null)}
