@@ -32,6 +32,7 @@ public class Cache {
 	protected static ClassManager<UntypedConstant> untypedConstant = null;
 	protected static ClassManager<TypedConstant> typedConstant = null;
 	protected static ClassManager<Variable> variable = null;
+	protected static ClassManager<FunctionTerm> functionTerm = null;
 
 	static {
 		startCaches();
@@ -59,6 +60,7 @@ public class Cache {
 		untypedConstant.reset();
 		variable.reset();
 		typedConstant.reset();
+		functionTerm.reset();
 	}
 
 	private static synchronized void startCaches() {
@@ -350,6 +352,24 @@ public class Cache {
 
 			protected int getHashCode(Variable object) {
 				return object.symbol.hashCode() * 7;
+			}
+		};
+
+        functionTerm = new ClassManager<FunctionTerm>() {
+			protected boolean equal(FunctionTerm object1, FunctionTerm object2) {
+				if (!object1.function.equals(object2.function) || object1.terms.length != object2.terms.length)
+					return false;
+				for (int index = object1.terms.length - 1; index >= 0; --index)
+					if (!object1.terms[index].equals(object2.terms[index]))
+						return false;
+				return true;
+			}
+
+			protected int getHashCode(FunctionTerm object) {
+				int hashCode = object.function.hashCode();
+				for (int index = object.terms.length - 1; index >= 0; --index)
+					hashCode = hashCode * 7 + object.terms[index].hashCode();
+				return hashCode;
 			}
 		};
 
