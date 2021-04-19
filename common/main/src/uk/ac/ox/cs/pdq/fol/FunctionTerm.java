@@ -16,8 +16,8 @@ import java.util.List;
 public class FunctionTerm extends Term{
 	private static final long serialVersionUID = 4513191157046218083L;
 
-	private final Function function;
-	private final Term[] terms;
+	protected final Function function;
+	protected final Term[] terms;
 	protected String toString = null;
 	protected Variable[] variables;
 
@@ -30,7 +30,7 @@ public class FunctionTerm extends Term{
 
 	@Override
 	public boolean isVariable() {
-		return !(this.function.getArity() == 0);
+		return false;
 	}
 
 	@Override
@@ -70,6 +70,7 @@ public class FunctionTerm extends Term{
                     builder.append(this.terms[index]).toString();
                 }
                 builder.append(')');
+                this.toString = builder.toString();
             }
 		}
 		return this.toString;
@@ -87,5 +88,9 @@ public class FunctionTerm extends Term{
 			this.variables = variables.toArray(new Variable[variables.size()]);
 		}
 		return this.variables.clone();
+	}
+
+    public static FunctionTerm create(Function function, Term... terms) {
+		return Cache.functionTerm.retrieve(new FunctionTerm(function, terms));
 	}
 }
