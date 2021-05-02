@@ -12,7 +12,8 @@ import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 
 
 /**
- * The cost of the plan equals the total number of output tuples per access .
+ * The cost of the plan equals the total number of output tuples per access. This is obtained from calculations in the catalog class based
+ * on the catalog.properties file
  *
  * @author Efthymia Tsamoura
  * 
@@ -23,7 +24,7 @@ public class TotalNumberOfOutputTuplesPerAccessCostEstimator implements OrderInd
 	protected final Catalog catalog;
 
 	/**
-	 * Instantiates a new total erspi (NumberOfOutputTuplesPerAccess) cost estimator.
+	 * Instantiates a new NumberOfOutputTuplesPerAccess cost estimator.
 	 *
 	 * @param stats the stats
 	 * @param catalog 		The database statistics
