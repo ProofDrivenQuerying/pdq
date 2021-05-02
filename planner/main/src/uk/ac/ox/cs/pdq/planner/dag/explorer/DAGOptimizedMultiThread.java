@@ -34,7 +34,8 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
  * parallel chasing and (success-)dominance, equivalence and success checks in
  * parallel
  * 
- * Similar to DAG Optimized, but the code is simplified.
+ * Most of what is new here over dagoptimized has to do with threading
+ * It makes calls to some of the methods for updating best plans that are in dagoptimized
  * 
  * @author Gabor
  *
