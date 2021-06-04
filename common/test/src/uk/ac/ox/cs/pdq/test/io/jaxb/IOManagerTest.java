@@ -3,12 +3,9 @@
 
 package uk.ac.ox.cs.pdq.test.io.jaxb;
 
-import java.io.File;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
@@ -20,6 +17,8 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.test.util.PdqTest;
+
+import java.io.File;
 
 /**
  * @author Gabor

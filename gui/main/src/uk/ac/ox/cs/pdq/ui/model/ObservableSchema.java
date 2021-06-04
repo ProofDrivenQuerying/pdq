@@ -3,23 +3,23 @@
 
 package uk.ac.ox.cs.pdq.ui.model;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableStringValue;
 import javafx.beans.value.ObservableValue;
+import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.ui.UserInterfaceException;
 import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaWriter;
+
+import java.io.File;
 // TODO: Auto-generated Javadoc
 /**
  * 
  */
 public class ObservableSchema {
+
+	private static Logger log = Logger.getLogger(ObservableSchema.class);
 
 	/**  */
 	private final SimpleStringProperty name =  new SimpleStringProperty(this, "name");
@@ -162,19 +162,14 @@ public class ObservableSchema {
 	}
 
 	/**
+	 * store method used to call the writer and store the xml file into the work directory
+	 * .pdq/schemas
 	 */
 	public void store() {
 		if (this.file.isNotNull().get()) {
 			ObservableSchemaWriter writer = new ObservableSchemaWriter();
 			File f = this.getFile();
-			try (PrintStream o = new PrintStream(f)) {
-				if (!f.exists()) {
-					f.createNewFile();
-				}
-				writer.write(o, this);
-			} catch (IOException e) {
-				throw new UserInterfaceException("Could not write file " + f.getAbsolutePath());
-			}
+				writer.write(f, this);
 		}
 	}
 

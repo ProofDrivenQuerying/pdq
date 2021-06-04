@@ -3,24 +3,21 @@
 
 package uk.ac.ox.cs.pdq.ui.io.sql;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.log4j.Logger;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.builder.ConjunctiveQueryBodyBuilder;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteLexer;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -65,7 +62,7 @@ public class SQLLikeQueryReader {
 	public ConjunctiveQuery fromString(String str) throws Exception {
 	
 		// Initialise variablez
-		CharStream stream = new ANTLRInputStream(str);
+		CharStream stream = CharStreams.fromString(str);
         SQLiteLexer lexer = new SQLiteLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         SQLLikeQueryParser parser = new SQLLikeQueryParser(tokens);
@@ -209,11 +206,6 @@ public class SQLLikeQueryReader {
         }
         catch(Exception e)
         {
-           	Alert alert = new Alert(AlertType.INFORMATION);
-        	alert.setTitle("Information Dialog");
-        	alert.setHeaderText(null);
-        	alert.setContentText(e.getMessage());
-        	alert.showAndWait();
         	throw e;
         }
         

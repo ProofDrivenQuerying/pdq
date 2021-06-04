@@ -4,6 +4,8 @@
 package uk.ac.ox.cs.pdq.rest.jsonobjects.plan;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 
 /**
@@ -13,19 +15,24 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
  */
 public class Plan {
     public GraphicalPlan graphicalPlan;
-    public String bestPlan;
+    public JSONRelationalTerm jsonPlan;
     public boolean runnable;
     public double planTime;
 
     @JsonIgnore
     private RelationalTerm plan;
 
-    public Plan(GraphicalPlan gp, String bp, boolean r, RelationalTerm plan, double time){
+    public Plan(GraphicalPlan gp, boolean r, RelationalTerm plan, double time) throws JsonProcessingException {
         this.graphicalPlan = gp;
-        this.bestPlan = bp;
+        this.jsonPlan = JSONRelationalTerm.fromRelationalTerm(plan);
         this.runnable = r;
         this.plan = plan;
         this.planTime = time;
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enableDefaultTyping();
+        String testJsonPlan = mapper.writeValueAsString(this.jsonPlan);
+        System.out.println(testJsonPlan);
     }
 
     public RelationalTerm getPlan(){

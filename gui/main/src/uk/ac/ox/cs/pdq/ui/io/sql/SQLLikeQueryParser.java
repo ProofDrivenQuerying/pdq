@@ -3,13 +3,13 @@
 
 package uk.ac.ox.cs.pdq.ui.io.sql;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.Interval;
 import org.apache.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class SQLLikeQueryParser.
@@ -667,6 +667,9 @@ public class SQLLikeQueryParser {
 	}
 	public Token match(int token) throws Exception
 	{
+		if(tokens.getTokens().isEmpty()){
+			throw new ArrayIndexOutOfBoundsException();
+		}
 		Token tok = tokens.get(tokens.index());
 		if((tok.getType() != token) && (!tokenNames[tok.getType()].equals("")))
 		{
