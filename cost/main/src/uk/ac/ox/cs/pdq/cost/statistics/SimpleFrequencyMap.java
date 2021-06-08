@@ -56,7 +56,7 @@ public class SimpleFrequencyMap {
 	}
 
 	/**
-	 * Builds the.
+	 * 
 	 *
 	 * @param schema the schema
 	 * @param histogram the histogram
@@ -68,7 +68,7 @@ public class SimpleFrequencyMap {
 	}
 
 	/**
-	 * Parses the.
+	 * 
 	 *
 	 * @param schema the schema
 	 * @param histogram the histogram
@@ -123,7 +123,7 @@ public class SimpleFrequencyMap {
 	}
 
 	/**
-	 * Gets the frequencies.
+	 * 
 	 *
 	 * @return the frequencies
 	 */
@@ -132,7 +132,7 @@ public class SimpleFrequencyMap {
 	}
 
 	/**
-	 * Gets the relation.
+	 * 
 	 *
 	 * @return the relation
 	 */
@@ -141,7 +141,7 @@ public class SimpleFrequencyMap {
 	}
 
 	/**
-	 * Gets the attibute.
+	 * 
 	 *
 	 * @return the attibute
 	 */
