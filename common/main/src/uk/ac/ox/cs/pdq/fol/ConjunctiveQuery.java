@@ -184,7 +184,7 @@ public class ConjunctiveQuery extends Formula {
 	/**
 	 * Gets the types of a query's free variables
 	 *
-	 * @param query
+	 * @param schema
 	 *            the q
 	 * @return a list of types for each free variable of the query
 	 */

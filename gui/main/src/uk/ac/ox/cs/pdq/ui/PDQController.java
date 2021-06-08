@@ -790,7 +790,6 @@ public class PDQController {
 				Scene scene = new Scene(parent);
 				dialog.setScene(scene);
 				dialog.setTitle(bundle.getString("runtime.dialog.title"));
-
 				// Set the currently selected schema/query/plan
 				final RuntimeController runtimeController = loader.getController();
 				runtimeController.setPlan(this.currentPlan.get());

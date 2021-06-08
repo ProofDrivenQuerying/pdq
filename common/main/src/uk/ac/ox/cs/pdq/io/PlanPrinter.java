@@ -167,24 +167,24 @@ public class PlanPrinter {
 	
 	public static String printFlatLinePlanToString(RelationalTerm p) {
 		if (p instanceof RenameTerm) return printFlatLinePlanToString(p.getChild(0));
-		if (p instanceof ProjectionTerm) return "Project[" + printAttributeList(((ProjectionTerm)p).getProjections()) + "] {"+printFlatLinePlanToString(p.getChild(0)) + "}";
+		if (p instanceof ProjectionTerm) return "Project{Debug}[" + printAttributeList(((ProjectionTerm)p).getProjections()) + "] {"+printFlatLinePlanToString(p.getChild(0)) + "}";
 		if (p instanceof SelectionTerm) 
-			return "Selection[" + ((SelectionTerm)p).getSelectionCondition().toString() + "]{" + printFlatLinePlanToString(p.getChild(0)) + "}";
+			return "Selection{Debug}[" + ((SelectionTerm)p).getSelectionCondition().toString() + "]{" + printFlatLinePlanToString(p.getChild(0)) + "}";
 		if (p instanceof AccessTerm) 
-			return "Access[" + ((AccessTerm)p).getRelation() + "(" + Joiner.on(',').join((((AccessTerm)p).getAccessMethod().getInputs())) + ")]";
+			return "Access{Debug}[" + ((AccessTerm)p).getRelation() + "(" + Joiner.on(',').join((((AccessTerm)p).getAccessMethod().getInputs())) + ")]";
 		if (p instanceof CartesianProductTerm) {
 			StringBuffer ret = new StringBuffer();
 			ret.append(p.getClass().getSimpleName()); 
 			if (p instanceof JoinTerm) {
-				ret.append('[');
+				ret.append("{debug}[");
 				ret.append(((JoinTerm) p).getJoinConditions().toString()); 
-				ret.append(']');
+				ret.append("]");
 			}
-			ret.append('{');
+			ret.append("DEBUG{");
 			ret.append(printFlatLinePlanToString(p.getChild(1))); 
 			ret.append(',');
 			ret.append(printFlatLinePlanToString(p.getChild(0)));
-			ret.append('}');
+			ret.append("}");
 			return ret.toString();
 		}
 		return "?"+p.getClass().getSimpleName();
@@ -231,9 +231,9 @@ public class PlanPrinter {
 	public static void printGenericPlanToStream(PrintStream out, RelationalTerm p, int indent) {
 		if(p instanceof AccessTerm)
 		{
-			ident(out, indent); out.println("Access");
-			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
+			ident(out, indent); out.println("[GenericPlanDebug]Access");
+			ident(out, indent); out.println("[GenericPlanDebug]{");
+			ident(out, indent+1); out.println("[AccessTermDebug toString]" + chop(p.toString()));
 			for(int i = 0; i < p.getChildren().length; i++)
 			{
 				printGenericPlanToStream(out, p.getChild(i), indent+1);
@@ -242,7 +242,7 @@ public class PlanPrinter {
 		}
 		if(p instanceof CartesianProductTerm)
 		{
-			ident(out, indent); out.println("Join");
+			ident(out, indent); out.println("[GenericPlanDebug]Join");
 			ident(out, indent); out.println("{");
 			ident(out, indent+1); out.println(chop(p.toString()));
 			for(int i = 0; i < p.getChildren().length; i++)
@@ -253,7 +253,7 @@ public class PlanPrinter {
 		}
 		if(p instanceof ProjectionTerm)
 		{
-			ident(out, indent); out.println("Project");
+			ident(out, indent); out.println("[GenericPlanDebug]Project");
 			ident(out, indent); out.println("{");
 			ident(out, indent+1); out.println(chop(p.toString()));
 			for(int i = 0; i < p.getChildren().length; i++)
@@ -264,7 +264,7 @@ public class PlanPrinter {
 		}
 		if(p instanceof RenameTerm)
 		{
-			ident(out, indent); out.println("Rename");
+			ident(out, indent); out.println("[GenericPlanDebug]Rename");
 			ident(out, indent); out.println("{");
 			ident(out, indent+1); out.println(chop(p.toString()));
 			for(int i = 0; i < p.getChildren().length; i++)
@@ -275,9 +275,9 @@ public class PlanPrinter {
 		}
 		if(p instanceof SelectionTerm)
 		{
-			ident(out, indent); out.println("Select");
+			ident(out, indent); out.println("[GenericPlanDebug]Select");
 			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
+			ident(out, indent+1); out.println("[SelectionTermDebug toString]"+ chop(p.toString()));
 			for(int i = 0; i < p.getChildren().length; i++)
 			{
 				printGenericPlanToStream(out, p.getChild(i), indent+1);
