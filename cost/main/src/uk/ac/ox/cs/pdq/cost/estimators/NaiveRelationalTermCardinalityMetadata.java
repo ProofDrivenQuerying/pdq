@@ -8,7 +8,7 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 
 /**
- * The Class NaiveMetadata.
+ * 
  *
  * @author Julien Leblay
  */
