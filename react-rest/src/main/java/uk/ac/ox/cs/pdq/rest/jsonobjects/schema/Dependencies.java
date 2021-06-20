@@ -11,12 +11,12 @@ import uk.ac.ox.cs.pdq.fol.Dependency;
  *
  * @author Camilo Ortiz
  */
-public class DependencyList {
+public class Dependencies {
     public EGD[] EGDDependencies;
     public TGD[] TGDDependencies;
     public int id;
 
-    public DependencyList(Schema s, int id){
+    public Dependencies(Schema s, int id){
         this.id = id;
 
         uk.ac.ox.cs.pdq.fol.EGD[] egd = s.getKeyDependencies();

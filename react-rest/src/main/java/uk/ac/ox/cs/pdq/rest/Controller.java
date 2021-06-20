@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.io.File;
 
@@ -37,14 +38,14 @@ import java.nio.file.Paths;
 
 @RestController
 public class Controller {
-    private String workingDirectory = "demo/";
-    private HashMap<Integer, String> paths;
+    private final String workingDirectory = "demo/";
+    private final HashMap<Integer, String> paths;
 
-    private HashMap<Integer, Schema> schemaList;
-    private HashMap<Integer, HashMap<Integer, ConjunctiveQuery>> commonQueries;
-    private HashMap<Integer, File> casePropertyList;
-    private HashMap<Integer, String> catalogPaths;
-    private boolean localMode; //change to config file
+    private final HashMap<Integer, Schema> schemaList;
+    private final HashMap<Integer, HashMap<Integer, ConjunctiveQuery>> commonQueries;
+    private final HashMap<Integer, File> casePropertyList;
+    private final HashMap<Integer, String> catalogPaths;
+    private final boolean localMode; //change to config file
 
     /**
      * Constructor. Reads in demo schema/query/property information found in ./demo/ and stores it in HashMaps for
@@ -60,7 +61,10 @@ public class Controller {
         this.catalogPaths = new HashMap<Integer, String>();
         this.localMode = false;
 
+        // The directory we store our example folders in
+        // This is externalizable
         File testDirectory = new File(workingDirectory);
+        // All the example folders
         File[] examples = testDirectory.listFiles();
 
         if (examples != null) {
@@ -128,6 +132,7 @@ public class Controller {
      *
      * @return SchemaName[]
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/initSchemas", method = RequestMethod.GET, produces = "application/json")
     public SchemaArray initSchemas() {
 
@@ -170,6 +175,7 @@ public class Controller {
      * @param id
      * @return JsonRelationList
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/getRelations", method = RequestMethod.GET, produces = "application/json")
     public RelationArray getRelations(@RequestParam(value = "id") int id) {
 
@@ -184,17 +190,13 @@ public class Controller {
      * @param id
      * @return JsonRelationList
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/getDependencies", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<DependencyList> getDependencies(@RequestParam(value = "id") int id) {
+    public Dependencies getDependencies(@RequestParam(value = "id") int id) {
 
         Schema schema = schemaList.get(id);
-        DependencyList toReturn = new DependencyList(schema, id);
 
-        String contentType = "application/json";
-
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
-                .header(contentType)
-                .body(toReturn);
+        return new Dependencies(schema, id);
     }
 
     /**
@@ -203,13 +205,11 @@ public class Controller {
      * @param schemaID
      * @param queryID
      * @param SQL
-     * @param request
      * @return boolean based on whether the SQL string is translatable
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/verifyQuery/{schemaID}/{queryID}/{SQL:.+}")
-    public boolean verifyQuery(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL,
-                               HttpServletRequest request) {
-
+    public boolean verifyQuery(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL) {
         Schema schema = this.schemaList.get(schemaID);
 
         boolean validQuery = false;
@@ -228,11 +228,12 @@ public class Controller {
                 HashMap<Integer, ConjunctiveQuery> updatedList = this.commonQueries.get(schemaID);
                 updatedList.put(queryID, newQuery);
             }
-
-            return validQuery;
-        } catch (Exception e) {
+        } catch (Exception | ExceptionInInitializerError | NoClassDefFoundError e) {
             e.printStackTrace();
+            return false;
         }
+
+        System.out.println("Returned in validQuery " + validQuery);
         return validQuery;
     }
 
@@ -244,6 +245,7 @@ public class Controller {
      * @param SQL
      * @return
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/plan/{schemaID}/{queryID}/{SQL}")
     public Plan plan(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL) {
 
@@ -273,7 +275,6 @@ public class Controller {
         } catch (Throwable e) {
             e.printStackTrace();
         }
-
         return plan;
     }
 
@@ -286,6 +287,7 @@ public class Controller {
      * @param request
      * @return a ResponseEntity that contains a Resource file (for downloading)
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/downloadPlan/{schemaID}/{queryID}/{SQL}")
     public ResponseEntity<Resource> downloadPlan(@PathVariable int schemaID, @PathVariable int queryID,
                                                  @PathVariable String SQL, HttpServletRequest request) {
@@ -313,6 +315,7 @@ public class Controller {
      * @param SQL
      * @return
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/run/{schemaID}/{queryID}/{SQL}")
     public RunResults run(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL){
 
@@ -354,6 +357,7 @@ public class Controller {
      * @param request
      * @return a ResponseEntity that contains a Resource file (for downloading)
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/downloadRun/{schemaID}/{queryID}/{SQL}")
     public ResponseEntity<Resource> downloadRun(@PathVariable int schemaID, @PathVariable int queryID,
                                                 @PathVariable String SQL, HttpServletRequest request) {
@@ -392,5 +396,17 @@ public class Controller {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public HashMap<Integer, Schema> getSchemaList() {
+        return this.schemaList;
+    }
+
+    public HashMap<Integer, HashMap<Integer, ConjunctiveQuery>> getCommonQueries() {
+        return this.commonQueries;
+    }
+
+    public HashMap<Integer, File> getCasePropertyList() {
+        return casePropertyList;
     }
 }

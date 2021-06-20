@@ -3,15 +3,14 @@
 
 package uk.ac.ox.cs.pdq.datasources.accessrepository;
 
+import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
+
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.xml.bind.JAXBException;
-
-import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
-import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 
 /**
  * AccessRepository represents a repository executable access methods. The
@@ -22,7 +21,7 @@ import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
  */
 public class AccessRepository {
 
-	private static String DEFAULT_REPOSITORY_LOCATION = "./services";
+	private static String DEFAULT_REPOSITORY_LOCATION = ".pdq/services";
 	// There can be multiple repositories. This static field maps between locations
 	// and repositories.
 	public static Map<String, AccessRepository> cachedRepositories = new HashMap<>();

@@ -44,7 +44,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
                   >
                     <Container>
                       <Row>
-                        <Col className="my-2" sm={12} md={12} lg={4}>
+                        <Col className="my-2" sm={12} md={12} lg={3}>
                           {this.props.schemaFromList.name}
                         </Col>
                         <Col xs={6} sm={6} md={6} lg={4}>

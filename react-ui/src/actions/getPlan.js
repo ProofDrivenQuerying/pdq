@@ -1,7 +1,5 @@
-// This file is part of PDQ (https://github.com/ProofDrivenQuerying/pdq) which is released under the MIT license.
-// See accompanying LICENSE for copyright notice and full details.
-
 import { store } from '../reducers/store.js';
+import { api } from './config.js';
 
 /**
  * Fetches plan object from the backend based on the provided selected schema's id.
@@ -42,7 +40,7 @@ export const plan = (schemaID, queryID, SQL) => {
   return function(dispatch, getState){
     let simpleSQL = SQL.replace(/\n|\r|\t/g, " ");
 
-    return fetch("/plan/"+schemaID+"/"+queryID+"/"+simpleSQL)
+    return fetch(api + "/plan/"+schemaID+"/"+queryID+"/"+simpleSQL)
     .then(res => res.text())
     .then(res => res = JSON.parse(res)).then((res)=>{
       if (res === null){
