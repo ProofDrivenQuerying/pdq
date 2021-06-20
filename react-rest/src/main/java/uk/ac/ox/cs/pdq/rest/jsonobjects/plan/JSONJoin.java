@@ -12,7 +12,7 @@ public class JSONJoin extends JSONRelationalTerm {
 
     public JSONJoin(JoinTerm rt) {
         super(rt);
-        this.condition = rt.getJoinConditions().asPredicate().toString();
+        this.condition = rt.getJoinConditions().toString();
     }
     public String toString() {
         StringBuilder toReturn = new StringBuilder("{ command: " + this.command +
