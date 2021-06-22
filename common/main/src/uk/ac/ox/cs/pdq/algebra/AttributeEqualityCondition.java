@@ -39,8 +39,12 @@ public class AttributeEqualityCondition extends SimpleCondition {
 
 	@Override
 	public String toString() {
+		String position = this.position.toString();
+		if(this.mappedNamed != null) {
+			position = this.mappedNamed;
+		}
 		StringBuilder result = new StringBuilder();
-		result.append('#').append(this.position).append('=').append('#').append(this.other);
+		result.append('#').append(position).append('=').append('#').append(this.other);
 		return result.toString();
 	}
 	

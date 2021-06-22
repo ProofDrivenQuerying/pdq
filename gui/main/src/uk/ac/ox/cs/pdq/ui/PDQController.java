@@ -1217,10 +1217,10 @@ public class PDQController {
 		if (newValue != null) {
 			Plan plan = newValue.getPlan();
 			if (plan != null)	PDQController.this.savePlan(newValue);
-			
+			Schema selectedSchema = this.currentSchema.get().getSchema();
 			PDQController.this.runRuntimeButton.setDisable(plan == null);
 //			PDQController.this.setSettingsEditable(plan == null);
-			PDQController.this.displayPlan(plan);
+			PDQController.this.displayPlan(plan, selectedSchema);
 			PDQController.this.displayProof(newValue.getProof());
 			PDQController.this.displaySettings(newValue);
 		} else {
@@ -1228,6 +1228,12 @@ public class PDQController {
 		}
 	};
 
+	/**
+	 * Old
+	 * @param out
+	 * @param p
+	 * @param indent
+	 */
 	static public void displayPlanSubtype(PrintStream out, Plan p, int indent)
 	{
 		try {
@@ -1236,13 +1242,22 @@ public class PDQController {
 			e.printStackTrace();
 		}
 	}
+
+	static public void displayPlanSubtype(PrintStream out, Plan p, int indent , Schema s)
+	{
+		try {
+			uk.ac.ox.cs.pdq.io.PlanPrinter.printPlanToText(out, (RelationalTerm) p, indent, s);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
-	void displayPlan(Plan p) {
+	void displayPlan(Plan p, Schema s) {
 		PDQController.this.planViewArea.clear();
 		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			PrintStream pbos = new PrintStream(bos); 
-			displayPlanSubtype(pbos, p, 0);
+			displayPlanSubtype(pbos, p, 0 , s);
 			PDQController.this.planViewArea.appendText(bos.toString());
 		}
 	}

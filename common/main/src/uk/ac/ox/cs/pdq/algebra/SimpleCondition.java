@@ -19,6 +19,19 @@ public abstract class SimpleCondition extends Condition {
 	/**  The first of the two positions to be compared for equality. */
 	protected final Integer position;
 
+	/** The value to be used to override the position index and replace it with
+	 * the mappedNamed in the toString method
+	 **/
+	protected String mappedNamed;
+
+	public String getMappedNamed() {
+		return mappedNamed;
+	}
+
+	public void setMappedNamed(String mappedNamed) {
+		this.mappedNamed = mappedNamed;
+	}
+
 	protected SimpleCondition(Integer position) {
 		Preconditions.checkArgument(position >= 0);
 		this.position = position;

@@ -14,15 +14,10 @@ import java.util.List;
 
 import com.google.common.base.Joiner;
 
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
-import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
-import uk.ac.ox.cs.pdq.algebra.JoinTerm;
-import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.algebra.RenameTerm;
-import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
+import uk.ac.ox.cs.pdq.algebra.*;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
 
 /**
  * Prints a picture of a plan for better readability, and opens it in explorer.
@@ -149,6 +144,19 @@ public class PlanPrinter {
 	public static void printPlanToText(PrintStream s, RelationalTerm p, int indent) throws IOException {
 		printPlanToText(s,p,indent,defaultTextMode);
 	}
+
+	/**
+	 * This is a temp method for now to be used to pass the selected schema object to get
+	 * the plans original name.
+	 * @param s
+	 * @param p
+	 * @param indent
+	 * @param schema
+	 * @throws IOException
+	 */
+	public static void printPlanToText(PrintStream s, RelationalTerm p, int indent, Schema schema) throws IOException {
+		printPlanToText(s,p,indent,defaultTextMode, schema);
+	}
 	public static void printPlanToText(PrintStream s, RelationalTerm p, int indent, TEXT_MODE tm) throws IOException {
 		switch (tm) {
 		case flatline:
@@ -164,13 +172,48 @@ public class PlanPrinter {
 		}
 		s.write(printFlatLinePlanToString(p).getBytes());
 	}
+
+	/**
+	 * This is a temp method for now to be used to pass the selected schema object to get
+	 *  the plans original name.
+	 * @param s
+	 * @param p
+	 * @param indent
+	 * @param tm
+	 * @param schema
+	 * @throws IOException
+	 */
+	public static void printPlanToText(PrintStream s, RelationalTerm p, int indent, TEXT_MODE tm, Schema schema) throws IOException {
+		switch (tm) {
+			case flatline:
+				s.write(printFlatLinePlanToString(p, schema).getBytes());
+				break;
+			case generictext:
+				printGenericPlanToStream(s,p,indent);
+				break;
+			case linearplantext:
+				printLinearPlanToStream(s,p,indent);
+				break;
+
+		}
+		s.write(printFlatLinePlanToString(p, schema).getBytes());
+	}
 	
 	public static String printFlatLinePlanToString(RelationalTerm p) {
 		if (p instanceof RenameTerm) return printFlatLinePlanToString(p.getChild(0));
 		if (p instanceof ProjectionTerm) return "Project{Debug}[" + printAttributeList(((ProjectionTerm)p).getProjections()) + "] {"+printFlatLinePlanToString(p.getChild(0)) + "}";
-		if (p instanceof SelectionTerm) 
+		if (p instanceof SelectionTerm) {
+			SelectionTerm st = ((SelectionTerm)p);
+			Condition c = ((SelectionTerm)p).getSelectionCondition();
+			if(c instanceof ConjunctiveCondition){
+				SimpleCondition[] simpleConditions = ((ConjunctiveCondition)c).getSimpleConditions();
+				for (SimpleCondition sc : simpleConditions){
+					Integer position = sc.getPosition();
+				}
+			}
 			return "Selection{Debug}[" + ((SelectionTerm)p).getSelectionCondition().toString() + "]{" + printFlatLinePlanToString(p.getChild(0)) + "}";
-		if (p instanceof AccessTerm) 
+		}
+			if (p instanceof AccessTerm)
 			return "Access{Debug}[" + ((AccessTerm)p).getRelation() + "(" + Joiner.on(',').join((((AccessTerm)p).getAccessMethod().getInputs())) + ")]";
 		if (p instanceof CartesianProductTerm) {
 			StringBuffer ret = new StringBuffer();
@@ -189,6 +232,51 @@ public class PlanPrinter {
 		}
 		return "?"+p.getClass().getSimpleName();
 	}
+
+	/**
+	 *  This is a temp method for now to be used to pass the selected schema object to get
+	 *  the plans original name
+	 * @param p
+	 * @param schema
+	 * @return
+	 */
+	public static String printFlatLinePlanToString(RelationalTerm p, Schema schema) {
+		if (p instanceof RenameTerm) return printFlatLinePlanToString(p.getChild(0));
+		if (p instanceof ProjectionTerm) return "Project{Debug}[" + printAttributeList(((ProjectionTerm)p).getProjections()) + "] {"+printFlatLinePlanToString(p.getChild(0),schema) + "}";
+		if (p instanceof SelectionTerm) {
+			Condition c = ((SelectionTerm)p).getSelectionCondition();
+			if(c instanceof ConjunctiveCondition){
+				SimpleCondition[] simpleConditions = ((ConjunctiveCondition)c).getSimpleConditions();
+				for (SimpleCondition sc : simpleConditions){
+						Integer position = sc.getPosition();
+						for(Relation r : schema.getRelations()){
+							String mappedName = r.getAttribute(position).getName();
+							sc.setMappedNamed(mappedName);
+						}
+				}
+			}
+			return "Selection{Debug}[" + ((SelectionTerm)p).getSelectionCondition().toString() + "]{" + printFlatLinePlanToString(p.getChild(0)) + "}";
+		}
+		if (p instanceof AccessTerm)
+			return "Access{Debug}[" + ((AccessTerm)p).getRelation() + "(" + Joiner.on(',').join((((AccessTerm)p).getAccessMethod().getInputs())) + ")]";
+		if (p instanceof CartesianProductTerm) {
+			StringBuffer ret = new StringBuffer();
+			ret.append(p.getClass().getSimpleName());
+			if (p instanceof JoinTerm) {
+				ret.append("{debug}[");
+				ret.append(((JoinTerm) p).getJoinConditions().toString());
+				ret.append("]");
+			}
+			ret.append("DEBUG{");
+			ret.append(printFlatLinePlanToString(p.getChild(1)));
+			ret.append(',');
+			ret.append(printFlatLinePlanToString(p.getChild(0)));
+			ret.append("}");
+			return ret.toString();
+		}
+		return "?"+p.getClass().getSimpleName();
+	}
+
 	private static String printAttributeList(Attribute[] attributes) {
 		StringBuffer ret = new StringBuffer();
 		boolean first = true;
