@@ -5,8 +5,8 @@ package uk.ac.ox.cs.pdq.rest.jsonobjects.plan;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.io.json.JSONRelationalTerm;
 
 /**
  * Serializable Plan class.
@@ -28,11 +28,6 @@ public class Plan {
         this.runnable = r;
         this.plan = plan;
         this.planTime = time;
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enableDefaultTyping();
-        String testJsonPlan = mapper.writeValueAsString(this.jsonPlan);
-        System.out.println(testJsonPlan);
     }
 
     public RelationalTerm getPlan(){

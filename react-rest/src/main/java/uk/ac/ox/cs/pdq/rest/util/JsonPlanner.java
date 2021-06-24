@@ -3,16 +3,13 @@
 
 package uk.ac.ox.cs.pdq.rest.util;
 
-import com.fasterxml.jackson.jaxrs.json.annotation.JSONP;
 import uk.ac.ox.cs.pdq.algebra.*;
 import uk.ac.ox.cs.pdq.fol.*;
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import uk.ac.ox.cs.pdq.db.Schema;
 import java.util.Map.Entry;
 
-import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.planner.*;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.plantree.PlanTree;
@@ -21,12 +18,8 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.*;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.GraphicalPlan;
-import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.JSONPlan;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.Plan;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 
 /**
  * This class has the static util for creating a plan and populating a JsonGraphicalPlan.
