@@ -1,12 +1,19 @@
-package uk.ac.ox.cs.pdq.rest.jsonobjects.plan;
+// This file is part of PDQ (https://github.com/ProofDrivenQuerying/pdq) which is released under the MIT license.
+// See accompanying LICENSE for copyright notice and full details.
+
+package uk.ac.ox.cs.pdq.io.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.db.Attribute;
 
 import java.util.Arrays;
 
+/**
+ * Serializable Projection class.
+ *
+ * @author Camilo Ortiz
+ */
 public class JSONProjection extends JSONRelationalTerm {
     @JsonProperty
     Attribute[] projections;

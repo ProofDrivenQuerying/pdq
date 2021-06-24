@@ -1,15 +1,17 @@
-package uk.ac.ox.cs.pdq.rest.jsonobjects.plan;
+// This file is part of PDQ (https://github.com/ProofDrivenQuerying/pdq) which is released under the MIT license.
+// See accompanying LICENSE for copyright notice and full details.
+
+package uk.ac.ox.cs.pdq.io.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonValue;
 import uk.ac.ox.cs.pdq.algebra.*;
 import uk.ac.ox.cs.pdq.db.Attribute;
 
-import java.util.Arrays;
-
-
+/**
+ * Abstract class for all serializable Relational Terms.
+ *
+ * @author Camilo Ortiz
+ */
 public abstract class JSONRelationalTerm {
     @JsonProperty
     public String command;
@@ -49,8 +51,11 @@ public abstract class JSONRelationalTerm {
         }
     }
 
-    /*
-    Returns a String version of RelationalTerm type
+
+    /**
+     * Returns a String version of RelationalTerm type
+     * @param rt
+     * @return
      */
     public String getType(RelationalTerm rt) {
         String toReturn;
@@ -70,8 +75,10 @@ public abstract class JSONRelationalTerm {
         return toReturn;
     }
 
-    /*
-    Returns a serializable JSON version of the RelationalTerm object
+    /**
+     * Returns a serializable JSON version of the RelationalTerm object
+     * @param rt
+     * @return
      */
     public static JSONRelationalTerm fromRelationalTerm(RelationalTerm rt) {
         JSONRelationalTerm toReturn;

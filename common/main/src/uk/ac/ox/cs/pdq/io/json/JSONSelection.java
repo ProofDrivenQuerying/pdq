@@ -1,9 +1,16 @@
-package uk.ac.ox.cs.pdq.rest.jsonobjects.plan;
+// This file is part of PDQ (https://github.com/ProofDrivenQuerying/pdq) which is released under the MIT license.
+// See accompanying LICENSE for copyright notice and full details.
+
+package uk.ac.ox.cs.pdq.io.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 
-
+/**
+ * Serializable SelectionTerm class.
+ *
+ * @author Camilo Ortiz
+ */
 public class JSONSelection extends JSONPlan{
     @JsonProperty
     String condition;
@@ -13,9 +20,7 @@ public class JSONSelection extends JSONPlan{
         this.condition = rt.getSelectionCondition().toString();
     }
     public String toString() {
-        // Ask Michael whether both input attributes and output attributes are arguments
         StringBuilder toReturn = new StringBuilder("{ command: " + this.command +
-                //Arrays.toString(ArrayUtils.addAll(this.inputAttributes, this.outputAttributes)) +
                 ", condition: " + this.condition + ", " +
                 "subexpression: [");
 

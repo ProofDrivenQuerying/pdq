@@ -1,8 +1,15 @@
-package uk.ac.ox.cs.pdq.rest.jsonobjects.plan;
+// This file is part of PDQ (https://github.com/ProofDrivenQuerying/pdq) which is released under the MIT license.
+// See accompanying LICENSE for copyright notice and full details.
 
-import uk.ac.ox.cs.pdq.algebra.*;
+package uk.ac.ox.cs.pdq.io.json;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 
+/**
+ * Default instantiable RelationalTerm class.
+ *
+ * @author Camilo Ortiz
+ */
 public class JSONPlan extends JSONRelationalTerm{
 
     public JSONPlan(RelationalTerm rt) {
@@ -10,7 +17,6 @@ public class JSONPlan extends JSONRelationalTerm{
     }
 
     public String toString() {
-        // Ask Michael whether both input attributes and output attributes are arguments
         StringBuilder toReturn = new StringBuilder("{ command: " + this.command +
                  ", " +
                 "subexpression: [");
