@@ -2,7 +2,7 @@
 // See accompanying LICENSE for copyright notice and full details.
 
 import React from "react";
-import PDQTree from "./PDQTree";
+import PDQTree from "./GraphicalPlan";
 import PopoutWindow from '../Popout';
 import { FaRoute } from 'react-icons/fa';
 import { Modal,

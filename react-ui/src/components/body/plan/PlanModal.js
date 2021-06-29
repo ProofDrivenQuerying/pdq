@@ -9,15 +9,18 @@ import { Modal,
          ModalBody,
          ModalFooter
 } from 'reactstrap';
-
+import { Tree } from 'antd';
+import PlanTreeNode from './PlanTreeNode'
 import Button from 'react-bootstrap/Button'
 
-export default class PlanInfoModal extends React.Component{
+export default class PlanModal extends React.Component{
+  
   constructor(props){
     super(props);
-
+    console.log([this.props.plan.jsonPlan]);
     this.state = {
       modalOpen: false,
+      formattedTree: this.grow([this.props.plan.jsonPlan])
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -28,24 +31,40 @@ export default class PlanInfoModal extends React.Component{
     })
   }
 
+  grow(jsonPlan) {
+    /*
+    Converts JSONPlan object into the required shape for Tree
+    */
+    const toReturn = [];
+    for (const command in jsonPlan) {
+      const node = {
+        title: <PlanTreeNode relationalTerm={jsonPlan[command]}/>,
+        key: `${jsonPlan[command].command}-${command}`,
+        children: this.grow(jsonPlan[command].subexpression)
+      }
+      toReturn.push(node);
+    }
+    return toReturn;
+  }
+
   render(){
     const planInfoContent = (name, plan, planStringStyle) =>(
       <div>
         <header>{name}</header>
-          {plan != null ?
+          {plan ?
           (<div>
             <i>Found an optimal {plan.runnable ? "runnable":null} plan
               in {plan.planTime} seconds.</i>
 
             <span>
-              {plan.bestPlan}
+              {plan.jsonPlan}
             </span>
            </div>)
           :
           (null)}
       </div>
     );
-
+    
     return(
       <div>
         <div className="my-2">
@@ -79,13 +98,14 @@ export default class PlanInfoModal extends React.Component{
           </ModalHeader>
 
           <ModalBody style={{maxHeight: "calc(100vh - 200px)"}}>
-            {this.props.plan != null ?
+            {this.props.plan ?
             (
-              <span style={{ display: "flex", flexDirection: "column",
-                overflowY: "scroll", whiteSpace: "pre-wrap", height: "calc(100vh - 300px)",
-                overflowWrap: 'break-word'}}>
-                  {this.props.plan.bestPlan}
-              </span>
+              // <span style={{ display: "flex", flexDirection: "column",
+              //   overflowY: "scroll", whiteSpace: "pre-wrap", height: "calc(100vh - 300px)",
+              //   overflowWrap: 'break-word'}}>
+              //     Check the console!
+              // </span>
+              <Tree treeData={this.state.formattedTree} height={233} defaultExpandAll/>
              )
             :
             (null)}

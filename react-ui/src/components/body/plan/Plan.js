@@ -5,7 +5,7 @@ import React from 'react';
 import GraphicalPlanModal from './GraphicalPlanModal';
 import DownloadRunButton from './DownloadRunButton';
 import DownloadPlanButton from './DownloadPlanButton';
-import PlanInfoModal from './PlanInfoModal';
+import PlanModal from './PlanModal';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import { connect } from 'react-redux';
@@ -31,7 +31,7 @@ import Col from 'react-bootstrap/Col';
 const Plan = ({plan, getPlan, run, planRun, schemaList, userID}) => {
 
   return(
-    <div>
+    <div style={{overflowY:"scroll"}}>
       <h4 className='my-2 pb-1'>
         <Container style={{padding:'0', margin:'0'}}>
           <Row>
@@ -52,7 +52,7 @@ const Plan = ({plan, getPlan, run, planRun, schemaList, userID}) => {
           {plan.plan!==null
             && plan.schemaID === schemaList.selectedSID
             && plan.queryID === schemaList.selectedQID ?
-            <div>
+            <div className='half'>
               <h4 className='my-3'>
                 <Container style={{padding:'0', margin:'0'}}>
                   <Row>
@@ -84,8 +84,7 @@ const Plan = ({plan, getPlan, run, planRun, schemaList, userID}) => {
 
 const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
   return (
-    <div className='half'>
-
+    <div>
       <div className='my-3'>
         <Button
             block
@@ -130,7 +129,7 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
         </Button>
       </div>
       {
-        plan.plan!==null &&
+        plan.plan &&
         plan.schemaID === schemaList.selectedSID &&
         plan.queryID === schemaList.selectedQID ?
 
@@ -159,7 +158,7 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
           </h4>
 
           <div>
-            <PlanInfoModal
+            <PlanModal
               id={schemaList.selectedSID}
               plan={plan.plan}/>
 
@@ -181,8 +180,8 @@ const PlanGroup = ({plan, getPlan, schemaList, userID}) => {
 const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
 
   return (
-    <div style={{maxHeight:"calc((100vh - 11rem) / 2 - 40px)", overflowY:"scroll"}}>
-      {plan.plan!==null
+    <div>
+      {plan.plan
         && plan.schemaID === schemaList.selectedSID
         && plan.queryID === schemaList.selectedQID ?
 
@@ -237,7 +236,7 @@ const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
 
            </Button>
 
-           {planRun.planRun!==null &&
+           {planRun.planRun &&
            planRun.schemaID === schemaList.selectedSID &&
            planRun.queryID === schemaList.selectedQID  ?
             <div className='my-4'>
@@ -285,7 +284,7 @@ const RunGroup = ({plan, planRun, schemaList, userID, run}) => {
 
 const RunTable = ({planRun}) => {
   return(
-    <div style={{maxHeight:"calc((100vh - 11rem) / 4 - 40px)", overflowY:"scroll"}} className='my-2'>
+    <div className='my-2'>
       <Table responsive>
         <thead>
           <tr>
