@@ -43,6 +43,7 @@ public class AccessTerm extends RelationalTerm {
 
 	private AccessTerm(Relation relation, AccessMethodDescriptor accessMethod) {
 		super(AccessTerm.computeInputAttributes(relation, accessMethod), relation.getAttributes());
+		/** Use all of the attributes of the relation being accessed as the output attributes; we do this by calling constructor of RelationalTerm */
 		assert (relation != null);
 		assert (accessMethod != null);
 		this.relation = relation;
