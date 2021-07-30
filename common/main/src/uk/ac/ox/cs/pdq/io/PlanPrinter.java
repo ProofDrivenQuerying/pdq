@@ -33,6 +33,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
  * following command: sudo apt-get install graphviz
  * 
  * @author Gabor
+ * @author Brandon
  */
 public class PlanPrinter {
 	private static final String WINDOWS_EXECUTABLE = "dot.exe";
@@ -192,9 +193,8 @@ public class PlanPrinter {
 				printGenericPlanToStream(s,p,indent);
 				break;
 			case linearplantext:
-				printLinearPlanToStream(s,p,indent);
+				printLinearPlanToStream(s,p,indent, schema);
 				break;
-
 		}
 		s.write(printFlatLinePlanToString(p, schema).getBytes());
 	}
@@ -224,7 +224,7 @@ public class PlanPrinter {
 				ret.append("]");
 			}
 			ret.append("DEBUG{");
-			ret.append(printFlatLinePlanToString(p.getChild(1))); 
+			ret.append(printFlatLinePlanToString(p.getChild(1)));
 			ret.append(',');
 			ret.append(printFlatLinePlanToString(p.getChild(0)));
 			ret.append("}");
@@ -242,7 +242,7 @@ public class PlanPrinter {
 	 */
 	public static String printFlatLinePlanToString(RelationalTerm p, Schema schema) {
 		if (p instanceof RenameTerm) return printFlatLinePlanToString(p.getChild(0));
-		if (p instanceof ProjectionTerm) return "Project{Debug}[" + printAttributeList(((ProjectionTerm)p).getProjections()) + "] {"+printFlatLinePlanToString(p.getChild(0),schema) + "}";
+		if (p instanceof ProjectionTerm) return "Project[" + printAttributeList(((ProjectionTerm)p).getProjections()) + "] {"+printFlatLinePlanToString(p.getChild(0),schema) + "}";
 		if (p instanceof SelectionTerm) {
 			Condition c = ((SelectionTerm)p).getSelectionCondition();
 			if(c instanceof ConjunctiveCondition){
@@ -255,19 +255,40 @@ public class PlanPrinter {
 						}
 				}
 			}
-			return "Selection{Debug}[" + ((SelectionTerm)p).getSelectionCondition().toString() + "]{" + printFlatLinePlanToString(p.getChild(0)) + "}";
+			return "Selection[" + ((SelectionTerm)p).getSelectionCondition().toString() + "]{" + printFlatLinePlanToString(p.getChild(0)) + "}";
 		}
 		if (p instanceof AccessTerm)
-			return "Access{Debug}[" + ((AccessTerm)p).getRelation() + "(" + Joiner.on(',').join((((AccessTerm)p).getAccessMethod().getInputs())) + ")]";
+			return "Access[" + ((AccessTerm)p).getRelation() + "(" + Joiner.on(',').join((((AccessTerm)p).getAccessMethod().getInputs())) + ")]";
 		if (p instanceof CartesianProductTerm) {
 			StringBuffer ret = new StringBuffer();
 			ret.append(p.getClass().getSimpleName());
 			if (p instanceof JoinTerm) {
-				ret.append("{debug}[");
+				JoinTerm jt = ((JoinTerm) p);
+				Condition c = jt.getJoinConditions();
+				if(c instanceof ConjunctiveCondition){
+					SimpleCondition[] simpleConditions = ((ConjunctiveCondition)c).getSimpleConditions();
+					for (SimpleCondition sc : simpleConditions){
+						if(sc instanceof AttributeEqualityCondition){
+							AttributeEqualityCondition aec = (AttributeEqualityCondition) sc;
+							Integer position = aec.getPosition();
+							Integer other = aec.getOther();
+							Attribute positionAttribute = outputAttributeProvenance(p.getChildren(), position);
+							Attribute otherAttribute = outputAttributeProvenance(p.getChildren(),other);
+							sc.setOtherToString(otherAttribute.toString());
+							sc.setMappedNamed(positionAttribute.toString());
+
+							System.out.println(String.format("%s = %s", positionAttribute.toString(), otherAttribute.toString()));
+							System.out.println("[Finished]" );
+
+						}
+
+					}
+				}
+				ret.append("[");
 				ret.append(((JoinTerm) p).getJoinConditions().toString());
 				ret.append("]");
 			}
-			ret.append("DEBUG{");
+			ret.append("");
 			ret.append(printFlatLinePlanToString(p.getChild(1)));
 			ret.append(',');
 			ret.append(printFlatLinePlanToString(p.getChild(0)));
@@ -276,6 +297,49 @@ public class PlanPrinter {
 		}
 		return "?"+p.getClass().getSimpleName();
 	}
+
+	/**
+	 * loop through the RelationalTerm array and verify if the position is either
+	 * in child one or child two based off of the length of the output attributes..
+	 * @param children
+	 * @param position
+	 */
+	private static Attribute outputAttributeProvenance(RelationalTerm[] children, Integer position) {
+		if(position == null){
+			return null;
+		}
+		for(RelationalTerm rt : children) {
+			if (position < rt.getNumberOfOutputAttributes()) {
+				System.out.println(rt.getChildren());
+				if(rt instanceof RenameTerm){
+					RenameTerm renameTerm = (RenameTerm) rt;
+					RelationalTerm childRt = renameTerm.getChild(0);
+					return childRt.getOutputAttributes()[position];
+//					renameTerm.get
+				}else if(rt instanceof DependentJoinTerm){
+					DependentJoinTerm dependentJoinTerm = (DependentJoinTerm) rt;
+					ConjunctiveCondition cc = (ConjunctiveCondition)dependentJoinTerm.getJoinConditions();
+					SimpleCondition[] simpleConditions = cc.getSimpleConditions();
+					for(SimpleCondition sc : simpleConditions){
+						if(sc.getOtherToString() == null && sc.getMappedNamed() == null){
+							sc.setMappedNamed(outputAttributeProvenance(rt.getChildren(), sc.getPosition()).toString());
+							if(sc instanceof AttributeEqualityCondition){
+								sc.setOtherToString(outputAttributeProvenance(rt.getChildren(), ((AttributeEqualityCondition) sc).getOther()).toString());
+							}
+						}
+					}
+					return outputAttributeProvenance(dependentJoinTerm.getChildren(), position);
+//					System.out.println(dependentJoinTerm.getChildren());
+				}
+//				rt.get
+				return rt.getOutputAttributes()[position];
+			}else{
+				position = position - rt.getNumberOfOutputAttributes();
+			}
+		}
+		return null;
+	}
+
 
 	private static String printAttributeList(Attribute[] attributes) {
 		StringBuffer ret = new StringBuffer();
@@ -310,18 +374,40 @@ public class PlanPrinter {
 //		}
 		
 	}
+
+	/**
+	 * New printLinearPlanToStream method to use schema information
+	 * @param out
+	 * @param p
+	 * @param indent
+	 * @param s
+	 */
+	public static void printLinearPlanToStream(PrintStream out, RelationalTerm p, int indent, Schema s) {
+		if (!p.isLinear()) {
+			//System.err.println("Linear printing disabled for non linear plan.");
+			printGenericPlanToStream(out,p,indent,s);
+			return;
+		}
+		printGenericPlanToStream(out,p,indent,s);
+		getSubTree(p, indent);
+
+	}
 	
 	private static RelationalTerm getSubTree(RelationalTerm p, int indent) {
 		
 		return null;
 	}
 
-	public static void printGenericPlanToStream(PrintStream out, RelationalTerm p, int indent) {
+	/**
+	 *
+	 */
+	public static void printGenericPlanToStream(PrintStream out, RelationalTerm p, int indent, Schema s) {
+		System.out.println("Debug");
 		if(p instanceof AccessTerm)
 		{
-			ident(out, indent); out.println("[GenericPlanDebug]Access");
-			ident(out, indent); out.println("[GenericPlanDebug]{");
-			ident(out, indent+1); out.println("[AccessTermDebug toString]" + chop(p.toString()));
+			ident(out, indent); out.println("Access");
+			ident(out, indent); out.println("{");
+			ident(out, indent+1); out.println(chop(p.toString()));
 			for(int i = 0; i < p.getChildren().length; i++)
 			{
 				printGenericPlanToStream(out, p.getChild(i), indent+1);
@@ -330,7 +416,7 @@ public class PlanPrinter {
 		}
 		if(p instanceof CartesianProductTerm)
 		{
-			ident(out, indent); out.println("[GenericPlanDebug]Join");
+			ident(out, indent); out.println("Join");
 			ident(out, indent); out.println("{");
 			ident(out, indent+1); out.println(chop(p.toString()));
 			for(int i = 0; i < p.getChildren().length; i++)
@@ -341,7 +427,7 @@ public class PlanPrinter {
 		}
 		if(p instanceof ProjectionTerm)
 		{
-			ident(out, indent); out.println("[GenericPlanDebug]Project");
+			ident(out, indent); out.println("Project");
 			ident(out, indent); out.println("{");
 			ident(out, indent+1); out.println(chop(p.toString()));
 			for(int i = 0; i < p.getChildren().length; i++)
@@ -352,7 +438,7 @@ public class PlanPrinter {
 		}
 		if(p instanceof RenameTerm)
 		{
-			ident(out, indent); out.println("[GenericPlanDebug]Rename");
+			ident(out, indent); out.println("Rename");
 			ident(out, indent); out.println("{");
 			ident(out, indent+1); out.println(chop(p.toString()));
 			for(int i = 0; i < p.getChildren().length; i++)
@@ -363,9 +449,80 @@ public class PlanPrinter {
 		}
 		if(p instanceof SelectionTerm)
 		{
-			ident(out, indent); out.println("[GenericPlanDebug]Select");
+			Condition c = ((SelectionTerm)p).getSelectionCondition();
+			if(c instanceof ConjunctiveCondition){
+				SimpleCondition[] simpleConditions = ((ConjunctiveCondition)c).getSimpleConditions();
+				for (SimpleCondition sc : simpleConditions){
+					Integer position = sc.getPosition();
+					for(Relation r : s.getRelations()){
+						String mappedName = r.getAttribute(position).getName();
+						sc.setMappedNamed(mappedName);
+					}
+				}
+			}
+			ident(out, indent); out.println("Select");
 			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println("[SelectionTermDebug toString]"+ chop(p.toString()));
+			ident(out, indent+1); out.println(chop(p.toString()));
+			for(int i = 0; i < p.getChildren().length; i++)
+			{
+				printGenericPlanToStream(out, p.getChild(i), indent+1);
+			}
+			ident(out, indent); out.println("}");
+		}
+
+	}
+
+	public static void printGenericPlanToStream(PrintStream out, RelationalTerm p, int indent) {
+		System.out.println("Debug");
+		if(p instanceof AccessTerm)
+		{
+			ident(out, indent); out.println("Access");
+			ident(out, indent); out.println("{");
+			ident(out, indent+1); out.println(chop(p.toString()));
+			for(int i = 0; i < p.getChildren().length; i++)
+			{
+				printGenericPlanToStream(out, p.getChild(i), indent+1);
+			}
+			ident(out, indent); out.println("}");
+		}
+		if(p instanceof CartesianProductTerm)
+		{
+			ident(out, indent); out.println("Join");
+			ident(out, indent); out.println("{");
+			ident(out, indent+1); out.println(chop(p.toString()));
+			for(int i = 0; i < p.getChildren().length; i++)
+			{
+				printGenericPlanToStream(out, p.getChild(i), indent+1);
+			}
+			ident(out, indent); out.println("}");
+		}
+		if(p instanceof ProjectionTerm)
+		{
+			ident(out, indent); out.println("Project");
+			ident(out, indent); out.println("{");
+			ident(out, indent+1); out.println(chop(p.toString()));
+			for(int i = 0; i < p.getChildren().length; i++)
+			{
+				printGenericPlanToStream(out, p.getChild(i), indent+1);
+			}
+			ident(out, indent); out.println("}");
+		}
+		if(p instanceof RenameTerm)
+		{
+			ident(out, indent); out.println("Rename");
+			ident(out, indent); out.println("{");
+			ident(out, indent+1); out.println(chop(p.toString()));
+			for(int i = 0; i < p.getChildren().length; i++)
+			{
+				printGenericPlanToStream(out, p.getChild(i), indent+1);
+			}
+			ident(out, indent); out.println("}");
+		}
+		if(p instanceof SelectionTerm)
+		{
+			ident(out, indent); out.println("Select");
+			ident(out, indent); out.println("{");
+			ident(out, indent+1); out.println(chop(p.toString()));
 			for(int i = 0; i < p.getChildren().length; i++)
 			{
 				printGenericPlanToStream(out, p.getChild(i), indent+1);

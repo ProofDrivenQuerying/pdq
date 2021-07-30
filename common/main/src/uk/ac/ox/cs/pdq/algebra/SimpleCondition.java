@@ -24,6 +24,16 @@ public abstract class SimpleCondition extends Condition {
 	 **/
 	protected String mappedNamed;
 
+	protected String otherToString;
+
+	public String getOtherToString() {
+		return otherToString;
+	}
+
+	public void setOtherToString(String otherToString) {
+		this.otherToString = otherToString;
+	}
+
 	public String getMappedNamed() {
 		return mappedNamed;
 	}

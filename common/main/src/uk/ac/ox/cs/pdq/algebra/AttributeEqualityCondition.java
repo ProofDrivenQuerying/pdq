@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.db.tuple.Tuple;
  *
  * @author Julien Leblay
  * @author Stefano
+ * @author Brandon
  */
 public class AttributeEqualityCondition extends SimpleCondition {
 	private static final long serialVersionUID = 590156716681307220L;
@@ -40,11 +41,12 @@ public class AttributeEqualityCondition extends SimpleCondition {
 	@Override
 	public String toString() {
 		String position = this.position.toString();
-		if(this.mappedNamed != null) {
-			position = this.mappedNamed;
-		}
 		StringBuilder result = new StringBuilder();
-		result.append('#').append(position).append('=').append('#').append(this.other);
+		if(this.mappedNamed != null && this.otherToString != null) {
+			result.append('#').append(this.mappedNamed).append('=').append('#').append(this.otherToString);
+		}else{
+			result.append('#').append(position).append('=').append('#').append(this.other);
+		}
 		return result.toString();
 	}
 	

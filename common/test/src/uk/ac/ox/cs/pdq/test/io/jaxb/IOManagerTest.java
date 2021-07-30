@@ -31,6 +31,10 @@ public class IOManagerTest extends PdqTest {
 	}
 
 	// Calls IOManager.importQuery then asserts everything expected about the query
+
+	/**
+	 * takes in a query.xml file process and return the equivalent java objects
+	 */
 	@Test
 	public void testReadingQuery() {
 		try {													 
@@ -50,6 +54,9 @@ public class IOManagerTest extends PdqTest {
 		}
 	}
 
+	/**
+	 * Takes a query.xml file and write it to a new xml file
+	 */
 	// Calls IOManager.exportQuery using importQuery as a starting point
 	@Test
 	public void testWritingQuery() {
@@ -68,6 +75,9 @@ public class IOManagerTest extends PdqTest {
 		}
 	}
 
+	/**
+	 * Take in a schema.xml file process and return the equivalent java objects
+	 */
 	// Calls IOManager.importSchema and then asserts everything about the relations
 	@Test
 	public void testReadingSchema() {
@@ -86,6 +96,9 @@ public class IOManagerTest extends PdqTest {
 		}
 	}
 
+	/**
+	 * Takes a schema.xml file and write it to a new xml file
+	 */
 	// Calls IOManager.exportSchemaToXML using importSchema as a starting point
 	@Test
 	public void testWritingSchema() {
@@ -114,6 +127,9 @@ public class IOManagerTest extends PdqTest {
 		}
 	}
 
+	/**
+	 * Takes a schema.xml file and a AccessTerm.xml and write it to a new xml file
+	 */
 	// Calls IOManager.read-and-writeRelationTerm using importSchema as a starting point
 	@Test
 	public void testReadingAccessTerm() {
