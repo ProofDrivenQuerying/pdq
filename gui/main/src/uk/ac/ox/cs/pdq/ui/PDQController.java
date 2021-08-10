@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -186,6 +187,10 @@ public class PDQController {
 	/** The plan view area. */
 	@FXML
 	private TextArea planViewArea;
+
+	/** The plan view area. */
+	@FXML
+	private TreeView planTreeViewArea;
 
 	/** The proof view area. */
 	@FXML
@@ -418,6 +423,7 @@ public class PDQController {
 	void openPlannerWindow(ActionEvent event) {
 		if (!event.isConsumed()) {
 			event.consume();
+
 			try {
 				Stage dialog = new Stage();
 				dialog.initModality(Modality.NONE);
@@ -469,6 +475,19 @@ public class PDQController {
 				throw new UserInterfaceException(e.getMessage());
 			}
 		}
+	}
+
+	// Helper Methods for the Event Handlers
+	private void branchExpended(TreeItem.TreeModificationEvent event)
+	{
+		String nodeValue = event.getSource().getValue().toString();
+		log.warn("Node " + nodeValue + " expanded.");
+	}
+
+	private void branchCollapsed(TreeItem.TreeModificationEvent event)
+	{
+		String nodeValue = event.getSource().getValue().toString();
+		log.warn("Node " + nodeValue + " collapsed.");
 	}
 
 	/**
@@ -1040,6 +1059,7 @@ public class PDQController {
 		assert this.colSearchType != null : "fx:id=\"colSearchType\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.planSettingsArea != null : "fx:id=\"planSettingsArea\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.planViewArea != null : "fx:id=\"planViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
+		assert this.planTreeViewArea != null : "fx:id=\"planTreeViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.proofViewArea != null : "fx:id=\"proofViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.plansTableView != null : "fx:id=\"plansTableView\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.queriesEditMenuButton != null : "fx:id=\"queriesEditMenuButton\" was not injected: check your FXML file 'root-window.fxml'.";
@@ -1663,6 +1683,39 @@ public class PDQController {
 		for (ObservableSchema s : list) {
 			this.loadTreeItem(s);
 		}
+
+		log.warn("[Exeacute]");
+		//treeview demo
+		// Create the TreeViewHelper
+		TreeViewHelper helper = new TreeViewHelper();
+		// Get the Products
+		ArrayList<TreeItem> products = helper.getProducts();
+		// Create the TreeView
+		// Create the Root TreeItem
+		TreeItem rootItem = new TreeItem("Plan");
+		// Add children to the root
+		rootItem.getChildren().addAll(products);
+		// Set the Root Node
+		planTreeViewArea.setRoot(rootItem);
+		// Set tree modification related event handlers (branchExpandedEvent)
+		rootItem.addEventHandler(TreeItem.branchExpandedEvent(),new EventHandler<TreeItem.TreeModificationEvent>()
+		{
+			@Override
+			public void handle(TreeItem.TreeModificationEvent event)
+			{
+				branchExpended(event);
+			}
+		});
+
+		// Set tree modification related event handlers (branchCollapsedEvent)
+		rootItem.addEventHandler(TreeItem.branchCollapsedEvent(),new EventHandler<TreeItem.TreeModificationEvent>()
+		{
+			@Override
+			public void handle(TreeItem.TreeModificationEvent event)
+			{
+				branchCollapsed(event);
+			}
+		});
 	}
 
 	/**

@@ -223,7 +223,7 @@ public class PlanPrinter {
 				ret.append(((JoinTerm) p).getJoinConditions().toString()); 
 				ret.append("]");
 			}
-			ret.append("DEBUG{");
+			ret.append("DEBUG123{");
 			ret.append(printFlatLinePlanToString(p.getChild(1)));
 			ret.append(',');
 			ret.append(printFlatLinePlanToString(p.getChild(0)));
@@ -241,7 +241,7 @@ public class PlanPrinter {
 	 * @return
 	 */
 	public static String printFlatLinePlanToString(RelationalTerm p, Schema schema) {
-		if (p instanceof RenameTerm) return printFlatLinePlanToString(p.getChild(0));
+		if (p instanceof RenameTerm) return printFlatLinePlanToString(p.getChild(0), schema);
 		if (p instanceof ProjectionTerm) return "Project[" + printAttributeList(((ProjectionTerm)p).getProjections()) + "] {"+printFlatLinePlanToString(p.getChild(0),schema) + "}";
 		if (p instanceof SelectionTerm) {
 			Condition c = ((SelectionTerm)p).getSelectionCondition();
@@ -255,7 +255,7 @@ public class PlanPrinter {
 						}
 				}
 			}
-			return "Selection[" + ((SelectionTerm)p).getSelectionCondition().toString() + "]{" + printFlatLinePlanToString(p.getChild(0)) + "}";
+			return "Selection[" + ((SelectionTerm)p).getSelectionCondition().toString() + "]{" + printFlatLinePlanToString(p.getChild(0), schema) + "}";
 		}
 		if (p instanceof AccessTerm)
 			return "Access[" + ((AccessTerm)p).getRelation() + "(" + Joiner.on(',').join((((AccessTerm)p).getAccessMethod().getInputs())) + ")]";
@@ -289,13 +289,52 @@ public class PlanPrinter {
 				ret.append("]");
 			}
 			ret.append("");
-			ret.append(printFlatLinePlanToString(p.getChild(1)));
+			ret.append(printFlatLinePlanToString(p.getChild(1), schema));
 			ret.append(',');
-			ret.append(printFlatLinePlanToString(p.getChild(0)));
+			ret.append(printFlatLinePlanToString(p.getChild(0), schema));
 			ret.append("}");
 			return ret.toString();
 		}
 		return "?"+p.getClass().getSimpleName();
+	}
+
+	/**
+	 * return the projections attributes index position
+	 */
+	public static ArrayList<Integer> getProjectionPositionIndex(ProjectionTerm projectionTerm){
+		RelationalTerm[] rt = projectionTerm.getChildren();
+		ArrayList<Integer> positions = new ArrayList<>();
+		for(Attribute attribute : projectionTerm.getProjections()){
+			for(RelationalTerm relationalTerm : rt){
+				positions.add(relationalTerm.getAttributePosition(attribute));
+			}
+		}
+		return positions;
+	}
+
+
+	private static Attribute outputAttributeProvenance2(RelationalTerm[] children, Integer position) {
+		if(position == null || position == -1){
+			return null;
+		}
+		for(RelationalTerm rt : children) {
+			if (position < rt.getNumberOfOutputAttributes()) {
+				if (rt instanceof RenameTerm) {
+					RenameTerm renameTerm = (RenameTerm) rt;
+					RelationalTerm childRt = renameTerm.getChild(0);
+					return childRt.getOutputAttributes()[position];
+//					renameTerm.get
+				} else {
+					return outputAttributeProvenance2(rt.getChildren(), position);
+				}
+//					return outputAttributeProvenance2(dependentJoinTerm.getChildren(), position);
+//					System.out.println(dependentJoinTerm.getChildren());
+			}else{
+				position = position - rt.getNumberOfOutputAttributes();
+			}
+//				rt.get
+		}
+		return null;
 	}
 
 	/**
@@ -427,9 +466,18 @@ public class PlanPrinter {
 		}
 		if(p instanceof ProjectionTerm)
 		{
-			ident(out, indent); out.println("Project");
+			ident(out, indent); out.print("Project[");
+//			ident(out, indent+1); out.println(chop(p.toString()));
+			ArrayList<Integer> positions = getProjectionPositionIndex((ProjectionTerm)p);
+			StringBuffer buffer = new StringBuffer();
+			for(int i = 0; i < p.getOutputAttributes().length; i++){
+				buffer.append(outputAttributeProvenance2(p.getChildren(), positions.get(i)).getName());
+				if(i < p.getOutputAttributes().length-1){
+					buffer.append(", ");
+				}
+			}
+			out.println(buffer + "]");
 			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
 			for(int i = 0; i < p.getChildren().length; i++)
 			{
 				printGenericPlanToStream(out, p.getChild(i), indent+1);
@@ -498,9 +546,17 @@ public class PlanPrinter {
 		}
 		if(p instanceof ProjectionTerm)
 		{
-			ident(out, indent); out.println("Project");
+			ident(out, indent); out.print("Project[");
+			ArrayList<Integer> positions = getProjectionPositionIndex((ProjectionTerm)p);
+			StringBuffer buffer = new StringBuffer();
+			for(int i = 0; i < p.getOutputAttributes().length; i++){
+				buffer.append(outputAttributeProvenance2(p.getChildren(), positions.get(i)).getName());
+				if(i < p.getOutputAttributes().length-1){
+					buffer.append(", ");
+				}
+			}
+			out.println(buffer + "]");
 			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
 			for(int i = 0; i < p.getChildren().length; i++)
 			{
 				printGenericPlanToStream(out, p.getChild(i), indent+1);
@@ -509,14 +565,14 @@ public class PlanPrinter {
 		}
 		if(p instanceof RenameTerm)
 		{
-			ident(out, indent); out.println("Rename");
-			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
+			ident(out, indent); out.println("Rename...");
+//			ident(out, indent); out.println("{");
+//			ident(out, indent+1); out.println(chop(p.toString()));
 			for(int i = 0; i < p.getChildren().length; i++)
 			{
 				printGenericPlanToStream(out, p.getChild(i), indent+1);
 			}
-			ident(out, indent); out.println("}");
+//			ident(out, indent); out.println("}");
 		}
 		if(p instanceof SelectionTerm)
 		{
