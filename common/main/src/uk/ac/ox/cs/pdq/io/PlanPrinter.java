@@ -277,9 +277,6 @@ public class PlanPrinter {
 							sc.setOtherToString(otherAttribute.toString());
 							sc.setMappedNamed(positionAttribute.toString());
 
-							System.out.println(String.format("%s = %s", positionAttribute.toString(), otherAttribute.toString()));
-							System.out.println("[Finished]" );
-
 						}
 
 					}
@@ -313,7 +310,7 @@ public class PlanPrinter {
 	}
 
 
-	private static Attribute outputAttributeProvenance2(RelationalTerm[] children, Integer position) {
+	private static Attribute projectionProvenance(RelationalTerm[] children, Integer position) {
 		if(position == null || position == -1){
 			return null;
 		}
@@ -325,7 +322,7 @@ public class PlanPrinter {
 					return childRt.getOutputAttributes()[position];
 //					renameTerm.get
 				} else {
-					return outputAttributeProvenance2(rt.getChildren(), position);
+					return projectionProvenance(rt.getChildren(), position);
 				}
 //					return outputAttributeProvenance2(dependentJoinTerm.getChildren(), position);
 //					System.out.println(dependentJoinTerm.getChildren());
@@ -471,7 +468,7 @@ public class PlanPrinter {
 			ArrayList<Integer> positions = getProjectionPositionIndex((ProjectionTerm)p);
 			StringBuffer buffer = new StringBuffer();
 			for(int i = 0; i < p.getOutputAttributes().length; i++){
-				buffer.append(outputAttributeProvenance2(p.getChildren(), positions.get(i)).getName());
+				buffer.append(projectionProvenance(p.getChildren(), positions.get(i)).getName());
 				if(i < p.getOutputAttributes().length-1){
 					buffer.append(", ");
 				}
@@ -550,7 +547,7 @@ public class PlanPrinter {
 			ArrayList<Integer> positions = getProjectionPositionIndex((ProjectionTerm)p);
 			StringBuffer buffer = new StringBuffer();
 			for(int i = 0; i < p.getOutputAttributes().length; i++){
-				buffer.append(outputAttributeProvenance2(p.getChildren(), positions.get(i)).getName());
+				buffer.append(projectionProvenance(p.getChildren(), positions.get(i)).getName());
 				if(i < p.getOutputAttributes().length-1){
 					buffer.append(", ");
 				}
