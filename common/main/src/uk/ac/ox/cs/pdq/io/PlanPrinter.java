@@ -3,6 +3,12 @@
 
 package uk.ac.ox.cs.pdq.io;
 
+import com.google.common.base.Joiner;
+import uk.ac.ox.cs.pdq.algebra.*;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,13 +17,6 @@ import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.google.common.base.Joiner;
-
-import uk.ac.ox.cs.pdq.algebra.*;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
 
 /**
  * Prints a picture of a plan for better readability, and opens it in explorer.
@@ -310,7 +309,7 @@ public class PlanPrinter {
 	}
 
 
-	private static Attribute projectionProvenance(RelationalTerm[] children, Integer position) {
+	public static Attribute projectionProvenance(RelationalTerm[] children, Integer position) {
 		if(position == null || position == -1){
 			return null;
 		}

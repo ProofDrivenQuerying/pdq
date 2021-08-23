@@ -1278,6 +1278,40 @@ public class PDQController {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			PrintStream pbos = new PrintStream(bos); 
 			displayPlanSubtype(pbos, p, 0 , s);
+
+			log.warn("[Exacute]");
+			//treeview demo
+			// Create the TreeViewHelper
+			TreeViewHelper helper = new TreeViewHelper();
+			// Get the Products
+			TreeItem plan = helper.printGenericPlanToStream( (RelationalTerm) p, s);
+			// Create the TreeView
+			// Create the Root TreeItem
+			TreeItem rootItem = new TreeItem("Plan");
+			// Add children to the root
+			rootItem.getChildren().addAll(plan);
+			// Set the Root Node
+			planTreeViewArea.setRoot(rootItem);
+			// Set tree modification related event handlers (branchExpandedEvent)
+			rootItem.addEventHandler(TreeItem.branchExpandedEvent(),new EventHandler<TreeItem.TreeModificationEvent>()
+			{
+				@Override
+				public void handle(TreeItem.TreeModificationEvent event)
+				{
+					branchExpended(event);
+				}
+			});
+
+			// Set tree modification related event handlers (branchCollapsedEvent)
+			rootItem.addEventHandler(TreeItem.branchCollapsedEvent(),new EventHandler<TreeItem.TreeModificationEvent>()
+			{
+				@Override
+				public void handle(TreeItem.TreeModificationEvent event)
+				{
+					branchCollapsed(event);
+				}
+			});
+
 			PDQController.this.planViewArea.appendText(bos.toString());
 		}
 	}
@@ -1683,39 +1717,6 @@ public class PDQController {
 		for (ObservableSchema s : list) {
 			this.loadTreeItem(s);
 		}
-
-		log.warn("[Exeacute]");
-		//treeview demo
-		// Create the TreeViewHelper
-		TreeViewHelper helper = new TreeViewHelper();
-		// Get the Products
-		ArrayList<TreeItem> products = helper.getProducts();
-		// Create the TreeView
-		// Create the Root TreeItem
-		TreeItem rootItem = new TreeItem("Plan");
-		// Add children to the root
-		rootItem.getChildren().addAll(products);
-		// Set the Root Node
-		planTreeViewArea.setRoot(rootItem);
-		// Set tree modification related event handlers (branchExpandedEvent)
-		rootItem.addEventHandler(TreeItem.branchExpandedEvent(),new EventHandler<TreeItem.TreeModificationEvent>()
-		{
-			@Override
-			public void handle(TreeItem.TreeModificationEvent event)
-			{
-				branchExpended(event);
-			}
-		});
-
-		// Set tree modification related event handlers (branchCollapsedEvent)
-		rootItem.addEventHandler(TreeItem.branchCollapsedEvent(),new EventHandler<TreeItem.TreeModificationEvent>()
-		{
-			@Override
-			public void handle(TreeItem.TreeModificationEvent event)
-			{
-				branchCollapsed(event);
-			}
-		});
 	}
 
 	/**
