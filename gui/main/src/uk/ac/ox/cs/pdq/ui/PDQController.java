@@ -1282,9 +1282,8 @@ public class PDQController {
 			log.warn("[Exacute]");
 			//treeview demo
 			// Create the TreeViewHelper
-			TreeViewHelper helper = new TreeViewHelper();
 			// Get the Products
-			TreeItem plan = helper.printGenericPlanToStream( (RelationalTerm) p, s);
+			TreeItem plan = TreeViewHelper.printGenericPlanToTreeview( (RelationalTerm) p, s);
 			// Create the TreeView
 			// Create the Root TreeItem
 			TreeItem rootItem = new TreeItem("Plan");

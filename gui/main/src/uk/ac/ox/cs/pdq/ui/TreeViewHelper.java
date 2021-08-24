@@ -14,68 +14,18 @@ public class TreeViewHelper
     {
     }
 
-    // This method creates an ArrayList of TreeItems ()
-    public ArrayList<TreeItem> getProducts()
-    {
-        ArrayList<TreeItem> products = new ArrayList<TreeItem>();
-
-        TreeItem cars = new TreeItem("Cars");
-        cars.getChildren().addAll(getCars());
-
-
-        products.add(cars);
-
-
-        return products;
-    }
-
-    // This method creates an ArrayList of TreeItems ()
-    private ArrayList<TreeItem> getCars()
-    {
-        ArrayList<TreeItem> cars = new ArrayList<TreeItem>();
-        TreeItem ferrari = new TreeItem("Ferrari");
-        TreeItem porsche = new TreeItem("Porsche");
-
-        porsche.getChildren().addAll(getModel());
-        TreeItem ford = new TreeItem("Ford");
-        TreeItem mercedes = new TreeItem("Mercedes");
-
-        cars.add(ferrari);
-        cars.add(porsche);
-        cars.add(ford);
-        cars.add(mercedes);
-
-        return cars;
-
-    }
-
-    private ArrayList<TreeItem> getModel(){
-        ArrayList<TreeItem> models = new ArrayList<TreeItem>();
-
-        TreeItem ferrari = new TreeItem("2011");
-        TreeItem porsche = new TreeItem("2012");
-        TreeItem ford = new TreeItem("2013");
-        TreeItem mercedes = new TreeItem("2014");
-
-        models.add(ferrari);
-        models.add(porsche);
-        models.add(ford);
-        models.add(mercedes);
-        return models;
-    }
-
-    public static TreeItem printGenericPlanToStream(RelationalTerm p, Schema s) {
+    public static TreeItem printGenericPlanToTreeview(RelationalTerm p, Schema s) {
         if (p instanceof AccessTerm) {
             TreeItem access = new TreeItem(String.format("Access[%s]", PlanPrinter.chop(p.toString())));
             for (int i = 0; i < p.getChildren().length; i++) {
-                access.getChildren().addAll(printGenericPlanToStream(p.getChild(i), s));
+                access.getChildren().addAll(printGenericPlanToTreeview(p.getChild(i), s));
             }
             return access;
         }
         if (p instanceof CartesianProductTerm) {
             TreeItem join = new TreeItem(String.format("Join[%s]", PlanPrinter.chop(p.toString())));
             for (int i = 0; i < p.getChildren().length; i++) {
-                join.getChildren().addAll(printGenericPlanToStream(p.getChild(i), s));
+                join.getChildren().addAll(printGenericPlanToTreeview(p.getChild(i), s));
             }
             return join;
         }
@@ -90,14 +40,14 @@ public class TreeViewHelper
             }
             TreeItem project = new TreeItem(String.format("Project[%s]", buffer));
             for (int i = 0; i < p.getChildren().length; i++) {
-                project.getChildren().addAll(printGenericPlanToStream(p.getChild(i), s));
+                project.getChildren().addAll(printGenericPlanToTreeview(p.getChild(i), s));
             }
             return project;
         }
         if (p instanceof RenameTerm) {
             TreeItem rename = new TreeItem("Rename");
             for (int i = 0; i < p.getChildren().length; i++) {
-                rename.getChildren().addAll(printGenericPlanToStream(p.getChild(i), s));
+                rename.getChildren().addAll(printGenericPlanToTreeview(p.getChild(i), s));
             }
             return rename;
         }
@@ -115,7 +65,7 @@ public class TreeViewHelper
             }
             TreeItem selection = new TreeItem(String.format("Select[%s]", PlanPrinter.chop(p.toString())));
             for (int i = 0; i < p.getChildren().length; i++) {
-                selection.getChildren().addAll(printGenericPlanToStream(p.getChild(i), s));
+                selection.getChildren().addAll(printGenericPlanToTreeview(p.getChild(i), s));
             }
         }
         return null;
