@@ -271,8 +271,8 @@ public class PlanPrinter {
 							AttributeEqualityCondition aec = (AttributeEqualityCondition) sc;
 							Integer position = aec.getPosition();
 							Integer other = aec.getOther();
-							Attribute positionAttribute = outputAttributeProvenance(p.getChildren(), position);
-							Attribute otherAttribute = outputAttributeProvenance(p.getChildren(),other);
+							Attribute positionAttribute = outputAttributeProvenance(p.getChild(0), position);
+							Attribute otherAttribute = outputAttributeProvenance(p.getChild(0),other);
 							sc.setOtherToString(otherAttribute.toString());
 							sc.setMappedNamed(positionAttribute.toString());
 
@@ -308,71 +308,46 @@ public class PlanPrinter {
 		return positions;
 	}
 
-
-	public static Attribute projectionProvenance(RelationalTerm[] children, Integer position) {
-		if(position == null || position == -1){
-			return null;
-		}
-		for(RelationalTerm rt : children) {
-			if (position < rt.getNumberOfOutputAttributes()) {
-				if (rt instanceof RenameTerm) {
-					RenameTerm renameTerm = (RenameTerm) rt;
-					RelationalTerm childRt = renameTerm.getChild(0);
-					return childRt.getOutputAttributes()[position];
-//					renameTerm.get
-				} else {
-					return projectionProvenance(rt.getChildren(), position);
-				}
-//					return outputAttributeProvenance2(dependentJoinTerm.getChildren(), position);
-//					System.out.println(dependentJoinTerm.getChildren());
-			}else{
-				position = position - rt.getNumberOfOutputAttributes();
-			}
-//				rt.get
-		}
-		return null;
-	}
-
 	/**
-	 * loop through the RelationalTerm array and verify if the position is either
-	 * in child one or child two based off of the length of the output attributes..
-	 * @param children
+	 * method that nest through the object to get the provence via it's position
+	 * @param rt
 	 * @param position
 	 */
-	private static Attribute outputAttributeProvenance(RelationalTerm[] children, Integer position) {
+	public static Attribute outputAttributeProvenance(RelationalTerm rt, Integer position) {
 		if(position == null){
 			return null;
 		}
-		for(RelationalTerm rt : children) {
-			if (position < rt.getNumberOfOutputAttributes()) {
-				System.out.println(rt.getChildren());
-				if(rt instanceof RenameTerm){
-					RenameTerm renameTerm = (RenameTerm) rt;
-					RelationalTerm childRt = renameTerm.getChild(0);
-					return childRt.getOutputAttributes()[position];
-//					renameTerm.get
-				}else if(rt instanceof DependentJoinTerm){
-					DependentJoinTerm dependentJoinTerm = (DependentJoinTerm) rt;
-					ConjunctiveCondition cc = (ConjunctiveCondition)dependentJoinTerm.getJoinConditions();
-					SimpleCondition[] simpleConditions = cc.getSimpleConditions();
-					for(SimpleCondition sc : simpleConditions){
-						if(sc.getOtherToString() == null && sc.getMappedNamed() == null){
-							sc.setMappedNamed(outputAttributeProvenance(rt.getChildren(), sc.getPosition()).toString());
-							if(sc instanceof AttributeEqualityCondition){
-								sc.setOtherToString(outputAttributeProvenance(rt.getChildren(), ((AttributeEqualityCondition) sc).getOther()).toString());
-							}
+		if (position < rt.getNumberOfOutputAttributes()) {
+			if (rt instanceof RenameTerm) {
+				RenameTerm renameTerm = (RenameTerm) rt;
+				RelationalTerm childRt = renameTerm.getChild(0);
+				return childRt.getOutputAttributes()[position];
+			} else if (rt instanceof DependentJoinTerm) {
+				DependentJoinTerm dependentJoinTerm = (DependentJoinTerm) rt;
+				ConjunctiveCondition cc = (ConjunctiveCondition) dependentJoinTerm.getJoinConditions();
+				SimpleCondition[] simpleConditions = cc.getSimpleConditions();
+				for (SimpleCondition sc : simpleConditions) {
+					if (sc.getOtherToString() == null && sc.getMappedNamed() == null) {
+
+						sc.setMappedNamed(outputAttributeProvenance(rt.getChild(0), sc.getPosition()).toString());
+						if (sc instanceof AttributeEqualityCondition) {
+							Integer aec = ((AttributeEqualityCondition) sc).getOther();
+							Attribute attribute= outputAttributeProvenance(rt.getChild(1), aec);
+							sc.setOtherToString(outputAttributeProvenance(rt.getChild(0), aec).toString());
 						}
 					}
-					return outputAttributeProvenance(dependentJoinTerm.getChildren(), position);
-//					System.out.println(dependentJoinTerm.getChildren());
 				}
-//				rt.get
-				return rt.getOutputAttributes()[position];
-			}else{
-				position = position - rt.getNumberOfOutputAttributes();
+				return outputAttributeProvenance(dependentJoinTerm.getChild(0), position);
+			}else if(rt instanceof JoinTerm){
+				return outputAttributeProvenance(rt.getChild(0), position);
+			}else if(rt instanceof ProjectionTerm){
+				return outputAttributeProvenance(rt.getChild(0), position);
 			}
+			return rt.getOutputAttributes()[position];
+		}else{
+			position = position - rt.getNumberOfOutputAttributes();
+			return outputAttributeProvenance(rt.getChild(0), position);
 		}
-		return null;
 	}
 
 

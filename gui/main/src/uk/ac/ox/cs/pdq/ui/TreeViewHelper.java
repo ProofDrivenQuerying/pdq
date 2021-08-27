@@ -23,7 +23,7 @@ public class TreeViewHelper
             return access;
         }
         if (p instanceof CartesianProductTerm) {
-            TreeItem join = new TreeItem(String.format("Join[%s]", PlanPrinter.chop(p.toString())));
+            TreeItem join = new TreeItem(String.format("Join %s", PlanPrinter.chop(p.toString())));
             for (int i = 0; i < p.getChildren().length; i++) {
                 join.getChildren().addAll(printGenericPlanToTreeview(p.getChild(i), s));
             }

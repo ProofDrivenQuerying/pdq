@@ -1273,13 +1273,12 @@ public class PDQController {
 	}
 	
 	void displayPlan(Plan p, Schema s) {
-		PDQController.this.planViewArea.clear();
+//		PDQController.this.planViewArea.clear();
 		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			PrintStream pbos = new PrintStream(bos); 
 			displayPlanSubtype(pbos, p, 0 , s);
 
-			log.warn("[Exacute]");
 			//treeview demo
 			// Create the TreeViewHelper
 			// Get the Products
@@ -1311,7 +1310,7 @@ public class PDQController {
 				}
 			});
 
-			PDQController.this.planViewArea.appendText(bos.toString());
+//			PDQController.this.planViewArea.appendText(bos.toString());
 		}
 	}
 
@@ -1321,7 +1320,7 @@ public class PDQController {
 	 * @param p the p
 	 */
 	void displayProof(Proof p) {
-		PDQController.this.proofViewArea.clear();
+//		PDQController.this.proofViewArea.clear();
 		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			new PrintStream(bos).println(p.toString());
