@@ -1265,11 +1265,11 @@ public class PDQController {
 
 	static public void displayPlanSubtype(PrintStream out, Plan p, int indent , Schema s)
 	{
-		try {
-			uk.ac.ox.cs.pdq.io.PlanPrinter.printPlanToText(out, (RelationalTerm) p, indent, s);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			uk.ac.ox.cs.pdq.io.PlanPrinter.printPlanToText(out, (RelationalTerm) p, indent, s);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	void displayPlan(Plan p, Schema s) {

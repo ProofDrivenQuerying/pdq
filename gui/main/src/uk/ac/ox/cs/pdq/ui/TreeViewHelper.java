@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.ui;
 
 import javafx.scene.control.TreeItem;
 import uk.ac.ox.cs.pdq.algebra.*;
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.PlanPrinter;
@@ -33,7 +34,8 @@ public class TreeViewHelper
             ArrayList<Integer> positions = PlanPrinter.getProjectionPositionIndex((ProjectionTerm) p);
             StringBuffer buffer = new StringBuffer();
             for (int i = 0; i < p.getOutputAttributes().length; i++) {
-                buffer.append(PlanPrinter.projectionProvenance(p.getChildren(), positions.get(i)).getName());
+                String a = PlanPrinter.outputAttributeProvenance(p, i).getName();
+                buffer.append(a);
                 if (i < p.getOutputAttributes().length - 1) {
                     buffer.append(", ");
                 }

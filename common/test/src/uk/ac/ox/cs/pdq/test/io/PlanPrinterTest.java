@@ -20,9 +20,30 @@ import java.util.Map;
 
 public class PlanPrinterTest extends TestCase {
 
+    RelationalTerm p;
     public void setUp() throws Exception {
         super.setUp();
+
+        Schema s = new PdqTest().getScenario1().getSchema();
+        Attribute[] ra1 = new Attribute[] { Attribute.create(String.class, "c1"), Attribute.create(String.class, "c2"),
+                Attribute.create(String.class, "c3") };
+        RelationalTerm a1 = AccessTerm.create(s.getRelation("R0"), s.getRelation("R0").getAccessMethod("mt_4"));
+        RelationalTerm r1 = RenameTerm.create(ra1, a1);
+
+        Attribute[] ra2 = new Attribute[] { Attribute.create(String.class, "c1"), Attribute.create(String.class, "c4"),
+                Attribute.create(String.class, "c3") };
+        Map<Integer, TypedConstant> map2 = new HashMap<>();
+        TypedConstant constant = TypedConstant.create("a");
+        map2.put(0, constant);
+        AccessTerm a2 = AccessTerm.create(s.getRelation("R1"), s.getRelation("R1").getAccessMethod("mt_5"),map2);
+        RelationalTerm c2 = RenameTerm.create(ra2, a2);
+
+        RelationalTerm joinTerm = JoinTerm.create(r1, c2);
+        Attribute c1 = Attribute.create(String.class, "c1") ;
+        p = ProjectionTerm.create(new Attribute[] {c1}, joinTerm);
     }
+
+
 
     /**
      *  Test to retrieve the province name of the projection RelationTerm
@@ -30,29 +51,10 @@ public class PlanPrinterTest extends TestCase {
     @Test
     public void testProjectionProvenance(){
         try {
-            Schema s = new PdqTest().getScenario1().getSchema();
-            Attribute[] ra1 = new Attribute[] { Attribute.create(String.class, "c1"), Attribute.create(String.class, "c2"),
-                    Attribute.create(String.class, "c3") };
-            RelationalTerm a1 = AccessTerm.create(s.getRelation("R0"), s.getRelation("R0").getAccessMethod("mt_4"));
-            RelationalTerm r1 = RenameTerm.create(ra1, a1);
-
-            Attribute[] ra2 = new Attribute[] { Attribute.create(String.class, "c1"), Attribute.create(String.class, "c4"),
-                    Attribute.create(String.class, "c3") };
-            Map<Integer, TypedConstant> map2 = new HashMap<>();
-            TypedConstant constant = TypedConstant.create("a");
-            map2.put(0, constant);
-            AccessTerm a2 = AccessTerm.create(s.getRelation("R1"), s.getRelation("R1").getAccessMethod("mt_5"),map2);
-            RelationalTerm c2 = RenameTerm.create(ra2, a2);
-
-            RelationalTerm joinTerm = JoinTerm.create(r1, c2);
-            Attribute c1 = Attribute.create(String.class, "c1") ;
-            RelationalTerm p = ProjectionTerm.create(new Attribute[] {c1}, joinTerm);
-
             ArrayList<Integer> positions = PlanPrinter.getProjectionPositionIndex((ProjectionTerm) p);
 
             for (int i = 0; i < p.getOutputAttributes().length; i++) {
-                PlanPrinter.outputAttributeProvenance(p, positions.get(i)).getName();
-                assertEquals(PlanPrinter.outputAttributeProvenance(p, positions.get(i)).getName(), "a");
+                assertEquals("a", PlanPrinter.outputAttributeProvenance(p, positions.get(i)).getName());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,28 +68,12 @@ public class PlanPrinterTest extends TestCase {
     @Test
     public void testJoinProvenance(){
         try {
-            Schema s = new PdqTest().getScenario1().getSchema();
-            Attribute[] ra1 = new Attribute[] { Attribute.create(String.class, "c1"), Attribute.create(String.class, "c2"),
-                    Attribute.create(String.class, "c3") };
-            RelationalTerm a1 = AccessTerm.create(s.getRelation("R0"), s.getRelation("R0").getAccessMethod("mt_4"));
-            RelationalTerm r1 = RenameTerm.create(ra1, a1);
-
-            Attribute[] ra2 = new Attribute[] { Attribute.create(String.class, "c1"), Attribute.create(String.class, "c4"),
-                    Attribute.create(String.class, "c3") };
-            Map<Integer, TypedConstant> map2 = new HashMap<>();
-            TypedConstant constant = TypedConstant.create("a");
-            map2.put(0, constant);
-            AccessTerm a2 = AccessTerm.create(s.getRelation("R1"), s.getRelation("R1").getAccessMethod("mt_5"),map2);
-            RelationalTerm c2 = RenameTerm.create(ra2, a2);
-
-            RelationalTerm joinTerm = JoinTerm.create(r1, c2);
-            Attribute c1 = Attribute.create(String.class, "c1") ;
-            RelationalTerm p = ProjectionTerm.create(new Attribute[] {c1}, joinTerm);
 
             ArrayList<Integer> positions = PlanPrinter.getProjectionPositionIndex((ProjectionTerm) p);
 
             for (int i = 0; i < p.getOutputAttributes().length; i++) {
-                assertEquals(PlanPrinter.projectionProvenance(p.getChildren(), positions.get(i)).getName(), "a");
+                PlanPrinter.outputAttributeProvenance(p, positions.get(i)).getName();
+                assertEquals("[(#a=#a&#c=#c)]",PlanPrinter.chop(p.getChild(0).toString()));
             }
         } catch (Exception e) {
             e.printStackTrace();
