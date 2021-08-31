@@ -334,7 +334,8 @@ public class PlanPrinter {
 	}
 
 	/**
-	 * method that nest through the RelationalTerm to get the provence via it's position
+	 * method that recurses through the RelationalTerm to get the provenance of a given position, where the provenance is the attribute of the input that the 
+	 * attribute derives from
 	 * @param rt
 	 * @param position
 	 */
