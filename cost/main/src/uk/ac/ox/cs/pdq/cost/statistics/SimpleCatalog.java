@@ -137,7 +137,6 @@ public class SimpleCatalog implements Catalog{
 	 */
 	public SimpleCatalog(Schema schema, String fileName) {
 		Preconditions.checkNotNull(schema);
-		log.warn("BRANDON DEBUG!!!!!!!!!!!!!!!");
 		this.schema = schema;
 		this.numberOfOutputTuplesPerInput = new HashMap<>();
 		this.costs = new HashMap<>();

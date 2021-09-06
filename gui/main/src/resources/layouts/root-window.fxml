@@ -4,6 +4,7 @@
 <?import java.net.URL?>
 <?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ContextMenu?>
@@ -18,6 +19,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -105,7 +107,7 @@
                             <MenuItem fx:id="queriesDeleteButton" disable="false" mnemonicParsing="false" onAction="#deleteSelectedQueries" text="%application.query.queries.delete-selected" />
                             <MenuItem fx:id="queriesGenerateButton" disable="false" mnemonicParsing="false" onAction="#openImportQueryWindow" text="%application.query.queries.import" />
                             <MenuItem fx:id="querySaveButton" disable="false" mnemonicParsing="false" onAction="#saveSelectedQuery" text="%application.query.queries.save" />
-				            <MenuItem fx:id="querySaveAsButton" disable="false" mnemonicParsing="false" onAction="#saveAsSelectedQuery" text="%application.query.queries.saveas" />
+                            <MenuItem fx:id="querySaveAsButton" disable="false" mnemonicParsing="false" onAction="#saveAsSelectedQuery" text="%application.query.queries.saveas" />
                           </items>
                         </MenuButton>
                       </children>
@@ -165,90 +167,108 @@
         </SplitPane>
       </items>
     </SplitPane>
-<HBox id="queryPlanArea" fx:id="planSettingsArea" prefHeight="100.0" prefWidth="200.0">
-  <children>
-    <AnchorPane id="settingsPane" prefHeight="306.0" prefWidth="280.0">
+    <HBox id="queryPlanArea" fx:id="planSettingsArea" prefHeight="100.0" prefWidth="200.0">
       <children>
-        <Label prefHeight="35.0" prefWidth="99.0" text="%application.plan.settings.search-type" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0" />
-        <ComboBox id="searchTypeList" fx:id="settingsPlannerTypeList" layoutX="10.0" prefWidth="132.0" AnchorPane.topAnchor="35.0">
-          <items>
-            <FXCollections fx:factory="observableArrayList">
-              <String fx:value="Item 1" />
-              <String fx:value="Item 2" />
-              <String fx:value="Item 3" />
-            </FXCollections>
-          </items>
-        </ComboBox>
-        <Label layoutX="152.0" prefHeight="35.0" prefWidth="99.0" text="%application.plan.settings.reasoning-type" AnchorPane.topAnchor="5.0" />
-        <ComboBox id="chasingTypeList" fx:id="settingsReasoningTypeList" layoutX="152.0" prefWidth="115.0" AnchorPane.topAnchor="35.0">
-          <items>
-            <FXCollections fx:factory="observableArrayList">
-              <String fx:value="Item 1" />
-              <String fx:value="Item 2" />
-              <String fx:value="Item 3" />
-            </FXCollections>
-          </items>
-        </ComboBox>
-        <Label layoutX="10.0" prefHeight="35.0" prefWidth="99.0" text="%application.plan.settings.cost-model" AnchorPane.topAnchor="161.0" />
-        <ComboBox id="costTypeList" fx:id="settingsCostTypeList" layoutX="10.0" prefWidth="132.0" AnchorPane.topAnchor="191.0">
-          <items>
-            <FXCollections fx:factory="observableArrayList">
-              <String fx:value="Item 1" />
-              <String fx:value="Item 2" />
-              <String fx:value="Item 3" />
-            </FXCollections>
-          </items>
-        </ComboBox>
-        <Label prefHeight="35.0" prefWidth="99.0" text="%application.plan.settings.timeout" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="57.0" />
-        <TextField id="timeoutTextField" fx:id="settingsTimeoutTextField" layoutX="10.0" layoutY="87.0" prefWidth="132.0" />
-        <Label prefHeight="35.0" prefWidth="115.0" text="%application.plan.settings.iterations" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="109.0" />
-        <TextField id="nbIterationsTextField" fx:id="settingsMaxIterationsTextField" layoutY="139.0" prefWidth="132.0" AnchorPane.leftAnchor="10.0" />
-        <TextField id="matchingIntervalsTextField" fx:id="settingsQueryMatchIntervalTextField" editable="true" layoutX="152.0" layoutY="139.0" prefWidth="115.0" />
-        <Label layoutX="152.0" layoutY="109.0" prefHeight="35.0" prefWidth="115.0" text="%application.plan.settings.match-intervals" />
-        <TextField id="blockingIntervalsTextField" fx:id="settingsBlockingIntervalTextField" layoutX="152.0" layoutY="87.0" prefWidth="115.0" />
-        <Label layoutX="152.0" layoutY="57.0" prefHeight="35.0" prefWidth="123.0" text="%application.plan.settings.blocking" />
-        <Button fx:id="runPlannerButton" alignment="CENTER_LEFT" minHeight="22.0" mnemonicParsing="false" onAction="#openPlannerWindow" prefHeight="38.0" prefWidth="80.0" text="%application.plan.settings.button.plan" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="177.0">
-          <graphic>
-            <ImageView fitHeight="16.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-              <image>
-                <Image url="@../icons/plan.gif" />
-              </image>
-            </ImageView>
-          </graphic>
-        </Button>
-        <Button fx:id="runRuntimeButton" alignment="CENTER_LEFT" minHeight="21.0" mnemonicParsing="false" onAction="#openRuntimeWindow" prefHeight="38.0" prefWidth="80.0" text="%application.plan.settings.button.run" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="259.0">
-          <graphic>
-            <ImageView fitHeight="16.0" fitWidth="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-              <image>
-                <Image url="@../icons/run.gif" />
-              </image>
-            </ImageView>
-          </graphic>
-        </Button>
-        <Separator layoutX="19.0" prefWidth="249.0" AnchorPane.topAnchor="234.0" />
-        <Label layoutX="10.0" layoutY="248.0" prefHeight="24.0" prefWidth="132.0" text="%application.plan.settings.executor" />
-        <ComboBox id="costTypeList" fx:id="settingsExecutorTypeList" layoutX="10.0" layoutY="272.0" prefWidth="132.0">
-          <items>
-            <FXCollections fx:factory="observableArrayList">
-                        </FXCollections>
-          </items>
-        </ComboBox>
-        <Label layoutX="10.0" layoutY="307.0" prefHeight="35.0" prefWidth="99.0" text="%application.plan.settings.output-tuples" />
-        <TextField id="outputTuplesTextField" fx:id="settingsOutputTuplesTextField" layoutX="10.0" layoutY="337.0" prefWidth="132.0" />
+        <AnchorPane id="settingsPane" prefHeight="306.0" prefWidth="280.0">
+          <children>
+            <Label prefHeight="35.0" prefWidth="99.0" text="%application.plan.settings.search-type" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0" />
+            <ComboBox id="searchTypeList" fx:id="settingsPlannerTypeList" layoutX="10.0" prefWidth="132.0" AnchorPane.topAnchor="35.0">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+            </ComboBox>
+            <Label layoutX="152.0" prefHeight="35.0" prefWidth="99.0" text="%application.plan.settings.reasoning-type" AnchorPane.topAnchor="5.0" />
+            <ComboBox id="chasingTypeList" fx:id="settingsReasoningTypeList" layoutX="152.0" prefWidth="115.0" AnchorPane.topAnchor="35.0">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+            </ComboBox>
+            <Label layoutX="10.0" prefHeight="35.0" prefWidth="99.0" text="%application.plan.settings.cost-model" AnchorPane.topAnchor="161.0" />
+            <ComboBox id="costTypeList" fx:id="settingsCostTypeList" layoutX="10.0" prefWidth="132.0" AnchorPane.topAnchor="191.0">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+            </ComboBox>
+            <Label prefHeight="35.0" prefWidth="99.0" text="%application.plan.settings.timeout" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="57.0" />
+            <TextField id="timeoutTextField" fx:id="settingsTimeoutTextField" layoutX="10.0" layoutY="87.0" prefWidth="132.0" />
+            <Label prefHeight="35.0" prefWidth="115.0" text="%application.plan.settings.iterations" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="109.0" />
+            <TextField id="nbIterationsTextField" fx:id="settingsMaxIterationsTextField" layoutY="139.0" prefWidth="132.0" AnchorPane.leftAnchor="10.0" />
+            <TextField id="matchingIntervalsTextField" fx:id="settingsQueryMatchIntervalTextField" editable="true" layoutX="152.0" layoutY="139.0" prefWidth="115.0" />
+            <Label layoutX="152.0" layoutY="109.0" prefHeight="35.0" prefWidth="115.0" text="%application.plan.settings.match-intervals" />
+            <TextField id="blockingIntervalsTextField" fx:id="settingsBlockingIntervalTextField" layoutX="152.0" layoutY="87.0" prefWidth="115.0" />
+            <Label layoutX="152.0" layoutY="57.0" prefHeight="35.0" prefWidth="123.0" text="%application.plan.settings.blocking" />
+            <Button fx:id="runPlannerButton" alignment="CENTER_LEFT" minHeight="22.0" mnemonicParsing="false" onAction="#openPlannerWindow" prefHeight="38.0" prefWidth="80.0" text="%application.plan.settings.button.plan" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="177.0">
+              <graphic>
+                <ImageView fitHeight="16.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                    <Image url="@../icons/plan.gif" />
+                  </image>
+                </ImageView>
+              </graphic>
+            </Button>
+            <Button fx:id="runRuntimeButton" alignment="CENTER_LEFT" minHeight="21.0" mnemonicParsing="false" onAction="#openRuntimeWindow" prefHeight="38.0" prefWidth="80.0" text="%application.plan.settings.button.run" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="259.0">
+              <graphic>
+                <ImageView fitHeight="16.0" fitWidth="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                    <Image url="@../icons/run.gif" />
+                  </image>
+                </ImageView>
+              </graphic>
+            </Button>
+            <Separator layoutX="19.0" prefWidth="249.0" AnchorPane.topAnchor="234.0" />
+            <Label layoutX="10.0" layoutY="248.0" prefHeight="24.0" prefWidth="132.0" text="%application.plan.settings.executor" />
+            <ComboBox id="costTypeList" fx:id="settingsExecutorTypeList" layoutX="10.0" layoutY="272.0" prefWidth="132.0">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                </FXCollections>
+              </items>
+            </ComboBox>
+            <Label layoutX="10.0" layoutY="307.0" prefHeight="35.0" prefWidth="99.0" text="%application.plan.settings.output-tuples" />
+            <TextField id="outputTuplesTextField" fx:id="settingsOutputTuplesTextField" layoutX="10.0" layoutY="337.0" prefWidth="132.0" />
+          </children>
+        </AnchorPane>
+        <AnchorPane maxHeight="-Infinity" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+          <children>
+            <Accordion prefHeight="320.0" prefWidth="533.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <panes>
+                <TitledPane animated="false" text="%application.plan.plan" fx:id="x3">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <children>
+                        <TreeView fx:id="planTreeViewArea" prefHeight="180.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                      </children>
+                    </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane animated="false" text="%application.plan.proof" fx:id="x4">
+                  <content>
+                    <TextArea fx:id="proofViewArea" prefWidth="200.0" wrapText="false" />
+                  </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+          </children>
+          <HBox.margin>
+            <Insets />
+          </HBox.margin>
+        </AnchorPane>
       </children>
-    </AnchorPane>
-    <AnchorPane maxHeight="-Infinity" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-      <children>
-                  <TreeView fx:id="planTreeViewArea" prefHeight="200.0" prefWidth="744.0" />
-      </children>
-      <HBox.margin>
-        <Insets />
-      </HBox.margin>
-    </AnchorPane>
-  </children>
-</HBox>
+    </HBox>
   </children>
   <stylesheets>
     <URL value="@default.css" />
   </stylesheets>
 </VBox>
+

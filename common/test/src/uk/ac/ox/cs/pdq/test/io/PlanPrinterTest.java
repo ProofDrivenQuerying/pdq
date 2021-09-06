@@ -68,9 +68,7 @@ public class PlanPrinterTest extends TestCase {
     @Test
     public void testJoinProvenance(){
         try {
-
             ArrayList<Integer> positions = PlanPrinter.getProjectionPositionIndex((ProjectionTerm) p);
-
             for (int i = 0; i < p.getOutputAttributes().length; i++) {
                 PlanPrinter.outputAttributeProvenance(p, positions.get(i)).getName();
                 assertEquals("[(#a=#a&#c=#c)]",PlanPrinter.chop(p.getChild(0).toString()));

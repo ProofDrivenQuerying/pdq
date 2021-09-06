@@ -186,10 +186,6 @@ public class PDQController {
 
 	/** The plan view area. */
 	@FXML
-	private TextArea planViewArea;
-
-	/** The plan view area. */
-	@FXML
 	private TreeView planTreeViewArea;
 
 	/** The proof view area. */
@@ -1058,7 +1054,6 @@ public class PDQController {
 		assert this.colCostType != null : "fx:id=\"colCostType\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.colSearchType != null : "fx:id=\"colSearchType\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.planSettingsArea != null : "fx:id=\"planSettingsArea\" was not injected: check your FXML file 'root-window.fxml'.";
-		assert this.planViewArea != null : "fx:id=\"planViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.planTreeViewArea != null : "fx:id=\"planTreeViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.proofViewArea != null : "fx:id=\"proofViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.plansTableView != null : "fx:id=\"plansTableView\" was not injected: check your FXML file 'root-window.fxml'.";
@@ -1239,7 +1234,6 @@ public class PDQController {
 			if (plan != null)	PDQController.this.savePlan(newValue);
 			Schema selectedSchema = this.currentSchema.get().getSchema();
 			PDQController.this.runRuntimeButton.setDisable(plan == null);
-//			PDQController.this.setSettingsEditable(plan == null);
 			PDQController.this.displayPlan(plan, selectedSchema);
 			PDQController.this.displayProof(newValue.getProof());
 			PDQController.this.displaySettings(newValue);
@@ -1273,44 +1267,17 @@ public class PDQController {
 	}
 	
 	void displayPlan(Plan p, Schema s) {
-//		PDQController.this.planViewArea.clear();
 		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			PrintStream pbos = new PrintStream(bos); 
 			displayPlanSubtype(pbos, p, 0 , s);
 
-			//treeview demo
 			// Create the TreeViewHelper
 			// Get the Products
 			TreeItem plan = TreeViewHelper.printGenericPlanToTreeview( (RelationalTerm) p, s);
-			// Create the TreeView
-			// Create the Root TreeItem
-			TreeItem rootItem = new TreeItem("Plan");
-			// Add children to the root
-			rootItem.getChildren().addAll(plan);
 			// Set the Root Node
-			planTreeViewArea.setRoot(rootItem);
-			// Set tree modification related event handlers (branchExpandedEvent)
-			rootItem.addEventHandler(TreeItem.branchExpandedEvent(),new EventHandler<TreeItem.TreeModificationEvent>()
-			{
-				@Override
-				public void handle(TreeItem.TreeModificationEvent event)
-				{
-					branchExpended(event);
-				}
-			});
+			planTreeViewArea.setRoot(plan);
 
-			// Set tree modification related event handlers (branchCollapsedEvent)
-			rootItem.addEventHandler(TreeItem.branchCollapsedEvent(),new EventHandler<TreeItem.TreeModificationEvent>()
-			{
-				@Override
-				public void handle(TreeItem.TreeModificationEvent event)
-				{
-					branchCollapsed(event);
-				}
-			});
-
-//			PDQController.this.planViewArea.appendText(bos.toString());
 		}
 	}
 
@@ -1320,7 +1287,7 @@ public class PDQController {
 	 * @param p the p
 	 */
 	void displayProof(Proof p) {
-//		PDQController.this.proofViewArea.clear();
+		PDQController.this.proofViewArea.clear();
 		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			new PrintStream(bos).println(p.toString());
