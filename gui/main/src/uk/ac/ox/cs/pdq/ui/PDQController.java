@@ -1274,7 +1274,7 @@ public class PDQController {
 
 			// Create the TreeViewHelper
 			// Get the Products
-			TreeItem plan = TreeViewHelper.printGenericPlanToTreeview( (RelationalTerm) p, s);
+			TreeItem plan = TreeViewHelper.printGenericPlanToTreeview( (RelationalTerm) p);
 			// Set the Root Node
 			planTreeViewArea.setRoot(plan);
 

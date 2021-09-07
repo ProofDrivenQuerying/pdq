@@ -547,7 +547,7 @@ private void registerEvents(final ExplorationSetUp planner) {
 					private void updatePlanTab(Plan pplan) {
 						// Create the TreeViewHelper
 						// Get the Products
-						TreeItem plan = TreeViewHelper.printGenericPlanToTreeview( (RelationalTerm) pplan, schema);
+						TreeItem plan = TreeViewHelper.printGenericPlanToTreeview( (RelationalTerm) pplan);
 						// Create the TreeView
 						// Create the Root TreeItem
 						TreeItem rootItem = new TreeItem("Plan");
@@ -622,7 +622,7 @@ private void registerEvents(final ExplorationSetUp planner) {
 
 						// Create the TreeViewHelper
 						// Get the Products
-						TreeItem plan = TreeViewHelper.printGenericPlanToTreeview( (RelationalTerm) p, schema);
+						TreeItem plan = TreeViewHelper.printGenericPlanToTreeview( (RelationalTerm) p);
 						// Create the TreeView
 						// Create the Root TreeItem
 						TreeItem rootItem = new TreeItem("Plan");

@@ -217,6 +217,14 @@ public class PlanPrinter {
 							attribute = outputAttributeProvenance(rt.getChild(1), (aec - rt.getChild(0).getNumberOfOutputAttributes()));
 						}
 						sc.setOtherToString(attribute.toString());
+
+						aec = sc.getPosition();
+						if (aec < childLength) {
+							attribute = outputAttributeProvenance(rt.getChild(0), aec);
+						} else {
+							attribute = outputAttributeProvenance(rt.getChild(1), (aec - rt.getChild(0).getNumberOfOutputAttributes()));
+						}
+						sc.setMappedNamed(attribute.toString());
 					}
 				}
 			}
@@ -275,6 +283,11 @@ public class PlanPrinter {
 						Attribute a = PlanPrinter.outputAttributeProvenance(rt.getChild(0), position1);
 						String mappedName = a.getName();
 						sc.setMappedNamed(mappedName);
+						if(sc instanceof AttributeEqualityCondition){
+							Integer p2 = ((AttributeEqualityCondition) sc).getOther();
+							Attribute otherAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), p2);
+							sc.setOtherToString(otherAttribute.getName());
+						}
 					}
 				}
 				return outputAttributeProvenance(rt.getChild(0), position);

@@ -2,27 +2,30 @@ package uk.ac.ox.cs.pdq.ui;
 
 import javafx.scene.control.TreeItem;
 import uk.ac.ox.cs.pdq.algebra.*;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.PlanPrinter;
 
-
+/**
+ * TreeViewHelper used to create TreeItems for a tree view FXML
+ * @author Brandon
+ */
 public class TreeViewHelper
 {
-    public TreeViewHelper()
-    {
-    }
 
-    public static TreeItem printGenericPlanToTreeview(RelationalTerm p, Schema s) {
+    /**
+     * used to pass threw an plan(RelationalTerm) to a recursive call
+     * to create nested nodes to display a plan with it provenance attributes
+     * @param p
+     * @return TreeItem
+     */
+    public static TreeItem printGenericPlanToTreeview(RelationalTerm p) {
         if (p instanceof AccessTerm) {
             return new TreeItem(String.format("Access[%s]", PlanPrinter.chop(p.toString())));
         }
         if (p instanceof CartesianProductTerm) {
             TreeItem join = new TreeItem(String.format("Join %s", PlanPrinter.chop(p.toString())));
 
-                join.getChildren().addAll(printGenericPlanToTreeview(p.getChild(0), s));
-                join.getChildren().addAll(printGenericPlanToTreeview(p.getChild(1), s));
+                join.getChildren().addAll(printGenericPlanToTreeview(p.getChild(0)));
+                join.getChildren().addAll(printGenericPlanToTreeview(p.getChild(1)));
 
             join.setExpanded(true);
             return join;
@@ -30,7 +33,7 @@ public class TreeViewHelper
         if(p instanceof SelectionTerm){
             TreeItem select = new TreeItem(String.format("Select[%s]", PlanPrinter.chop(p.toString())));
 
-            select.getChildren().addAll(printGenericPlanToTreeview(p.getChild(0), s));
+            select.getChildren().addAll(printGenericPlanToTreeview(p.getChild(0)));
 
             select.setExpanded(true);
             return select;
@@ -45,12 +48,12 @@ public class TreeViewHelper
                 }
             }
             TreeItem project = new TreeItem(String.format("Project[%s]", buffer));
-            project.getChildren().addAll(printGenericPlanToTreeview(p.getChild(0), s));
+            project.getChildren().addAll(printGenericPlanToTreeview(p.getChild(0)));
             project.setExpanded(true);
             return project;
         }
         if (p instanceof RenameTerm) {
-               return printGenericPlanToTreeview(p.getChild(0), s);
+               return printGenericPlanToTreeview(p.getChild(0));
         }
         return null;
     }
