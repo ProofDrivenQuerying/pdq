@@ -6,8 +6,6 @@ package uk.ac.ox.cs.pdq.io;
 import com.google.common.base.Joiner;
 import uk.ac.ox.cs.pdq.algebra.*;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -186,67 +184,6 @@ public class PlanPrinter {
 	}
 
 	/**
-	 *  This is a temp method for now to be used to pass the selected schema object to get
-	 *  the plans original name
-	 * @param p
-	 * @param schema
-	 * @return
-	 */
-	public static String printFlatLinePlanToString(RelationalTerm p, Schema schema) {
-		if (p instanceof RenameTerm) return printFlatLinePlanToString(p.getChild(0), schema);
-		if (p instanceof ProjectionTerm) return "Project[" + printAttributeList(((ProjectionTerm)p).getProjections()) + "] {"+printFlatLinePlanToString(p.getChild(0),schema) + "}";
-		if (p instanceof SelectionTerm) {
-			Condition c = ((SelectionTerm)p).getSelectionCondition();
-			if(c instanceof ConjunctiveCondition){
-				SimpleCondition[] simpleConditions = ((ConjunctiveCondition)c).getSimpleConditions();
-				for (SimpleCondition sc : simpleConditions){
-						Integer position = sc.getPosition();
-						for(Relation r : schema.getRelations()){
-							String mappedName = r.getAttribute(position).getName();
-							sc.setMappedNamed(mappedName);
-						}
-				}
-			}
-			return "Selection[" + ((SelectionTerm)p).getSelectionCondition().toString() + "]{" + printFlatLinePlanToString(p.getChild(0), schema) + "}";
-		}
-		if (p instanceof AccessTerm)
-			return "Access[" + ((AccessTerm)p).getRelation() + "(" + Joiner.on(',').join((((AccessTerm)p).getAccessMethod().getInputs())) + ")]";
-		if (p instanceof CartesianProductTerm) {
-			StringBuffer ret = new StringBuffer();
-			ret.append(p.getClass().getSimpleName());
-			if (p instanceof JoinTerm) {
-				JoinTerm jt = ((JoinTerm) p);
-				Condition c = jt.getJoinConditions();
-				if(c instanceof ConjunctiveCondition){
-					SimpleCondition[] simpleConditions = ((ConjunctiveCondition)c).getSimpleConditions();
-					for (SimpleCondition sc : simpleConditions){
-						if(sc instanceof AttributeEqualityCondition){
-							AttributeEqualityCondition aec = (AttributeEqualityCondition) sc;
-							Integer position = aec.getPosition();
-							Integer other = aec.getOther();
-							Attribute positionAttribute = outputAttributeProvenance(p.getChild(0), position);
-							Attribute otherAttribute = outputAttributeProvenance(p.getChild(0),other);
-							sc.setOtherToString(otherAttribute.toString());
-							sc.setMappedNamed(positionAttribute.toString());
-						}
-
-					}
-				}
-				ret.append("[");
-				ret.append(((JoinTerm) p).getJoinConditions().toString());
-				ret.append("]");
-			}
-			ret.append("");
-			ret.append(printFlatLinePlanToString(p.getChild(1), schema));
-			ret.append(',');
-			ret.append(printFlatLinePlanToString(p.getChild(0), schema));
-			ret.append("}");
-			return ret.toString();
-		}
-		return "?"+p.getClass().getSimpleName();
-	}
-
-	/**
 	 * return the projections attributes index position
 	 */
 	public static ArrayList<Integer> getProjectionPositionIndex(ProjectionTerm projectionTerm){
@@ -328,6 +265,19 @@ public class PlanPrinter {
 						return outputAttributeProvenance(ch, i);
 					}
 				}
+			}
+			else if(rt instanceof SelectionTerm){
+				Condition c = ((SelectionTerm)rt).getSelectionCondition();
+				if(c instanceof ConjunctiveCondition){
+					SimpleCondition[] simpleConditions = ((ConjunctiveCondition)c).getSimpleConditions();
+					for (SimpleCondition sc : simpleConditions){
+						Integer position1 = sc.getPosition();
+						Attribute a = PlanPrinter.outputAttributeProvenance(rt.getChild(0), position1);
+						String mappedName = a.getName();
+						sc.setMappedNamed(mappedName);
+					}
+				}
+				return outputAttributeProvenance(rt.getChild(0), position);
 			}
 			return rt.getOutputAttributes()[position];
 	}
