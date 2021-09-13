@@ -279,14 +279,16 @@ public class PlanPrinter {
 				if(c instanceof ConjunctiveCondition){
 					SimpleCondition[] simpleConditions = ((ConjunctiveCondition)c).getSimpleConditions();
 					for (SimpleCondition sc : simpleConditions){
-						Integer position1 = sc.getPosition();
-						Attribute a = PlanPrinter.outputAttributeProvenance(rt.getChild(0), position1);
-						String mappedName = a.getName();
-						sc.setMappedNamed(mappedName);
-						if(sc instanceof AttributeEqualityCondition){
-							Integer p2 = ((AttributeEqualityCondition) sc).getOther();
-							Attribute otherAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), p2);
-							sc.setOtherToString(otherAttribute.getName());
+						if(sc.getMappedNamed() == null || sc.getOtherToString() == null){
+							Integer position1 = sc.getPosition();
+							Attribute a = PlanPrinter.outputAttributeProvenance(rt.getChild(0), position1);
+							String mappedName = a.getName();
+							sc.setMappedNamed(mappedName);
+							if(sc instanceof AttributeEqualityCondition){
+								Integer p2 = ((AttributeEqualityCondition) sc).getOther();
+								Attribute otherAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), p2);
+								sc.setOtherToString(otherAttribute.getName());
+							}
 						}
 					}
 				}

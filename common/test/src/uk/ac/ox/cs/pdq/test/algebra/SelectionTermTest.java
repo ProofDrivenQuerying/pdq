@@ -30,7 +30,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 public class SelectionTermTest extends PdqTest {
 
 	// Dummy concrete class for testing.
-	public class ConcreteAccessMethod  extends AccessMethodDescriptor {
+	public static class ConcreteAccessMethod  extends AccessMethodDescriptor {
 		private static final long serialVersionUID = 1L;
 		
 		public ConcreteAccessMethod(Attribute[] attributes, Integer[] inputs, Relation relation, 
