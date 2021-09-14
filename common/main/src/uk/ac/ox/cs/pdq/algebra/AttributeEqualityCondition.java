@@ -42,8 +42,8 @@ public class AttributeEqualityCondition extends SimpleCondition {
 	public String toString() {
 		String position = this.position.toString();
 		StringBuilder result = new StringBuilder();
-		if(this.mappedNamed != null && this.otherToString != null) {
-			result.append('#').append(this.mappedNamed).append('=').append('#').append(this.otherToString);
+		if(this.provenanceName != null && this.otherProvenance != null) {
+			result.append('#').append(this.provenanceName).append('=').append('#').append(this.otherProvenance);
 		}else{
 			result.append('#').append(position).append('=').append('#').append(this.other);
 		}
@@ -54,7 +54,7 @@ public class AttributeEqualityCondition extends SimpleCondition {
         return Cache.attributeEqualityCondition.retrieve(new AttributeEqualityCondition(position, other));
     }
 
- // Return true iff the tuple value at the 'position' index is less than that
+ 	// Return true iff the tuple value at the 'position' index is less than that
  	// of the constant value in this condition, if the lessThan field is true.
  	// Otherwise do the same but test for a tuple value that is greater than the
  	// constant.

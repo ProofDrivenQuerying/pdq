@@ -22,24 +22,24 @@ public abstract class SimpleCondition extends Condition {
 	/** The value to be used to override the position index and replace it with
 	 * the mappedNamed in the toString method
 	 **/
-	protected String mappedNamed;
+	protected String provenanceName;
 
-	protected String otherToString;
+	protected String otherProvenance;
 
-	public String getOtherToString() {
-		return otherToString;
+	public String getOtherProvenance() {
+		return otherProvenance;
 	}
 
-	public void setOtherToString(String otherToString) {
-		this.otherToString = otherToString;
+	public void setOtherProvenance(String otherProvenance) {
+		this.otherProvenance = otherProvenance;
 	}
 
-	public String getMappedNamed() {
-		return mappedNamed;
+	public String getProvenanceName() {
+		return provenanceName;
 	}
 
-	public void setMappedNamed(String mappedNamed) {
-		this.mappedNamed = mappedNamed;
+	public void setProvenanceName(String provenanceName) {
+		this.provenanceName = provenanceName;
 	}
 
 	protected SimpleCondition(Integer position) {

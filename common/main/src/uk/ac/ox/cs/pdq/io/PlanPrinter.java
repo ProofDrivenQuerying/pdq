@@ -205,8 +205,8 @@ public class PlanPrinter {
 	 */
 	private static void setJoinTermProvenance(RelationalTerm rt,SimpleCondition[] simpleConditions){
 			for (SimpleCondition sc : simpleConditions) {
-				if (sc.getOtherToString() == null && sc.getMappedNamed() == null) {
-					sc.setMappedNamed(outputAttributeProvenance(rt.getChild(0), sc.getPosition()).toString());
+				if (sc.getOtherProvenance() == null && sc.getProvenanceName() == null) {
+					sc.setProvenanceName(outputAttributeProvenance(rt.getChild(0), sc.getPosition()).toString());
 					if (sc instanceof AttributeEqualityCondition) {
 						Integer aec = ((AttributeEqualityCondition) sc).getOther();
 						Attribute attribute;
@@ -216,7 +216,7 @@ public class PlanPrinter {
 						} else {
 							attribute = outputAttributeProvenance(rt.getChild(1), (aec - rt.getChild(0).getNumberOfOutputAttributes()));
 						}
-						sc.setOtherToString(attribute.toString());
+						sc.setOtherProvenance(attribute.toString());
 
 						aec = sc.getPosition();
 						if (aec < childLength) {
@@ -224,7 +224,7 @@ public class PlanPrinter {
 						} else {
 							attribute = outputAttributeProvenance(rt.getChild(1), (aec - rt.getChild(0).getNumberOfOutputAttributes()));
 						}
-						sc.setMappedNamed(attribute.toString());
+						sc.setProvenanceName(attribute.toString());
 					}
 				}
 			}
@@ -279,15 +279,15 @@ public class PlanPrinter {
 				if(c instanceof ConjunctiveCondition){
 					SimpleCondition[] simpleConditions = ((ConjunctiveCondition)c).getSimpleConditions();
 					for (SimpleCondition sc : simpleConditions){
-						if(sc.getMappedNamed() == null || sc.getOtherToString() == null){
+						if(sc.getProvenanceName() == null || sc.getOtherProvenance() == null){
 							Integer position1 = sc.getPosition();
 							Attribute a = PlanPrinter.outputAttributeProvenance(rt.getChild(0), position1);
 							String mappedName = a.getName();
-							sc.setMappedNamed(mappedName);
+							sc.setProvenanceName(mappedName);
 							if(sc instanceof AttributeEqualityCondition){
 								Integer p2 = ((AttributeEqualityCondition) sc).getOther();
 								Attribute otherAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), p2);
-								sc.setOtherToString(otherAttribute.getName());
+								sc.setOtherProvenance(otherAttribute.getName());
 							}
 						}
 					}

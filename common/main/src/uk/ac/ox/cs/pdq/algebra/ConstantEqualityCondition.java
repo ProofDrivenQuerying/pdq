@@ -46,8 +46,8 @@ public class ConstantEqualityCondition extends SimpleCondition {
 	@Override
 	public String toString() {
 		String position = this.position.toString();
-		if(this.mappedNamed != null) {
-			position = this.mappedNamed;
+		if(this.provenanceName != null) {
+			position = this.provenanceName;
 		}
 		StringBuilder result = new StringBuilder();
 		result.append('#').append(position).append('=');
