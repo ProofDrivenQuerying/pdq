@@ -197,38 +197,6 @@ public class PlanPrinter {
 		return positions;
 	}
 
-	/**
-	 * Private method used to set the Join term Conditions provenance
-	 * when called from the outputAttributeProvenance
-	 * @param rt
-	 * @param simpleConditions
-	 */
-	private static void setJoinTermProvenance(RelationalTerm rt,SimpleCondition[] simpleConditions){
-			for (SimpleCondition sc : simpleConditions) {
-				if (sc.getOtherProvenance() == null && sc.getProvenanceName() == null) {
-					sc.setProvenanceName(outputAttributeProvenance(rt.getChild(0), sc.getPosition()).toString());
-					if (sc instanceof AttributeEqualityCondition) {
-						Integer aec = ((AttributeEqualityCondition) sc).getOther();
-						Attribute attribute;
-						int childLength = rt.getChild(0).getNumberOfOutputAttributes();
-						if (aec < childLength) {
-							attribute = outputAttributeProvenance(rt.getChild(0), aec);
-						} else {
-							attribute = outputAttributeProvenance(rt.getChild(1), (aec - rt.getChild(0).getNumberOfOutputAttributes()));
-						}
-						sc.setOtherProvenance(attribute.toString());
-
-						aec = sc.getPosition();
-						if (aec < childLength) {
-							attribute = outputAttributeProvenance(rt.getChild(0), aec);
-						} else {
-							attribute = outputAttributeProvenance(rt.getChild(1), (aec - rt.getChild(0).getNumberOfOutputAttributes()));
-						}
-						sc.setProvenanceName(attribute.toString());
-					}
-				}
-			}
-	}
 
 	/**
 	 * method that recurses through the RelationalTerm to get the provenance of a given position, where the provenance is the attribute of the input that the 
@@ -245,15 +213,6 @@ public class PlanPrinter {
 				RelationalTerm childRt = renameTerm.getChild(0);
 				return childRt.getOutputAttributes()[position];
 			} else if (rt instanceof CartesianProductTerm) {
-				ConjunctiveCondition cc = null;
-				if(rt instanceof JoinTerm){
-					JoinTerm joinTerm = (JoinTerm) rt;
-					cc = (ConjunctiveCondition) joinTerm.getJoinConditions();
-				}else if(rt instanceof DependentJoinTerm){
-					DependentJoinTerm dependentJoinTerm = (DependentJoinTerm) rt;
-					cc = (ConjunctiveCondition) dependentJoinTerm.getJoinConditions();
-				}
-				setJoinTermProvenance(rt, cc.getSimpleConditions());
 				if (position<rt.getChild(0).getNumberOfOutputAttributes()){
 					return outputAttributeProvenance(rt.getChild(0), position);
 				}else{
@@ -275,23 +234,6 @@ public class PlanPrinter {
 				}
 			}
 			else if(rt instanceof SelectionTerm){
-				Condition c = ((SelectionTerm)rt).getSelectionCondition();
-				if(c instanceof ConjunctiveCondition){
-					SimpleCondition[] simpleConditions = ((ConjunctiveCondition)c).getSimpleConditions();
-					for (SimpleCondition sc : simpleConditions){
-						if(sc.getProvenanceName() == null || sc.getOtherProvenance() == null){
-							Integer position1 = sc.getPosition();
-							Attribute a = PlanPrinter.outputAttributeProvenance(rt.getChild(0), position1);
-							String mappedName = a.getName();
-							sc.setProvenanceName(mappedName);
-							if(sc instanceof AttributeEqualityCondition){
-								Integer p2 = ((AttributeEqualityCondition) sc).getOther();
-								Attribute otherAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), p2);
-								sc.setOtherProvenance(otherAttribute.getName());
-							}
-						}
-					}
-				}
 				return outputAttributeProvenance(rt.getChild(0), position);
 			}
 			return rt.getOutputAttributes()[position];
