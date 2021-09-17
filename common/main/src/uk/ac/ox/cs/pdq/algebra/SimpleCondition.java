@@ -19,29 +19,6 @@ public abstract class SimpleCondition extends Condition {
 	/**  The first of the two positions to be compared for equality. */
 	protected final Integer position;
 
-	/** The value to be used to override the position index and replace it with
-	 * the mappedNamed in the toString method
-	 **/
-	protected String provenanceName;
-
-	protected String otherProvenance;
-
-	public String getOtherProvenance() {
-		return otherProvenance;
-	}
-
-	public void setOtherProvenance(String otherProvenance) {
-		this.otherProvenance = otherProvenance;
-	}
-
-	public String getProvenanceName() {
-		return provenanceName;
-	}
-
-	public void setProvenanceName(String provenanceName) {
-		this.provenanceName = provenanceName;
-	}
-
 	protected SimpleCondition(Integer position) {
 		Preconditions.checkArgument(position >= 0);
 		this.position = position;

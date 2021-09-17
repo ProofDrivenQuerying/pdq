@@ -20,42 +20,47 @@ public class TreeViewHelper
      */
     private static StringBuffer getProvenanceCondition(RelationalTerm rt, SimpleCondition[] simpleConditions){
         StringBuffer buffer = new StringBuffer();
-        for (SimpleCondition sc : simpleConditions) {
-            Attribute provenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), sc.getPosition());
+        for(int i =0; i < simpleConditions.length; i++ ){
+            Attribute provenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), simpleConditions[i].getPosition());
             //check position to see which child element to retrieve attribute from CartesianProductTerm
+
+
             if(rt instanceof CartesianProductTerm){
                 //get position attribute
-                if(sc.getPosition() < rt.getChild(0).getNumberOfOutputAttributes()){
-                    provenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), sc.getPosition() );
+                if(simpleConditions[i].getPosition() < rt.getChild(0).getNumberOfOutputAttributes()){
+                    provenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), simpleConditions[i].getPosition() );
                 }else{
-                    provenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(1), sc.getPosition() - rt.getChild(0).getNumberOfOutputAttributes());
+                    provenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(1), simpleConditions[i].getPosition() - rt.getChild(0).getNumberOfOutputAttributes());
                 }
             }
 
             //get Other Attribute Provenance from AttributeEqualityCondition
-            if (sc instanceof AttributeEqualityCondition) {
+            if (simpleConditions[i] instanceof AttributeEqualityCondition) {
                 Attribute otherProvenanceAttribute;
                 if(rt instanceof CartesianProductTerm){
                     //check position to see which child element to retrieve attribute from CartesianProductTerm
 
                     //get Other position attribute
-                    if(((AttributeEqualityCondition) sc).getOther() < rt.getChild(0).getNumberOfOutputAttributes()){
-                        otherProvenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), ((AttributeEqualityCondition) sc).getOther());
+                    if(((AttributeEqualityCondition) simpleConditions[i]).getOther() < rt.getChild(0).getNumberOfOutputAttributes()){
+                        otherProvenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), ((AttributeEqualityCondition) simpleConditions[i]).getOther());
                     }else{
-                        otherProvenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0),( ((AttributeEqualityCondition) sc).getOther() - rt.getChild(0).getNumberOfOutputAttributes()));
+                        otherProvenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0),( ((AttributeEqualityCondition) simpleConditions[i]).getOther() - rt.getChild(0).getNumberOfOutputAttributes()));
                     }
                 }else{
-                    otherProvenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), ((AttributeEqualityCondition) sc).getOther());
+                    otherProvenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), ((AttributeEqualityCondition) simpleConditions[i]).getOther());
                 }
 
-                buffer.append(String.format(" #%s=#%s", provenanceAttribute.getName(), otherProvenanceAttribute.getName()));
+                buffer.append(String.format("#%s=#%s", provenanceAttribute.getName(), otherProvenanceAttribute.getName()));
             } else {
-                if (sc instanceof ConstantEqualityCondition) {
-                    buffer.append(String.format(" #%s=%s", provenanceAttribute.getName(), ((ConstantEqualityCondition) sc).getConstant()));
-                } else if (sc instanceof ConstantComparisonCondition) {
-                    buffer.append(String.format(" #%s=%s", provenanceAttribute.getName(), ((ConstantComparisonCondition) sc).getConstant()));
+                if (simpleConditions[i] instanceof ConstantEqualityCondition) {
+                    buffer.append(String.format("#%s=%s", provenanceAttribute.getName(), ((ConstantEqualityCondition) simpleConditions[i]).getConstant()));
+                } else if (simpleConditions[i] instanceof ConstantComparisonCondition) {
+                    buffer.append(String.format("#%s=%s", provenanceAttribute.getName(), ((ConstantComparisonCondition) simpleConditions[i]).getConstant()));
                 }
 
+            }
+            if (i < simpleConditions.length - 1) {
+                buffer.append(" & ");
             }
         }
         return buffer;
@@ -83,8 +88,6 @@ public class TreeViewHelper
                 cc = (ConjunctiveCondition) dependentJoinTerm.getJoinConditions();
                 buffer = getProvenanceCondition(p,cc.getSimpleConditions());
             }
-
-
             TreeItem join = new TreeItem(String.format("Join [%s]", buffer));
 
                 join.getChildren().addAll(printGenericPlanToTreeview(p.getChild(0)));

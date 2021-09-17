@@ -208,35 +208,35 @@ public class PlanPrinter {
 		if(position == null){
 			return null;
 		}
-			if (rt instanceof RenameTerm) {
-				RenameTerm renameTerm = (RenameTerm) rt;
-				RelationalTerm childRt = renameTerm.getChild(0);
-				return childRt.getOutputAttributes()[position];
-			} else if (rt instanceof CartesianProductTerm) {
-				if (position<rt.getChild(0).getNumberOfOutputAttributes()){
-					return outputAttributeProvenance(rt.getChild(0), position);
-				}else{
-					return outputAttributeProvenance(rt.getChild(1), (position - rt.getChild(0).getNumberOfOutputAttributes()));
-				}
-			}
-			else if(rt instanceof ProjectionTerm){
-				ProjectionTerm pt = (ProjectionTerm) rt;
-				Attribute[] al = pt.getProjections();
-				RelationalTerm ch = pt.getChild(0);
-				Attribute myatt=al[position];
-				Attribute[] childatts=ch.getOutputAttributes();
-				//find the position of myatt in child that matches this attribute
-				//then make recursive call
-				for(int i=0; i<childatts.length; i++){
-					if(childatts[i]==myatt){
-						return outputAttributeProvenance(ch, i);
-					}
-				}
-			}
-			else if(rt instanceof SelectionTerm){
+		if(rt instanceof AccessTerm) {
+			return rt.getOutputAttribute(position);
+		} else if (rt instanceof RenameTerm) {
+			return outputAttributeProvenance(rt.getChild(0),position);
+		} else if (rt instanceof CartesianProductTerm) {
+			if (position<rt.getChild(0).getNumberOfOutputAttributes()){
 				return outputAttributeProvenance(rt.getChild(0), position);
+			}else{
+				return outputAttributeProvenance(rt.getChild(1), (position - rt.getChild(0).getNumberOfOutputAttributes()));
 			}
-			return rt.getOutputAttributes()[position];
+		}
+		else if(rt instanceof ProjectionTerm){
+			ProjectionTerm pt = (ProjectionTerm) rt;
+			Attribute[] al = pt.getProjections();
+			RelationalTerm ch = pt.getChild(0);
+			Attribute myatt=al[position];
+			Attribute[] childatts=ch.getOutputAttributes();
+			//find the position of myatt in child that matches this attribute
+			//then make recursive call
+			for(int i=0; i<childatts.length; i++){
+				if(childatts[i]==myatt){
+					return outputAttributeProvenance(ch, i);
+				}
+			}
+		}
+		else if(rt instanceof SelectionTerm){
+			return outputAttributeProvenance(rt.getChild(0), position);
+		}
+		return rt.getOutputAttributes()[position];
 	}
 
 

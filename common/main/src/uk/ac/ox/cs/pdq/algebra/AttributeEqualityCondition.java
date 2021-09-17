@@ -42,11 +42,7 @@ public class AttributeEqualityCondition extends SimpleCondition {
 	public String toString() {
 		String position = this.position.toString();
 		StringBuilder result = new StringBuilder();
-		if(this.provenanceName != null && this.otherProvenance != null) {
-			result.append('#').append(this.provenanceName).append('=').append('#').append(this.otherProvenance);
-		}else{
-			result.append('#').append(position).append('=').append('#').append(this.other);
-		}
+		result.append('#').append(position).append('=').append('#').append(this.other);
 		return result.toString();
 	}
 	
