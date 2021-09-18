@@ -548,14 +548,8 @@ private void registerEvents(final ExplorationSetUp planner) {
 						// Create the TreeViewHelper
 						// Get the Products
 						TreeItem plan = TreeViewHelper.printGenericPlanToTreeview( (RelationalTerm) pplan);
-						// Create the TreeView
-						// Create the Root TreeItem
-						TreeItem rootItem = new TreeItem("Plan");
-						rootItem.setExpanded(true);
-						// Add children to the root
-						rootItem.getChildren().addAll(plan);
 						// Set the Root Node
-						planTreeView.setRoot(rootItem);
+						planTreeView.setRoot(plan);
 						this.planViewArea.getItems().clear();
 						if (pplan != null && pplan instanceof Plan) {
 							ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -623,14 +617,9 @@ private void registerEvents(final ExplorationSetUp planner) {
 						// Create the TreeViewHelper
 						// Get the Products
 						TreeItem plan = TreeViewHelper.printGenericPlanToTreeview( (RelationalTerm) p);
-						// Create the TreeView
-						// Create the Root TreeItem
-						TreeItem rootItem = new TreeItem("Plan");
-						rootItem.setExpanded(true);
-						// Add children to the root
-						rootItem.getChildren().addAll(plan);
+
 						// Set the Root Node
-						selectedPlanTreeView.setRoot(rootItem);
+						selectedPlanTreeView.setRoot(plan);
 
 
 
