@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.ui;
 import javafx.scene.control.TreeItem;
 import uk.ac.ox.cs.pdq.algebra.*;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.io.PlanPrinter;
 
 /**
@@ -86,6 +87,7 @@ public class TreeViewHelper
                     }
                 }
             }
+            // concat & when more then one Condition is set
             if (i < conditions.length - 1) {
                 buffer.append(" & ");
             }
@@ -101,7 +103,34 @@ public class TreeViewHelper
      */
     public static TreeItem printGenericPlanToTreeview(RelationalTerm p) {
         if (p instanceof AccessTerm) {
-            return new TreeItem(String.format("Access[%s]", PlanPrinter.chop(p.toString())));
+            AccessTerm at = (AccessTerm) p;
+
+            StringBuilder result = new StringBuilder();
+            result.append(at.getRelation().getName());
+            result.append(",");
+            result.append(at.getAccessMethod().getName());
+            result.append('[');
+            int shiftBack = 0;
+            for (int index = 0; index < at.getAccessMethod().getInputs().length; ++index) {
+                result.append("#");
+                Attribute provenanceName = PlanPrinter.outputAttributeProvenance(p,at.getAccessMethod().getInputs()[index]);
+                result.append(provenanceName.getName());
+                result.append("=");
+                TypedConstant input = at.getInputConstants().get(at.getAccessMethod().getInputs()[index]);
+                if (input != null) {
+                    result.append(at.getInputConstants().get(at.getAccessMethod().getInputs()[index]));
+                    shiftBack++;
+                } else {
+                    if (at.getInputAttributes().length > index - shiftBack) {
+                        result.append(at.getInputAttributes()[index - shiftBack]);
+                    }
+                }
+                if (index < at.getAccessMethod().getInputs().length - 1)
+                    result.append(",");
+            }
+            result.append(']');
+
+            return new TreeItem(String.format("Access[%s]", result));
         }
         if (p instanceof CartesianProductTerm) {
             ConjunctiveCondition cc;

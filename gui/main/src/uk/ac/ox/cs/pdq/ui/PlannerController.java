@@ -519,6 +519,15 @@ private void registerEvents(final ExplorationSetUp planner) {
 			int size = this.planSelection.getItems().size();
 			this.planSelection.getItems().add("Plan " + Integer.valueOf(size + 1).toString());
 			this.planSelection.getSelectionModel().selectedIndexProperty().addListener(this.viewPlan);
+
+			//set planSelection at first index
+			if(size > 0){
+				this.planSelection.getSelectionModel().selectFirst();
+
+				ObservableSearchState oss = this.plansFound.first();
+				this.displayPlan(this.selectedPlanViewArea, oss.getPlan());
+				this.displayProof(this.selectedProofViewArea, oss.getProof());
+			}
 		}
 	}
 
