@@ -521,9 +521,8 @@ private void registerEvents(final ExplorationSetUp planner) {
 			this.planSelection.getSelectionModel().selectedIndexProperty().addListener(this.viewPlan);
 
 			//set planSelection at first index
-			if(size > 0){
+			if(this.planSelection.getItems().size() > 0){
 				this.planSelection.getSelectionModel().selectFirst();
-
 				ObservableSearchState oss = this.plansFound.first();
 				this.displayPlan(this.selectedPlanViewArea, oss.getPlan());
 				this.displayProof(this.selectedProofViewArea, oss.getProof());
