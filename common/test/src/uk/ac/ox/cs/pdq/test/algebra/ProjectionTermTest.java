@@ -137,7 +137,7 @@ public class ProjectionTermTest extends PdqTest {
 
 		// ProjectionTerm.toString is #1=#2&#3=#4
 		String s = pt.toString();
-		Assert.assertTrue(s.equals("Project{[attribute1,attribute2]Access{relation.am[#0=attribute1]}}"));
+		Assert.assertTrue(s.equals("Project{[attribute1,attribute2]Access{relation,am[#0=attribute1]}}"));
 		
 		// RelationalTerm returned from ProjectionTerm.getAccesses is invariant
 		Set<AccessTerm> sat = pt.getAccesses();
