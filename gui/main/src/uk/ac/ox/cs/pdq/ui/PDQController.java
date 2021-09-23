@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -185,7 +186,7 @@ public class PDQController {
 
 	/** The plan view area. */
 	@FXML
-	private TextArea planViewArea;
+	private TreeView planTreeViewArea;
 
 	/** The proof view area. */
 	@FXML
@@ -418,6 +419,7 @@ public class PDQController {
 	void openPlannerWindow(ActionEvent event) {
 		if (!event.isConsumed()) {
 			event.consume();
+
 			try {
 				Stage dialog = new Stage();
 				dialog.initModality(Modality.NONE);
@@ -469,6 +471,19 @@ public class PDQController {
 				throw new UserInterfaceException(e.getMessage());
 			}
 		}
+	}
+
+	// Helper Methods for the Event Handlers
+	private void branchExpended(TreeItem.TreeModificationEvent event)
+	{
+		String nodeValue = event.getSource().getValue().toString();
+		log.warn("Node " + nodeValue + " expanded.");
+	}
+
+	private void branchCollapsed(TreeItem.TreeModificationEvent event)
+	{
+		String nodeValue = event.getSource().getValue().toString();
+		log.warn("Node " + nodeValue + " collapsed.");
 	}
 
 	/**
@@ -790,7 +805,6 @@ public class PDQController {
 				Scene scene = new Scene(parent);
 				dialog.setScene(scene);
 				dialog.setTitle(bundle.getString("runtime.dialog.title"));
-
 				// Set the currently selected schema/query/plan
 				final RuntimeController runtimeController = loader.getController();
 				runtimeController.setPlan(this.currentPlan.get());
@@ -1040,7 +1054,7 @@ public class PDQController {
 		assert this.colCostType != null : "fx:id=\"colCostType\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.colSearchType != null : "fx:id=\"colSearchType\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.planSettingsArea != null : "fx:id=\"planSettingsArea\" was not injected: check your FXML file 'root-window.fxml'.";
-		assert this.planViewArea != null : "fx:id=\"planViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
+		assert this.planTreeViewArea != null : "fx:id=\"planTreeViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.proofViewArea != null : "fx:id=\"proofViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.plansTableView != null : "fx:id=\"plansTableView\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.queriesEditMenuButton != null : "fx:id=\"queriesEditMenuButton\" was not injected: check your FXML file 'root-window.fxml'.";
@@ -1218,10 +1232,9 @@ public class PDQController {
 		if (newValue != null) {
 			Plan plan = newValue.getPlan();
 			if (plan != null)	PDQController.this.savePlan(newValue);
-			
+			Schema selectedSchema = this.currentSchema.get().getSchema();
 			PDQController.this.runRuntimeButton.setDisable(plan == null);
-//			PDQController.this.setSettingsEditable(plan == null);
-			PDQController.this.displayPlan(plan);
+			PDQController.this.displayPlan(plan, selectedSchema);
 			PDQController.this.displayProof(newValue.getProof());
 			PDQController.this.displaySettings(newValue);
 		} else {
@@ -1229,6 +1242,12 @@ public class PDQController {
 		}
 	};
 
+	/**
+	 * Old
+	 * @param out
+	 * @param p
+	 * @param indent
+	 */
 	static public void displayPlanSubtype(PrintStream out, Plan p, int indent)
 	{
 		try {
@@ -1237,14 +1256,28 @@ public class PDQController {
 			e.printStackTrace();
 		}
 	}
+
+	static public void displayPlanSubtype(PrintStream out, Plan p, int indent , Schema s)
+	{
+//		try {
+//			uk.ac.ox.cs.pdq.io.PlanPrinter.printPlanToText(out, (RelationalTerm) p, indent, s);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+	}
 	
-	void displayPlan(Plan p) {
-		PDQController.this.planViewArea.clear();
+	void displayPlan(Plan p, Schema s) {
 		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			PrintStream pbos = new PrintStream(bos); 
-			displayPlanSubtype(pbos, p, 0);
-			PDQController.this.planViewArea.appendText(bos.toString());
+			displayPlanSubtype(pbos, p, 0 , s);
+
+			// Create the TreeViewHelper
+			// Get the Products
+			TreeItem plan = TreeViewHelper.printGenericPlanToTreeview( (RelationalTerm) p);
+			// Set the Root Node
+			planTreeViewArea.setRoot(plan);
+
 		}
 	}
 

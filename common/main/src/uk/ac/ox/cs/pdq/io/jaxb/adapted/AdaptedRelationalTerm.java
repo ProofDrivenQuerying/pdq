@@ -30,6 +30,7 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
 /**
  * @author Gabor
+ * @author Brandon
  *
  */
 @XmlRootElement(name = "RelationalTerm")

@@ -107,7 +107,7 @@ public class AccessTerm extends RelationalTerm {
 			StringBuilder result = new StringBuilder();
 			result.append("Access").append('{');
 			result.append(this.relation.getName());
-			result.append(".");
+			result.append(",");
 			result.append(this.accessMethod.getName());
 			result.append('[');
 			int shiftBack = 0;

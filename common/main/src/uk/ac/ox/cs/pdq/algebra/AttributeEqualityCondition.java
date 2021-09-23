@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.db.tuple.Tuple;
  *
  * @author Julien Leblay
  * @author Stefano
+ * @author Brandon
  */
 public class AttributeEqualityCondition extends SimpleCondition {
 	private static final long serialVersionUID = 590156716681307220L;
@@ -39,8 +40,9 @@ public class AttributeEqualityCondition extends SimpleCondition {
 
 	@Override
 	public String toString() {
+		String position = this.position.toString();
 		StringBuilder result = new StringBuilder();
-		result.append('#').append(this.position).append('=').append('#').append(this.other);
+		result.append('#').append(position).append('=').append('#').append(this.other);
 		return result.toString();
 	}
 	
@@ -48,7 +50,7 @@ public class AttributeEqualityCondition extends SimpleCondition {
         return Cache.attributeEqualityCondition.retrieve(new AttributeEqualityCondition(position, other));
     }
 
- // Return true iff the tuple value at the 'position' index is less than that
+ 	// Return true iff the tuple value at the 'position' index is less than that
  	// of the constant value in this condition, if the lessThan field is true.
  	// Otherwise do the same but test for a tuple value that is greater than the
  	// constant.

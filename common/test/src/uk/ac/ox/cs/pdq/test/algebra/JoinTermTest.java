@@ -259,7 +259,7 @@ public class JoinTermTest extends PdqTest {
 
 		// JoinTerm.toString is #1=#2&#3=#4
 		String s = jt.toString();
-		Assert.assertTrue(s.equals("Join{[]Access{relation1.am[#0=attribute1]},Access{relation2.am[#0=attribute2]}}"));
+		Assert.assertTrue(s.equals("Join{[]Access{relation1,am[#0=attribute1]},Access{relation2,am[#0=attribute2]}}"));
 		
 		// RelationalTerm returned from JoinTerm.getAccesses is invariant
 		Set<AccessTerm> sat = jt.getAccesses();

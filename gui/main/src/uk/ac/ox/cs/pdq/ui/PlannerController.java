@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javafx.scene.control.*;
 import org.apache.log4j.Logger;
 
 import com.google.common.base.Preconditions;
@@ -32,17 +33,6 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -143,6 +133,12 @@ public class PlannerController {
 	/** The plan view area. */
 	@FXML private ListView<Text> planViewArea;
 
+	/** The plan view tree area. */
+	@FXML private TreeView planTreeView;
+
+	/** The plan view tree area. */
+	@FXML private TreeView selectedPlanTreeView;
+
 	/** The proof view area. */
 	@FXML private TextArea proofViewArea;
 
@@ -220,6 +216,8 @@ public class PlannerController {
 		assert this.plannerMessages != null : "fx:id=\"plannerMessages\" was not injected: check your FXML file 'planner-window.fxml'.";
 		assert this.planSelection != null : "fx:id=\"planSelection\" was not injected: check your FXML file 'root-window.fxml'.";
 		assert this.selectedPlanViewArea != null : "fx:id=\"selectedPlanViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
+		assert this.selectedPlanTreeView != null : "fx:id=\"selectedPlanViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
+		assert this.planTreeView != null : "fx:id=\"planTreeViewArea\" was not injected: check your FXML file 'planner-window.fxml'.";
 		assert this.selectedProofViewArea != null : "fx:id=\"selectedProofViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
 
 		this.plannerPauseButton.setGraphic(new ImageView(this.pauseIcon));
@@ -521,6 +519,14 @@ private void registerEvents(final ExplorationSetUp planner) {
 			int size = this.planSelection.getItems().size();
 			this.planSelection.getItems().add("Plan " + Integer.valueOf(size + 1).toString());
 			this.planSelection.getSelectionModel().selectedIndexProperty().addListener(this.viewPlan);
+
+			//set planSelection at first index
+			if(this.planSelection.getItems().size() > 0){
+				this.planSelection.getSelectionModel().selectFirst();
+				ObservableSearchState oss = this.plansFound.first();
+				this.displayPlan(this.selectedPlanViewArea, oss.getPlan());
+				this.displayProof(this.selectedProofViewArea, oss.getProof());
+			}
 		}
 	}
 
@@ -547,6 +553,11 @@ private void registerEvents(final ExplorationSetUp planner) {
 					 * @param pplan the pplan
 					 */
 					private void updatePlanTab(Plan pplan) {
+						// Create the TreeViewHelper
+						// Get the Products
+						TreeItem plan = TreeViewHelper.printGenericPlanToTreeview( (RelationalTerm) pplan);
+						// Set the Root Node
+						planTreeView.setRoot(plan);
 						this.planViewArea.getItems().clear();
 						if (pplan != null && pplan instanceof Plan) {
 							ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -610,6 +621,16 @@ private void registerEvents(final ExplorationSetUp planner) {
 					 * @param p the p
 					 */
 					void displayPlan(ListView<Text> area, Plan p) {
+
+						// Create the TreeViewHelper
+						// Get the Products
+						TreeItem plan = TreeViewHelper.printGenericPlanToTreeview( (RelationalTerm) p);
+
+						// Set the Root Node
+						selectedPlanTreeView.setRoot(plan);
+
+
+
 						area.getItems().clear();
 							ByteArrayOutputStream bos = new ByteArrayOutputStream();
 							PrintStream pbos = new PrintStream(bos);

@@ -218,7 +218,8 @@ public class DependentJoinTermTest extends PdqTest {
 
 		// DependentJoinTerm.toString is #1=#2&#3=#4
 		String s = djt.toString();
-		Assert.assertTrue(s.equals("DependentJoin{[(#1=#2)]Access{relation1.mt_0[#0=attribute1]},Access{relation2.mt_1[#0=attribute2]}}"));
+		System.out.println(s);
+		Assert.assertTrue(s.equals("DependentJoin{[(#1=#2)]Access{relation1,mt_0[#0=attribute1]},Access{relation2,mt_1[#0=attribute2]}}"));
 		
 		// RelationalTerm returned from DependentJoinTerm.getChild is invariant
 		RelationalTerm p = djt.getChild(0);

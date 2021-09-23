@@ -19,7 +19,10 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 // @author Mark Ridler
 
 public class RelationPrimaryAndForeignKeyTest {
-	
+
+	/**
+	 * Take in a schema.xml file process and return the equivalent java objects
+	 */
 	@Test
 	public void testReadingSchema() {
 		try {
@@ -40,7 +43,10 @@ public class RelationPrimaryAndForeignKeyTest {
 			Assert.fail(e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * Creates the java object representative of a schema and writes it to a xml file
+	 */
 	@Test
 	public void testWritingSchema() {
 		try {
@@ -71,7 +77,10 @@ public class RelationPrimaryAndForeignKeyTest {
 			Assert.fail(e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * Test the import/export function of taking an schema file and exporting it to another location
+	 */
 	@Test
 	public void ImportExportTest() {
 		try {

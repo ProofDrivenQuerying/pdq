@@ -3,6 +3,10 @@
 
 package uk.ac.ox.cs.pdq.io;
 
+import com.google.common.base.Joiner;
+import uk.ac.ox.cs.pdq.algebra.*;
+import uk.ac.ox.cs.pdq.db.Attribute;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,18 +15,6 @@ import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.google.common.base.Joiner;
-
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
-import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
-import uk.ac.ox.cs.pdq.algebra.JoinTerm;
-import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.algebra.RenameTerm;
-import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
-import uk.ac.ox.cs.pdq.db.Attribute;
 
 /**
  * Prints a picture of a plan for better readability, and opens it in explorer.
@@ -38,6 +30,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
  * following command: sudo apt-get install graphviz
  * 
  * @author Gabor
+ * @author Brandon
  */
 public class PlanPrinter {
 	private static final String WINDOWS_EXECUTABLE = "dot.exe";
@@ -48,7 +41,7 @@ public class PlanPrinter {
 	private static String imageOpen = LINUX_OPEN_IMG;
 	private static final boolean PNG_SHORT_MODE=true;
 	private static int id = 0;
-	public static enum TEXT_MODE {flatline, generictext, linearplantext};
+	public enum TEXT_MODE {flatline, generictext, linearplantext};
 	private static final TEXT_MODE defaultTextMode = TEXT_MODE.linearplantext;
 	/**
 	 * Creates a png file in a temp folder, and attempts to open it with the
@@ -149,6 +142,7 @@ public class PlanPrinter {
 	public static void printPlanToText(PrintStream s, RelationalTerm p, int indent) throws IOException {
 		printPlanToText(s,p,indent,defaultTextMode);
 	}
+
 	public static void printPlanToText(PrintStream s, RelationalTerm p, int indent, TEXT_MODE tm) throws IOException {
 		switch (tm) {
 		case flatline:
@@ -164,31 +158,93 @@ public class PlanPrinter {
 		}
 		s.write(printFlatLinePlanToString(p).getBytes());
 	}
-	
+
 	public static String printFlatLinePlanToString(RelationalTerm p) {
 		if (p instanceof RenameTerm) return printFlatLinePlanToString(p.getChild(0));
 		if (p instanceof ProjectionTerm) return "Project[" + printAttributeList(((ProjectionTerm)p).getProjections()) + "] {"+printFlatLinePlanToString(p.getChild(0)) + "}";
-		if (p instanceof SelectionTerm) 
-			return "Selection[" + ((SelectionTerm)p).getSelectionCondition().toString() + "]{" + printFlatLinePlanToString(p.getChild(0)) + "}";
-		if (p instanceof AccessTerm) 
+		if (p instanceof SelectionTerm) return "Selection[" + ((SelectionTerm)p).getSelectionCondition().toString() + "]{" + printFlatLinePlanToString(p.getChild(0)) + "}";
+			if (p instanceof AccessTerm)
 			return "Access[" + ((AccessTerm)p).getRelation() + "(" + Joiner.on(',').join((((AccessTerm)p).getAccessMethod().getInputs())) + ")]";
 		if (p instanceof CartesianProductTerm) {
 			StringBuffer ret = new StringBuffer();
 			ret.append(p.getClass().getSimpleName()); 
 			if (p instanceof JoinTerm) {
-				ret.append('[');
+				ret.append("[");
 				ret.append(((JoinTerm) p).getJoinConditions().toString()); 
-				ret.append(']');
+				ret.append("]");
 			}
-			ret.append('{');
-			ret.append(printFlatLinePlanToString(p.getChild(1))); 
+			ret.append("{");
+			ret.append(printFlatLinePlanToString(p.getChild(1)));
 			ret.append(',');
 			ret.append(printFlatLinePlanToString(p.getChild(0)));
-			ret.append('}');
+			ret.append("}");
 			return ret.toString();
 		}
 		return "?"+p.getClass().getSimpleName();
 	}
+
+	/**
+	 * return the projections attributes index position
+	 */
+	public static ArrayList<Integer> getProjectionPositionIndex(ProjectionTerm projectionTerm){
+		RelationalTerm[] rt = projectionTerm.getChildren();
+		ArrayList<Integer> positions = new ArrayList<>();
+		for(Attribute attribute : projectionTerm.getProjections()){
+			for(RelationalTerm relationalTerm : rt){
+				positions.add(relationalTerm.getAttributePosition(attribute));
+			}
+		}
+		return positions;
+	}
+
+
+	/**
+	 * method that recurses through the RelationalTerm to get the provenance of a given position, where the provenance is the attribute of the input that the 
+	 * attribute derives from
+	 * @param rt
+	 * @param position
+	 */
+	public static Attribute outputAttributeProvenance(RelationalTerm rt, Integer position) {
+		if(position == null){
+			return null;
+		}
+		if(rt instanceof AccessTerm) {
+			return rt.getOutputAttribute(position);
+		} else if (rt instanceof RenameTerm) {
+			return outputAttributeProvenance(rt.getChild(0),position);
+		} else if (rt instanceof CartesianProductTerm) {
+			if (position<rt.getChild(0).getNumberOfOutputAttributes()){
+				return outputAttributeProvenance(rt.getChild(0), position);
+			}else{
+				return outputAttributeProvenance(rt.getChild(1), (position - rt.getChild(0).getNumberOfOutputAttributes()));
+			}
+		}
+		else if(rt instanceof ProjectionTerm){
+			ProjectionTerm pt = (ProjectionTerm) rt;
+			Attribute[] al = pt.getProjections();
+			RelationalTerm ch = pt.getChild(0);
+			Attribute myatt=al[position];
+			Attribute[] childatts=ch.getOutputAttributes();
+			//find the position of myatt in child that matches this attribute
+			//then make recursive call
+			for(int i=0; i<childatts.length; i++){
+				if(childatts[i]==myatt){
+					return outputAttributeProvenance(ch, i);
+				}
+			}
+		}
+		else if(rt instanceof SelectionTerm){
+			return outputAttributeProvenance(rt.getChild(0), position);
+		}
+		return rt.getOutputAttributes()[position];
+	}
+
+
+	/**
+	 * used to print a list of attributes to a string
+	 * @param attributes
+	 * @return
+	 */
 	private static String printAttributeList(Attribute[] attributes) {
 		StringBuffer ret = new StringBuffer();
 		boolean first = true;
@@ -206,26 +262,10 @@ public class PlanPrinter {
 	
 	public static void printLinearPlanToStream(PrintStream out, RelationalTerm p, int indent) {
 		if (!p.isLinear()) {
-			//System.err.println("Linear printing disabled for non linear plan.");
 			printGenericPlanToStream(out,p,indent);
 			return;
 		}
 		printGenericPlanToStream(out,p,indent);
-		getSubTree(p, indent);
-//		if (indent == 0) {
-//			out.println("T1 <- 0");
-//			RelationalTerm subTree = getSubTree(p, indent);
-//			//printLinearSubTree();
-//		} else {
-//			out.println("T" + (indent + 1) + "' <- T" + indent); 					       // T2' <- T1
-//			out.println("T" + (indent + 1) + " = T" + (indent + 1) + "' |><| T" + indent); // T2 = T2' |><| T1   
-//		}
-		
-	}
-	
-	private static RelationalTerm getSubTree(RelationalTerm p, int indent) {
-		
-		return null;
 	}
 
 	public static void printGenericPlanToStream(PrintStream out, RelationalTerm p, int indent) {
@@ -253,9 +293,16 @@ public class PlanPrinter {
 		}
 		if(p instanceof ProjectionTerm)
 		{
-			ident(out, indent); out.println("Project");
+			ident(out, indent); out.print("Project[");
+			StringBuffer buffer = new StringBuffer();
+			for(int i = 0; i < p.getOutputAttributes().length; i++){
+				buffer.append(outputAttributeProvenance(p, i).getName());
+				if(i < p.getOutputAttributes().length-1){
+					buffer.append(", ");
+				}
+			}
+			out.println(buffer + "]");
 			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
 			for(int i = 0; i < p.getChildren().length; i++)
 			{
 				printGenericPlanToStream(out, p.getChild(i), indent+1);
@@ -264,14 +311,11 @@ public class PlanPrinter {
 		}
 		if(p instanceof RenameTerm)
 		{
-			ident(out, indent); out.println("Rename");
-			ident(out, indent); out.println("{");
-			ident(out, indent+1); out.println(chop(p.toString()));
+			ident(out, indent); out.println("Rename...");
 			for(int i = 0; i < p.getChildren().length; i++)
 			{
 				printGenericPlanToStream(out, p.getChild(i), indent+1);
 			}
-			ident(out, indent); out.println("}");
 		}
 		if(p instanceof SelectionTerm)
 		{
@@ -284,7 +328,7 @@ public class PlanPrinter {
 			}
 			ident(out, indent); out.println("}");
 		}
-				
+
 	}
 	static public void ident(PrintStream out, int indent)
 	{

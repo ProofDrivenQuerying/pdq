@@ -30,7 +30,7 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 public class SelectionTermTest extends PdqTest {
 
 	// Dummy concrete class for testing.
-	public class ConcreteAccessMethod  extends AccessMethodDescriptor {
+	public static class ConcreteAccessMethod  extends AccessMethodDescriptor {
 		private static final long serialVersionUID = 1L;
 		
 		public ConcreteAccessMethod(Attribute[] attributes, Integer[] inputs, Relation relation, 
@@ -112,7 +112,7 @@ public class SelectionTermTest extends PdqTest {
 
 		// SelectionTerm.toString is #1=#2&#3=#4
 		String s = st.toString();
-		Assert.assertTrue(s.equals("Select{[#0=hello]Access{relation.am[#0=attribute1]}}"));
+		Assert.assertTrue(s.equals("Select{[#0=hello]Access{relation,am[#0=attribute1]}}"));
 		
 		// RelationalTerm returned from SelectionTerm.getAccesses is invariant
 		Set<AccessTerm> sat = st.getAccesses();

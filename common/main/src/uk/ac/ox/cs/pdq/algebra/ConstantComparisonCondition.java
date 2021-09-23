@@ -26,8 +26,9 @@ public abstract class ConstantComparisonCondition extends SimpleCondition {
 
 	@Override
 	public String toString() {
+		String position = this.position.toString();
 		StringBuilder result = new StringBuilder();
-		result.append('#').append(this.position).append('=');
+		result.append('#').append(position).append('=');
 		result.append(this.constant);
 		return result.toString();
 	}

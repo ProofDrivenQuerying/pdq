@@ -651,6 +651,7 @@ public class SimpleCatalog implements Catalog{
 	 */
 	@Override
 	public int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethodDescriptor method) {
+		log.warn("[DEBUG] case_001a");
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(method);
 		final Integer erspi = getNumberOfOutputTuplesPerInputFromMap(relation, method);
@@ -667,7 +668,7 @@ public class SimpleCatalog implements Catalog{
 							+ DEFAULT_CARDINALITY + " and DEFAULT_COLUMN_CARDINALITY: " + DEFAULT_COLUMN_CARDINALITY);
 
 					final int defaultValue = DEFAULT_CARDINALITY / DEFAULT_COLUMN_CARDINALITY;
-					log.info("RELATION: " + relation.getName() + " AccessMethod: " + method + " ERPSI: " + defaultValue);
+					log.warn("RELATION: " + relation.getName() + " AccessMethod: " + method + " ERPSI: " + defaultValue);
 					return defaultValue;
 				}
 			}

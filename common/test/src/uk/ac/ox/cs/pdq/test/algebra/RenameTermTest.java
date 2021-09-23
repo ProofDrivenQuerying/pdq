@@ -64,7 +64,7 @@ public class RenameTermTest extends PdqTest {
 
 		// RenameTerm.toString is #1=#2&#3=#4
 		String s = rt.toString();
-		Assert.assertTrue(s.equals("Rename{[attribute1,attribute2]Access{relation.mt_0[#0=attribute1]}}"));
+		Assert.assertTrue(s.equals("Rename{[attribute1,attribute2]Access{relation,mt_0[#0=attribute1]}}"));
 		
 		// RelationalTerm returned from RenameTerm.getAccesses is invariant
 		Set<AccessTerm> sat = rt.getAccesses();

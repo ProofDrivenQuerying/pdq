@@ -3,6 +3,7 @@
 
 package uk.ac.ox.cs.pdq.test.io.jaxb;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,9 +17,16 @@ import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 // @author Mark Ridler
 public class DependencyPrettyPrintTest {
+	String[] expectedDependencyPrettyPrint;
+	private String[] expectedTgdPrettyPrint;
+
 	@Before
 	public void setup() {
+
 		PdqTest.assertsEnabled();
+		expectedDependencyPrettyPrint = new String[]{"forall[] (body_pred --> head_pred)", "forall[x0] (body_pred(x0) --> exists[y0] head_pred(y0))", "forall[x0,x1] (body_pred(x0,x1) --> exists[y0,y1] head_pred(y0,y1))"};
+		expectedTgdPrettyPrint = new String[]{"body_pred → head_pred","body_pred(x0) → exists[y0] head_pred(y0)","body_pred(x0,x1) → exists[y0,y1] head_pred(y0,y1)"};
+
 	}
 
 	// Calls Dependency.toString
@@ -43,8 +51,8 @@ public class DependencyPrettyPrintTest {
 			Atom[] body = new Atom[1]; body[0] = Atom.create(bodypred, bodyterms);
 			Dependency dependency1 = Dependency.create(body, head);
 			TGD dependency2 = TGD.create(body, head);
-			System.out.println("Dependency: " + dependency1.toString());
-			System.out.println("TGD: " + dependency2.toString());
+			Assert.assertEquals(expectedDependencyPrettyPrint[i], dependency1.toString());
+			Assert.assertEquals(expectedTgdPrettyPrint[i], dependency2.toString());
 		}
 	}
 
