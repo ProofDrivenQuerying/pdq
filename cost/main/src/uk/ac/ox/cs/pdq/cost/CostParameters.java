@@ -337,10 +337,6 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 		BLACKBOX_DB,
 		
 		/**  */
-		@EnumParameterValue(description = "Experimental: estimates the cost as the number of atoms in a plan")
-		INVERSE_LENGTH,
-		
-		/**  */
 		@EnumParameterValue(description = "Estimates the cost as the sum of the estimated result size per invocation associated to each access method used in a plan")
 		NUMBER_OF_OUTPUT_TUPLES_PER_ACCESS,
 		

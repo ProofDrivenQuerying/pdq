@@ -7,15 +7,7 @@ package uk.ac.ox.cs.pdq.cost;
 import java.sql.SQLException;
 
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
-import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.FixedCostPerAccessCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.LengthBasedCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.QueryExplainCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.TotalNumberOfOutputTuplesPerAccessCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.*;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -46,7 +38,6 @@ public class CostEstimatorFactory {
 	/**
 	 * Gets the estimator.
 	 *
-	 * @param  the generic type
 	 * @param costParams 		Parameters that specify the type of plan cost estimation object that will be created 
 	 * @param schema 		The database schema
 	 * @return the estimator
@@ -59,9 +50,9 @@ public class CostEstimatorFactory {
 	/**
 	 * Gets the single instance of CostEstimatorFactory.
 	 *
-	 * @param  the generic type
-	 * @param eventBus the event bus
-	 * @param collectStats the collect stats
+	 * the generic type
+	 * eventBus the event bus
+	 * collectStats the collect stats
 	 * @param costParams 		Parameters that specify the type of plan cost estimation object that will be created
 	 * @param schema 		The database schema
 	 * @return single instance of CostEstimatorFactory
@@ -123,9 +114,6 @@ public class CostEstimatorFactory {
 		case FIXED_COST_PER_ACCESS:
 			assert (costParams.getCatalog() != null);
 			result =  new FixedCostPerAccessCostEstimator(catalog);
-			break;
-		case INVERSE_LENGTH:
-			result =  new LengthBasedCostEstimator();
 			break;
 		default:
 			result =  new CountNumberOfAccessedRelationsCostEstimator();

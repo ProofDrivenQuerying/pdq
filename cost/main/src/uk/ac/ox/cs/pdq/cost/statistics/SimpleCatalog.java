@@ -67,7 +67,7 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
  * @author Efthymia Tsamoura
  * @author Gabor
- *
+ * @Contributor Brandon Moore
  */
 public class SimpleCatalog implements Catalog{
 
@@ -251,7 +251,7 @@ public class SimpleCatalog implements Catalog{
 					log.info("RELATION: " + relation + " ATTRIBUTE: " + attribute + " SELECTIVITY: " + selectivity);
 				}
 				else {
-					throw new java.lang.IllegalArgumentException();
+					throw new java.lang.IllegalArgumentException(String.format("Requesting AccessMethod [%s] but not found in relation [%s]", relation));
 				}
 			}
 			else {
@@ -277,7 +277,7 @@ public class SimpleCatalog implements Catalog{
 					log.info("RELATION: " + relation + " BINDING: " + binding + " ERPSI: " + erspi);
 				}
 				else {
-					throw new java.lang.IllegalArgumentException();
+					throw new java.lang.IllegalArgumentException(String.format("Requesting AccessMethod [%s] but not found in relation [%s]", binding, relation));
 				}
 			}
 			else {
@@ -302,11 +302,11 @@ public class SimpleCatalog implements Catalog{
 					log.info("RELATION: " + relation + " BINDING: " + binding + " COST: " + cost);
 				}
 				else {
-					throw new java.lang.IllegalArgumentException();
+					throw new java.lang.IllegalArgumentException(String.format("Requesting AccessMethod [%s] but not found in relation [%s]", binding, relation));
 				}
 			}
 			else {
-				throw new java.lang.IllegalArgumentException();
+				throw new java.lang.IllegalArgumentException(String.format(String.format("Requesting relation [%s] in schema [%s] but not found", relation, schema)));
 			}
 			return;
 		}
