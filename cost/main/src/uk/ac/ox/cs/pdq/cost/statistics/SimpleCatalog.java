@@ -4,6 +4,19 @@
 package uk.ac.ox.cs.pdq.cost.statistics;
 
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.log4j.Logger;
+import uk.ac.ox.cs.pdq.cost.sqlserverhistogram.SQLServerHistogram;
+import uk.ac.ox.cs.pdq.cost.sqlserverhistogram.SQLServerHistogramLoader;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,21 +28,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Logger;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
-
-import uk.ac.ox.cs.pdq.cost.sqlserverhistogram.SQLServerHistogram;
-import uk.ac.ox.cs.pdq.cost.sqlserverhistogram.SQLServerHistogramLoader;
-import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.TypedConstant;
-
 /**
  * Holds unconditional statistics.
  * The statistics that are maintained are:
@@ -37,7 +35,6 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
  * -cardinalities of single attributes
  * -the size of output per invocation of an access method
  * -the cost of an access method
- * -selectivities of single attribute filtering predicates
  * -frequency maps of single attributes
  * -and SQL Server 2014 single attribute histograms.
  * All the statistics are loaded by default from a catalog.properties file
@@ -82,7 +79,6 @@ public class SimpleCatalog implements Catalog{
 
 	private static final String READ_CARDINALITY = "^(RE:(\\w+)(\\s+)CA:(\\d+))";
 	private static final String READ_COLUMN_CARDINALITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)CC:(\\d+))";
-	private static final String READ_COLUMN_SELECTIVITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SE:(\\d+(\\.\\d+)?))";
 	private static final String READ_ERSPI = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)ERSPI:(\\d+(\\.\\d+)?))";
 	private static final String READ_COST = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)RT:(\\d+(\\.\\d+)?))";
 	private static final String READ_SQLSERVERHISTOGRAM = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SQLH:((/[a-zA-Z0-9._-]+)+/?))";
@@ -227,31 +223,6 @@ public class SimpleCatalog implements Catalog{
 				}
 				else {
 					throw new java.lang.IllegalArgumentException();
-				}
-			}
-			else {
-				throw new java.lang.IllegalArgumentException();
-			}
-			return;
-		}
-
-		p = Pattern.compile(READ_COLUMN_SELECTIVITY);
-		m = p.matcher(line);
-		if (m.find()) {
-			String relation = m.group(2);
-			String column = m.group(4);
-			String selectivity = m.group(6);
-			if(schema.contains(relation)) {
-				Relation r = schema.getRelation(relation);
-				if(r.getAttribute(column) != null) {
-					Attribute attribute = r.getAttribute(column);
-					final double value = Double.parseDouble(selectivity);
-					this.columnSelectivity.put( Pair.of(r,attribute), value);
-					this.columnSelectivityLookupByName.put( Pair.of(r.getName(),attribute.getName()), value);
-					log.info("RELATION: " + relation + " ATTRIBUTE: " + attribute + " SELECTIVITY: " + selectivity);
-				}
-				else {
-					throw new java.lang.IllegalArgumentException(String.format("Requesting AccessMethod [%s] but not found in relation [%s]", relation));
 				}
 			}
 			else {
@@ -613,39 +584,6 @@ public class SimpleCatalog implements Catalog{
 		}
 	}
 
-	/**
-	 * Gets the selectivity.
-	 *
-	 * @param left the left
-	 * @param right the right
-	 * @param leftAttribute the left attribute
-	 * @param rightAttribute the right attribute
-	 * @return the selectivity
-	 */
-	public double getSelectivity(Relation left, Relation right, Attribute leftAttribute, Attribute rightAttribute) {
-		Preconditions.checkNotNull(left);
-		Preconditions.checkNotNull(right);
-		Preconditions.checkNotNull(leftAttribute);
-		Preconditions.checkNotNull(rightAttribute);
-		Integer leftCardinality = this.getColumnCardinalityFromMap(left, leftAttribute);
-		Integer rightCardinality = this.getColumnCardinalityFromMap(right, rightAttribute);
-		if(leftCardinality != null && rightCardinality != null) {
-			final double selectivity = 1.0 / (double) Math.max(leftCardinality, rightCardinality);
-			log.info("LEFT RELATION: " + left.getName() + " LEFT ATTRIBUTE " + leftAttribute + " RIGHT RELATION: "
-					+ right.getName() + " RIGHT ATTRIBUTE " + rightAttribute + " SELECTIVITY: " + selectivity);
-			return selectivity;
-		}
-		else {
-			final double selectivity = 1.0 / (double) DEFAULT_COLUMN_CARDINALITY;
-			log.warn("LEFT RELATION: " + left.getName() + " LEFT ATTRIBUTE " + leftAttribute + " RIGHT RELATION: "
-					+ right.getName() + " RIGHT ATTRIBUTE " + rightAttribute
-					+ " is using the DEFAULT_COLUMN_CARDINALITY: " + DEFAULT_COLUMN_CARDINALITY);
-			log.info("LEFT RELATION: " + left.getName() + " LEFT ATTRIBUTE " + leftAttribute + " RIGHT RELATION: "
-					+ right.getName() + " RIGHT ATTRIBUTE " + rightAttribute + " SELECTIVITY: " + selectivity);
-			return selectivity;
-		}
-	}
-
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getERPSI(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod)
 	 */
@@ -817,8 +755,6 @@ public class SimpleCatalog implements Catalog{
 		sb.append("#	RE:[TABLE_NAME]		BI:[ACCESS_METHOD_NAME]		ERSPI:[COST_OF_ACCESS_METHOD]\n");
 		sb.append("#Sql server histogram (this has no known usages/examples or tests):\n");
 		sb.append("#	RE:[TABLE_NAME]		AT:[ATTRIBUTE_NAME]		SQLH:[???]\n");
-		sb.append("#Column selectivity:\n");
-		sb.append("#	RE:[TABLE_NAME]		AT:[ATTRIBUTE_NAME]		SE:[SELECTIVITY]\n");
 		sb.append("#Column cardinality (Number Of Output Tuples Per Input):\n");
 		sb.append("#	RE:[TABLE_NAME]		AT:[ATTRIBUTE_NAME]		CC:[DECIMAL_CARDINALITY]\n");
 		sb.append("#Relation cardinality:\n");
@@ -862,17 +798,6 @@ public class SimpleCatalog implements Catalog{
 			sb.append(p.getRight().getName());
 			sb.append("\tERSPI:");
 			sb.append(numberOfOutputTuplesPerInput.get(p));
-			sb.append("\n");
-		}
-
-		sb.append("\n#COLUMN SELECTIVITY:\n");
-		for (Pair<Relation,Attribute> p: columnSelectivity.keySet()) {
-			sb.append("RE:");
-			sb.append(p.getLeft().getName());
-			sb.append("\tAT:");
-			sb.append(p.getRight().getName());
-			sb.append("\tSE:");
-			sb.append(columnSelectivity.get(p));
 			sb.append("\n");
 		}
 
@@ -929,8 +854,8 @@ public class SimpleCatalog implements Catalog{
 						"\n==================COSTS=====================\n" +
 						Joiner.on("\n").join(this.costs.entrySet()) +
 
-						"\n============COLUMN SELECTIVITIES============\n" +
-						Joiner.on("\n").join(this.columnSelectivity.entrySet()) +
+//						"\n============COLUMN SELECTIVITIES============\n" +
+//						Joiner.on("\n").join(this.columnSelectivity.entrySet()) +
 
 						"\n==============COLUMN HISTOGRAMS=============\n" +
 						Joiner.on("\n").join(this.frequencyMaps.entrySet()) );
