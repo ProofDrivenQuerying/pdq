@@ -3,24 +3,14 @@
 
 package uk.ac.ox.cs.pdq.cost.estimators;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.google.common.base.Preconditions;
-
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
-import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
-import uk.ac.ox.cs.pdq.algebra.JoinTerm;
-import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.algebra.RenameTerm;
-import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
-import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
+import uk.ac.ox.cs.pdq.algebra.*;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Relation;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Compute the estimated input and output cardinalities of a logical operator
@@ -31,7 +21,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
  */
 public class NaiveCardinalityEstimator implements CardinalityEstimator {
 
-	private final Map<RelationalTerm,RelationalTermCardinalityMetadata> cardinalityMetadata;
+	private final Map<RelationalTerm,NaiveRelationalTermCardinalityMetadata> cardinalityMetadata;
 
 	/** The Constant UNION_REDUCTION. */
 	public static final Double UNION_REDUCTION = 2.0;
@@ -49,7 +39,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 
 	/**
 	 * Constructor for NaiveCardinalityEstimator.
-	 * @param schema Schema
+	 * @param catalog
 	 */
 	public NaiveCardinalityEstimator(Catalog catalog) {
 		Preconditions.checkNotNull(catalog);
@@ -60,10 +50,9 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	/**
 	 * Cardinality estimations are cached, this will execute the estimation only if we have a 0 cached value.
 	 * @param term LogicalOperator
-	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimateCardinalityIfNeeded(RelationalOperator)
 	 */
 	public void estimateCardinalityIfNeeded(RelationalTerm term) {
-		RelationalTermCardinalityMetadata metadata = this.getCardinalityMetadata(term);
+		NaiveRelationalTermCardinalityMetadata metadata = this.getCardinalityMetadata(term);
 		if (metadata.getOutputCardinality() < 0) {
 			this.estimateCardinality(term);
 		}
@@ -73,13 +62,12 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	 * Main estimation function
 	 *
 	 * @param term LogicalOperator
-	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimateCardinality(RelationalOperator)
 	 */
 	@Override
 	public void estimateCardinality(RelationalTerm term) {
 		synchronized (term) {
 			Double output = -1.0;
-			RelationalTermCardinalityMetadata metadata = this.getCardinalityMetadata(term);
+			NaiveRelationalTermCardinalityMetadata metadata = this.getCardinalityMetadata(term);
 			Double input = metadata.getInputCardinality();
 			RelationalTerm parent = metadata.getParent();
 			if (input < 0) {
@@ -105,7 +93,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 			} 
 			else if (term instanceof ProjectionTerm || term instanceof RenameTerm) {
 				RelationalTerm child = term.getChild(0);
-				RelationalTermCardinalityMetadata childMetadata = this.getCardinalityMetadata(child);
+				NaiveRelationalTermCardinalityMetadata childMetadata = this.getCardinalityMetadata(child);
 				childMetadata.setParent(term);
 				childMetadata.setInputCardinality(input);
 				this.estimateCardinalityIfNeeded(child);
@@ -116,7 +104,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 				output = 1.0;
 				for (int childIndex = 0; childIndex < 2; ++childIndex) {
 					RelationalTerm child = term.getChild(childIndex);
-					RelationalTermCardinalityMetadata childMetadata = this.getCardinalityMetadata(child);
+					NaiveRelationalTermCardinalityMetadata childMetadata = this.getCardinalityMetadata(child);
 					childMetadata.setParent(term);
 					childMetadata.setInputCardinality(input);
 					this.estimateCardinalityIfNeeded(child);
@@ -135,8 +123,8 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	 * @return M
 	 */
 	@Override
-	public RelationalTermCardinalityMetadata getCardinalityMetadata(RelationalTerm o) {
-		RelationalTermCardinalityMetadata result = this.cardinalityMetadata.get(o);
+	public NaiveRelationalTermCardinalityMetadata getCardinalityMetadata(RelationalTerm o) {
+		NaiveRelationalTermCardinalityMetadata result = this.cardinalityMetadata.get(o);
 		if (result == null) {
 			result = this.initMetadata(o);
 			this.cardinalityMetadata.put(o, result);
@@ -172,7 +160,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	 * @return Double
 	 */
 	private Double getParentInputCardinality(RelationalTerm o) {
-		RelationalTermCardinalityMetadata metadata = this.getCardinalityMetadata(o);
+		NaiveRelationalTermCardinalityMetadata metadata = this.getCardinalityMetadata(o);
 		RelationalTerm parent = metadata.getParent();
 		if (parent != null) {
 			return this.getCardinalityMetadata(parent).getInputCardinality();
@@ -192,7 +180,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 		Double inputCard = this.getParentInputCardinality(o);
 		// Compute the horizontal increase of input card.
 		RelationalTerm leftChild = o.getChild(0);
-		RelationalTermCardinalityMetadata lcMetadata = this.getCardinalityMetadata(leftChild);
+		NaiveRelationalTermCardinalityMetadata lcMetadata = this.getCardinalityMetadata(leftChild);
 		lcMetadata.setParent(o);
 		lcMetadata.setInputCardinality(inputCard);
 		this.estimateCardinalityIfNeeded(leftChild);
@@ -201,7 +189,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 
 		Double rightInputCard = inputCard;
 
-		RelationalTermCardinalityMetadata rcMetadata = this.getCardinalityMetadata(rightChild);
+		NaiveRelationalTermCardinalityMetadata rcMetadata = this.getCardinalityMetadata(rightChild);
 		rcMetadata.setParent(o);
 		rcMetadata.setInputCardinality(rightInputCard);
 		this.estimateCardinalityIfNeeded(rightChild);
@@ -232,7 +220,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 		Double inputCard = this.getParentInputCardinality(o);
 		// Compute the horizontal increase of input card.
 		RelationalTerm leftChild = o.getChild(0);
-		RelationalTermCardinalityMetadata lcMetadata = this.getCardinalityMetadata(leftChild);
+		NaiveRelationalTermCardinalityMetadata lcMetadata = this.getCardinalityMetadata(leftChild);
 		lcMetadata.setParent(o);
 		lcMetadata.setInputCardinality(inputCard);
 		this.estimateCardinalityIfNeeded(leftChild);
@@ -241,7 +229,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 
 		Double rightInputCard = lcMetadata.getOutputCardinality() * Math.max(1.0, inputCard);
 
-		RelationalTermCardinalityMetadata rcMetadata = this.getCardinalityMetadata(rightChild);
+		NaiveRelationalTermCardinalityMetadata rcMetadata = this.getCardinalityMetadata(rightChild);
 		rcMetadata.setParent(o);
 		rcMetadata.setInputCardinality(rightInputCard);
 		this.estimateCardinalityIfNeeded(rightChild);
@@ -277,7 +265,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	 */
 	protected Double estimateOutputCardinality(SelectionTerm o) {
 		RelationalTerm child = o.getChild(0);
-		RelationalTermCardinalityMetadata cMetadata = this.getCardinalityMetadata(child);
+		NaiveRelationalTermCardinalityMetadata cMetadata = this.getCardinalityMetadata(child);
 		cMetadata.setParent(o);
 		Double inputCard = this.getParentInputCardinality(o);
 		cMetadata.setInputCardinality(inputCard);
