@@ -30,7 +30,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
  * @author Julien Leblay
  * @param <P> the generic type
  */
-public class TextBookCostEstimator implements OrderDependentCostEstimator {
+public class TextBookCostEstimator implements CostEstimator {
 
 	/** The card estimator. */
 	protected final CardinalityEstimator cardEstimator;
@@ -38,7 +38,6 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 	/**
 	 * Constructor.
 	 *
-	 * @param stats the stats
 	 * @param ce CardinalityEstimator
 	 */
 	public TextBookCostEstimator(CardinalityEstimator ce) {
@@ -67,7 +66,6 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 	 * Recursively computes the cost of the given operator.
 	 *
 	 * @param logOp the log op
-	 * @param descendants the descendants
 	 * @return the cost of the given operator.
 	 */
 	private double recursiveCost(RelationalTerm logOp) {
@@ -157,7 +155,7 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 	 *
 	 * @param plan P
 	 * @return DoubleCost
-	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#cost(P)
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#cost(RelationalTerm) 
 	 */
 	@Override
 	public Cost cost(RelationalTerm plan) {

@@ -95,16 +95,6 @@ public interface Catalog {
 	 */
 	double getCost(Relation relation, AccessMethodDescriptor method, Map<Integer, TypedConstant> inputs);
 	
-	
-	/**
-	 * Gets the histogram.
-	 *
-	 * @param relation the relation
-	 * @param attribute the attribute
-	 * @return 		the histogram of the input relation attribute pair
-	 */
-	Histogram getHistogram(Relation relation, Attribute attribute);
-	
 	/**
 	 * Gets the quality.
 	 *
