@@ -16,7 +16,7 @@ import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearConfigurationNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.plantree.PlanTree;
@@ -41,7 +41,7 @@ public class OrderDependentCostPropagator extends CostPropagator<LinearConfigura
 	/**
 	 * Empty constructor.
 	 */
-	public OrderDependentCostPropagator(OrderDependentCostEstimator estimator) {
+	public OrderDependentCostPropagator(TextBookCostEstimator estimator) {
 		super(estimator);
 	}
 

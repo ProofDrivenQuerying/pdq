@@ -23,8 +23,8 @@ import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.exceptions.LimitReachedException;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -87,30 +87,18 @@ public class LinearOptimized extends LinearExplorer {
 	 *
 	 * @param eventBus
 	 *            the event bus
-	 * @param collectStats
-	 *            the collect stats
 	 * @param query
 	 *            The input user query
-	 * @param accessibleQuery
-	 *            The accessible counterpart of the user query
-	 * @param schema
-	 *            The input schema
 	 * @param accessibleSchema
 	 *            The accessible counterpart of the input schema
 	 * @param chaser
 	 *            Runs the chase algorithm
-	 * @param detector
-	 *            Detects homomorphisms during chasing
 	 * @param costEstimator
 	 *            Estimates the cost of a plan
-	 * @param nodeFactory
-	 *            the node factory
 	 * @param depth
 	 *            the depth
 	 * @param queryMatchInterval
 	 *            the query match interval
-	 * @param postPruning
-	 *            Removes the redundant follow up joins and accesses from a plan
 	 * @throws PlannerException
 	 *             the planner exception
 	 * @throws SQLException
@@ -125,7 +113,7 @@ public class LinearOptimized extends LinearExplorer {
 		Preconditions.checkArgument((costPropagator instanceof OrderIndependentCostPropagator
 				&& costEstimator instanceof OrderIndependentCostEstimator)
 				|| (costPropagator instanceof OrderDependentCostPropagator
-						&& costEstimator instanceof OrderDependentCostEstimator));
+						&& costEstimator instanceof TextBookCostEstimator));
 		this.costPropagator = costPropagator;
 		this.queryMatchInterval = queryMatchInterval;
 		this.postPruning = new PostPruningRemoveFollowUps(accessibleSchema, chaser, this.accessibleQuery);

@@ -20,8 +20,8 @@ import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.exceptions.LimitReachedException;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -59,19 +59,13 @@ public class LinearKChase extends LinearExplorer {
 	/**
 	 * Instantiates a new linear k chase.
 	 *
-	 * @param eventBus the event bus
-	 * @param collectStats the collect stats
+	 * @param eventBus the event buss
 	 * @param query 		The input user query
-	 * @param accessibleQuery 		The accessible counterpart of the user query
-	 * @param schema 		The input schema
 	 * @param accessibleSchema 		The accessible counterpart of the input schema
 	 * @param chaser 		Runs the chase algorithm
-	 * @param detector 		Detects homomorphisms during chasing
 	 * @param costEstimator 		Estimates the cost of a plan
-	 * @param nodeFactory the node factory
 	 * @param depth the depth
 	 * @param chaseInterval the chase interval
-	 * @param reasoningParameters 
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
 	 */
@@ -89,7 +83,7 @@ public class LinearKChase extends LinearExplorer {
 		super(eventBus, query, accessibleSchema, chaser, connection, costEstimator, depth);
 		Preconditions.checkNotNull(costPropagator);
 		Preconditions.checkArgument(costPropagator instanceof OrderIndependentCostPropagator && costEstimator instanceof OrderIndependentCostEstimator
-				|| costPropagator instanceof OrderDependentCostPropagator && costEstimator instanceof OrderDependentCostEstimator);
+				|| costPropagator instanceof OrderDependentCostPropagator && costEstimator instanceof TextBookCostEstimator);
 		this.costPropagator = costPropagator;
 		this.chaseInterval = chaseInterval;
 	}

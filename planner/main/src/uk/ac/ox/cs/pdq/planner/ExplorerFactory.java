@@ -11,8 +11,8 @@ import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
@@ -76,7 +76,6 @@ public class ExplorerFactory {
 	 *            the generic type
 	 * @param eventBus
 	 *            the event bus
-	 * @param collectStats
 	 *            the collect stats
 	 * @param schema
 	 *            the schema
@@ -84,12 +83,8 @@ public class ExplorerFactory {
 	 *            the accessible schema
 	 * @param query
 	 *            the query
-	 * @param accessibleQuery
-	 *            the accessible query
 	 * @param chaser
 	 *            the chaser
-	 * @param detector
-	 *            the detector
 	 * @param costEstimator
 	 *            the cost estimator
 	 * @param parameters
@@ -115,8 +110,8 @@ public class ExplorerFactory {
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_OPTIMIZED)) {
 			if (costEstimator instanceof OrderIndependentCostEstimator)
 				costPropagator = new OrderIndependentCostPropagator((OrderIndependentCostEstimator) costEstimator);
-			else if (costEstimator instanceof OrderDependentCostEstimator)
-				costPropagator = new OrderDependentCostPropagator((OrderDependentCostEstimator) costEstimator);
+			else if (costEstimator instanceof TextBookCostEstimator)
+				costPropagator = new OrderDependentCostPropagator((TextBookCostEstimator) costEstimator);
 			else
 				throw new IllegalStateException(
 						"Attempting to get a propagator for a unknown cost estimator: " + costEstimator);

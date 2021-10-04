@@ -155,7 +155,7 @@ public class TextBookCostEstimator implements CostEstimator {
 	 *
 	 * @param plan P
 	 * @return DoubleCost
-	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#cost(RelationalTerm) 
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#cost(RelationalTerm)
 	 */
 	@Override
 	public Cost cost(RelationalTerm plan) {
