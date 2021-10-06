@@ -3,14 +3,13 @@
 
 package uk.ac.ox.cs.pdq.planner.linear.cost;
 
-import java.util.List;
-
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.plantree.PlanTree;
+
+import java.util.List;
 
 /**
  * Abstract path-to-success propagation. Propagation takes place either when a

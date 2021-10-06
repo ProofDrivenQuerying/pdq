@@ -4,8 +4,6 @@
 package uk.ac.ox.cs.pdq.cost;
 
 
-import java.sql.SQLException;
-
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.cost.estimators.*;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
@@ -15,6 +13,8 @@ import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
+
+import java.sql.SQLException;
 
 /**
  * A factory of cost estimation objects.
@@ -73,8 +73,12 @@ public class CostEstimatorFactory {
 				e.printStackTrace();
 			}
 		} else {
-			if (CostTypes.TEXTBOOK.equals(costParams.getCostType())) {
-				costParams.setCostType(CostTypes.SIMPLE_CONSTANT);
+			//we don't have catalog so can only use CountNumberOfAccessedRelationsCostEstimator or Black Box
+			if(CostTypes.FIXED_COST_PER_ACCESS.equals(costParams.getCostType()) ||
+					CostTypes.TEXTBOOK.equals(costParams.getCostType()) ||
+					CostTypes.NUMBER_OF_OUTPUT_TUPLES_PER_ACCESS.equals(costParams.getCostType())
+			){
+				costParams.setCostType(CostTypes.COUNT_NUMBER_OF_ACCESSED_RELATIONS);
 			}
 		}
 		
@@ -114,6 +118,9 @@ public class CostEstimatorFactory {
 		case FIXED_COST_PER_ACCESS:
 			assert (costParams.getCatalog() != null);
 			result =  new FixedCostPerAccessCostEstimator(catalog);
+			break;
+		case COUNT_NUMBER_OF_ACCESSED_RELATIONS:
+			result =  new CountNumberOfAccessedRelationsCostEstimator();
 			break;
 		default:
 			result =  new CountNumberOfAccessedRelationsCostEstimator();

@@ -3,28 +3,17 @@
 
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
-import org.jgrapht.graph.DefaultEdge;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
-
+import org.apache.log4j.Logger;
+import org.jgrapht.graph.DefaultEdge;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.exceptions.LimitReachedException;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -43,6 +32,9 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
+
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * Searches the proof space employing several optimisations heuristics in order
@@ -113,7 +105,7 @@ public class LinearOptimized extends LinearExplorer {
 		Preconditions.checkArgument((costPropagator instanceof OrderIndependentCostPropagator
 				&& costEstimator instanceof OrderIndependentCostEstimator)
 				|| (costPropagator instanceof OrderDependentCostPropagator
-						&& costEstimator instanceof TextBookCostEstimator));
+						&& costEstimator instanceof OrderDependentCostEstimator));
 		this.costPropagator = costPropagator;
 		this.queryMatchInterval = queryMatchInterval;
 		this.postPruning = new PostPruningRemoveFollowUps(accessibleSchema, chaser, this.accessibleQuery);

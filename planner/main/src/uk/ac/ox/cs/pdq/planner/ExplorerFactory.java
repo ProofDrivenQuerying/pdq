@@ -3,16 +3,11 @@
 
 package uk.ac.ox.cs.pdq.planner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.google.common.eventbus.EventBus;
-
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
@@ -32,6 +27,10 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimized;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Creates an explorer given the input arguments. The following types of
@@ -110,8 +109,8 @@ public class ExplorerFactory {
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_OPTIMIZED)) {
 			if (costEstimator instanceof OrderIndependentCostEstimator)
 				costPropagator = new OrderIndependentCostPropagator((OrderIndependentCostEstimator) costEstimator);
-			else if (costEstimator instanceof TextBookCostEstimator)
-				costPropagator = new OrderDependentCostPropagator((TextBookCostEstimator) costEstimator);
+			else if (costEstimator instanceof OrderDependentCostEstimator)
+				costPropagator = new OrderDependentCostPropagator((OrderDependentCostEstimator) costEstimator);
 			else
 				throw new IllegalStateException(
 						"Attempting to get a propagator for a unknown cost estimator: " + costEstimator);

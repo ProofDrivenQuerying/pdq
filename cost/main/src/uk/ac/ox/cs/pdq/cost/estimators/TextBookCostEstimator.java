@@ -3,16 +3,7 @@
 
 package uk.ac.ox.cs.pdq.cost.estimators;
 
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.Condition;
-import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
-import uk.ac.ox.cs.pdq.algebra.JoinTerm;
-import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.algebra.RenameTerm;
-import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
-import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
+import uk.ac.ox.cs.pdq.algebra.*;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -28,9 +19,10 @@ import uk.ac.ox.cs.pdq.db.Attribute;
  * plus it own IO cost multiple by an estimation of its cardinality.
  *
  * @author Julien Leblay
+ * @contributor Brandon Moore
  * @param <P> the generic type
  */
-public class TextBookCostEstimator implements CostEstimator {
+public class TextBookCostEstimator implements OrderDependentCostEstimator {
 
 	/** The card estimator. */
 	protected final CardinalityEstimator cardEstimator;

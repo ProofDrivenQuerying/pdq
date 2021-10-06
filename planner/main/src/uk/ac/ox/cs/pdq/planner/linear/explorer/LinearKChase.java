@@ -3,25 +3,17 @@
 
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.base.Preconditions;
+import com.google.common.eventbus.EventBus;
 import org.apache.log4j.Logger;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
-
-import com.google.common.base.Preconditions;
-import com.google.common.eventbus.EventBus;
-
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.exceptions.LimitReachedException;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -38,6 +30,12 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
+
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Searches the proof space employing several optimisations (similar to the OptimizedExplorer) in order to reach faster the best proof.
@@ -83,7 +81,7 @@ public class LinearKChase extends LinearExplorer {
 		super(eventBus, query, accessibleSchema, chaser, connection, costEstimator, depth);
 		Preconditions.checkNotNull(costPropagator);
 		Preconditions.checkArgument(costPropagator instanceof OrderIndependentCostPropagator && costEstimator instanceof OrderIndependentCostEstimator
-				|| costPropagator instanceof OrderDependentCostPropagator && costEstimator instanceof TextBookCostEstimator);
+				|| costPropagator instanceof OrderDependentCostPropagator && costEstimator instanceof OrderDependentCostEstimator);
 		this.costPropagator = costPropagator;
 		this.chaseInterval = chaseInterval;
 	}
