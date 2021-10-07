@@ -119,8 +119,11 @@ public class CostEstimatorFactory {
 			assert (costParams.getCatalog() != null);
 			result =  new FixedCostPerAccessCostEstimator(catalog);
 			break;
+		case LENGTH:
+			result =  new LengthBasedCostEstimator();
+			break;
 		case COUNT_NUMBER_OF_ACCESSED_RELATIONS:
-			result =  new CountNumberOfAccessedRelationsCostEstimator();
+			result = new CountNumberOfAccessedRelationsCostEstimator();
 			break;
 		default:
 			result =  new CountNumberOfAccessedRelationsCostEstimator();

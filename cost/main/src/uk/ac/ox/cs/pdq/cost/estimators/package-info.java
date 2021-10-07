@@ -17,6 +17,8 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 		@see uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator
 	-TEXTBOOK: Estimates the cost through some externally defined cost function. Currently, this defaults to the white box cost functions relying on textbox cost estimation techniques
 		@see uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator
+	-LENGTH: Experimental: estimates the cost as the number of atoms in a plan
+		@see uk.ac.ox.cs.pdq.cost.estimators.LengthBasedCostEstimator
 	-NUMBER_OF_OUTPUT_TUPLES_PER_ACCESS: Estimates the cost as the sum of the estimated result size per invocation associated to each access method used in a plan
 		@see uk.ac.ox.cs.pdq.cost.estimators.TotalNumberOfOutputTuplesPerAccessCostEstimator
 	-BLACKBOX_DB Estimates the cost by translating the query to SQL and asking its cost to a database

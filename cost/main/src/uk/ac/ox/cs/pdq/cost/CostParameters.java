@@ -335,6 +335,10 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 		/** T */
 		@EnumParameterValue(description = "Estimates the cost by translating the query to SQL and asking its cost to a database")
 		BLACKBOX_DB,
+
+		/**  */
+		@EnumParameterValue(description = "Experimental: estimates the cost as the number of atoms in a plan")
+		LENGTH,
 		
 		/**  */
 		@EnumParameterValue(description = "Estimates the cost as the sum of the estimated result size per invocation associated to each access method used in a plan")
