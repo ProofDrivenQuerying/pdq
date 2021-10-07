@@ -1018,7 +1018,7 @@ public class PDQController {
 		params.setTimeout("\u22E1");
 		params.setMaxIterations("\u22E1");
 		CostParameters costParams = new CostParameters();
-		costParams.setCostType(CostTypes.SIMPLE_CONSTANT);
+		costParams.setCostType(CostTypes.TEXTBOOK);
 		ReasoningParameters reasoningParams = new ReasoningParameters();
 		reasoningParams.setReasoningType(ReasoningParameters.ReasoningTypes.RESTRICTED_CHASE);
 		ObservablePlan p = new ObservablePlan(params, costParams, reasoningParams);
