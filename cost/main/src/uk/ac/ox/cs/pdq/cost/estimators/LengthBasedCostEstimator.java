@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Cost estimator favoring query with fewer atoms.
+ * Cost estimator favoring query with fewer accesses.
  *
  * @author Julien Leblay
  * 
@@ -42,7 +42,7 @@ public class LengthBasedCostEstimator implements OrderDependentCostEstimator {
 			if (!accesses.contains(access)) 
 				accesses.add(access);
 		}
-		DoubleCost result = new DoubleCost(1.0 / accesses.size());
+		DoubleCost result = new DoubleCost(accesses.size());
 		return result;
 	}
 }
