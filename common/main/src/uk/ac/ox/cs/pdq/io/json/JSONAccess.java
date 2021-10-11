@@ -5,6 +5,8 @@ package uk.ac.ox.cs.pdq.io.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.io.PlanPrinter;
 
 /**
  * Serializable AccessTerm class.
@@ -16,11 +18,32 @@ public class JSONAccess extends JSONRelationalTerm {
     String accessMethod;
     @JsonProperty
     String relationName;
+    @JsonProperty
+    String accessString;
 
     public JSONAccess(AccessTerm rt) {
         super(rt);
         this.accessMethod = rt.getAccessMethod().getName();
         this.relationName = rt.getRelation().getName();
+
+        StringBuilder result = new StringBuilder();
+        result.append(rt.getRelation().getName());
+        result.append(",");
+        result.append(rt.getAccessMethod().getName());
+        result.append('[');
+        for (int index = 0; index < rt.getAccessMethod().getInputs().length; ++index) {
+            result.append("#");
+            Attribute provenanceName = PlanPrinter.outputAttributeProvenance(rt,rt.getAccessMethod().getInputs()[index]);
+            result.append(provenanceName.getName());
+            result.append("=");
+            result.append("?");
+            if (index < rt.getAccessMethod().getInputs().length - 1)
+                result.append(",");
+        }
+        result.append(']');
+
+        accessString = result.toString();
+
     }
     public String toString() {
         StringBuilder toReturn = new StringBuilder("{ command: " + this.command +

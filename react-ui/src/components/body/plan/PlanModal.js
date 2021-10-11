@@ -3,13 +3,9 @@
 
 import React from 'react';
 import PopoutWindow from '../Popout';
-import { FaClipboardList } from 'react-icons/fa';
-import { Modal,
-         ModalHeader,
-         ModalBody,
-         ModalFooter
-} from 'reactstrap';
-import { Tree } from 'antd';
+import {FaClipboardList} from 'react-icons/fa';
+import {Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
+import {Tree} from 'antd';
 import PlanTreeNode from './PlanTreeNode'
 import Button from 'react-bootstrap/Button'
 
@@ -17,7 +13,7 @@ export default class PlanModal extends React.Component{
   
   constructor(props){
     super(props);
-    console.log([this.props.plan.jsonPlan]);
+    console.log("[JsonPlan]", [this.props.plan.jsonPlan]);
     this.state = {
       modalOpen: false,
       formattedTree: this.grow([this.props.plan.jsonPlan])

@@ -6,6 +6,7 @@ package uk.ac.ox.cs.pdq.io.json;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.io.PlanPrinter;
 
 import java.util.Arrays;
 
@@ -18,13 +19,31 @@ public class JSONProjection extends JSONRelationalTerm {
     @JsonProperty
     Attribute[] projections;
 
+    @JsonProperty
+    String ProvenanceProjections;
+
     public JSONProjection(ProjectionTerm rt) {
         super(rt);
         this.projections = rt.getProjections();
+
+        //added provenance attribute for projections
+        StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < rt.getProjections().length; i++) {
+            String a = PlanPrinter.outputAttributeProvenance(rt, i).getName();
+            buffer.append(a);
+            if (i < rt.getProjections().length - 1) {
+                buffer.append(", ");
+            }
+        }
+        if(buffer.length() == 0){
+            ProvenanceProjections = Arrays.toString(this.projections);
+        }else {
+            ProvenanceProjections = buffer.toString();
+        }
     }
     public String toString() {
         StringBuilder toReturn = new StringBuilder("{ command: " + this.command +
-                ", projections: " + Arrays.toString(this.projections) + ", " +
+                ", projections: " + this.ProvenanceProjections + ", " +
                 "subexpression: [");
 
         for (JSONRelationalTerm jsonPlan : this.subexpression) {

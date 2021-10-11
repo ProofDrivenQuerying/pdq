@@ -3,42 +3,48 @@
 
 package uk.ac.ox.cs.pdq.rest;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.*;
-import uk.ac.ox.cs.pdq.rest.util.*;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.plan.Plan;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.run.RunResults;
+import uk.ac.ox.cs.pdq.rest.jsonobjects.schema.*;
+import uk.ac.ox.cs.pdq.rest.util.JsonPlanner;
+import uk.ac.ox.cs.pdq.rest.util.JsonRunner;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import org.springframework.core.io.Resource;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.http.MediaType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.io.File;
-
-import org.springframework.http.HttpHeaders;
-
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Entry point for Rest application. Controller defines and computes all the REST calls of the API.
  *
  * @author Camilo Ortiz
+ * @Contributor Brandon Moore
  */
+
 
 @RestController
 public class Controller {
-    private final String workingDirectory = "demo/";
+
+    private Logger log = LogManager.getLogger(Controller.class);
+
+    private final String workingDirectory = "/Users/Brandon/IdeaProjects/oxfordUniversity/pdq/react-rest/demo";
     private final HashMap<Integer, String> paths;
 
     private final HashMap<Integer, Schema> schemaList;
@@ -135,7 +141,7 @@ public class Controller {
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/initSchemas", method = RequestMethod.GET, produces = "application/json")
     public SchemaArray initSchemas() {
-
+        System.out.println(String.format("Dir"));
         SchemaName[] jsonSchemaList = new SchemaName[this.schemaList.size()];
 
         int i = 0;
@@ -248,7 +254,7 @@ public class Controller {
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/plan/{schemaID}/{queryID}/{SQL}")
     public Plan plan(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL) {
-
+        log.warn("Get Plan Passed here///////////////////////");
         Schema schema = schemaList.get(schemaID);
         File properties = casePropertyList.get(schemaID);
         String pathToCatalog = catalogPaths.get(schemaID);
@@ -275,6 +281,8 @@ public class Controller {
         } catch (Throwable e) {
             e.printStackTrace();
         }
+        System.out.println("Get Plan Passed here///////////////////////");
+        log.warn("Get Plan Passed here///////////////////////");
         return plan;
     }
 
