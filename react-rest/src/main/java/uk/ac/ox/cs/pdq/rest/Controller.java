@@ -44,7 +44,7 @@ public class Controller {
 
     private Logger log = LogManager.getLogger(Controller.class);
 
-    private final String workingDirectory = "/Users/Brandon/IdeaProjects/oxfordUniversity/pdq/react-rest/demo";
+    private final String workingDirectory = "demo/";
     private final HashMap<Integer, String> paths;
 
     private final HashMap<Integer, Schema> schemaList;

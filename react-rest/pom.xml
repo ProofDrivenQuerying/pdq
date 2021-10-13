@@ -8,7 +8,7 @@
 
   	<name>PDQ REST API</name>
   	<url>http://www.cs.ox.ac.uk/pdq/</url>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
   	<description>This library features packages and classes for PDQ's REST API.</description>
 
     <parent>
