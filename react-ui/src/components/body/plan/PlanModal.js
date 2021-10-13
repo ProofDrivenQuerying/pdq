@@ -33,12 +33,19 @@ export default class PlanModal extends React.Component{
     */
     const toReturn = [];
     for (const command in jsonPlan) {
-      const node = {
-        title: <PlanTreeNode relationalTerm={jsonPlan[command]}/>,
-        key: `${jsonPlan[command].command}-${command}`,
-        children: this.grow(jsonPlan[command].subexpression)
+      let relationalTerm = jsonPlan[command];
+      //skip printing rename in treeNode instead passing onto the next node
+      if(relationalTerm.command === "Rename"){
+        toReturn.push(...this.grow(relationalTerm.subexpression));
+      }else{
+        const node = {
+          title: <PlanTreeNode relationalTerm={relationalTerm}/>,
+          key: `${relationalTerm.command}-${command}`,
+          children: this.grow(relationalTerm.subexpression)
+        }
+        toReturn.push(node);
       }
-      toReturn.push(node);
+
     }
     return toReturn;
   }
