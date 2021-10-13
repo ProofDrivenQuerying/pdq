@@ -71,7 +71,7 @@ public class SimpleCatalog implements Catalog{
 	private static final double DEFAULT_QUALITY = 0.0;
 	private static final int DEFAULT_COLUMN_CARDINALITY = 1000;
 	private static final double DEFAULT_COST = 1.0;
-	private static final String CATALOG_FILE_NAME = "catalog/catalog.properties";
+	private static final String CATALOG_FILE_NAME = "catalog.properties";
 
 	private static final String READ_CARDINALITY = "^(RE:(\\w+)(\\s+)CA:(\\d+))";
 	private static final String READ_COLUMN_CARDINALITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)CC:(\\d+))";
@@ -143,9 +143,11 @@ public class SimpleCatalog implements Catalog{
 	 * @param fileName 		The file that stores the statistics
 	 */
 	private void read(Schema schema, String fileName) {
+		//Find the catalog.properties in the subfolder of the schema names in the ./.pdq/catalog Directory
+		String catalogFile = String.format("./.pdq/catalog/%s/%s",schema.getName(),fileName);
 		String line;
 		try {
-			FileReader fileReader = new FileReader(fileName);
+			FileReader fileReader = new FileReader(catalogFile);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			while((line = bufferedReader.readLine()) != null) {
 				this.parse(schema, line);

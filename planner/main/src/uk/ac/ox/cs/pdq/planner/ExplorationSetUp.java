@@ -3,32 +3,9 @@
 
 package uk.ac.ox.cs.pdq.planner;
 
-import java.lang.reflect.Type;
-import java.sql.SQLException;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.log4j.Logger;
-
 import com.google.common.eventbus.EventBus;
-
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
-import uk.ac.ox.cs.pdq.algebra.Condition;
-import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
-import uk.ac.ox.cs.pdq.algebra.JoinTerm;
-import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.algebra.RenameTerm;
-import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
-import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
+import org.apache.log4j.Logger;
+import uk.ac.ox.cs.pdq.algebra.*;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
@@ -38,29 +15,22 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.fol.*;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleQuery;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimizedMultiThread;
 import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
-import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
-import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.reasoningdatabase.*;
 import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.reasoningdatabase.monitor.DatabaseMonitor;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
+
+import java.lang.reflect.Type;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Main entry point for plannng, where all properties are gathered and used to
@@ -128,8 +98,6 @@ public class ExplorationSetUp {
 	 *            the reasoning params
 	 * @param schema
 	 *            the schema
-	 * @param statsLogger
-	 *            the stats logger
 	 */
 	public ExplorationSetUp(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters databaseParams, Schema schema) {
 		this.plannerParams = params;
@@ -169,9 +137,6 @@ public class ExplorationSetUp {
 	 *
 	 * @param query
 	 *            the query
-	 * @param noDep
-	 *            if true, dependencies in the schema are disabled and planning
-	 *            occur taking only into account access-based axioms.
 	 * @return a pair whose first element is the best plan found if any, null
 	 *         otherwise, and the second is a mapping from the variables of the
 	 *         input query to the constant generated in the initial grounded
@@ -263,8 +228,8 @@ public class ExplorationSetUp {
 
 	/** Converts the output plan's attribute types and constant types back to the original schema's types.
 	* This will be necessary when we make use of an external dbms 
-	 * @param bestPlan
-	 * @return
+	 * @param term RelationalTerm
+	 * @return RelationalTerm
 	 */
 	private RelationalTerm convertTypesBack(RelationalTerm term) {
 		if (term instanceof AccessTerm) {

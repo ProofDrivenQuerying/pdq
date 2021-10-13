@@ -4,23 +4,7 @@
 
 package uk.ac.ox.cs.pdq.ui;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeSet;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import javafx.scene.control.*;
-import org.apache.log4j.Logger;
-
 import com.google.common.base.Preconditions;
-
 import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -33,12 +17,14 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import org.apache.log4j.Logger;
 import prefuse.controls.FocusControl;
 import prefuse.controls.WheelZoomControl;
 import uk.ac.ox.cs.pdq.algebra.Plan;
@@ -56,9 +42,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.ui.event.PlanSearchVisualizer;
@@ -74,6 +57,18 @@ import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 import uk.ac.ox.cs.pdq.ui.util.DecimalConverter;
 import uk.ac.ox.cs.pdq.ui.util.LogarithmicAxis;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -346,7 +341,7 @@ public class PlannerController {
 		}
 		if (workDir.exists()) {
 			this.params = new PlannerParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
-			this.costParams = new CostParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
+			this.costParams = new CostParameters(new File( workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
 			this.reasoningParams = new ReasoningParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
 			this.databaseParams = DatabaseParameters.Empty;
 		} else {

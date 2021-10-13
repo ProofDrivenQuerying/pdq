@@ -3,46 +3,18 @@
 
 package uk.ac.ox.cs.pdq.datasources.io.jaxb.adapted;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
 import org.apache.commons.collections4.CollectionUtils;
-
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.Source;
 import uk.ac.ox.cs.pdq.datasources.schemabuilder.SchemaDiscoverer;
-import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Cache;
-import uk.ac.ox.cs.pdq.db.ForeignKey;
-import uk.ac.ox.cs.pdq.db.Reference;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.View;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.EGD;
-import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.LinearGuarded;
-import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
-import uk.ac.ox.cs.pdq.fol.TGD;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.db.*;
+import uk.ac.ox.cs.pdq.fol.*;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedRelation;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedView;
+
+import javax.xml.bind.annotation.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * @author Gabor
@@ -81,8 +53,8 @@ public class AdaptedDbSchema {
 				
 				// not every schema has external sources
 				if (discoveredDependencies.size()>0)
-					return new Schema(relations,discoveredDependencies.toArray(new Dependency[discoveredDependencies.size()]));
-				Schema s = new Schema(relations);
+					return new Schema(relations,discoveredDependencies.toArray(new Dependency[discoveredDependencies.size()]), name);
+				Schema s = new Schema(relations, name);
 				
 				return s;
 			}
@@ -175,7 +147,7 @@ public class AdaptedDbSchema {
 			if (discoveredDependencies.size() > 0) {
 				return new Schema(discoveredRelations.values().toArray(new Relation[discoveredRelations.size()]), discoveredDependencies.toArray(new Dependency[discoveredDependencies.size()]));
 			}
-			return new Schema(discoveredRelations.values().toArray(new Relation[discoveredRelations.size()])); 
+			return new Schema(discoveredRelations.values().toArray(new Relation[discoveredRelations.size()]), name);
 		} catch ( ClassNotFoundException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException t) {
 			t.printStackTrace();
 			throw t;

@@ -14,7 +14,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -1394,6 +1393,7 @@ public class PDQController {
 			s.setFile(schemaFile);
 			this.schemas.put(s.getName(), s);
 		}
+		System.out.println(this.schemas);
 	}
 
 	/**
@@ -1913,8 +1913,7 @@ public class PDQController {
 		}
 
 		// Swap the old schema with the new schema
-
-		Schema schema = new Schema(relationz, dependencys2);
+		Schema schema = new Schema(relationz, dependencys2,s.getSchema().getName());
 		ArrayList<ObservableSchema> obslist = new ArrayList<>();
 		for (ObservableSchema obschema : this.schemas.values()) {
 			if (obschema.equals(s)) {

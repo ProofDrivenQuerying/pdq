@@ -37,5 +37,4 @@ package uk.ac.ox.cs.pdq.logging;
 	- Timed.java
  		* Annotation used to distinguish method that can automatically be timed through
  		* Aspect Oriented Programming.
- 
 **/

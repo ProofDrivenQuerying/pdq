@@ -3,37 +3,16 @@
 
 package uk.ac.ox.cs.pdq.reasoningdatabase;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-
-import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Match;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.*;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQueryWithInequality;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.fol.*;
 import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
 import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.CreateTable;
 import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.InsertSelect;
+
+import java.util.*;
 
 /**
  * Each instance of this LogicalDatabase class will create a logical database
@@ -329,7 +308,7 @@ public class LogicalDatabaseInstance implements DatabaseManager {
 			index++;
 		}
 		newRelations[newRelations.length - 1] = factIdInstanceIdMappingTable;
-		return new Schema(newRelations, schema.getAllDependencies());
+		return new Schema(newRelations, schema.getAllDependencies(), schema.getName());
 	}
 
 	private static Collection<Atom> extendFactsWithFactID(Collection<Atom> facts) {
