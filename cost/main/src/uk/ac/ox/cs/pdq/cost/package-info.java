@@ -5,6 +5,7 @@ package uk.ac.ox.cs.pdq.cost;
 
 /**
 	@author Efthymia Tsamoura and Mark Ridler
+	@Contributor Brandon Moore
 
 	This package contains classes related to plan cost estimation. By separating it out in this way, cost becomes
 	a fully independent package rather than being mixed in with one or more of the others.
@@ -15,7 +16,6 @@ package uk.ac.ox.cs.pdq.cost;
 	 method used in a plan.
 	
 	-- Statistics, which defines database level statistics.
-	    The supported statistics are SQL Server 2014 histograms and density vectors.
     	The Catalog interface answers statistical queries, like the cardinality of a given column or relation,
     	the selectivity of a given filtering predicates or the cost of a specific access.
 	    The class SimpleCatalog implements the Catalog interface.
@@ -24,9 +24,6 @@ package uk.ac.ox.cs.pdq.cost;
 	    -cardinalities of single attributes
 	    -the size of output per invocation of an access method
 	    -the cost of an access method
-	    -selectivities of single attribute filtering predicates
-	    -frequency maps of single attributes
-	    -and SQL Server 2014 single attribute histograms.
 	   All the statistics are loaded by default from a catalog.properties file
 	   
 	-- Io.jaxb implements JAXB-based XML parsing for cost objects

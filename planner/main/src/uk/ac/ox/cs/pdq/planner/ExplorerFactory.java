@@ -3,12 +3,7 @@
 
 package uk.ac.ox.cs.pdq.planner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.google.common.eventbus.EventBus;
-
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
@@ -32,6 +27,10 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimized;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Creates an explorer given the input arguments. The following types of
@@ -76,7 +75,6 @@ public class ExplorerFactory {
 	 *            the generic type
 	 * @param eventBus
 	 *            the event bus
-	 * @param collectStats
 	 *            the collect stats
 	 * @param schema
 	 *            the schema
@@ -84,12 +82,8 @@ public class ExplorerFactory {
 	 *            the accessible schema
 	 * @param query
 	 *            the query
-	 * @param accessibleQuery
-	 *            the accessible query
 	 * @param chaser
 	 *            the chaser
-	 * @param detector
-	 *            the detector
 	 * @param costEstimator
 	 *            the cost estimator
 	 * @param parameters

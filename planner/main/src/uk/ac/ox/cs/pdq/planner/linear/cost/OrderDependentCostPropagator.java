@@ -3,17 +3,10 @@
 
 package uk.ac.ox.cs.pdq.planner.linear.cost;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.jgrapht.graph.DefaultEdge;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
+import org.jgrapht.graph.DefaultEdge;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
@@ -21,6 +14,11 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearConfigurationNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.plantree.PlanTree;
 import uk.ac.ox.cs.pdq.planner.plancreation.PlanCreationUtility;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  *

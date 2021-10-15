@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation used to distinguish methods that can automatically be timed through
- * aspect oriented programming aspect oriented programming aspect oriented programming aspect oriented programming 
+ * aspect oriented programming  
  *
  * @author Julien Leblay
  */

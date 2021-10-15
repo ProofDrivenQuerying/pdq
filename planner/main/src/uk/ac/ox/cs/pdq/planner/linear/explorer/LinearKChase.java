@@ -3,19 +3,11 @@
 
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.base.Preconditions;
+import com.google.common.eventbus.EventBus;
 import org.apache.log4j.Logger;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
-
-import com.google.common.base.Preconditions;
-import com.google.common.eventbus.EventBus;
-
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
@@ -39,6 +31,12 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Searches the proof space employing several optimisations (similar to the OptimizedExplorer) in order to reach faster the best proof.
  * Performs chasing at intervals
@@ -59,19 +57,13 @@ public class LinearKChase extends LinearExplorer {
 	/**
 	 * Instantiates a new linear k chase.
 	 *
-	 * @param eventBus the event bus
-	 * @param collectStats the collect stats
+	 * @param eventBus the event buss
 	 * @param query 		The input user query
-	 * @param accessibleQuery 		The accessible counterpart of the user query
-	 * @param schema 		The input schema
 	 * @param accessibleSchema 		The accessible counterpart of the input schema
 	 * @param chaser 		Runs the chase algorithm
-	 * @param detector 		Detects homomorphisms during chasing
 	 * @param costEstimator 		Estimates the cost of a plan
-	 * @param nodeFactory the node factory
 	 * @param depth the depth
 	 * @param chaseInterval the chase interval
-	 * @param reasoningParameters 
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
 	 */

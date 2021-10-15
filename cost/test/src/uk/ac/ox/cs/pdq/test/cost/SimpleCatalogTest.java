@@ -87,7 +87,6 @@ public class SimpleCatalogTest extends PdqTest {
 			Assert.assertTrue(13.0 == catalogOut.getCost(relation1, am1));
 			Assert.assertTrue(15.7 == catalogOut.getCost(relation2, am2));
 			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();

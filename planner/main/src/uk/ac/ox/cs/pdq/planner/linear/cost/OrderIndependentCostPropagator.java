@@ -51,7 +51,6 @@ public class OrderIndependentCostPropagator extends CostPropagator<LinearConfigu
 	 *
 	 * @param node SimpleNode
 	 * @param planTree PlanTree<SimpleNode>
-	 * @see uk.ac.ox.cs.pdq.plan.cost.CostPropagator#propagate(uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode, org.jgrapht.DirectedGraph, uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode)
 	 */
 	@Override
 	public void propagate(LinearConfigurationNode node, PlanTree<LinearConfigurationNode> planTree) {

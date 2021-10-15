@@ -4,12 +4,12 @@
 package uk.ac.ox.cs.pdq.cost;
 
 
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
-import org.apache.log4j.Logger;
 
 
 /**
@@ -335,16 +335,14 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 		/** T */
 		@EnumParameterValue(description = "Estimates the cost by translating the query to SQL and asking its cost to a database")
 		BLACKBOX_DB,
-		
+
 		/**  */
 		@EnumParameterValue(description = "Experimental: estimates the cost as the number of atoms in a plan")
-		INVERSE_LENGTH,
+		LENGTH,
 		
 		/**  */
 		@EnumParameterValue(description = "Estimates the cost as the sum of the estimated result size per invocation associated to each access method used in a plan")
-		NUMBER_OF_OUTPUT_TUPLES_PER_ACCESS,
-		
-		SIMPLE_CONSTANT
+		NUMBER_OF_OUTPUT_TUPLES_PER_ACCESS
 	}
 
 	/**
