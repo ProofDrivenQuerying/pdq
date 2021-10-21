@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema name="Yahoo! API" description="">
+<schema name="6" description="">
 <relations>
 <relation name="YahooPlaceCode" source="yahoo" size="10000000">
 		<attribute name="namespace" type="java.lang.String"  input-method="relation.1"/>

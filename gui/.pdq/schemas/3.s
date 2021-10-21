@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<schema>
+<schema name="3">
     <relations>
          <relation name="R">
              <attribute name="x" type="java.lang.String"/>
