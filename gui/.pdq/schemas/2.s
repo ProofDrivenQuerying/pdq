@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema name="Yahoo! API" description="">
+<schema name="2" description="">
 <relations>
 <relation name="YahooPlaces" source="yahoo" size="10000000">
 	<attribute name="woeid"    type="java.lang.Integer"     input-method="woeid.1"    path="woeid"/>

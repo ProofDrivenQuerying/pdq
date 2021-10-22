@@ -136,6 +136,10 @@ public class SimpleCatalog implements Catalog{
 		this.read(schema, fileName);
 	}
 
+	private void read(Schema schema){
+
+	}
+
 	/**
 	 * Read.
 	 *
@@ -143,8 +147,15 @@ public class SimpleCatalog implements Catalog{
 	 * @param fileName 		The file that stores the statistics
 	 */
 	private void read(Schema schema, String fileName) {
+		String catalogFile;
 		//Find the catalog.properties in the subfolder of the schema names in the ./.pdq/catalog Directory
-		String catalogFile = String.format("./.pdq/catalog/%s/%s",schema.getName(),fileName);
+		//if no Filename location specified the default SimpleCatalog.CATALOG_FILE_NAME is used
+		// and is filtered into working directory
+		if(fileName.equals(SimpleCatalog.CATALOG_FILE_NAME)){
+			catalogFile = String.format("./.pdq/catalog/%s/%s",schema.getName(),fileName);
+		}else{
+			catalogFile = fileName;
+		}
 		String line;
 		try {
 			FileReader fileReader = new FileReader(catalogFile);

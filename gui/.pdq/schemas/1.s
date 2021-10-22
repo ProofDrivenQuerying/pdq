@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<schema>
+<schema name="1">
     <relations>
         <view name="region_nation">
             <attribute name="nation_key" type="java.lang.Integer"/>
