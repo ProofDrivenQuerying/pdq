@@ -28,7 +28,6 @@ package uk.ac.ox.cs.pdq.cost;
 	   
 	-- Io.jaxb implements JAXB-based XML parsing for cost objects
 	
-	-- Logging provides the single class CostStatKeys.java, which used in planning statistics collections.
 	
 	
 	The top level classes are as follows:
