@@ -1,7 +1,7 @@
 // This file is part of PDQ (https://github.com/ProofDrivenQuerying/pdq) which is released under the MIT license.
 // See accompanying LICENSE for copyright notice and full details.
 
-package uk.ac.ox.cs.pdq.logging;
+package uk.ac.ox.cs.pdq.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
