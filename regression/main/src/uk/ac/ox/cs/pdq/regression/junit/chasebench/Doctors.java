@@ -110,6 +110,7 @@ public class Doctors {
 	}
 
 	private void reasonTest(DatabaseManager dbm) throws SQLException, IOException, DatabaseException {
+		System.out.println("Number of facts: " + getTestFacts().size());
 		DatabaseChaseInstance state = new DatabaseChaseInstance(getTestFacts(), dbm);
 		ParallelChaser chaser = new ParallelChaser();
 		long start = System.currentTimeMillis();
@@ -124,8 +125,8 @@ public class Doctors {
 		int counter = 0;
 		for (ConjunctiveQuery q : queries) {
 			List<Match> matches = state.getMatches(q, new HashMap<>());
-				Assert.assertEquals(EXPECTED_NUMBER_OF_RESULTS[counter], matches.size());
 			System.out.println(counter + " query:\n\t" + matches.size());
+				Assert.assertEquals(EXPECTED_NUMBER_OF_RESULTS[counter], matches.size());
 			counter++;
 		}
 	}
