@@ -24,7 +24,7 @@ public class CommonToPDQTranslatorTest extends TestCase {
     Map<String, Relation> relations = new HashMap<>();
 
     /**
-     * Check the and Parse chasebench files: the first two contain schema information and dependencies, the next few contain dependencies
+     * Check and Parse chasebench files: the first two contain schema information and dependencies, the next few contain dependencies
      */
     @Test
     public void testReadTablesFromFile() {
@@ -48,7 +48,7 @@ public class CommonToPDQTranslatorTest extends TestCase {
      */
     @Test
     public void testParseAtom() {
-        //read tables to create relations
+        //read chasebench schema files to create relations
         Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//Ontology-256.s-schema.txt");
         Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//Ontology-256.t-schema.txt");
 
