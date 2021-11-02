@@ -24,7 +24,7 @@ public class CommonToPDQTranslatorTest extends TestCase {
     Map<String, Relation> relations = new HashMap<>();
 
     /**
-     * Check the and Parse tgds file and parse it
+     * Check the and Parse chasebench files: the first two contain schema information and dependencies, the next few contain dependencies
      */
     @Test
     public void testReadTablesFromFile() {
