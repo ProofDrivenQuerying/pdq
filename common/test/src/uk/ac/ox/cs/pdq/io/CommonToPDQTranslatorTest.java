@@ -14,7 +14,7 @@ import java.util.Map;
 
 
 /**
- * unit test for the CommonToPDQTranslator class to verify the process to TGDS files
+ * unit test for the CommonToPDQTranslator class to verify the process of translating the "ascii" format used by chasebench to the objects used in PDQ (e.g. dependencies)
  * @Author Brandon Moore
  */
 public class CommonToPDQTranslatorTest extends TestCase {
