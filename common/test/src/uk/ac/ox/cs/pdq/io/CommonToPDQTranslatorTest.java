@@ -84,8 +84,9 @@ public class CommonToPDQTranslatorTest extends TestCase {
         List<Atom> headAtoms3 = CommonToPDQTranslator.parseAtoms(relations, sides3[1]);
         Atom equality3 = CommonToPDQTranslator.parseEquality(sides3[1]);
         Assert.assertEquals("use_vnm_64_nl0_ce0(influence_ad_33_nl0_ae0ke0,oil_vnm_64_nl0_ae00)",bodyAtoms3.get(0).toString());
-        //should be zero as it's a equality
+        //parseatoms is only looking for non-equality atoms, so should be zero as it's a equality
         Assert.assertEquals(0,headAtoms3.size());
+        //this is the result of parseEquality, so should be not null, since it is equality
         Assert.assertNotNull(equality3);
     }
 
