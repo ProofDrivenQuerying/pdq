@@ -41,10 +41,10 @@ import java.util.HashMap;
 
 @RestController
 public class Controller {
-
     private Logger log = LogManager.getLogger(Controller.class);
 
-    private final String workingDirectory = "demo/";
+    private final String workingDirectory = "./demo/";
+
     private final HashMap<Integer, String> paths;
 
     private final HashMap<Integer, Schema> schemaList;
