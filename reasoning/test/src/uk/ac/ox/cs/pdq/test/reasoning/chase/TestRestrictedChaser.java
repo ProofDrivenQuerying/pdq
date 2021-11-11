@@ -3,43 +3,26 @@
 
 package uk.ac.ox.cs.pdq.test.reasoning.chase;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.Sets;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.collect.Sets;
-
-import uk.ac.ox.cs.pdq.util.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.EGD;
-import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.TGD;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.fol.*;
 import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.test.util.PdqTest;
+import uk.ac.ox.cs.pdq.util.PdqTest;
+import uk.ac.ox.cs.pdq.util.QNames;
+
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * Tests the reasonUntilTermination method of the RestrictedChaser class

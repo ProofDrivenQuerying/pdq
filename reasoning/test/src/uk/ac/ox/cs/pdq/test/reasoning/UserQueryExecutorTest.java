@@ -3,13 +3,8 @@
 
 package uk.ac.ox.cs.pdq.test.reasoning;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-
 import org.junit.After;
 import org.junit.Assert;
-
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -17,7 +12,11 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.reasoning.CertainAnswerExecutor;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
-import uk.ac.ox.cs.pdq.test.util.PdqTest;
+import uk.ac.ox.cs.pdq.util.PdqTest;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * @author gabor tests the UserQueryExecutor in both internal db mode and

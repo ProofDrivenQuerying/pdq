@@ -3,20 +3,7 @@
 
 package uk.ac.ox.cs.pdq.test.reasoning.chase.state;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
-
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
+import org.junit.*;
 import uk.ac.ox.cs.pdq.datasources.schemabuilder.PostgresqlSchemaDiscoverer;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -30,13 +17,17 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoning.chase.KTerminationChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
-import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
-import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.reasoningdatabase.StateExporter;
+import uk.ac.ox.cs.pdq.reasoningdatabase.*;
 import uk.ac.ox.cs.pdq.reasoningdatabase.sqlcommands.Command;
-import uk.ac.ox.cs.pdq.test.util.PdqTest;
+import uk.ac.ox.cs.pdq.util.PdqTest;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author gabor
