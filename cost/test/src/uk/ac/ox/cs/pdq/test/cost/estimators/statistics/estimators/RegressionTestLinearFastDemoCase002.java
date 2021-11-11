@@ -3,16 +3,10 @@
 
 package uk.ac.ox.cs.pdq.test.cost.estimators.statistics.estimators;
 
-import static org.mockito.Mockito.when;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
@@ -25,7 +19,12 @@ import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.test.util.PdqTest;
+import uk.ac.ox.cs.pdq.util.PdqTest;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.mockito.Mockito.when;
 
 /**
  * This test is a regression test converted to be a unit test. The same test can

@@ -3,20 +3,12 @@
 
 package uk.ac.ox.cs.pdq.test.planner.linear.explorer;
 
-import static org.mockito.Mockito.when;
-
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.google.common.eventbus.EventBus;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-
-import com.google.common.eventbus.EventBus;
-
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
@@ -43,8 +35,14 @@ import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
+import uk.ac.ox.cs.pdq.util.PdqTest;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.mockito.Mockito.when;
 
 /**
  * Tests the LinearKChase explorer class.

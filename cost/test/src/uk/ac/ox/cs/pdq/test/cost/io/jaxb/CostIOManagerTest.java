@@ -3,20 +3,18 @@
 
 package uk.ac.ox.cs.pdq.test.cost.io.jaxb;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.xml.bind.JAXBException;
-
 import org.junit.Assert;
 import org.junit.Test;
-
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
-import uk.ac.ox.cs.pdq.test.util.PdqTest;
+import uk.ac.ox.cs.pdq.util.PdqTest;
+
+import javax.xml.bind.JAXBException;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Tests the CostIOManager's functions by creating a new cost file and then

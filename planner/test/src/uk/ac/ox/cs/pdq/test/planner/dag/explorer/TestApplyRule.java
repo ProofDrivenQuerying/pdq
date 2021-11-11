@@ -3,19 +3,9 @@
 
 package uk.ac.ox.cs.pdq.test.planner.dag.explorer;
 
-import static org.mockito.Mockito.when;
-
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -31,8 +21,13 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
+import uk.ac.ox.cs.pdq.util.PdqTest;
+
+import java.sql.SQLException;
+import java.util.*;
+
+import static org.mockito.Mockito.when;
 
 /**
  * Tests the DAGExplorerUtilities.createInitialApplyRuleConfigurations function
