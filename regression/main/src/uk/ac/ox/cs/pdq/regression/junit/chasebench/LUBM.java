@@ -3,17 +3,7 @@
 
 package uk.ac.ox.cs.pdq.regression.junit.chasebench;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Test;
-
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
@@ -25,6 +15,11 @@ import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * The test case called "LUBM" from the chasebench project.
@@ -41,11 +36,13 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
  *   - case 01k:  timeout
  * </pre>
  * @author Gabor
- *
+ * @contributor Brandon Moore
  */
 public class LUBM {
 	String TEST_DATA[] = {"001","010","100", "01k"}; // test data folders;
 	String testDataFolder = TEST_DATA[0];
+	//filters what file separator to use unix / or windows \\
+	private String fileSeparator = System.getProperty("file.separator");
 	private Schema s = null;
 	Map<String, Relation> relations = new HashMap<>();
 	
@@ -95,19 +92,19 @@ public class LUBM {
 		}
 	}
 	private Schema createSchema() {
-		File schemaDir = new File("test//chaseBench//LUBM//schema");
-		File dependencyDir = new File("test//chaseBench//LUBM//dependencies");
-		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//LUBM.s-schema.txt");
-		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//LUBM.t-schema.txt");
+		File schemaDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"LUBM"+fileSeparator+"schema");
+		File dependencyDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"LUBM"+fileSeparator+"dependencies");
+		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + ""+fileSeparator+"LUBM.s-schema.txt");
+		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + ""+fileSeparator+"LUBM.t-schema.txt");
 		relations.putAll(tables);
 		relations.putAll(tables1);
-		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//LUBM.st-tgds.txt");
-		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//LUBM.t-tgds.txt"));
+		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + ""+fileSeparator+"LUBM.st-tgds.txt");
+		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + ""+fileSeparator+"LUBM.t-tgds.txt"));
 		return new Schema(relations.values().toArray(new Relation[relations.size()]), dependencies.toArray(new Dependency[dependencies.size()]));
 		
 	}
 	private Collection<Atom> getTestFacts() {
-		File dataDir = new File("test//chaseBench//LUBM//data", testDataFolder);
+		File dataDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"LUBM"+fileSeparator+"data", testDataFolder);
 		Collection<Atom> facts = new ArrayList<>();
 		for (File f: dataDir.listFiles()) {
 			if (f.getName().endsWith(".csv")) {
@@ -122,7 +119,7 @@ public class LUBM {
 		return facts;
 	}
 	private Collection<ConjunctiveQuery> getTestQueries() throws IOException {
-		File dataDir = new File("test//chaseBench//LUBM//queries");
+		File dataDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"LUBM"+fileSeparator+"queries");
 		Collection<ConjunctiveQuery> facts = new ArrayList<>();
 		Map<String, Relation> relations = new HashMap<>();
 		for (Relation r: s.getRelations()) {

@@ -3,20 +3,9 @@
 
 package uk.ac.ox.cs.pdq.regression.junit.chasebench;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.bind.JAXBException;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
-
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
@@ -31,12 +20,20 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
 
+import javax.xml.bind.JAXBException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
+
 /**
  * @author Gabor
+ * @contributor Brandon Moore
  * Runs the chaseBanch test cases using the internal memory database.
  */
 public class TestMainInternal {
 
+	//filters what file separator to use unix / or windows \\
+	private String fileSeparator = System.getProperty("file.separator");
 	private LogicalDatabaseInstance dm;
 
 	@Test
@@ -44,13 +41,13 @@ public class TestMainInternal {
 		System.out.println("TestMain.testChaseBench_tgds()");
 		Schema schema = null;
 		try {
-			schema = IOManager.importSchema(new File("test\\chaseBench\\tgds\\schema.xml"));
+			schema = IOManager.importSchema(new File("test"+fileSeparator+"chaseBench"+fileSeparator+"tgds"+fileSeparator+"schema.xml"));
 		} catch (JAXBException | FileNotFoundException e1) {
 			e1.printStackTrace();
 			Assert.fail();
 		}
 
-		Collection<Atom> facts = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgds\\data\\s.csv");
+		Collection<Atom> facts = CommonToPDQTranslator.importFacts(schema, "s", "test"+fileSeparator+"chaseBench"+fileSeparator+"tgds"+fileSeparator+"data"+fileSeparator+"s.csv");
 
 		try {
 			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
@@ -97,14 +94,14 @@ public class TestMainInternal {
 		System.out.println("TestMain.testChaseBench_tgds5()");
 		Schema schema = null;
 		try {
-			schema = IOManager.importSchema(new File("test\\chaseBench\\tgds5\\schema.xml"));
+			schema = IOManager.importSchema(new File("test"+fileSeparator+"chaseBench"+fileSeparator+"tgds5"+fileSeparator+"schema.xml"));
 		} catch (JAXBException | FileNotFoundException e1) {
 			e1.printStackTrace();
 			Assert.fail();
 		}
 
-		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s0", "test\\chaseBench\\tgds5\\data\\s0.csv");
-		Collection<Atom> facts1 = CommonToPDQTranslator.importFacts(schema, "s1", "test\\chaseBench\\tgds5\\data\\s1.csv");
+		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s0", "test"+fileSeparator+"chaseBench"+fileSeparator+"tgds5"+fileSeparator+"data"+fileSeparator+"s0.csv");
+		Collection<Atom> facts1 = CommonToPDQTranslator.importFacts(schema, "s1", "test"+fileSeparator+"chaseBench"+fileSeparator+"tgds5"+fileSeparator+"data"+fileSeparator+"s1.csv");
 		facts0.addAll(facts1);
 		try {
 			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
@@ -141,13 +138,13 @@ public class TestMainInternal {
 		System.out.println("TestMain.testChaseBench_tgdsEgds()");
 		Schema schema = null;
 		try {
-			schema = IOManager.importSchema(new File("test\\chaseBench\\tgdsEgds\\schema.xml"));
+			schema = IOManager.importSchema(new File("test"+fileSeparator+"chaseBench"+fileSeparator+"tgdsEgds"+fileSeparator+"schema.xml"));
 		} catch (JAXBException | FileNotFoundException e1) {
 			e1.printStackTrace();
 			Assert.fail();
 		}
 
-		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgds\\data\\s.csv");
+		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test"+fileSeparator+"chaseBench"+fileSeparator+"tgdsEgds"+fileSeparator+"data"+fileSeparator+"s.csv");
 		try {
 			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
@@ -201,13 +198,13 @@ public class TestMainInternal {
 		System.out.println("TestMain.testChaseBench_tgdsEgdsLarge()");
 		Schema schema = null;
 		try {
-			schema = IOManager.importSchema(new File("test\\chaseBench\\tgdsEgdsLarge\\schema.xml"));
+			schema = IOManager.importSchema(new File("test"+fileSeparator+"chaseBench"+fileSeparator+"tgdsEgdsLarge"+fileSeparator+"schema.xml"));
 		} catch (JAXBException | FileNotFoundException e1) {
 			e1.printStackTrace();
 			Assert.fail();
 		}
 
-		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgdsLarge\\data\\s.csv");
+		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test"+fileSeparator+"chaseBench"+fileSeparator+"tgdsEgdsLarge"+fileSeparator+"data"+fileSeparator+"s.csv");
 		try {
 			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
@@ -261,13 +258,13 @@ public class TestMainInternal {
 		System.out.println("TestMain.testChaseBench_vldb2010()");
 		Schema schema = null;
 		try {
-			schema = IOManager.importSchema(new File("test\\chaseBench\\vldb2010\\schema.xml"));
+			schema = IOManager.importSchema(new File("test"+fileSeparator+"chaseBench"+fileSeparator+"vldb2010"+fileSeparator+"schema.xml"));
 		} catch (JAXBException | FileNotFoundException e1) {
 			e1.printStackTrace();
 			Assert.fail();
 		}
 
-		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "A", "test\\chaseBench\\vldb2010\\data\\A.csv");
+		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "A", "test"+fileSeparator+"chaseBench"+fileSeparator+"vldb2010"+fileSeparator+"data"+fileSeparator+"A.csv");
 		try {
 			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
@@ -303,13 +300,13 @@ public class TestMainInternal {
 		System.out.println("TestMain.testChaseBench_weak()");
 		Schema schema = null;
 		try {
-			schema = IOManager.importSchema(new File("test\\chaseBench\\weak\\schema.xml"));
+			schema = IOManager.importSchema(new File("test"+fileSeparator+"chaseBench"+fileSeparator+"weak"+fileSeparator+"schema.xml"));
 		} catch (JAXBException | FileNotFoundException e1) {
 			e1.printStackTrace();
 			Assert.fail();
 		}
 
-		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "deptemp", "test\\chaseBench\\weak\\data\\deptemp.csv");
+		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "deptemp", "test"+fileSeparator+"chaseBench"+fileSeparator+"weak"+fileSeparator+"data"+fileSeparator+"deptemp.csv");
 		try {
 			DatabaseManager dc = createConnection(DatabaseParameters.Empty, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
