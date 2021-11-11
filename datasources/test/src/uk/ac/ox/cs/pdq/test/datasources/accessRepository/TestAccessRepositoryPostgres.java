@@ -3,23 +3,10 @@
 
 package uk.ac.ox.cs.pdq.test.datasources.accessRepository;
 
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.xml.bind.JAXBException;
-
+import com.google.common.collect.ImmutableMap;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import com.google.common.collect.ImmutableMap;
-
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
@@ -33,7 +20,13 @@ import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 import uk.ac.ox.cs.pdq.db.tuple.TupleType;
 import uk.ac.ox.cs.pdq.fol.TGD;
-import uk.ac.ox.cs.pdq.test.util.PdqTest;
+import uk.ac.ox.cs.pdq.util.PdqTest;
+
+import javax.xml.bind.JAXBException;
+import java.io.File;
+import java.util.*;
+
+import static org.mockito.Mockito.when;
 
 /**
  * Tests the access repository
