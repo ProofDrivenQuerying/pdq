@@ -33,7 +33,7 @@ public class JsonRunner {
      * @param properties
      * @return
      */
-    public static RunResults runtime(Schema schema, ConjunctiveQuery cq, File properties, RelationalTerm plan){
+    public static RunResults runtime(Schema schema, ConjunctiveQuery cq, File properties, RelationalTerm plan) throws Exception {
 
         try{
             long start = System.currentTimeMillis();
@@ -54,19 +54,18 @@ public class JsonRunner {
 
             return new RunResults(tupleCount, results, computationTime, cq);
 
-        }catch(Throwable e){
-            e.printStackTrace();
+        }catch(Exception e){
+            throw e;
         }
-        return null;
     }
 
     private static Table evaluatePlan(RelationalTerm p, Schema schema) throws Exception {
-        AccessRepository repo = AccessRepository.getRepository("/Users/Brandon/IdeaProjects/oxfordUniversity/pdq/react-rest/services");
+        AccessRepository repo = AccessRepository.getRepository("/var/lib/tomcat9/webapps/services/");
         try {
             ExecutablePlan executable = new PlanDecorator(repo, schema).decorate(p);
             Table res = executable.execute();
             return res;
-        }catch(Throwable t) {
+        }catch(Exception t) {
             t.printStackTrace();
             throw t;
         }
@@ -79,13 +78,14 @@ public class JsonRunner {
      * @throws Exception
      */
     public static ExecutablePlan decoratePlan(RelationalTerm p, Schema schema) throws Exception {
-        AccessRepository repo = AccessRepository.getRepository("/Users/Brandon/IdeaProjects/oxfordUniversity/pdq/react-rest/services");
+        AccessRepository repo = AccessRepository.getRepository("/var/lib/tomcat9/webapps/services/");
 
         ExecutablePlan executable = null;
         try{
             executable = new PlanDecorator(repo,schema).decorate(p);
         }catch(Exception e){
             e.printStackTrace();
+            throw e;
         }
         return executable;
     }

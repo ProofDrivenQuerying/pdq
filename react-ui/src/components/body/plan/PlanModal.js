@@ -40,7 +40,7 @@ export default class PlanModal extends React.Component{
       }else{
         const node = {
           title: <PlanTreeNode relationalTerm={relationalTerm}/>,
-          key: `${relationalTerm.command}-${command}`,
+          key: `${relationalTerm.command}-${command}-${Math.random()*new Date()}`,
           children: this.grow(relationalTerm.subexpression)
         }
         toReturn.push(node);

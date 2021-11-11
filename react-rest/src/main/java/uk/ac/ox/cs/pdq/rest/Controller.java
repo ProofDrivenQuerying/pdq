@@ -8,9 +8,11 @@ import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -25,6 +27,8 @@ import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,7 +47,7 @@ import java.util.HashMap;
 public class Controller {
     private Logger log = LogManager.getLogger(Controller.class);
 
-    private final String workingDirectory = "./demo/";
+    private final String workingDirectory = "/var/lib/tomcat9/webapps/demo/";
 
     private final HashMap<Integer, String> paths;
 
@@ -141,7 +145,6 @@ public class Controller {
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/initSchemas", method = RequestMethod.GET, produces = "application/json")
     public SchemaArray initSchemas() {
-        System.out.println(String.format("Dir"));
         SchemaName[] jsonSchemaList = new SchemaName[this.schemaList.size()];
 
         int i = 0;
@@ -254,7 +257,6 @@ public class Controller {
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/plan/{schemaID}/{queryID}/{SQL}")
     public Plan plan(@PathVariable Integer schemaID, @PathVariable Integer queryID, @PathVariable String SQL) {
-        log.warn("Get Plan Passed here///////////////////////");
         Schema schema = schemaList.get(schemaID);
         File properties = casePropertyList.get(schemaID);
         String pathToCatalog = catalogPaths.get(schemaID);
@@ -281,8 +283,6 @@ public class Controller {
         } catch (Throwable e) {
             e.printStackTrace();
         }
-        System.out.println("Get Plan Passed here///////////////////////");
-        log.warn("Get Plan Passed here///////////////////////");
         return plan;
     }
 
@@ -339,9 +339,7 @@ public class Controller {
 
             Plan jsonPlan = JsonPlanner.plan(schema, cq, properties, pathToCatalog);
             RelationalTerm plan = jsonPlan.getPlan();
-
             result = JsonRunner.runtime(schema, cq, properties, plan);
-
             // If our run has already been written to file, don't write it out again.
             if (Files.exists(Paths.get(paths.get(schemaID) + "/results" + queryID + ".csv")) && commonQueries.get(schemaID).get(queryID) != null){
                 return result;
@@ -349,8 +347,15 @@ public class Controller {
 
             JsonRunner.writeOutput(result.results, paths.get(schemaID) + "/results" + queryID + ".csv");
 
-        } catch (Throwable e) {
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "[Exception line 358]" + e.getMessage());
+        }catch (Throwable e) {
             e.printStackTrace();
+            StringWriter writer = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(writer);
+            e.printStackTrace(printWriter);
+            printWriter.flush();
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "[Exception line 361]" + writer.toString());
         }
 
         return result;
