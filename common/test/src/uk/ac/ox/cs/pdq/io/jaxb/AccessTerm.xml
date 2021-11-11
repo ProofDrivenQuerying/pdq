@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RelationalTerm type="AccessTerm">
+    <accessMethod name="m1"/>
+    <inputConstants/>
+    <relation name="r1">
+        <attribute name="r1.1" type="java.lang.Integer"/>
+        <attribute name="r1.2" type="java.lang.Integer"/>
+        <access-method name="m1"/>
+        <access-method name="m2" inputs="0,1"/>
+    </relation>
+</RelationalTerm>
