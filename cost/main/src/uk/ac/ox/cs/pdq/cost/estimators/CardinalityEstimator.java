@@ -19,8 +19,8 @@ public interface CardinalityEstimator {
 	 * @param logOp the log op
 	 */
 	void estimateCardinality(RelationalTerm logOp);
-	
-	RelationalTermCardinalityMetadata getCardinalityMetadata(RelationalTerm o);
+
+	NaiveRelationalTermCardinalityMetadata getCardinalityMetadata(RelationalTerm o);
 
 	/**
 	 * 

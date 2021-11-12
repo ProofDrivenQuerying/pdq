@@ -3,16 +3,7 @@
 
 package uk.ac.ox.cs.pdq.cost.estimators;
 
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.Condition;
-import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
-import uk.ac.ox.cs.pdq.algebra.JoinTerm;
-import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.algebra.RenameTerm;
-import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
-import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
+import uk.ac.ox.cs.pdq.algebra.*;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -28,6 +19,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
  * plus it own IO cost multiple by an estimation of its cardinality.
  *
  * @author Julien Leblay
+ * @contributor Brandon Moore
  * @param <P> the generic type
  */
 public class TextBookCostEstimator implements OrderDependentCostEstimator {
@@ -38,7 +30,6 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 	/**
 	 * Constructor.
 	 *
-	 * @param stats the stats
 	 * @param ce CardinalityEstimator
 	 */
 	public TextBookCostEstimator(CardinalityEstimator ce) {
@@ -67,7 +58,6 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 	 * Recursively computes the cost of the given operator.
 	 *
 	 * @param logOp the log op
-	 * @param descendants the descendants
 	 * @return the cost of the given operator.
 	 */
 	private double recursiveCost(RelationalTerm logOp) {
@@ -157,7 +147,7 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 	 *
 	 * @param plan P
 	 * @return DoubleCost
-	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#cost(P)
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#cost(RelationalTerm)
 	 */
 	@Override
 	public Cost cost(RelationalTerm plan) {

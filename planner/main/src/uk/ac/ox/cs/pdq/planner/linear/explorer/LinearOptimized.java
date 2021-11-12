@@ -3,22 +3,11 @@
 
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
-import org.jgrapht.graph.DefaultEdge;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
-
+import org.apache.log4j.Logger;
+import org.jgrapht.graph.DefaultEdge;
 import uk.ac.ox.cs.pdq.algebra.Plan;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
@@ -43,6 +32,9 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
+
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * Searches the proof space employing several optimisations heuristics in order
@@ -87,30 +79,18 @@ public class LinearOptimized extends LinearExplorer {
 	 *
 	 * @param eventBus
 	 *            the event bus
-	 * @param collectStats
-	 *            the collect stats
 	 * @param query
 	 *            The input user query
-	 * @param accessibleQuery
-	 *            The accessible counterpart of the user query
-	 * @param schema
-	 *            The input schema
 	 * @param accessibleSchema
 	 *            The accessible counterpart of the input schema
 	 * @param chaser
 	 *            Runs the chase algorithm
-	 * @param detector
-	 *            Detects homomorphisms during chasing
 	 * @param costEstimator
 	 *            Estimates the cost of a plan
-	 * @param nodeFactory
-	 *            the node factory
 	 * @param depth
 	 *            the depth
 	 * @param queryMatchInterval
 	 *            the query match interval
-	 * @param postPruning
-	 *            Removes the redundant follow up joins and accesses from a plan
 	 * @throws PlannerException
 	 *             the planner exception
 	 * @throws SQLException

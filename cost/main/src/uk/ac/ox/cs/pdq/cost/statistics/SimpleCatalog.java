@@ -4,6 +4,17 @@
 package uk.ac.ox.cs.pdq.cost.statistics;
 
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.log4j.Logger;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,21 +26,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Logger;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
-
-import uk.ac.ox.cs.pdq.cost.sqlserverhistogram.SQLServerHistogram;
-import uk.ac.ox.cs.pdq.cost.sqlserverhistogram.SQLServerHistogramLoader;
-import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.TypedConstant;
-
 /**
  * Holds unconditional statistics.
  * The statistics that are maintained are:
@@ -37,7 +33,6 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
  * -cardinalities of single attributes
  * -the size of output per invocation of an access method
  * -the cost of an access method
- * -selectivities of single attribute filtering predicates
  * -frequency maps of single attributes
  * -and SQL Server 2014 single attribute histograms.
  * All the statistics are loaded by default from a catalog.properties file
@@ -57,8 +52,6 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
  * RE:[TABLE_NAME]		AT:[ATTRIBUTE_NAME]		CC:[DECIMAL_CARDINALITY]
  * relation cardinality:
  * RE:[TABLE_NAME]		CA:[DECIMAL_CARDINALITY]
- * Frequency map (No examples or any usage):
- * RE:[TABLE_NAME] 		AT:[ATTRIBUTE_NAME]		HH:[???] VA:[???] FR:[???]
  * Example content of the file for a relation that contains 150 records and has 2 access methods, and a selectivity example
  * RE: cars CA: 150
  * RE: cars BI: read_all RT: 12.5
@@ -67,7 +60,7 @@ import uk.ac.ox.cs.pdq.fol.TypedConstant;
 
  * @author Efthymia Tsamoura
  * @author Gabor
- *
+ * @Contributor Brandon Moore
  */
 public class SimpleCatalog implements Catalog{
 
@@ -82,10 +75,8 @@ public class SimpleCatalog implements Catalog{
 
 	private static final String READ_CARDINALITY = "^(RE:(\\w+)(\\s+)CA:(\\d+))";
 	private static final String READ_COLUMN_CARDINALITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)CC:(\\d+))";
-	private static final String READ_COLUMN_SELECTIVITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SE:(\\d+(\\.\\d+)?))";
 	private static final String READ_ERSPI = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)ERSPI:(\\d+(\\.\\d+)?))";
 	private static final String READ_COST = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)RT:(\\d+(\\.\\d+)?))";
-	private static final String READ_SQLSERVERHISTOGRAM = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SQLH:((/[a-zA-Z0-9._-]+)+/?))";
 
 	/** Cardinalities of the schema relations*/
 	private final Map<Relation,Integer> cardinalities;
@@ -97,10 +88,6 @@ public class SimpleCatalog implements Catalog{
 	private final Map<Pair<Relation,AccessMethodDescriptor>,Double> costs;
 	/** The selectivity of each attribute*/
 	private final Map<Pair<Relation,Attribute>,Double> columnSelectivity;
-	/** The frequency histogram of each attribute*/
-	private final Map<Pair<Relation,Attribute>, SimpleFrequencyMap> frequencyMaps;
-	/** The SQL Server histograms of each attribute*/
-	private final Map<Pair<Relation,Attribute>, SQLServerHistogram> SQLServerHistograms;
 
 	/** Cardinalities of the schema relations, with lookup by name*/
 	private final Map<String,Integer> cardinalitiesLookupByName;
@@ -112,10 +99,6 @@ public class SimpleCatalog implements Catalog{
 	private final Map<Pair<String,String>,Double> costsLookupByName;
 	/** The selectivity of each attribute, with lookup by name*/
 	private final Map<Pair<String,String>,Double> columnSelectivityLookupByName;
-	/** The frequency histogram of each attribute, with lookup by name*/
-	private final Map<Pair<String,String>, SimpleFrequencyMap> frequencyMapsLookupByName;
-	/** The SQL Server histograms of each attribute, with lookup by name*/
-	private final Map<Pair<String,String>, SQLServerHistogram> SQLServerHistogramsLookupByName;
 
 	/** The schema of the input database */
 	private final Schema schema;
@@ -143,16 +126,12 @@ public class SimpleCatalog implements Catalog{
 		this.columnSelectivity = new HashMap<>();
 		this.cardinalities = new HashMap<>();
 		this.columnCardinalities = new HashMap<>();
-		this.frequencyMaps = new HashMap<>();
-		this.SQLServerHistograms = new HashMap<>();
 
 		this.cardinalitiesLookupByName = new HashMap<>();
 		this.columnCardinalitiesLookupByName = new HashMap<>();
 		this.numberOfOutputTuplesPerInputLookupByName = new HashMap<>();
 		this.costsLookupByName = new HashMap<>();
 		this.columnSelectivityLookupByName = new HashMap<>();
-		this.frequencyMapsLookupByName = new HashMap<>();
-		this.SQLServerHistogramsLookupByName = new HashMap<>();
 
 		this.read(schema, fileName);
 	}
@@ -235,31 +214,6 @@ public class SimpleCatalog implements Catalog{
 			return;
 		}
 
-		p = Pattern.compile(READ_COLUMN_SELECTIVITY);
-		m = p.matcher(line);
-		if (m.find()) {
-			String relation = m.group(2);
-			String column = m.group(4);
-			String selectivity = m.group(6);
-			if(schema.contains(relation)) {
-				Relation r = schema.getRelation(relation);
-				if(r.getAttribute(column) != null) {
-					Attribute attribute = r.getAttribute(column);
-					final double value = Double.parseDouble(selectivity);
-					this.columnSelectivity.put( Pair.of(r,attribute), value);
-					this.columnSelectivityLookupByName.put( Pair.of(r.getName(),attribute.getName()), value);
-					log.info("RELATION: " + relation + " ATTRIBUTE: " + attribute + " SELECTIVITY: " + selectivity);
-				}
-				else {
-					throw new java.lang.IllegalArgumentException();
-				}
-			}
-			else {
-				throw new java.lang.IllegalArgumentException();
-			}
-			return;
-		}
-
 		p = Pattern.compile(READ_ERSPI);
 		m = p.matcher(line);
 		if (m.find()) {
@@ -277,7 +231,7 @@ public class SimpleCatalog implements Catalog{
 					log.info("RELATION: " + relation + " BINDING: " + binding + " ERPSI: " + erspi);
 				}
 				else {
-					throw new java.lang.IllegalArgumentException();
+					throw new java.lang.IllegalArgumentException(String.format("Requesting AccessMethod [%s] but not found in relation [%s]", binding, relation));
 				}
 			}
 			else {
@@ -302,45 +256,15 @@ public class SimpleCatalog implements Catalog{
 					log.info("RELATION: " + relation + " BINDING: " + binding + " COST: " + cost);
 				}
 				else {
-					throw new java.lang.IllegalArgumentException();
+					throw new java.lang.IllegalArgumentException(String.format("Requesting AccessMethod [%s] but not found in relation [%s]", binding, relation));
 				}
 			}
 			else {
-				throw new java.lang.IllegalArgumentException();
+				throw new java.lang.IllegalArgumentException(String.format(String.format("Requesting relation [%s] in schema [%s] but not found", relation, schema)));
 			}
 			return;
 		}
 
-		SimpleFrequencyMap h = SimpleFrequencyMap.build(schema, line);
-		if(h != null) {
-			this.frequencyMaps.put(Pair.of(h.getRelation(), h.getAttibute()), h);
-			this.frequencyMapsLookupByName.put(Pair.of(h.getRelation().getName(), h.getAttibute().getName()), h);
-			return;
-		}
-
-		p = Pattern.compile(READ_SQLSERVERHISTOGRAM);
-		m = p.matcher(line);
-		if (m.find()) {
-			String relation = m.group(2);
-			String column = m.group(4);
-			String histogramFile = m.group(6);
-			if(schema.contains(relation)) {
-				Relation r = schema.getRelation(relation);
-				if(r.getAttribute(column) != null) {
-					Attribute attribute = r.getAttribute(column);
-					SQLServerHistogram histogram = SQLServerHistogramLoader.load(attribute.getType(), histogramFile);
-					this.SQLServerHistograms.put(Pair.of(r, attribute), histogram);
-					this.SQLServerHistogramsLookupByName.put(Pair.of(r.getName(), attribute.getName()), histogram);
-					log.info("RELATION: " + relation + " ATTRIBUTE: " + attribute + " Histogram file: " + histogramFile);
-				}
-				else {
-					throw new java.lang.IllegalArgumentException();
-				}
-			}
-			else {
-				throw new java.lang.IllegalArgumentException();
-			}
-		}
 	}
 
 	/**
@@ -385,17 +309,6 @@ public class SimpleCatalog implements Catalog{
 			this.columnSelectivityLookupByName.put(Pair.of(key.getLeft().getName(), key.getRight().getName()), value);
 		}
 
-		for (Map.Entry<Pair<Relation, Attribute>, SimpleFrequencyMap> entry : this.frequencyMaps.entrySet()) {
-			Pair<Relation, Attribute> key = entry.getKey();
-			SimpleFrequencyMap value = entry.getValue();
-			this.frequencyMapsLookupByName.put(Pair.of(key.getLeft().getName(), key.getRight().getName()), value);
-		}
-
-		for (Map.Entry<Pair<Relation, Attribute>, SQLServerHistogram> entry : this.SQLServerHistograms.entrySet()) {
-			Pair<Relation, Attribute> key = entry.getKey();
-			SQLServerHistogram value = entry.getValue();
-			this.SQLServerHistogramsLookupByName.put(Pair.of(key.getLeft().getName(), key.getRight().getName()), value);
-		}
 	}
 
 	/**
@@ -464,32 +377,6 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	/**
-	 * Query this.frequencyMaps given a relation and attribute.
-	 *
-	 * If the lookup fails, try looking up by name in this.frequencyMapsLookupByName.
-	 */
-	private SimpleFrequencyMap getFrequencyMapsFromMap(Relation relation, Attribute attribute) {
-		SimpleFrequencyMap value = this.frequencyMaps.get(Pair.of(relation, attribute));
-		if (value == null) {
-			value = this.frequencyMapsLookupByName.get(Pair.of(relation.getName(), attribute.getName()));
-		}
-		return value;
-	}
-
-	/**
-	 * Query this.SQLServerHistograms given a relation and attribute.
-	 *
-	 * If the lookup fails, try looking up by name in this.SQLServerHistogramsLookupByName.
-	 */
-	private SQLServerHistogram getSQLServerHistogramsFromMap(Relation relation, Attribute attribute) {
-		SQLServerHistogram value = this.SQLServerHistograms.get(Pair.of(relation, attribute));
-		if (value == null) {
-			value = this.SQLServerHistogramsLookupByName.get(Pair.of(relation.getName(), attribute.getName()));
-		}
-		return value;
-	}
-
-	/**
 	 * Instantiates a new simple catalog.
 	 *
 	 * @param schema the schema
@@ -498,8 +385,6 @@ public class SimpleCatalog implements Catalog{
 	 * @param responseTimes the response times
 	 * @param columnSelectivity the column selectivity
 	 * @param columnCardinalities the column cardinalities
-	 * @param frequencyMaps the frequency maps
-	 * @param SQLServerHistograms the SQL server histograms
 	 */
 	public SimpleCatalog(
 			Schema schema,
@@ -507,9 +392,7 @@ public class SimpleCatalog implements Catalog{
 			Map<Pair<Relation,AccessMethodDescriptor>,Integer> erpsi,
 			Map<Pair<Relation,AccessMethodDescriptor>,Double> responseTimes,
 			Map<Pair<Relation,Attribute>,Double> columnSelectivity,
-			Map<Pair<Relation,Attribute>,Integer> columnCardinalities,
-			Map<Pair<Relation,Attribute>, SimpleFrequencyMap> frequencyMaps,
-			Map<Pair<Relation,Attribute>, SQLServerHistogram> SQLServerHistograms
+			Map<Pair<Relation,Attribute>,Integer> columnCardinalities
 			) {
 		Preconditions.checkNotNull(schema);
 		Preconditions.checkNotNull(cardinalities);
@@ -517,16 +400,12 @@ public class SimpleCatalog implements Catalog{
 		Preconditions.checkNotNull(responseTimes);
 		Preconditions.checkNotNull(columnSelectivity);
 		Preconditions.checkNotNull(columnCardinalities);
-		Preconditions.checkNotNull(frequencyMaps);
-		Preconditions.checkNotNull(SQLServerHistograms);
 		this.schema = schema;
 		this.cardinalities = Maps.newHashMap(cardinalities);
 		this.numberOfOutputTuplesPerInput = Maps.newHashMap(erpsi);
 		this.costs = Maps.newHashMap(responseTimes);
 		this.columnSelectivity = Maps.newHashMap(columnSelectivity);
 		this.columnCardinalities = Maps.newHashMap(columnCardinalities);
-		this.frequencyMaps = Maps.newHashMap(frequencyMaps);
-		this.SQLServerHistograms = Maps.newHashMap(SQLServerHistograms);
 
 		// Initialise the maps with lookup by name, then construct them from the maps above
 		this.cardinalitiesLookupByName = new HashMap<>();
@@ -534,35 +413,22 @@ public class SimpleCatalog implements Catalog{
 		this.numberOfOutputTuplesPerInputLookupByName = new HashMap<>();
 		this.costsLookupByName = new HashMap<>();
 		this.columnSelectivityLookupByName = new HashMap<>();
-		this.frequencyMapsLookupByName = new HashMap<>();
-		this.SQLServerHistogramsLookupByName = new HashMap<>();
 		this.updateMapsThatLookUpByName();
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getSelectivity(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.Attribute, uk.ac.ox.cs.pdq.db.TypedConstant)
+	/** (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getSelectivity(Relation, Attribute, TypedConstant)
 	 */
 	public Double getSelectivity(Relation relation, Attribute attribute, TypedConstant constant) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(attribute);
 		Preconditions.checkNotNull(constant);
 
-		SimpleFrequencyMap histogram = getFrequencyMapsFromMap(relation, attribute);
-		String search = constant.toString();
-		if (constant.getType() instanceof Class && BigDecimal.class.isAssignableFrom((Class<?>) constant.getType())) {
-			BigInteger integer = new BigDecimal(constant.toString()).toBigInteger();
-			search = integer.toString();
-		}
-		if (histogram != null && histogram.getFrequency(search) != null) {
-			int erpsi = histogram.getFrequency(search);
-			log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " CONSTANTS: " + constant);
-			return (double) erpsi / this.getCardinality(relation);
-		}
 		return this.getSelectivity(relation, attribute);
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getSize(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.Attribute, uk.ac.ox.cs.pdq.db.TypedConstant)
+	/** (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getSize(Relation, Attribute, TypedConstant)
 	 */
 	@Override
 	public int getSize(Relation relation, Attribute attribute, TypedConstant constant) {
@@ -570,17 +436,12 @@ public class SimpleCatalog implements Catalog{
 		Preconditions.checkNotNull(attribute);
 		Preconditions.checkNotNull(constant);
 
-		SimpleFrequencyMap histogram = getFrequencyMapsFromMap(relation, attribute);
 		String search = constant.toString();
 		if(constant.getType() instanceof Class && BigDecimal.class.isAssignableFrom((Class<?>) constant.getType())) {
 			BigInteger integer = new BigDecimal(constant.toString()).toBigInteger();
 			search = integer.toString();
 		}
-		if(histogram != null && histogram.getFrequency(search) != null) {
-			int erpsi = histogram.getFrequency(search);
-			log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " CONSTANTS: " + constant);
-			return erpsi;
-		}
+
 		return SimpleCatalog.DEFAULT_COLUMN_CARDINALITY;
 	}
 
@@ -613,45 +474,9 @@ public class SimpleCatalog implements Catalog{
 		}
 	}
 
-	/**
-	 * Gets the selectivity.
-	 *
-	 * @param left the left
-	 * @param right the right
-	 * @param leftAttribute the left attribute
-	 * @param rightAttribute the right attribute
-	 * @return the selectivity
-	 */
-	public double getSelectivity(Relation left, Relation right, Attribute leftAttribute, Attribute rightAttribute) {
-		Preconditions.checkNotNull(left);
-		Preconditions.checkNotNull(right);
-		Preconditions.checkNotNull(leftAttribute);
-		Preconditions.checkNotNull(rightAttribute);
-		Integer leftCardinality = this.getColumnCardinalityFromMap(left, leftAttribute);
-		Integer rightCardinality = this.getColumnCardinalityFromMap(right, rightAttribute);
-		if(leftCardinality != null && rightCardinality != null) {
-			final double selectivity = 1.0 / (double) Math.max(leftCardinality, rightCardinality);
-			log.info("LEFT RELATION: " + left.getName() + " LEFT ATTRIBUTE " + leftAttribute + " RIGHT RELATION: "
-					+ right.getName() + " RIGHT ATTRIBUTE " + rightAttribute + " SELECTIVITY: " + selectivity);
-			return selectivity;
-		}
-		else {
-			final double selectivity = 1.0 / (double) DEFAULT_COLUMN_CARDINALITY;
-			log.warn("LEFT RELATION: " + left.getName() + " LEFT ATTRIBUTE " + leftAttribute + " RIGHT RELATION: "
-					+ right.getName() + " RIGHT ATTRIBUTE " + rightAttribute
-					+ " is using the DEFAULT_COLUMN_CARDINALITY: " + DEFAULT_COLUMN_CARDINALITY);
-			log.info("LEFT RELATION: " + left.getName() + " LEFT ATTRIBUTE " + leftAttribute + " RIGHT RELATION: "
-					+ right.getName() + " RIGHT ATTRIBUTE " + rightAttribute + " SELECTIVITY: " + selectivity);
-			return selectivity;
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getERPSI(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod)
-	 */
 	@Override
 	public int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethodDescriptor method) {
-		log.warn("[DEBUG] case_001a");
+		log.info("[DEBUG] case_001a");
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(method);
 		final Integer erspi = getNumberOfOutputTuplesPerInputFromMap(relation, method);
@@ -691,28 +516,16 @@ public class SimpleCatalog implements Catalog{
 	}
 
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getERPSI(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod, java.util.Map)
-	 */
 	@Override
 	public int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethodDescriptor method, Map<Integer, TypedConstant> inputs) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(inputs);
-		if(inputs.size() == 1 && method.getInputs().length == 1) {
-			Attribute attribute = relation.getAttribute(method.getInputs().length);
-			SimpleFrequencyMap histogram = getFrequencyMapsFromMap(relation, attribute);
-			if(histogram != null && histogram.getFrequency(inputs.get(0).toString()) != null) {
-				int erpsi = histogram.getFrequency(inputs.get(0).toString());
-				log.info("RELATION: " + relation.getName() + " ACCESS: " + method + " INPUTS: " + inputs + " ERPSI: " + erpsi);
-				return erpsi;
-			}
-		}
 		int erpsi = this.getTotalNumberOfOutputTuplesPerInputTuple(relation, method);
 		log.info("RELATION: " + relation.getName() + " ACCESS: " + method + " INPUTS: " + inputs + " ERPSI: " + erpsi);
 		return erpsi;
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getCardinality(uk.ac.ox.cs.pdq.db.Relation)
 	 */
 	@Override
@@ -728,7 +541,7 @@ public class SimpleCatalog implements Catalog{
 		}
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getCardinality(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.Attribute)
 	 */
 	@Override
@@ -745,8 +558,8 @@ public class SimpleCatalog implements Catalog{
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getCost(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod)
+	/** (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getCost(Relation, AccessMethodDescriptor)
 	 */
 	@Override
 	public double getCost(Relation relation, AccessMethodDescriptor method) {
@@ -763,22 +576,14 @@ public class SimpleCatalog implements Catalog{
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getCost(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod, java.util.Map)
+	/** (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getCost(Relation, AccessMethodDescriptor)
 	 */
 	@Override
 	public double getCost(Relation relation, AccessMethodDescriptor method, Map<Integer, TypedConstant> inputs) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(method);
 		double erpsi = -1;
-		if(inputs.size() == 1) {
-			Attribute attribute = relation.getAttribute(method.getInputs()[0]);
-			SimpleFrequencyMap histogram = getFrequencyMapsFromMap(relation, attribute);
-			if(histogram != null && histogram.getFrequency(inputs.get(0).toString()) != null) {
-				erpsi = histogram.getFrequency(inputs.get(0).toString());
-				log.info("RELATION: " + relation.getName() + " ACCESS: " + method + " INPUTS: " + inputs + " ERPSI: " + erpsi);
-			}
-		}
 		Double cost = this.getCostFromMap(relation, method);
 		if(cost == null) {
 			log.warn("RELATION: " + relation.getName() + " ACCESS METHOD: " + method + " is using the DEFAULT_COST: " + DEFAULT_COST);
@@ -794,7 +599,7 @@ public class SimpleCatalog implements Catalog{
 	@Override
 	public SimpleCatalog clone() {
 		return new SimpleCatalog(this.schema, this.cardinalities, this.numberOfOutputTuplesPerInput, this.costs,
-				this.columnSelectivity, this.columnCardinalities, this.frequencyMaps, this.SQLServerHistograms);
+				this.columnSelectivity, this.columnCardinalities);
 	}
 
 	/** This method can be used by schema discovery functions to add table cardinalities.
@@ -817,8 +622,6 @@ public class SimpleCatalog implements Catalog{
 		sb.append("#	RE:[TABLE_NAME]		BI:[ACCESS_METHOD_NAME]		ERSPI:[COST_OF_ACCESS_METHOD]\n");
 		sb.append("#Sql server histogram (this has no known usages/examples or tests):\n");
 		sb.append("#	RE:[TABLE_NAME]		AT:[ATTRIBUTE_NAME]		SQLH:[???]\n");
-		sb.append("#Column selectivity:\n");
-		sb.append("#	RE:[TABLE_NAME]		AT:[ATTRIBUTE_NAME]		SE:[SELECTIVITY]\n");
 		sb.append("#Column cardinality (Number Of Output Tuples Per Input):\n");
 		sb.append("#	RE:[TABLE_NAME]		AT:[ATTRIBUTE_NAME]		CC:[DECIMAL_CARDINALITY]\n");
 		sb.append("#Relation cardinality:\n");
@@ -865,17 +668,6 @@ public class SimpleCatalog implements Catalog{
 			sb.append("\n");
 		}
 
-		sb.append("\n#COLUMN SELECTIVITY:\n");
-		for (Pair<Relation,Attribute> p: columnSelectivity.keySet()) {
-			sb.append("RE:");
-			sb.append(p.getLeft().getName());
-			sb.append("\tAT:");
-			sb.append(p.getRight().getName());
-			sb.append("\tSE:");
-			sb.append(columnSelectivity.get(p));
-			sb.append("\n");
-		}
-
 
 		return sb.toString();
 	}
@@ -888,30 +680,7 @@ public class SimpleCatalog implements Catalog{
 		return DEFAULT_QUALITY;
 	}
 
-	/**
-	 * Gets the SQL server histogram.
-	 *
-	 * @param relation the relation
-	 * @param attribute the attribute
-	 * @return the SQL server histogram
-	 */
-	public SQLServerHistogram getSQLServerHistogram(Relation relation, Attribute attribute) {
-		Preconditions.checkNotNull(relation);
-		Preconditions.checkNotNull(attribute);
-		return getSQLServerHistogramsFromMap(relation, attribute);
-	}
-
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getHistogram(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.Attribute)
-	 */
-	@Override
-	public Histogram getHistogram(Relation relation, Attribute attribute) {
-		Preconditions.checkNotNull(relation);
-		Preconditions.checkNotNull(attribute);
-		return getSQLServerHistogramsFromMap(relation, attribute);
-	}
-
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -927,13 +696,7 @@ public class SimpleCatalog implements Catalog{
 						Joiner.on("\n").join(this.numberOfOutputTuplesPerInput.entrySet()) +
 
 						"\n==================COSTS=====================\n" +
-						Joiner.on("\n").join(this.costs.entrySet()) +
-
-						"\n============COLUMN SELECTIVITIES============\n" +
-						Joiner.on("\n").join(this.columnSelectivity.entrySet()) +
-
-						"\n==============COLUMN HISTOGRAMS=============\n" +
-						Joiner.on("\n").join(this.frequencyMaps.entrySet()) );
+						Joiner.on("\n").join(this.costs.entrySet()) );
 	}
 
 }

@@ -4,18 +4,8 @@
 package uk.ac.ox.cs.pdq.cost;
 
 
-import java.sql.SQLException;
-
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
-import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.FixedCostPerAccessCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.LengthBasedCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.QueryExplainCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.TotalNumberOfOutputTuplesPerAccessCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.*;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -24,17 +14,23 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 
+import java.sql.SQLException;
+
 /**
  * A factory of cost estimation objects.
  * 	The following types of plan cost estimators are supported:
-	-SIMPLE_CONSTANT: Estimates the cost as the sum of the cost of all accesses in a plan, \n where access cost are provided externally	
-	-SIMPLE_RANDOM: Estimates the cost as the sum of the cost of all accesses in a plan, \n where cost are assigned randomly
-	-SIMPLE_GIVEN: Estimates the cost as the sum of the cost of all accesses in a plan, \n where cost are measured automatically from the underlying datasources	
-	-SIMPLE_COUNT: Estimates the cost as the sum of all accesses in a plan	
-	-BLACKBOX: Estimates the cost through some externally defined cost function.\nCurrently, this defaults to the white box cost functions relying on textbox cost estimation techniques	
-	-BLACKBOX_DB Estimates the cost by translating the query to SQL and asking its cost to a DBMS. The current implementation supports Postgres 
-	-INVERSE_LENGTH: Experimental: estimates the cost as the number of atoms in a plan
-	-SIMPLE_ERSPI Estimates the cost as the sum of the estimated result size per invocation associated to each access method used in a plan.
+	 -FIXED_COST_PER_ACCESS: Estimates the cost as the sum of the cost of all accesses in a plan, where access cost are provided externally
+	 @see uk.ac.ox.cs.pdq.cost.estimators.FixedCostPerAccessCostEstimator
+	 -COUNT_NUMBER_OF_ACCESSED_RELATIONS: Estimates the cost as the sum of all accesses in a plan
+	 @see uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator
+	 -TEXTBOOK: Estimates the cost through some externally defined cost function. Currently, this defaults to the white box cost functions relying on textbox cost estimation techniques
+	 @see uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator
+	 -LENGTH: Experimental: estimates the cost as the number of atoms in a plan
+	 @see uk.ac.ox.cs.pdq.cost.estimators.LengthBasedCostEstimator
+	 -NUMBER_OF_OUTPUT_TUPLES_PER_ACCESS: Estimates the cost as the sum of the estimated result size per invocation associated to each access method used in a plan
+	 @see uk.ac.ox.cs.pdq.cost.estimators.TotalNumberOfOutputTuplesPerAccessCostEstimator
+	 -BLACKBOX_DB Estimates the cost by translating the query to SQL and asking its cost to a database
+	 @see uk.ac.ox.cs.pdq.cost.estimators.QueryExplainCostEstimator
  *
  * @author Julien Leblay
  * @author Efthymia Tsamoura 
@@ -46,8 +42,7 @@ public class CostEstimatorFactory {
 	/**
 	 * Gets the estimator.
 	 *
-	 * @param  the generic type
-	 * @param costParams 		Parameters that specify the type of plan cost estimation object that will be created 
+	 * @param costParams 	Parameters that specify the type of plan cost estimation object that will be created
 	 * @param schema 		The database schema
 	 * @return the estimator
 	 * @throws SQLException the SQL exception
@@ -59,9 +54,9 @@ public class CostEstimatorFactory {
 	/**
 	 * Gets the single instance of CostEstimatorFactory.
 	 *
-	 * @param  the generic type
-	 * @param eventBus the event bus
-	 * @param collectStats the collect stats
+	 * the generic type
+	 * eventBus the event bus
+	 * collectStats the collect stats
 	 * @param costParams 		Parameters that specify the type of plan cost estimation object that will be created
 	 * @param schema 		The database schema
 	 * @return single instance of CostEstimatorFactory
@@ -82,8 +77,12 @@ public class CostEstimatorFactory {
 				e.printStackTrace();
 			}
 		} else {
-			if (CostTypes.TEXTBOOK.equals(costParams.getCostType())) {
-				costParams.setCostType(CostTypes.SIMPLE_CONSTANT);
+			//we don't have catalog so can only use CountNumberOfAccessedRelationsCostEstimator or Black Box
+			if(CostTypes.FIXED_COST_PER_ACCESS.equals(costParams.getCostType()) ||
+					CostTypes.TEXTBOOK.equals(costParams.getCostType()) ||
+					CostTypes.NUMBER_OF_OUTPUT_TUPLES_PER_ACCESS.equals(costParams.getCostType())
+			){
+				costParams.setCostType(CostTypes.COUNT_NUMBER_OF_ACCESSED_RELATIONS);
 			}
 		}
 		
@@ -124,8 +123,11 @@ public class CostEstimatorFactory {
 			assert (costParams.getCatalog() != null);
 			result =  new FixedCostPerAccessCostEstimator(catalog);
 			break;
-		case INVERSE_LENGTH:
+		case LENGTH:
 			result =  new LengthBasedCostEstimator();
+			break;
+		case COUNT_NUMBER_OF_ACCESSED_RELATIONS:
+			result = new CountNumberOfAccessedRelationsCostEstimator();
 			break;
 		default:
 			result =  new CountNumberOfAccessedRelationsCostEstimator();

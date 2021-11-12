@@ -6,7 +6,8 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 /**
  * Top level interface for all Order Dependent cost estimators.
  * 	The cost of a plan depends on the operators' order
- *
+ * In some of the planning algorithms, there will be a common way to propagate costs for all orderdependent estimators
+ * and another common way for all order independent estimators
  * @author Julien Leblay
  * @author Efthymia Tsamoura
  */
