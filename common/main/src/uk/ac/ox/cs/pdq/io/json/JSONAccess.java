@@ -36,7 +36,12 @@ public class JSONAccess extends JSONRelationalTerm {
             Attribute provenanceName = PlanPrinter.outputAttributeProvenance(rt,rt.getAccessMethod().getInputs()[index]);
             result.append(provenanceName.getName());
             result.append("=");
-            result.append("?");
+            if(rt.getInputConstants().isEmpty()){
+                result.append("?");
+            }else{
+                result.append("\'"+rt.getInputConstants().get(index)+"\'");
+            }
+
             if (index < rt.getAccessMethod().getInputs().length - 1)
                 result.append(",");
         }

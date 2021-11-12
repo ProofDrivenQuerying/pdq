@@ -14,7 +14,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -55,6 +54,7 @@ import uk.ac.ox.cs.pdq.ui.model.ObservablePlan;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
+import uk.ac.ox.cs.pdq.ui.util.TreeViewHelper;
 import uk.ac.ox.cs.pdq.util.SanityCheck;
 
 import java.io.*;

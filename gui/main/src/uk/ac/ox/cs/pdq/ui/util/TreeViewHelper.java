@@ -1,9 +1,8 @@
-package uk.ac.ox.cs.pdq.ui;
+package uk.ac.ox.cs.pdq.ui.util;
 
 import javafx.scene.control.TreeItem;
 import uk.ac.ox.cs.pdq.algebra.*;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.io.PlanPrinter;
 
 /**
@@ -115,7 +114,11 @@ public class TreeViewHelper
                 Attribute provenanceName = PlanPrinter.outputAttributeProvenance(p,at.getAccessMethod().getInputs()[index]);
                 result.append(provenanceName.getName());
                 result.append("=");
-                result.append("?");
+                if(at.getInputConstants().isEmpty()){
+                    result.append("?");
+                }else{
+                    result.append("\'"+at.getInputConstants().get(index)+"\'");
+                }
                 if (index < at.getAccessMethod().getInputs().length - 1)
                     result.append(",");
             }
