@@ -87,11 +87,11 @@ export default class PlanModal extends React.Component{
           size="lg">
 
           <ModalHeader toggle={this.toggle}>
-            Plan{this.props.id}
+            Best Plan
 
             <PopoutWindow
               title={"Plan Information"}
-              content={planInfoContent("Plan"+this.props.id, this.props.plan)}
+              content={planInfoContent("Best Plan", this.props.plan)}
               options={{
                 width: "800px",
                 height: "600px"

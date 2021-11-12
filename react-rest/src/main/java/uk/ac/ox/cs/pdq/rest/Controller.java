@@ -47,7 +47,8 @@ import java.util.HashMap;
 public class Controller {
     private Logger log = LogManager.getLogger(Controller.class);
 
-    private final String workingDirectory = "/var/lib/tomcat9/webapps/demo/";
+//    private final String workingDirectory = "/var/lib/tomcat9/webapps/demo/";
+    private final String workingDirectory = "/Users/Brandon/IdeaProjects/oxfordUniversity/pdq/react-rest/demo/";
 
     private final HashMap<Integer, String> paths;
 
