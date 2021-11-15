@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.io.PlanPrinter;
  * Serializable SelectionTerm class.
  *
  * @author Camilo Ortiz
+ * @Contributor Brandon Moore
  */
 public class JSONSelection extends JSONPlan{
     @JsonProperty

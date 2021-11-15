@@ -14,6 +14,7 @@ import java.util.Arrays;
  * Serializable Projection class.
  *
  * @author Camilo Ortiz
+ * @Contributor Brandon Moore
  */
 public class JSONProjection extends JSONRelationalTerm {
     @JsonProperty

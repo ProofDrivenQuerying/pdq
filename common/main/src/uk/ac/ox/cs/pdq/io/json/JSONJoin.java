@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.io.PlanPrinter;
  * Serializable JoinTerm class.
  *
  * @author Camilo Ortiz
+ * @Contributor Brandon Moore
  */
 public class JSONJoin extends JSONRelationalTerm {
     @JsonProperty

@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.io.PlanPrinter;
  * Serializable AccessTerm class.
  *
  * @author Camilo Ortiz
+ * @Contributor Brandon Moore
  */
 public class JSONAccess extends JSONRelationalTerm {
     @JsonProperty
