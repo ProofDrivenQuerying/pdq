@@ -115,7 +115,7 @@ public class ExecutorThread extends Thread {
 				dbToConnect = database.substring(0, database.indexOf("_WORK"));
 			}
 			connection = getConnection(driver, url, dbToConnect, username, password);
-		} catch (SQLException e) {
+		}catch (SQLException e) {
 			throw new DatabaseException("Connection failed to url: " + url + " using database: " + database + ", driver: " + driver, e);
 		}
 		if (!database.contains("_WORK") && databaseParameters.isCreateNewDatabase()) {
@@ -567,15 +567,17 @@ public class ExecutorThread extends Thread {
 			result.setAutoCommit(true);
 			return result;
 		} catch (SQLException e) {
-			if (e.getMessage() != null && e.getMessage().contains("does not exist")) {
-				System.err.println("Database " + database + " does not exists. falling back to default connection without database name.");
-			} else if (e.getNextException()!=null)
-				e.getNextException().printStackTrace();
-			else
-				e.printStackTrace();
+//			if (e.getMessage() != null && e.getMessage().contains("does not exist")) {
+//				System.err.println("Database " + database + " does not exists. falling back to default connection without database name.");
+//			} else if (e.getNextException()!=null)
+//				e.getNextException().printStackTrace();
+//			else
+//				e.printStackTrace();
+			throw e;
+		}finally {
+			Connection result = DriverManager.getConnection(url, username, password);
+			result.setAutoCommit(true);
+			return result;
 		}
-		Connection result = DriverManager.getConnection(url, username, password);
-		result.setAutoCommit(true);
-		return result;
 	}	
 }

@@ -47,7 +47,7 @@ public class CostEstimatorFactory {
 	 * @return the estimator
 	 * @throws SQLException the SQL exception
 	 */
-	public static CostEstimator getEstimator(CostParameters costParams, Schema schema) {
+	public static CostEstimator getEstimator(CostParameters costParams, Schema schema)  throws UnsupportedOperationException{
 		return getInstance(costParams, schema);
 	}
 
@@ -111,7 +111,6 @@ public class CostEstimatorFactory {
 				dbm.initialiseDatabaseForSchema(schema);
 				result = new QueryExplainCostEstimator(dbm);
 			} catch (DatabaseException e) {
-				e.printStackTrace();
 				throw new UnsupportedOperationException("BLACKBOX_DB cost estimator is not currently supported.",e);
 			}
 			break;

@@ -234,7 +234,7 @@ public class ExplorationSetUp {
 			throw e;
 		} catch (UnsupportedOperationException  e) {
 			this.handleEarlyTermination(explorer);
-			log.error(e.getMessage(), e);
+//			log.error(e.getMessage(), e);
 			throw new PlannerException(e);
 		} catch (Exception e) {
 			this.handleEarlyTermination(explorer);
