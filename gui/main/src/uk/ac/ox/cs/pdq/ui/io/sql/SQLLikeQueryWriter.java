@@ -179,14 +179,11 @@ public class SQLLikeQueryWriter implements Writer<Formula> {
 			for (int i = 0, l = terms.length; i < l; i++) {
 				if (!terms[i].isVariable()) {
 					Relation r = this.schema.getRelation(p.getPredicate().getName());
-					if(r != null){
 						Attribute aa = r.getAttribute(i);
 						result.append(sep).append(aliases.get(p)).append('.')
 								.append(aa)
 						.append('=').append("'").append(terms[i]).append("'");
-					}else{
-						System.out.println("something has happened");
-					}
+
 
 					sep = "\nAND ";
 				}
