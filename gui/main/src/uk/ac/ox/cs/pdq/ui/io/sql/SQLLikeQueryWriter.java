@@ -3,19 +3,9 @@
 
 package uk.ac.ox.cs.pdq.ui.io.sql;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
-
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -24,6 +14,10 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.io.Writer;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.*;
 //import uk.ac.ox.cs.pdq.io.pretty.PrettyWriter;
 
 // TODO: Auto-generated Javadoc
@@ -83,7 +77,7 @@ public class SQLLikeQueryWriter implements Writer<Formula> {
 	/**
 	 * To string.
 	 *
-	 * @param query the query
+	 * @param f Formula
 	 * @return the string
 	 */
 	/*
@@ -184,9 +178,16 @@ public class SQLLikeQueryWriter implements Writer<Formula> {
 			Term[] terms = p.getTerms();
 			for (int i = 0, l = terms.length; i < l; i++) {
 				if (!terms[i].isVariable()) {
-					result.append(sep).append(aliases.get(p)).append('.')
-						.append(this.schema.getRelation(p.getPredicate().getName()).getAttribute(i))
-						.append('=').append("'").append(terms[i]).append("'"); 
+					Relation r = this.schema.getRelation(p.getPredicate().getName());
+					if(r != null){
+						Attribute aa = r.getAttribute(i);
+						result.append(sep).append(aliases.get(p)).append('.')
+								.append(aa)
+						.append('=').append("'").append(terms[i]).append("'");
+					}else{
+						System.out.println("something has happened");
+					}
+
 					sep = "\nAND ";
 				}
 			}
@@ -199,7 +200,8 @@ public class SQLLikeQueryWriter implements Writer<Formula> {
 	 * Returns a short String representation of the given dependency. This
 	 * by-passes toString which is too verbose for non-debug purpose.
 	 *
-	 * @param t the t
+	 * @param f the Formula
+	 * @param s the Schema
 	 * @return a short String representation of the dependency.
 	 */
 	public static String convert(Formula f, Schema s) {
