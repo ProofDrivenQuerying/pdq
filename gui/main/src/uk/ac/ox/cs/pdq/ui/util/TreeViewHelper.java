@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.ui.util;
 import javafx.scene.control.TreeItem;
 import uk.ac.ox.cs.pdq.algebra.*;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.io.PlanPrinter;
 
 /**
@@ -77,12 +78,12 @@ public class TreeViewHelper
                         int position = ((ConstantEqualityCondition) conditions[i]).getPosition();
 
                         provenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), position );
-                        buffer.append(String.format("#%s=%s", provenanceAttribute.getName(), ((ConstantEqualityCondition) conditions[i]).getConstant()));
+                        buffer.append(String.format("#%s=\'%s\'", provenanceAttribute.getName(), ((ConstantEqualityCondition) conditions[i]).getConstant()));
                     } else if (conditions[i] instanceof ConstantComparisonCondition) {
                         int position = ((ConstantComparisonCondition) conditions[i]).getPosition();
 
                         provenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), position);
-                        buffer.append(String.format("#%s=%s", provenanceAttribute.getName(), ((ConstantComparisonCondition) conditions[i]).getConstant()));
+                        buffer.append(String.format("#%s=\'%s\'", provenanceAttribute.getName(), ((ConstantComparisonCondition) conditions[i]).getConstant()));
                     }
                 }
             }
@@ -117,7 +118,10 @@ public class TreeViewHelper
                 if(at.getInputConstants().isEmpty()){
                     result.append("?");
                 }else{
-                    result.append("\'"+at.getInputConstants().get(index)+"\'");
+                    TypedConstant tc = at.getInputConstants().get(index);
+                    if(tc != null){
+                        result.append("\'"+at.getInputConstants().get(index)+"\'");
+                    }
                 }
                 if (index < at.getAccessMethod().getInputs().length - 1)
                     result.append(",");

@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableStringValue;
 import javafx.beans.value.ObservableValue;
 import org.apache.log4j.Logger;
+import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaWriter;
@@ -33,7 +34,7 @@ public class ObservableSchema {
 	/** */
 	private final SimpleObjectProperty<Schema> schema =  new SimpleObjectProperty<>(this, "schema");
 	
-	private final SimpleObjectProperty<Service[]> services =  new SimpleObjectProperty<>(this, "services");
+	private final SimpleObjectProperty<AccessRepository> services =  new SimpleObjectProperty<>(this, "services");
 	
 	/**
 	 * Instantiates a new observable schema.
@@ -42,7 +43,7 @@ public class ObservableSchema {
 	 * @param description the description
 	 * @param schema the schema
 	 */
-	public ObservableSchema(String name, String description, Schema schema, Service[] services) {
+	public ObservableSchema(String name, String description, Schema schema, AccessRepository services) {
 		this(name, description, null, schema, services);
 	}
 	
@@ -54,7 +55,7 @@ public class ObservableSchema {
 	 * @param file the file
 	 * @param schema the schema
 	 */
-	public ObservableSchema(String name, String description, File file, Schema schema, Service[] services) {
+	public ObservableSchema(String name, String description, File file, Schema schema, AccessRepository services) {
 		this.name.set(name);
 		this.description.set(description);
 		this.file.set(file);
@@ -112,7 +113,7 @@ public class ObservableSchema {
 		return this.schema.getValue();
 	}
 
-	public Service[] getServices()
+	public AccessRepository getServices()
 	{
 		return this.services.getValue();
 	}

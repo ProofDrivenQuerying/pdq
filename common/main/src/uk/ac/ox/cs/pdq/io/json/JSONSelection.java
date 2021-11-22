@@ -67,12 +67,12 @@ public class JSONSelection extends JSONPlan{
                     int position = ((ConstantEqualityCondition) conditions[i]).getPosition();
 
                     provenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), position );
-                    buffer.append(String.format("#%s=%s", provenanceAttribute.getName(), ((ConstantEqualityCondition) conditions[i]).getConstant()));
+                    buffer.append(String.format("#%s=\'%s\'", provenanceAttribute.getName(), ((ConstantEqualityCondition) conditions[i]).getConstant()));
                 } else if (conditions[i] instanceof ConstantComparisonCondition) {
                     int position = ((ConstantComparisonCondition) conditions[i]).getPosition();
 
                     provenanceAttribute = PlanPrinter.outputAttributeProvenance(rt.getChild(0), position);
-                    buffer.append(String.format("#%s=%s", provenanceAttribute.getName(), ((ConstantComparisonCondition) conditions[i]).getConstant()));
+                    buffer.append(String.format("#%s=\'%s\'", provenanceAttribute.getName(), ((ConstantComparisonCondition) conditions[i]).getConstant()));
                 }
             }
 
