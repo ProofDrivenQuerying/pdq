@@ -6,6 +6,7 @@ package uk.ac.ox.cs.pdq.io.json;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
 import uk.ac.ox.cs.pdq.io.PlanPrinter;
 
 /**
@@ -40,7 +41,12 @@ public class JSONAccess extends JSONRelationalTerm {
             if(rt.getInputConstants().isEmpty()){
                 result.append("?");
             }else{
-                result.append("\'"+rt.getInputConstants().get(index)+"\'");
+                TypedConstant tc = rt.getInputConstants().get(index);
+                if(tc != null){
+                    result.append("\'"+rt.getInputConstants().get(index)+"\'");
+                }else{
+                    result.append("?");
+                }
             }
 
             if (index < rt.getAccessMethod().getInputs().length - 1)
