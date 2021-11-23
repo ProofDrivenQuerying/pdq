@@ -3,19 +3,26 @@
 
 package uk.ac.ox.cs.pdq.test.reasoning.chase.state;
 
-import com.google.common.collect.Sets;
+import java.sql.SQLException;
+import java.util.Map;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import uk.ac.ox.cs.pdq.fol.*;
+
+import com.google.common.collect.Sets;
+
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
-import uk.ac.ox.cs.pdq.util.PdqTest;
-
-import java.sql.SQLException;
-import java.util.Map;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * Tests the updateEqualConstantClasses method of the DatabaseChaseInstance class
