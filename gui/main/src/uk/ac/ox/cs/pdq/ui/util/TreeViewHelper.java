@@ -111,10 +111,6 @@ public class TreeViewHelper
             result.append(at.getAccessMethod().getName());
             result.append('[');
             for (int index = 0; index < at.getAccessMethod().getInputs().length; ++index) {
-                TypedConstant tc = at.getInputConstants().get(index);
-                if(tc == null){
-                    continue;
-                }
                 result.append("#");
                 Attribute provenanceName = PlanPrinter.outputAttributeProvenance(p,at.getAccessMethod().getInputs()[index]);
                 result.append(provenanceName.getName());
@@ -122,7 +118,12 @@ public class TreeViewHelper
                 if(at.getInputConstants().isEmpty()){
                     result.append("?");
                 }else{
-                    result.append("\'"+at.getInputConstants().get(index)+"\'");
+                    TypedConstant tc = at.getInputConstants().get(index);
+                    if(tc != null){
+                        result.append("\'"+at.getInputConstants().get(index)+"\'");
+                    }else{
+                        result.append("?");
+                    }
                 }
                 if (index < at.getAccessMethod().getInputs().length - 1)
                     result.append(",");
