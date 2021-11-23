@@ -252,7 +252,7 @@
                     </AnchorPane>
                   </content>
                 </TitledPane>
-                <TitledPane animated="false" text="%application.plan.proof" fx:id="x4">
+                <TitledPane fx:id="proofViewAreaproofViewArea" animated="false" text="%application.plan.proof">
                   <content>
                     <TextArea fx:id="proofViewArea" prefWidth="200.0" wrapText="false" />
                   </content>
