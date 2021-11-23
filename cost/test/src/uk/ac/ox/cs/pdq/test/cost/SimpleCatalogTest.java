@@ -3,8 +3,12 @@
 
 package uk.ac.ox.cs.pdq.test.cost;
 
+import java.io.File;
+import java.io.FileWriter;
+
 import org.junit.Assert;
 import org.junit.Test;
+
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.FixedCostPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
@@ -12,10 +16,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.util.PdqTest;
-
-import java.io.File;
-import java.io.FileWriter;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * Basic functionality test for the FixedCostPerAccessCostEstimator class and

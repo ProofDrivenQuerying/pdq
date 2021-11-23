@@ -3,24 +3,49 @@
 
 package uk.ac.ox.cs.pdq.test.planner.linear.explorer;
 
-import com.google.common.collect.Sets;
-import com.google.common.eventbus.EventBus;
+import static org.mockito.Mockito.when;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
+import java.util.Set;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
+
+import com.google.common.collect.Sets;
+import com.google.common.eventbus.EventBus;
+
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.*;
+import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.exceptions.LimitReachedException;
-import uk.ac.ox.cs.pdq.fol.*;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.LinearGuarded;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -39,14 +64,8 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
-import uk.ac.ox.cs.pdq.util.PdqTest;
-
-import java.sql.SQLException;
-import java.util.*;
-import java.util.Map.Entry;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Tests the LinearGeneric explorer class.

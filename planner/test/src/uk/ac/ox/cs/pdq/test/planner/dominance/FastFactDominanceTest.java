@@ -3,12 +3,16 @@
 
 package uk.ac.ox.cs.pdq.test.planner.dominance;
 
-import com.google.common.collect.Lists;
+import static org.mockito.Mockito.when;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import com.google.common.collect.Lists;
+
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
@@ -23,9 +27,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
-import uk.ac.ox.cs.pdq.util.PdqTest;
-
-import static org.mockito.Mockito.when;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  *

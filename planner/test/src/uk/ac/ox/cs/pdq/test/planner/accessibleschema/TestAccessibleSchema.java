@@ -5,13 +5,21 @@ package uk.ac.ox.cs.pdq.test.planner.accessibleschema;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import uk.ac.ox.cs.pdq.util.QNames;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.*;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.EGD;
+import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.TGD;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.util.PdqTest;
-import uk.ac.ox.cs.pdq.util.QNames;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * Tests the AccessibleSchema class by creating an example schemas and

@@ -3,9 +3,24 @@
 
 package uk.ac.ox.cs.pdq.test.cost;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.bind.JAXBException;
+
 import org.junit.Assert;
 import org.junit.Test;
-import uk.ac.ox.cs.pdq.algebra.*;
+
+import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.JoinTerm;
+import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.estimators.QueryExplainCostEstimator;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
@@ -20,12 +35,7 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.util.PdqTest;
-
-import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.*;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * Tests the QueryExplainCostEstimator class by creating ad hoc plans and queries.  

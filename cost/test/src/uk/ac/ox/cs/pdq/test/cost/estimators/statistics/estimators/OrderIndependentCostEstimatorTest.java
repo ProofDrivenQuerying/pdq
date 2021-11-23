@@ -3,18 +3,19 @@
 
 package uk.ac.ox.cs.pdq.test.cost.estimators.statistics.estimators;
 
+import static org.mockito.Mockito.when;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.FixedCostPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TotalNumberOfOutputTuplesPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
-import uk.ac.ox.cs.pdq.util.PdqTest;
-
-import static org.mockito.Mockito.when;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * This unit test aims to demonstrate some of the OrderIndependentCostEstimators

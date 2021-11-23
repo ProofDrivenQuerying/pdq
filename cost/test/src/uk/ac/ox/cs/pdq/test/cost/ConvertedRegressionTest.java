@@ -3,9 +3,12 @@
 
 package uk.ac.ox.cs.pdq.test.cost;
 
+import static org.mockito.Mockito.when;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
+
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
@@ -18,10 +21,12 @@ import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.*;
-import uk.ac.ox.cs.pdq.util.PdqTest;
-
-import static org.mockito.Mockito.when;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.TGD;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * These test cases are converted from regression tests

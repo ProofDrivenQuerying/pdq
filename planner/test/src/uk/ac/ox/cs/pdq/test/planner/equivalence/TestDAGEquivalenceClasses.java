@@ -3,8 +3,15 @@
 
 package uk.ac.ox.cs.pdq.test.planner.equivalence;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Assert;
 import org.junit.Test;
+
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -24,13 +31,7 @@ import uk.ac.ox.cs.pdq.planner.equivalence.dag.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.util.PdqTest;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import uk.ac.ox.cs.pdq.test.util.PdqTest;
 
 /**
  * Tests the SynchronizedEquivalenceClasses class.
