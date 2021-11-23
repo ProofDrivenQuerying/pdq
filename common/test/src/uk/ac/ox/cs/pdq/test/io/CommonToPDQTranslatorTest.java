@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.io;
+package uk.ac.ox.cs.pdq.test.io;
 
 import junit.framework.TestCase;
 import org.junit.Assert;
@@ -6,6 +6,7 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.io.CommonToPDQTranslator;
 
 import java.io.File;
 import java.util.HashMap;
