@@ -19,10 +19,8 @@ import java.util.Map;
  */
 public class CommonToPDQTranslatorTest extends TestCase {
 
-    //filters what file separator to use unix / or windows \\
-    private String fileSeparator = System.getProperty("file.separator");
-    File schemaDir = new File(".."+fileSeparator+"regression"+fileSeparator+"test"+fileSeparator+"chaseBench"+fileSeparator+"Ontology-256"+fileSeparator+"schema");
-    File dependencyDir = new File(".."+fileSeparator+"regression"+fileSeparator+"test"+fileSeparator+"chaseBench"+fileSeparator+"Ontology-256"+fileSeparator+"dependencies");
+    File schemaDir = new File("..//regression//test//chaseBench//Ontology-256//schema");
+    File dependencyDir = new File("..//regression//test//chaseBench//Ontology-256//dependencies");
     Map<String, Relation> relations = new HashMap<>();
 
     /**
@@ -30,15 +28,15 @@ public class CommonToPDQTranslatorTest extends TestCase {
      */
     @Test
     public void testReadTablesFromFile() {
-        Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + ""+fileSeparator+"Ontology-256.s-schema.txt");
-        Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + ""+fileSeparator+"Ontology-256.t-schema.txt");
+        Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//Ontology-256.s-schema.txt");
+        Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//Ontology-256.t-schema.txt");
 
         Assert.assertEquals(218, tables.size());
         Assert.assertEquals(444, tables1.size());
 
-        List<Dependency> dependencies1 = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + ""+fileSeparator+"Ontology-256.st-tgds.txt");
-        List<Dependency> dependencies2 = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + ""+fileSeparator+"Ontology-256.st-tgds.txt");
-        List<Dependency> dependencies3 = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + ""+fileSeparator+"Ontology-256.st-tgds.txt");
+        List<Dependency> dependencies1 = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//Ontology-256.st-tgds.txt");
+        List<Dependency> dependencies2 = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//Ontology-256.st-tgds.txt");
+        List<Dependency> dependencies3 = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//Ontology-256.st-tgds.txt");
 
         Assert.assertEquals(256, dependencies1.size());
         Assert.assertEquals(256, dependencies2.size());
@@ -51,8 +49,8 @@ public class CommonToPDQTranslatorTest extends TestCase {
     @Test
     public void testParseAtom() {
         //read chasebench schema files to create relations
-        Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + ""+fileSeparator+"Ontology-256.s-schema.txt");
-        Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + ""+fileSeparator+"Ontology-256.t-schema.txt");
+        Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//Ontology-256.s-schema.txt");
+        Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//Ontology-256.t-schema.txt");
 
         relations.putAll(tables);
         relations.putAll(tables1);
