@@ -309,6 +309,7 @@ public class RuntimeController {
 	       alert.setHeaderText(null);
 	       alert.setContentText(e.toString());
 	       alert.showAndWait();
+		   log.warn("Error with RUNTIME", e);
 	       return false;
 		}
 	}

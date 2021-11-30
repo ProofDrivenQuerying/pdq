@@ -60,8 +60,8 @@ public class JsonRunner {
     }
 
     private static Table evaluatePlan(RelationalTerm p, Schema schema) throws Exception {
-//        AccessRepository repo = AccessRepository.getRepository("/var/lib/tomcat9/webapps/services/");
-        AccessRepository repo = AccessRepository.getRepository("/Users/Brandon/IdeaProjects/oxfordUniversity/pdq/react-rest/services");
+        AccessRepository repo = AccessRepository.getRepository("/var/lib/tomcat9/webapps/services/");
+//        AccessRepository repo = AccessRepository.getRepository("/Users/Brandon/IdeaProjects/oxfordUniversity/pdq/react-rest/services");
         try {
             ExecutablePlan executable = new PlanDecorator(repo, schema).decorate(p);
             Table res = executable.execute();
@@ -79,8 +79,8 @@ public class JsonRunner {
      * @throws Exception
      */
     public static ExecutablePlan decoratePlan(RelationalTerm p, Schema schema) throws Exception {
-//        AccessRepository repo = AccessRepository.getRepository("/var/lib/tomcat9/webapps/services/");
-        AccessRepository repo = AccessRepository.getRepository("/Users/Brandon/IdeaProjects/oxfordUniversity/pdq/react-rest/services");
+        AccessRepository repo = AccessRepository.getRepository("/var/lib/tomcat9/webapps/services/");
+//        AccessRepository repo = AccessRepository.getRepository("/Users/Brandon/IdeaProjects/oxfordUniversity/pdq/react-rest/services");
 
         ExecutablePlan executable = null;
         try{
