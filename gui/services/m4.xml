@@ -1,13 +1,23 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Access access-type="IN_MEMORY_ACCESS_METHOD" name="m4" relation-name="part">
-    <attribute name="p_partkey" type="java.lang.Integer" input="false" mapsToRelationAttribute="p_partkey"/>
-    <attribute name="p_brand" type="java.lang.String" input="false" mapsToRelationAttribute="p_brand"/>
-    <attribute name="p_name" type="java.lang.String" input="false" mapsToRelationAttribute="p_name"/>
-    <attribute name="p_size" type="java.lang.Integer" input="false" mapsToRelationAttribute="p_size"/>
-    <attribute name="p_type" type="java.lang.String" input="false" mapsToRelationAttribute="p_type"/>
-    <attribute name="p_retailprice" type="java.math.BigDecimal" input="false" mapsToRelationAttribute="p_retailprice"/>
-    <attribute name="p_comment" type="java.lang.String" input="false" mapsToRelationAttribute="p_comment"/>
-    <attribute name="p_mfgr" type="java.lang.String" input="false" mapsToRelationAttribute="p_mfgr"/>
-    <attribute name="p_container" type="java.lang.String" input="false" mapsToRelationAttribute="p_container"/>
-    <data-scv-file>./data4/part_m4.csv</data-scv-file>
-</Access>
+<service
+        name="m4"
+        protocol="REST"
+        url="http://pdq-webapp.cs.ox.ac.uk:8080/webapp/servlets/servlet/m4"
+        media-type="application/xml"
+        documentation=""
+        result-delimiter="country"
+        service-group="service-group-1">
+
+    <policy name="1000_items_per_page" />
+
+    <access-method type="FREE" name="m4" cost="1000.0" relation-name="part">
+        <attribute name="p_partkey" type="Integer" output="true"  relation-attribute="p_partkey" path="p_partkey" />
+        <attribute name="p_brand" type="String" output="true" relation-attribute="p_brand" path="p_brand"/>
+        <attribute name="p_name" type="String" output="true" relation-attribute="p_name" path="p_name"/>
+        <attribute name="p_size" type="Integer" output="true" relation-attribute="p_size" path="p_size"/>
+        <attribute name="p_type" type="String" output="true" relation-attribute="p_type" path="p_type"/>
+        <attribute name="p_retailprice" type="String" output="true" relation-attribute="p_retailprice" path="p_retailprice"/>
+        <attribute name="p_comment" type="String" output="true" relation-attribute="p_comment" path="p_comment"/>
+        <attribute name="p_mfgr" type="String" output="true" relation-attribute="p_mfgr" path="p_mfgr"/>
+        <attribute name="p_container" type="String" output="true" relation-attribute="p_container" path="p_container"/>
+    </access-method>
+</service>

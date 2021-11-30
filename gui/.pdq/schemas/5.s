@@ -53,7 +53,7 @@
             <attribute name="p_type" type="java.lang.String"/>
             <attribute name="p_size" type="java.lang.Integer"/>
             <attribute name="p_container" type="java.lang.String"/>
-            <attribute name="p_retailprice" type="java.math.BigDecimal"/>
+            <attribute name="p_retailprice" type="java.lang.String"/>
             <attribute name="p_comment" type="java.lang.String"/>
             <access-method name="m4"/>
             <access-method name="m5" inputs="0,1"/>
