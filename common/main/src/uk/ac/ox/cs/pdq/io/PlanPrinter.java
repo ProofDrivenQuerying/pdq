@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Prints a picture of a plan for better readability, and opens it in explorer.
+ * Prints plan for better readability, and (for the ping version) opens it in explorer.
  * Options: 
  *    - flat single line text,
  *    - indented text
