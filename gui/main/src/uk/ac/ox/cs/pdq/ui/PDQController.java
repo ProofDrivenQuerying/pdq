@@ -36,7 +36,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
-import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
 import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.db.*;
@@ -747,17 +746,12 @@ public class PDQController {
 
 					// Find the service that corresponds to currentSchemaViewItems
 					Service service = null;
-					log.warn("[WARN LINE 750] " + currentSchemaViewitems.getValue());
-					ExecutableAccessMethod executableAccessMethod = this.currentSchema.get().getServices().getAccess(currentSchemaViewitems.getValue());
-					if(executableAccessMethod != null){
-						log.warn("[WARN LINE 753]");
+					for (Service sr : this.currentSchema.get().getServices()) {
+						if (sr.getName().equals(currentSchemaViewitems.getValue())) {
+							service = sr;
+							break;
+						}
 					}
-//					for (Service sr : this.currentSchema.get().getServices()) {
-//						if (sr.getName().equals(currentSchemaViewitems.getValue())) {
-//							service = sr;
-//							break;
-//						}
-//					}
 
 					// Check services in the list of services and when connected to a relation by
 					// access method
@@ -1860,26 +1854,19 @@ public class PDQController {
 
 			boolean found = false;
 			for (AccessMethodDescriptor a : r.getAccessMethods()) {
-
-				ExecutableAccessMethod executableAccessMethod = s.getServices().getAccess(a.getName());
-				if(executableAccessMethod != null){
-					imageView = new ImageView(this.webRelationIcon);
-					ti.getChildren().add(new TreeItem<>(s.getName(), imageView));
-					found = true;
+				for (Service sr : s.getServices()) {
+					for (RESTExecutableAccessMethodSpecification ream : sr.getAccessMethod()) {
+						if (ream.getName().equals(a.getName())) {
+							imageView = new ImageView(this.webRelationIcon);
+							ti.getChildren().add(new TreeItem<>(sr.getName(), imageView));
+							found = true;
+						}
+						if (found)
+							break;
+					}
+					if (found)
+						break;
 				}
-//				for (Service sr : s.getServices()) {
-//					for (RESTExecutableAccessMethodSpecification ream : sr.getAccessMethod()) {
-//						if (ream.getName().equals(a.getName())) {
-//							imageView = new ImageView(this.webRelationIcon);
-//							ti.getChildren().add(new TreeItem<>(sr.getName(), imageView));
-//							found = true;
-//						}
-//						if (found)
-//							break;
-//					}
-//					if (found)
-//						break;
-//				}
 				if (found)
 					break;
 			}

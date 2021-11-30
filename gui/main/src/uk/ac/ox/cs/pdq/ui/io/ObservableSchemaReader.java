@@ -5,7 +5,6 @@ package uk.ac.ox.cs.pdq.ui.io;
 
 import com.google.common.base.Preconditions;
 import org.apache.log4j.Logger;
-import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
 import uk.ac.ox.cs.pdq.datasources.services.servicegroup.ServiceGroup;
@@ -42,7 +41,7 @@ public class ObservableSchemaReader {
 	
 	private Schema schema;
 
-	private AccessRepository services;
+	private Service[] services;
 	
 	/** A conventional schema reader, service group. */
 	private ServiceGroup sgr;
@@ -65,18 +64,27 @@ public class ObservableSchemaReader {
 			File schemaDir = new File(".pdq/services");
 			if (!schemaDir.exists())
 				schemaDir.mkdirs();
-			this.services = AccessRepository.getRepository(".pdq/services");
+			
 			ArrayList<Service> list = new ArrayList<>();
-//			for(File serviceFile : listFiles(schemaDir, "", ".xml"))
-//			{
-//				JAXBContext jaxbContext2 = JAXBContext.newInstance(Service.class);
-//				Unmarshaller jaxbUnmarshaller2 = jaxbContext2.createUnmarshaller();
-//				list.add((Service) jaxbUnmarshaller2.unmarshal(serviceFile));
-//			}
+			for(File serviceFile : listFiles(schemaDir, "", ".xml"))
+			{
+				JAXBContext jaxbContext2 = JAXBContext.newInstance(Service.class);
+				Unmarshaller jaxbUnmarshaller2 = jaxbContext2.createUnmarshaller();
+				list.add((Service) jaxbUnmarshaller2.unmarshal(serviceFile));
+			}
 			this.schema = DbIOManager.importSchema(file);
 			this.name = homepath(file.getPath());
-//			this.services = new Service[list.size()];
-
+			this.services = new Service[list.size()];
+			for(int i = 0; i < list.size(); i++) services[i] = list.get(i);
+			try
+			{
+				//TOCOMMENT fix this
+				//SanityCheck.sanityCheck(schema, services);
+			}
+			catch(Exception e)
+			{
+				throw new UserInterfaceException("Schema: " + this.name + " " + e.getMessage());
+			}
 			return new ObservableSchema(this.name, this.description, this.schema, this.services);
 		} catch (JAXBException | FileNotFoundException e) {
 			throw new ReaderException("Exception thrown while reading schema ", e);
