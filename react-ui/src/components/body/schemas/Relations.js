@@ -122,7 +122,7 @@ const RelationAttributeTable = ({relation}) => {
           {relation.attributes.map((attribute, index) => {
             return[
               <tr key={"row"+index}>
-                <th scope="row">{index+1}</th>
+                <th scope="row">{index}</th>
                 <td>{attribute.name}</td>
                 <td>{attribute.type}</td>
               </tr>
