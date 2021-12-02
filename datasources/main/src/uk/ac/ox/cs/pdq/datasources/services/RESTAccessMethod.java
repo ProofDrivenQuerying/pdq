@@ -21,9 +21,9 @@ import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.ExecutableAccessMethod;
-import uk.ac.ox.cs.pdq.datasources.services.policies.PolicyFactory;
-import uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication;
-import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
+//import uk.ac.ox.cs.pdq.datasources.services.policies.PolicyFactory;
+//import uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication;
+//import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodAttributeSpecification;
 import uk.ac.ox.cs.pdq.datasources.services.service.RESTExecutableAccessMethodSpecification;
 import uk.ac.ox.cs.pdq.datasources.services.service.Service;
@@ -59,7 +59,7 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 	private Attribute[] inputattributes;
 	private Attribute[] outputattributes;
 	private TreeMap<String, AttributeEncoding> attributeEncodingMap;
-	private TreeMap<String, UsagePolicy> usagePolicyMap;
+//	private TreeMap<String, UsagePolicy> usagePolicyMap;
 	
 	public RESTAccessMethod(String name, Attribute[] attributes, Integer[] inputs, Relation relation,
 			Map<Attribute, Attribute> attributeMapping, WebTarget target, MediaType mediaType,
@@ -114,13 +114,13 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 		this.url = sr.getUrl();
 		this.template = "";
 		this.attributeEncodingMap = new TreeMap<String, AttributeEncoding>();
-		this.usagePolicyMap = new TreeMap<String, UsagePolicy>();
+//		this.usagePolicyMap = new TreeMap<String, UsagePolicy>();
 
 		// Setup the attributeEncodingMap by putting in all AttributeEncodings from the ServiceGroupsRoot object
 		for(AttributeEncoding ae: sgr.getAttributeEncoding()) if(ae.getName() != null) attributeEncodingMap.put(ae.getName(), ae);
 
 		// Parse the usage policies from the ServiceGroupsRoot object
-		compileUsagePolicies(sgr);
+//		compileUsagePolicies(sgr);
 
 		// Format the templates stored in the AttributeEncodings from the ServiceGroupsRoot object 
 		formatTemplate(sgr, sr, am);
@@ -152,41 +152,41 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 
 	// Put all usage polcies in a map for future reference
 	@SuppressWarnings("unchecked")
-	public void compileUsagePolicies(ServiceGroup sgr)
-	{
-		for(GroupUsagePolicy gup : sgr.getUsagePolicy())
-		{
-			if(gup.getName() != null)
-			{
-				UsagePolicy up = usagePolicyMap.get(gup.getName());
-				if(up != null)
-				{
-					try
-					{
-						throw new ReaderException("Duplicate usage policy '" + gup.getName() + "'");
-					}
-					catch(ReaderException e)
-					{
-					}
-				}
-				else if(gup.getType() != null)
-				{
-					try
-					{
-						String className = gup.getType();
-						Class<UsagePolicy> cl = (Class<UsagePolicy>) Class.forName(className);
-						if(cl != null)
-						{
-							usagePolicyMap.put(gup.getName(), PolicyFactory.getInstance(cl, gup));
-						}
-					}
-					catch(ClassNotFoundException e)
-					{
-					}
-				}
-			}
-		}
-	}
+//	public void compileUsagePolicies(ServiceGroup sgr)
+//	{
+//		for(GroupUsagePolicy gup : sgr.getUsagePolicy())
+//		{
+//			if(gup.getName() != null)
+//			{
+//				UsagePolicy up = usagePolicyMap.get(gup.getName());
+//				if(up != null)
+//				{
+//					try
+//					{
+//						throw new ReaderException("Duplicate usage policy '" + gup.getName() + "'");
+//					}
+//					catch(ReaderException e)
+//					{
+//					}
+//				}
+//				else if(gup.getType() != null)
+//				{
+//					try
+//					{
+//						String className = gup.getType();
+//						Class<UsagePolicy> cl = (Class<UsagePolicy>) Class.forName(className);
+//						if(cl != null)
+//						{
+//							usagePolicyMap.put(gup.getName(), PolicyFactory.getInstance(cl, gup));
+//						}
+//					}
+//					catch(ClassNotFoundException e)
+//					{
+//					}
+//				}
+//			}
+//		}
+//	}
 	
 	// Format a list of templates as presented by the AttributeEncodings
 	private void formatTemplate(ServiceGroup sgr, Service sr, RESTExecutableAccessMethodSpecification am)
@@ -199,17 +199,17 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 			{
 				if(sup.getName() != null)
 				{
-					UsagePolicy up = usagePolicyMap.get(sup.getName());
-					if(up != null)
-					{
-						if(up instanceof uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication)
-						{
-							URLAuthentication uae = (URLAuthentication) up;
-							String encoding = uae.getAttributeEncoding();
-							String index = "0";
-							formatTemplateProcessParams(encoding, index, null, attributeEncodingMap2);
-						}
-					}
+//					UsagePolicy up = usagePolicyMap.get(sup.getName());
+//					if(up != null)
+//					{
+//						if(up instanceof uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication)
+//						{
+//							URLAuthentication uae = (URLAuthentication) up;
+//							String encoding = uae.getAttributeEncoding();
+//							String index = "0";
+//							formatTemplateProcessParams(encoding, index, null, attributeEncodingMap2);
+//						}
+//					}
 				}
 			}
 		}
@@ -338,16 +338,16 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 			{
 				if(sup.getName() != null)
 				{
-					UsagePolicy up = usagePolicyMap.get(sup.getName());
-					if(up != null)
-					{
-						if(up instanceof uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication)
-						{
-							URLAuthentication uae = (URLAuthentication) up;
-							String encoding = uae.getAttributeEncoding();
-							mapAttributesPhase2ProcessParams(encoding, sup.getName(), null, null);
-						}
-					}
+//					UsagePolicy up = usagePolicyMap.get(sup.getName());
+//					if(up != null)
+//					{
+//						if(up instanceof uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication)
+//						{
+//							URLAuthentication uae = (URLAuthentication) up;
+//							String encoding = uae.getAttributeEncoding();
+//							mapAttributesPhase2ProcessParams(encoding, sup.getName(), null, null);
+//						}
+//					}
 				}
 			}
 		}
@@ -424,30 +424,30 @@ public class RESTAccessMethod extends ExecutableAccessMethod {
 		RESTRequestEvent request = new RESTRequestEvent(target, mediaType);
 		
 		// For all AccessPreProcessors call the processAccessRequest method with the RESTRequestEvent
-		Collection<UsagePolicy> cup = usagePolicyMap.values();
-		for(UsagePolicy up : cup)
-		{
-			if(up instanceof AccessPreProcessor)
-			{
-				@SuppressWarnings("unchecked")
-				AccessPreProcessor<RESTRequestEvent> apep = (AccessPreProcessor<RESTRequestEvent>) up;
-				apep.processAccessRequest(request);
-			}
-		}
+//		Collection<UsagePolicy> cup = usagePolicyMap.values();
+//		for(UsagePolicy up : cup)
+//		{
+//			if(up instanceof AccessPreProcessor)
+//			{
+//				@SuppressWarnings("unchecked")
+//				AccessPreProcessor<RESTRequestEvent> apep = (AccessPreProcessor<RESTRequestEvent>) up;
+//				apep.processAccessRequest(request);
+//			}
+//		}
 		
 		// Process the RESTRequestEvent to generate a RESTResponseEvent
 		RESTResponseEvent response = request.processRequest();
 		
 		// For all AccessPostProcessors call the processAccessResponse method with the RESTResponse event
-		for(UsagePolicy up : cup)
-		{
-			if(up instanceof AccessPostProcessor)
-			{
-				@SuppressWarnings("unchecked")
-				AccessPostProcessor<RESTResponseEvent> apop = (AccessPostProcessor<RESTResponseEvent>) up;
-				apop.processAccessResponse(response);
-			}
-		}
+//		for(UsagePolicy up : cup)
+//		{
+//			if(up instanceof AccessPostProcessor)
+//			{
+//				@SuppressWarnings("unchecked")
+//				AccessPostProcessor<RESTResponseEvent> apop = (AccessPostProcessor<RESTResponseEvent>) up;
+//				apop.processAccessResponse(response);
+//			}
+//		}
 
 		// Create a new table as input for the unmarshallers
 		Table table = new Table();
