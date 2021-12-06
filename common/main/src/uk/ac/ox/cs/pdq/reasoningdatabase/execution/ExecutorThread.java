@@ -567,17 +567,15 @@ public class ExecutorThread extends Thread {
 			result.setAutoCommit(true);
 			return result;
 		} catch (SQLException e) {
-//			if (e.getMessage() != null && e.getMessage().contains("does not exist")) {
-//				System.err.println("Database " + database + " does not exists. falling back to default connection without database name.");
-//			} else if (e.getNextException()!=null)
-//				e.getNextException().printStackTrace();
-//			else
-//				e.printStackTrace();
-			throw e;
-		}finally {
-			Connection result = DriverManager.getConnection(url, username, password);
-			result.setAutoCommit(true);
-			return result;
+			if (e.getMessage() != null && e.getMessage().contains("does not exist")) {
+				System.err.println("Database " + database + " does not exists. falling back to default connection without database name.");
+			} else if (e.getNextException()!=null)
+				e.getNextException().printStackTrace();
+			else
+				e.printStackTrace();
 		}
+		Connection result = DriverManager.getConnection(url, username, password);
+		result.setAutoCommit(true);
+		return result;
 	}	
 }
