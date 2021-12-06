@@ -7,8 +7,6 @@
 		result-delimiter="country"
 		service-group="service-group-1">
 
-		<policy name="1000_items_per_page" />
-
 		<access-method type="LIMITED" 						name="yh_geo_code" cost="1000.0" relation-name="YahooPlaceCode">
         		<attribute name="namespace" input="true" output="true" type="String"    	relation-attribute="namespace" path="namespace"/>
 			<attribute name="code4"      input="true" output="true" type="String"    	relation-attribute="code4" path="code4"/>

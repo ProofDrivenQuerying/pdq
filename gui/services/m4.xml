@@ -7,8 +7,6 @@
         result-delimiter="country"
         service-group="service-group-1">
 
-    <policy name="1000_items_per_page" />
-
     <access-method type="FREE" name="m4" cost="1000.0" relation-name="part">
         <attribute name="p_partkey" type="Integer" output="true"  relation-attribute="p_partkey" path="p_partkey" />
         <attribute name="p_brand" type="String" output="true" relation-attribute="p_brand" path="p_brand"/>
