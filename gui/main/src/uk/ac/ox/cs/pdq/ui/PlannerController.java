@@ -6,6 +6,8 @@ package uk.ac.ox.cs.pdq.ui;
 
 import com.google.common.base.Preconditions;
 import javafx.animation.AnimationTimer;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -32,7 +34,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -64,7 +65,6 @@ import uk.ac.ox.cs.pdq.ui.util.TreeViewHelper;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
-import java.net.ConnectException;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -259,7 +259,7 @@ public class PlannerController {
 	private ConjunctiveQuery query;
 
 	/**  The previous plan obtained with the setting of this planning session. */
-	private ObservablePlan plan;
+	public ObservablePlan plan;
 
 	/** Queue containing the plan found. */
 	private ConcurrentLinkedQueue<Object> planQueue;
@@ -285,6 +285,13 @@ public class PlannerController {
 	/** The best proof. */
 	private Proof bestProof;
 
+
+	/** used as a listener for parent controller to use (PDQController) */
+	private final ObjectProperty parentValue = new SimpleObjectProperty();
+
+	public ObjectProperty valueProperty() {
+		return parentValue;
+	}
 	/**
 	 * Default constructor, start the animation timer.
 	 */
@@ -603,6 +610,7 @@ private void registerEvents(final ExplorationSetUp planner) {
 							new PrintStream(bos).println(pr.toString());
 							this.proofViewArea.setText(bos.toString());
 							this.bestProof = pr;
+							parentValue.setValue(pr);
 						}
 					}
 
