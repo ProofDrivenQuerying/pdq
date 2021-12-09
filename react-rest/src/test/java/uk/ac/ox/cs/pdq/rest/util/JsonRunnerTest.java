@@ -27,7 +27,7 @@ public class JsonRunnerTest {
 
 
     @Test
-    public void testRuntime() {
+    public void testRuntime() throws Exception {
         RunResults actual = JsonRunner.runtime(testSchema, testCq, testProperties, testPlanRT);
         Assert.assertNotNull(actual);
     }

@@ -3,13 +3,9 @@
 
 import React from 'react';
 import PopoutWindow from '../Popout';
-import { FaClipboardList } from 'react-icons/fa';
-import { Modal,
-         ModalHeader,
-         ModalBody,
-         ModalFooter
-} from 'reactstrap';
-import { Tree } from 'antd';
+import {FaClipboardList} from 'react-icons/fa';
+import {Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
+import {Tree} from 'antd';
 import PlanTreeNode from './PlanTreeNode'
 import Button from 'react-bootstrap/Button'
 
@@ -17,7 +13,7 @@ export default class PlanModal extends React.Component{
   
   constructor(props){
     super(props);
-    console.log([this.props.plan.jsonPlan]);
+    console.log("[JsonPlan]", [this.props.plan.jsonPlan]);
     this.state = {
       modalOpen: false,
       formattedTree: this.grow([this.props.plan.jsonPlan])
@@ -37,12 +33,19 @@ export default class PlanModal extends React.Component{
     */
     const toReturn = [];
     for (const command in jsonPlan) {
-      const node = {
-        title: <PlanTreeNode relationalTerm={jsonPlan[command]}/>,
-        key: `${jsonPlan[command].command}-${command}`,
-        children: this.grow(jsonPlan[command].subexpression)
+      let relationalTerm = jsonPlan[command];
+      //skip printing rename in treeNode instead passing onto the next node
+      if(relationalTerm.command === "Rename"){
+        toReturn.push(...this.grow(relationalTerm.subexpression));
+      }else{
+        const node = {
+          title: <PlanTreeNode relationalTerm={relationalTerm}/>,
+          key: `${relationalTerm.command}-${command}-${Math.random()*new Date()}`,
+          children: this.grow(relationalTerm.subexpression)
+        }
+        toReturn.push(node);
       }
-      toReturn.push(node);
+
     }
     return toReturn;
   }
@@ -84,11 +87,11 @@ export default class PlanModal extends React.Component{
           size="lg">
 
           <ModalHeader toggle={this.toggle}>
-            Plan{this.props.id}
+            Best Plan
 
             <PopoutWindow
               title={"Plan Information"}
-              content={planInfoContent("Plan"+this.props.id, this.props.plan)}
+              content={planInfoContent("Best Plan", this.props.plan)}
               options={{
                 width: "800px",
                 height: "600px"

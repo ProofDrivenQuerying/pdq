@@ -8,7 +8,7 @@
 
   	<name>PDQ REST API</name>
   	<url>http://www.cs.ox.ac.uk/pdq/</url>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
   	<description>This library features packages and classes for PDQ's REST API.</description>
 
     <parent>
@@ -61,13 +61,6 @@
             <artifactId>javax.ws.rs-api</artifactId>
             <version>2.1</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>1.12</version>
-        </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

@@ -14,7 +14,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -55,6 +54,7 @@ import uk.ac.ox.cs.pdq.ui.model.ObservablePlan;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
+import uk.ac.ox.cs.pdq.ui.util.TreeViewHelper;
 import uk.ac.ox.cs.pdq.util.SanityCheck;
 
 import java.io.*;
@@ -435,6 +435,8 @@ public class PDQController {
 
 				// Set the currently selected schema/query/plan
 				final PlannerController plannerController = loader.getController();
+				//added Listener on planner controller to display proof from child window to main window
+				plannerController.valueProperty().addListener((observable, oldValue, newValue) -> setProof(oldValue,newValue));
 				ObservablePlan pl = this.currentPlan.get();
 				pl.setPlannerType(this.settingsPlannerTypeList.getValue());
 				pl.setChaserType(this.settingsReasoningTypeList.getValue());
@@ -469,6 +471,19 @@ public class PDQController {
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				throw new UserInterfaceException(e.getMessage());
+			}
+		}
+	}
+
+	/**
+	 * A Listener method used to set proofViewArea proof
+	 * @param oldValue
+	 * @param newValue
+	 */
+	private void setProof(Object oldValue, Object newValue) {
+		if(!(oldValue == newValue)){
+			if(newValue instanceof Proof){
+				this.displayProof((Proof)newValue);
 			}
 		}
 	}
@@ -1232,9 +1247,8 @@ public class PDQController {
 		if (newValue != null) {
 			Plan plan = newValue.getPlan();
 			if (plan != null)	PDQController.this.savePlan(newValue);
-			Schema selectedSchema = this.currentSchema.get().getSchema();
 			PDQController.this.runRuntimeButton.setDisable(plan == null);
-			PDQController.this.displayPlan(plan, selectedSchema);
+			PDQController.this.displayPlan(plan);
 			PDQController.this.displayProof(newValue.getProof());
 			PDQController.this.displaySettings(newValue);
 		} else {
@@ -1242,12 +1256,6 @@ public class PDQController {
 		}
 	};
 
-	/**
-	 * Old
-	 * @param out
-	 * @param p
-	 * @param indent
-	 */
 	static public void displayPlanSubtype(PrintStream out, Plan p, int indent)
 	{
 		try {
@@ -1256,21 +1264,12 @@ public class PDQController {
 			e.printStackTrace();
 		}
 	}
-
-	static public void displayPlanSubtype(PrintStream out, Plan p, int indent , Schema s)
-	{
-//		try {
-//			uk.ac.ox.cs.pdq.io.PlanPrinter.printPlanToText(out, (RelationalTerm) p, indent, s);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-	}
 	
-	void displayPlan(Plan p, Schema s) {
+	void displayPlan(Plan p) {
 		if (p != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			PrintStream pbos = new PrintStream(bos); 
-			displayPlanSubtype(pbos, p, 0 , s);
+			displayPlanSubtype(pbos, p, 0);
 
 			// Create the TreeViewHelper
 			// Get the Products

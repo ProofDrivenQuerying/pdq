@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<schema name="mark">
+<schema name="0">
     <relations>
         <relation name="activityFree">
             <attribute name="activity_comment" type="java.lang.String"/>

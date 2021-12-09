@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
  * Default instantiable RelationalTerm class.
  *
  * @author Camilo Ortiz
+ * @Contributor Brandon Moore
  */
 public class JSONPlan extends JSONRelationalTerm{
 

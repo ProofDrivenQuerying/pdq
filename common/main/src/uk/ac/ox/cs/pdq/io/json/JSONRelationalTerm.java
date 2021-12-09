@@ -33,21 +33,31 @@ public abstract class JSONRelationalTerm {
         if (rtChildren.length == 0) {
             this.subexpression = new JSONRelationalTerm[]{};
         } else {
-            RelationalTerm rtChild = rtChildren[0];
-            for (int i = 0; i < this.subexpression.length; i ++) {
-                if (rtChild instanceof JoinTerm) {
-                    this.subexpression[i] = new JSONJoin((JoinTerm) rtChildren[i]);
-                } else if (rtChild instanceof SelectionTerm) {
-                    this.subexpression[i] = new JSONSelection((SelectionTerm) rtChildren[i]);
-                } else if (rtChild instanceof ProjectionTerm) {
-                    this.subexpression[i] = new JSONProjection((ProjectionTerm) rtChildren[i]);
-                } else if (rtChild instanceof AccessTerm) {
-                    this.subexpression[i] = new JSONAccess((AccessTerm) rtChildren[i]);
+            if (rtChildren[0] instanceof JoinTerm) {
+                this.subexpression[0] = new JSONJoin((JoinTerm) rtChildren[0]);
+            } else if (rtChildren[0] instanceof SelectionTerm) {
+                this.subexpression[0] = new JSONSelection((SelectionTerm) rtChildren[0]);
+            } else if (rtChildren[0] instanceof ProjectionTerm) {
+                this.subexpression[0] = new JSONProjection((ProjectionTerm) rtChildren[0]);
+            } else if (rtChildren[0] instanceof AccessTerm) {
+                this.subexpression[0] = new JSONAccess((AccessTerm) rtChildren[0]);
+            } else {
+                this.subexpression[0] = new JSONPlan(rtChildren[0]);
+            }
+            if(rtChildren.length>1) {
+                if (rtChildren[1] instanceof JoinTerm) {
+                    this.subexpression[1] = new JSONJoin((JoinTerm) rtChildren[1]);
+
+                } else if (rtChildren[1] instanceof SelectionTerm) {
+                    this.subexpression[1] = new JSONSelection((SelectionTerm) rtChildren[1]);
+                } else if (rtChildren[1] instanceof ProjectionTerm) {
+                    this.subexpression[1] = new JSONProjection((ProjectionTerm) rtChildren[1]);
+                } else if (rtChildren[1] instanceof AccessTerm) {
+                    this.subexpression[1] = new JSONAccess((AccessTerm) rtChildren[1]);
                 } else {
-                    this.subexpression[i] = new JSONPlan(rtChildren[i]);
+                    this.subexpression[1] = new JSONPlan(rtChildren[1]);
                 }
             }
-
         }
     }
 

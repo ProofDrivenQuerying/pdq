@@ -55,7 +55,15 @@ public class RelationArray {
         if(accessMethods[k].getNumberOfInputs() == 0){
           a_m_type = "free";
         }else{
-          a_m_type = "limited";
+          StringBuffer stringBuffer = new StringBuffer();
+          stringBuffer.append("limited:");
+          char sep = '[';
+          for(int input: accessMethods[k].getInputs()){
+            stringBuffer.append(sep).append(input);
+            sep = ',';
+          }
+          stringBuffer.append(']');
+          a_m_type = stringBuffer.toString();
         }
         jsonAccessMethods[k] = new AccessMethod(a_m_name, a_m_type);
       }

@@ -4,24 +4,10 @@
 
 package uk.ac.ox.cs.pdq.ui;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeSet;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import javafx.scene.control.*;
-import org.apache.log4j.Logger;
-
 import com.google.common.base.Preconditions;
-
 import javafx.animation.AnimationTimer;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -33,12 +19,14 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import org.apache.log4j.Logger;
 import prefuse.controls.FocusControl;
 import prefuse.controls.WheelZoomControl;
 import uk.ac.ox.cs.pdq.algebra.Plan;
@@ -48,6 +36,7 @@ import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
+import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
@@ -56,9 +45,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
-//import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.ui.event.PlanSearchVisualizer;
@@ -74,6 +60,17 @@ import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 import uk.ac.ox.cs.pdq.ui.util.DecimalConverter;
 import uk.ac.ox.cs.pdq.ui.util.LogarithmicAxis;
+import uk.ac.ox.cs.pdq.ui.util.TreeViewHelper;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeSet;
+import java.util.concurrent.*;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -262,7 +259,7 @@ public class PlannerController {
 	private ConjunctiveQuery query;
 
 	/**  The previous plan obtained with the setting of this planning session. */
-	private ObservablePlan plan;
+	public ObservablePlan plan;
 
 	/** Queue containing the plan found. */
 	private ConcurrentLinkedQueue<Object> planQueue;
@@ -288,6 +285,13 @@ public class PlannerController {
 	/** The best proof. */
 	private Proof bestProof;
 
+
+	/** used as a listener for parent controller to use (PDQController) */
+	private final ObjectProperty parentValue = new SimpleObjectProperty();
+
+	public ObjectProperty valueProperty() {
+		return parentValue;
+	}
 	/**
 	 * Default constructor, start the animation timer.
 	 */
@@ -395,6 +399,15 @@ public class PlannerController {
 		AnchorPane.setLeftAnchor(swingNode, 0.);
 	}
 
+	public static void infoBox(String infoMessage, String titleBar, String headerMessage)
+	{
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle(titleBar);
+		alert.setHeaderText(headerMessage);
+		alert.setContentText(infoMessage);
+		alert.showAndWait();
+	}
+
 	/**
 	 * Starts or resumes the search thread.
 	 *
@@ -405,34 +418,47 @@ public class PlannerController {
 		Preconditions.checkNotNull(this.schema);
 		Preconditions.checkNotNull(this.query);
 		if (this.pauser == null) {
-			final ExplorationSetUp planner = new ExplorationSetUp(this.params, this.costParams, this.reasoningParams, this.databaseParams, this.schema);
-			registerEvents(planner);
-            peh.initialiseShapes();
-            this.pauser = new Pauser(this.dataQueue, 99999);
-			ExecutorService executor = Executors.newFixedThreadPool(2);
-			executor.execute(this.pauser);
-			this.future = executor.submit(() -> {
-				try {
-					log.debug("Searching plan...");
-					Map.Entry<RelationalTerm, Cost> bestPlan = planner.search(this.query);
-					if(bestPlan != null)
-					{
-						PlannerController.this.bestPlan = bestPlan.getKey();
-						log.debug("Best plan: " + bestPlan);
-						ObservablePlan p = PlannerController.this.plan.copy();
-						p.setPlan(bestPlan.getKey());
-						p.setProof(PlannerController.this.bestProof);
-						p.setCost(bestPlan.getValue());
-						p.store();
-						PlannerController.this.planQueue.add(p);
+				final ExplorationSetUp planner = new ExplorationSetUp(this.params, this.costParams, this.reasoningParams, this.databaseParams, this.schema);
+				registerEvents(planner);
+				peh.initialiseShapes();
+				this.pauser = new Pauser(this.dataQueue, 99999);
+				ExecutorService executor = Executors.newFixedThreadPool(2);
+				executor.execute(this.pauser);
+				this.future = executor.submit(() -> {
+					try {
+						log.debug("Searching plan...");
+						Map.Entry<RelationalTerm, Cost> bestPlan = planner.search(this.query);
+						if (bestPlan != null) {
+							PlannerController.this.bestPlan = bestPlan.getKey();
+							log.debug("Best plan: " + bestPlan);
+							ObservablePlan p = PlannerController.this.plan.copy();
+							p.setPlan(bestPlan.getKey());
+							p.setProof(PlannerController.this.bestProof);
+							p.setCost(bestPlan.getValue());
+							p.store();
+							PlannerController.this.planQueue.add(p);
+						}
+					} catch (PlannerException pe ){
+						throw new IllegalStateException(pe.getMessage());
+					} catch (SQLException sqlException){
+						throw new IllegalStateException("SQLException has Occurred something went wrong in the database");
+					}catch (Exception e) {
+						throw new IllegalStateException("Error Occurred, Please check logs for more information");
 					}
-				} catch (Exception e) {
-					log.error(e.getMessage(), e);
-					throw new IllegalStateException();
-				}
-				peh.drawShapes();
-				PlannerController.this.dataQueue.add(Status.COMPLETE);
-			});
+					peh.drawShapes();
+					PlannerController.this.dataQueue.add(Status.COMPLETE);
+				});
+
+				//future value and catch exception being thrown
+			try {
+				this.future.get();
+			} catch (ExecutionException | InterruptedException ex) {
+				Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.setHeaderText("Error");
+				alert.setContentText(ex.getMessage());
+				alert.show();
+				log.warn("Failed Error", ex);
+			}
 		} else {
 			this.pauser.resume();
 		}
@@ -584,6 +610,7 @@ private void registerEvents(final ExplorationSetUp planner) {
 							new PrintStream(bos).println(pr.toString());
 							this.proofViewArea.setText(bos.toString());
 							this.bestProof = pr;
+							parentValue.setValue(pr);
 						}
 					}
 

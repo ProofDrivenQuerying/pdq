@@ -7,8 +7,6 @@
 		result-delimiter="nation"
 		service-group="service-group-1">
 
-		<policy name="1000_items_per_page" />
-
 		<access-method 						name="pdqWebappNationInput" cost="1000.0" relation-name="Nation">
 			<attribute name="n_nationkey"  input="true"	output="true" type="Integer"    	relation-attribute="n_nationkey" path="n_nationkey" attribute-encoding="n_nationkey"/>
 			<attribute name="n_name"    			    output="true" type="String"    	relation-attribute="n_name" path="n_name"/>

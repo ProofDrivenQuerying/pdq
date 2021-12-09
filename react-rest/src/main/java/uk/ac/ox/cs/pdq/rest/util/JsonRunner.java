@@ -5,14 +5,15 @@ package uk.ac.ox.cs.pdq.rest.util;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.datasources.accessrepository.AccessRepository;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.datasources.tuple.Table;
-import uk.ac.ox.cs.pdq.db.tuple.Tuple;
 import uk.ac.ox.cs.pdq.datasources.tuple.Table.ResetableIterator;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.tuple.Tuple;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.rest.jsonobjects.run.RunResults;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanDecorator;
 import uk.ac.ox.cs.pdq.runtime.exec.spliterator.ExecutablePlan;
+
 import java.io.File;
 import java.io.FileWriter;
 
@@ -32,7 +33,7 @@ public class JsonRunner {
      * @param properties
      * @return
      */
-    public static RunResults runtime(Schema schema, ConjunctiveQuery cq, File properties, RelationalTerm plan){
+    public static RunResults runtime(Schema schema, ConjunctiveQuery cq, File properties, RelationalTerm plan) throws Exception {
 
         try{
             long start = System.currentTimeMillis();
@@ -53,19 +54,19 @@ public class JsonRunner {
 
             return new RunResults(tupleCount, results, computationTime, cq);
 
-        }catch(Throwable e){
-            e.printStackTrace();
+        }catch(Exception e){
+            throw e;
         }
-        return null;
     }
 
     private static Table evaluatePlan(RelationalTerm p, Schema schema) throws Exception {
-        AccessRepository repo = AccessRepository.getRepository("./services");
+        AccessRepository repo = AccessRepository.getRepository("/var/lib/tomcat9/webapps/services/");
+//        AccessRepository repo = AccessRepository.getRepository("/Users/Brandon/IdeaProjects/oxfordUniversity/pdq/react-rest/services");
         try {
             ExecutablePlan executable = new PlanDecorator(repo, schema).decorate(p);
             Table res = executable.execute();
             return res;
-        }catch(Throwable t) {
+        }catch(Exception t) {
             t.printStackTrace();
             throw t;
         }
@@ -78,13 +79,15 @@ public class JsonRunner {
      * @throws Exception
      */
     public static ExecutablePlan decoratePlan(RelationalTerm p, Schema schema) throws Exception {
-        AccessRepository repo = AccessRepository.getRepository("./services");
+        AccessRepository repo = AccessRepository.getRepository("/var/lib/tomcat9/webapps/services/");
+//        AccessRepository repo = AccessRepository.getRepository("/Users/Brandon/IdeaProjects/oxfordUniversity/pdq/react-rest/services");
 
         ExecutablePlan executable = null;
         try{
             executable = new PlanDecorator(repo,schema).decorate(p);
         }catch(Exception e){
             e.printStackTrace();
+            throw e;
         }
         return executable;
     }

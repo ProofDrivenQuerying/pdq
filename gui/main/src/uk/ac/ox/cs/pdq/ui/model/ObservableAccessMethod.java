@@ -40,7 +40,7 @@ public class ObservableAccessMethod {
 	/**
 	 * Instantiates a new observable access method.
 	 *
-	 * @param b the b
+	 * @param urlToRead String
 	 */
 	  public static String getHTML(String urlToRead) throws Exception {
 	      StringBuilder result = new StringBuilder();
@@ -58,7 +58,7 @@ public class ObservableAccessMethod {
 
 	public ObservableAccessMethod( String url, AccessMethodDescriptor b) {
 		this.name.set(b.getName());
-		this.type.set((b.getNumberOfInputs() == 0) ? "Free" : "Limited");
+		this.type.set(getAccessType(b));
 		try
 		{
 			getHTML(url);
@@ -70,10 +70,31 @@ public class ObservableAccessMethod {
 		}
 		this.inputs.set(FXCollections.observableArrayList(b.getInputs()));
 	}
+
+	/**
+	 * returns the type of AccessMethod
+	 * @param b
+	 * @return
+	 */
+	private String getAccessType(AccessMethodDescriptor b){
+		if(b.getNumberOfInputs() == 0){
+			return "free";
+		}else{
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append("limited:");
+			char sep = '[';
+			for(int input: b.getInputs()){
+				stringBuffer.append(sep).append(input);
+				sep = ',';
+			}
+			stringBuffer.append(']');
+			return stringBuffer.toString();
+		}
+	}
 	
 	public ObservableAccessMethod(AccessMethodDescriptor b) {
 		this.name.set(b.getName());
-		this.type.set((b.getNumberOfInputs() == 0) ? "Free" : "Limited");
+		this.type.set(getAccessType(b));
 		this.working.set("N/A");
 		this.inputs.set(FXCollections.observableArrayList(b.getInputs()));
 	}

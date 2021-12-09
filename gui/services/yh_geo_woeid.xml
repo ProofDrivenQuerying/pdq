@@ -7,8 +7,6 @@
 		result-delimiter="country"
 		service-group="service-group-1">
 
-		<policy name="1000_items_per_page" />
-
 		<access-method type="LIMITED" 						name="yh_geo_woeid" cost="1000.0" relation-name="YahooPlaces">
 	  	<attribute name="woeid"    input="true" output="true" type="Integer"   relation-attribute="woeid"     path="woeid"/>
 		<attribute name="name"     output="true" type="String"     relation-attribute="name"  path="name"/>
