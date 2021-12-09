@@ -11,10 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import com.google.common.collect.Sets;
 
@@ -76,6 +73,7 @@ public class TestParallelChaser extends PdqTest {
 	 * R2(c,John)
 	 * </pre>
 	 */
+	@Ignore
 	@Test
 	public void test_reasonUntilTermination1() {
 		Atom f20 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k1"), UntypedConstant.create("c"), UntypedConstant.create("c1") });
