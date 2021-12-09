@@ -16,11 +16,10 @@ import javax.xml.bind.annotation.XmlType;
 // It represents the in-memory results of parsing the XML file for the ServiceGroup object
 // It contains  Attribute~Encodings, GroupUsagePolicies and Services.
 @XmlRootElement (name="service-groups")
-@XmlType (propOrder= {"attributeEncoding", "usagePolicy", "service"})
+@XmlType (propOrder= {"attributeEncoding", "service"})
 public class ServiceGroup {
 	
 	private AttributeEncoding[] attributeEncoding;
-	private GroupUsagePolicy[] usagePolicy;
 	private Service[] service;
 
 	@XmlElement (name = "attribute-encoding", required=false)
@@ -30,15 +29,6 @@ public class ServiceGroup {
 
 	public void setAttributeEncoding(AttributeEncoding[] attributeEncoding) {
 		this.attributeEncoding = attributeEncoding;
-	}
-
-	@XmlElement (name = "usage-policy", required=false)
-	public GroupUsagePolicy[] getUsagePolicy() {
-		return usagePolicy;
-	}
-
-	public void setUsagePolicy(GroupUsagePolicy[] usagePolicy) {
-		this.usagePolicy = usagePolicy;
 	}
 
 	@XmlElement (required=true)
