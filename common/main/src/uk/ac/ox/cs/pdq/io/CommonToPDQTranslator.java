@@ -3,36 +3,21 @@
 
 package uk.ac.ox.cs.pdq.io;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.*;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.EGD;
-import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.TGD;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
  * @author Efi & Gabor
@@ -137,7 +122,7 @@ public class CommonToPDQTranslator {
 		return null;
 	}
 
-	protected static List<Atom> parseAtoms(Map<String, Relation> relations, String line) {
+	public static List<Atom> parseAtoms(Map<String, Relation> relations, String line) {
 		Pattern p = Pattern.compile(READ_ATOM);
 		Matcher m = p.matcher(line);
 		List<Atom> atoms = Lists.newArrayList();
@@ -189,7 +174,7 @@ public class CommonToPDQTranslator {
 		return null;
 	}
 
-	protected static Atom parseEquality(String line) {
+	public static Atom parseEquality(String line) {
 		Pattern p = Pattern.compile(READ_EQUALITY);
 		Matcher m = p.matcher(line);
 		if (m.find()) {

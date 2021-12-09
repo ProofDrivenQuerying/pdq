@@ -3,19 +3,8 @@
 
 package uk.ac.ox.cs.pdq.regression.junit.chasebench;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.Test;
-
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
@@ -30,14 +19,21 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.*;
+
 /**
  * The test case called "DoctorsFD" from the chasebench project.
  * @author Gabor
- *
+ * @contributor Brandon Moore
  */
 public class DoctorsFD {
 	String TEST_DATA[] = {"10k","100k","500k","1m"}; // test data folders;
 	String testDataFolder = TEST_DATA[0];
+	//filters what file separator to use unix / or windows \\
+	private String fileSeparator = System.getProperty("file.separator");
 	private Schema s = null;
 	Map<String, Relation> relations = new HashMap<>();
 	@Test 
@@ -81,18 +77,18 @@ public class DoctorsFD {
 	}
 	
 	private Schema createSchema() {
-		File schemaDir = new File("test//chaseBench//doctors//schema//");
-		File dependencyDir = new File("test//chaseBench//doctors//dependencies");
-		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//doctors-fd.s-schema.txt");
-		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//doctors-fd.t-schema.txt");
+		File schemaDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"doctors"+fileSeparator+"schema"+fileSeparator+"");
+		File dependencyDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"doctors"+fileSeparator+"dependencies");
+		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + ""+fileSeparator+"doctors-fd.s-schema.txt");
+		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + ""+fileSeparator+"doctors-fd.t-schema.txt");
 		relations.putAll(tables);
 		relations.putAll(tables1);
-		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//doctors-fd.st-tgds.txt");
+		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + ""+fileSeparator+"doctors-fd.st-tgds.txt");
 		return new Schema(relations.values().toArray(new Relation[relations.size()]), dependencies.toArray(new Dependency[dependencies.size()]));
 		
 	}
 	private Collection<Atom> getTestFacts() {
-		File dataDir = new File("test//chaseBench//doctors//data//" + testDataFolder + "//");
+		File dataDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"doctors"+fileSeparator+"data"+fileSeparator+"" + testDataFolder + ""+fileSeparator+"");
 		Collection<Atom> facts = new ArrayList<>();
 		for (File f: dataDir.listFiles()) {
 			if (f.getName().endsWith(".csv")) {

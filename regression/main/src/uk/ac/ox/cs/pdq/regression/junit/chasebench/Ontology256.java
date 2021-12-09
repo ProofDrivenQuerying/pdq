@@ -3,17 +3,7 @@
 
 package uk.ac.ox.cs.pdq.regression.junit.chasebench;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Test;
-
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
@@ -26,6 +16,11 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.*;
+
 /**
  * The test case called "Ontology-256" from the chasebench project.
  * <pre>
@@ -35,9 +30,11 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
  *   - case :  timeout
  * </pre>
  * @author Gabor
- *
+ * @contributor Brandon Moore
  */
 public class Ontology256 {
+	//filters what file separator to use unix / or windows \\
+	private String fileSeparator = System.getProperty("file.separator");
 	private Schema s = null;
 	Map<String, Relation> relations = new HashMap<>();
 	
@@ -87,20 +84,20 @@ public class Ontology256 {
 		}
 	}
 	private Schema createSchema() {
-		File schemaDir = new File("test//chaseBench//Ontology-256//schema");
-		File dependencyDir = new File("test//chaseBench//Ontology-256//dependencies");
-		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//Ontology-256.s-schema.txt");
-		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//Ontology-256.t-schema.txt");
+		File schemaDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"Ontology-256"+fileSeparator+"schema");
+		File dependencyDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"Ontology-256"+fileSeparator+"dependencies");
+		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + ""+fileSeparator+"Ontology-256.s-schema.txt");
+		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + ""+fileSeparator+"Ontology-256.t-schema.txt");
 		relations.putAll(tables);
 		relations.putAll(tables1);
-		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//Ontology-256.st-tgds.txt");
-		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//Ontology-256.t-tgds.txt"));
-		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//Ontology-256.t-egds.txt"));
+		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + ""+fileSeparator+"Ontology-256.st-tgds.txt");
+		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + ""+fileSeparator+"Ontology-256.t-tgds.txt"));
+		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + ""+fileSeparator+"Ontology-256.t-egds.txt"));
 		return new Schema(relations.values().toArray(new Relation[relations.size()]), dependencies.toArray(new Dependency[dependencies.size()]));
 		
 	}
 	private Collection<Atom> getTestFacts() {
-		File dataDir = new File("test//chaseBench//Ontology-256//data");
+		File dataDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"Ontology-256"+fileSeparator+"data");
 		Collection<Atom> facts = new ArrayList<>();
 		for (File f: dataDir.listFiles()) {
 			if (f.getName().endsWith(".csv")) {
@@ -115,7 +112,7 @@ public class Ontology256 {
 		return facts;
 	}
 	private Collection<ConjunctiveQuery> getTestQueries() throws IOException {
-		File dataDir = new File("test//chaseBench//Ontology-256//queries");
+		File dataDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"Ontology-256"+fileSeparator+"queries");
 		Collection<ConjunctiveQuery> facts = new ArrayList<>();
 		Map<String, Relation> relations = new HashMap<>();
 		for (Relation r: s.getRelations()) {
