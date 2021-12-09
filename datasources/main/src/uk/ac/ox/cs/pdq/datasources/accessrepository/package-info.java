@@ -11,5 +11,7 @@ package uk.ac.ox.cs.pdq.datasources.accessrepository;
 	- AccessRepository.java
  		 * AccessRepository represents a repository executable access methods. 
  		 * The access methods are defined in xml descriptors in a folder. 
+		 
+The Access Repository allows flexibility in terms of where service descriptions are located -- we do not have to abide by some folder convention		 
 
 **/
