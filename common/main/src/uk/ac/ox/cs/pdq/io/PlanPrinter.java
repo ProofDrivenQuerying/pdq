@@ -17,18 +17,21 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Prints plan for better readability, and (for the ping version) opens it in explorer.
+ * Prints a plan 
  * Options: 
  *    - flat single line text,
  *    - indented text
  *    - indented sequential text for linear plans.
  *    - png file output - optionally opened in browser.
  *    
+ * In the last case it will also try to open in a viewer. 
  * Preconditions for png: GraphViz (http://www.graphviz.org/Download..php) have to be
  * installed and the bin directory have to be added to the path, so the command
  * "dot.exe -V" will work in any command line window. for linux use the
  * following command: sudo apt-get install graphviz
  * 
+ * The main use currently is just for the ascii version. The png functionality is only used in a unit test.
+ *
  * @author Gabor
  * @author Brandon
  */
