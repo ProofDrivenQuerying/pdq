@@ -115,7 +115,7 @@ public class ExecutorThread extends Thread {
 				dbToConnect = database.substring(0, database.indexOf("_WORK"));
 			}
 			connection = getConnection(driver, url, dbToConnect, username, password);
-		} catch (SQLException e) {
+		}catch (SQLException e) {
 			throw new DatabaseException("Connection failed to url: " + url + " using database: " + database + ", driver: " + driver, e);
 		}
 		if (!database.contains("_WORK") && databaseParameters.isCreateNewDatabase()) {

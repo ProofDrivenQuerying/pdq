@@ -7,8 +7,6 @@
 		result-delimiter="country"
 		service-group="service-group-1">
 
-		<policy name="1000_items_per_page" />
-
 		<access-method type="FREE" 						name="S_free" cost="1000.0" relation-name="S">
 			<attribute name="x"    			output="true" type="String"    	relation-attribute="x" path="x"/>
 			<attribute name="y"   		  			output="true" type="String"    	relation-attribute="y" path="y"/>

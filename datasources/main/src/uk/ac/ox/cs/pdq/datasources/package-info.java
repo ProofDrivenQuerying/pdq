@@ -17,9 +17,7 @@ in the plan language
 -- tools for reading these datasource objects from external repositories (currently,
 from SQL-based databases).
 
-There are 3 generations of XML-based specifications, unfortunately, of which two are still supported.  There is also a legacy one, which can be parsed but
-the resulting parsed files cannot be used; it is useful mostly for creating converters
-to the current format.
+There are 3 generations of XML-based specifications, unfortunately, of which two are still supported.
 	
 Subpackages include:
 
@@ -28,8 +26,6 @@ Subpackages include:
 -- schema builder, which allows one to read in external schemas (currently from a DBMS)
 
 -- io.jaxb, for reading specifications in the current "simple web service" format
-
--- legacy services, giving the java object representation of the legacy REST metadata specifications 
 
 -- services, giving the java object representation of an older specification of REST services -- metadata
 and methods to access the data

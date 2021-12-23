@@ -3,26 +3,13 @@
 
 package uk.ac.ox.cs.pdq.builder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
-
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.fol.*;
+
+import java.util.*;
 
 
 // TODO: Auto-generated Javadoc
@@ -217,6 +204,7 @@ public class ConjunctiveQueryBodyBuilder {
 		} else {
 			// right has a constant
 			Constant rightConstant = (Constant) rightTerm;
+//			rightConstant.
 			if( !rightConstant.equals(leftConstant)) {
 				throw new Exception("conflicting constants");
 			}

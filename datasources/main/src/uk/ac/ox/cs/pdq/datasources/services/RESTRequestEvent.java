@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
-import uk.ac.ox.cs.pdq.datasources.legacy.services.RequestEvent;
+import uk.ac.ox.cs.pdq.datasources.services.RequestEvent;
 
 // RESTRequestEvent occurs immediately before a REST access event
 public class RESTRequestEvent implements RequestEvent {

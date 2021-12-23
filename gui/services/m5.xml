@@ -7,8 +7,6 @@
 		result-delimiter="country"
 		service-group="service-group-1">
 
-		<policy name="1000_items_per_page" />
-
 		<access-method type="LIMITED" name="m5" cost="1000.0" relation-name="partsupp">
 	         <attribute name="ps_partkey" output="true" type="Integer" relation-attribute="ps_partkey" path="ps_partkey"/>
             <attribute name="ps_suppkey" input="true" output="true" type="Integer" relation-attribute="ps_suppkey" path="ps_suppkey" attribute-encoding="ps_suppkey"/>

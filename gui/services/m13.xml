@@ -7,8 +7,6 @@
 		result-delimiter="country"
 		service-group="service-group-1">
 
-		<policy name="1000_items_per_page" />
-
 		<access-method type="FREE" name="m13" cost="1000.0" relation-name="region_nation">
            <attribute name="nation_key" output="true" type="Integer" relation-attribute="nation_key" path="nation_key"/>
             <attribute name="nation_name" type="String" output="true" relation-attribute="nation_name" path="nation_name"/>

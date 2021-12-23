@@ -3,41 +3,26 @@
 
 package uk.ac.ox.cs.pdq.regression.junit.chasebench;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.Test;
-
-import uk.ac.ox.cs.pdq.util.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.EGD;
-import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.TGD;
-import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.fol.*;
 import uk.ac.ox.cs.pdq.io.CommonToPDQTranslator;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
-import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
-import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
-import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
+import uk.ac.ox.cs.pdq.reasoningdatabase.*;
 import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
+import uk.ac.ox.cs.pdq.util.QNames;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * The test case called "Doctors" from the chasebench project.
@@ -57,14 +42,17 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
  * </pre>
  * 
  * @author Gabor
- *
+ * @contributor Brandon Moore
  */
 public class Doctors {
 	String TEST_DATA[] = { "10k", "100k", "500k", "1m" }; // test data folders;
 	String testDataFolder = TEST_DATA[0];
 	int EXPECTED_NUMBER_OF_RESULTS[] = { 73048, 73048, 73048, 73048, 73465, 292, 73048, 73048, 181 };
 
+	//filters what file separator to use unix / or windows \\
+	private String fileSeparator = System.getProperty("file.separator");
 	private Schema s = createSchema();
+
 
 	@Test
 	public void testDoctorsInternalDb() throws DatabaseException, SQLException, IOException {
@@ -110,6 +98,7 @@ public class Doctors {
 	}
 
 	private void reasonTest(DatabaseManager dbm) throws SQLException, IOException, DatabaseException {
+		System.out.println("Number of facts: " + getTestFacts().size());
 		DatabaseChaseInstance state = new DatabaseChaseInstance(getTestFacts(), dbm);
 		ParallelChaser chaser = new ParallelChaser();
 		long start = System.currentTimeMillis();
@@ -124,8 +113,8 @@ public class Doctors {
 		int counter = 0;
 		for (ConjunctiveQuery q : queries) {
 			List<Match> matches = state.getMatches(q, new HashMap<>());
-				Assert.assertEquals(EXPECTED_NUMBER_OF_RESULTS[counter], matches.size());
 			System.out.println(counter + " query:\n\t" + matches.size());
+				Assert.assertEquals(EXPECTED_NUMBER_OF_RESULTS[counter], matches.size());
 			counter++;
 		}
 	}
@@ -319,7 +308,7 @@ public class Doctors {
 	}
 
 	private Collection<Atom> getTestFacts() {
-		File dataDir = new File("test//chaseBench//doctors//data", testDataFolder);
+		File dataDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"doctors"+fileSeparator+"data", testDataFolder);
 		Collection<Atom> facts = new ArrayList<>();
 		for (File f : dataDir.listFiles()) {
 			if (f.getName().endsWith(".csv")) {
@@ -335,7 +324,7 @@ public class Doctors {
 	}
 
 	private Collection<ConjunctiveQuery> getTestQueries() throws IOException {
-		File dataDir = new File("test//chaseBench//doctors//queries", testDataFolder);
+		File dataDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"doctors"+fileSeparator+"queries", testDataFolder);
 		Collection<ConjunctiveQuery> facts = new ArrayList<>();
 		Map<String, Relation> relations = new HashMap<>();
 		for (Relation r : s.getRelations()) {

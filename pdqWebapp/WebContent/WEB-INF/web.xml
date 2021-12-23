@@ -85,6 +85,15 @@
         <servlet-name>m5</servlet-name>
         <url-pattern>/servlets/servlet/m5/*</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>m4</servlet-name>
+        <servlet-class>m4</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>m4</servlet-name>
+        <url-pattern>/servlets/servlet/m4/*</url-pattern>
+    </servlet-mapping>
  
       <servlet>
         <servlet-name>m13</servlet-name>

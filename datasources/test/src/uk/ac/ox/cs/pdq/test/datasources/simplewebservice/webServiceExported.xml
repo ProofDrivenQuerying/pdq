@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Access access-type="XML_WEB_ACCESS_METHOD" name="mt_4" relation-name="TestRelation1">
+<Access access-type="XML_WEB_ACCESS_METHOD" name="mt_11" relation-name="TestRelation1">
     <attribute name="n_name" type="java.lang.String" input="false" mapsToRelationAttribute="name"/>
     <attribute name="n_nationkey" type="java.lang.Integer" input="true" mapsToRelationAttribute="key"/>
     <attribute name="n_comment" type="java.lang.String" input="false" mapsToRelationAttribute="comment"/>

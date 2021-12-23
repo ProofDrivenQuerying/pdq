@@ -3,18 +3,8 @@
 
 package uk.ac.ox.cs.pdq.regression.junit.chasebench;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.Test;
-
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -30,6 +20,11 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
 import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.*;
+
 /**
  * The test case called "Deep" from the chasebench project.
  * <pre>
@@ -43,12 +38,14 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
  *   - case 300:  timeout
  * </pre>
  * @author Gabor
- *
+ * @contributor Brandon Moore
  */
 public class Deep {
 	String TEST_DATA[] = {"100","200","300"}; // test data folders;
 	String testDataFolder = TEST_DATA[0];
 	private Schema s = null;
+	//filters what file separator to use unix / or windows \\
+	private String fileSeparator = System.getProperty("file.separator");
 	Map<String, Relation> relations = new HashMap<>();
 	
 	@Test
@@ -135,19 +132,19 @@ public class Deep {
 		}
 	}
 	private Schema createSchema() {
-		File schemaDir = new File("test//chaseBench//deep//"+testDataFolder+"//schema");
-		File dependencyDir = new File("test//chaseBench//deep//"+testDataFolder+"//dependencies");
-		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//deep.s-schema.txt");
-		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + "//deep.t-schema.txt");
+		File schemaDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"deep"+fileSeparator+""+testDataFolder+""+fileSeparator+"schema");
+		File dependencyDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"deep"+fileSeparator+""+testDataFolder+""+fileSeparator+"dependencies");
+		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + ""+fileSeparator+"deep.s-schema.txt");
+		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + ""+fileSeparator+"deep.t-schema.txt");
 		relations.putAll(tables);
 		relations.putAll(tables1);
-		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//deep.st-tgds.txt");
-		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + "//deep.t-tgds.txt"));
+		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + ""+fileSeparator+"deep.st-tgds.txt");
+		dependencies.addAll(CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + ""+fileSeparator+"deep.t-tgds.txt"));
 		return new Schema(relations.values().toArray(new Relation[relations.size()]), dependencies.toArray(new Dependency[dependencies.size()]));
 		
 	}
 	private Collection<Atom> getTestFacts() {
-		File dataDir = new File("test//chaseBench//deep//" + testDataFolder + "//data");
+		File dataDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"deep"+fileSeparator+"" + testDataFolder + ""+fileSeparator+"data");
 		Collection<Atom> facts = new ArrayList<>();
 		for (File f: dataDir.listFiles()) {
 			if (f.getName().endsWith(".csv")) {
@@ -162,7 +159,7 @@ public class Deep {
 		return facts;
 	}
 	private Collection<ConjunctiveQuery> getTestQueries() throws IOException {
-		File dataDir = new File("test//chaseBench//deep//"+testDataFolder+"//queries");
+		File dataDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"deep"+fileSeparator+""+testDataFolder+""+fileSeparator+"queries");
 		Collection<ConjunctiveQuery> facts = new ArrayList<>();
 		Map<String, Relation> relations = new HashMap<>();
 		for (Relation r: s.getRelations()) {
