@@ -3,21 +3,20 @@
 
 package uk.ac.ox.cs.pdq.ui;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ResourceBundle;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
-import org.apache.log4j.Logger;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ResourceBundle;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -179,6 +178,8 @@ public class PDQApplication extends Application {
 					}
 				}
 			}
+		}catch (Exception e){
+			log.warn("[Error with default.zip]",e);
 		}
 	}
 }

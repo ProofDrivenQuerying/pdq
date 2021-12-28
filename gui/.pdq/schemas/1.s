@@ -40,8 +40,8 @@
             <access-method name="m6" inputs="0,1"/>
         </relation>
         <relation name="nation">
-            <attribute name="n_nationkey" type="java.lang.Integer"/>
             <attribute name="n_name" type="java.lang.String"/>
+            <attribute name="n_nationkey" type="java.lang.Integer"/>
             <attribute name="n_regionkey" type="java.lang.Integer"/>
             <attribute name="n_comment" type="java.lang.String"/>
             <access-method name="m7" inputs="2"/>

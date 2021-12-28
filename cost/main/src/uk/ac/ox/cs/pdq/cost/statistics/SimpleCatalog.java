@@ -21,6 +21,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -151,8 +153,8 @@ public class SimpleCatalog implements Catalog{
 		//Find the catalog.properties in the subfolder of the schema names in the ./.pdq/catalog Directory
 		//if no Filename location specified the default SimpleCatalog.CATALOG_FILE_NAME is used
 		// and is filtered into working directory
-		if(fileName.equals(SimpleCatalog.CATALOG_FILE_NAME)){
-			catalogFile = String.format("./.pdq/catalog/%s/%s",schema.getName(),fileName);
+		if(Files.exists(Paths.get(String.format("./.pdq/catalog/%s/catalog.properties",schema.getName())))){
+			catalogFile = String.format("./.pdq/catalog/%s/catalog.properties",schema.getName());
 		}else{
 			catalogFile = fileName;
 		}
