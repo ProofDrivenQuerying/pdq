@@ -6,8 +6,7 @@ package uk.ac.ox.cs.pdq.test.util;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import uk.ac.ox.cs.pdq.logging.Periods;
+import uk.ac.ox.cs.pdq.util.Periods;
 
 /**
  * The Class PeriodsTest.

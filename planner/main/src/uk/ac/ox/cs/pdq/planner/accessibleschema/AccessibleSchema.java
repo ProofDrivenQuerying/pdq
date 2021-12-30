@@ -3,26 +3,13 @@
 
 package uk.ac.ox.cs.pdq.planner.accessibleschema;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-
 import uk.ac.ox.cs.pdq.db.AccessMethodDescriptor;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.Disjunction;
-import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Negation;
-import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
-import uk.ac.ox.cs.pdq.fol.TGD;
+import uk.ac.ox.cs.pdq.fol.*;
+
+import java.util.*;
 
 /**
  * Given schema S_0, the Accessible Schema for S_0, denoted AcSch(S_0), 
@@ -62,10 +49,23 @@ public class AccessibleSchema extends Schema {
 	 *
 	 * @param relations 		List of schema relations
 	 * @param dependencies 		list if schema dependencies
-	 * @param constantsMap 		Map of schema constant names to constants
 	 */
 	private AccessibleSchema(Relation[] relations, Dependency[] dependencies) {
 		super(computeAccessibleSchemaRelations(relations), computeAccessibleSchemaAxioms(relations, dependencies));
+		this.originalDependencies = dependencies.clone();
+		this.accessibilityAxioms = lastComputedaccessibilityAxioms.clone();
+		this.inferredAccessibilityAxioms = lastComputedinferredAccessibilityAxioms.clone();
+	}
+
+	/**
+	 * Instantiates a new accessible schema.
+	 *
+	 * @param relations 		List of schema relations
+	 * @param dependencies 		list if schema dependencies
+	 * @param name 		Name of schema
+	 */
+	private AccessibleSchema(Relation[] relations, Dependency[] dependencies, String name) {
+		super(computeAccessibleSchemaRelations(relations), computeAccessibleSchemaAxioms(relations, dependencies), name);
 		this.originalDependencies = dependencies.clone();
 		this.accessibilityAxioms = lastComputedaccessibilityAxioms.clone();
 		this.inferredAccessibilityAxioms = lastComputedinferredAccessibilityAxioms.clone();
@@ -76,7 +76,7 @@ public class AccessibleSchema extends Schema {
 	 * @param schema Schema
 	 */
 	public AccessibleSchema(Schema schema) {
-		this(schema.getRelations(), schema.getNonEgdDependencies());
+		this(schema.getRelations(), schema.getNonEgdDependencies(), schema.getName());
 	}
 
 	/**

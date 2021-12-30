@@ -72,6 +72,18 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class PlannerController.
@@ -350,7 +362,7 @@ public class PlannerController {
 		}
 		if (workDir.exists()) {
 			this.params = new PlannerParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
-			this.costParams = new CostParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
+			this.costParams = new CostParameters(new File( workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
 			this.reasoningParams = new ReasoningParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
 			this.databaseParams = DatabaseParameters.Empty;
 		} else {

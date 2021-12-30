@@ -4,17 +4,16 @@
 
 package uk.ac.ox.cs.pdq.db;
 
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.EGD;
+import uk.ac.ox.cs.pdq.io.jaxb.adapters.SchemaAdapter;
+
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.EGD;
-import uk.ac.ox.cs.pdq.io.jaxb.adapters.SchemaAdapter;
 
 /**
  * A database schema.
@@ -38,25 +37,24 @@ public class Schema {
 	/** The EGDs of the keys*. */
 	protected final EGD[] egdDependencies;
 
-	/**
-	 * Builds a schema with the input relations.
-	 *
-	 * @param relations
-	 *            the relations
-	 */
+	/** The Name of schema to link simple catalog*/
+	protected final String name;
+
+
 	public Schema(Relation[] relations) {
-		this(relations, new Dependency[] {});
+		this(relations, new Dependency[] {}, "");
 	}
 
 	/**
-	 * Builds a schema with the input relations and dependencies.
+	 * Builds a schema with the input relations, dependencies and schema name .
 	 *
 	 * @param relations
-	 *            The input relations
-	 * @param mixedDependencies
-	 *            The input dependencies
+	 *            the relations
+	 * @param mixedDependencies mixedDependencies
+	 * @param name schema Name
 	 */
-	public Schema(Relation[] relations, Dependency[] mixedDependencies) {
+	public Schema(Relation[] relations, Dependency[] mixedDependencies , String name) {
+		this.name = name;
 		this.relations = new Relation[relations.length];
 		this.relationsMap = new LinkedHashMap<>();
 		int relationIndex = 0;
@@ -85,6 +83,24 @@ public class Schema {
 		} else {
 			this.egdDependencies = new EGD[0];
 		}
+
+	}
+
+
+	/**
+	 * Builds a schema with the input relations and dependencies.
+	 *
+	 * @param relations
+	 *            The input relations
+	 * @param mixedDependencies
+	 *            The input dependencies
+	 */
+	public Schema(Relation[] relations, Dependency[] mixedDependencies) {
+		this(relations,mixedDependencies, "Not found");
+	}
+
+	public Schema(Relation[] relations, String name) {
+		this(relations, new Dependency[] {}, name);
 	}
 
 	/**
@@ -172,6 +188,11 @@ public class Schema {
 		result.append("\n}");
 		return result.toString();
 	}
+
+	public String getName() {
+		return name;
+	}
+
 
 	/**
 	 * Checks if the schema contains a relation.

@@ -3,22 +3,16 @@
 
 package uk.ac.ox.cs.pdq.io.jaxb.adapted;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+
+import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Gabor
@@ -65,7 +59,7 @@ public class AdaptedSchema {
 		
 		if (getDependencies()!=null && getDependencies().length>0)
 			return new Schema(relations,getDependencies());
-		Schema s = new Schema(relations);
+		Schema s = new Schema(relations, name);
 		return s;
 	}
 

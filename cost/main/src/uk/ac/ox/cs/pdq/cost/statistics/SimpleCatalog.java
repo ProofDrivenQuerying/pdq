@@ -21,6 +21,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -71,7 +73,7 @@ public class SimpleCatalog implements Catalog{
 	private static final double DEFAULT_QUALITY = 0.0;
 	private static final int DEFAULT_COLUMN_CARDINALITY = 1000;
 	private static final double DEFAULT_COST = 1.0;
-	private static final String CATALOG_FILE_NAME = "catalog/catalog.properties";
+	private static final String CATALOG_FILE_NAME = "catalog.properties";
 
 	private static final String READ_CARDINALITY = "^(RE:(\\w+)(\\s+)CA:(\\d+))";
 	private static final String READ_COLUMN_CARDINALITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)CC:(\\d+))";
@@ -136,6 +138,10 @@ public class SimpleCatalog implements Catalog{
 		this.read(schema, fileName);
 	}
 
+	private void read(Schema schema){
+
+	}
+
 	/**
 	 * Read.
 	 *
@@ -143,9 +149,18 @@ public class SimpleCatalog implements Catalog{
 	 * @param fileName 		The file that stores the statistics
 	 */
 	private void read(Schema schema, String fileName) {
+		String catalogFile;
+		//Find the catalog.properties in the subfolder of the schema names in the ./.pdq/catalog Directory
+		//if no Filename location specified the default SimpleCatalog.CATALOG_FILE_NAME is used
+		// and is filtered into working directory
+		if(Files.exists(Paths.get(String.format("./.pdq/catalog/%s/catalog.properties",schema.getName())))){
+			catalogFile = String.format("./.pdq/catalog/%s/catalog.properties",schema.getName());
+		}else{
+			catalogFile = fileName;
+		}
 		String line;
 		try {
-			FileReader fileReader = new FileReader(fileName);
+			FileReader fileReader = new FileReader(catalogFile);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			while((line = bufferedReader.readLine()) != null) {
 				this.parse(schema, line);
