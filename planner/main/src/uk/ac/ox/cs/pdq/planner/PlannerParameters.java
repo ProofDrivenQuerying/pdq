@@ -182,7 +182,7 @@ public class PlannerParameters extends Parameters {
 	/** The first phase threads. */
 	@Parameter(description = "Number of threads to use in the first phase of "
 			+ "a parallel DAG planning algorithm",
-			defaultValue = "50")
+			defaultValue = "10")
 	protected Integer dagThreads = 10;
 
 	/** The depth threshold. */
