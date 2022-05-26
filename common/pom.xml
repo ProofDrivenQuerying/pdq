@@ -11,12 +11,6 @@
 		<relativePath>..</relativePath>
 	</parent>
 
-	<repositories>
-		<repository>
-			<id>mvnrepository</id>
-			<url>https://mvnrepository.com/</url>
-		</repository>
-	</repositories>
 	<build>
 		<sourceDirectory>main/src</sourceDirectory>
 		<testSourceDirectory>test/src</testSourceDirectory>
