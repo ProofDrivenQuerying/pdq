@@ -1,4 +1,4 @@
-pdq_version="1.0.0"
+pdq_version="2.0.0"
 
 # collect library jar files
 cp ../../common/target/pdq-common-${pdq_version}.jar .
