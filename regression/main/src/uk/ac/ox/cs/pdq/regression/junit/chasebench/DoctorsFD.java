@@ -3,104 +3,109 @@
 
 package uk.ac.ox.cs.pdq.regression.junit.chasebench;
 
-import org.junit.Assert;
-import org.junit.Test;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.io.CommonToPDQTranslator;
-import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
-import uk.ac.ox.cs.pdq.reasoning.chase.ParallelChaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseManager;
-import uk.ac.ox.cs.pdq.reasoningdatabase.DatabaseParameters;
-import uk.ac.ox.cs.pdq.reasoningdatabase.ExternalDatabaseManager;
-import uk.ac.ox.cs.pdq.reasoningdatabase.InternalDatabaseManager;
-
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
+
+import org.junit.Test;
+
+import uk.ac.ox.cs.pdq.exceptions.DatabaseException;
 
 /**
  * The test case called "DoctorsFD" from the chasebench project.
+ * New test results (Stefano 2022):
+ * - 10k
+ *   + Internal : 1s
+ *   + External : 
+ *   + Logical  : 2s
+ * - 100k
+ *   + Internal : 15s
+ *   + External :
+ *   + Logical  : 24s
+ * - 500k
+ *   + Internal : 143s
+ *   + External :
+ *   + Logical  :
+ * - 1m
+ *   + Internal : 553s
+ *   + External :
+ *   + Logical  :
+ * 
  * @author Gabor
  * @contributor Brandon Moore
+ * @contributor Stefano
  */
-public class DoctorsFD {
-	String TEST_DATA[] = {"10k","100k","500k","1m"}; // test data folders;
-	String testDataFolder = TEST_DATA[0];
-	//filters what file separator to use unix / or windows \\
-	private String fileSeparator = System.getProperty("file.separator");
-	private Schema s = null;
-	Map<String, Relation> relations = new HashMap<>();
-	@Test 
-	public void testDoctorsInternalDb() throws DatabaseException, SQLException, IOException {
-		s = ExplorationSetUp.convertTypesToString(createSchema());
-		
-		System.out.println("MEMORY");
-		DatabaseManager dbm = new InternalDatabaseManager();
-		dbm.initialiseDatabaseForSchema(s);
-		DatabaseChaseInstance state = new DatabaseChaseInstance(getTestFacts(), dbm);
-		Collection<Atom> res = state.getFacts();
-		System.out.println("INITIAL STATE contains " + res.size() + " facts.");
-		ParallelChaser chaser = new ParallelChaser();
-		chaser.reasonUntilTermination(state, s.getNonEgdDependencies());
-		res = state.getFacts();
-		System.out.println("Final state contains " + res.size() + " facts." + new HashSet<>(res).size() + " unique.");
-		
-		System.out.println("EXTERNAL");
-		DatabaseManager dbmExt = new ExternalDatabaseManager(DatabaseParameters.Postgres);
-		dbmExt.initialiseDatabaseForSchema(s);
-		DatabaseChaseInstance stateExt = new DatabaseChaseInstance(getTestFacts(), dbmExt);
-		Collection<Atom> resExt = stateExt.getFacts();
-		System.out.println("INITIAL STATE contains " + resExt.size() + " facts.");
-		ParallelChaser chaserExt = new ParallelChaser();
-		chaserExt.reasonUntilTermination(stateExt, s.getNonEgdDependencies());
-		resExt = stateExt.getFacts();
-		System.out.println("Final state contains " + resExt.size() + " facts." + new HashSet<>(resExt).size() + " unique.");
+public class DoctorsFD extends ChaseBenchAbstract {
 
-		if (res.size() > resExt.size()) {
-			System.out.println("There are more facts in mem.");
-			Assert.fail("There are more facts in mem.");
-		} else {
-			if (res.size() < resExt.size()) {
-				System.out.println("There are more facts in Ext.");
-				Assert.fail("There are more facts in Ext.");
-			} else {				
-				System.out.println("There are no difference in the number of facts.");
-			}
-		}
-		Assert.assertTrue(res.size()>1000);
+	@Test
+	public void test10kInternalDB() throws DatabaseException, SQLException, IOException {
+		init("doctors", "10k", "doctors-fd");
+		super.testInternalDB();
 	}
-	
-	private Schema createSchema() {
-		File schemaDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"doctors"+fileSeparator+"schema"+fileSeparator+"");
-		File dependencyDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"doctors"+fileSeparator+"dependencies");
-		Map<String, Relation> tables = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + ""+fileSeparator+"doctors-fd.s-schema.txt");
-		Map<String, Relation> tables1 = CommonToPDQTranslator.parseTables(schemaDir.getAbsolutePath() + ""+fileSeparator+"doctors-fd.t-schema.txt");
-		relations.putAll(tables);
-		relations.putAll(tables1);
-		List<Dependency> dependencies = CommonToPDQTranslator.parseDependencies(relations, dependencyDir .getAbsolutePath() + ""+fileSeparator+"doctors-fd.st-tgds.txt");
-		return new Schema(relations.values().toArray(new Relation[relations.size()]), dependencies.toArray(new Dependency[dependencies.size()]));
-		
+
+	@Test
+	public void test10kExternalDB() throws DatabaseException, SQLException, IOException {
+		init("doctors", "10k", "doctors-fd");
+		super.testExternalDB();
 	}
-	private Collection<Atom> getTestFacts() {
-		File dataDir = new File("test"+fileSeparator+"chaseBench"+fileSeparator+"doctors"+fileSeparator+"data"+fileSeparator+"" + testDataFolder + ""+fileSeparator+"");
-		Collection<Atom> facts = new ArrayList<>();
-		for (File f: dataDir.listFiles()) {
-			if (f.getName().endsWith(".csv")) {
-				String name = f.getName().substring(0, f.getName().indexOf("."));
-				if (s.getRelation(name) == null) {
-					System.out.println("Can't process file: "+ f.getAbsolutePath());
-				} else {
-					facts.addAll(CommonToPDQTranslator.importFacts(s, name, f.getAbsolutePath()));
-				}
-			}
-		}
-		return facts;
+
+	@Test
+	public void test10kLogicalDB() throws DatabaseException, SQLException, IOException {
+		init("doctors", "10k", "doctors-fd");
+		super.testLogicalDB();
+	}
+
+	@Test
+	public void test100kInternalDB() throws DatabaseException, SQLException, IOException {
+		init("doctors", "100k", "doctors-fd");
+		super.testInternalDB();
+	}
+
+	@Test
+	public void test100kExternalDB() throws DatabaseException, SQLException, IOException {
+		init("doctors", "100k", "doctors-fd");
+		super.testExternalDB();
+	}
+
+	@Test
+	public void test100kLogicalDB() throws DatabaseException, SQLException, IOException {
+		init("doctors", "100k", "doctors-fd");
+		super.testLogicalDB();
+	}
+
+	@Test
+	public void test500kInternalDB() throws DatabaseException, SQLException, IOException {
+		init("doctors", "500k", "doctors-fd");
+		super.testInternalDB();
+	}
+
+	@Test
+	public void test500kExternalDB() throws DatabaseException, SQLException, IOException {
+		init("doctors", "500k", "doctors-fd");
+		super.testExternalDB();
+	}
+
+	@Test
+	public void test500kLogicalDB() throws DatabaseException, SQLException, IOException {
+		init("doctors", "500k", "doctors-fd");
+		super.testLogicalDB();
+	}
+
+	@Test
+	public void test1mInternalDB() throws DatabaseException, SQLException, IOException {
+		init("doctors", "1m", "doctors-fd");
+		super.testInternalDB();
+	}
+
+	@Test
+	public void test1mExternalDB() throws DatabaseException, SQLException, IOException {
+		init("doctors", "1m", "doctors-fd");
+		super.testExternalDB();
+	}
+
+	@Test
+	public void test1mLogicalDB() throws DatabaseException, SQLException, IOException {
+		init("doctors", "1m", "doctors-fd");
+		super.testLogicalDB();
 	}
 
 }
