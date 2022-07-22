@@ -126,6 +126,8 @@ public abstract class ChaseBenchAbstract {
     protected void testDB(DatabaseManager dbm) throws DatabaseException, SQLException, IOException {
         long start,duration;
         start = System.currentTimeMillis();
+        // s = ExplorationSetUp.convertTypesToString(createSchema()); 
+        // code above was used in some of the test cases, not in others
         DatabaseChaseInstance state = new DatabaseChaseInstance(getTestFacts(), dbm);
         Collection<Atom> res = state.getFacts();
         System.out.println("INITIAL STATE contains " + res.size() + " facts.");
