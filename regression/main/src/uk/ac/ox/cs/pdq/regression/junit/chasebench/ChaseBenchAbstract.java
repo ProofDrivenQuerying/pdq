@@ -35,7 +35,7 @@ import uk.ac.ox.cs.pdq.reasoningdatabase.LogicalDatabaseInstance;
 import uk.ac.ox.cs.pdq.reasoningdatabase.cache.MultiInstanceFactCache;
 
 /**
- * Abstract class for ChaseBench test cases.
+ * Abstract class for ChaseBench test cases. Gives a generic harness for running reasoning test cases under several configurations
  * 
  * @author Stefano
  */
@@ -95,6 +95,9 @@ public abstract class ChaseBenchAbstract {
         return dbm;
     }
 
+    
+    //Logical database manager is a layer on top of the use of external db postgres, with slightly different behavior
+    
     private DatabaseManager getLogicalDatabaseManager() throws DatabaseException {
         ExternalDatabaseManager dbm = new ExternalDatabaseManager(DatabaseParameters.Postgres);
         return new LogicalDatabaseInstance(new MultiInstanceFactCache(), dbm, 0);
